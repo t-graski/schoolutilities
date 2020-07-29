@@ -1,9 +1,9 @@
 const { MessageEmbed } = require('discord.js');
 const { evaluate } = require('mathjs');
 
-exports.run = (client, message, args) => {
+exports.run = async (client, message, args) => {
     let result = evaluate(args[0]);
-    
+
     const embed = new MessageEmbed()
         .setColor('#4BB543')
         .setTitle('Calculation')
