@@ -1,21 +1,23 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
-const postgres = require('postgres')
 
 const PREFIX = ".";
 
 const client = new Client();
 
 
-
-
-
-
-
 client.on('ready', () => {
     console.log('Successfully started.');
 });
-
+client.on('guildCreate', async (guild) => {
+    console.log("Bot has joined the Guild " + guild);
+    await guild.channels.create('bot-config', 'text', [{
+        type: 'role',
+        id: '738115363329277963',
+        permissions: 1024
+    }]
+    )
+})
 client.on('message', async message => {
     let msg = message.content.toUpperCase();
     let sender = message.author;
