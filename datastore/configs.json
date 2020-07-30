@@ -1,0 +1,12 @@
+[
+	{
+		"guildId": "676831877025497108",
+		"name": "Tobii's Bot Zentrale",
+		"studentId": 0,
+		"teacherId": 0,
+		"timeZone": "GMT+2",
+		"language": "english",
+		"channel": "bot-config",
+		"checktime": 3000
+	}
+]
