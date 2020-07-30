@@ -2,12 +2,19 @@ const { MessageEmbed } = require('discord.js');
 const { evaluate } = require('mathjs');
 
 exports.run = async (client, message, args) => {
-    let result = evaluate(args[0]);
-
+    let error = false;
+    let calculation;
+    let result;
+    try {
+        calculation = args.slice(0).reduce((a, b) => a + b);
+        result = evaluate(calculation);
+    } catch (e) {
+        error = true;
+    }
     const embed = new MessageEmbed()
-        .setColor('#4BB543')
+        .setColor(error ? '#FF0000' : '#4BB543')
         .setTitle('Calculation')
-        .setDescription(`The calculation **${args[0]}** results: **${result}**.`)
+        .setDescription(error ? `There are **invalid charactars** in the calculation!` : `The calculation **${calculation}** results: **${result}**.`)
         .setTimestamp()
         .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
     message.channel.send(embed);

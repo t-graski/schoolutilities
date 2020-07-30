@@ -56,5 +56,3 @@ exports.run = async (client, message, args) => {
 function save(path, string) {
     fs.writeFile(path, string, (err) => { console.log(err ? err : ''); });
 }
-
-
