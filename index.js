@@ -18,7 +18,7 @@ client.on('guildCreate', async (guild) => {
         permissions: 1024
     }]
     )
-})
+});
 client.on('message', async message => {
     let msg = message.content.toUpperCase();
     let sender = message.author;
@@ -34,9 +34,10 @@ client.on('message', async message => {
         let commandFile = require(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
     } catch (e) {
-        console.log(e.stack);
+        message.channel.send("This was a wrong command, please check the commands with .help");
+        console.log(`There was a wrong command-input: ${cmd}`);
     }
-})
+});
 
 
 client.login(process.env.TOKEN);
