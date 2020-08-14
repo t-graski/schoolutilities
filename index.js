@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
+const { columnTransformDependencies } = require('mathjs');
 
 const PREFIX = ".";
 
@@ -23,10 +24,12 @@ client.on('message', async message => {
     let sender = message.author;
     let args = message.content.slice(PREFIX.length).trim().split(' ');
     let cmd = args.shift().toLowerCase();
-
+    if (msg.startsWith('!') && cmd == 'anwesenheit') {
+        let commandFile = require(`./commands/${cmd}.js`);
+        commandFile.run(client, message, args);
+    }
     if (!msg.startsWith(PREFIX)) return;
     if (message.author.bot) return;
-
     try {
         let commandFile = require(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
