@@ -20,6 +20,7 @@
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "google-translate-free": "^2.4.5",
-    "mathjs": "^7.1.0"
+    "mathjs": "^7.1.0",
+    "numeral": "^2.0.6"
   }
 }
