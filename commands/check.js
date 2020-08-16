@@ -6,7 +6,17 @@ exports.run = async (client, message, args) => {
     let serverConfigurationData = serverConfiguration(message.guild.id);
     if (serverConfigurationData) {
         if (message.member.hasPermission('ADMINISTRATOR') || message.member.roles.cache.has(serverConfigurationData.teacherId)) {
-            let checkTime = serverConfigurationData.checktime;
+            let checkTime;
+            if (args[0]) {
+                if (!Number.isNaN(Number(args[0]))) {
+                    checkTime = Number(args[0])
+                } else {
+                    message.channel.send(`"${args[0]}" is not a valid number.`)
+                }
+            } else {
+                checkTime = serverConfigurationData.checktime;
+            }
+
             let embed = new MessageEmbed()
                 .setTitle('Precense Check')
                 .setColor('#4BB543')
@@ -39,15 +49,25 @@ exports.run = async (client, message, args) => {
                         for (const key in arr) {
                             arr[key] = `<@${arr[key]}>`
                         }
+                        let title;
+                        let color;
+                        if (!arr.length) {
+                            title = 'No missing students'
+                            color = '#4BB543';
+                        } else {
+                            title = 'Missing students'
+                            color = '#e50000';
+                        }
                         let missingStudents = new MessageEmbed()
-                            .setTitle('Missing Students')
-                            .setColor('#e50000')
+                            .setTitle(title)
+                            .setColor(color)
                             .setDescription(arr)
                             .setTimestamp()
                             .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
                         message.channel.send(missingStudents);
                     }).catch(collected => { console.log("error"); });
             })
+
         }
     } else {
         message.channel.send("Your server hasn't been configured, please configure the bot. Type .help to see the available commands.");

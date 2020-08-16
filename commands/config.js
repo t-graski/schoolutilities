@@ -92,8 +92,8 @@ exports.run = async (client, message, args) => {
 
                     //Check, if time is correct
                     let subject = args.length > 0 ? args.slice(6).reduce((a, b) => a + " " + b) : args[6];
-                    let dateEntry = convertTimeEntryToObject(args[3], args[4], args[5], subject);
-                    if (dateEntry != false) {
+                    let dateEntry = convertTimeEntryToObject(args[3], args[4], args[5], subject, message);
+                    if (typeof dateEntry == "object" && typeof weekday == "number") {
                         configData[serverArrayId].timeTable[weekday].push(dateEntry);
                         console.table(configData[serverArrayId].timeTable);
                         replyMsg += "Edited timetable";
@@ -101,8 +101,12 @@ exports.run = async (client, message, args) => {
                             replyMsg += "\n**Warning**: Your time entry overlapes with another one, if you want to remove the entry, please use remove. (For more informations type .help)";
                         }
                     } else {
-                        console.log("Something went wrong!");
-                        replyMsg += "The edit went wrong";
+                        // console.log("Something went wrong!");
+                        if(typeof dateEntry == "object"){
+                            replyMsg += weekday;
+                        }else{
+                            replyMsg += dateEntry;
+                        }
                     }
                 } else if (args[1].toLowerCase() == "remove") {
                     //Check the weekday for the timetable entry
@@ -110,13 +114,12 @@ exports.run = async (client, message, args) => {
 
                     //Check, if time is correct
                     let subject = args.slice(6).reduce((a, b) => a + " " + b);
-                    let dateEntry = convertTimeEntryToObject(args[3], args[4], args[5], subject);
+                    let dateEntry = convertTimeEntryToObject(args[3], args[4], args[5], subject, message);
                     let isDeleted = deleteTimeEntry(dateEntry, weekday);
-                    if (isDeleted) {
+                    if (isDeleted == true) {
                         replyMsg += `The subject has been deleted!`;
                     } else {
-                        console.log("Something went wrong!");
-                        replyMsg += "The delete went wrong";
+                        replyMsg += isDeleted;
                     }
 
 
@@ -132,13 +135,13 @@ exports.run = async (client, message, args) => {
                             configData[serverArrayId].timeTable[weekday].splice(deleteIndex, 1);
                             return true;
                         } else {
-                            return false;
+                            return dateEntry;
                         }
                     }
                 } else if (args[1].toLowerCase() == "clear") {
                     if (args[2]) {
                         let weekday = getWeekDay(args[2]);
-                        if (weekday) {
+                        if (typeof weekday == "number") {
                             configData[serverArrayId].timeTable[weekday] = [];
                             replyMsg += `The day has been wiped.`
                         } else {
@@ -159,6 +162,7 @@ exports.run = async (client, message, args) => {
                 } else if (args[1].toLowerCase() == "print") {
                     replyMsg += getTimeTableString(configData[serverArrayId].timeTable);
                 } else {
+                    replyMsg += "The command " + args[1] + " doesn't exist.";
                     console.log("Wrong input:" + args[1]);
                 }
             } else {
@@ -192,21 +196,33 @@ function checkTimesMatching(startTime, endTime) {
     return (startTime.hours == endTime.hours && startTime.minutes < endTime.minutes) || (startTime.hours < endTime.hours);
 }
 
-function convertTimeEntryToObject(startTime, endTime, channel, subjectName) {
+function convertTimeEntryToObject(startTime, endTime, channel, subjectName, message) {
+    let replyMsg = "";
     channel = channel.replace(/\D/g, "");
     startTime = checkTime(startTime);
     endTime = checkTime(endTime);
 
-    if (startTime != false && endTime != false && checkTimesMatching(startTime, endTime) && subjectName.length > 1 && subjectName.length < 30) {
-        return {
+    if (startTime != false && endTime != false && checkTimesMatching(startTime, endTime) && subjectName.length > 1 && subjectName.length < 30 && message.guild.channels.cache.get(channel)) {
+        replyMsg = {
             "startTime": startTime,
             "endTime": endTime,
             "subject": subjectName,
             "channel": channel
         };
-    } else {
-        return false;
+    } else if(startTime == false){
+        replyMsg += "Your start time was incorrect, please enter a valid time. Look up in the documentation with .help for more informations.";
+    } else if(endTime == false){
+        replyMsg += "Your end time was incorrect, please enter a valid time. Look up in the documentation with .help for more informations.";
+    } else if(!checkTimesMatching(startTime, endTime)){
+        replyMsg += "Your times don't match, please enter a valid time. Look up in the documentation with .help for more informations.";
+    } else if(subjectName.length <= 1){
+        replyMsg += "Your subject is too short, please enter a subject with more than 1 character. Look up in the documentation with .help for more informations.";
+    } else if(subjectName.length >= 30){
+        replyMsg += "Your subject is too long, please enter a subject with less than 30 characters. Look up in the documentation with .help for more informations.";
+    } else if(!message.guild.channels.cache.get(channel)){
+        replyMsg += "Your channel is wrong. Look up in the documentation with .help for more informations.";
     }
+    return replyMsg;
 }
 
 function isTimeOverlaped(timeObject, dayTimeTable) {
@@ -244,7 +260,7 @@ function getWeekDay(dayArg) {
     } else if (dayArg == "su" || dayArg == "sunday") {
         weekday = 7;
     } else {
-        weekday = false;
+        weekday = "The weekday was wrong, please enter a valid weekday.";
     }
     return weekday;
 }
@@ -260,7 +276,7 @@ function getWeekDay(dayArg) {
 // }
 
 function isSameEntry(entryOne, entryTwo) {
-    return (entryOne.startTime.hours == entryTwo.startTime.hours && entryOne.startTime.minutes == entryTwo.startTime.minutes && entryOne.endTime.hours == entryTwo.endTime.hours && entryOne.endTime.minutes == entryTwo.endTime.minutes && entryOne.subject == entryTwo.subject);
+    return (typeof entryOne == "object" && typeof entryTwo == "object" && entryOne.startTime.hours == entryTwo.startTime.hours && entryOne.startTime.minutes == entryTwo.startTime.minutes && entryOne.endTime.hours == entryTwo.endTime.hours && entryOne.endTime.minutes == entryTwo.endTime.minutes && entryOne.subject == entryTwo.subject);
 }
 
 function getTimeTableString(timeTable) {
