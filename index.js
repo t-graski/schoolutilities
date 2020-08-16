@@ -57,7 +57,7 @@ function checkPresence() {
         }else{
             date = date.getDay();
         }
-        let foundEntry = serverConfig.timeTable[date].find((timeEntry) => timeInRange(timeEntry.startTime, timeEntry.endTime));
+        let foundEntry = serverConfig.timeTable[date].find((timeEntry) => timeInRange(timeEntry.startTime, timeEntry.endTime, serverConfig.timeZone));
         if (foundEntry) {
             let channel = guild.channels.cache.get(foundEntry.channel);
             if (guild) {
@@ -80,8 +80,9 @@ function checkPresence() {
 }
 
 
-function timeInRange(startTime, endTime) {
-    startTime = startTime.hours * 60 + startTime.minutes;
+function timeInRange(startTime, endTime, timezone) {
+    timezone = Number(timezone.split("gmt")[1]);
+    startTime = (startTime.hours + timezone) * 60 + startTime.minutes;
 
     let date = new Date();
     let currentHour = date.getHours();
