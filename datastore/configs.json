@@ -52,7 +52,56 @@
 					"channel": "744270271539839038"
 				}
 			],
-			"7": []
+			"7": [
+				{
+					"startTime": {
+						"hours": 17,
+						"minutes": 39
+					},
+					"endTime": {
+						"hours": 22,
+						"minutes": 20
+					},
+					"subject": "Test",
+					"channel": "744270271539839038"
+				},
+				{
+					"startTime": {
+						"hours": 15,
+						"minutes": 39
+					},
+					"endTime": {
+						"hours": 22,
+						"minutes": 20
+					},
+					"subject": "Test",
+					"channel": "744270271539839038"
+				},
+				{
+					"startTime": {
+						"hours": 17,
+						"minutes": 41
+					},
+					"endTime": {
+						"hours": 22,
+						"minutes": 20
+					},
+					"subject": "Test",
+					"channel": "744270271539839038"
+				},
+				{
+					"startTime": {
+						"hours": 17,
+						"minutes": 44
+					},
+					"endTime": {
+						"hours": 22,
+						"minutes": 20
+					},
+					"subject": "Test",
+					"channel": "744270271539839038"
+				}
+			]
 		},
 		"autocheck": true
 	},
