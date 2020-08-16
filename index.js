@@ -52,7 +52,12 @@ function checkPresence() {
     configData.forEach(serverConfig => {
         let guild = client.guilds.cache.get(serverConfig.guildId);
         let date = new Date();
-        let foundEntry = serverConfig.timeTable[date.getDay()].find((timeEntry) => timeInRange(timeEntry.startTime, timeEntry.endTime));
+        if(date.getDay() == 0){
+            date = 7;
+        }else{
+            date = date.getDay();
+        }
+        let foundEntry = serverConfig.timeTable[date].find((timeEntry) => timeInRange(timeEntry.startTime, timeEntry.endTime));
         if (foundEntry) {
             let channel = guild.channels.cache.get(foundEntry.channel);
             if (guild) {
