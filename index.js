@@ -4,6 +4,7 @@ const datastorePath = './datastore/configs.json';
 const { columnTransformDependencies } = require('mathjs');
 const fs = require('fs');
 const numeral = require('numeral');
+const { serverConfiguration } = require('./utils.js');
 
 const PREFIX = ".";
 
@@ -14,14 +15,26 @@ client.on('ready', () => {
     setInterval(checkPresence, 60000);
     console.log('Successfully started.');
 });
-client.on('guildCreate', async (guild) => {
+client.on('guildCreate', (guild) => {
     console.log("Bot has joined the Guild " + guild);
-    await guild.channels.create('bot-config', 'text', [{
-        type: 'role',
-        id: '738115363329277963',
-        permissions: 1024
-    }]
-    )
+    guild.channels.create('bot-config', {
+        type: 'text',
+        permissionOverwrites: [
+            {
+                id: guild.id,
+                deny: ['VIEW_CHANNEL']
+            }
+            // },
+            // {
+            //     id: serverConfiguration(guild.id).studentId,
+            //     deny: ['VIEW_CHANNEL']
+            // },
+            // {
+            //     id: serverConfiguration(guild.id).teacherId,
+            //     allow: ['VIEW_CHANNEL']
+            // }
+        ]
+    });
 });
 client.on('message', async message => {
     let msg = message.content.toUpperCase();
@@ -52,9 +65,9 @@ function checkPresence() {
     configData.forEach(serverConfig => {
         let guild = client.guilds.cache.get(serverConfig.guildId);
         let date = new Date();
-        if(date.getDay() == 0){
+        if (date.getDay() == 0) {
             date = 7;
-        }else{
+        } else {
             date = date.getDay();
         }
         let foundEntry = serverConfig.timeTable[date].find((timeEntry) => timeInRange(timeEntry.startTime, timeEntry.endTime, serverConfig.timeZone));
@@ -63,7 +76,7 @@ function checkPresence() {
             if (guild) {
                 if (channel) {
                     channel.send(`<@&${serverConfig.studentId}>, the subject **${foundEntry.subject}** is now starting and will take until ${numeral(foundEntry.endTime.hours).format("00")}:${numeral(foundEntry.endTime.minutes).format("00")}.`);
-                    if (serverConfig.autocheck){
+                    if (serverConfig.autocheck) {
                         try {
                             let commandFile = require(`./autocheck.js`);
                             commandFile.run(channel, serverConfig.guildId, guild);
