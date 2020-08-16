@@ -29,7 +29,7 @@ exports.run = async (client, message, args) => {
                         name: message.guild.name,
                         studentId: 0,
                         teacherId: 0,
-                        timeZone: "GMT+0",
+                        timeZone: "gmt+0",
                         language: "english",
                         channel: "bot-config",
                         checktime: 3,
