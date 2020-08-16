@@ -299,7 +299,7 @@ function getTimeTableString(timeTable) {
             stringToPrint += `**${currentDay}** :\n`;
             sortedTimeTable = sortedTimeTable.sort((a, b) => checkTimesMatching(a.startTime, b.startTime) ? -1 : 1);
             sortedTimeTable.forEach(element => {
-                if (weekDay == currentDay) {
+                if (weekDay == currentDay && timeInRange(element.startTime, element.endTime)) {
                     if (timeInRange(element.startTime, element.endTime)) {
                         stringToPrint += `__**${numeral(element.startTime.hours).format("00")}:${numeral(element.startTime.minutes).format("00")} - ${numeral(element.endTime.hours).format("00")}:${numeral(element.endTime.minutes).format("00")}: ${element.subject}**__\n`;
                     }
