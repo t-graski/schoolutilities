@@ -102,9 +102,9 @@ exports.run = async (client, message, args) => {
                         }
                     } else {
                         // console.log("Something went wrong!");
-                        if(typeof dateEntry == "object"){
+                        if (typeof dateEntry == "object") {
                             replyMsg += weekday;
-                        }else{
+                        } else {
                             replyMsg += dateEntry;
                         }
                     }
@@ -160,7 +160,7 @@ exports.run = async (client, message, args) => {
                         replyMsg += `The entire timetable has been wiped.`
                     }
                 } else if (args[1].toLowerCase() == "print") {
-                    replyMsg += getTimeTableString(configData[serverArrayId].timeTable);
+                    replyMsg += getTimeTableString(configData[serverArrayId].timeTable, configData[serverArrayId].timezone);
                 } else {
                     replyMsg += "The command " + args[1] + " doesn't exist.";
                     console.log("Wrong input:" + args[1]);
@@ -209,17 +209,17 @@ function convertTimeEntryToObject(startTime, endTime, channel, subjectName, mess
             "subject": subjectName,
             "channel": channel
         };
-    } else if(startTime == false){
+    } else if (startTime == false) {
         replyMsg += "Your start time was incorrect, please enter a valid time. Look up in the documentation with .help for more informations.";
-    } else if(endTime == false){
+    } else if (endTime == false) {
         replyMsg += "Your end time was incorrect, please enter a valid time. Look up in the documentation with .help for more informations.";
-    } else if(!checkTimesMatching(startTime, endTime)){
+    } else if (!checkTimesMatching(startTime, endTime)) {
         replyMsg += "Your times don't match, please enter a valid time. Look up in the documentation with .help for more informations.";
-    } else if(subjectName.length <= 1){
+    } else if (subjectName.length <= 1) {
         replyMsg += "Your subject is too short, please enter a subject with more than 1 character. Look up in the documentation with .help for more informations.";
-    } else if(subjectName.length >= 30){
+    } else if (subjectName.length >= 30) {
         replyMsg += "Your subject is too long, please enter a subject with less than 30 characters. Look up in the documentation with .help for more informations.";
-    } else if(!message.guild.channels.cache.get(channel)){
+    } else if (!message.guild.channels.cache.get(channel)) {
         replyMsg += "Your channel is wrong. Look up in the documentation with .help for more informations.";
     }
     return replyMsg;
@@ -279,7 +279,7 @@ function isSameEntry(entryOne, entryTwo) {
     return (typeof entryOne == "object" && typeof entryTwo == "object" && entryOne.startTime.hours == entryTwo.startTime.hours && entryOne.startTime.minutes == entryTwo.startTime.minutes && entryOne.endTime.hours == entryTwo.endTime.hours && entryOne.endTime.minutes == entryTwo.endTime.minutes && entryOne.subject == entryTwo.subject);
 }
 
-function getTimeTableString(timeTable) {
+function getTimeTableString(timeTable, timezone) {
     let stringToPrint = "";
 
     let weekdays = [
@@ -299,8 +299,8 @@ function getTimeTableString(timeTable) {
             stringToPrint += `**${currentDay}** :\n`;
             sortedTimeTable = sortedTimeTable.sort((a, b) => checkTimesMatching(a.startTime, b.startTime) ? -1 : 1);
             sortedTimeTable.forEach(element => {
-                if (weekDay == currentDay && timeInRange(element.startTime, element.endTime)) {
-                    if (timeInRange(element.startTime, element.endTime)) {
+                if (weekDay == currentDay && timeInRange(element.startTime, element.endTime, timezone)) {
+                    if (timeInRange(element.startTime, element.endTime, timezone)) {
                         stringToPrint += `__**${numeral(element.startTime.hours).format("00")}:${numeral(element.startTime.minutes).format("00")} - ${numeral(element.endTime.hours).format("00")}:${numeral(element.endTime.minutes).format("00")}: ${element.subject}**__\n`;
                     }
                 } else {
@@ -327,18 +327,15 @@ function getLongWeekDay() {
 
     return weekday[d.getDay()];
 }
-function timeInRange(startTime, endTime) {
-    let startTimeSec = (startTime.hours * 60 + startTime.minutes) * 60;
-    let endTimeSec = (endTime.hours * 60 + endTime.minutes) * 60;
+function timeInRange(startTime, endTime, timezone) {
+    timezone = Number(timezone.split("gmt")[1]);
+    let startTimeSec = ((startTime.hours + timezone) * 60 + startTime.minutes) * 60;
+    let endTimeSec = ((endTime.hours + timezone) * 60 + endTime.minutes) * 60;
 
     let date = new Date();
     let currentHour = date.getHours();
     let currentMinute = date.getMinutes();
     let currentTimeSec = (currentHour * 60 + currentMinute) * 60;
 
-    if (currentTimeSec > startTimeSec && currentTimeSec < endTimeSec)
-        return true;
-    else
-        return false;
-
+    return (currentTimeSec > startTimeSec && currentTimeSec < endTimeSec);
 }

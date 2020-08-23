@@ -100,9 +100,6 @@ function timeInRange(startTime, endTime, timezone) {
     let date = new Date();
     let currentHour = date.getHours();
     let currentMinute = currentHour * 60 + date.getMinutes();
-    if (currentMinute == startTime)
-        return true;
-    else
-        return false;
+    return currentMinute == startTime;
 
 }
