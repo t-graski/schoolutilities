@@ -9,7 +9,7 @@ const request = require('request');
                 for (const attachments of message.attachments) {
                     for (const attachment of attachments) {
                         if (attachment.url) {
-                            console.log(new URL(attachment.url.href));
+                            console.log(new URL(attachment.url));
                             download(new URL(attachment.url));
                         }
                     }
