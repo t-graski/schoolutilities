@@ -1,26 +1,34 @@
 {
-  "name": "schoolutilities",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/WahlMandat/schoolutilities.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/WahlMandat/schoolutilities/issues"
-  },
-  "homepage": "https://github.com/WahlMandat/schoolutilities#readme",
-  "dependencies": {
-    "discord.js": "^12.2.0",
-    "dotenv": "^8.2.0",
-    "google-translate-free": "^2.4.5",
-    "mathjs": "^7.1.0",
-    "numeral": "^2.0.6"
-  }
+    "name": "schoolutilities",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node ./index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/WahlMandat/schoolutilities.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/WahlMandat/schoolutilities/issues"
+    },
+    "homepage": "https://github.com/WahlMandat/schoolutilities#readme",
+    "dependencies": {
+        "discord.js": "^12.2.0",
+        "dotenv": "^8.2.0",
+        "google-translate-free": "^2.4.5",
+        "mathjs": "^7.1.0",
+        "node-fetch": "^2.6.0",
+        "numeral": "^2.0.6",
+        "request": "^2.88.2"
+    },
+    "devDependencies": {
+        "eslint": "^7.7.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "prettier": "2.0.5"
+    }
 }
