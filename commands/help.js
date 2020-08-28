@@ -1,51 +1,49 @@
 const { MessageEmbed } = require('discord.js');
 
 exports.run = async (client, message, args) => {
-    const embed = new MessageEmbed()
-        .setTitle('SchoolUtilities Help')
-        .setColor('#4BB543')
-        .setDescription(`Hi, I'm  SchoolUtilities' help. If you've any questions how to use the bot, you are absolutly right here.`)
-        .addField(`In case you need extra help you can contact us via ******`)
-        .addField(
-            '**.calc** Command',
-            `You can calculate calcuations easily in discord.\n Example: .calc 1+1\n Extra Information: Square Root: sqrt(x)`,
-            true
-        )
-        .addField('**.check Command**', `You can simply check if every user with a certain role, which is configurated is precent.`, true)
-        .setTimestamp()
-        .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
-
-    message.channel.send(embed);
-    //     message.reply(`
-    // Hi, I'm  SchoolUtilities' help. If you've any questions how the commands work or how you should write them, you are right here.
-    // So here are the commands:
-
-    // Calculation function:
-    // The calc funtion helps you calculate calculations easy in discord.
-
-    // How it works?
-    // Simply write .calc and then add the calculation:
-    // .calc 1+1
-
-    // Server configuration:
-    // With the server configuration you can configure the server settings, please do this befor you use the other commands, because most of them won't work without configuration. Important: All .config commands must be written in the bot-config channel, this channel was auto-generated from the bot.
-
-    // .config student <studentRole>
-    // With this command you can set the student role.
-    // For example you have the role student and want to set this role as the student role, then you have to write:
-    // .config student student
-
-    // .config teacher <teacherRole>
-    // This is the same command as the student command above(only for teachers), check it out there.
-
-    // .config timezone <timezone>
-    // Not implemented yet.
-
-    // .config language <language>
-    // Not implemented yet.above
-
-    // .config checktime <checktime>
-    // With the checktime you can set, how long the check command should wait, until he sends the results. So if you want the check commant wait 3min, you have to write the following command:
-    // .config checktime 3
-    //     `);
+    const emoji = client.emojis.cache.get('748653682966528171');
+    const example = {
+        title: 'SchoolUtilities Help',
+        description:
+            "\nHi, I'm SchoolUtilites help. If you have any questions how to use SchoolUtilities, you are absolutly right here. If you have any issues, you can contact us via [Github](https://github.com/WahlMandat/SchoolUtilities).",
+        color: 3066993,
+        timestamp: '2020-08-27T19:53:42.666Z',
+        footer: {
+            icon_url: 'https://i.imgur.com/KJ63K3r.png',
+            text: 'SchoolUtilities© 2020',
+        },
+        fields: [
+            {
+                name: '<:calc:748639112033992715> Calculation Command',
+                value:
+                    '```You can calulate calculations easily in discord.\n\nExample: .calc 1+1\n\nExtra Information: Square Root: sqrt(x)```',
+            },
+            {
+                name: '<:check:748641460710277170> Check Command',
+                value:
+                    '```This command is only usable with a teacher role. In case you are a teacher you can check the precense of your students with this command.\n\nExample: .check, .check 1 <-- Time how long students have to confirm their precense.```',
+            },
+            {
+                name: ` ${emoji} Translate Command`,
+                value:
+                    '```You can simply translate single words or entire sentences to the language you wish.\n\nExample: .translate de Hello, my name is SchoolUtilities```',
+            },
+            {
+                name: '<:config:748662672983064739> Concig Command (ADMIN ONLY and only if you know what you are doing)',
+                value:
+                    '```Set your student role\nExample: .config student StudentRole\n\nSet your teacher role\nExample: .config teacher TeacherRole\n\nSet your timezone\nExample: .config timezone GMT+2\n\nSet your language\nExample: .config language German\n\nSet your checktime\nThe checktime is the time how long students have time to confirm their precense if there is now time give.\nExample: .config checktime 2\n\nEnable your autochecks\nFurther information about this in the timetable tab.\nExample: .config autocheck enable, .config autocheck disable ```',
+            },
+            {
+                name: '<:timetable:748671257943212092> Timetable command',
+                value:
+                    '```You can configurate your personal timetable. It allows you to activate automated precense checks and it will send a message when the class starts.\n\nAdd a class\nExample: .timetable add Mo 8:00 8:50 #MathsChannel Maths\n\nRemove a class\nExample: .timetable remove Mo 8:00 8:50 #MathsChannel Maths\n\nClear the timetable\nExample: .timetable clear\n\nPrint the timetable\nExample: .timetable print```',
+            },
+            {
+                name: '<:extrainfo:748675170058764380> Extra information',
+                value:
+                    'If you experience any issues feel free to create an issue on [Github](https://github.com/WahlMandat/schoolutilities/#creating-issues-on-github), if you dont not know how to create an issues read the [ReadMe](https://github.com/WahlMandat/SchoolUtilities#schoolutilities) there will be an explanation how to create an issues.  ',
+            },
+        ],
+    };
+    message.channel.send({ embed: example });
 };

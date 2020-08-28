@@ -38,7 +38,7 @@ exports.run = async (channel, guildId, guild) => {
                     arr[key] = `<@${arr[key]}>`;
                 }
                 let missingStudents = new MessageEmbed()
-                    .setTitle(arr.length ? 'Missing students' : 'No missing students')
+                    .setTitle(arr.length ? 'Missing students' : 'Yay, no missing students')
                     .setColor(arr.length ? '#e50000' : '#4BB543')
                     .setDescription(arr)
                     .setTimestamp()
