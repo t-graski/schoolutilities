@@ -1,4 +1,4 @@
-const { langs } = require('../languages.js');
+const { langs } = require('../misc/languages.js');
 const translate = require('google-translate-free');
 const { MessageEmbed, Message } = require('discord.js');
 

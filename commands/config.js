@@ -84,7 +84,7 @@ exports.run = async (client, message, args) => {
                 if (args[1].toLowerCase() == 'enable') {
                     configData[serverArrayId].autocheck = true;
                 } else if (args[1].toLowerCase() == 'disable') {
-                    configData[serverArrayId].checktime = false;
+                    configData[serverArrayId].autocheck = false;
                 }
                 console.table(configData);
                 replyMsg += `Your autocheck has been updated.`;
