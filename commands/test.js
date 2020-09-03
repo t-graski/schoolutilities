@@ -3,8 +3,11 @@ const request = require('request');
 const fs = require('fs');
 const https = require('https');
 const { serverConfiguration } = require('../misc/utils.js');
+<<<<<<< Updated upstream
 // Ugly <-- Refactor
 let id;
+=======
+>>>>>>> Stashed changes
 exports.run = async (client, message, args) => {
     let serverConfigurationData = serverConfiguration(message.guild.id);
     if (serverConfigurationData) {
@@ -20,9 +23,23 @@ exports.run = async (client, message, args) => {
                                 const request = https.get(attachmentURL, function (respone) {
                                     respone.pipe(file);
                                 });
+<<<<<<< Updated upstream
                                 let channelName = correctChannelNameCase(args[0]);
                                 let voiceChannel = getChannelId(channelName, message);
                                 playFile(client, id);
+=======
+                                try {
+                                    let channel = client.channels.cache.get(getChannelId(args[0], message));
+                                    const connection = await channel.join();
+                                    const dispatcher = await connection.play('./media/file.mp3');
+                                    dispatcher.on('finish', () => {
+                                        
+                                    });
+                                } catch (err) {
+                                    console.log(err);
+                                    message.channel.send('The given channel could not be found.');
+                                }
+>>>>>>> Stashed changes
                             }
                         }
                     }
@@ -36,9 +53,11 @@ async function playFile(client, voiceChannel) {
     const connection = await channel.join();
     const dispatcher = connection.play('./media/file.mp3');
     dispatcher.on('finish', () => {
+        console.log('finish');
         channel.leave();
     });
 }
+<<<<<<< Updated upstream
 function correctChannelNameCase(channelName) {
     subString = channelName.substring(1).toLowerCase();
     channelName = channelName[0].toUpperCase() + subString;
@@ -50,4 +69,12 @@ function getChannelId(channelName, message) {
             id = channel.id;
         }
     });
+=======
+function getChannelId(channelName, message) {
+    let id;
+    let channel = message.guild.channels.cache.find((channel) => {
+        return channel.type == 'voice' && channel.name.toLowerCase() == channelName.toLowerCase();
+    });
+    return channel ? channel.id : false;
+>>>>>>> Stashed changes
 }

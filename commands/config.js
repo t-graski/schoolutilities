@@ -352,8 +352,15 @@ function getLongWeekDay() {
 }
 function timeInRange(startTime, endTime, timezone) {
     timezone = Number(timezone.split('gmt')[1]);
-    let startTimeSec = ((startTime.hours - timezone) * 60 + startTime.minutes) * 60;
-    let endTimeSec = ((endTime.hours - timezone) * 60 + endTime.minutes) * 60;
+    let operatorString = timezone[3];
+    let startTimeSec, endTimeSec;
+    if (operatorString == '+') {
+        startTimeSec = ((startTime.hours - timezone) * 60 + startTime.minutes) * 60;
+        endTimeSec = ((endTime.hours - timezone) * 60 + endTime.minutes) * 60;
+    } else {
+        startTimeSec = ((startTime.hours + timezone) * 60 + startTime.minutes) * 60;
+        endTimeSec = ((endTime.hours + timezone) * 60 + endTime.minutes) * 60;
+    }
 
     let date = new Date();
     let currentHour = date.getHours();
