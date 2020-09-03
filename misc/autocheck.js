@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { serverConfiguration } = require('utils.js');
+const { serverConfiguration } = require('../misc/utils.js');
 
 exports.run = async (channel, guildId, guild) => {
     let serverConfigurationData = serverConfiguration(guildId);
