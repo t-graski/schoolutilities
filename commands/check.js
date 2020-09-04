@@ -16,6 +16,7 @@ exports.run = async (client, message, args) => {
                 checkTime = serverConfigurationData.checktime;
             }
 
+
             let embed = new MessageEmbed()
                 .setTitle('Precense check')
                 .setColor('#4BB543')
@@ -61,12 +62,11 @@ exports.run = async (client, message, args) => {
                             for(const reaction of userReactions.values()) {
                                 reaction.users.remove('737357503989415956');
                             }
-                        } catch (error) {
-                            console.log(error);
+                        } catch (e) {
+                            console.log(e);
                         }
                     })
                     .catch((e) => {
-                        console.log('error');
                         console.log(e);
                     });
             });
