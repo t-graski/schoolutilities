@@ -305,7 +305,6 @@ function isSameEntry(entryOne, entryTwo) {
 
 function getTimeTableString(timeTable, timezone) {
     let stringToPrint = '';
-
     let weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     weekdays.forEach((currentDay, index) => {
