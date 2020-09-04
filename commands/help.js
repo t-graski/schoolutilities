@@ -36,7 +36,7 @@ exports.run = async (client, message, args) => {
             {
                 name: '<:timetable:748671257943212092> Timetable command',
                 value:
-                    '```You can configurate your personal timetable. It allows you to activate automated precense checks and it will send a message when the class starts.\n\nAdd a class\nExample: .config timetable add Mo 8:00 8:50 #MathsChannel Maths\n\nRemove a class\nExample: .config timetable remove Mo 8:00 8:50 #MathsChannel Maths\n\nClear the timetable\nExample: .timetable clear\n\nPrint the timetable\nExample: .timetable print```',
+                    '```You can configurate your personal timetable. It allows you to activate automated precense checks and it will send a message when the class starts.\n\nAdd a class\nExample: .config timetable add Mo 8:00 8:50 #MathsChannel Maths\n\nRemove a class\nExample: .config timetable remove Mo 8:00 8:50 #MathsChannel Maths\n\nClear the timetable\nExample: .config timetable clear\n\nPrint the timetable\nExample: .timetable print```',
             },
             {
                 name: '<:extrainfo:748675170058764380> Extra information',
