@@ -56,9 +56,18 @@ exports.run = async (client, message, args) => {
                             .setTimestamp()
                             .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
                         message.channel.send(missingStudents);
+                        let userReactions = sentEmbed.reactions.cache.filter((reaction) => reaction.users.cache.has('737357503989415956'));
+                        try {
+                            for(const reaction of userReactions.values()) {
+                                reaction.users.remove('737357503989415956');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
                     })
-                    .catch(() => {
+                    .catch((e) => {
                         console.log('error');
+                        console.log(e);
                     });
             });
         }

@@ -1,5 +1,3 @@
-const { ar } = require('google-translate-free/languages');
-
 exports.run = async (client, message, args) => {
     let owner = ['500299416767299585', '640871953628004386'];
     if (owner.includes(message.author.id)) {

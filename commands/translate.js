@@ -7,7 +7,7 @@ function getLanguage(code) {
     for (const key in langs) {
         if (langs.hasOwnProperty(key)) {
             const element = langs[key];
-            if (key == code || code == element.toLowerCase()) {
+            if (key == code.toLowerCase() || code.toLowerCase() == element.toLowerCase()) {
                 returnProperty = element;
             }
         }
