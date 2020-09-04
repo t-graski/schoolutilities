@@ -2,14 +2,18 @@ require('dotenv').config();
 const { Client } = require('discord.js');
 const numeral = require('numeral');
 
+// Bot prefix
 const PREFIX = '.';
 
 const client = new Client();
 
+// Once bot is ready set an interval to check if auto precense check needs to be done
 client.on('ready', () => {
     setInterval(checkPresence, 60000);
     console.log('Successfully started.');
+    generateNewKey();
 });
+// Once bot joins a new guild, creates a bot-config channel
 client.on('guildCreate', (guild) => {
     console.log('Bot has joined the Guild ' + guild);
     guild.channels.create('bot-config', {
@@ -22,6 +26,7 @@ client.on('guildCreate', (guild) => {
         ],
     });
 });
+// Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
     let msg = message.content.toUpperCase();
     let args = message.content.slice(PREFIX.length).trim().split(' ');
@@ -43,7 +48,7 @@ client.on('message', async (message) => {
 });
 // eslint-disable-next-line
 client.login(process.env.TOKEN);
-
+// Check if auto check needs to be done
 function checkPresence() {
     const configData = require('./datastore/configs.json');
 
@@ -91,4 +96,12 @@ function timeInRange(startTime, endTime, timezone) {
     let currentHour = date.getHours();
     let currentMinute = currentHour * 60 + date.getMinutes();
     return currentMinute == startTime;
+}
+function generateNewKey() {
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let key = '';
+    for (let i = 0; i <= 10; i++) {
+        key += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    process.env.key = key;
 }

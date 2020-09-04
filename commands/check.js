@@ -16,6 +16,7 @@ exports.run = async (client, message, args) => {
                 checkTime = serverConfigurationData.checktime;
             }
 
+
             let embed = new MessageEmbed()
                 .setTitle('Precense check')
                 .setColor('#4BB543')
@@ -56,9 +57,17 @@ exports.run = async (client, message, args) => {
                             .setTimestamp()
                             .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
                         message.channel.send(missingStudents);
+                        let userReactions = sentEmbed.reactions.cache.filter((reaction) => reaction.users.cache.has('737357503989415956'));
+                        try {
+                            for(const reaction of userReactions.values()) {
+                                reaction.users.remove('737357503989415956');
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
                     })
-                    .catch(() => {
-                        console.log('error');
+                    .catch((e) => {
+                        console.log(e);
                     });
             });
         }
