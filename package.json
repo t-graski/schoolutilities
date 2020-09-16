@@ -23,7 +23,7 @@
         "ffmpeg-static": "^4.2.7",
         "google-translate-free": "^2.4.5",
         "mathjs": "^7.1.0",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.1",
         "numeral": "^2.0.6",
         "request": "^2.88.2"
     },
