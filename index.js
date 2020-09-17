@@ -3,7 +3,7 @@ const { Client } = require('discord.js');
 const numeral = require('numeral');
 
 // Bot prefix
-const PREFIX = '.';
+const PREFIX = process.env.PREFIX;
 
 const client = new Client();
 
@@ -68,7 +68,7 @@ function checkPresence() {
             if (guild) {
                 if (channel) {
                     channel.send(
-                        `<@&${serverConfig.studentId}>, the subject **${foundEntry.subject}** is now starting and will take until ${numeral(
+                        `The subject **${foundEntry.subject}** is now starting and will take until ${numeral(
                             foundEntry.endTime.hours
                         ).format('00')}:${numeral(foundEntry.endTime.minutes).format('00')}.`
                     );
