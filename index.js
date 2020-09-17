@@ -3,7 +3,7 @@ const { Client } = require('discord.js');
 const numeral = require('numeral');
 
 // Bot prefix
-const PREFIX = process.env.PREFIX; // 
+const PREFIX = process.env.PREFIX;
 
 const client = new Client();
 
