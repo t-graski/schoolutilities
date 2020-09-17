@@ -72,8 +72,8 @@ function getLongWeekDay() {
     return weekday[d.getDay()];
 }
 function timeInRange(startTime, endTime, timezone) {
-    timezone = Number(timezone.split('gmt')[1]);
     let operatorString = timezone[3];
+    timezone = Number(timezone.split('gmt')[1]);
     let startTimeSec, endTimeSec;
     if (operatorString == '+') {
         startTimeSec = ((startTime.hours - timezone) * 60 + startTime.minutes) * 60;
