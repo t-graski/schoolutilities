@@ -4,6 +4,7 @@ const { serverConfiguration } = require('../misc/utils.js');
 exports.run = async (channel, guildId, guild) => {
     let serverConfigurationData = serverConfiguration(guildId);
     let checkTime = serverConfigurationData.checktime;
+    channel.send(`<@&${serverConfigurationData.studentId}>`);
     let embed = new MessageEmbed()
         .setTitle('Precense check')
         .setColor('#4BB543')
