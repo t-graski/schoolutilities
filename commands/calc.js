@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { evaluate } = require('mathjs');
-var numeral = require('numeral');
+const numeral = require('numeral');
 
 exports.run = async (client, message, args) => {
     let error = false;
