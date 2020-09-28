@@ -30,6 +30,7 @@ exports.run = async (client, message, args) => {
                         timeZone: 'gmt+0',
                         language: 'english',
                         channel: 'bot-config',
+                        notifications: false,
                         checktime: 3,
                         autocheck: false,
                         timeTable: {
@@ -55,6 +56,10 @@ exports.run = async (client, message, args) => {
             }
             let configInput = args[0].toLowerCase();
             if (configInput == 'student') {
+                let regEx = new RegExp('/^<@[0-9]{14,20}>$/');
+                if (args[1].match(regEx)) {
+                    console.log('dlfaksd');
+                }
                 let inputRole = args.slice(1).reduce((a, b) => a + ' ' + b);
                 configData[serverArrayId].studentId = message.guild.roles.cache.find(
                     (role) => role.name.toLowerCase() === inputRole.toLowerCase()
@@ -68,6 +73,16 @@ exports.run = async (client, message, args) => {
                 ).id;
                 console.table(configData);
                 replyMsg += `Your teacher role has been updated.`;
+            } else if (configInput == 'notifications') {
+                if (args[1].toLowerCase() == 'enable') {
+                    configData[serverArrayId].notifications = true;
+                    replyMsg += `Your notification has been enabled`;
+                } else if (args[1].toLowerCase() == 'disable') {
+                    configData[serverArrayId].notifications = false;
+                    replyMsg += `Your notification has been disabled`;
+                } else {
+                    replyMsg += `Please enter a valid argument (For more informations, check the documentary with .help)`;
+                }
             } else if (configInput == 'timezone') {
                 configData[serverArrayId].timeZone = args[1].toLowerCase();
                 console.table(configData);
@@ -83,11 +98,13 @@ exports.run = async (client, message, args) => {
             } else if (configInput == 'autocheck') {
                 if (args[1].toLowerCase() == 'enable') {
                     configData[serverArrayId].autocheck = true;
+                    replyMsg += `Your autocheck has been enabled.`;
                 } else if (args[1].toLowerCase() == 'disable') {
                     configData[serverArrayId].autocheck = false;
+                    replyMsg += `Your autocheck has been disabled.`;
+                } else {
+                    replyMsg += `Please enter a valid argument (For more informations, check the documentary with .help)`;
                 }
-                console.table(configData);
-                replyMsg += `Your autocheck has been updated.`;
             } else if (configInput == 'timetable') {
                 if (args[1].toLowerCase() == 'add') {
                     //Check the weekday for the timetable entry

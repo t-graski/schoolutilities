@@ -64,14 +64,17 @@ function checkPresence() {
             timeInRange(timeEntry.startTime, timeEntry.endTime, serverConfig.timeZone)
         );
         if (foundEntry) {
+            console.log('asdflasdf');
             let channel = guild.channels.cache.get(foundEntry.channel);
             if (guild) {
                 if (channel) {
-                    channel.send(
-                        `The subject **${foundEntry.subject}** is now starting and will take until ${numeral(
-                            foundEntry.endTime.hours
-                        ).format('00')}:${numeral(foundEntry.endTime.minutes).format('00')}.`
-                    );
+                    if (serverConfig.notifications) {
+                        channel.send(
+                            `The subject **${foundEntry.subject}** is now starting and will take until ${numeral(
+                                foundEntry.endTime.hours
+                            ).format('00')}:${numeral(foundEntry.endTime.minutes).format('00')}.`
+                        );
+                    }
                     if (serverConfig.autocheck) {
                         try {
                             let commandFile = require(`./misc/autocheck.js`);
