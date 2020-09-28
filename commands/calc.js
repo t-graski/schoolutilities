@@ -1,5 +1,7 @@
 const { MessageEmbed } = require('discord.js');
+const { repeat } = require('ffmpeg-static');
 const { evaluate } = require('mathjs');
+var numeral = require('numeral');
 
 exports.run = async (client, message, args) => {
     let error = false;
@@ -12,6 +14,16 @@ exports.run = async (client, message, args) => {
     } catch (e) {
         error = true;
     }
+    let resultString = result + '';
+    resultString = resultString.split('.')[1];
+    if (resultString.length > 10) {
+        resultString.length = 10;
+    }
+    if (!resultString) {
+        resultString.length = 0;
+    }
+    result = numeral(result).format('0,0.' + '0'.repeat(resultString.length));
+
     // Create and send a discord message
     const embed = new MessageEmbed()
         .setColor(error ? '#FF0000' : '#4BB543')

@@ -13,7 +13,7 @@ exports.run = async (client, message, args) => {
             return configData.guildId == message.guild.id;
         })
     ) {
-        replyMsg = 'Please config your server, for more informations type .help'
+        replyMsg = 'Please config your server, for more informations type .help';
     }
     if (args[0].toLowerCase() == 'print') {
         console.log(configData[serverArrayId]);
@@ -55,6 +55,9 @@ function getTimeTableString(timeTable, timezone) {
             stringToPrint += '\n';
         }
     });
+    if (!stringToPrint) {
+        stringToPrint = 'Your timetable is empty! Add something.';
+    }
 
     return stringToPrint;
 }

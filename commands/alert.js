@@ -19,7 +19,9 @@ exports.run = async (client, message, args) => {
                         .get(user)
                         .send(`${message.author} sent you the message:\n**${msg}**`)
                         .catch(() => {
-                            message.reply(`The bot was not able to send a direct message to <@${user}>, maybe the user has his direct messages disabled, what a shame.:pensive:`);
+                            message.reply(
+                                `The bot was not able to send a direct message to <@${user}>, maybe the user has his direct messages disabled, what a shame.:pensive:`
+                            );
                             messagesFailed.push(user);
                         });
                 });
