@@ -56,10 +56,6 @@ exports.run = async (client, message, args) => {
             }
             let configInput = args[0].toLowerCase();
             if (configInput == 'student') {
-                let regEx = new RegExp('/^<@[0-9]{14,20}>$/');
-                if (args[1].match(regEx)) {
-                    console.log('dlfaksd');
-                }
                 let inputRole = args.slice(1).reduce((a, b) => a + ' ' + b);
                 configData[serverArrayId].studentId = message.guild.roles.cache.find(
                     (role) => role.name.toLowerCase() === inputRole.toLowerCase()

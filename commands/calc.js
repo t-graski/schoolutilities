@@ -1,5 +1,4 @@
 const { MessageEmbed } = require('discord.js');
-const { repeat } = require('ffmpeg-static');
 const { evaluate } = require('mathjs');
 var numeral = require('numeral');
 

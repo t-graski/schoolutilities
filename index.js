@@ -64,7 +64,6 @@ function checkPresence() {
             timeInRange(timeEntry.startTime, timeEntry.endTime, serverConfig.timeZone)
         );
         if (foundEntry) {
-            console.log('asdflasdf');
             let channel = guild.channels.cache.get(foundEntry.channel);
             if (guild) {
                 if (channel) {
