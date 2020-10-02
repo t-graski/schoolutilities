@@ -14,15 +14,15 @@ exports.run = async (client, message, args) => {
         error = true;
     }
     let resultString = result + '';
-    resultString = resultString.split('.')[1];
+    if (resultString.split('.').length < 2) {
+        resultString += '.0';
+        resultString = resultString.split('.')[1];
+    }
     if (resultString.length > 10) {
         resultString.length = 10;
     }
-    if (!resultString) {
-        resultString.length = 0;
-    }
     result = numeral(result).format('0,0.' + '0'.repeat(resultString.length));
-
+    console.log(result);
     // Create and send a discord message
     const embed = new MessageEmbed()
         .setColor(error ? '#FF0000' : '#4BB543')
