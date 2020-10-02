@@ -22,7 +22,6 @@ exports.run = async (client, message, args) => {
         resultString.length = 10;
     }
     result = numeral(result).format('0,0.' + '0'.repeat(resultString.length));
-    console.log(result);
     // Create and send a discord message
     const embed = new MessageEmbed()
         .setColor(error ? '#FF0000' : '#4BB543')
