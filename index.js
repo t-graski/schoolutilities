@@ -89,7 +89,7 @@ function checkPresence() {
         }
     });
 }
-
+// Checks if a specific time is between two other times, also works with timezone
 function timeInRange(startTime, endTime, timezone) {
     timezone = Number(timezone.split('gmt')[1]);
     startTime = (startTime.hours - timezone) * 60 + startTime.minutes;
@@ -99,6 +99,7 @@ function timeInRange(startTime, endTime, timezone) {
     let currentMinute = currentHour * 60 + date.getMinutes();
     return currentMinute == startTime;
 }
+// Generates a random key out of 10 characters
 function generateNewKey() {
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let key = '';
@@ -107,3 +108,27 @@ function generateNewKey() {
     }
     process.env.key = key;
 }
+
+// import module
+const express = require('express');
+
+// import router
+const interfaceRouter = require('./routes/route.js');
+
+// specify http server port
+const port = 3000;
+
+// create express application
+const app = express();
+
+// mount middleware
+app.use(express.static('public'));
+app.use(express.json()); // parse JSON payload and place result in req.body
+
+// mount router(s)
+app.use('/api/router', interfaceRouter);
+
+// start http server
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+});
