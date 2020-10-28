@@ -41,9 +41,9 @@ client.on('message', async (message) => {
         let commandFile = require(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
     } catch (e) {
-        console.log(e);
-        message.channel.send('This was a wrong command, please check the commands with .help');
-        console.log(`There was a wrong command-input: ${cmd}`);
+        (await message.reply('This was a wrong command, please check the commands with .help')).delete({
+            timeout: 10000,
+        });
     }
 });
 // eslint-disable-next-line
@@ -126,7 +126,7 @@ app.use(express.static('public'));
 app.use(express.json()); // parse JSON payload and place result in req.body
 
 // mount router(s)
-app.use('/api/router', interfaceRouter);
+app.use('/api/', interfaceRouter);
 
 // start http server
 app.listen(port, () => {

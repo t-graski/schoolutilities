@@ -1,10 +1,27 @@
+// eslint-disable-next-line
+let languageData;
+onload();
 
-/**
- * Sends a HTTP request to the REST API endpoint.
- * @param {string} route
- * @param {'GET' |'POST' |'PUT' |'DELETE'} method
- * @param {Object} data
- */
+async function onload() {
+    languageData = await getLanguageData();
+
+    if (languageData) {
+        if (languageData.webInterface.tabTitle) {
+            document.querySelector('title').innerHTML = languageData.webInterface.tabTitle;
+        }
+        for (text in languageData.webInterface) {
+            let translation = document.querySelector('.' + text);
+            if (translation) {
+                translation.innerHTML = languageData.webInterface[text];
+            }
+        }
+    }
+}
+
+async function getLanguageData() {
+    return await fetchRestEndpoint('/api/languagejson', 'POST', { language: window.navigator.language.split('-')[0] });
+}
+
 async function fetchRestEndpoint(route, method, data) {
     const options = { method };
 
@@ -23,8 +40,5 @@ async function fetchRestEndpoint(route, method, data) {
 
     if (res.status !== 204) {
         return await res.json();
-    } 
+    }
 }
-
-//eslint-disable-next-line
-let languageData = await fetchRestEndpoint("/api/languagejson", "GET");
