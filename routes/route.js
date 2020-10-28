@@ -7,15 +7,29 @@ const router = express.Router();
 
 let languageData;
 try {
-    languageData = require('../datastore/configs.json');
+    languageData = require('../datastore/language.json');
 } catch (error) {
     languageData = [];
 }
 
 // read all tasks
-router.get('/languagejson', (req, res) => {
-    res.status(OK).json(languageData);
+router.post('/languagejson', (req, res) => {
+    const language = req.body.language;
+    if (isLanguageSupported(language)) {
+        res.status(OK).json(languageData.languages[language]);
+    } else {
+        res.status(NOT_FOUND);
+    }
 });
+
+function isLanguageSupported(language) {
+    for (key in languageData.languages) {
+        if (key == language) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // // read single task
 // router.get('/:id', (req, res) => {

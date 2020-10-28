@@ -27,6 +27,7 @@ exports.run = async (client, message, args) => {
             servers.push(`${server.name} (${server.id})`);
         });
         serversString = '';
+        serversString += servers.length > 1 ? servers.length + ' servers total. \n' : servers.length + ' server total.\n';
         servers.forEach((server) => {
             serversString += server + '\n';
         });
