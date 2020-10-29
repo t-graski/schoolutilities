@@ -28,7 +28,6 @@ router.get('/discord', (req, res) => {
     let responseCode = 404;
     let content = '404 Error';
     const urlObj = url.parse(req.url, true);
-
     if (urlObj.query.code) {
         const accessCode = urlObj.query.code;
         const data = {
@@ -69,7 +68,7 @@ router.get('/discord', (req, res) => {
     res.writeHead(responseCode, {
         'content-type': 'text/html;charset=utf-8',
     });
-    res.redirect('/');
+    res.write(content.toLocaleString());
     res.end();
 });
 
