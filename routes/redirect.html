@@ -4,34 +4,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title></title>
-        <script defer src="script.js"></script>
-        <link rel="stylesheet" href="style.css" type="text/css" />
     </head>
     <body>
-        <div class="site-layout">
-            <nav class="side-menu">
-                <a href="" class="nav-link webinteface-header-link">
-                    <img src="media/avatar.png" alt="SchoolUtlities Logo" class="schoolutilites-logo" />
-                    <h4 class="server-name"></h4>
-                </a>
-                <a href="" class="nav-link timetable-configuration-headline"></a>
-                <a href="" class="nav-link settings-headline"></a>
-            </nav>
-            <div class="content">
-                <h1 class="header"></h1>
-                <div class="detail-content">
-                    <p class="description"></p>
-                    <br />
-                    <p class="connect"></p>
-                    <a
-                        id="login"
-                        href="https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fdiscord&response_type=token&scope=identify%20guilds"
-                        >Hallo MÜrtin</a
-                    >
-                    <div id="info"></div>
-                </div>
-            </div>
-        </div>
         <script>
             function generateRandomString() {
                 const rand = Math.floor(Math.random() * 10);
@@ -65,7 +39,6 @@
                         .then((res) => res.json())
                         .then((response) => {
                             for (a in response) {
-                                console.log(tokenType);
                                 if (response[a].permissions == '2147483647') {
                                     let server = document.createElement('div');
                                     server.className = 'server';
@@ -112,6 +85,29 @@
                     document.getElementById('login').style.display = 'block';
                 }
             };
+            function setCookie(name, value, daysToLive) {
+                var cookie = name + "=" + encodeURIComponent(value);
+                
+                if(typeof daysToLive === "number") {
+                    cookie += "; max-age=" + (daysToLive*24*60*60);
+                    
+                    document.cookie = cookie;
+                }
+            }
+
+            function getCookie(name) {
+                var cookieArr = document.cookie.split(";");
+                
+                for(var i = 0; i < cookieArr.length; i++) {
+                    var cookiePair = cookieArr[i].split("=");
+                    
+                    if(name == cookiePair[0].trim()) {
+                        return decodeURIComponent(cookiePair[1]);
+                    }
+                }
+                
+                return null;
+            }
         </script>
     </body>
 </html>
