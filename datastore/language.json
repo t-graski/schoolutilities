@@ -7,7 +7,8 @@
                 "description": "Du kannst SchoolUtilities hier konfigurieren.",
                 "connect": "Bitte verbinde dein Discord Konto mit dem Interface",
                 "server-name": "SchoolUtilities",
-                "timetable-configuration-headline": "Stundenplan bearbeiten"
+                "timetable-configuration-headline": "Stundenplan bearbeiten",
+                "settings-headline": "Einstellungen"
             }
         },
         "en": {
@@ -17,7 +18,8 @@
                 "description": "You can configurate SchoolUtilities here.",
                 "connect": "Please connect you discord account with this interface.",
                 "server-name": "SchoolUtilities",
-                "timetable-configuration-headline": "Edit timetable"
+                "timetable-configuration-headline": "Edit timetable",
+                "settings-headline": "Settings"
             }
         }
     }

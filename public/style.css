@@ -49,4 +49,21 @@ body {
 .content {
     position: absolute;
     left: 16.66%;
+    width: 83.33%;
+}
+
+.header {
+    width: 100%;
+    margin: 50px 0;
+    text-align: center;
+    display: inline-block;
+    color: white;
+}
+
+.detail-content {
+    width: 100%;
+    padding: 0 10%;
+    display: inline-block;
+    font-size: 1.1rem;
+    line-height: 1.5rem;
 }
