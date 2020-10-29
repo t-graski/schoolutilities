@@ -1,5 +1,8 @@
 // import external modules
 const express = require('express');
+const url = require('url');
+const fs = require('fs');
+const fetch = require('node-fetch');
 const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND } = require('http-status-codes');
 
 // create router
@@ -12,7 +15,6 @@ try {
     languageData = [];
 }
 
-// read all tasks
 router.post('/languagejson', (req, res) => {
     const language = req.body.language;
     if (isLanguageSupported(language)) {
@@ -20,6 +22,55 @@ router.post('/languagejson', (req, res) => {
     } else {
         res.status(NOT_FOUND);
     }
+});
+
+router.get('/discord', (req, res) => {
+    let responseCode = 404;
+    let content = '404 Error';
+    const urlObj = url.parse(req.url, true);
+
+    if (urlObj.query.code) {
+        const accessCode = urlObj.query.code;
+        const data = {
+            client_id: process.env.CLIENT_ID,
+            client_secret: process.env.CLIENT_SECRET,
+            grant_type: 'authorization_code',
+            redirect_uri: 'http://localhost:3000',
+            code: accessCode,
+            scope: 'identify guilds',
+        };
+        fetch('https://discord.com/api/oauth2/token', {
+            method: 'POST',
+            body: new URLSearchParams(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        })
+            .then((discordRes) => discordRes.json())
+            .then((info) => {
+                console.log(info);
+                return info;
+            })
+            .then((info) =>
+                fetch('https://discord.com/api/users/@me', {
+                    headers: {
+                        authorization: `${info.token_type} ${info.access_token}`,
+                    },
+                })
+            )
+            .then((userRes) => userRes.json())
+            .then(console.log);
+    }
+    if (urlObj.pathname == '/discord') {
+        responseCode = 200;
+        content = fs.readFileSync('./public/index.html');
+    }
+
+    res.writeHead(responseCode, {
+        'content-type': 'text/html;charset=utf-8',
+    });
+    res.redirect('/');
+    res.end();
 });
 
 function isLanguageSupported(language) {
