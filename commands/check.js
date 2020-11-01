@@ -16,7 +16,6 @@ exports.run = async (client, message, args) => {
                 checkTime = serverConfigurationData.checktime;
             }
 
-
             let embed = new MessageEmbed()
                 .setTitle('Precense check')
                 .setColor('#4BB543')
@@ -59,7 +58,7 @@ exports.run = async (client, message, args) => {
                         message.channel.send(missingStudents);
                         let userReactions = sentEmbed.reactions.cache.filter((reaction) => reaction.users.cache.has('737357503989415956'));
                         try {
-                            for(const reaction of userReactions.values()) {
+                            for (const reaction of userReactions.values()) {
                                 reaction.users.remove('737357503989415956');
                             }
                         } catch (e) {
