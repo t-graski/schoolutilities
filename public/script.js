@@ -1,5 +1,8 @@
 // eslint-disable-next-line
 let languageData;
+let accessToken;
+let isLoggedIn = false;
+let userData;
 onload();
 
 async function onload() {
@@ -16,6 +19,21 @@ async function onload() {
             }
         }
     }
+
+    if (getCookie('access_token')) {
+        let cookie = getCookie('access_token');
+
+        accessToken = cookie;
+        let userResponse = await fetchRestEndpoint('https://discord.com/api/users/@me', 'GET');
+        if (userResponse) {
+            isLoggedIn = true;
+            accessToken = userResponse.accessToken;
+            userData = userResponse;
+            if (userData) {
+                document.querySelector('.user-name').innerHTML = userData.username;
+            }
+        }
+    }
 }
 
 async function getLanguageData() {
@@ -26,8 +44,15 @@ async function fetchRestEndpoint(route, method, data) {
     const options = { method };
 
     if (data) {
-        options.headers = { 'Content-Type': 'application/json' };
+        options.headers = {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        };
         options.body = JSON.stringify(data);
+    } else {
+        options.headers = {
+            Authorization: `Bearer ${accessToken}`,
+        };
     }
 
     const res = await fetch(route, options);
@@ -41,4 +66,28 @@ async function fetchRestEndpoint(route, method, data) {
     if (res.status !== 204) {
         return await res.json();
     }
+}
+
+function setCookie(name, value, daysToLive) {
+    var cookie = name + '=' + encodeURIComponent(value);
+
+    if (typeof daysToLive === 'number') {
+        cookie += ';path=/; max-age=' + daysToLive * 24 * 60 * 60;
+
+        document.cookie = cookie;
+    }
+}
+
+function getCookie(name) {
+    var cookieArr = document.cookie.split(';path=/;');
+
+    for (var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split('=');
+
+        if (name == cookiePair[0].trim()) {
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+
+    return null;
 }

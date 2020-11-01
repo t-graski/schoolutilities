@@ -24,7 +24,6 @@ exports.run = async (client, message, args) => {
                 ) {
                     configData.push({
                         guildId: message.guild.id,
-                        joinDate: new Date().toISOString(),
                         name: message.guild.name,
                         studentId: 0,
                         teacherId: 0,

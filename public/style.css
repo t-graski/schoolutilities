@@ -25,6 +25,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    border-right: solid 2px #aaaaaa7c;
 }
 
 .nav-link {
@@ -66,4 +67,9 @@ body {
     display: inline-block;
     font-size: 1.1rem;
     line-height: 1.5rem;
+}
+
+.user-name {
+    font-size: 0.8rem;
+    margin-top: 10px;
 }

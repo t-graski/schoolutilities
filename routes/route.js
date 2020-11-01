@@ -62,7 +62,7 @@ router.get('/discord', (req, res) => {
     }
     if (urlObj.pathname == '/discord') {
         responseCode = 200;
-        content = fs.readFileSync('./public/index.html');
+        content = fs.readFileSync('./routes/redirect.html');
     }
 
     res.writeHead(responseCode, {
