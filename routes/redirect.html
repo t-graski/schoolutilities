@@ -23,60 +23,9 @@
 
                 if (fragment.has('access_token')) {
                     const urlState = fragment.get('state');
-                    const stateParameter = localStorage.getItem('stateParameter');
-                    if (stateParameter !== atob(decodeURIComponent(urlState))) {
-                        return console.log('You may have been clickjacked!');
-                    }
-
                     const accessToken = fragment.get('access_token');
                     const tokenType = fragment.get('token_type');
-
-                    fetch('https://discord.com/api/users/@me/guilds', {
-                        headers: {
-                            authorization: `${tokenType} ${accessToken}`,
-                        },
-                    })
-                        .then((res) => res.json())
-                        .then((response) => {
-                            for (a in response) {
-                                if (response[a].permissions == '2147483647') {
-                                    let server = document.createElement('div');
-                                    server.className = 'server';
-                                    server.style.border = '1px solid #000';
-                                    server.style.margin = '10px';
-                                    let icon = document.createElement('img');
-                                    icon.src = `https://cdn.discordapp.com/icons/${response[a].id}/${response[a].icon}.png`;
-                                    server.appendChild(icon);
-                                    let name = document.createElement('p');
-                                    name.textContent = response[a].name;
-                                    server.appendChild(name);
-                                    document.querySelector('#info').appendChild(server);
-                                    console.log(window.location.hash);
-                                }
-                            }
-                        })
-                        .catch(console.error);
-                    fetch('https://discord.com/api/users/@me', {
-                        headers: {
-                            authorization: `${tokenType} ${accessToken}`,
-                        },
-                    })
-                        .then((res) => res.json())
-                        .then((response) => {
-                            console.log(response);
-                            let user = document.createElement('div');
-                            let avatar = document.createElement('img');
-                            avatar.src = `https://cdn.discordapp.com/avatars/${response.id}/${response.avatar}.png`;
-                            let name = document.createElement('p');
-                            name.textContent = response.username + '#' + response.discriminator;
-                            let nitro = document.createElement('p');
-                            nitro.textContent = response.premium_type == 1 ? 'Nitro' : null;
-                            user.appendChild(avatar);
-                            user.appendChild(name);
-                            user.appendChild(nitro);
-                            document.querySelector('#info').appendChild(user);
-                        })
-                        .catch(console.error);
+                    setCookie('access_token', accessToken, 7);
                 } else {
                     const randStr = generateRandomString();
                     localStorage.setItem('stateParameter', randStr);
@@ -84,28 +33,30 @@
                     document.getElementById('login').href += `&state=${encodeURIComponent(btoa(randStr))}`;
                     document.getElementById('login').style.display = 'block';
                 }
+                window.location.href = 'http://localhost:3000';
             };
+
             function setCookie(name, value, daysToLive) {
-                var cookie = name + "=" + encodeURIComponent(value);
-                
-                if(typeof daysToLive === "number") {
-                    cookie += "; max-age=" + (daysToLive*24*60*60);
-                    
+                var cookie = name + '=' + encodeURIComponent(value);
+
+                if (typeof daysToLive === 'number') {
+                    cookie += ';path=/; max-age=' + daysToLive * 24 * 60 * 60;
+
                     document.cookie = cookie;
                 }
             }
 
             function getCookie(name) {
-                var cookieArr = document.cookie.split(";");
-                
-                for(var i = 0; i < cookieArr.length; i++) {
-                    var cookiePair = cookieArr[i].split("=");
-                    
-                    if(name == cookiePair[0].trim()) {
+                var cookieArr = document.cookie.split(';path=/;');
+
+                for (var i = 0; i < cookieArr.length; i++) {
+                    var cookiePair = cookieArr[i].split('=');
+
+                    if (name == cookiePair[0].trim()) {
                         return decodeURIComponent(cookiePair[1]);
                     }
                 }
-                
+
                 return null;
             }
         </script>
