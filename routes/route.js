@@ -3,7 +3,7 @@ const express = require('express');
 const url = require('url');
 const fs = require('fs');
 const fetch = require('node-fetch');
-const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND } = require('http-status-codes');
+const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND, METHOD_NOT_ALLOWED } = require('http-status-codes');
 
 // create router
 const router = express.Router();
@@ -15,6 +15,11 @@ try {
     languageData = [];
 }
 
+let configData;
+try {
+    configData = require('../datastore/configs.json');
+} catch (error) {}
+
 router.post('/languagejson', (req, res) => {
     const language = req.body.language;
     if (isLanguageSupported(language)) {
@@ -22,6 +27,31 @@ router.post('/languagejson', (req, res) => {
     } else {
         res.status(NOT_FOUND);
     }
+});
+
+router.post('/serverjson', (req, res) => {
+    const token = req.body.token;
+    let allServers = [];
+    fetch('https://discord.com/api/users/@me/guilds', {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        }
+    })
+    .then((discordRes) => discordRes.json())
+    .then((servers) => {
+        configData.forEach((server) => {
+            let foundServer = servers.find((element) => element.id == server.guildId);
+            if(foundServer){
+                allServers.push(foundServer);
+            }
+        });
+        if(allServers){
+            res.status(OK).json(allServers);
+        }else{
+            res.status(NOT_FOUND);
+        }
+    });
 });
 
 router.get('/discord', (req, res) => {
