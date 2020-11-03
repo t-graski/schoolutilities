@@ -20,25 +20,74 @@ async function onload() {
         }
     }
 
-    if (getCookie('access_token')) {
+    if (getCookie('access_token') && getCookie('access_token') != '') {
         let cookie = getCookie('access_token');
 
         accessToken = cookie;
         let userResponse = await fetchRestEndpoint('https://discord.com/api/users/@me', 'GET');
         if (userResponse) {
             isLoggedIn = true;
-            accessToken = userResponse.accessToken;
+            accessToken = cookie;
             userData = userResponse;
             if (userData) {
                 document.querySelector('.user-name').innerHTML = userData.username;
+                document.querySelectorAll('.login').forEach((element) => {
+                    element.style.visibility = 'visible';
+                });
             }
+        } else {
+            redirect('http://localhost:3000/');
+        }
+    } else {
+        redirect('http://localhost:3000/');
+    }
+
+    document.querySelector('.logout-btn').addEventListener('click', () => {
+        setCookie('access_token', '', 7);
+        isLoggedIn = false;
+        userData = null;
+        accessToken = null;
+        document.querySelector('.user-name').innerHTML = '';
+        document.querySelectorAll('.login').forEach((element) => {
+            element.style.visibility = 'hidden';
+        });
+        redirect('http://localhost:3000/');
+    });
+    
+    if(window.location.href.includes('account')){
+        if(isLoggedIn){
+            loadServers();
         }
     }
+}
+
+async function loadServers(){
+    const servers = await getServerData();
+    servers.forEach(server => {
+        let domNode = document.createElement("div");
+        domNode.className = "server";
+        let textNode = document.createElement("p");
+        textNode.innerHTML = server.name;
+        let imageNode = document.createElement("img");
+        imageNode.src = `https://cdn.discordapp.com/icons/${server.id}/${server.icon}`;
+        domNode.appendChild(imageNode);
+        domNode.appendChild(textNode);
+        document.querySelector(".servers").appendChild(domNode);
+    });
+}
+
+function redirect(href) {
+    if (window.location.href != href) window.location.href = href;
 }
 
 async function getLanguageData() {
     return await fetchRestEndpoint('/api/languagejson', 'POST', { language: window.navigator.language.split('-')[0] });
 }
+
+async function getServerData() {
+    return await fetchRestEndpoint('/api/serverjson', 'POST', { token: accessToken });
+}
+
 
 async function fetchRestEndpoint(route, method, data) {
     const options = { method };
