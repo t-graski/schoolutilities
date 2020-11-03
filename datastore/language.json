@@ -8,7 +8,10 @@
                 "connect": "Bitte verbinde dein Discord Konto mit dem Interface",
                 "server-name": "SchoolUtilities",
                 "timetable-configuration-headline": "Stundenplan bearbeiten",
-                "settings-headline": "Einstellungen"
+                "settings-headline": "Einstellungen",
+                "logout-btn": "Abmelden",
+                "acc-header": "Dein Account",
+                "acc-description": "Hier kannst du den Server auswählen, den du bearbeiten willst."
             }
         },
         "en": {
@@ -19,7 +22,10 @@
                 "connect": "Please connect you discord account with this interface.",
                 "server-name": "SchoolUtilities",
                 "timetable-configuration-headline": "Edit timetable",
-                "settings-headline": "Settings"
+                "settings-headline": "Settings",
+                "logout-btn": "Logout",
+                "acc-header": "Your account",
+                "acc-description": "You can choose the server you want to edit here."
             }
         }
     }
