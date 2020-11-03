@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title></title>
-        <script defer src="script.js"></script>
-        <link rel="stylesheet" href="style.css" type="text/css" />
-    </head>
-    <body>
-        <div class="site-layout">
-            <nav class="side-menu">
-                <a href="" class="nav-link webinteface-header-link">
-                    <img src="media/avatar.png" alt="SchoolUtlities Logo" class="schoolutilites-logo" />
-                    <h4 class="server-name"></h4>
-                    <h4 class="user-name"></h4>
-                </a>
-                <a href="" class="nav-link timetable-configuration-headline"></a>
-                <a href="" class="nav-link settings-headline"></a>
-            </nav>
-            <div class="content">
-                <h1 class="header"></h1>
-                <div class="detail-content">
-                    <p class="description"></p>
-                    <br />
-                    <p class="connect"></p>
-                    <a
-                        id="login"
-                        href="https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fdiscord&response_type=token&scope=identify%20guilds"
-                        >Hallo MÜrtin</a
-                    >
-                    <div id="info"></div>
-                </div>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+    <div class="site-layout">
+        <nav class="side-menu">
+            <a href="" class="nav-link webinteface-header-link">
+                <img src="media/avatar.png" alt="SchoolUtlities Logo" class="schoolutilites-logo" />
+                <h4 class="server-name"></h4>
+            </a>
+            <a href="" class="login nav-link timetable-configuration-headline"></a>
+            <a href="" class="login nav-link settings-headline"></a>
+            <div class="user-nav">
+                <a href="/account.html" class="login nav-link user-name"></a>
+                <button class="login nav-link logout-btn"></button>
+            </div>
+        </nav>
+        <div class="content">
+            <h1 class="header"></h1>
+            <div class="detail-content">
+                <p class="description"></p>
+                <br />
+                <p class="connect"></p>
+                <a id="login"
+                    href="https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fdiscord&response_type=token&scope=identify%20guilds">Hallo
+                    Mürtin</a>
+                <div id="info"></div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>
