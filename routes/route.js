@@ -4,6 +4,7 @@ const url = require('url');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND, METHOD_NOT_ALLOWED } = require('http-status-codes');
+const { sort } = require('mathjs');
 
 // create router
 const router = express.Router();
@@ -35,24 +36,56 @@ router.post('/serverjson', (req, res) => {
     fetch('https://discord.com/api/users/@me/guilds', {
         method: 'GET',
         headers: {
-            "Authorization": `Bearer ${token}`,
-        }
+            Authorization: `Bearer ${token}`,
+        },
     })
-    .then((discordRes) => discordRes.json())
-    .then((servers) => {
-        configData.forEach((server) => {
-            let foundServer = servers.find((element) => element.id == server.guildId);
-            if(foundServer){
-                allServers.push(foundServer);
+        .then((discordRes) => discordRes.json())
+        .then((servers) => {
+            configData.forEach((server) => {
+                let foundServer = servers.find((element) => element.id == server.guildId);
+                if (foundServer) {
+                    allServers.push(foundServer);
+                }
+            });
+            if (allServers) {
+                res.status(OK).json(betterSort(servers));
+            } else {
+                res.status(NOT_FOUND);
             }
         });
-        if(allServers){
-            res.status(OK).json(allServers);
-        }else{
-            res.status(NOT_FOUND);
+});
+function betterSort(userServer) {
+    let botServerIDs = [];
+    configData.forEach((server) => botServerIDs.push(server.guildId));
+    let userServerIDs = [];
+    userServer.forEach((server) => userServerIDs.push(server.id));
+
+    let sharedServer = [];
+    let userOnlyServer = [];
+    let sortedServers = [];
+
+    userServerIDs.forEach((server) => {
+        let found = userServer.find((element) => element.id == server);
+        if ((found.permissions == '2147483647')) {
+            if (botServerIDs.includes(server)) {
+                sharedServer.push(found);
+            } else {
+                userOnlyServer.push(found);
+            }
         }
     });
-});
+
+    sharedServer.sort();
+    sharedServer.reverse();
+    
+    userOnlyServer.sort();
+    userOnlyServer.reverse();
+
+    sortedServers.push(sharedServer);
+    sortedServers.push(userOnlyServer);
+
+    return sortedServers;
+}
 
 router.get('/discord', (req, res) => {
     let responseCode = 404;
