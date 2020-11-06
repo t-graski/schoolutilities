@@ -63,15 +63,30 @@ async function onload() {
 
 async function loadServers(){
     const servers = await getServerData();
-    servers.forEach(server => {
+    addServer(servers[0], true);
+    addServer(servers[1], false);
+}
+
+function addServer(serverArray, isBotAdded){
+    serverArray.forEach(server => {
         let domNode = document.createElement("div");
         domNode.className = "server";
         let textNode = document.createElement("p");
-        textNode.innerHTML = server.name;
+        textNode.innerText = server.name;
+        let buttonNode = document.createElement("button");
+        if(isBotAdded){
+            buttonNode.innerText = "Configurate";
+            buttonNode.className = "configurate-btn server-select-button";
+        }else{
+            buttonNode.innerText = "Add to server";
+            buttonNode.className = "add-to-server server-select-button";
+            buttonNode.setAttribute("onclick", `window.open('https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot&guild_id=${server.id}','_blank')`);
+        }
         let imageNode = document.createElement("img");
         imageNode.src = `https://cdn.discordapp.com/icons/${server.id}/${server.icon}`;
         domNode.appendChild(imageNode);
         domNode.appendChild(textNode);
+        domNode.appendChild(buttonNode);
         document.querySelector(".servers").appendChild(domNode);
     });
 }
