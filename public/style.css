@@ -99,3 +99,72 @@ body {
     left: 0;
     border-right: solid 2px #aaaaaa7c;
 }
+
+.servers{
+    width: 80%;
+    margin: 0 10%;
+    display: block;
+}
+
+.server{
+    -webkit-user-select: none;
+    width: 100%;
+    display: block;
+    transition: all 200ms;
+    border: transparent 1px solid;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.server:hover{
+    background-color: #3d3d3d;
+    border: white 1px solid;
+    border-radius: 5px;
+}
+
+.server img{
+    height: 5vw;
+    padding: 1vw;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.server p{
+    display: inline-block;
+    font-size: 1.5rem;
+    line-height: 5vw;
+    color: rgb(173, 173, 173);
+    vertical-align: top;
+}
+
+.server .server-select-button{
+    display: inline-block;
+    font-size: 1rem;
+    width: 10vw;
+    height: 2.5vw;
+    line-height: 2.5vw;
+    background-color: rgb(0, 185, 0);
+    border-radius: 5px;
+    vertical-align: top;
+    margin: 1.25vw;
+    cursor: pointer;
+    transition: all 200ms;
+    border: 1px solid transparent;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.server .server-select-button:hover{
+    background-color: rgb(0, 131, 0);
+}
+
+.server .server-select-button.add-to-server{
+    background-color: rgb(0, 130, 0);
+}
+
+.server .server-select-button.add-to-server:hover{
+    background-color: rgb(0, 151, 0);
+}
