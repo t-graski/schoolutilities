@@ -63,32 +63,54 @@ async function onload() {
 
 async function loadServers(){
     const servers = await getServerData();
-    addServer(servers[0], true);
-    addServer(servers[1], false);
+    addServer(servers[0], true, true);
+    addServer(servers[1], false, false);
+    addServer(servers[2], false, true);
 }
 
-function addServer(serverArray, isBotAdded){
+function addServer(serverArray, isBotAdded, isAdmin){
     serverArray.forEach(server => {
         let domNode = document.createElement("div");
         domNode.className = "server";
         let textNode = document.createElement("p");
         textNode.innerText = server.name;
         let buttonNode = document.createElement("button");
-        if(isBotAdded){
-            buttonNode.innerText = "Configurate";
-            buttonNode.className = "configurate-btn server-select-button";
+        let configurateButtonNode;
+        if(isBotAdded || !isAdmin){
+            buttonNode.innerText = "Choose";
+            buttonNode.className = "choose-btn server-select-button";
+            buttonNode.setAttribute("onclick", `openDashboard('${server.id}')`);
         }else{
             buttonNode.innerText = "Add to server";
             buttonNode.className = "add-to-server server-select-button";
             buttonNode.setAttribute("onclick", `window.open('https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot&guild_id=${server.id}','_blank')`);
         }
         let imageNode = document.createElement("img");
-        imageNode.src = `https://cdn.discordapp.com/icons/${server.id}/${server.icon}`;
+        if(server.icon){
+            imageNode.src = `https://cdn.discordapp.com/icons/${server.id}/${server.icon}`;
+        }
         domNode.appendChild(imageNode);
         domNode.appendChild(textNode);
+        if(isBotAdded){
+            configurateButtonNode = document.createElement("button");
+            configurateButtonNode.innerText="Configurate";
+            configurateButtonNode.className="configurate-btn server-select-button";
+            configurateButtonNode.setAttribute("onclick", `openConfigurate('${server.id}')`);
+            domNode.appendChild(configurateButtonNode);
+        }
         domNode.appendChild(buttonNode);
         document.querySelector(".servers").appendChild(domNode);
     });
+}
+
+function openDashboard(serverId){
+    setCookie('serverId', serverId, 7);
+    window.open("/dashboard.html");
+}
+
+function openConfigurate(serverId){
+    setCookie('serverId', serverId, 7);
+    window.open("/configurate.html");
 }
 
 function redirect(href) {
