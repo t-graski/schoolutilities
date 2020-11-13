@@ -54,33 +54,107 @@ router.post('/serverjson', (req, res) => {
             }
         });
 });
+router.post('/serverinformation', async (req, res) => {
+    const token = req.body.token;
+    const id = req.body.id;
+    let serverinformation = {
+        guild: null,
+        roles: null,
+        channels: null,
+    };
+    let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    let servers = await discordRes.json();
+    if(servers){
+    let sharedAdminServer = getSharedAdminServers(servers);
+    serverinformation.guild = servers.find((element) => element.id == id);
+        if (sharedAdminServer.find((element) => element.id == id)) {
+            let roles = await fetch(`https://discord.com/api/guilds/${id}/roles`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bot ${process.env.TOKEN}`,
+                },
+            });
+            roles = await roles.json();
+            if(roles){
+                serverinformation.roles = roles;
+            }
+            let channels = await fetch(`https://discord.com/api/guilds/${id}/channels`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bot ${process.env.TOKEN}`,
+                },
+            });
+            channels = await channels.json();
+            if(channels){
+                serverinformation.channels = channels;
+            }
+            if(serverinformation.channels != null && serverinformation.roles != null){
+                if (serverinformation) {
+                    console.log("send back");
+                    res.status(OK).json(serverinformation);
+                } else {
+                    res.status(NOT_FOUND);
+                }
+            }
+        }
+    }
+});
+function getSharedAdminServers(userServer) {
+    let botServerIDs = [];
+    configData.forEach((server) => botServerIDs.push(server.guildId));
+    let userServerIDs = [];
+    userServer.forEach((server) => userServerIDs.push(server.id));
+    let sharedAdminServer = [];
+
+    userServerIDs.forEach((server) => {
+        let found = userServer.find((element) => element.id == server);
+        if (found.permissions == '2147483647') {
+            if (botServerIDs.includes(server)) {
+                sharedAdminServer.push(found);
+            }
+        }
+    });
+    return sharedAdminServer;
+}
 function betterSort(userServer) {
     let botServerIDs = [];
     configData.forEach((server) => botServerIDs.push(server.guildId));
     let userServerIDs = [];
     userServer.forEach((server) => userServerIDs.push(server.id));
 
+    let sharedAdminServer = [];
     let sharedServer = [];
     let userOnlyServer = [];
     let sortedServers = [];
 
     userServerIDs.forEach((server) => {
         let found = userServer.find((element) => element.id == server);
-        if ((found.permissions == '2147483647')) {
+        if (found.permissions == '2147483647') {
             if (botServerIDs.includes(server)) {
-                sharedServer.push(found);
+                sharedAdminServer.push(found);
             } else {
                 userOnlyServer.push(found);
             }
+        } else if (botServerIDs.includes(server)) {
+            sharedServer.push(found);
         }
     });
 
+    sharedAdminServer.sort();
+    sharedAdminServer.reverse();
+
     sharedServer.sort();
     sharedServer.reverse();
-    
+
     userOnlyServer.sort();
     userOnlyServer.reverse();
 
+    sortedServers.push(sharedAdminServer);
     sortedServers.push(sharedServer);
     sortedServers.push(userOnlyServer);
 
