@@ -64,8 +64,8 @@ function checkPresence() {
             timeInRange(timeEntry.startTime, timeEntry.endTime, serverConfig.timeZone)
         );
         if (foundEntry) {
-            let channel = guild.channels.cache.get(foundEntry.channel);
             if (guild) {
+                let channel = guild.channels.cache.get(foundEntry.channel);
                 if (channel) {
                     if (serverConfig.notifications) {
                         channel.send(
@@ -79,7 +79,7 @@ function checkPresence() {
                             let commandFile = require(`./misc/autocheck.js`);
                             commandFile.run(channel, serverConfig.guildId, guild);
                         } catch (e) {
-                            console.log(e);
+                            
                         }
                     }
                 } else {
