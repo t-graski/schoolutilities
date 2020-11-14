@@ -53,35 +53,38 @@ async function onload() {
         });
         redirect('http://localhost:3000/');
     });
-    
-    if(window.location.href.includes('account')){
-        if(isLoggedIn){
+
+    if (window.location.href.includes('account')) {
+        if (isLoggedIn) {
             loadServers();
         }
     }
-    
-    if(window.location.href.includes('configurate')){
-        if(isLoggedIn){
+
+    if (window.location.href.includes('configurate')) {
+        if (isLoggedIn) {
             loadConfiguration();
         }
     }
 }
 
-async function loadConfiguration(){
-    const serverInformation = await fetchRestEndpoint("/api/serverinformation", "POST", {
+async function loadConfiguration() {
+    const serverInformation = await fetchRestEndpoint('/api/serverinformation', 'POST', {
         token: accessToken,
         id: getCookie('serverId'),
     });
-    const languages = await fetchRestEndpoint("/api/supportedlanguages", "GET");
-    if(serverInformation && languages){
+    const languages = await fetchRestEndpoint('/api/supportedlanguages', 'GET');
+    if (serverInformation && languages) {
         let serverConfiguration;
-        setTimeout(async () => {serverConfiguration = await fetchRestEndpoint("/api/serverconfiguration", "POST", {
-            token: accessToken,
-            id: getCookie('serverId'),
-        })
-        if(serverConfiguration){
-            let configurationHtml = `
-            <h2 class="config-general-headline">${languageData.webInterface.configGeneralHeadline}</h2><button class="config-save-button">${languageData.webInterface.configSaveButton}</button><hr><br>
+        setTimeout(async () => {
+            serverConfiguration = await fetchRestEndpoint('/api/serverconfiguration', 'POST', {
+                token: accessToken,
+                id: getCookie('serverId'),
+            });
+            if (serverConfiguration) {
+                let configurationHtml = `
+            <h2 class="config-general-headline">${languageData.webInterface.configGeneralHeadline}</h2><button class="config-save-button">${
+                    languageData.webInterface.configSaveButton
+                }</button><hr><br>
             <div class="config-general-layout">
                 <div class="config-general-item">
                     <label class="student-roles" for="studentRoles">${languageData.webInterface.chooseStudent}</label><br>
@@ -106,10 +109,12 @@ async function loadConfiguration(){
                     ${getLanguageHtml(languages, serverConfiguration.language)}
                 </div>
                 <div class="config-general-item">
-                    <label class="timezones small-margin" for="timezones">${languageData.webInterface.chooseNotificationsHeadline}</label><br>
+                    <label class="timezones small-margin" for="timezones">${
+                        languageData.webInterface.chooseNotificationsHeadline
+                    }</label><br>
                     <p class="config-item-description">${languageData.webInterface.chooseNotificationsDescription}</p><br>
                     <label class="switch no-margin">
-                        <input type="checkbox" ${serverConfiguration.notifications ? "checked" : ""}>
+                        <input type="checkbox" ${serverConfiguration.notifications ? 'checked' : ''}>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -122,7 +127,7 @@ async function loadConfiguration(){
                     <label class="timezones small-margin" for="timezones">${languageData.webInterface.chooseAutocheckHeadline}</label>
                     <p class="config-item-description">${languageData.webInterface.chooseAutocheckDescription}</p><br>
                     <label class="switch no-margin">
-                        <input type="checkbox" ${serverConfiguration.autocheck ? "checked" : ""}>
+                        <input type="checkbox" ${serverConfiguration.autocheck ? 'checked' : ''}>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -130,108 +135,128 @@ async function loadConfiguration(){
             <div class="config-timetable">
                 ${getTimetableHtml(serverConfiguration)}
             </div>`;
-            document.querySelector(".configuration").innerHTML = configurationHtml;
-        }
-    }, 300);
+                document.querySelector('.configuration').innerHTML = configurationHtml;
+            }
+        }, 300);
     }
 }
 
-function getLanguageHtml(languages, choosenLanguage){
+function getLanguageHtml(languages, choosenLanguage) {
     let languageHtml = `
     <input list="languages" name="language" value="${choosenLanguage}" id="language">
     <datalist id="languages">`;
-    for(key in languages){
+    for (key in languages) {
         languageHtml += `<option value="${languages[key]}">`;
     }
-    languageHtml += "</datalist>";
+    languageHtml += '</datalist>';
     return languageHtml;
 }
 
-function getTimeZoneHtml(timeZone){
-    let timeZoneHtml = "";
+function getTimeZoneHtml(timeZone) {
+    let timeZoneHtml = '';
     let timeZoneIndex;
-    if(timeZone){
-        timeZoneIndex = Number(timeZone.split("gmt")[1]);
-        timeZoneHtml = `<option value="${timeZoneIndex}">GMT${timeZoneIndex >= 0 ? "+" : ""}${timeZoneIndex}</option>`;
+    if (timeZone) {
+        timeZoneIndex = Number(timeZone.split('gmt')[1]);
+        timeZoneHtml = `<option value="${timeZoneIndex}">GMT${timeZoneIndex >= 0 ? '+' : ''}${timeZoneIndex}</option>`;
     }
-    for(i = 12; i >= -12; i--){
-        if(timeZoneIndex != i){
-            timeZoneHtml += `<option value="${i}">GMT${i >= 0 ? "+" : ""}${i}</option>`;
+    for (i = 12; i >= -12; i--) {
+        if (timeZoneIndex != i) {
+            timeZoneHtml += `<option value="${i}">GMT${i >= 0 ? '+' : ''}${i}</option>`;
         }
     }
     return timeZoneHtml;
 }
 
-function getRoleHtml(roles, choosenRoleId){
-    let choosenRoleIndex = roles.findIndex(role => role.id==choosenRoleId);
+function getRoleHtml(roles, choosenRoleId) {
+    let choosenRoleIndex = roles.findIndex((role) => role.id == choosenRoleId);
     let roleHtml;
-    if(choosenRoleIndex){
+    if (choosenRoleIndex) {
         const choosenRole = roles[choosenRoleIndex];
         roleHtml = `<option value="${choosenRole.id}">${choosenRole.name}</option>`;
         roles.splice(choosenRoleIndex, 1);
     }
-    roles.sort((role1, role2) => (role1.position < role2.position) ? 1 : -1);
-    roles.forEach(element => {
+    roles.sort((role1, role2) => (role1.position < role2.position ? 1 : -1));
+    roles.forEach((element) => {
         roleHtml += `<option value="${element.id}">${element.name}</option>`;
     });
     return roleHtml;
 }
 
-function getTimetableHtml(serverConfiguration){
-    let timeTableHtml = ``;
+function getTimetableHtml(serverConfiguration) {
+    let timeTableHtml = `
+    <h2 class="config-general-headline">${languageData.webInterface.configTimetableHeadline}</h2><button class="config-save-button">${
+        languageData.webInterface.configSaveButton
+    }</button><hr><br>
+    <div class="config-timetable">
+        ${getTimetableContentHtml(serverConfiguration)}
+    </div>`;
 }
 
+function getTimetableContentHtml(serverConfiguration){
+    let timeTablecontentHtml = `
+        <div class="config-timetable-layout">
+            <div class="config-timetable-headers">
+                <div class="config-timetable-header">
+                    ${languageDate.webInterface.configSundayHeadline}
+                </div>
+            </div>
+        </div>
+    `;
+}
 
-async function loadServers(){
+async function loadServers() {
     const servers = await getServerData();
     addServer(servers[0], true, true);
     addServer(servers[1], false, false);
     addServer(servers[2], false, true);
 }
 
-function addServer(serverArray, isBotAdded, isAdmin){
-    serverArray.forEach(server => {
-        let domNode = document.createElement("div");
-        domNode.className = "server";
-        let textNode = document.createElement("p");
+function addServer(serverArray, isBotAdded, isAdmin) {
+    serverArray.forEach((server) => {
+        let domNode = document.createElement('div');
+        domNode.className = 'server';
+        let textNode = document.createElement('p');
         textNode.innerText = server.name;
-        let buttonNode = document.createElement("button");
+        let buttonNode = document.createElement('button');
         let configurateButtonNode;
-        if(isBotAdded || !isAdmin){
-            buttonNode.innerText = "Choose";
-            buttonNode.className = "choose-btn server-select-button";
-            buttonNode.setAttribute("onclick", `openDashboard('${server.id}')`);
-        }else{
-            buttonNode.innerText = "Add to server";
-            buttonNode.className = "add-to-server server-select-button";
-            buttonNode.setAttribute("onclick", `window.open('https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot&guild_id=${server.id}','_blank')`);
+        if (isBotAdded || !isAdmin) {
+            buttonNode.innerText = 'Choose';
+            buttonNode.className = 'choose-btn server-select-button';
+            buttonNode.setAttribute('onclick', `openDashboard('${server.id}')`);
+        } else {
+            buttonNode.innerText = 'Add to server';
+            buttonNode.className = 'add-to-server server-select-button';
+            buttonNode.setAttribute(
+                'onclick',
+                `window.open('https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot&guild_id=${server.id}','_blank')`
+            );
         }
-        let imageNode = document.createElement("img");
-        if(server.icon){
+        let imageNode = document.createElement('img');
+        if (server.icon) {
             imageNode.src = `https://cdn.discordapp.com/icons/${server.id}/${server.icon}`;
         }
         domNode.appendChild(imageNode);
         domNode.appendChild(textNode);
-        if(isBotAdded){
-            configurateButtonNode = document.createElement("button");
-            configurateButtonNode.innerText="Configurate";
-            configurateButtonNode.className="configurate-btn server-select-button";
-            configurateButtonNode.setAttribute("onclick", `openConfigurate('${server.id}')`);
+        if (isBotAdded) {
+            configurateButtonNode = document.createElement('button');
+            configurateButtonNode.innerText = 'Configurate';
+            configurateButtonNode.className = 'configurate-btn server-select-button';
+            configurateButtonNode.setAttribute('onclick', `openConfigurate('${server.id}')`);
             domNode.appendChild(configurateButtonNode);
         }
         domNode.appendChild(buttonNode);
-        document.querySelector(".servers").appendChild(domNode);
+        document.querySelector('.servers').appendChild(domNode);
     });
 }
 
-function openDashboard(serverId){
+function openDashboard(serverId) {
     setCookie('serverId', serverId, 7);
-    window.open("/dashboard.html");
+    window.open('/dashboard.html');
 }
 
-function openConfigurate(serverId){
+function openConfigurate(serverId) {
     setCookie('serverId', serverId, 7);
-    window.open("/configurate.html", "_self");
+    window.open('/configurate.html', '_self');
 }
 
 function redirect(href) {
@@ -245,7 +270,6 @@ async function getLanguageData() {
 async function getServerData() {
     return await fetchRestEndpoint('/api/serverjson', 'POST', { token: accessToken });
 }
-
 
 async function fetchRestEndpoint(route, method, data) {
     const options = { method };
