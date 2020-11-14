@@ -11,7 +11,21 @@
                 "settings-headline": "Einstellungen",
                 "logout-btn": "Abmelden",
                 "acc-header": "Dein Account",
-                "acc-description": "Hier kannst du den Server auswählen, den du bearbeiten willst."
+                "acc-description": "Hier kannst du den Server auswählen, den du bearbeiten willst.",
+                "config-header": "SchoolUtilities Konfiguration",
+                "config-description": "Du kannst SchoolUtilities hier konfigurieren.",
+                "chooseStudent": "Wähle die Schüler Rolle",
+                "chooseTeacher": "Wähle die Lehre Rolle",
+                "chooseTimezone": "Wähle die Zeitzone",
+                "configGeneralHeadline": "Allgemeine Einstellungen",
+                "chooseNotificationsHeadline": "Benachrichtigungen",
+                "chooseAutocheckHeadline": "Autocheck",
+                "chooseNotificationsDescription": "Wähle aus ob du am Stundenbeginn benachrichtigt werden willst.",
+                "chooseAutocheckDescription": "Wähle aus ob am Stundenbeginn automatisch ein check gestartet werden soll.",
+                "chooseCheckTimeHeadline": "Check Zeit",
+                "chooseCheckTime": "Wähle wie viel Zeit in Minuten ein automatischer check sein soll.",
+                "configSaveButton": "Speichern"
+                
             }
         },
         "en": {
@@ -25,7 +39,20 @@
                 "settings-headline": "Settings",
                 "logout-btn": "Logout",
                 "acc-header": "Your account",
-                "acc-description": "You can choose the server you want to edit here."
+                "acc-description": "You can choose the server you want to edit here.",
+                "config-header": "SchoolUtilities Configuration",
+                "config-description": "You can configurate SchoolUtilities here.",
+                "chooseStudent": "Choose your student role",
+                "chooseTeacher": "Choose your teacher role",
+                "chooseTimezone": "Choose your timezone",
+                "configGeneralHeadline": "General Settings",
+                "chooseNotificationsHeadline": "Notifications",
+                "chooseAutocheckHeadline": "Autocheck",
+                "chooseNotificationsDescription": "Choose whether you would like to receive notifications in the beginning of every lesson or not.",
+                "chooseAutocheckDescription": "Choose whether you want the bot to start an automated check at the start of every lesson or not.",
+                "chooseCheckTime": "Choose how much time in minutes an automatic check should be.",
+                "chooseCheckTimeHeadline": "Checktime",
+                "configSaveButton": "Save"
             }
         }
     }
