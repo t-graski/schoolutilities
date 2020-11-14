@@ -5,6 +5,9 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND, METHOD_NOT_ALLOWED } = require('http-status-codes');
 const { sort } = require('mathjs');
+const { serverConfiguration, save } = require('../misc/utils.js');
+const { langs } = require('../misc/languages.js');
+let userCache = {};
 
 // create router
 const router = express.Router();
@@ -20,6 +23,14 @@ let configData;
 try {
     configData = require('../datastore/configs.json');
 } catch (error) {}
+
+setInterval(function clearCache() {
+    for (key in userCache) {
+        if (userCache[key].date < Date.now() - 2000) {
+            delete userCache[key];
+        }
+    }
+}, 3000);
 
 router.post('/languagejson', (req, res) => {
     const language = req.body.language;
@@ -41,6 +52,10 @@ router.post('/serverjson', (req, res) => {
     })
         .then((discordRes) => discordRes.json())
         .then((servers) => {
+            userCache[token] = {
+                servers: servers,
+                date: Date.now(),
+            };
             configData.forEach((server) => {
                 let foundServer = servers.find((element) => element.id == server.guildId);
                 if (foundServer) {
@@ -54,6 +69,38 @@ router.post('/serverjson', (req, res) => {
             }
         });
 });
+router.post('/saveconfig', async (req, res) => {
+    const token = req.body.token;
+    const id = req.body.id;
+    let servers = [];
+    let serverConfig;
+    let discordRes = await fetch('https://discord.com/api/users/@me', {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    servers = await discordRes.json();
+    if(servers) {
+        if(getSharedAdminServerIDs(getSharedAdminServers(servers)).includes(id)) {
+            serverConfig = serverConfiguration(id);
+            let serverConigfIndex = configData.findIndex((serverData) => serverData.guildId == id);
+            configData[serverConigfIndex] = serverConfig;
+            save('./datastore/configs.json', JSON.stringify(configData));
+            res.status(OK);
+        } else {
+            res.status(NOT_FOUND);
+        }
+    }
+});
+router.get('/supportedlanguages', async (req, res) => {
+    let supportedLanguages = langs;
+    if (supportedLanguages) {
+        res.status(OK).json(supportedLanguages);
+    } else {
+        res.status(NOT_FOUND);
+    }
+});
 router.post('/serverinformation', async (req, res) => {
     const token = req.body.token;
     const id = req.body.id;
@@ -62,16 +109,25 @@ router.post('/serverinformation', async (req, res) => {
         roles: null,
         channels: null,
     };
-    let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    let servers = await discordRes.json();
-    if(servers){
-    let sharedAdminServer = getSharedAdminServers(servers);
-    serverinformation.guild = servers.find((element) => element.id == id);
+    let servers;
+    if (userCache[token]) {
+        servers = userCache[token].servers;
+    } else {
+        let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        servers = await discordRes.json();
+        userCache[token] = {
+            servers: servers,
+            date: Date.now(),
+        };
+    }
+    if (servers) {
+        let sharedAdminServer = getSharedAdminServers(servers);
+        serverinformation.guild = servers.find((element) => element.id == id);
         if (sharedAdminServer.find((element) => element.id == id)) {
             let roles = await fetch(`https://discord.com/api/guilds/${id}/roles`, {
                 method: 'GET',
@@ -80,7 +136,7 @@ router.post('/serverinformation', async (req, res) => {
                 },
             });
             roles = await roles.json();
-            if(roles){
+            if (roles) {
                 serverinformation.roles = roles;
             }
             let channels = await fetch(`https://discord.com/api/guilds/${id}/channels`, {
@@ -90,16 +146,48 @@ router.post('/serverinformation', async (req, res) => {
                 },
             });
             channels = await channels.json();
-            if(channels){
+            if (channels) {
                 serverinformation.channels = channels;
             }
-            if(serverinformation.channels != null && serverinformation.roles != null){
+            if (serverinformation.channels != null && serverinformation.roles != null) {
                 if (serverinformation) {
-                    console.log("send back");
                     res.status(OK).json(serverinformation);
                 } else {
                     res.status(NOT_FOUND);
                 }
+            }
+        }
+    }
+});
+router.post('/serverconfiguration', async (req, res) => {
+    const token = req.body.token;
+    const id = req.body.id;
+    let servers;
+    if (userCache[token]) {
+        servers = userCache[token].servers;
+    } else {
+        let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        servers = await discordRes.json();
+        userCache[token] = {
+            servers: servers,
+            date: Date.now(),
+        };
+    }
+    if (servers) {
+        let sharedAdminServer = getSharedAdminServers(servers);
+
+        if (sharedAdminServer.find((element) => element.id == id)) {
+            let guildConfig = serverConfiguration(id);
+
+            if (guildConfig) {
+                res.status(OK).json(guildConfig);
+            } else {
+                res.status(NOT_FOUND);
             }
         }
     }
@@ -120,6 +208,13 @@ function getSharedAdminServers(userServer) {
         }
     });
     return sharedAdminServer;
+}
+function getSharedAdminServerIDs(sharedAdminServer) {
+    let IDs = [];
+    sharedAdminServer.forEach((server) => {
+        IDs.push(server.id);
+    });
+    return IDs;
 }
 function betterSort(userServer) {
     let botServerIDs = [];
@@ -184,7 +279,6 @@ router.get('/discord', (req, res) => {
         })
             .then((discordRes) => discordRes.json())
             .then((info) => {
-                console.log(info);
                 return info;
             })
             .then((info) =>
@@ -194,8 +288,7 @@ router.get('/discord', (req, res) => {
                     },
                 })
             )
-            .then((userRes) => userRes.json())
-            .then(console.log);
+            .then((userRes) => userRes.json());
     }
     if (urlObj.pathname == '/discord') {
         responseCode = 200;
