@@ -59,7 +59,128 @@ async function onload() {
             loadServers();
         }
     }
+    
+    if(window.location.href.includes('configurate')){
+        if(isLoggedIn){
+            loadConfiguration();
+        }
+    }
 }
+
+async function loadConfiguration(){
+    const serverInformation = await fetchRestEndpoint("/api/serverinformation", "POST", {
+        token: accessToken,
+        id: getCookie('serverId'),
+    });
+    const languages = await fetchRestEndpoint("/api/supportedlanguages", "GET");
+    if(serverInformation && languages){
+        let serverConfiguration;
+        setTimeout(async () => {serverConfiguration = await fetchRestEndpoint("/api/serverconfiguration", "POST", {
+            token: accessToken,
+            id: getCookie('serverId'),
+        })
+        if(serverConfiguration){
+            let configurationHtml = `
+            <h2 class="config-general-headline">${languageData.webInterface.configGeneralHeadline}</h2><button class="config-save-button">${languageData.webInterface.configSaveButton}</button><hr><br>
+            <div class="config-general-layout">
+                <div class="config-general-item">
+                    <label class="student-roles" for="studentRoles">${languageData.webInterface.chooseStudent}</label><br>
+                    <select class="student-select" name="studentRoles" id="studentRoles">
+                    ${getRoleHtml(serverInformation.roles, serverConfiguration.studentId)}
+                    </select><br>
+                </div>
+                <div class="config-general-item">
+                    <label class="teacher-roles" for="studentRoles">${languageData.webInterface.chooseTeacher}</label><br>
+                    <select class="teacher-select" name="studentRoles" id="studentRoles">
+                    ${getRoleHtml(serverInformation.roles, serverConfiguration.teacherId)}
+                    </select><br>
+                </div>
+                <div class="config-general-item">
+                    <label class="timezones" for="timezones">${languageData.webInterface.chooseTimezone}</label><br>
+                    <select class="timezone-select" name="timezones" id="timezones">
+                    ${getTimeZoneHtml(serverConfiguration.timeZone)}
+                    </select><br>
+                </div>
+                <div class="config-general-item">
+                    <label class="teacher-roles" for="studentRoles">${languageData.webInterface.chooseTeacher}</label><br>
+                    ${getLanguageHtml(languages, serverConfiguration.language)}
+                </div>
+                <div class="config-general-item">
+                    <label class="timezones small-margin" for="timezones">${languageData.webInterface.chooseNotificationsHeadline}</label><br>
+                    <p class="config-item-description">${languageData.webInterface.chooseNotificationsDescription}</p><br>
+                    <label class="switch no-margin">
+                        <input type="checkbox" ${serverConfiguration.notifications ? "checked" : ""}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="config-general-item">
+                    <label class="checktime small-margin" for="checktime">${languageData.webInterface.chooseCheckTimeHeadline}</label><br>
+                    <p class="config-item-description">${languageData.webInterface.chooseCheckTime}</p><br>
+                    <input type="number" min="0" value="${serverConfiguration.checktime}"> 
+                </div>
+                <div class="config-general-item">
+                    <label class="timezones small-margin" for="timezones">${languageData.webInterface.chooseAutocheckHeadline}</label>
+                    <p class="config-item-description">${languageData.webInterface.chooseAutocheckDescription}</p><br>
+                    <label class="switch no-margin">
+                        <input type="checkbox" ${serverConfiguration.autocheck ? "checked" : ""}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="config-timetable">
+                ${getTimetableHtml(serverConfiguration)}
+            </div>`;
+            document.querySelector(".configuration").innerHTML = configurationHtml;
+        }
+    }, 300);
+    }
+}
+
+function getLanguageHtml(languages, choosenLanguage){
+    let languageHtml = `
+    <input list="languages" name="language" value="${choosenLanguage}" id="language">
+    <datalist id="languages">`;
+    for(key in languages){
+        languageHtml += `<option value="${languages[key]}">`;
+    }
+    languageHtml += "</datalist>";
+    return languageHtml;
+}
+
+function getTimeZoneHtml(timeZone){
+    let timeZoneHtml = "";
+    let timeZoneIndex;
+    if(timeZone){
+        timeZoneIndex = Number(timeZone.split("gmt")[1]);
+        timeZoneHtml = `<option value="${timeZoneIndex}">GMT${timeZoneIndex >= 0 ? "+" : ""}${timeZoneIndex}</option>`;
+    }
+    for(i = 12; i >= -12; i--){
+        if(timeZoneIndex != i){
+            timeZoneHtml += `<option value="${i}">GMT${i >= 0 ? "+" : ""}${i}</option>`;
+        }
+    }
+    return timeZoneHtml;
+}
+
+function getRoleHtml(roles, choosenRoleId){
+    let choosenRoleIndex = roles.findIndex(role => role.id==choosenRoleId);
+    let roleHtml;
+    if(choosenRoleIndex){
+        const choosenRole = roles[choosenRoleIndex];
+        roleHtml = `<option value="${choosenRole.id}">${choosenRole.name}</option>`;
+        roles.splice(choosenRoleIndex, 1);
+    }
+    roles.sort((role1, role2) => (role1.position < role2.position) ? 1 : -1);
+    roles.forEach(element => {
+        roleHtml += `<option value="${element.id}">${element.name}</option>`;
+    });
+    return roleHtml;
+}
+
+function getTimetableHtml(serverConfiguration){
+    let timeTableHtml = ``;
+}
+
 
 async function loadServers(){
     const servers = await getServerData();
@@ -110,7 +231,7 @@ function openDashboard(serverId){
 
 function openConfigurate(serverId){
     setCookie('serverId', serverId, 7);
-    window.open("/configurate.html");
+    window.open("/configurate.html", "_self");
 }
 
 function redirect(href) {
@@ -158,15 +279,14 @@ function setCookie(name, value, daysToLive) {
     var cookie = name + '=' + encodeURIComponent(value);
 
     if (typeof daysToLive === 'number') {
-        cookie += ';path=/; max-age=' + daysToLive * 24 * 60 * 60;
+        cookie += ';path=/;max-age=' + daysToLive * 24 * 60 * 60;
 
         document.cookie = cookie;
     }
 }
 
 function getCookie(name) {
-    var cookieArr = document.cookie.split(';path=/;');
-
+    var cookieArr = document.cookie.split('; ');
     for (var i = 0; i < cookieArr.length; i++) {
         var cookiePair = cookieArr[i].split('=');
 
