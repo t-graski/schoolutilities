@@ -23,15 +23,17 @@ exports.run = async (client, message, args) => {
     }
     function getServers(client) {
         let servers = [];
+        let count = 0;
         client.guilds.cache.forEach((server) => {
             servers.push(`${server.name} (${server.id})`);
+            count++;
         });
         serversString = '';
         serversString += servers.length > 1 ? servers.length + ' servers total. \n' : servers.length + ' server total.\n';
         servers.forEach((server) => {
             serversString += server + '\n';
         });
-        return serversString;
+        return count;
     }
     function generateNewKey() {
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
