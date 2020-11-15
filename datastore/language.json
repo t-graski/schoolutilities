@@ -24,8 +24,15 @@
                 "chooseAutocheckDescription": "Wähle aus ob am Stundenbeginn automatisch ein check gestartet werden soll.",
                 "chooseCheckTimeHeadline": "Check Zeit",
                 "chooseCheckTime": "Wähle wie viel Zeit in Minuten ein automatischer check sein soll.",
-                "configSaveButton": "Speichern"
-                
+                "configSaveButton": "Speichern",
+                "configMondayHeadline": "Montag",
+                "configTuesdayHeadline": "Dienstag",
+                "configWednesdayHeadline": "Mittwoch",
+                "configThursdayHeadline": "Donnerstag",
+                "configFridayHeadline": "Freitag",
+                "configSaturdayHeadline": "Samstag",
+                "configSundayHeadline": "Sonntag",
+                "configTimetableHeadline": "Stundenplan bearbeiten"
             }
         },
         "en": {
@@ -52,7 +59,15 @@
                 "chooseAutocheckDescription": "Choose whether you want the bot to start an automated check at the start of every lesson or not.",
                 "chooseCheckTime": "Choose how much time in minutes an automatic check should be.",
                 "chooseCheckTimeHeadline": "Checktime",
-                "configSaveButton": "Save"
+                "configSaveButton": "Save",
+                "configMondayHeadline": "Monday",
+                "configTuesdayHeadline": "Tuesday",
+                "configWednesdayHeadline": "Wednesday",
+                "configThursdayHeadline": "Thursday",
+                "configFridayHeadline": "Friday",
+                "configSaturdayHeadline": "Saturday",
+                "configSundayHeadline": "Sunday",
+                "configTimetableHeadline": "Edit Timetable"
             }
         }
     }

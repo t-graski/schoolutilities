@@ -187,21 +187,94 @@ function getTimetableHtml(serverConfiguration) {
     <h2 class="config-general-headline">${languageData.webInterface.configTimetableHeadline}</h2><button class="config-save-button">${
         languageData.webInterface.configSaveButton
     }</button><hr><br>
-    <div class="config-timetable">
+    <div class="config-timetable-content">
         ${getTimetableContentHtml(serverConfiguration)}
     </div>`;
+    return timeTableHtml;
 }
 
-function getTimetableContentHtml(serverConfiguration){
+function getTimetableContentHtml(serverConfiguration) {
     let timeTablecontentHtml = `
         <div class="config-timetable-layout">
             <div class="config-timetable-headers">
                 <div class="config-timetable-header">
-                    ${languageDate.webInterface.configSundayHeadline}
+                    ${languageData.webInterface.configMondayHeadline}
                 </div>
+                <div class="config-timetable-header">
+                    ${languageData.webInterface.configTuesdayHeadline}
+                </div>
+                <div class="config-timetable-header">
+                    ${languageData.webInterface.configWednesdayHeadline}
+                </div>
+                <div class="config-timetable-header">
+                    ${languageData.webInterface.configThursdayHeadline}
+                </div>
+                <div class="config-timetable-header">
+                    ${languageData.webInterface.configFridayHeadline}
+                </div>
+                <div class="config-timetable-header">
+                    ${languageData.webInterface.configSaturdayHeadline}
+                </div>
+                <div class="config-timetable-header">
+                    ${languageData.webInterface.configSundayHeadline}
+                </div>
+            </div>
+            <div class="config-timetable-columns">
+                ${getTimetableColumnHtml(serverConfiguration)}
             </div>
         </div>
     `;
+    return timeTablecontentHtml;
+}
+
+function getTimetableColumnHtml(serverConfiguration) {
+    let columnHtml = '';
+    for (columnKey in serverConfiguration.timeTable) {
+        columnHtml += `<div class="config-timetable-column">`;
+        serverConfiguration.timeTable[columnKey].sort((a, b) => {
+            if (a.startTime.hours > b.startTime.hours) {
+                return 1;
+            } else if (a.startTime.hours == b.startTime.hours) {
+                if (a.startTime.minutes > b.startTime.minutes) {
+                    return 1;
+                } else if (a.startTime.minutes < b.startTime.minutes) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            } else {
+                return -1;
+            }
+        });
+        serverConfiguration.timeTable[columnKey].forEach((timeTableItem, index) => {
+            columnHtml += `
+            <div class="config-timetable-item" onclick="openTimetableDetail(${columnKey}, ${index})">
+                <p class="config-timetable-item-headline">
+                    ${timeTableItem.subject}
+                </p>
+                <p class="config-timetable-item-time">
+                    ${timeTableItem.startTime.hours}:${appendLeadingZeroes(timeTableItem.startTime.minutes)} - ${
+                timeTableItem.endTime.hours
+            }:${appendLeadingZeroes(timeTableItem.endTime.minutes)}
+                </p>
+            </div>`;
+        });
+        columnHtml += `
+        <div class="config-timetable-item" onclick="openTimetableDetail(${columnKey}, -1)">
+            <h1>
+               +
+            </h1>
+        </div>`;
+        columnHtml += `</div>`;
+    }
+    return columnHtml;
+}
+
+function appendLeadingZeroes(n) {
+    if (n <= 9) {
+        return '0' + n;
+    }
+    return n;
 }
 
 async function loadServers() {
