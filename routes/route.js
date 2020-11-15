@@ -71,21 +71,24 @@ router.post('/serverjson', (req, res) => {
 });
 router.post('/saveconfig', async (req, res) => {
     const token = req.body.token;
-    const id = req.body.id;
-    let servers = [];
-    let serverConfig;
-    let discordRes = await fetch('https://discord.com/api/users/@me', {
+    let servers;
+    let serverConfig = req.body.serverConfig;
+    const id = serverConfig.guildId;
+    let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
         method: 'GET',
         headers: {
-            Authorization: `Bearer ${token}`
-        }
+            Authorization: `Bearer ${token}`,
+        },
     });
     servers = await discordRes.json();
-    if(servers) {
-        if(getSharedAdminServerIDs(getSharedAdminServers(servers)).includes(id)) {
-            serverConfig = serverConfiguration(id);
-            let serverConigfIndex = configData.findIndex((serverData) => serverData.guildId == id);
-            configData[serverConigfIndex] = serverConfig;
+    userCache[token] = {
+        servers: servers,
+        date: Date.now(),
+    };
+    if (servers) {
+        if (getSharedAdminServerIDs(getSharedAdminServers(servers)).includes(id)) {
+            let serverConfigIndex = configData.findIndex((serverData) => serverData.guildId == id);
+            configData[serverConfigIndex] = serverConfig;
             save('./datastore/configs.json', JSON.stringify(configData));
             res.status(OK);
         } else {

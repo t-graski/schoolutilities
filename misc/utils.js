@@ -1,4 +1,5 @@
 let config = require('../datastore/configs.json');
+const fs = require('fs');
 function serverConfiguration(guildId) {
     return config.find((element) => Number(guildId) == element.guildId);
 }

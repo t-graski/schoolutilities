@@ -3,10 +3,16 @@ let languageData;
 let accessToken;
 let isLoggedIn = false;
 let userData;
+let serverConfiguration;
+let serverInformation;
 onload();
 
 async function onload() {
     languageData = await getLanguageData();
+    // document.querySelector('.pop-up-close').addEventListener('click', () => {
+    //     document.querySelector('.pop-up-layout').style.display = 'none';
+    //     document.querySelector('.pop-up-close').style.display = 'none';
+    // });
 
     if (languageData) {
         if (languageData.webInterface.tabTitle) {
@@ -68,13 +74,12 @@ async function onload() {
 }
 
 async function loadConfiguration() {
-    const serverInformation = await fetchRestEndpoint('/api/serverinformation', 'POST', {
+    serverInformation = await fetchRestEndpoint('/api/serverinformation', 'POST', {
         token: accessToken,
         id: getCookie('serverId'),
     });
     const languages = await fetchRestEndpoint('/api/supportedlanguages', 'GET');
     if (serverInformation && languages) {
-        let serverConfiguration;
         setTimeout(async () => {
             serverConfiguration = await fetchRestEndpoint('/api/serverconfiguration', 'POST', {
                 token: accessToken,
@@ -133,9 +138,9 @@ async function loadConfiguration() {
                 </div>
             </div>
             <div class="config-timetable">
-                ${getTimetableHtml(serverConfiguration)}
             </div>`;
                 document.querySelector('.configuration').innerHTML = configurationHtml;
+                getTimetableHtml();
             }
         }, 300);
     }
@@ -182,18 +187,17 @@ function getRoleHtml(roles, choosenRoleId) {
     return roleHtml;
 }
 
-function getTimetableHtml(serverConfiguration) {
-    let timeTableHtml = `
+function getTimetableHtml() {
+    document.querySelector('.config-timetable').innerHTML = `
     <h2 class="config-general-headline">${languageData.webInterface.configTimetableHeadline}</h2><button class="config-save-button">${
         languageData.webInterface.configSaveButton
     }</button><hr><br>
     <div class="config-timetable-content">
         ${getTimetableContentHtml(serverConfiguration)}
     </div>`;
-    return timeTableHtml;
 }
 
-function getTimetableContentHtml(serverConfiguration) {
+function getTimetableContentHtml() {
     let timeTablecontentHtml = `
         <div class="config-timetable-layout">
             <div class="config-timetable-headers">
@@ -220,14 +224,53 @@ function getTimetableContentHtml(serverConfiguration) {
                 </div>
             </div>
             <div class="config-timetable-columns">
-                ${getTimetableColumnHtml(serverConfiguration)}
+                ${getTimetableColumnHtml()}
             </div>
+            ${getColumnDeleteHtml()}
         </div>
     `;
     return timeTablecontentHtml;
 }
 
-function getTimetableColumnHtml(serverConfiguration) {
+function getColumnDeleteHtml() {
+    let counter = 0;
+    let columnDeleteHtml = '<div class="config-timetable-column-delete">';
+    for (key in serverConfiguration.timeTable) {
+        if (serverConfiguration.timeTable[key].length > 0) {
+            columnDeleteHtml += `<button class="column-delete-btn" onclick="deleteDay(${key})">Reset</button>`;
+            counter++;
+        } else {
+            columnDeleteHtml += `<span></span>`;
+        }
+    }
+    columnDeleteHtml += '</div>';
+    if (counter > 0) {
+        columnDeleteHtml += `<button class="column-delete-btn all-delete-btn" onclick="deleteDay(-1)">Reset timetable</button>`;
+    }
+    return columnDeleteHtml;
+}
+
+function deleteDay(index) {
+    document.querySelector('.pop-up-layout').style.display = 'flex';
+    document.querySelector('.pop-up').innerHTML = `
+    <h3>Do you really want to reset ${index == -1 ? 'the entire timetable' : 'this day'}?</h3><br>
+    <button class="config-timetable-item-save item-btn" onclick="closePopUp()">Cancel</button>
+    <button class="config-timetable-item-delete item-btn" onclick="deleteDayAccepted(${index})">Delete</button>`;
+}
+
+function deleteDayAccepted(index) {
+    serverConfiguration.timeTable[index] = [];
+    console.log(serverConfiguration);
+
+    fetchRestEndpoint('/api/saveconfig', 'POST', {
+        token: accessToken,
+        serverConfig: serverConfiguration,
+    });
+    closePopUp();
+    getTimetableHtml();
+}
+
+function getTimetableColumnHtml() {
     let columnHtml = '';
     for (columnKey in serverConfiguration.timeTable) {
         columnHtml += `<div class="config-timetable-column">`;
@@ -248,7 +291,7 @@ function getTimetableColumnHtml(serverConfiguration) {
         });
         serverConfiguration.timeTable[columnKey].forEach((timeTableItem, index) => {
             columnHtml += `
-            <div class="config-timetable-item" onclick="openTimetableDetail(${columnKey}, ${index})">
+            <div class="config-timetable-item" onclick="openTimetableDetail('${columnKey}', ${index})">
                 <p class="config-timetable-item-headline">
                     ${timeTableItem.subject}
                 </p>
@@ -260,14 +303,213 @@ function getTimetableColumnHtml(serverConfiguration) {
             </div>`;
         });
         columnHtml += `
-        <div class="config-timetable-item" onclick="openTimetableDetail(${columnKey}, -1)">
-            <h1>
-               +
-            </h1>
+        <div class="config-timetable-item" onclick="openTimetableDetail('${columnKey}', -1)">
+            <h4>+</h4>
         </div>`;
         columnHtml += `</div>`;
     }
     return columnHtml;
+}
+
+function openTimetableDetail(columnKey, index) {
+    document.querySelector('.pop-up-layout').style.display = 'flex';
+    let selectChannelHtml = '';
+    let deleteButton = '';
+    let currentItem;
+    if (index > -1) {
+        currentItem = serverConfiguration.timeTable[columnKey][index];
+        let channelIndex = serverInformation.channels.findIndex((channel) => channel.id == currentItem.channel);
+        selectChannelHtml = `<option value="${serverInformation.channels[channelIndex].id}">${serverInformation.channels[channelIndex].name}</option>`;
+        serverInformation.channels.forEach((channel, index) => {
+            if (channelIndex != index && channel.type != 4) {
+                selectChannelHtml += `<option value="${channel.id}">${channel.name}</option>`;
+            }
+        });
+        deleteButton = `<button class="config-timetable-item-delete item-btn" onclick="deleteTimetableItem('${columnKey}', ${index})">Delete</button>`;
+    } else {
+        currentItem = {
+            startTime: {
+                hours: null,
+                minutes: null,
+            },
+            endTime: {
+                hours: null,
+                minutes: null,
+            },
+            subject: '',
+        };
+        serverInformation.channels.forEach((channel) => {
+            if (channel.type != 4) {
+                selectChannelHtml += `<option value="${channel.id}">${channel.name}</option>`;
+            }
+        });
+    }
+
+    document.querySelector('.pop-up').innerHTML = `    
+    <label for="config-timetable-subject">Subject Name</label>
+    <input
+        id="config-timetable-subject"
+        type="text"
+        value="${currentItem.subject}"
+        placeholder="Subject Name"
+        class="config-timetable-subject"
+    /><br />
+    <div class="config-timetable-time">
+        <div class="config-timetable-start">
+            <label for="config-timetable-start-label">Beginn Time</label>
+            <div class="config-timetable-start-time">
+                <input
+                    class="config-timetable-start-hour"
+                    id="config-timetable-start"
+                    type="number"
+                    min="0"
+                    max="23"
+                    value="${currentItem.startTime.hours}"
+                    maxlength="2"
+                    placeholder=""
+                />:
+                <input
+                    class="config-timetable-start-minute"
+                    id="config-timetable-start-minute"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="${currentItem.startTime.minutes}"
+                    maxlength="2"
+                    placeholder=""
+                />
+            </div>
+        </div>
+        <br />
+        <div class="config-timetable-end">
+            <label for="config-timetable-end-label">End Time</label>
+            <div class="config-timetable-end-time">
+                <input
+                    class="config-timetable-end-hour"
+                    id="config-timetable-end"
+                    type="number"
+                    min="0"
+                    max="23"
+                    value="${currentItem.endTime.hours}"
+                    maxlength="2"
+                    placeholder=""
+                />:
+                <input
+                    class="config-timetable-end-minute"
+                    id="config-timetable-end-minute"
+                    type="number"
+                    min="0"
+                    max="59"
+                    value="${currentItem.endTime.minutes}"
+                    maxlength="2"
+                    placeholder=""
+                />
+            </div>
+        </div>
+        <br />
+    </div>
+    <div class="config-timetable-channel">
+        <label class="timetable-channel" for="timetableChannel">Wähle die Schüler Rolle</label><br />
+        <select class="timetable-channel-select" name="timetableChannel" id="timetableChannel">
+            ${selectChannelHtml}
+        </select><br />
+    </div>
+    <br />
+    <button class="config-timetable-item-save item-btn" onclick="saveTimetableChange('${columnKey}', ${index})">Save</button>
+    ${deleteButton}
+    <button class="config-timetable-close" onclick="closePopUp()">X</button>`;
+}
+
+function saveTimetableChange(columnKey, index) {
+    let itemObject = {
+        startTime: {
+            hours: null,
+            minutes: null,
+        },
+        endTime: {
+            hours: null,
+            minutes: null,
+        },
+        subject: null,
+        channel: null,
+    };
+    let falseValues = [];
+    if (document.querySelector('.config-timetable-start-hour')) {
+        let startHour = document.querySelector('.config-timetable-start-hour').value;
+        if (startHour >= 0 && startHour < 24) {
+            itemObject.startTime.hours = Number(startHour);
+        } else {
+            falseValues.push('startHour');
+        }
+    }
+    if (document.querySelector('.config-timetable-start-minute')) {
+        let startMinute = document.querySelector('.config-timetable-start-minute').value;
+        if (startMinute >= 0 && startMinute < 60) {
+            itemObject.startTime.minutes = Number(startMinute);
+        } else {
+            falseValues.push('startMinute');
+        }
+    }
+    if (document.querySelector('.config-timetable-end-hour')) {
+        let endHour = document.querySelector('.config-timetable-end-hour').value;
+        if (endHour >= 0 && endHour < 24) {
+            itemObject.endTime.hours = Number(endHour);
+        } else {
+            falseValues.push('endHour');
+        }
+    }
+    if (document.querySelector('.config-timetable-end-minute')) {
+        let endMinute = document.querySelector('.config-timetable-end-minute').value;
+        if (endMinute >= 0 && endMinute < 60) {
+            itemObject.endTime.minutes = Number(endMinute);
+        } else {
+            falseValues.push('endMinute');
+        }
+    }
+    if (document.querySelector('.config-timetable-subject')) {
+        itemObject.subject = document.querySelector('.config-timetable-subject').value;
+    }
+    if (document.querySelector('.timetable-channel-select')) {
+        let channelSelect = document.querySelector('.timetable-channel-select').value;
+        if (serverInformation.channels.find((channel) => channel.id == channelSelect)) {
+            itemObject.channel = channelSelect;
+        } else {
+            falseValues.push('channel');
+        }
+    }
+
+    if (falseValues.length > 0) {
+        alert('An input was wrong');
+        console.log(falseValues);
+    } else {
+        if (index >= 0) {
+            serverConfiguration.timeTable[columnKey][index] = itemObject;
+        } else {
+            serverConfiguration.timeTable[columnKey].push(itemObject);
+        }
+
+        fetchRestEndpoint('/api/saveconfig', 'POST', {
+            token: accessToken,
+            serverConfig: serverConfiguration,
+        });
+        closePopUp();
+        getTimetableHtml();
+    }
+}
+
+function deleteTimetableItem(columnKey, index) {
+    serverConfiguration.timeTable[columnKey].splice(index, 1);
+    fetchRestEndpoint('/api/saveconfig', 'POST', {
+        token: accessToken,
+        serverConfig: serverConfiguration,
+    });
+    console.log('asdfasdf');
+    closePopUp();
+    getTimetableHtml();
+}
+
+function closePopUp() {
+    document.querySelector('.pop-up-layout').style.display = 'none';
 }
 
 function appendLeadingZeroes(n) {
