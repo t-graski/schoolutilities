@@ -81,11 +81,11 @@ body {
     padding: 4% 0;
 }
 
-.login{
+.login {
     visibility: hidden;
 }
 
-.logout-btn{
+.logout-btn {
     border: none;
     background-color: transparent;
     border-top: 1px #aaaaaa7c solid;
@@ -93,7 +93,7 @@ body {
     cursor: pointer;
 }
 
-.user-nav{
+.user-nav {
     background-color: #2c2c2c;
     width: 16.66%;
     display: inline-block;
@@ -103,13 +103,13 @@ body {
     border-right: solid 2px #aaaaaa7c;
 }
 
-.servers{
+.servers {
     width: 80%;
     margin: 0 10%;
     display: block;
 }
 
-.server{
+.server {
     -webkit-user-select: none;
     width: 100%;
     display: block;
@@ -120,13 +120,13 @@ body {
     position: relative;
 }
 
-.server:hover{
+.server:hover {
     background-color: #3d3d3d;
     border: white 1px solid;
     border-radius: 5px;
 }
 
-.server img{
+.server img {
     height: 5vw;
     padding: 1vw;
     display: inline-block;
@@ -134,7 +134,7 @@ body {
     width: 5vw;
 }
 
-.server p{
+.server p {
     display: inline-block;
     font-size: 1.5rem;
     line-height: 5vw;
@@ -142,7 +142,7 @@ body {
     vertical-align: top;
 }
 
-.server .server-select-button{
+.server .server-select-button {
     display: inline-block;
     font-size: 1rem;
     width: 10vw;
@@ -161,30 +161,31 @@ body {
     top: 0;
 }
 
-.server .server-select-button:hover{
+.server .server-select-button:hover {
     background-color: rgb(0, 131, 0);
 }
 
-.server .server-select-button.add-to-server{
+.server .server-select-button.add-to-server {
     background-color: rgb(0, 130, 0);
 }
 
-.server .server-select-button.add-to-server:hover{
+.server .server-select-button.add-to-server:hover {
     background-color: rgb(0, 151, 0);
 }
 
-.server .configurate-btn{
+.server .configurate-btn {
     right: 11vw;
 }
 
-.configuration-content label{
+.configuration-content label {
     font-size: 1.4rem;
     line-height: 1.7rem;
     margin-bottom: 2vh;
     display: inline-block;
 }
 
-.configuration-content select, .configuration-content input{
+.configuration-content select,
+.configuration-content input {
     padding: 0.5vw;
     border-radius: 5px;
     font-size: 1rem;
@@ -196,12 +197,12 @@ body {
     border: 1px solid white;
 }
 
-.config-general-headline{
+.config-general-headline {
     padding-bottom: 1vw;
     display: inline-block;
 }
 
-.config-general-layout{
+.config-general-layout {
     width: 100%;
     display: grid;
     grid-gap: 50px;
@@ -214,8 +215,8 @@ body {
     width: 60px;
     height: 34px;
 }
-  
-.switch input { 
+
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
@@ -229,20 +230,20 @@ body {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 .slider:before {
     position: absolute;
-    content: "";
+    content: '';
     height: 26px;
     width: 26px;
     left: 4px;
     bottom: 4px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 input:checked + .slider {
@@ -267,25 +268,25 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.config-item-description{
+.config-item-description {
     font-size: 1rem;
     line-height: 1.3rem;
 }
 
-.config-general-item label.small-margin{
+.config-general-item label.small-margin {
     margin: 8px 0;
 }
 
-.config-general-item label.no-margin{
+.config-general-item label.no-margin {
     margin: 0;
 }
 
-.configuration{
+.configuration {
     display: inline-block;
     position: relative;
 }
 
-.config-save-button{
+.config-save-button {
     position: absolute;
     right: 0;
     top: 0;
@@ -301,6 +302,58 @@ input:checked + .slider:before {
     transition: all 200ms;
 }
 
-.config-save-button:hover{
+.config-save-button:hover {
     background-color: #00be00;
+}
+
+.config-timetable-layout {
+    width: 100%;
+    display: grid;
+}
+
+.config-timetable {
+    margin: 100px 0;
+}
+
+.config-timetable-headers,
+.config-timetable-columns {
+    grid-template-columns: repeat(7, 1fr);
+    display: grid;
+    width: 100%;
+    grid-gap: 20px;
+}
+
+.config-timetable-column {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+.config-timetable-header,
+.config-timetable-item {
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 1vh 0;
+}
+
+.config-timetable-item {
+    border: 1px solid white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 100ms;
+    margin-bottom: 20px;
+    -webkit-user-select: none;
+}
+
+.config-timetable-item:hover {
+    border-color: rgb(150, 150, 150);
+}
+
+.config-timetable-item-headline {
+    font-size: 1rem;
+}
+
+.config-timetable-item-time {
+    font-size: 0.8rem;
 }
