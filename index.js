@@ -26,6 +26,7 @@ client.on('guildCreate', (guild) => {
         ],
     });
 });
+
 // Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
     let msg = message.content.toUpperCase();

@@ -42,10 +42,10 @@ async function onload() {
                 });
             }
         } else {
-            redirect('http://www.schoolutilities.net/');
+            redirect('http://www.localhost:3000/');
         }
     } else {
-        redirect('http://www.schoolutilities.net/');
+        redirect('http://www.localhost:3000/');
     }
 
     document.querySelector('.logout-btn').addEventListener('click', () => {
@@ -57,7 +57,7 @@ async function onload() {
         document.querySelectorAll('.login').forEach((element) => {
             element.style.visibility = 'hidden';
         });
-        redirect('http://www.schoolutilities.net/');
+        redirect('http://www.localhost:3000/');
     });
 
     if (window.location.href.includes('account')) {

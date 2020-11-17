@@ -2,10 +2,10 @@
     "languages": {
         "de": {
             "webInterface": {
-                "tabTitle": "SchoolUtilities Web-Interface",
-                "header": "SchoolUtilities Web-Interface",
-                "description": "Du kannst SchoolUtilities hier konfigurieren.",
-                "connect": "Bitte verbinde dein Discord Konto mit dem Interface",
+                "tabTitle": "SchoolUtilities",
+                "header": "SchoolUtilities",
+                "description": "Die einfachste Möglichkeit deinen Schul Discord server zu verwalten.",
+                "feature-btn": "Features",
                 "server-name": "SchoolUtilities",
                 "timetable-configuration-headline": "Stundenplan bearbeiten",
                 "settings-headline": "Einstellungen",
@@ -32,15 +32,16 @@
                 "configFridayHeadline": "Freitag",
                 "configSaturdayHeadline": "Samstag",
                 "configSundayHeadline": "Sonntag",
-                "configTimetableHeadline": "Stundenplan bearbeiten"
+                "configTimetableHeadline": "Stundenplan bearbeiten",
+                "authorize-btn": "Mit Discord verbinden"
             }
         },
         "en": {
             "webInterface": {
-                "tabTitle": "SchoolUtilities Web-Interface",
-                "header": "SchoolUtilities Web-Interface",
-                "description": "You can configurate SchoolUtilities here.",
-                "connect": "Please connect you discord account with this interface.",
+                "tabTitle": "SchoolUtilities",
+                "header": "SchoolUtilities",
+                "description": "The easiest way to manage your school Discord server.",
+                "feature-btn": "Features",
                 "server-name": "SchoolUtilities",
                 "timetable-configuration-headline": "Edit timetable",
                 "settings-headline": "Settings",
@@ -67,7 +68,8 @@
                 "configFridayHeadline": "Friday",
                 "configSaturdayHeadline": "Saturday",
                 "configSundayHeadline": "Sunday",
-                "configTimetableHeadline": "Edit Timetable"
+                "configTimetableHeadline": "Edit Timetable",
+                "authorize-btn": "Connect with discord"
             }
         }
     }
