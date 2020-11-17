@@ -42,10 +42,10 @@ async function onload() {
                 });
             }
         } else {
-            redirect('http://localhost:3000/');
+            redirect('http://www.schoolutilities.net/');
         }
     } else {
-        redirect('http://localhost:3000/');
+        redirect('http://www.schoolutilities.net/');
     }
 
     document.querySelector('.logout-btn').addEventListener('click', () => {
@@ -57,7 +57,7 @@ async function onload() {
         document.querySelectorAll('.login').forEach((element) => {
             element.style.visibility = 'hidden';
         });
-        redirect('http://localhost:3000/');
+        redirect('http://www.schoolutilities.net/');
     });
 
     if (window.location.href.includes('account')) {
@@ -409,7 +409,7 @@ function openTimetableDetail(columnKey, index) {
         <br />
     </div>
     <div class="config-timetable-channel">
-        <label class="timetable-channel" for="timetableChannel">Wähle die Schüler Rolle</label><br />
+        <label class="timetable-channel" for="timetableChannel">WÃ¤hle die SchÃ¼ler Rolle</label><br />
         <select class="timetable-channel-select" name="timetableChannel" id="timetableChannel">
             ${selectChannelHtml}
         </select><br />
