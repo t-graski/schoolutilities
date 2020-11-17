@@ -37,7 +37,7 @@ router.post('/languagejson', (req, res) => {
     if (isLanguageSupported(language)) {
         res.status(OK).json(languageData.languages[language]);
     } else {
-        res.status(NOT_FOUND);
+        res.status(OK).json(languageData.languages["en"]);
     }
 });
 
