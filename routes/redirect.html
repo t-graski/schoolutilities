@@ -19,21 +19,13 @@
             }
 
             window.onload = () => {
-                const fragment = new URLSearchParams(window.location.hash.slice(1));
+                const fragment = window.location.href.split("#")[1].split("&");
 
-                if (fragment.has('access_token')) {
-                    const urlState = fragment.get('state');
-                    const accessToken = fragment.get('access_token');
-                    const tokenType = fragment.get('token_type');
+                if (fragment[1]) {
+                    const accessToken = fragment[1].split("=")[1];
                     setCookie('access_token', accessToken, 7);
-                } else {
-                    const randStr = generateRandomString();
-                    localStorage.setItem('stateParameter', randStr);
-
-                    document.getElementById('login').href += `&state=${encodeURIComponent(btoa(randStr))}`;
-                    document.getElementById('login').style.display = 'block';
+					window.location.href = '/';
                 }
-                window.location.href = 'http://localhost:3000';
             };
 
             function setCookie(name, value, daysToLive) {
