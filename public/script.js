@@ -6,10 +6,15 @@ let userData;
 let serverConfiguration;
 let serverInformation;
 let url;
+let discordLoginUrl;
 onload();
 
 async function onload() {
-    url = await fetchRestEndpoint("/url", "GET");
+    url = await fetchRestEndpoint('/api/url', 'GET');
+    discordLoginUrl = await fetchRestEndpoint('/api/discordloginurl', 'GET');
+    if (discordLoginUrl && document.querySelector('.authorize-btn')) {
+        document.querySelector('.authorize-btn').href = discordLoginUrl;
+    }
     languageData = await getLanguageData();
     // document.querySelector('.pop-up-close').addEventListener('click', () => {
     //     document.querySelector('.pop-up-layout').style.display = 'none';
@@ -59,7 +64,9 @@ async function onload() {
         document.querySelectorAll('.login').forEach((element) => {
             element.style.visibility = 'hidden';
         });
-        redirect(url);
+        if (url) {
+            redirect(url);
+        }
     });
 
     if (window.location.href.includes('account')) {
@@ -89,7 +96,9 @@ async function loadConfiguration() {
             });
             if (serverConfiguration) {
                 let configurationHtml = `
-            <h2 class="config-general-headline">${languageData.webInterface.configGeneralHeadline}</h2><button class="config-save-button" onclick="saveGeneralChanges()">${
+            <h2 class="config-general-headline">${
+                languageData.webInterface.configGeneralHeadline
+            }</h2><button class="config-save-button" onclick="saveGeneralChanges()">${
                     languageData.webInterface.configSaveButton
                 }</button><hr><br>
             <div class="config-general-layout">
@@ -424,26 +433,19 @@ function openTimetableDetail(columnKey, index) {
 
 function saveGeneralChanges() {
     let falseValues = [];
-    if(document.querySelector(".student-select")){
-
+    if (document.querySelector('.student-select')) {
     }
-    if(document.querySelector(".teacher-select")){
-        
+    if (document.querySelector('.teacher-select')) {
     }
-    if(document.querySelector(".timezone-select")){
-        
+    if (document.querySelector('.timezone-select')) {
     }
-    if(document.querySelector("#language")){
-        
+    if (document.querySelector('#language')) {
     }
-    if(document.querySelector(".config-notifications")){
-        
+    if (document.querySelector('.config-notifications')) {
     }
-    if(document.querySelector(".config-checktime")){
-        
+    if (document.querySelector('.config-checktime')) {
     }
-    if(document.querySelector(".student-autocheck")){
-        
+    if (document.querySelector('.student-autocheck')) {
     }
 }
 
@@ -602,6 +604,7 @@ function openConfigurate(serverId) {
 }
 
 function redirect(href) {
+    console.log(href);
     if (!window.location.href.contains(href)) window.location.href = href;
 }
 

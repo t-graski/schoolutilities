@@ -38,7 +38,7 @@ router.post('/languagejson', (req, res) => {
     if (isLanguageSupported(language)) {
         res.status(OK).json(languageData.languages[language]);
     } else {
-        res.status(OK).json(languageData.languages["en"]);
+        res.status(OK).json(languageData.languages['en']);
     }
 });
 
@@ -64,15 +64,18 @@ router.post('/serverjson', (req, res) => {
                 }
             });
             if (allServers) {
-                res.status(StatusCode.OK).json(betterSort(servers));
+                res.status(OK).json(betterSort(servers));
             } else {
-                res.status(StatusCode.NOT_FOUND);
+                res.status(NOT_FOUND);
             }
         });
 });
-router.get('/url', async (req, res) => {
-    res.status(StatusCode.OK).json({
-        url: process.env.url
+router.get('/url', (req, res) => {
+    res.status(OK).send(process.env.URL);
+});
+router.get('/discordloginurl', (req, res) => {
+    res.status(OK).json({
+        url: process.env.DISCORD_LOGIN_URL,
     });
 });
 router.post('/saveconfig', async (req, res) => {
@@ -97,18 +100,18 @@ router.post('/saveconfig', async (req, res) => {
             let serverConfigIndex = configData.findIndex((serverData) => serverData.guildId == id);
             configData[serverConfigIndex] = serverConfig;
             save('./datastore/configs.json', JSON.stringify(configData));
-            res.status(StatusCode.OK);
+            res.status(OK);
         } else {
-            res.status(StatusCode.NOT_FOUND);
+            res.status(NOT_FOUND);
         }
     }
 });
 router.get('/supportedlanguages', async (req, res) => {
     let supportedLanguages = langs;
     if (supportedLanguages) {
-        res.status(StatusCode.OK).json(supportedLanguages);
+        res.status(OK).json(supportedLanguages);
     } else {
-        res.status(StatusCode.NOT_FOUND);
+        res.status(NOT_FOUND);
     }
 });
 router.post('/serverinformation', async (req, res) => {
@@ -161,9 +164,9 @@ router.post('/serverinformation', async (req, res) => {
             }
             if (serverinformation.channels != null && serverinformation.roles != null) {
                 if (serverinformation) {
-                    res.status(StatusCode.OK).json(serverinformation);
+                    res.status(OK).json(serverinformation);
                 } else {
-                    res.status(StatusCode.NOT_FOUND);
+                    res.status(NOT_FOUND);
                 }
             }
         }
@@ -195,9 +198,9 @@ router.post('/serverconfiguration', async (req, res) => {
             let guildConfig = serverConfiguration(id);
 
             if (guildConfig) {
-                res.status(StatusCode.OK).json(guildConfig);
+                res.status(OK).json(guildConfig);
             } else {
-                res.status(StatusCode.NOT_FOUND);
+                res.status(NOT_FOUND);
             }
         }
     }
