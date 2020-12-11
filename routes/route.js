@@ -7,6 +7,7 @@ const { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND, METHOD_NOT_ALLOWED } = 
 const { sort } = require('mathjs');
 const { serverConfiguration, save } = require('../misc/utils.js');
 const { langs } = require('../misc/languages.js');
+const { env } = require('process');
 let userCache = {};
 
 // create router
@@ -63,11 +64,16 @@ router.post('/serverjson', (req, res) => {
                 }
             });
             if (allServers) {
-                res.status(OK).json(betterSort(servers));
+                res.status(StatusCode.OK).json(betterSort(servers));
             } else {
-                res.status(NOT_FOUND);
+                res.status(StatusCode.NOT_FOUND);
             }
         });
+});
+router.get('/url', async (req, res) => {
+    res.status(StatusCode.OK).json({
+        url: process.env.url
+    });
 });
 router.post('/saveconfig', async (req, res) => {
     const token = req.body.token;
@@ -80,6 +86,7 @@ router.post('/saveconfig', async (req, res) => {
             Authorization: `Bearer ${token}`,
         },
     });
+    //TODO Serverside Error-Handling
     servers = await discordRes.json();
     userCache[token] = {
         servers: servers,
@@ -90,18 +97,18 @@ router.post('/saveconfig', async (req, res) => {
             let serverConfigIndex = configData.findIndex((serverData) => serverData.guildId == id);
             configData[serverConfigIndex] = serverConfig;
             save('./datastore/configs.json', JSON.stringify(configData));
-            res.status(OK);
+            res.status(StatusCode.OK);
         } else {
-            res.status(NOT_FOUND);
+            res.status(StatusCode.NOT_FOUND);
         }
     }
 });
 router.get('/supportedlanguages', async (req, res) => {
     let supportedLanguages = langs;
     if (supportedLanguages) {
-        res.status(OK).json(supportedLanguages);
+        res.status(StatusCode.OK).json(supportedLanguages);
     } else {
-        res.status(NOT_FOUND);
+        res.status(StatusCode.NOT_FOUND);
     }
 });
 router.post('/serverinformation', async (req, res) => {
@@ -154,9 +161,9 @@ router.post('/serverinformation', async (req, res) => {
             }
             if (serverinformation.channels != null && serverinformation.roles != null) {
                 if (serverinformation) {
-                    res.status(OK).json(serverinformation);
+                    res.status(StatusCode.OK).json(serverinformation);
                 } else {
-                    res.status(NOT_FOUND);
+                    res.status(StatusCode.NOT_FOUND);
                 }
             }
         }
@@ -188,9 +195,9 @@ router.post('/serverconfiguration', async (req, res) => {
             let guildConfig = serverConfiguration(id);
 
             if (guildConfig) {
-                res.status(OK).json(guildConfig);
+                res.status(StatusCode.OK).json(guildConfig);
             } else {
-                res.status(NOT_FOUND);
+                res.status(StatusCode.NOT_FOUND);
             }
         }
     }
@@ -314,86 +321,4 @@ function isLanguageSupported(language) {
     return false;
 }
 
-// // read single task
-// router.get('/:id', (req, res) => {
-//     const id = Number(req.params.id);
-//     const task = tasks.find((task) => task.id === id);
-
-//     if (!task) {
-//         res.sendStatus(NOT_FOUND);
-//         return;
-//     }
-
-//     res.status(OK).json(task);
-// });
-
-// // create task
-// router.post('/', (req, res) => {
-//     const action = req.body.action;
-//     const done = req.body.done;
-
-//     if (typeof action !== 'string' || action === '') {
-//         res.status(BAD_REQUEST).send('action missing or not ok');
-//         return;
-//     }
-
-//     if (typeof done !== 'boolean') {
-//         res.status(BAD_REQUEST).send('done missing or not ok');
-//         return;
-//     }
-
-//     const task = { id: nextId++, action, done };
-//     tasks.push(task);
-//     res.status(CREATED).json(task);
-// });
-
-// // update task
-// router.put('/:id', (req, res) => {
-//     const id = Number(req.params.id);
-//     const task = tasks.find((task) => task.id === id);
-
-//     if (!task) {
-//         res.sendStatus(NOT_FOUND);
-//         return;
-//     }
-
-//     const action = req.body.action;
-//     const done = req.body.done;
-
-//     if (typeof action !== 'string' || action === '') {
-//         res.status(BAD_REQUEST).send('action missing or not ok');
-//         return;
-//     }
-
-//     if (typeof done !== 'boolean') {
-//         res.status(BAD_REQUEST).send('done missing or not ok');
-//         return;
-//     }
-
-//     task.action = action;
-//     task.done = done;
-//     res.sendStatus(NO_CONTENT);
-// });
-
-// // delete all tasks
-// router.delete('/', (req, res) => {
-//     tasks.splice(0);
-//     res.sendStatus(NO_CONTENT);
-// });
-
-// // delete single task
-// router.delete('/:id', (req, res) => {
-//     const id = Number(req.params.id);
-//     const index = tasks.findIndex((task) => task.id === id);
-
-//     if (index < 0) {
-//         res.sendStatus(NOT_FOUND);
-//         return;
-//     }
-
-//     tasks.splice(index, 1);
-//     res.sendStatus(NO_CONTENT);
-// });
-
-// export router
 module.exports = router;
