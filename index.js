@@ -79,9 +79,7 @@ function checkPresence() {
                         try {
                             let commandFile = require(`./misc/autocheck.js`);
                             commandFile.run(channel, serverConfig.guildId, guild);
-                        } catch (e) {
-                            
-                        }
+                        } catch (e) {}
                     }
                 } else {
                     console.log('There is no channel with this Id!');
@@ -115,9 +113,9 @@ const express = require('express');
 const fs = require('fs');
 const https = require('https');
 const http = require('http');
-var privateKey  = fs.readFileSync('cert/privkey.pem', 'utf8');
+var privateKey = fs.readFileSync('cert/privkey.pem', 'utf8');
 var certificate = fs.readFileSync('cert/cert.pem', 'utf8');
-var credentials = {key: privateKey, cert: certificate};
+var credentials = { key: privateKey, cert: certificate };
 
 // import router
 const interfaceRouter = require('./routes/route.js');
@@ -138,6 +136,6 @@ var httpServer = http.createServer(app);
 httpsServer.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
-httpServer.listen(80, () => {
+httpServer.listen(process.env.PORT, () => {
     console.log(`Server listening on port 80`);
 });
