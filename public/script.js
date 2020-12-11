@@ -5,9 +5,11 @@ let isLoggedIn = false;
 let userData;
 let serverConfiguration;
 let serverInformation;
+let url;
 onload();
 
 async function onload() {
+    url = await fetchRestEndpoint("/url", "GET");
     languageData = await getLanguageData();
     // document.querySelector('.pop-up-close').addEventListener('click', () => {
     //     document.querySelector('.pop-up-layout').style.display = 'none';
@@ -42,10 +44,10 @@ async function onload() {
                 });
             }
         } else {
-            redirect('https://www.schoolutilities.net');
+            redirect(url);
         }
     } else {
-        redirect('https://www.schoolutilities.net');
+        redirect(url);
     }
 
     document.querySelector('.logout-btn').addEventListener('click', () => {
@@ -57,7 +59,7 @@ async function onload() {
         document.querySelectorAll('.login').forEach((element) => {
             element.style.visibility = 'hidden';
         });
-        redirect('https://www.schoolutilities.net');
+        redirect(url);
     });
 
     if (window.location.href.includes('account')) {
@@ -87,7 +89,7 @@ async function loadConfiguration() {
             });
             if (serverConfiguration) {
                 let configurationHtml = `
-            <h2 class="config-general-headline">${languageData.webInterface.configGeneralHeadline}</h2><button class="config-save-button">${
+            <h2 class="config-general-headline">${languageData.webInterface.configGeneralHeadline}</h2><button class="config-save-button" onclick="saveGeneralChanges()">${
                     languageData.webInterface.configSaveButton
                 }</button><hr><br>
             <div class="config-general-layout">
@@ -110,7 +112,7 @@ async function loadConfiguration() {
                     </select><br>
                 </div>
                 <div class="config-general-item">
-                    <label class="teacher-roles" for="studentRoles">${languageData.webInterface.chooseTeacher}</label><br>
+                    <label class="teacher-roles" for="studentRoles">${languageData.webInterface.chooseLanguage}</label><br>
                     ${getLanguageHtml(languages, serverConfiguration.language)}
                 </div>
                 <div class="config-general-item">
@@ -119,20 +121,20 @@ async function loadConfiguration() {
                     }</label><br>
                     <p class="config-item-description">${languageData.webInterface.chooseNotificationsDescription}</p><br>
                     <label class="switch no-margin">
-                        <input type="checkbox" ${serverConfiguration.notifications ? 'checked' : ''}>
+                        <input class="config-notifications" type="checkbox" ${serverConfiguration.notifications ? 'checked' : ''}>
                         <span class="slider round"></span>
                     </label>
                 </div>
                 <div class="config-general-item">
                     <label class="checktime small-margin" for="checktime">${languageData.webInterface.chooseCheckTimeHeadline}</label><br>
                     <p class="config-item-description">${languageData.webInterface.chooseCheckTime}</p><br>
-                    <input type="number" min="0" value="${serverConfiguration.checktime}"> 
+                    <input class="config-checktime" type="number" min="0" value="${serverConfiguration.checktime}"> 
                 </div>
                 <div class="config-general-item">
                     <label class="timezones small-margin" for="timezones">${languageData.webInterface.chooseAutocheckHeadline}</label>
                     <p class="config-item-description">${languageData.webInterface.chooseAutocheckDescription}</p><br>
                     <label class="switch no-margin">
-                        <input type="checkbox" ${serverConfiguration.autocheck ? 'checked' : ''}>
+                        <input class="config-autocheck" type="checkbox" ${serverConfiguration.autocheck ? 'checked' : ''}>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -418,6 +420,31 @@ function openTimetableDetail(columnKey, index) {
     <button class="config-timetable-item-save item-btn" onclick="saveTimetableChange('${columnKey}', ${index})">Save</button>
     ${deleteButton}
     <button class="config-timetable-close" onclick="closePopUp()">X</button>`;
+}
+
+function saveGeneralChanges() {
+    let falseValues = [];
+    if(document.querySelector(".student-select")){
+
+    }
+    if(document.querySelector(".teacher-select")){
+        
+    }
+    if(document.querySelector(".timezone-select")){
+        
+    }
+    if(document.querySelector("#language")){
+        
+    }
+    if(document.querySelector(".config-notifications")){
+        
+    }
+    if(document.querySelector(".config-checktime")){
+        
+    }
+    if(document.querySelector(".student-autocheck")){
+        
+    }
 }
 
 function saveTimetableChange(columnKey, index) {
