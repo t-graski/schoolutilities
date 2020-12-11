@@ -112,12 +112,18 @@ function generateNewKey() {
 
 // import module
 const express = require('express');
+const fs = require('fs');
+const https = require('https');
+const http = require('http');
+var privateKey  = fs.readFileSync('cert/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('cert/cert.pem', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
 
 // import router
 const interfaceRouter = require('./routes/route.js');
 
 // specify http server port
-const port = 3000;
+const port = 443;
 
 // create express application
 const app = express();
@@ -125,11 +131,13 @@ const app = express();
 // mount middleware
 app.use(express.static('public'));
 app.use(express.json()); // parse JSON payload and place result in req.body
-
-// mount router(s)
 app.use('/api/', interfaceRouter);
 
-// start http server
-app.listen(port, () => {
+var httpsServer = https.createServer(credentials, app);
+var httpServer = http.createServer(app);
+httpsServer.listen(port, () => {
     console.log(`Server listening on port ${port}`);
+});
+httpServer.listen(80, () => {
+    console.log(`Server listening on port 80`);
 });

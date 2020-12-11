@@ -17,16 +17,18 @@
     },
     "homepage": "https://github.com/WahlMandat/schoolutilities#readme",
     "dependencies": {
-        "@discordjs/opus": "github:discordjs/opus",
         "discord.js": "^12.3.1",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "ffmpeg-static": "^4.2.7",
         "google-translate-free": "^2.4.5",
+        "http": "0.0.1-security",
         "http-status-codes": "^2.1.4",
+        "https": "^1.0.0",
         "mathjs": "^7.1.0",
         "node-fetch": "^2.6.1",
         "numeral": "^2.0.6",
+        "path": "^0.12.7",
         "request": "^2.88.2"
     },
     "devDependencies": {
