@@ -70,13 +70,8 @@ router.post('/serverjson', (req, res) => {
             }
         });
 });
-router.get('/url', (req, res) => {
-    res.status(OK).send(process.env.URL);
-});
 router.get('/discordloginurl', (req, res) => {
-    res.status(OK).json({
-        url: process.env.DISCORD_LOGIN_URL,
-    });
+    res.send(process.env.DISCORD_LOGIN_URL);
 });
 router.post('/saveconfig', async (req, res) => {
     const token = req.body.token;
