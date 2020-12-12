@@ -137,5 +137,5 @@ httpsServer.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 httpServer.listen(process.env.PORT, () => {
-    console.log(`Server listening on port 80`);
+    console.log(`Server listening on port ${process.env.PORT}`);
 });

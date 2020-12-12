@@ -3,6 +3,7 @@ let languageData;
 let accessToken;
 let isLoggedIn = false;
 let userData;
+let languages;
 let serverConfiguration;
 let serverInformation;
 let url = window.location.href;
@@ -87,7 +88,7 @@ async function loadConfiguration() {
         token: accessToken,
         id: getCookie('serverId'),
     });
-    const languages = await fetchRestEndpoint('/api/supportedlanguages', 'GET');
+    languages = await fetchRestEndpoint('/api/supportedlanguages', 'GET');
     if (serverInformation && languages) {
         setTimeout(async () => {
             serverConfiguration = await fetchRestEndpoint('/api/serverconfiguration', 'POST', {
@@ -172,12 +173,14 @@ function getTimeZoneHtml(timeZone) {
     let timeZoneHtml = '';
     let timeZoneIndex;
     if (timeZone) {
-        timeZoneIndex = Number(timeZone.split('gmt')[1]);
-        timeZoneHtml = `<option value="${timeZoneIndex}">GMT${timeZoneIndex >= 0 ? '+' : ''}${timeZoneIndex}</option>`;
+        timeZoneIndex = Number(timeZone.toLowerCase().split('gmt')[1]);
+        timeZoneHtml = `<option value="gmt${timeZoneIndex >= 0 ? '+' : ''}${timeZoneIndex}">GMT${
+            timeZoneIndex >= 0 ? '+' : ''
+        }${timeZoneIndex}</option>`;
     }
     for (i = 12; i >= -12; i--) {
         if (timeZoneIndex != i) {
-            timeZoneHtml += `<option value="${i}">GMT${i >= 0 ? '+' : ''}${i}</option>`;
+            timeZoneHtml += `<option value="gmt${i >= 0 ? '+' : ''}${i}">GMT${i >= 0 ? '+' : ''}${i}</option>`;
         }
     }
     return timeZoneHtml;
@@ -200,9 +203,9 @@ function getRoleHtml(roles, choosenRoleId) {
 
 function getTimetableHtml() {
     document.querySelector('.config-timetable').innerHTML = `
-    <h2 class="config-general-headline">${languageData.webInterface.configTimetableHeadline}</h2><button class="config-save-button">${
-        languageData.webInterface.configSaveButton
-    }</button><hr><br>
+    <h2 class="config-general-headline">${
+        languageData.webInterface.configTimetableHeadline
+    }</h2><button class="config-save-button" onclick="saveGeneralChanges()">${languageData.webInterface.configSaveButton}</button><hr><br>
     <div class="config-timetable-content">
         ${getTimetableContentHtml(serverConfiguration)}
     </div>`;
@@ -432,20 +435,30 @@ function openTimetableDetail(columnKey, index) {
 }
 
 function saveGeneralChanges() {
-    let falseValues = [];
-    if (document.querySelector('.student-select')) {
-    }
-    if (document.querySelector('.teacher-select')) {
-    }
-    if (document.querySelector('.timezone-select')) {
-    }
+    let wentWrong = true;
     if (document.querySelector('#language')) {
+        for (key in languages) {
+            if (document.querySelector('#language').value.toLowerCase() == languages[key].toLowerCase()) {
+                wentWrong = false;
+            }
+        }
     }
-    if (document.querySelector('.config-notifications')) {
-    }
-    if (document.querySelector('.config-checktime')) {
-    }
-    if (document.querySelector('.student-autocheck')) {
+    if (wentWrong) {
+        openPopUp('Your language is not supported, please try anoter language!');
+    } else {
+        serverConfiguration.studentId = document.querySelector('.student-select').value;
+        serverConfiguration.teacherId = document.querySelector('.teacher-select').value;
+        serverConfiguration.timeZone = document.querySelector('.timezone-select').value;
+        serverConfiguration.language = document.querySelector('#language').value;
+        serverConfiguration.notifications = document.querySelector('.config-notifications').value;
+        serverConfiguration.checktime = document.querySelector('.config-checktime').value;
+        serverConfiguration.autocheck = document.querySelector('.config-autocheck').value;
+
+        fetchRestEndpoint('/api/saveconfig', 'POST', {
+            token: accessToken,
+            serverConfig: serverConfiguration,
+        });
+        openPopUp('Your changes got saved');
     }
 }
 
@@ -509,7 +522,6 @@ function saveTimetableChange(columnKey, index) {
 
     if (falseValues.length > 0) {
         alert('An input was wrong');
-        console.log(falseValues);
     } else {
         if (index >= 0) {
             serverConfiguration.timeTable[columnKey][index] = itemObject;
@@ -524,6 +536,11 @@ function saveTimetableChange(columnKey, index) {
         closePopUp();
         getTimetableHtml();
     }
+}
+
+function openPopUp(text) {
+    document.querySelector('.pop-up').innerHTML = `<p>${text}</p><button class="config-timetable-close" onclick="closePopUp()">X</button>`;
+    document.querySelector('.pop-up-layout').style.display = 'flex';
 }
 
 function deleteTimetableItem(columnKey, index) {
