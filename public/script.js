@@ -5,14 +5,14 @@ let isLoggedIn = false;
 let userData;
 let serverConfiguration;
 let serverInformation;
-let url;
-let discordLoginUrl;
+let url = window.location.href;
+let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=${encodeURIComponent(
+    url
+)}api/discord&response_type=token&scope=identify guilds`;
 onload();
 
 async function onload() {
-    url = await fetchRestEndpoint('/api/url', 'GET');
-    discordLoginUrl = await fetchRestEndpoint('/api/discordloginurl', 'GET');
-    if (discordLoginUrl && document.querySelector('.authorize-btn')) {
+    if (document.querySelector('.authorize-btn')) {
         document.querySelector('.authorize-btn').href = discordLoginUrl;
     }
     languageData = await getLanguageData();
@@ -604,8 +604,7 @@ function openConfigurate(serverId) {
 }
 
 function redirect(href) {
-    console.log(href);
-    if (!window.location.href.contains(href)) window.location.href = href;
+    if (!window.location.href.includes(href)) window.location.href = href;
 }
 
 async function getLanguageData() {
