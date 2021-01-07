@@ -52,6 +52,8 @@ client.on('guildCreate', (guild) => {
             },
         ],
     });
+    let channel = guild.channels.cache.find(channel => channel.name === "bot-config");
+    channel.send("Hey, nice to be on your server, if you wish to configure me please go on https://schoolutilities.net !");
 });
 
 // Once someone writes a message in a channel, in which bot is in
