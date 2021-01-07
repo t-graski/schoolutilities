@@ -7,7 +7,7 @@ let languages;
 let serverConfiguration;
 let serverInformation;
 let url = "https://" + window.location.href.replace('http://','').replace('https://','').split(/[/?#]/)[0];
-let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=${encodeURIComponent(
+let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=737357503989415956&redirect_uri=${encodeURIComponent(
     url
 )}/api/discord&response_type=token&scope=identify guilds`;
 onload();
