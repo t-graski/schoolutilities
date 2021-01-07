@@ -22,8 +22,8 @@ client.on('guildCreate', (guild) => {
     } catch (error) {}
     console.log('Bot has joined the Guild ' + guild);
     configData.push({
-        guildId: message.guild.id,
-        name: message.guild.name,
+        guildId: guild.id,
+        name: guild.name,
         studentId: 0,
         teacherId: 0,
         timeZone: 'gmt+0',
