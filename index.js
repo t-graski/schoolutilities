@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const numeral = require('numeral');
-const { save } = require('../misc/utils.js');
+const { save } = require('./misc/utils.js');
 
 // Bot prefix
 const PREFIX = process.env.PREFIX;
