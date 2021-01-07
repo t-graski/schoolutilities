@@ -178,7 +178,7 @@ function getTimeZoneHtml(timeZone) {
 function getRoleHtml(roles, choosenRoleId) {
     let choosenRoleIndex = roles.findIndex((role) => role.id == choosenRoleId);
     let choosenRole = {};
-    if(!choosenRoleIndex){
+    if(choosenRoleIndex == -1){
         choosenRole.id = "";
     }else{
         choosenRole = roles[choosenRoleIndex]
