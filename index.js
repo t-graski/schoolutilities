@@ -18,7 +18,7 @@ client.on('ready', () => {
 client.on('guildCreate', (guild) => {
     let configData;
     try {
-        configData = require('../datastore/configs.json');
+        configData = require('datastore/configs.json');
     } catch (error) {}
     console.log('Bot has joined the Guild ' + guild);
     configData.push({
