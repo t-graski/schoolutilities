@@ -560,4 +560,11 @@ input[type='number'] {
     display: none;
 }
 
-.acc-header {padding:  30px 10%;font-size:  3.5rem;}
+.acc-header {
+    padding: 30px 10%;
+    font-size: 3.5rem;
+}
+
+.data-policy-detail-content {
+    margin-bottom: 200px;
+}
