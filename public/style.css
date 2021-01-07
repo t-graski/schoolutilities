@@ -99,9 +99,6 @@ footer a {
     padding: 2% 0;
     color: white;
     transition: all 200ms;
-}
-
-footer a:hover {
     text-decoration: none;
 }
 
@@ -558,3 +555,9 @@ input[type='number'] {
     justify-content: space-around;
     align-items: center;
 }
+
+.choose-btn {
+    display: none;
+}
+
+.acc-header {padding:  30px 10%;font-size:  3.5rem;}
