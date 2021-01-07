@@ -177,12 +177,14 @@ function getTimeZoneHtml(timeZone) {
 
 function getRoleHtml(roles, choosenRoleId) {
     let choosenRoleIndex = roles.findIndex((role) => role.id == choosenRoleId);
+    let choosenRole = {};
     if(!choosenRoleIndex){
-        choosenRoleIndex.id = "";
+        choosenRole.id = "";
+    }else{
+        choosenRole = roles[choosenRoleIndex]
     }
     let roleHtml;
     if (choosenRoleIndex) {
-        const choosenRole = roles[choosenRoleIndex];
         roleHtml = `<option value="${choosenRole.id}">${choosenRole.name}</option>`;
         roles.splice(choosenRoleIndex, 1);
     }
