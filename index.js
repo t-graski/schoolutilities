@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const numeral = require('numeral');
+const { save } = require('../misc/utils.js');
 
 // Bot prefix
 const PREFIX = process.env.PREFIX;
@@ -15,7 +16,33 @@ client.on('ready', () => {
 });
 // Once bot joins a new guild, creates a bot-config channel
 client.on('guildCreate', (guild) => {
+    let configData;
+    try {
+        configData = require('../datastore/configs.json');
+    } catch (error) {}
     console.log('Bot has joined the Guild ' + guild);
+    configData.push({
+        guildId: message.guild.id,
+        name: message.guild.name,
+        studentId: 0,
+        teacherId: 0,
+        timeZone: 'gmt+0',
+        language: 'english',
+        channel: 'bot-config',
+        notifications: false,
+        checktime: 3,
+        autocheck: false,
+        timeTable: {
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [],
+            6: [],
+            7: [],
+        },
+    });
+    save('./datastore/configs.json', JSON.stringify(configData));
     guild.channels.create('bot-config', {
         type: 'text',
         permissionOverwrites: [

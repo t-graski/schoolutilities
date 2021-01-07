@@ -6,10 +6,10 @@ let userData;
 let languages;
 let serverConfiguration;
 let serverInformation;
-let url = window.location.href;
+let url = "https://" + window.location.href.replace('http://','').replace('https://','').split(/[/?#]/)[0];
 let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=${encodeURIComponent(
     url
-)}api/discord&response_type=token&scope=identify guilds`;
+)}/api/discord&response_type=token&scope=identify guilds`;
 onload();
 
 async function onload() {
@@ -33,15 +33,13 @@ async function onload() {
             }
         }
     }
-
-    if (getCookie('access_token') && getCookie('access_token') != '') {
+    if (getCookie('access_token') != '') {
         let cookie = getCookie('access_token');
 
         accessToken = cookie;
         let userResponse = await fetchRestEndpoint('https://discord.com/api/users/@me', 'GET');
         if (userResponse) {
             isLoggedIn = true;
-            accessToken = cookie;
             userData = userResponse;
             if (userData) {
                 document.querySelector('.user-name').innerHTML = userData.username;
@@ -49,25 +47,16 @@ async function onload() {
                     element.style.visibility = 'visible';
                 });
             }
-        } else {
+        } else if(document.querySelector(".login-only")){
             redirect(url);
         }
-    } else {
+    } else if(document.querySelector(".login-only")){
         redirect(url);
     }
 
     document.querySelector('.logout-btn').addEventListener('click', () => {
         setCookie('access_token', '', 7);
-        isLoggedIn = false;
-        userData = null;
-        accessToken = null;
-        document.querySelector('.user-name').innerHTML = '';
-        document.querySelectorAll('.login').forEach((element) => {
-            element.style.visibility = 'hidden';
-        });
-        if (url) {
-            redirect(url);
-        }
+        redirect('/');
     });
 
     if (window.location.href.includes('account')) {
@@ -621,7 +610,10 @@ function openConfigurate(serverId) {
 }
 
 function redirect(href) {
-    if (!window.location.href.includes(href)) window.location.href = href;
+    if (window.location.href == href){
+    }else{
+        window.location.href = href;
+    }
 }
 
 async function getLanguageData() {
