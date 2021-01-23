@@ -33,27 +33,20 @@ exports.run = async (client, message, args) => {
                     .awaitReactions(filter, { max: 9999, time: checkTime * 60000, error: ['time'] })
                     .then((collected) => {
                         let coll = collected.first().users;
-                        let collArray = Array.from(coll.cache).slice(1);
-                        let reactedUsers = [];
-                        collArray.forEach((element) => {
-                            reactedUsers.push(element[1].id);
+                        let reactions = Array.from(coll.cache).slice(1);
+                        reactions.map((element) => {
+                            element[1].id;
                         });
-                        let missing = [];
                         let studentId = serverConfigurationData.studentId;
                         let students = message.guild.roles.cache.get(studentId).members.map((m) => m.user.id);
-                        students.forEach((element) => {
-                            if (!reactedUsers.includes(element)) {
-                                missing.push(element);
-                            }
+                        students.filter(studentId => !reactions.includes(studentId));
+                        students = students.map(id => {
+                            return `<@${id}>`;
                         });
-                        let arr = [...missing];
-                        for (const key in arr) {
-                            arr[key] = `<@${arr[key]}>`;
-                        }
                         let missingStudents = new MessageEmbed()
-                            .setTitle(arr.length ? 'Missing students' : 'Yay, no missing students')
-                            .setColor(arr.length ? '#e50000' : '#4BB543')
-                            .setDescription(arr)
+                            .setTitle(students.length ? 'Missing students' : 'Yay, no missing students')
+                            .setColor(students.length ? '#e50000' : '#4BB543')
+                            .setDescription(students)
                             .setTimestamp()
                             .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
                         message.channel.send(missingStudents);
