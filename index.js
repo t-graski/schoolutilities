@@ -1,6 +1,14 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const numeral = require('numeral');
+const fs = require('fs');
+
+let commandInputData;
+try {
+    commandInputData = require('./datastore/commandInputData.json');
+} catch (error) {
+    commandInputData = [];
+}
 
 // Bot prefix
 const PREFIX = process.env.PREFIX;
@@ -26,24 +34,26 @@ client.on('guildCreate', (guild) => {
         ],
     });
 });
+function save(path, string) {
+    fs.writeFile(path, string, (err) => {
+        console.log(err ? err : '');
+    });
+}
+
 // Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
     let msg = message.content.toUpperCase();
     let args = message.content.slice(PREFIX.length).trim().split(' ');
     let cmd = args.shift().toLowerCase();
-    if (msg.startsWith('!') && cmd == 'anwesenheit') {
-        let commandFile = require(`./commands/${cmd}.js`);
-        commandFile.run(client, message, args);
-    }
     if (!msg.startsWith(PREFIX)) return;
     if (message.author.bot) return;
+    commandInputData.push(new Date().toISOString() + ";" + message.content);
+    save("./datastore/commandInputData.json", JSON.stringify(commandInputData, null, '\t'));
     try {
         let commandFile = require(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
     } catch (e) {
-        console.log(e);
         message.channel.send('This was a wrong command, please check the commands with .help');
-        console.log(`There was a wrong command-input: ${cmd}`);
     }
 });
 // eslint-disable-next-line
