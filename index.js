@@ -47,6 +47,7 @@ client.on('message', async (message) => {
     let cmd = args.shift().toLowerCase();
     if (!msg.startsWith(PREFIX)) return;
     if (message.author.bot) return;
+    if(msg[1] == PREFIX) return;
     commandInputData.push(new Date().toISOString() + ";" + message.content);
     save("./datastore/commandInputData.json", JSON.stringify(commandInputData, null, '\t'));
     try {
