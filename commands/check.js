@@ -8,7 +8,7 @@ exports.run = async (client, message, args) => {
             let checkTime;
             if (args[0]) {
                 if (!Number.isNaN(Number(args[0]))) {
-                    checkTime = Number(args[0]);
+                    checkTime = Math.abs(Number(args[0]));
                 } else {
                     message.channel.send(`"${args[0]}" is not a valid number.`);
                     return false;
