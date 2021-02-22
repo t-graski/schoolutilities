@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client } = require('discord.js');
 const numeral = require('numeral');
 const fs = require('fs');
+const { serverConfiguration } = require('./misc/utils');
 
 let commandInputData;
 try {
@@ -9,9 +10,6 @@ try {
 } catch (error) {
     commandInputData = [];
 }
-
-// Bot prefix
-const PREFIX = process.env.PREFIX;
 
 const client = new Client();
 
@@ -42,12 +40,13 @@ function save(path, string) {
 
 // Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
+    let prefix = serverConfiguration(message.guild.id).prefix || '.';
     let msg = message.content.toUpperCase();
-    let args = message.content.slice(PREFIX.length).trim().split(' ');
+    let args = message.content.slice(prefix.length).trim().split(' ');
     let cmd = args.shift().toLowerCase();
-    if (!msg.startsWith(PREFIX)) return;
+    if (!msg.startsWith(prefix)) return;
     if (message.author.bot) return;
-    if(msg[1] == PREFIX) return;
+    if(msg[1] == prefix) return;
     commandInputData.push(new Date().toISOString() + ";" + message.content);
     save("./datastore/commandInputData.json", JSON.stringify(commandInputData, null, '\t'));
     try {

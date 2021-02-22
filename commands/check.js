@@ -11,6 +11,7 @@ exports.run = async (client, message, args) => {
                     checkTime = Number(args[0]);
                 } else {
                     message.channel.send(`"${args[0]}" is not a valid number.`);
+                    return false;
                 }
             } else {
                 checkTime = serverConfigurationData.checktime;
