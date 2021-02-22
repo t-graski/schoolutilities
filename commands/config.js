@@ -32,6 +32,7 @@ exports.run = async (client, message, args) => {
                         channel: 'bot-config',
                         notifications: false,
                         checktime: 3,
+                        prefix: '.',
                         autocheck: false,
                         timeTable: {
                             1: [],
@@ -60,14 +61,15 @@ exports.run = async (client, message, args) => {
                 configData[serverArrayId].studentId = message.guild.roles.cache.find(
                     (role) => role.name.toLowerCase() === inputRole.toLowerCase()
                 ).id;
-                console.table(configData);
                 replyMsg += `Your student role has been updated.`;
-            } else if (configInput == 'teacher') {
+            } else if (configInput == 'prefix') {
+                configData[serverArrayId].prefix = args[1];
+                replyMsg += `Prefix has been updated to ${args[1]}`;
+            }  else if (configInput == 'teacher') {
                 let inputRole = args.slice(1).reduce((a, b) => a + ' ' + b);
                 configData[serverArrayId].teacherId = message.guild.roles.cache.find(
                     (role) => role.name.toLowerCase() === inputRole.toLowerCase()
                 ).id;
-                console.table(configData);
                 replyMsg += `Your teacher role has been updated.`;
             } else if (configInput == 'notifications') {
                 if (args[1].toLowerCase() == 'enable') {
@@ -81,15 +83,12 @@ exports.run = async (client, message, args) => {
                 }
             } else if (configInput == 'timezone') {
                 configData[serverArrayId].timeZone = args[1].toLowerCase();
-                console.table(configData);
                 replyMsg += `Your timezone has been updated.`;
             } else if (configInput == 'language') {
                 configData[serverArrayId].language = args[1].toLowerCase();
-                console.table(configData);
                 replyMsg += `Your language has been updated.`;
             } else if (configInput == 'checktime') {
                 configData[serverArrayId].checktime = args[1];
-                console.table(configData);
                 replyMsg += `Your checktime has been updated.`;
             } else if (configInput == 'autocheck') {
                 if (args[1].toLowerCase() == 'enable') {
@@ -111,7 +110,6 @@ exports.run = async (client, message, args) => {
                     let dateEntry = convertTimeEntryToObject(args[3], args[4], args[5], subject, message);
                     if (typeof dateEntry == 'object' && typeof weekday == 'number') {
                         configData[serverArrayId].timeTable[weekday].push(dateEntry);
-                        console.table(configData[serverArrayId].timeTable);
                         replyMsg += 'Edited timetable';
                         if (isTimeOverlaped(dateEntry, configData[serverArrayId].timeTable[weekday])) {
                             replyMsg +=
@@ -163,7 +161,6 @@ exports.run = async (client, message, args) => {
                     replyMsg += getTimeTableString(configData[serverArrayId].timeTable, configData[serverArrayId].timeZone);
                 } else {
                     replyMsg += 'The command ' + args[1] + " doesn't exist.";
-                    console.log('Wrong input:' + args[1]);
                 }
             } else {
                 replyMsg += `There was a problem updating your config, please check, if you've written it correctly.`;
