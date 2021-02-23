@@ -3,3 +3,4 @@ node_modules
 datastore/configs.json
 media/*
 *.pem
+datastore/commandInputData.json

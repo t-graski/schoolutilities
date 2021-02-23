@@ -16,23 +16,26 @@ function getLanguage(code) {
 }
 
 exports.run = async (client, message, args) => {
-    // Get all arguments and turn them into one string
-    let translateText = args.slice(1).reduce((a, b) => a + ' ' + b);
+    // // Get all arguments and turn them into one string
+    // let translateText = args.slice(1).reduce((a, b) => a + ' ' + b);
 
-    // Use google-translate-free npm package to translate the input text to another language
-    translate(translateText, { to: args[0] })
-        .then((res) => {
-            // Create discord embed message
-            const embed = new MessageEmbed()
-                .setTitle(`Translation (${getLanguage(res.from.language.iso)} -> ${getLanguage(args[0])}) `)
-                .setColor('#4BB543')
-                .setDescription(`**${res.text}**`)
-                .setTimestamp()
-                .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
-            // Send discord message
-            message.channel.send(embed);
-        })
-        .catch((err) => {
-            message.reply('This language is not supported yet.');
-        });
+    // console.log(await 
+    //     translate(translateText, { to: args[0] }));
+
+    // // Use google-translate-free npm package to translate the input text to another language
+    // translate(translateText, { to: args[0] })
+    //     .then((res) => {
+    //         // Create discord embed message
+    //         const embed = new MessageEmbed()
+    //             .setTitle(`Translation (${getLanguage(res.from.language.iso)} -> ${getLanguage(args[0])}) `)
+    //             .setColor('#4BB543')
+    //             .setDescription(`**${res.text}**`)
+    //             .setTimestamp()
+    //             .setFooter('SchoolUtilities© 2020', 'https://i.imgur.com/KJ63K3r.png');
+    //         // Send discord message
+    //         message.channel.send(embed);
+    //     })
+    //     .catch((err) => {
+    message.reply('This feature is temporary disabled.');
+        // });
 };

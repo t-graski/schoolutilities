@@ -6,7 +6,7 @@ let userData;
 let languages;
 let serverConfiguration;
 let serverInformation;
-let url = "https://" + window.location.href.replace('http://','').replace('https://','').split(/[/?#]/)[0];
+let url = 'https://' + window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
 let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=737357503989415956&redirect_uri=${encodeURIComponent(
     url
 )}/api/discord&response_type=token&scope=identify guilds`;
@@ -47,10 +47,10 @@ async function onload() {
                     element.style.visibility = 'visible';
                 });
             }
-        } else if(document.querySelector(".login-only")){
+        } else if (document.querySelector('.login-only')) {
             redirect(url);
         }
-    } else if(document.querySelector(".login-only")){
+    } else if (document.querySelector('.login-only')) {
         redirect(url);
     }
 
@@ -119,10 +119,7 @@ async function loadConfiguration() {
                         languageData.webInterface.chooseNotificationsHeadline
                     }</label><br>
                     <p class="config-item-description">${languageData.webInterface.chooseNotificationsDescription}</p><br>
-                    <label class="switch no-margin">
-                        <input class="config-notifications" type="checkbox" ${serverConfiguration.notifications ? 'checked' : ''}>
-                        <span class="slider round"></span>
-                    </label>
+                    <input class="config-notifications" type="checkbox" ${serverConfiguration.notifications ? 'checked' : ''}>
                 </div>
                 <div class="config-general-item">
                     <label class="checktime small-margin" for="checktime">${languageData.webInterface.chooseCheckTimeHeadline}</label><br>
@@ -132,10 +129,7 @@ async function loadConfiguration() {
                 <div class="config-general-item">
                     <label class="timezones small-margin" for="timezones">${languageData.webInterface.chooseAutocheckHeadline}</label>
                     <p class="config-item-description">${languageData.webInterface.chooseAutocheckDescription}</p><br>
-                    <label class="switch no-margin">
-                        <input class="config-autocheck" type="checkbox" ${serverConfiguration.autocheck ? 'checked' : ''}>
-                        <span class="slider round"></span>
-                    </label>
+                    <input class="config-autocheck" type="checkbox" ${serverConfiguration.autocheck ? 'checked' : ''}>
                 </div>
             </div>
             <div class="config-timetable">
@@ -178,10 +172,10 @@ function getTimeZoneHtml(timeZone) {
 function getRoleHtml(roles, choosenRoleId) {
     let choosenRoleIndex = roles.findIndex((role) => role.id == choosenRoleId);
     let choosenRole = {};
-    if(choosenRoleIndex == -1){
-        choosenRole.id = "";
-    }else{
-        choosenRole = roles[choosenRoleIndex]
+    if (choosenRoleIndex == -1) {
+        choosenRole.id = '';
+    } else {
+        choosenRole = roles[choosenRoleIndex];
     }
     let roleHtml;
     if (choosenRoleIndex) {
@@ -267,8 +261,19 @@ function deleteDay(index) {
 }
 
 function deleteDayAccepted(index) {
-    serverConfiguration.timeTable[index] = [];
-    console.log(serverConfiguration);
+    if (index == -1) {
+        serverConfiguration.timeTable = {
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [],
+            6: [],
+            7: [],
+        };
+    } else {
+        serverConfiguration.timeTable[index] = [];
+    }
 
     fetchRestEndpoint('/api/saveconfig', 'POST', {
         token: accessToken,
@@ -444,10 +449,9 @@ function saveGeneralChanges() {
         serverConfiguration.teacherId = document.querySelector('.teacher-select').value;
         serverConfiguration.timeZone = document.querySelector('.timezone-select').value;
         serverConfiguration.language = document.querySelector('#language').value;
-        serverConfiguration.notifications = document.querySelector('.config-notifications').value;
-        serverConfiguration.checktime = document.querySelector('.config-checktime').value;
-        serverConfiguration.autocheck = document.querySelector('.config-autocheck').value;
-
+        serverConfiguration.notifications = document.querySelector('.config-notifications').checked;
+        serverConfiguration.checktime = Number(document.querySelector('.config-checktime').value);
+        serverConfiguration.autocheck = document.querySelector('.config-autocheck').checked;
         fetchRestEndpoint('/api/saveconfig', 'POST', {
             token: accessToken,
             serverConfig: serverConfiguration,
@@ -487,8 +491,11 @@ function saveTimetableChange(columnKey, index) {
         }
     }
     if (document.querySelector('.config-timetable-end-hour')) {
+        let startHour = document.querySelector('.config-timetable-start-hour').value;
+        let startMinute = document.querySelector('.config-timetable-start-minute').value;
         let endHour = document.querySelector('.config-timetable-end-hour').value;
-        if (endHour >= 0 && endHour < 24) {
+        let endMinute = document.querySelector('.config-timetable-end-minute').value;
+        if (endHour >= 0 && endHour < 24 && (endHour > startHour || (endHour == startHour && endMinute > startMinute))) {
             itemObject.endTime.hours = Number(endHour);
         } else {
             falseValues.push('endHour');
@@ -543,7 +550,6 @@ function deleteTimetableItem(columnKey, index) {
         token: accessToken,
         serverConfig: serverConfiguration,
     });
-    console.log('asdfasdf');
     closePopUp();
     getTimetableHtml();
 }
@@ -615,8 +621,8 @@ function openConfigurate(serverId) {
 }
 
 function redirect(href) {
-    if (window.location.href == href){
-    }else{
+    if (window.location.href == href) {
+    } else {
         window.location.href = href;
     }
 }
