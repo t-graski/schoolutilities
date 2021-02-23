@@ -86,11 +86,11 @@ router.post('/saveconfig', async (req, res) => {
     });
     //TODO Serverside Error-Handling
     servers = await discordRes.json();
-    userCache[token] = {
-        servers: servers,
-        date: Date.now(),
-    };
     if (servers) {
+        userCache[token] = {
+            servers: servers,
+            date: Date.now(),
+        };
         if (getSharedAdminServerIDs(getSharedAdminServers(servers)).includes(id)) {
             let serverConfigIndex = configData.findIndex((serverData) => serverData.guildId == id);
             configData[serverConfigIndex] = serverConfig;
