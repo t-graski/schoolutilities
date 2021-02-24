@@ -3,7 +3,7 @@ exports.run = async (client, message, args) => {
     if (owner.includes(message.author.id)) {
         if (args.length >= 1 && args.length < 2) {
             if (args[0].toLowerCase() == 'serverlist') {
-                message.channel.send('```' + getServers(client) + '```');
+                message.channel.send('```' + getServers(client).length + '```');
                 generateNewKey();
             } else if (args[0].toLowerCase() == 'key') {
                 message.author.send('`' + process.env.key + '`');
