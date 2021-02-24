@@ -145,7 +145,6 @@ function generateNewKey() {
 
 // import module
 const express = require('express');
-const fs = require('fs');
 const https = require('https');
 const http = require('http');
 var privateKey = fs.readFileSync('cert/privkey.pem', 'utf8');
