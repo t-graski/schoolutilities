@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const numeral = require('numeral');
+const { save } = require('./misc/utils.js');
 const fs = require('fs');
 
 let commandInputData;
@@ -23,7 +24,33 @@ client.on('ready', () => {
 });
 // Once bot joins a new guild, creates a bot-config channel
 client.on('guildCreate', (guild) => {
+    let configData;
+    try {
+        configData = require('./datastore/configs.json');
+    } catch (error) {}
     console.log('Bot has joined the Guild ' + guild);
+    configData.push({
+        guildId: guild.id,
+        name: guild.name,
+        studentId: 0,
+        teacherId: 0,
+        timeZone: 'gmt+0',
+        language: 'english',
+        channel: 'bot-config',
+        notifications: false,
+        checktime: 3,
+        autocheck: false,
+        timeTable: {
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [],
+            6: [],
+            7: [],
+        },
+    });
+    save('./datastore/configs.json', JSON.stringify(configData));
     guild.channels.create('bot-config', {
         type: 'text',
         permissionOverwrites: [
@@ -33,6 +60,8 @@ client.on('guildCreate', (guild) => {
             },
         ],
     });
+    let channel = guild.channels.cache.find(channel => channel.name === "bot-config");
+    // --channel.send("Hey, nice to be on your server, if you wish to use my features click on the following link: https://schoolutilities.net !");
 });
 function save(path, string) {
     fs.writeFile(path, string, (err) => {
@@ -53,7 +82,9 @@ client.on('message', async (message) => {
         let commandFile = require(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
     } catch (e) {
-        message.channel.send('This was a wrong command, please check the commands with .help');
+        (await message.reply('This was a wrong command, please check the commands with .help')).delete({
+            timeout: 10000,
+        });
     }
 });
 // eslint-disable-next-line
@@ -75,7 +106,7 @@ function checkPresence() {
         );
         if (foundEntry) {
             if (guild) {
-                  let channel = guild.channels.cache.get(foundEntry.channel);
+                let channel = guild.channels.cache.get(foundEntry.channel);
                 if (channel) {
                     if (serverConfig.notifications) {
                         channel.send(
@@ -88,9 +119,7 @@ function checkPresence() {
                         try {
                             let commandFile = require(`./misc/autocheck.js`);
                             commandFile.run(channel, serverConfig.guildId, guild);
-                        } catch (e) {
-                            console.log(e);
-                        }
+                        } catch (e) {}
                     }
                 } else {
                     console.log('There is no channel with this Id!');
@@ -99,7 +128,7 @@ function checkPresence() {
         }
     });
 }
-
+// Checks if a specific time is between two other times, also works with timezone
 function timeInRange(startTime, endTime, timezone) {
     timezone = Number(timezone.split('gmt')[1]);
     startTime = (startTime.hours - timezone) * 60 + startTime.minutes;
@@ -109,6 +138,7 @@ function timeInRange(startTime, endTime, timezone) {
     let currentMinute = currentHour * 60 + date.getMinutes();
     return currentMinute == startTime;
 }
+// Generates a random key out of 10 characters
 function generateNewKey() {
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let key = '';
@@ -117,3 +147,35 @@ function generateNewKey() {
     }
     process.env.key = key;
 }
+
+// import module
+const express = require('express');
+const fs = require('fs');
+const https = require('https');
+const http = require('http');
+var privateKey = fs.readFileSync('cert/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('cert/cert.pem', 'utf8');
+var credentials = { key: privateKey, cert: certificate };
+
+// import router
+const interfaceRouter = require('./routes/route.js');
+
+// specify http server port
+const port = 443;
+
+// create express application
+const app = express();
+
+// mount middleware
+app.use(express.static('public'));
+app.use(express.json()); // parse JSON payload and place result in req.body
+app.use('/api/', interfaceRouter);
+
+var httpsServer = https.createServer(credentials, app);
+var httpServer = http.createServer(app);
+httpsServer.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+});
+httpServer.listen(process.env.PORT, () => {
+    console.log(`Server listening on port ${process.env.PORT}`);
+});
