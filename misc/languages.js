@@ -7,7 +7,6 @@
  */
 
 let langs = {
-    auto: 'Automatic',
     af: 'Afrikaans',
     sq: 'Albanian',
     am: 'Amharic',

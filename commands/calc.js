@@ -14,14 +14,8 @@ exports.run = async (client, message, args) => {
         error = true;
     }
     let resultString = result + '';
-    if (resultString.split('.').length < 2) {
-        resultString += '.0';
-        resultString = resultString.split('.')[1];
-    }
-    if (resultString.length > 10) {
-        resultString.length = 10;
-    }
-    result = numeral(result).format('0,0.' + '0'.repeat(resultString.length));
+    let commaLength = resultString.includes('.') ? resultString.split('.')[1].length : 0;
+    result = numeral(result).format('0,0.' + '0'.repeat(commaLength > 10 ? 10 : commaLength));
     // Create and send a discord message
     const embed = new MessageEmbed()
         .setColor(error ? '#FF0000' : '#4BB543')

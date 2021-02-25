@@ -2,12 +2,13 @@ const { MessageEmbed } = require('discord.js');
 
 exports.run = async (client, message, args) => {
     const emoji = client.emojis.cache.get('748653682966528171');
+    let date = new Date().toISOString();
     const example = {
         title: 'SchoolUtilities Help',
         description:
             "\nHi, I'm SchoolUtilites help. If you have any questions how to use SchoolUtilities, you are absolutly right here. If you have any issues, you can contact us via [Github](https://github.com/WahlMandat/SchoolUtilities).",
         color: 3066993,
-        timestamp: '2020-08-27T19:53:42.666Z',
+        timestamp: date,
         footer: {
             icon_url: 'https://i.imgur.com/KJ63K3r.png',
             text: 'SchoolUtilities© 2020',
