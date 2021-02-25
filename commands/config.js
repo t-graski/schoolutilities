@@ -52,7 +52,7 @@ exports.run = async (client, message, args) => {
             let replyMsg = '';
             if (isFirstConfig) {
                 replyMsg =
-                    "Hi, nice to have you in the schoolutilities community. That's your first configuration, have fun with this bot!\n";
+                    "Hi, nice to have you in the schoolutilities community. That's your first configuration, have fun with this bot!\nConsider to type \".help\"!";
                 isFirstConfig = false;
             }
             let configInput = args[0].toLowerCase();
@@ -82,8 +82,12 @@ exports.run = async (client, message, args) => {
                     replyMsg += `Please enter a valid argument (For more informations, check the documentary with .help)`;
                 }
             } else if (configInput == 'timezone') {
-                configData[serverArrayId].timeZone = args[1].toLowerCase();
-                replyMsg += `Your timezone has been updated.`;
+                if(args[1].toUpperCase().startsWith("GMT")) {
+                    configData[serverArrayId].timeZone = args[1].toLowerCase();
+                    replyMsg += `Your timezone has been updated.`;
+                } else {
+                    replyMsg += `The given timezone is not correct. Maybe it does not start with GMT? :thinking:`;
+                }
             } else if (configInput == 'language') {
                 configData[serverArrayId].language = args[1].toLowerCase();
                 replyMsg += `Your language has been updated.`;
@@ -101,6 +105,7 @@ exports.run = async (client, message, args) => {
                     replyMsg += `Please enter a valid argument (For more informations, check the documentary with .help)`;
                 }
             } else if (configInput == 'timetable') {
+                try {
                 if (args[1].toLowerCase() == 'add') {
                     //Check the weekday for the timetable entry
                     let weekday = getWeekDay(args[2]);
@@ -157,13 +162,14 @@ exports.run = async (client, message, args) => {
                         };
                         replyMsg += `The entire timetable has been wiped.`;
                     }
-                } else if (args[1].toLowerCase() == 'print') {
-                    replyMsg += getTimeTableString(configData[serverArrayId].timeTable, configData[serverArrayId].timeZone);
                 } else {
                     replyMsg += 'The command ' + args[1] + " doesn't exist.";
                 }
+            }catch(IllegalArgumentException) {
+                replyMsg += `There was a problem updating your config, please check, if you've written it correctly.\nMake sure you follow the pattern: ".config timetable [add/remove] [Mo/Tu/We/Th/Fr/Sa/Su] [start Time (10:00)] [end Time(12:00)] [#channel] [subject name].`;
+            }
             } else {
-                replyMsg += `There was a problem updating your config, please check, if you've written it correctly.`;
+                replyMsg += `There was a problem updating your config, please check, if you've written it correctly.\nMake sure you follow the pattern: ".config timetable [add/remove] [Mo/Tu/We/Th/Fr/Sa/Su] [start Time (10:00)] [end Time(12:00)] [#channel] [subject name].`;
             }
             message.channel.send(replyMsg);
             save(datastorePath, JSON.stringify(configData, null, '\t'));
