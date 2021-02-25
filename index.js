@@ -64,6 +64,20 @@ client.on('guildCreate', (guild) => {
     // --channel.send("Hey, nice to be on your server, if you wish to use my features click on the following link: https://schoolutilities.net !");
 });
 
+client.on('guildDelete', (guild) => {
+    let configData;
+    try {
+        configData = require('./datastore/configs.json');
+    } catch (error) {
+        configData = [];
+    }
+    let index = configData.findIndex((currentGuildConfig) => currentGuildConfig.guildId == guild);
+    if (index) {
+        delete configData[index];
+        save('./datastore/configs.json', JSON.stringify(configData));
+    }
+});
+
 // Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
     let msg = message.content.toUpperCase();
