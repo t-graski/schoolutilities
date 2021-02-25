@@ -60,7 +60,7 @@ client.on('guildCreate', (guild) => {
             },
         ],
     });
-    let channel = guild.channels.cache.find(channel => channel.name === "bot-config");
+    let channel = guild.channels.cache.find((channel) => channel.name === 'bot-config');
     // --channel.send("Hey, nice to be on your server, if you wish to use my features click on the following link: https://schoolutilities.net !");
 });
 
@@ -71,8 +71,8 @@ client.on('message', async (message) => {
     let cmd = args.shift().toLowerCase();
     if (!msg.startsWith(PREFIX)) return;
     if (message.author.bot) return;
-    commandInputData.push(new Date().toISOString() + ";" + message.content);
-    save("./datastore/commandInputData.json", JSON.stringify(commandInputData, null, '\t'));
+    commandInputData.push(new Date().toISOString() + ';' + message.content);
+    save('./datastore/commandInputData.json', JSON.stringify(commandInputData, null, '\t'));
     try {
         let commandFile = require(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
@@ -129,7 +129,7 @@ function timeInRange(startTime, endTime, timezone) {
     startTime = (startTime.hours - timezone) * 60 + startTime.minutes;
 
     let date = new Date();
-    let currentHour = date.getHours()-1;
+    let currentHour = date.getHours() - process.env.TIMEZONE;
     let currentMinute = currentHour * 60 + date.getMinutes();
     return currentMinute == startTime;
 }

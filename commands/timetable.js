@@ -1,6 +1,7 @@
 const fs = require('fs');
 const datastorePath = './datastore/configs.json';
 const numeral = require('numeral');
+require('dotenv').config();
 let configData;
 configData = require('../datastore/configs.json');
 
@@ -87,7 +88,7 @@ function timeInRange(startTime, endTime, timezone) {
     }
 
     let date = new Date();
-    let currentHour = date.getHours();
+    let currentHour = date.getHours() - process.env.TIMEZONE;
     let currentMinute = date.getMinutes();
     let currentTimeSec = (currentHour * 60 + currentMinute) * 60;
     return currentTimeSec > startTimeSec && currentTimeSec < endTimeSec;
