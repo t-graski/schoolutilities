@@ -24,13 +24,13 @@ exports.run = async (client, message, args) => {
                 value:
                     '```This command is only usable with a teacher role. In case you are a teacher you can check the precense of your students with this command.\n\nExample: .check, .check 1 <-- Time how long students have to confirm their precense.```',
             },
+            // {
+            //     name: ` ${emoji} Translate Command`,
+            //     value:
+            //         '```You can simply translate single words or entire sentences to the language you wish.\n\nExample: .translate de Hello, my name is SchoolUtilities```',
+            // },
             {
-                name: ` ${emoji} Translate Command`,
-                value:
-                    '```You can simply translate single words or entire sentences to the language you wish.\n\nExample: .translate de Hello, my name is SchoolUtilities```',
-            },
-            {
-                name: '<:config:748662672983064739> Concig Command (ADMIN ONLY and only if you know what you are doing)',
+                name: '<:config:748662672983064739> Config Command (ADMIN ONLY and only if you know what you are doing)',
                 value:
                     '```Set your student role\nExample: .config student StudentRole\n\nSet your teacher role\nExample: .config teacher TeacherRole\n\nSet your timezone\nExample: .config timezone GMT+2\n\nSet your language\nExample: .config language German\n\nSet your checktime\nThe checktime is the time how long students have time to confirm their precense if there is now time give.\nExample: .config checktime 2\n\nEnable your autochecks\nFurther information about this in the timetable tab.\nExample: .config autocheck enable, .config autocheck disable ```',
             },
