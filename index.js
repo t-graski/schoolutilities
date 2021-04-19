@@ -129,7 +129,7 @@ function timeInRange(startTime, endTime, timezone) {
     startTime = (startTime.hours - timezone) * 60 + startTime.minutes;
 
     let date = new Date();
-    let currentHour = date.getHours();
+    let currentHour = date.getHours()-1;
     let currentMinute = currentHour * 60 + date.getMinutes();
     return currentMinute == startTime;
 }
