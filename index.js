@@ -58,21 +58,26 @@ client.on('guildCreate', (guild) => {
             },
         ],
     });
-    let channel = guild.channels.cache.find(channel => channel.name === "bot-config");
+    let channel = guild.channels.cache.find((channel) => channel.name === 'bot-config');
     // --channel.send("Hey, nice to be on your server, if you wish to use my features click on the following link: https://schoolutilities.net !");
 });
 
 // Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
-    let prefix = serverConfiguration(message.guild.id).prefix || '.';
+    let prefix = serverConfiguration(message.guild.id);
+    if (prefix && prefix.prefix) {
+        prefix = prefix.prefix;
+    } else {
+        prefix = process.env.PREFIX;
+    }
     let msg = message.content.toUpperCase();
     let args = message.content.slice(prefix.length).trim().split(' ');
     let cmd = args.shift().toLowerCase();
     if (!msg.startsWith(prefix)) return;
     if (message.author.bot) return;
-    if(msg[1] == prefix) return;
-    commandInputData.push(new Date().toISOString() + ";" + message.content);
-    save("./datastore/commandInputData.json", JSON.stringify(commandInputData, null, '\t'));
+    if (msg[1] == prefix) return;
+    commandInputData.push(new Date().toISOString() + ';' + message.content);
+    save('./datastore/commandInputData.json', JSON.stringify(commandInputData, null, '\t'));
     try {
         let commandFile = require(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
@@ -168,8 +173,8 @@ app.use('/api/', interfaceRouter);
 var httpsServer = https.createServer(credentials, app);
 var httpServer = http.createServer(app);
 httpsServer.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+ console.log(`Server listening on port ${port}`);
 });
 httpServer.listen(process.env.PORT, () => {
-    console.log(`Server listening on port ${process.env.PORT}`);
+ console.log(`Server listening on port ${process.env.PORT}`);
 });
