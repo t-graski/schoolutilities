@@ -77,6 +77,10 @@ async function loadConfiguration() {
         token: accessToken,
         id: getCookie('serverId'),
     });
+    console.log({
+        token: accessToken,
+        id: getCookie('serverId'),
+    });
     languages = await fetchRestEndpoint('/api/supportedlanguages', 'GET');
     if (serverInformation && languages) {
         setTimeout(async () => {
