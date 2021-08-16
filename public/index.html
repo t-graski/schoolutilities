@@ -12,35 +12,56 @@
 
     <body>
         <div class="site-layout">
-            <nav class="side-menu">
-                <a href="/" class="nav-link webinteface-header-link">
-                    <img src="media/avatar.png" alt="SchoolUtlities Logo" class="schoolutilites-logo" />
-                    <h4 class="server-name"></h4>
-                </a>
-                <div class="user-nav">
-                    <a href="/account.html" class="login nav-link user-name"></a>
-                    <button class="login nav-link logout-btn"></button>
+            <nav class="nav-bar">
+                <a href="/"><img src="/media/avatar.png" alt="SchoolUtilities Logo" class="navbar-logo" /> </a>
+                <div class="nav-bar-content">
+                    <ul class="styled-nav-list">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="contact.html">Features</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                    <button class="account-button">
+                        <img src="/media/user.svg" alt="SchoolUtilities Logo" class="account-img" />
+                        <p>John</p>
+                    </button>
                 </div>
             </nav>
-            <div class="content">
-                <h1 class="header"></h1>
-                <div class="detail-content">
-                    <div class="description"></div>
-                    <div class="index-button-layout">
-                        <a class="discord-style-btn feature-btn"></a>
-                        <a
-                            id="login"
-                            class="discord-style-btn authorize-btn"
-                            href="https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fapi%2Fdiscord&response_type=token&scope=identify%20guilds"
-                        ></a>
-                    </div>
-                    <div id="info"></div>
+            <div class="main-content">
+                <h1>Features</h1>
+                <hr class="small-hr" />
+                <div class="description-1">
+                    <img src="/media/timetable.svg" alt="Timetable Icon" />
+                    <h2>#1 - Timetable</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
                 </div>
-                <footer>
-                    <a href="/data-protection.html">Data policy</a>
-                    <a href="/impressum.html">Impressum</a>
-                </footer>
+                <hr class="tiny-hr"/>
+                <div class="description-2">
+                    <img src="/media/calculator.svg" alt="Calculation Icon" />
+                    <h2>#2 - Calculation</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
+                </div>
+                <hr class="tiny-hr"/>
+                <div class="description-3">
+                    <img src="media/immigration.svg" alt="Attendance Icon" />
+                    <h2>#3 - Attendance</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
+                </div>
+                <hr class="tiny-hr"/>
+                <div class="description-4">
+                    <img src="media/promotion.svg" alt="Alert Icon" />
+                    <h2>#4 - Alert</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</p>
+                </div>
             </div>
+            <footer>
+                <nav class="footer-navbar">
+                    <ul>
+                        <li><a href="data-policy.html">Data Policy</a></li>
+                        <li><a href="imprint.html">Imprint</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </footer>
         </div>
     </body>
 </html>

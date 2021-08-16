@@ -19,11 +19,11 @@ exports.run = async (client, message, args) => {
                 if (
                     !configData.find((configData, index) => {
                         serverArrayId = index;
-                        return configData.guildId == message.guild.id;
+                        return configData.guildId == message.channel.guild.id;
                     })
                 ) {
                     configData.push({
-                        guildId: message.guild.id,
+                        guildId: ,
                         name: message.guild.name,
                         studentId: 0,
                         teacherId: 0,
