@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 let languageData;
-let accessToken;
+let accessToken = '';
 let isLoggedIn = false;
 let userData;
 let languages;
@@ -42,7 +42,7 @@ async function onload() {
             isLoggedIn = true;
             userData = userResponse;
             if (userData) {
-                document.querySelector('.user-name').innerHTML = userData.username;
+                document.querySelector('.account-button p').innerHTML = userData.username;
                 document.querySelectorAll('.login').forEach((element) => {
                     element.style.visibility = 'visible';
                 });
@@ -52,6 +52,17 @@ async function onload() {
         }
     } else if (document.querySelector('.login-only')) {
         redirect(url);
+    }
+
+    console.log(accessToken);
+    if (accessToken != '') {
+        document.querySelector('.account-button').addEventListener('click', () => {
+            redirect('/dashboard.html');
+        });
+    } else {
+        document.querySelector('.account-button').addEventListener('click', () => {
+            redirect(discordLoginUrl);
+        });
     }
 
     document.querySelector('.logout-btn').addEventListener('click', () => {

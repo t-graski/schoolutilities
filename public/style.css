@@ -84,19 +84,24 @@ footer {
     display: flex;
     justify-content: space-around;
     font-size: 1rem;
-    position: absolute;
-    bottom: 0;
     line-height: 1.2rem;
     margin-top: 80px;
-    border-top: solid 2px white;
-    background-color: #3d3d3d;
+    background-color: var(--background-color-tertiary);
 }
 
-footer a {
-    padding: 2% 0;
-    color: white;
-    transition: all 200ms;
+footer ul {
+    display: flex;
+    flex-direction: row;
+    padding: 5vh 0;
+    list-style: none;
+}
+
+footer ul a {
+    color: var(--font-color-primary);
     text-decoration: none;
+    margin: 0 4vw;
+    font-size: 1.5rem;
+    text-transform: uppercase;
 }
 
 .servers {
@@ -469,12 +474,24 @@ input[type='number'] {
     left: 0;
     width: 100%;
     flex-direction: row;
+    z-index: 1;
 }
 
 .navbar-logo {
     display: inline-block;
     max-width: 70px;
     margin-left: 10px;
+}
+.navbar-header {
+    display: flex;
+    color: var(--font-color-primary);
+    text-decoration: none;
+    align-items: center;
+    font-size: 1.6rem; 
+}
+.navbar-header-font {
+    display: inline-block;
+    margin-left: 1vw;
 }
 
 .styled-nav-list {
@@ -500,9 +517,9 @@ input[type='number'] {
 
 .account-button {
     display: flex;
+    width: fit-content; 
+     padding: 10px;
     align-items: center;
-    flex-direction: row;
-    padding: 10px;
     background-color: var(--special-color-primary);
     color: var(--font-color-secondary);
     border: none;
@@ -514,14 +531,20 @@ input[type='number'] {
     -moz-box-shadow: 0px 0px 13px 0px var(--special-color-primary);
 }
 
+.account-button p{
+    font-weight: 700;
+}
+
 .account-img {
     max-width: 30px;
+    width: 30px;
     margin-right: 10px;
 }
 
 .main-content {
     width: 100%;
     margin-top: 140px;
+    padding: 0 15vw;
 }
 
 .main-content h1 {
@@ -536,4 +559,59 @@ input[type='number'] {
     border-top: 3px solid var(--font-color-primary);
     width: 110px;
     margin: 10px auto;
+}
+
+.tiny-hr {
+    border-top: 1px solid var(--font-color-primary);
+    width: 100%;
+}
+
+[class^='description'] {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 2vw;
+    padding: 3vw;
+    align-items: center;
+}
+
+.icon-img {
+    width: 100%;
+    filter: invert();
+}
+
+.icon-background {
+    padding: 3.5vw;
+    border-radius: 50%;
+    background-color: var(--special-color-secondary);
+    margin: 2.3vw;
+    grid-column: 1 / span 1;
+    grid-row: 1;
+}
+
+[class^='description'] h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--font-color-primary);
+    margin: 0;
+}
+
+.change-view .icon-background{
+    grid-column: 3 / span 1;
+    grid-row: 1;
+}
+
+[class^='description'] p {
+    font-size: 1.5rem;
+    color: var(--font-color-primary);
+}
+
+.feature-description {
+    grid-column: 2 / span 2;
+    grid-row: 1;
+}
+
+.change-view .feature-description{
+    grid-column: 1 / span 2;
+    grid-row: 1;
 }
