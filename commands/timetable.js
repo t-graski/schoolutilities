@@ -10,7 +10,7 @@ exports.run = async (client, message, args) => {
     if (
         !configData.find((configData, index) => {
             serverArrayId = index;
-            return configData.guildId == message.guild.id;
+            return configData.guildId == message.channel.guild.id;
         })
     ) {
         replyMsg = 'Please config your server, for more informations type .help';

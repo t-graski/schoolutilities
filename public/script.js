@@ -1,16 +1,20 @@
 // eslint-disable-next-line
 let languageData;
-let accessToken;
+let accessToken = '';
 let isLoggedIn = false;
 let userData;
 let languages;
 let serverConfiguration;
 let serverInformation;
-let url = 'https://' + window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=737357503989415956&redirect_uri=${encodeURIComponent(
-    url
-)}/api/discord&response_type=token&scope=identify guilds`;
+let url = 'http://' + window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=${encodeURIComponent(
+    url + '/api/discord'
+)}&response_type=token&scope=identify%20guilds`;
 onload();
+
+if (window.location.href.includes('logout=true')) {
+    setCookie('access_token', '', 7);
+}
 
 async function onload() {
     if (document.querySelector('.authorize-btn')) {
@@ -24,7 +28,7 @@ async function onload() {
 
     if (languageData) {
         if (languageData.webInterface.tabTitle) {
-            document.querySelector('title').innerHTML = languageData.webInterface.tabTitle;
+            document.querySelector('title').innerHTML = document.querySelector('title').innerHTML + languageData.webInterface.tabTitle;
         }
         for (text in languageData.webInterface) {
             let translation = document.querySelector('.' + text);
@@ -33,7 +37,7 @@ async function onload() {
             }
         }
     }
-    if (getCookie('access_token') != '') {
+    if (getCookie('access_token')) {
         let cookie = getCookie('access_token');
 
         accessToken = cookie;
@@ -42,7 +46,7 @@ async function onload() {
             isLoggedIn = true;
             userData = userResponse;
             if (userData) {
-                document.querySelector('.user-name').innerHTML = userData.username;
+                document.querySelector('.account-button p').innerHTML = userData.username;
                 document.querySelectorAll('.login').forEach((element) => {
                     element.style.visibility = 'visible';
                 });
@@ -54,12 +58,17 @@ async function onload() {
         redirect(url);
     }
 
-    document.querySelector('.logout-btn').addEventListener('click', () => {
-        setCookie('access_token', '', 7);
-        redirect('/');
-    });
+    if (accessToken != '') {
+        document.querySelector('.account-button').addEventListener('click', () => {
+            redirect('/dashboard.html');
+        });
+    } else {
+        document.querySelector('.account-button').addEventListener('click', () => {
+            redirect(discordLoginUrl);
+        });
+    }
 
-    if (window.location.href.includes('account')) {
+    if (window.location.href.includes('dashboard')) {
         if (isLoggedIn) {
             loadServers();
         }
@@ -74,6 +83,10 @@ async function onload() {
 
 async function loadConfiguration() {
     serverInformation = await fetchRestEndpoint('/api/serverinformation', 'POST', {
+        token: accessToken,
+        id: getCookie('serverId'),
+    });
+    console.log({
         token: accessToken,
         id: getCookie('serverId'),
     });
@@ -422,7 +435,7 @@ function openTimetableDetail(columnKey, index) {
         <br />
     </div>
     <div class="config-timetable-channel">
-        <label class="timetable-channel" for="timetableChannel">WÃ¤hle die SchÃ¼ler Rolle</label><br />
+        <label class="timetable-channel" for="timetableChannel">Wähle die Schüler Rolle</label><br />
         <select class="timetable-channel-select" name="timetableChannel" id="timetableChannel">
             ${selectChannelHtml}
         </select><br />
