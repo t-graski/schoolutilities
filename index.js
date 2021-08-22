@@ -59,12 +59,12 @@ client.on('guildCreate', (guild) => {
         ],
     });
     let channel = guild.channels.cache.find((channel) => channel.name === 'bot-config');
-    // --channel.send("Hey, nice to be on your server, if you wish to use my features click on the following link: https://schoolutilities.net !");
+    // channel.send("Hey, nice to be on your server, if you wish to use my features click on the following link: https://schoolutilities.net !");
 });
 
 // Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
-    let prefix = serverConfiguration(message.guild.id);
+    let prefix = serverConfiguration(message.channel.guild.id);
     if (prefix && prefix.prefix) {
         prefix = prefix.prefix;
     } else {
@@ -80,6 +80,7 @@ client.on('message', async (message) => {
     save('./datastore/commandInputData.json', JSON.stringify(commandInputData, null, '\t'));
     try {
         let commandFile = require(`./commands/${cmd}.js`);
+        console.log(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
     } catch (e) {
         (await message.reply('This was a wrong command, please check the commands with .help')).delete({
@@ -134,7 +135,7 @@ function timeInRange(startTime, endTime, timezone) {
     startTime = (startTime.hours - timezone) * 60 + startTime.minutes;
 
     let date = new Date();
-    let currentHour = date.getHours()-1;
+    let currentHour = date.getHours() - 1;
     let currentMinute = currentHour * 60 + date.getMinutes();
     return currentMinute == startTime;
 }
@@ -152,8 +153,8 @@ function generateNewKey() {
 const express = require('express');
 const https = require('https');
 const http = require('http');
-var privateKey = fs.readFileSync('cert/privkey.pem', 'utf8');
-var certificate = fs.readFileSync('cert/cert.pem', 'utf8');
+var privateKey = fs.readFileSync('/etc/letsencrypt/archive/schoolutilities.net/privkey7.pem', 'utf8');
+var certificate = fs.readFileSync('/etc/letsencrypt/archive/schoolutilities.net/cert7.pem', 'utf8');
 var credentials = { key: privateKey, cert: certificate };
 
 // import router
@@ -176,5 +177,5 @@ httpsServer.listen(port, () => {
  console.log(`Server listening on port ${port}`);
 });
 httpServer.listen(process.env.PORT, () => {
- console.log(`Server listening on port ${process.env.PORT}`);
+    console.log(`Server listening on port ${process.env.PORT}`);
 });

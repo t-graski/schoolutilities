@@ -1,84 +1,82 @@
+:root {
+    --background-color-primary: #2f3136;
+    --background-color-secondary: #202225;
+    --background-color-tertiary: #3c3f46;
+    --font-color-primary: #ffffff;
+    --font-color-secondary: #242424;
+    --special-color-primary: #eda33f;
+    --special-color-secondary: #738adb;
+}
+
+/* montserrat-100 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 100;
+    src: local(''), url('./fonts/montserrat-v18-latin-100.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-100.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-300 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 300;
+    src: local(''), url('./fonts/montserrat-v18-latin-300.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-regular - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: local(''), url('./fonts/montserrat-v18-latin-regular.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-500 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    src: local(''), url('./fonts/montserrat-v18-latin-500.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-700 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    src: local(''), url('./fonts/montserrat-v18-latin-700.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* montserrat-900 - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 900;
+    src: local(''), url('./fonts/montserrat-v18-latin-900.woff2') format('woff2'),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-900.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.description {
-    width: 100%;
-    text-align: center;
-    font-size: 1.5rem;
+    font-family: Montserrat, Helvetica, sans-serif;
+    color: var(--font-color-primary);
 }
 
 body {
     width: 100%;
     height: 100%;
-    background-color: #555555;
+    background-color: var(--background-color-primary);
+    color: var(--color-primary);
     overflow-x: hidden;
+    font-weight: 500;
 }
 
 .site-layout {
     width: 100vw;
     height: 100%;
-}
-
-.side-menu {
-    background-color: #2c2c2c;
-    width: 16.66%;
-    height: 100vw;
-    display: inline-block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    border-right: solid 2px #aaaaaa7c;
-}
-
-.nav-link {
-    padding: 4% 0;
-    display: block;
-    border-bottom: 1px #aaaaaa7c solid;
-    width: 100%;
-    text-align: center;
-    text-decoration: none;
-    color: white;
-    transition: 200ms all;
-}
-
-.schoolutilites-logo {
-    width: 50%;
-}
-
-.nav-link:hover {
-    background-color: rgb(56, 56, 56);
-}
-
-.content {
-    position: absolute;
-    left: 16.66%;
-    width: 83.33%;
-    flex-direction: column;
-    display: flex;
-    min-height: 100vh;
-}
-
-.header {
-    width: 100%;
-    font-size: 3.5rem;
-    line-height: 4rem;
-    margin: 50px 0;
-    text-align: center;
-    display: inline-block;
-    color: white;
-}
-
-.detail-content {
-    width: 100%;
-    padding: 0 10%;
-    display: inline-block;
-    font-size: 1.4rem;
-    line-height: 1.7rem;
-    color: white;
 }
 
 footer {
@@ -87,55 +85,37 @@ footer {
     display: flex;
     justify-content: space-around;
     font-size: 1rem;
-    position: absolute;
-    bottom: 0;
     line-height: 1.2rem;
     margin-top: 80px;
-    border-top: solid 2px white;
-    background-color: #3d3d3d;
+    background-color: var(--background-color-tertiary);
 }
 
-footer a {
-    padding: 2% 0;
-    color: white;
-    transition: all 200ms;
+footer ul {
+    display: flex;
+    flex-direction: row;
+    padding: 5vh 0;
+    list-style: none;
+}
+
+footer ul a {
+    color: var(--font-color-primary);
     text-decoration: none;
+    margin: 0 4vw;
+    font-size: 1.5rem;
+    text-transform: uppercase;
 }
 
-.user-name {
-    font-size: 1rem;
-    margin-top: 10px;
-    width: 100%;
-    text-align: center;
-    color: white;
-    padding: 4% 0;
-}
-
-.login {
-    visibility: hidden;
-}
-
-.logout-btn {
-    border: none;
-    background-color: transparent;
-    border-top: 1px #aaaaaa7c solid;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.user-nav {
-    background-color: #2c2c2c;
-    width: 16.66%;
-    display: inline-block;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    border-right: solid 2px #aaaaaa7c;
+footer ul a:hover {
+    color: var(--font-color-primary);
+    text-decoration: none;
+    margin: 0 4vw;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: var(--special-color-primary);
 }
 
 .servers {
-    width: 80%;
-    margin: 0 10%;
+    width: 100%;
     display: block;
 }
 
@@ -472,31 +452,6 @@ input[type='number'] {
     width: 10vw;
 }
 
-.discord-style-btn {
-    padding: 2vh 3vw;
-    background-color: #7289da;
-    border-radius: 10px;
-    transition: all 200ms;
-    color: white;
-    text-decoration: none;
-    margin-top: 30px;
-    display: inline-block;
-    cursor: pointer;
-    -webkit-user-select: none;
-}
-
-.discord-style-btn:hover {
-    background-color: #8ea1e1;
-}
-
-.index-button-layout {
-    width: 100%;
-    height: 40vh;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
 .choose-btn {
     display: none;
 }
@@ -506,12 +461,181 @@ input[type='number'] {
     font-size: 3.5rem;
 }
 
+.acc-description{
+    color: var(--font-color-primary);
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 1.2rem;
+}
+
 .detail-content {
-    margin-bottom: 200px;
+    margin-top: 50px;
 }
 
 @media only screen and (max-width: 1300px) {
-    .config-general-layout{
+    .config-general-layout {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+.nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--background-color-secondary);
+    color: var(--font-color-primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    flex-direction: row;
+    z-index: 1;
+}
+
+.navbar-logo {
+    display: inline-block;
+    max-width: 70px;
+    margin-left: 10px;
+}
+.navbar-header {
+    display: flex;
+    color: var(--font-color-primary);
+    text-decoration: none;
+    align-items: center;
+    font-size: 1.6rem; 
+}
+.navbar-header-font {
+    display: inline-block;
+    margin-left: 1vw;
+}
+
+.styled-nav-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    list-style: none;
+}
+
+.styled-nav-list li a {
+    color: var(--font-color-primary);
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 10px;
+    text-transform: uppercase;
+}
+.styled-nav-list li a:hover {
+    color: var(--font-color-primary);
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 10px;
+    text-transform: uppercase;
+    color: var(--special-color-primary);
+}
+
+.nav-bar-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.account-button {
+    display: flex;
+    width: fit-content; 
+     padding: 10px;
+    align-items: center;
+    background-color: var(--special-color-primary);
+    color: var(--font-color-secondary);
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    margin: 0 30px;
+    box-shadow: 0px 0px 13px 0px var(--special-color-primary);
+    -webkit-box-shadow: 0px 0px 13px 0px var(--special-color-primary);
+    -moz-box-shadow: 0px 0px 13px 0px var(--special-color-primary);
+}
+
+.account-button p{
+    font-weight: 700;
+}
+
+.account-img {
+    max-width: 30px;
+    width: 30px;
+    margin-right: 10px;
+}
+
+.main-content {
+    width: 100%;
+    margin-top: 140px;
+    padding: 0 15vw;
+}
+
+.main-content h1 {
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: var(--font-color-primary);
+    width: 100%;
+    text-align: center;
+}
+
+.small-hr {
+    border-top: 3px solid var(--font-color-primary);
+    width: 110px;
+    margin: 10px auto;
+}
+
+.tiny-hr {
+    border-top: 1px solid var(--font-color-primary);
+    width: 100%;
+}
+
+[class^='description'] {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 2vw;
+    padding: 3vw;
+    align-items: center;
+}
+
+.icon-img {
+    width: 100%;
+    filter: invert();
+}
+
+.icon-background {
+    padding: 3.5vw;
+    border-radius: 50%;
+    background-color: var(--special-color-secondary);
+    margin: 2.3vw;
+    grid-column: 1 / span 1;
+    grid-row: 1;
+}
+
+[class^='description'] h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--font-color-primary);
+    margin: 0;
+}
+
+.change-view .icon-background{
+    grid-column: 3 / span 1;
+    grid-row: 1;
+}
+
+[class^='description'] p {
+    font-size: 1.5rem;
+    color: var(--font-color-primary);
+}
+
+.feature-description {
+    grid-column: 2 / span 2;
+    grid-row: 1;
+}
+
+.change-view .feature-description{
+    grid-column: 1 / span 2;
+    grid-row: 1;
 }

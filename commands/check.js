@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const { serverConfiguration } = require('../misc/utils.js');
 
 exports.run = async (client, message, args) => {
-    let serverConfigurationData = serverConfiguration(message.guild.id);
+    let serverConfigurationData = serverConfiguration(message.channel.guild.id);
     if (serverConfigurationData) {
         if (message.member.hasPermission('ADMINISTRATOR') || message.member.roles.cache.has(serverConfigurationData.teacherId)) {
             let checkTime;

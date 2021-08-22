@@ -3,44 +3,108 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title></title>
+        <title>Home |</title>
         <script defer src="script.js"></script>
         <link rel="icon" href="https://i.imgur.com/KJ63K3r.png" />
         <link rel="stylesheet" href="style.css" type="text/css" />
         <script data-ad-client="pub-8008535912475265" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (function (h, o, t, j, a, r) {
+                h.hj =
+                    h.hj ||
+                    function () {
+                        (h.hj.q = h.hj.q || []).push(arguments);
+                    };
+                h._hjSettings = { hjid: 2566171, hjsv: 6 };
+                a = o.getElementsByTagName('head')[0];
+                r = o.createElement('script');
+                r.async = 1;
+                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+        </script>
     </head>
-
     <body>
         <div class="site-layout">
-            <nav class="side-menu">
-                <a href="/" class="nav-link webinteface-header-link">
-                    <img src="media/avatar.png" alt="SchoolUtlities Logo" class="schoolutilites-logo" />
-                    <h4 class="server-name"></h4>
-                </a>
-                <div class="user-nav">
-                    <a href="/account.html" class="login nav-link user-name"></a>
-                    <button class="login nav-link logout-btn"></button>
+            <nav class="nav-bar">
+                <a href="/" class="navbar-header"
+                    ><img src="/media/avatar.png" alt="SchoolUtilities Logo" class="navbar-logo" />
+                    <span class="navbar-header-font">SchoolUtilities</span></a
+                >
+
+                <div class="nav-bar-content">
+                    <ul class="styled-nav-list">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html">Features</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                    <button class="account-button">
+                        <img src="/media/user.svg" alt="SchoolUtilities Logo" class="account-img" />
+                        <p>Login</p>
+                    </button>
                 </div>
             </nav>
-            <div class="content">
-                <h1 class="header"></h1>
-                <div class="detail-content">
-                    <div class="description"></div>
-                    <div class="index-button-layout">
-                        <a class="discord-style-btn feature-btn"></a>
-                        <a
-                            id="login"
-                            class="discord-style-btn authorize-btn"
-                            href="https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=http%3A%2F%2Flocalhost:3000%2Fapi%2Fdiscord&response_type=token&scope=identify%20guilds"
-                        ></a>
+            <div class="main-content">
+                <h1>Features</h1>
+                <hr class="small-hr" />
+                <div class="description-1">
+                    <div class="icon-background">
+                        <img src="/media/timetable.svg" alt="Timetable Icon" class="icon-img" />
                     </div>
-                    <div id="info"></div>
+                    <div class="feature-description">
+                        <h2>#1 - Timetable</h2>
+                        <p>
+                            Construct your timetable depending on your personal needs. Easily set up your timetable with just a few simple
+                            steps on our Dashboard
+                        </p>
+                    </div>
                 </div>
-                <footer>
-                    <a href="/data-protection.html">Data policy</a>
-                    <a href="/impressum.html">Impressum</a>
-                </footer>
+                <hr class="tiny-hr" />
+                <div class="description-2 change-view">
+                    <div class="icon-background">
+                        <img src="/media/calculator.svg" alt="Calculation Icon" class="icon-img" />
+                    </div>
+                    <div class="feature-description">
+                        <h2>#2 - Calculation</h2>
+                        <p>Feel the need to quickly solve some math problems?<br />Just use our new calculation feature!</p>
+                    </div>
+                </div>
+                <hr class="tiny-hr" />
+                <div class="description-3">
+                    <div class="icon-background">
+                        <img src="media/immigration.svg" alt="Attendance Icon" class="icon-img" />
+                    </div>
+                    <div class="feature-description">
+                        <h2>#3 - Attendance</h2>
+                        <p>
+                            Easier than ever before to check the attendance of your students or friends. This feature also comes with
+                            customizable time and roles to check.
+                        </p>
+                    </div>
+                </div>
+                <hr class="tiny-hr" />
+                <div class="description-4 change-view">
+                    <div class="icon-background">
+                        <img src="media/promotion.svg" alt="Alert Icon" class="icon-img" />
+                    </div>
+                    <div class="feature-description">
+                        <h2>#4 - Alert</h2>
+                        <p>
+                            You are a teacher, and want to send a message to all your students?<br />
+                            This is now easily possible through the use of our alert feature.
+                        </p>
+                    </div>
+                </div>
             </div>
+            <footer>
+                <nav class="footer-navbar">
+                    <ul>
+                        <li><a href="data-policy.html">Data Policy</a></li>
+                        <li><a href="imprint.html">Imprint</a></li>
+                        <li><a href="index.html?logout=true">Logout</a></li>
+                    </ul>
+                </nav>
+            </footer>
         </div>
     </body>
 </html>
