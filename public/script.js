@@ -6,11 +6,15 @@ let userData;
 let languages;
 let serverConfiguration;
 let serverInformation;
-let url = 'https://' + window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=737357503989415956&redirect_uri=${encodeURIComponent(
-    url
-)}/api/discord&response_type=token&scope=identify guilds`;
+let url = 'http://' + window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=${encodeURIComponent(
+    url + '/api/discord'
+)}&response_type=token&scope=identify%20guilds`;
 onload();
+
+if (window.location.href.includes('logout=true')) {
+    setCookie('access_token', '', 7);
+}
 
 async function onload() {
     if (document.querySelector('.authorize-btn')) {
@@ -24,7 +28,7 @@ async function onload() {
 
     if (languageData) {
         if (languageData.webInterface.tabTitle) {
-            document.querySelector('title').innerHTML = languageData.webInterface.tabTitle;
+            document.querySelector('title').innerHTML = document.querySelector('title').innerHTML + languageData.webInterface.tabTitle;
         }
         for (text in languageData.webInterface) {
             let translation = document.querySelector('.' + text);
@@ -33,7 +37,7 @@ async function onload() {
             }
         }
     }
-    if (getCookie('access_token') != '') {
+    if (getCookie('access_token')) {
         let cookie = getCookie('access_token');
 
         accessToken = cookie;
@@ -54,7 +58,6 @@ async function onload() {
         redirect(url);
     }
 
-    console.log(accessToken);
     if (accessToken != '') {
         document.querySelector('.account-button').addEventListener('click', () => {
             redirect('/dashboard.html');
@@ -65,12 +68,7 @@ async function onload() {
         });
     }
 
-    document.querySelector('.logout-btn').addEventListener('click', () => {
-        setCookie('access_token', '', 7);
-        redirect('/');
-    });
-
-    if (window.location.href.includes('account')) {
+    if (window.location.href.includes('dashboard')) {
         if (isLoggedIn) {
             loadServers();
         }
@@ -437,7 +435,7 @@ function openTimetableDetail(columnKey, index) {
         <br />
     </div>
     <div class="config-timetable-channel">
-        <label class="timetable-channel" for="timetableChannel">WÃ¤hle die SchÃ¼ler Rolle</label><br />
+        <label class="timetable-channel" for="timetableChannel">Wähle die Schüler Rolle</label><br />
         <select class="timetable-channel-select" name="timetableChannel" id="timetableChannel">
             ${selectChannelHtml}
         </select><br />

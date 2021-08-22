@@ -153,9 +153,9 @@ function generateNewKey() {
 const express = require('express');
 const https = require('https');
 const http = require('http');
-// var privateKey = fs.readFileSync('cert/privkey.pem', 'utf8');
-// var certificate = fs.readFileSync('cert/cert.pem', 'utf8');
-// var credentials = { key: privateKey, cert: certificate };
+var privateKey = fs.readFileSync('/etc/letsencrypt/archive/schoolutilities.net/privkey7.pem', 'utf8');
+var certificate = fs.readFileSync('/etc/letsencrypt/archive/schoolutilities.net/cert7.pem', 'utf8');
+var credentials = { key: privateKey, cert: certificate };
 
 // import router
 const interfaceRouter = require('./routes/route.js');
@@ -171,11 +171,11 @@ app.use(express.static('public'));
 app.use(express.json()); // parse JSON payload and place result in req.body
 app.use('/api/', interfaceRouter);
 
-// var httpsServer = https.createServer(credentials, app);
+var httpsServer = https.createServer(credentials, app);
 var httpServer = http.createServer(app);
-// httpsServer.listen(port, () => {
-//  console.log(`Server listening on port ${port}`);
-// });
+httpsServer.listen(port, () => {
+ console.log(`Server listening on port ${port}`);
+});
 httpServer.listen(process.env.PORT, () => {
     console.log(`Server listening on port ${process.env.PORT}`);
 });

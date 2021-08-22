@@ -3,38 +3,64 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title></title>
+        <title>Dashboard |</title>
         <script defer src="script.js"></script>
         <link rel="icon" href="https://i.imgur.com/KJ63K3r.png" />
         <link rel="stylesheet" href="style.css" type="text/css" />
-	<script data-ad-client="pub-8008535912475265" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script data-ad-client="pub-8008535912475265" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (function (h, o, t, j, a, r) {
+                h.hj =
+                    h.hj ||
+                    function () {
+                        (h.hj.q = h.hj.q || []).push(arguments);
+                    };
+                h._hjSettings = { hjid: 2566171, hjsv: 6 };
+                a = o.getElementsByTagName('head')[0];
+                r = o.createElement('script');
+                r.async = 1;
+                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+        </script>
     </head>
-
     <body>
         <div class="site-layout login-only">
-            <nav class="side-menu">
-                <a href="/" class="nav-link webinteface-header-link">
-                    <img src="media/avatar.png" alt="SchoolUtlities Logo" class="schoolutilites-logo" />
-                    <h4 class="server-name"></h4>
-                </a>
-                <div class="user-nav">
-                    <a href="/account.html" class="login nav-link user-name"></a>
-                    <button class="login nav-link logout-btn"></button>
+            <nav class="nav-bar">
+                <a href="/" class="navbar-header"
+                    ><img src="/media/avatar.png" alt="SchoolUtilities Logo" class="navbar-logo" />
+                    <span class="navbar-header-font">SchoolUtilities</span></a
+                >
+
+                <div class="nav-bar-content">
+                    <ul class="styled-nav-list">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html">Features</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                    <button class="account-button">
+                        <img src="/media/user.svg" alt="SchoolUtilities Logo" class="account-img" />
+                        <p>Login</p>
+                    </button>
                 </div>
             </nav>
-            <div class="content">
-                <h1 class="header"></h1>
+            <div class="main-content content">
+                <h1 class="acc-header"></h1>
                 <div class="detail-content">
-                    <p class="description"></p>
+                    <p class="acc-description"></p>
                     <br />
-                    <p class="connect"></p>
-                    <div id="info"></div>
+                    <div class="servers"></div>
                 </div>
-                <footer>
-                    <a href="/data-protection.html">Data policy</a>
-                    <a href="/impressum.html">Impressum</a>
-                </footer>
             </div>
+            <footer>
+                <nav class="footer-navbar">
+                    <ul>
+                        <li><a href="data-policy.html">Data Policy</a></li>
+                        <li><a href="imprint.html">Imprint</a></li>
+                        <li><a href="index.html?logout=true">Logout</a></li>
+                    </ul>
+                </nav>
+            </footer>
         </div>
     </body>
 </html>

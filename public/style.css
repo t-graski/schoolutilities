@@ -62,6 +62,7 @@
     margin: 0;
     padding: 0;
     font-family: Montserrat, Helvetica, sans-serif;
+    color: var(--font-color-primary);
 }
 
 body {
@@ -104,9 +105,17 @@ footer ul a {
     text-transform: uppercase;
 }
 
+footer ul a:hover {
+    color: var(--font-color-primary);
+    text-decoration: none;
+    margin: 0 4vw;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: var(--special-color-primary);
+}
+
 .servers {
-    width: 80%;
-    margin: 0 10%;
+    width: 100%;
     display: block;
 }
 
@@ -452,8 +461,15 @@ input[type='number'] {
     font-size: 3.5rem;
 }
 
+.acc-description{
+    color: var(--font-color-primary);
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 1.2rem;
+}
+
 .detail-content {
-    margin-bottom: 200px;
+    margin-top: 50px;
 }
 
 @media only screen and (max-width: 1300px) {
@@ -507,6 +523,14 @@ input[type='number'] {
     font-size: 1.2rem;
     padding: 10px;
     text-transform: uppercase;
+}
+.styled-nav-list li a:hover {
+    color: var(--font-color-primary);
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 10px;
+    text-transform: uppercase;
+    color: var(--special-color-primary);
 }
 
 .nav-bar-content {

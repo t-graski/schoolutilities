@@ -2,7 +2,7 @@
     "languages": {
         "de": {
             "webInterface": {
-                "tabTitle": "SchoolUtilities",
+                "tabTitle": " SchoolUtilities",
                 "header": "SchoolUtilities",
                 "description": "Die einfachste Möglichkeit deinen Schul Discord server zu verwalten.",
                 "feature-btn": "Features",
@@ -10,7 +10,7 @@
                 "timetable-configuration-headline": "Stundenplan bearbeiten",
                 "settings-headline": "Einstellungen",
                 "logout-btn": "Abmelden",
-                "acc-header": "Dein Account",
+                "acc-header": "Deine Server",
                 "acc-description": "Hier kannst du den Server auswählen, den du bearbeiten willst.",
                 "config-header": "SchoolUtilities Konfiguration",
                 "config-description": "Du kannst SchoolUtilities hier konfigurieren.",
@@ -39,7 +39,7 @@
         },
         "en": {
             "webInterface": {
-                "tabTitle": "SchoolUtilities",
+                "tabTitle": " SchoolUtilities",
                 "header": "SchoolUtilities",
                 "description": "The easiest way to manage your school Discord server.",
                 "feature-btn": "Features",
@@ -47,8 +47,8 @@
                 "timetable-configuration-headline": "Edit timetable",
                 "settings-headline": "Settings",
                 "logout-btn": "Logout",
-                "acc-header": "Your account",
-                "acc-description": "You can choose the server you want to edit here.",
+                "acc-header": "Your Servers",
+                "acc-description": "Choose the server you want to edit here.",
                 "config-header": "SchoolUtilities Configuration",
                 "config-description": "You can configurate SchoolUtilities here.",
                 "chooseStudent": "Choose your student role",
