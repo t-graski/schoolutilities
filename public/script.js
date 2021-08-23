@@ -17,8 +17,19 @@ if (window.location.href.includes('logout=true')) {
 }
 
 async function onload() {
-    if (document.querySelector('.authorize-btn')) {
-        document.querySelector('.authorize-btn').href = discordLoginUrl;
+    if (document.querySelector('.authorize-link')) {
+        document.querySelector('.authorize-link').href = discordLoginUrl;
+    }
+
+    if (document.querySelector('[class^="read-more-button-"]')) {
+        document.querySelectorAll('[class^="read-more-button-"]').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                let className = event.target.className;
+                let index = className.substr(className.length - 1);
+                if (document.querySelector(`.${className}`).innerText == 'Read more...') openReadMore(index);
+                else closeReadMore(index);
+            });
+        });
     }
     languageData = await getLanguageData();
     // document.querySelector('.pop-up-close').addEventListener('click', () => {
@@ -80,16 +91,12 @@ async function onload() {
         }
     }
 }
-
 async function loadConfiguration() {
     serverInformation = await fetchRestEndpoint('/api/serverinformation', 'POST', {
         token: accessToken,
         id: getCookie('serverId'),
     });
-    console.log({
-        token: accessToken,
-        id: getCookie('serverId'),
-    });
+
     languages = await fetchRestEndpoint('/api/supportedlanguages', 'GET');
     if (serverInformation && languages) {
         setTimeout(async () => {
@@ -149,11 +156,21 @@ async function loadConfiguration() {
             </div>`;
                 document.querySelector('.configuration').innerHTML = configurationHtml;
                 getTimetableHtml();
+                document.querySelector('.load-wrapp').style.display = 'none';
             }
         }, 300);
     }
 }
 
+function openReadMore(index) {
+    document.querySelector(`.read-more-text-${index}`).style.display = 'block';
+    document.querySelector(`.read-more-button-${index}`).innerText = 'Read less';
+}
+
+function closeReadMore(index) {
+    document.querySelector(`.read-more-text-${index}`).style.display = 'none';
+    document.querySelector(`.read-more-button-${index}`).innerText = 'Read more...';
+}
 function getLanguageHtml(languages, choosenLanguage) {
     let languageHtml = `
     <input list="languages" name="language" value="${choosenLanguage}" id="language">
@@ -613,13 +630,14 @@ function addServer(serverArray, isBotAdded, isAdmin) {
         domNode.appendChild(textNode);
         if (isBotAdded) {
             configurateButtonNode = document.createElement('button');
-            configurateButtonNode.innerText = 'Configurate';
+            configurateButtonNode.innerText = 'Configure';
             configurateButtonNode.className = 'configurate-btn server-select-button';
             configurateButtonNode.setAttribute('onclick', `openConfigurate('${server.id}')`);
             domNode.appendChild(configurateButtonNode);
         }
         domNode.appendChild(buttonNode);
         document.querySelector('.servers').appendChild(domNode);
+        document.querySelector('.load-wrapp').style.display = 'none';
     });
 }
 

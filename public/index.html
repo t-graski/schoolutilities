@@ -4,6 +4,12 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Home |</title>
+        <script
+            type="text/javascript"
+            src="https://app.termly.io/embed.min.js"
+            data-auto-block="on"
+            data-website-uuid="42b6cd3e-5461-4e34-8c45-88f5ecfd5ea9"
+        ></script>
         <script defer src="script.js"></script>
         <link rel="icon" href="https://i.imgur.com/KJ63K3r.png" />
         <link rel="stylesheet" href="style.css" type="text/css" />
@@ -41,7 +47,7 @@
         ></script>
     </head>
     <body>
-        <div class="site-layout">
+        <div class="site-layout startpage">
             <nav class="nav-bar">
                 <a href="/" class="navbar-header"
                     ><img src="/media/avatar.png" alt="SchoolUtilities Logo" class="navbar-logo" />
@@ -51,7 +57,7 @@
                 <div class="nav-bar-content">
                     <ul class="styled-nav-list">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html">Features</a></li>
+                        <li><a href="features.html">Features</a></li>
                         <li><a href="dashboard.html">Dashboard</a></li>
                     </ul>
                     <button class="account-button">
@@ -60,68 +66,61 @@
                     </button>
                 </div>
             </nav>
-            <div class="main-content">
-                <h1>Features</h1>
-                <hr class="small-hr" />
-                <div class="description-1">
-                    <div class="icon-background">
-                        <img src="/media/timetable.svg" alt="Timetable Icon" class="icon-img" />
-                    </div>
-                    <div class="feature-description">
-                        <h2>#1 - Timetable</h2>
-                        <p>
-                            Construct your timetable depending on your personal needs. Easily set up your timetable with just a few simple
-                            steps on our Dashboard
-                        </p>
-                    </div>
-                </div>
-                <hr class="tiny-hr" />
-                <div class="description-2 change-view">
-                    <div class="icon-background">
-                        <img src="/media/calculator.svg" alt="Calculation Icon" class="icon-img" />
-                    </div>
-                    <div class="feature-description">
-                        <h2>#2 - Calculation</h2>
-                        <p>Feel the need to quickly solve some math problems?<br />Just use our new calculation feature!</p>
-                    </div>
-                </div>
-                <hr class="tiny-hr" />
-                <div class="description-3">
-                    <div class="icon-background">
-                        <img src="media/immigration.svg" alt="Attendance Icon" class="icon-img" />
-                    </div>
-                    <div class="feature-description">
-                        <h2>#3 - Attendance</h2>
-                        <p>
-                            Easier than ever before to check the attendance of your students or friends. This feature also comes with
-                            customizable time and roles to check.
-                        </p>
-                    </div>
-                </div>
-                <hr class="tiny-hr" />
-                <div class="description-4 change-view">
-                    <div class="icon-background">
-                        <img src="media/promotion.svg" alt="Alert Icon" class="icon-img" />
-                    </div>
-                    <div class="feature-description">
-                        <h2>#4 - Alert</h2>
-                        <p>
-                            You are a teacher, and want to send a message to all your students?<br />
-                            This is now easily possible through the use of our alert feature.
-                        </p>
+            <div class="main-content-position">
+                <div class="main-content">
+                    <h1>SchoolUtilities</h1>
+                    <p class="headline-description">
+                        The easiest way to manage your school discord server
+                    </p>
+                    <hr class="small-hr" />
+                    <div class="menu-bubbles">
+                        <a href="" class="menu-bubble authorize-link">
+                            <span class="menu-bubble-icon">
+                                <img src="/media/discord.svg" alt="Menu Icon" />
+                            </span>
+                            <span class="menu-bubble-text">
+                                Add to Discord
+                            </span>
+                        </a>
+                        <a href="features.html" class="menu-bubble">
+                            <span class="menu-bubble-icon">
+                                <img src="/media/features.svg" alt="Menu Icon" />
+                            </span>
+                            <span class="menu-bubble-text">
+                                Features
+                            </span>
+                        </a>
+                        <a href="imprint.html" class="menu-bubble">
+                            <span class="menu-bubble-icon">
+                                <img src="/media/about_us.svg" alt="Menu Icon" />
+                            </span>
+                            <span class="menu-bubble-text">
+                                About us
+                            </span>
+                        </a>
+                        <!-- <a href="#" class="menu-bubble">
+                            <span class="menu-bubble-icon">
+                                <img src="/media/change_log.svg" alt="Menu Icon" />
+                            </span>
+                            <span class="menu-bubble-text">
+                                Change log
+                            </span>
+                        </a> -->
                     </div>
                 </div>
+                <footer>
+                    <nav class="footer-navbar">
+                        <ul>
+                            <li><a href="data-policy.html">Data Policy</a></li>
+                            <li><a href="imprint.html">Imprint</a></li>
+                            <li><a href="index.html?logout=true">Logout</a></li>
+                        </ul>
+                    </nav>
+                    <div>
+                        Icons made by Freepik, Icongeek26 from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+                    </div>
+                </footer>
             </div>
-            <div>Icons made by Freepik, Icongeek26 from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-            <footer>
-                <nav class="footer-navbar">
-                    <ul>
-                        <li><a href="data-policy.html">Data Policy</a></li>
-                        <li><a href="imprint.html">Imprint</a></li>
-                        <li><a href="index.html?logout=true">Logout</a></li>
-                    </ul>
-                </nav>
-            </footer>
         </div>
     </body>
 </html>
