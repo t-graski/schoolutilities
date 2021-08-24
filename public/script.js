@@ -14,7 +14,8 @@ onload();
 
 if (window.location.href.includes('logout=true')) {
     setCookie('access_token', '', 7);
-    redirect('/');
+    setCookie('serverId', '', 7);
+    setCookie('userData', '', 7);
 }
 
 async function onload() {
@@ -49,7 +50,7 @@ async function onload() {
             }
         }
     }
-    if(document.querySelector('.authorize-link') && getCookie('access_token')) {
+    if(document.querySelector('.authorize-link') && getCookie('userData')) {
         setLoggedIn(true);
     }
     if (getCookie('access_token')) {
@@ -61,8 +62,8 @@ async function onload() {
             isLoggedIn = true;
             userData = userResponse;
             if (userData) {
-                setLoggedIn(true);
                 setCookie('userData', JSON.stringify(userData), 7);
+                setLoggedIn(true);
             }
         } else if (document.querySelector('.login-only')) {
             setLoggedIn(false);
