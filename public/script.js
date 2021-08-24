@@ -49,7 +49,7 @@ async function onload() {
             }
         }
     }
-    if(document.querySelector('.authorize-link') && getCookie('access_token')) {
+    if(document.querySelector('.authorize-link') && getCookie('userData')) {
         setLoggedIn(true);
     }
     if (getCookie('access_token')) {
@@ -61,8 +61,8 @@ async function onload() {
             isLoggedIn = true;
             userData = userResponse;
             if (userData) {
-                setLoggedIn(true);
                 setCookie('userData', JSON.stringify(userData), 7);
+                setLoggedIn(true);
             }
         } else if (document.querySelector('.login-only')) {
             setLoggedIn(false);
