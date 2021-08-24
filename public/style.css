@@ -571,6 +571,7 @@ input[type='number'] {
     max-width: 30px;
     width: 30px;
     margin-right: 10px;
+    border-radius: 50%;
 }
 
 .main-content {
@@ -803,21 +804,47 @@ input[type='number'] {
 .startpage .menu-bubble-icon img {
     filter: invert();
 }
-.account-button img {
-    filter: invert();
-}
 
 [class^='read-more-button-'] {
-    display:  block;
+    display: block;
     background-color: transparent;
     color: var(--special-color-secondary);
     border: none;
     margin: 20px 0;
-    font-size:  1.1rem;
+    font-size: 1.1rem;
     transition: all 200ms;
     cursor: pointer;
 }
 
 [class^='read-more-button-']:hover {
     color: var(--special-color-primary);
+}
+
+.about-us-header {
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: var(--font-color-primary);
+    width: 100%;
+    text-align: center;
+}
+.headline-description-about-us {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.about-us-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    width: 100%;
+}
+
+.about-us-item {
+    color: var(--font-color-primary);
+}
+
+.about-us-hr {
+    border-top: 2px solid var(--font-color-primary);
+    width: 55px;
+    margin: 15px 0;
 }

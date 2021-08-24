@@ -7,13 +7,14 @@ let languages;
 let serverConfiguration;
 let serverInformation;
 let url = 'https://' + window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=756085157949079552&redirect_uri=${encodeURIComponent(
+let discordLoginUrl = `https://discord.com/api/oauth2/authorize?client_id=737357503989415956&redirect_uri=${encodeURIComponent(
     url + '/api/discord'
 )}&response_type=token&scope=identify%20guilds`;
 onload();
 
 if (window.location.href.includes('logout=true')) {
     setCookie('access_token', '', 7);
+    redirect('/');
 }
 
 async function onload() {
@@ -48,6 +49,9 @@ async function onload() {
             }
         }
     }
+    if(document.querySelector('.authorize-link') && getCookie('access_token')) {
+        setLoggedIn(true);
+    }
     if (getCookie('access_token')) {
         let cookie = getCookie('access_token');
 
@@ -57,15 +61,15 @@ async function onload() {
             isLoggedIn = true;
             userData = userResponse;
             if (userData) {
-                document.querySelector('.account-button p').innerHTML = userData.username;
-                document.querySelectorAll('.login').forEach((element) => {
-                    element.style.visibility = 'visible';
-                });
+                setLoggedIn(true);
+                setCookie('userData', JSON.stringify(userData), 7);
             }
         } else if (document.querySelector('.login-only')) {
+            setLoggedIn(false);
             redirect(url);
         }
     } else if (document.querySelector('.login-only')) {
+        setLoggedIn(false);
         redirect(url);
     }
 
@@ -91,6 +95,46 @@ async function onload() {
         }
     }
 }
+
+function setLoggedIn(isLoggedIn) {
+    let userData = JSON.parse(getCookie('userData'));
+    if (isLoggedIn) {
+        document.querySelector('.account-button p').innerHTML = userData.username;
+        document.querySelector('.account-img').src = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}`;
+        document.querySelectorAll('.login').forEach((element) => {
+            element.style.visibility = 'visible';
+        });
+        if(document.querySelector('.authorize-link')) {
+            document.querySelector('.authorize-link').href="/dashboard.html";
+            document.querySelector('.authorize-link').innerHTML=`
+                <span class="menu-bubble-icon">
+                    <img src="/media/business-report.svg" alt="Menu Icon" />
+                </span>
+                <span class="menu-bubble-text">
+                    Dashboard
+                </span>
+            `;
+        }
+    } else {
+        document.querySelector('.account-button p').innerHTML = 'Login';
+        document.querySelector('.account-img').src = `/media/user.svg`;
+        document.querySelectorAll('.login').forEach((element) => {
+            element.style.visibility = 'hidden';
+        });
+        if(document.querySelector('.authorize-link')) {
+            document.querySelector('.authorize-link').href = discordLoginUrl;
+            document.querySelector('.authorize-link').innerHTML=`
+                <span class="menu-bubble-icon">
+                    <img src="/media/discord.svg" alt="Menu Icon" />
+                </span>
+                <span class="menu-bubble-text">
+                    Add to Discord
+                </span>
+            `;
+        }
+    }
+}
+
 async function loadConfiguration() {
     serverInformation = await fetchRestEndpoint('/api/serverinformation', 'POST', {
         token: accessToken,
