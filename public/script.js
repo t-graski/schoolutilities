@@ -14,7 +14,8 @@ onload();
 
 if (window.location.href.includes('logout=true')) {
     setCookie('access_token', '', 7);
-    redirect('/');
+    setCookie('serverId', '', 7);
+    setCookie('userData', '', 7);
 }
 
 async function onload() {
