@@ -80,7 +80,6 @@ client.on('message', async (message) => {
     save('./datastore/commandInputData.json', JSON.stringify(commandInputData, null, '\t'));
     try {
         let commandFile = require(`./commands/${cmd}.js`);
-        console.log(`./commands/${cmd}.js`);
         commandFile.run(client, message, args);
     } catch (e) {
         (await message.reply('This was a wrong command, please check the commands with .help')).delete({
