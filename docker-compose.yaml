@@ -1,55 +1,29 @@
-version: "3"
-
+version: '3'
+ 
 services:
-  mysql:
-    build: ./database
-    image: dev_mysql
+  db:
+    image: mysql:5.7
+    container_name: db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-    #ports:
-    #  - 3306:3306
-    networks:
-      - pmanet
+      MYSQL_ROOT_PASSWORD: z4KcxgwVuQe9rLLNe7ef67qhJ9TKN2hAu3drPGy9MszFJ726Y3qg
+      MYSQL_DATABASE: schoolutilities
+      MYSQL_USER: schoolutilities_beta
+      MYSQL_PASSWORD: 744e66Gd7pY2etho2jEMnCXP
+    ports:
+      - "3306:3306"
     volumes:
-      - my-mysql-datavolume:/var/lib/mysql
+      - dbdata:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: dev_pma
-    ports:
-      - 2020:80
+    container_name: pma
+    links:
+      - db
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: db
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: root
       PMA_ARBITRARY: 1
     restart: always
-    networks:
-      - pmanet
-    depends_on:
-      - mysql
-  node-backend:
-    build: ./backend/
-    image: node.js-backend
-    environment:
-      - NODE_ENV=production
-      - DATABASE_HOST=mysql
-    volumes:
-      - backend-data:/server/build/uploads
-    depends_on:
-      - mysql
-    restart: always
-    networks:
-      - pmanet
     ports:
-      - 443:4000
-
+      - 8081:80
 volumes:
-  my-mysql-datavolume:
-  backend-data:
-networks:
-  pmanet:
-    #name: pmanet
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.2.0.0/16
+  dbdata:

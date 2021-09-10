@@ -23,7 +23,7 @@ exports.run = async (client, message, args) => {
                     })
                 ) {
                     configData.push({
-                        guildId: ,
+                        guildId: message.guild.id,
                         name: message.guild.name,
                         studentId: 0,
                         teacherId: 0,
