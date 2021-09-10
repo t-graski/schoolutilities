@@ -1,72 +1,73 @@
-# SchoolUtilities 
-A simple discord bot to help you and your class. 
-In case you don't want to read everything type `.help` and SchoolUtilities will send you a little overview about everything.
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+</p>
 
-## Features
-- Calcuation
-- Translate
-- Precense check
-- Timetable
-- Alert 
-## Setup
-Every setup command starts with `.config` and needs to be written in the channel `#bot-config`, which has been created by SchoolUtilities. 
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-If you cannot find the `#bot-config` channel type `crtl + k` and type `bot-config`. 
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-Now you have the found the correct channel we can go on to setup SchoolUtilities. 
+## Description
 
-Next you need the name of your teacher and student role. In case you haven't already created the roles follow the steps below.
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-Text which looks like this `<ExampleText>` you have to fill with 
-- `.config student <YourStudentRole>` 
-- `.config teacher <YourTeacherRole>`
-- `.config timezone <YourTimeZone>` Example for timzone: `GMT+1`
-- `.config language <YourLanguage>` Example for language: `english`
-- `.config checktime <TimeInMinutes>` The checktime is the time how long students have to confirm they are precent. If you want this time under 1 minute type for example: `0.2`
-- `.config autocheck <enable> <disable>` Autochecks are automated precense checks. If you want them to work you need to set up your timetable. **Pro tip: Type either enable or disable**
+## Installation
 
-## How to create teacher and student role
-Step 1: Click in the top left on `SchoolUtilities`, the name will be different on your server.
-![](https://i.imgur.com/DJbLr0o.png)
+```bash
+$ npm install
+```
 
- Step 2: Next you click on `Server Settings`.
- ![](https://i.imgur.com/SNHR2Bg.png)
- Step 3: Click on `Roles`.
- ![enter image description here](https://i.imgur.com/JIWO5EN.png)
-Step 4: Click on the little plus next to Roles.
-![](https://i.imgur.com/gb3zdkc.png)
-Step 5: Name the role `Teacher`.
-![](https://i.imgur.com/lGBPeTg.png)
-Step 6: Go back to Step 4 and do the same with the `Student Role`
+## Running the app
 
-## Timetable 
-The timetable feature works like a normal timetable in real life. It just needs some simple steps to set it up. 
+```bash
+# development
+$ npm run start
 
-**Adding classes to the timetable:** 
-`.timetable add <day> <from> <to> <channel> <subject>`
-Example: `.timetable add Mo 8:00 8:50 #MathsChannel Maths`
-**Clearing days out of the timetable:**
-`.timetable clear <day>`
-Example: `.timetable clear Mo`
-**Printing the timetable**
-`.timetable print`
-It will show the entire timetable. 
-## Alert
-As a teacher you can send a message to all your students.
-Example: `.alert Hey, my name is SchoolUtilities.`
-## Calculation
-You can easily calucate on discord now. 
-Example: `.calc 23+17`
+# watch mode
+$ npm run start:dev
 
-**Pro tip:** If you want to calculate the square root type `.calc sqrt(16)` 
+# production mode
+$ npm run start:prod
+```
 
-## Translate 
-You can translate singe words or even entire sentences.
-Example: `.translate de I want to get translated!`
-## Precense check
- As a teacher you can check the precense of the students.
- Example: `.check 2`
- The `2`in the example means that students have 2 minutes to confirm they are precent, if there is now number given it will take the time out of the configuration. 
+## Test
 
-## Creating Issues on Github
-To create an issues you have to go to [issues](https://github.com/wahlmandat/schoolutilities/issues) and click on the top right on `New issues`. We will try to respond as fast as possible. 
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).

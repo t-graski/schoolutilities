@@ -751,6 +751,11 @@ input[type='number'] {
 .feature-description {
     grid-column: 2 / span 2;
     grid-row: 1;
+    line-height: 2.2rem;
+}
+
+.feature-description h2 {
+   padding-bottom: 10px;
 }
 
 .change-view .feature-description {

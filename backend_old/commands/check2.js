@@ -38,6 +38,9 @@ exports.run = async (client, message, args) => {
                         reactions.map((element) => {
                             element[1].id;
                         });
+
+                        console.log(reactions);
+
                         let studentId = serverConfigurationData.studentId;
                         let students = message.guild.roles.cache.get(studentId).members.map((m) => m.user.id);
                         students.filter(studentId => !reactions.includes(studentId));
