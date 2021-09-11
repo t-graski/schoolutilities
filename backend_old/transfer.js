@@ -88,11 +88,17 @@ for (let i = 0; i < configData.length; i++) {
             });
         }
     }
-    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
-    console.log(`${i+1}/${configData.length}`);
+    // Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
+    console.log(`${i+1}/${configData.length} (${Math.round((i+1)/configData.length*10000)/100}%)`);
 }
 }
 test();
+
+async function test2() {
+    let returnValue = await getSubjectIdOfClassId(5, "Mathematik");
+    console.log(returnValue);
+}
+// test2();
 
 async function addServer(server) {
     return new Promise((resolve, reject) => {
@@ -137,12 +143,13 @@ async function addClass(schoolclass) {
 }
 
 async function addTimetableEntry(entry) {
-    let subject_id = await getSubjectIdOfClassId(entry.class_id, entry.subject_name);
-    if (subject_id.length === 0) {
-        let subject = await addSubject({name: entry.subject_name});
+    let subject_id;
+    let subjectInDatabase = await getSubjectIdOfClassId(entry.class_id, entry.subject_name);
+    if(subjectInDatabase && subjectInDatabase.length === 0) {
+        let subject = await addSubject({name: entry.subject_name, class_id: entry.class_id});
         subject_id = subject.insertId;
-    } else if(subject_id){
-        subject_id = subject_id[0].subject_id;
+    } else {
+        subject_id = subjectInDatabase[0].subject_id;
     }
     return new Promise((resolve, reject) => {
         connection.query(
@@ -164,10 +171,11 @@ async function addTimetableEntry(entry) {
 }
 
 async function getSubjectIdOfClassId(class_id, subject_name) {
+    let subjectTrimmed = subject_name.trim();
     return new Promise((resolve, reject) => {
         connection.query(
-            'SELECT subject_id FROM `timetable_entry` WHERE class_id = ? AND subject_id IN(SELECT subject_id FROM subject WHERE subject_name=?)',
-            [class_id, subject_name],
+            "SELECT * FROM `subject` WHERE class_id=? AND subject_name like ?",
+            [class_id, subjectTrimmed],
             //@ts-ignore
             function (error, results, fields) {
                 resolve(results);
@@ -178,10 +186,12 @@ async function getSubjectIdOfClassId(class_id, subject_name) {
 
 async function addSubject(subject){
     return new Promise((resolve, reject) => {
+        let subjectTrimmed = subject.name.trim();
         connection.query(
-            'INSERT INTO `subject` (subject_name) VALUES(?)',
+            'INSERT INTO `subject` (subject_name, class_id) VALUES(?, ?)',
             [
-                subject.name,
+                subjectTrimmed,
+                subject.class_id,
             ],
             //@ts-ignore
             function (error, results, fields) {
