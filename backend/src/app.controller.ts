@@ -1,4 +1,4 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Get, Req, Patch, Res, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   Server,
@@ -14,6 +14,20 @@ export class AppController {
 
   @Get('serverjson')
   async getServerJson(@Req() request): Promise<Server> {
-    return await this.appService.getServerJson(request.body.guildId, request.body.token);
+    return await this.appService.getServerJson(
+      request.body.guildId,
+      request.body.token,
+    );
+  }
+
+  @Patch('serverjson')
+  async patchServerJson(@Req() request, @Res() response): Promise<string> {
+    let updateStatus = await this.appService.saveServerJson(
+      request.body.serverJson,
+      request.body.token,
+    );
+    if (updateStatus) {
+      return response.status(HttpStatus.OK).send('Update successfull');
+    }
   }
 }
