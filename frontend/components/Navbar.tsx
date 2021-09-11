@@ -3,7 +3,10 @@ import { styled } from "../stitches.config";
 import Image from "next/image";
 
 type Props = {
-  someProps: string;
+  links: {
+    href: string;
+    label: string;
+  }[];
 };
 
 const NavbarLayout = styled("div", {
@@ -116,7 +119,7 @@ const StyledAccountImage = styled(Image, {
     borderRadius: "50%",
 });
 
-export const Navbar: React.FC<Props> = ({ someProps }) => {
+export const Navbar: React.FC<Props> = ({ links }) => {
   return (
     <>
       <NavbarLayout>
@@ -133,15 +136,11 @@ export const Navbar: React.FC<Props> = ({ someProps }) => {
 
         <NavbarContentLayout>
           <StyledLinkList>
-            <li>
-              <StyledLink href="index.html">Home</StyledLink>
-            </li>
-            <li>
-              <StyledLink href="features.html">Features</StyledLink>
-            </li>
-            <li>
-              <StyledLink href="dashboard.html">Dashboard</StyledLink>
-            </li>
+            {links.map((link) => (
+              <li>
+                <StyledLink href={link.href}>{link.label}</StyledLink>
+              </li>
+            ))}
           </StyledLinkList>
           <AccountButton>
             <AccountButtonIconLayout>
