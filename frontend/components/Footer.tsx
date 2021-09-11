@@ -1,12 +1,12 @@
 import React from "react";
 import { styled } from "../stitches.config";
-import Image from "next/image";
 
 type Props = {
   links: {
     href: string;
     label: string;
   }[];
+  isOnMain?: boolean;
 };
 
 const FooterLayout = styled("footer", {
@@ -53,7 +53,7 @@ const FooterLink = styled('a', {
     },
 });
 
-export const Footer: React.FC<Props> = ({ links }) => {
+export const Footer: React.FC<Props> = ({ links, isOnMain }) => {
   return (
     <>
       <FooterLayout>
