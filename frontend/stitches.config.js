@@ -22,6 +22,7 @@ export const {
     shadows: {
       accountButton: '0px 0px 5px 0px #eda33f',
       accountButtonHover: '0px 0px 13px 0px #eda33f',
+      menuBubbleShadowHover: '0px 0px 13px 0px #738adb'
     },
     space: {
       1: '5px',

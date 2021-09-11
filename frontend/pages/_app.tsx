@@ -13,6 +13,8 @@ const globalStyles = globalCss({
   body: {
     fontFamily: 'Montserrat',
     fontWeight: '500',
+    backgroundColor: "#2f3136",
+    overflowX: 'hidden',
   },
 });
 

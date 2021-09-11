@@ -7,6 +7,7 @@ type Props = {
     href: string;
     label: string;
   }[];
+  isOnMain?: boolean;
 };
 
 const NavbarLayout = styled("div", {
@@ -22,6 +23,17 @@ const NavbarLayout = styled("div", {
   width: "100%",
   zIndex: 1,
   flexDirection: "row",
+  variants: {
+    isOnMain: {
+      true: {
+        flexDirection: "column",
+        position: "column",
+        height: "100vh",
+        padding: "3vh",
+        width: "25vw",
+      },
+    },
+  },
 });
 
 const NavbarHeaderLink = styled("a", {
@@ -30,6 +42,13 @@ const NavbarHeaderLink = styled("a", {
   textDecoration: "none",
   alignItems: "center",
   fontSize: "1.6rem",
+  variants: {
+    isOnMain: {
+      true: {
+        flexDirection: "column",
+      },
+    },
+  },
 });
 
 const NavbarLogoText = styled("span", {
@@ -38,6 +57,13 @@ const NavbarLogoText = styled("span", {
   transition: "all 200ms",
   "&:hover": {
     color: "$specialPrimary",
+  },
+  variants: {
+    isOnMain: {
+      true: {
+        fontWeight: "700",
+      },
+    },
   },
 });
 
@@ -52,6 +78,13 @@ const StyledLinkList = styled("ul", {
   flexDirection: "row",
   justifyContent: "space-between",
   listStyle: "none",
+  variants: {
+    isOnMain: {
+      true: {
+        display: "none",
+      },
+    },
+  },
 });
 
 const StyledLink = styled("a", {
@@ -100,6 +133,20 @@ const NavbarLogoLayout = styled("div", {
     width: "70px",
     paddingTop: "70px"
   },
+  variants: {
+    isOnMain: {
+      true: {
+        marginTop: "2vh",
+        ["&:before"]: {
+          display: "block",
+          content: "",
+          width: "12vw",
+          maxWidth: "inherit",
+          paddingTop: "12vw",
+        },
+      },
+    },
+  },
 });
 
 const AccountButtonIconLayout = styled("div", {
@@ -119,23 +166,23 @@ const StyledAccountImage = styled(Image, {
     borderRadius: "50%",
 });
 
-export const Navbar: React.FC<Props> = ({ links }) => {
+export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
   return (
     <>
-      <NavbarLayout>
-        <NavbarHeaderLink href="/">
-          <NavbarLogoLayout>
+      <NavbarLayout isOnMain={isOnMain}>
+        <NavbarHeaderLink href="/" isOnMain={isOnMain}>
+          <NavbarLogoLayout isOnMain={isOnMain}>
             <Image
               layout="fill"
               src="/images/avatar.png"
               alt="SchoolUtilities Logo"
             />
           </NavbarLogoLayout>
-          <NavbarLogoText>SchoolUtilities</NavbarLogoText>
+          <NavbarLogoText isOnMain={isOnMain}>SchoolUtilities</NavbarLogoText>
         </NavbarHeaderLink>
 
         <NavbarContentLayout>
-          <StyledLinkList>
+          <StyledLinkList isOnMain={isOnMain}>
             {links.map((link) => (
               <li>
                 <StyledLink href={link.href}>{link.label}</StyledLink>
