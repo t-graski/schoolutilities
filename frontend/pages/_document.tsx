@@ -49,6 +49,8 @@ export default class Document extends NextDocument {
             type="font/woff2"
             crossOrigin="anonymous"
           />
+          <script type="text/javascript" src="/redirectLogin.js">
+          </script>
           <style
             dangerouslySetInnerHTML={{
               __html: `

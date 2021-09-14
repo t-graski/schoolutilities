@@ -1,0 +1,46 @@
+if (window.location.href.includes("loginRedirect")) {
+  function generateRandomString() {
+    const rand = Math.floor(Math.random() * 10);
+    let randStr = "";
+
+    for (let i = 0; i < 20 + rand; i++) {
+      randStr += String.fromCharCode(33 + Math.floor(Math.random() * 94));
+    }
+
+    return randStr;
+  }
+
+  window.onload = () => {
+    const fragment = window.location.href.split("#")[1].split("&");
+
+    if (fragment[1]) {
+      const accessToken = fragment[1].split("=")[1];
+      setCookie("access_token", accessToken, 7);
+      window.location.href = "/";
+    }
+  };
+
+  function setCookie(name, value, daysToLive) {
+    var cookie = name + "=" + encodeURIComponent(value);
+
+    if (typeof daysToLive === "number") {
+      cookie += ";path=/; max-age=" + daysToLive * 24 * 60 * 60;
+
+      document.cookie = cookie;
+    }
+  }
+
+  function getCookie(name) {
+    var cookieArr = document.cookie.split(";path=/;");
+
+    for (var i = 0; i < cookieArr.length; i++) {
+      var cookiePair = cookieArr[i].split("=");
+
+      if (name == cookiePair[0].trim()) {
+        return decodeURIComponent(cookiePair[1]);
+      }
+    }
+
+    return null;
+  }
+}
