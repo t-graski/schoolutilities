@@ -2,7 +2,9 @@ import { styled } from "../stitches.config";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { StartPageNav } from "../components/StartPageNav";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import cookie from "js-cookie";
+import { useRouter } from "next/router";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -12,29 +14,58 @@ const Maincontent = styled("div", {
 });
 
 export default function Home() {
+  const router = useRouter();
+  let path = router.query;
+  if (path && path.logout) {
+    cookie.remove("access_token");
+  }
+
+  const [userData, setUserData] = useState(null);
+  if (cookie.get("access_token")) {
+    let token = cookie.get("access_token");
+    useEffect(() => {
+      fetch("https://discord.com/api/users/@me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((jsonResponse) => {
+          setUserData(jsonResponse);
+        });
+    }, []);
+  }
+
   return (
     <>
-      <Navbar links={[
-        {
-          href: "/",
-          label: "Home",
-        },
-        {
-          href: "/features",
-          label: "Features",
-        },
-        {
-          href: "/dashboard",
-          label: "Dashboard",
-        },
-      ]} isOnMain={true}></Navbar>
+      <Navbar
+        links={[
+          {
+            href: "/",
+            label: "Home",
+          },
+          {
+            href: "/features",
+            label: "Features",
+          },
+          {
+            href: "/dashboard",
+            label: "Dashboard",
+          },
+        ]}
+        isOnMain={true}
+      ></Navbar>
       <Maincontent>
         <StartPageNav
           links={[
             {
-              href: process.env.DICSCORD_LOGIN_URL,
-              label: "Login with Discord",
-              imageSrc: "/images/discord.svg",
+              href: userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL,
+              label: userData ? "Dashboard" : "Login with Discord",
+              imageSrc: userData
+                ? "/images/business-report.svg"
+                : "/images/discord.svg",
               imageAlt: "Discord logo",
             },
             {
@@ -53,27 +84,27 @@ export default function Home() {
               href: "/change-log",
               label: "Change Log",
               imageSrc: "/images/change_log.svg",
-              imageAlt: "Change Log"
-            } 
+              imageAlt: "Change Log",
+            },
           ]}
-        >
-
-        </StartPageNav>  
-        <Footer links={[
-          {
-            href: "/data-policy",
-            label: "Data Policy",
-          },
-          {
-            href: "/imprint",
-            label: "Imprint",
-          },
-          {
-            href: "/logout",
-            label: "Logout",
-          },
-        ]}></Footer>
-        </Maincontent>
+        ></StartPageNav>
+        <Footer
+          links={[
+            {
+              href: "/data-policy",
+              label: "Data Policy",
+            },
+            {
+              href: "/imprint",
+              label: "Imprint",
+            },
+            {
+              href: "/?logout=true",
+              label: "Logout",
+            },
+          ]}
+        ></Footer>
+      </Maincontent>
     </>
   );
 }

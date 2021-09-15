@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
+import cookie from "js-cookie";
 
 type Props = {
   links: {
@@ -118,20 +119,20 @@ const AccountButton = styled("button", {
 });
 
 const AccountButtonText = styled("p", {
-    color: "$fontPrimary",
+  color: "$fontPrimary",
   fontWeight: "700",
   fontSize: "0.9rem",
 });
 
 const NavbarLogoLayout = styled("div", {
   position: "relative",
-  marginLeft: '10px',
+  marginLeft: "10px",
 
   ["&:before"]: {
     display: "block",
     content: "",
     width: "70px",
-    paddingTop: "70px"
+    paddingTop: "70px",
   },
   variants: {
     isOnMain: {
@@ -150,9 +151,9 @@ const NavbarLogoLayout = styled("div", {
 });
 
 const AccountButtonIconLayout = styled("div", {
-    position: "relative",
-    marginRight: "10px",
-    borderRadius: "50%",
+  position: "relative",
+  marginRight: "10px",
+  borderRadius: "50%",
 
   ["&:before"]: {
     display: "block",
@@ -163,10 +164,32 @@ const AccountButtonIconLayout = styled("div", {
 });
 
 const StyledAccountImage = styled(Image, {
-    borderRadius: "50%",
+  borderRadius: "50%",
+});
+
+const StyledAccountLink = styled("a", {
+  textDecoration: "none",
 });
 
 export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
+  const [userData, setUserData] = useState(null);
+  if (cookie.get("access_token")) {
+    let token = cookie.get("access_token");
+    useEffect(() => {
+      fetch("https://discord.com/api/users/@me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((jsonResponse) => {
+          setUserData(jsonResponse);
+        });
+    }, []);
+  }
+
   return (
     <>
       <NavbarLayout isOnMain={isOnMain}>
@@ -189,16 +212,26 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
               </li>
             ))}
           </StyledLinkList>
-          <AccountButton>
-            <AccountButtonIconLayout>
-              <StyledAccountImage
-                layout="fill"
-                src="/images/user.svg"
-                alt="SchoolUtilities Logo"
-              />
-            </AccountButtonIconLayout>
-            <AccountButtonText>Login</AccountButtonText>
-          </AccountButton>
+          <StyledAccountLink
+            href={userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL}
+          >
+            <AccountButton>
+              <AccountButtonIconLayout>
+                <StyledAccountImage
+                  layout="fill"
+                  src={
+                    userData
+                      ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}`
+                      : "/images/user.svg"
+                  }
+                  alt="SchoolUtilities Logo"
+                />
+              </AccountButtonIconLayout>
+              <AccountButtonText>
+                {userData ? userData.username : "Login"}
+              </AccountButtonText>
+            </AccountButton>
+          </StyledAccountLink>
         </NavbarContentLayout>
       </NavbarLayout>
     </>

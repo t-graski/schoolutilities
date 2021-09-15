@@ -44,3 +44,9 @@ if (window.location.href.includes("loginRedirect")) {
     return null;
   }
 }
+
+if(window.location.href.includes("logout=true")){
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 500);
+}
