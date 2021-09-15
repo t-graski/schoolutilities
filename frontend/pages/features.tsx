@@ -6,7 +6,7 @@ import { Footer } from "../components/Footer";
 import { Headline } from "../components/Headline";
 import React from "react";
 import { Spacer } from "../components/Spacer";
-import { Seperator } from "../components/Seperator";
+import { Seperator } from "../components/Separator";
 import { FeatureOverview } from "../components/FeatureOverview";
 import { FeatureOverviewList } from "../components/FeatureOverviewList";
 

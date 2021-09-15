@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "../stitches.config";
 import { FeatureOverview, FeatureOverviewProps } from "./FeatureOverview";
-import { Seperator } from "./Seperator";
+import { Seperator } from "./Separator";
 
 type Props = {
   features: FeatureOverviewProps[];
