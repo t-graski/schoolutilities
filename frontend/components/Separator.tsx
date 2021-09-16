@@ -8,7 +8,7 @@ type Props = {
   alignment: Stitches.VariantProps<typeof HrLayout>['alignment'];
 };
 
-const StyledHr = styled("hr", {
+const StyledHr = styled("div", {
     borderTop: "3px solid $fontPrimary",
     margin: "20px 0",
     variants: {

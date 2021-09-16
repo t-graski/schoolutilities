@@ -34,6 +34,8 @@ export default function AboutUs() {
       <Headline label="About Us"></Headline>
       <Separator width="small" alignment="center" />
       <AboutUsItem imageSrc="/media/user.svg" imageAlt="user" name="David" position="CDO" description="This is some sample text" roles={["CDO", "CDO"]} />
+      <AboutUsItem imageSrc="/media/user.svg" imageAlt="user" name="Tobias" position="CEO" description="This is some sample text" roles={["CEO", "CDO"]} />
+      <AboutUsItem imageSrc="/media/user.svg" imageAlt="user" name="Florian" position="Design" description="This is some sample text" roles={["Design", "CDO"]} />
       <Footer
         links={[
           {

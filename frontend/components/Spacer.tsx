@@ -10,6 +10,9 @@ const SpacerBox = styled("div", {
   display: "inline-block",
   variants: {
     size: {
+      verySmall: {
+        height: "25px",
+      },
       small: {
         height: "50px",
       },
