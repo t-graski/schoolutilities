@@ -55,3 +55,13 @@ export interface subjectTable {
   subject_id: number;
   subject_name: string;
 }
+
+export interface UserServerInfo {
+  id: string;
+  name: string;
+  icon: string;
+  owner: string;
+  permissions: string;
+  features: string[];
+  permissions_new: string;
+}

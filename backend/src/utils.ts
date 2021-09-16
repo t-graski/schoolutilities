@@ -20,10 +20,11 @@ connection.connect();
 export async function getServerByGuildId(guild_id): Promise<serverTable[]> {
   return new Promise((resolve, reject) => {
     connection.query(
-      'SELECT * FROM `server` WHERE guild_id=?',
+      'SELECT * FROM `school` WHERE school_id IN (SELECT school_id FROM `discord_server` WHERE guild_id=?)',
       [guild_id],
       //@ts-ignore
       function (error, results, fields) {
+        console.log(error);
         resolve(results);
       },
     );

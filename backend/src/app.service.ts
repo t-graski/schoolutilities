@@ -5,6 +5,7 @@ import {
   classTable,
   timeTableEntryTable,
   subjectTable,
+  UserServerInfo,
 } from './server';
 import {
   getServerByGuildId,
@@ -20,6 +21,34 @@ import fetch from 'node-fetch';
 
 @Injectable()
 export class AppService {
+  //@ts-ignore
+  async getServerList(token: string): Promise<UserServerInfo> {
+    let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    let discordServers = await discordRes.json();
+    let serverList: UserServerInfo[][] = [[], [], []];
+    discordServers.forEach(async (discordServer) => {
+      console.log(discordServer);
+      let server = await getServerIdByGuildId(discordServer.id);
+      console.log(server);
+      if(discordServer.permissions === 2147483647){
+        if(server[0]){
+          serverList[0].push(discordServer);
+        }else{
+          serverList[2].push(discordServer);
+        }
+      }else if(server[0]){
+        serverList[1].push(discordServer);
+      }
+    });
+    console.log(serverList);
+    return null;
+  }
+
   async getServerJson(guild_id: string, token: string): Promise<Server> {
     let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
       method: 'GET',
