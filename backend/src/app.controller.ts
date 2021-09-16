@@ -6,6 +6,7 @@ import {
   classTable,
   timeTableEntryTable,
   subjectTable,
+  UserServerInfo,
 } from './server';
 
 @Controller('api')
@@ -29,5 +30,10 @@ export class AppController {
     if (updateStatus) {
       return response.status(HttpStatus.OK).send('Update successfull');
     }
+  }
+
+  @Get('serverlist')
+  async getServerList(@Req() request): Promise<UserServerInfo> {
+    return await this.appService.getServerList(request.body.token);
   }
 }
