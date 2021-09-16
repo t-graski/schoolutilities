@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
+import { Spacer } from "./Spacer";
 
 export type AboutUsItem = {
   imageSrc: string;
@@ -12,53 +13,53 @@ export type AboutUsItem = {
 };
 
 const AboutUsLayout = styled("div", {
-  padding: "5vh 15vw",
-  display: "grid",
-  gridTemplateRows: "1vw 1vw",
+  padding: "1.5vh 15vw",
+  display: "flex",
 });
 
 const ImageDimension = styled("div", {
-    position: "relative",
-    width: "20vw",
-    height: "20vw",
+  position: "relative",
+  width: "15vw",
+  height: "15vw",
 });
 
 const VerticalLine = styled("div", {
-    display: "inline-block",
-    height: "fit-content",
-    padding: "10% 0",
-    width: "5px",
-    borderRadius: "5px",
-    backgroundColor: "$fontSecondary"
+  display: "inline-block",
+  height: "fit-content",
+  padding: "70px 0",
+  width: "5px",
+  borderRadius: "5px",
+  marginLeft: "20px",
+  backgroundColor: "#4b4c4e",
 });
 
 const AboutUsTextLayout = styled("div", {
-    width: "100%",
-    display: "grid",
-    gridTemplateRows: "1fr",
-    gridGap: "30px",
-    height: "20vw",
+  width: "40vw",
+  display: "flex",
+  flexDirection: "column",
+  gridGap: "15px",
+  height: "20vw",
 });
 
-const AboutUsTextHeader = styled("h1", {
+const AboutUsTextHeader = styled("h1", {});
 
-});
+const AboutUsTextDescription = styled("p", {});
 
-const AboutUsTextDescription = styled("p", {
-
-});
-
-const AboutUsTextRoles = styled("ul", {
-    
-});
+const AboutUsTextRoles = styled("ul", {});
 
 const ImageLayout = styled("div", {
-    display: "flex",
-    flexDirection: "row",
-    height: "fit-content",
-    alignItems: "center",
+  display: "flex",
+  flexDirection: "row",
+  height: "fit-content",
+  alignItems: "center",
+  width: "30vw",
+  justifyContent: "center",
 });
 
+const AboutUsRolesTitle = styled("h3",{
+  paddingBottom: "0.9vh",
+  paddingTop: "1vh"
+})
 export const AboutUsItem: React.FC<AboutUsItem> = ({
   imageSrc,
   imageAlt,
@@ -70,25 +71,28 @@ export const AboutUsItem: React.FC<AboutUsItem> = ({
   return (
     <>
       <AboutUsLayout>
-          <ImageLayout>
-        <ImageDimension>
-          <Image
-            layout="fill"
-            src="/images/avatar.png"
-            alt="SchoolUtilities Logo"
-          ></Image>
-        </ImageDimension>
-            <VerticalLine></VerticalLine>
-          </ImageLayout>
+        <ImageLayout>
+          <ImageDimension>
+            <Image
+              layout="fill"
+              src="/images/avatar.png"
+              alt="SchoolUtilities Logo"
+            ></Image>
+          </ImageDimension>
+          <VerticalLine></VerticalLine>
+        </ImageLayout>
         <AboutUsTextLayout>
-            <AboutUsTextHeader>{name} ({position})</AboutUsTextHeader>
-            <AboutUsTextDescription>{description}</AboutUsTextDescription>
-            <h3>Roles:</h3>
-            <AboutUsTextRoles>
-                {roles.map((role, index) => (
-                    <li>{role}</li>
-                ))}
-            </AboutUsTextRoles>
+        <Spacer size="verySmall"></Spacer>
+          <AboutUsTextHeader>
+            {name} ({position})
+          </AboutUsTextHeader>
+          <AboutUsTextDescription>{description}</AboutUsTextDescription>
+          <AboutUsTextRoles>
+            <AboutUsRolesTitle>Roles:</AboutUsRolesTitle>
+            {roles.map((role, index) => (
+              <li>{role}</li>
+            ))}
+          </AboutUsTextRoles>
         </AboutUsTextLayout>
       </AboutUsLayout>
     </>

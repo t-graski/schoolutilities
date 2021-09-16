@@ -1,13 +1,10 @@
-import Head from "next/head";
 import { styled } from "../stitches.config";
-import StitchesLogo from "../components/StitchesLogo";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { Headline } from "../components/Headline";
 import React from "react";
 import { Spacer } from "../components/Spacer";
-import { Seperator } from "../components/Separator";
-import { FeatureOverview } from "../components/FeatureOverview";
+import { Separator } from "../components/Separator";
 import { FeatureOverviewList } from "../components/FeatureOverviewList";
 
 export default function Features() {
@@ -31,7 +28,7 @@ export default function Features() {
       ></Navbar>
       <Spacer size="medium"></Spacer>
       <Headline label="Features"></Headline>
-      <Seperator width="small" alignment="center" />
+      <Separator width="small" alignment="center" />
       <FeatureOverviewList
         features={[
           {
