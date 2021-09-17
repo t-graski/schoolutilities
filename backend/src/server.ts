@@ -65,3 +65,9 @@ export interface UserServerInfo {
   features: string[];
   permissions_new: string;
 }
+
+export interface UserServerInfoList {
+    sharedAdminServer: UserServerInfo[],
+    sharedServer: UserServerInfo[],
+    adminServer: UserServerInfo[],
+}

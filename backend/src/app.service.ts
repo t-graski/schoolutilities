@@ -6,6 +6,7 @@ import {
   timeTableEntryTable,
   subjectTable,
   UserServerInfo,
+  UserServerInfoList,
 } from './server';
 import {
   getServerByGuildId,
@@ -22,7 +23,7 @@ import fetch from 'node-fetch';
 @Injectable()
 export class AppService {
   //@ts-ignore
-  async getServerList(token: string): Promise<UserServerInfo> {
+  async getServerList(token: string): Promise<UserServerInfoList> {
     let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
       method: 'GET',
       headers: {
@@ -30,23 +31,28 @@ export class AppService {
       },
     });
     let discordServers = await discordRes.json();
-    let serverList: UserServerInfo[][] = [[], [], []];
-    discordServers.forEach(async (discordServer) => {
-      console.log(discordServer);
-      let server = await getServerIdByGuildId(discordServer.id);
-      console.log(server);
-      if(discordServer.permissions === 2147483647){
-        if(server[0]){
-          serverList[0].push(discordServer);
+    let serverList: UserServerInfoList = {
+      sharedAdminServer: [],
+      sharedServer: [],
+      adminServer: [],
+    };
+
+    for( let discordServer of discordServers ) {
+      let server: number[] = await getServerIdByGuildId(discordServer.id);
+      if(discordServer.permissions == 2147483647){
+        if(server.length > 0){
+          serverList.sharedAdminServer.push(discordServer);
         }else{
-          serverList[2].push(discordServer);
+          serverList.adminServer.push(discordServer);
         }
-      }else if(server[0]){
-        serverList[1].push(discordServer);
+      }else if(server.length > 0){
+        serverList.sharedServer.push(discordServer);
       }
-    });
-    console.log(serverList);
-    return null;
+    }
+    serverList.sharedAdminServer.sort((a, b) => a.name.localeCompare(b.name));
+    serverList.sharedServer.sort((a, b) => a.name.localeCompare(b.name));
+    serverList.adminServer.sort((a, b) => a.name.localeCompare(b.name));
+    return serverList;
   }
 
   async getServerJson(guild_id: string, token: string): Promise<Server> {
@@ -135,6 +141,7 @@ async function saveSettings(serverJson: Server): Promise<boolean> {
       checktime: serverJson.checktime,
       autocheck: serverJson.autocheck,
       notifications: serverJson.notifications,
+      //@ts-ignore
       server_id: server_id[0].server_id,
   });
   return true;

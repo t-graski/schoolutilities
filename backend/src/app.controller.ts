@@ -7,6 +7,7 @@ import {
   timeTableEntryTable,
   subjectTable,
   UserServerInfo,
+  UserServerInfoList,
 } from './server';
 
 @Controller('api')
@@ -33,7 +34,7 @@ export class AppController {
   }
 
   @Get('serverlist')
-  async getServerList(@Req() request): Promise<UserServerInfo> {
+  async getServerList(@Req() request): Promise<UserServerInfoList> {
     return await this.appService.getServerList(request.body.token);
   }
 }

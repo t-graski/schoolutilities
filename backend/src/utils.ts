@@ -90,10 +90,10 @@ export async function updateServer(server) {
   });
 }
 
-export async function getServerIdByGuildId(guildId) {
+export async function getServerIdByGuildId(guildId): Promise<number[]> {
   return new Promise((resolve, reject) => {
     connection.query(
-      'SELECT server_id FROM server WHERE guild_id=?',
+      'SELECT school_id FROM school WHERE school_id IN (SELECT school_id FROM discord_server WHERE guild_id=?)',
       [guildId],
       //@ts-ignore
       function (error, results, fields) {
