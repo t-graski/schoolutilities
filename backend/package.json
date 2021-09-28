@@ -23,11 +23,13 @@
   "dependencies": {
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
+    "@nestjs/jwt": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/throttler": "^2.0.0",
     "dotenv": "^10.0.0",
     "mysql2": "^2.3.0",
     "node-fetch": "^2.6.2",
+    "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
