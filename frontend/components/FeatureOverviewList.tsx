@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "../stitches.config";
 import { FeatureOverview, FeatureOverviewProps } from "./FeatureOverview";
-import { Seperator } from "./Separator";
+import { Separator } from "./Separator";
 
 type Props = {
   features: FeatureOverviewProps[];
@@ -31,7 +31,7 @@ export const FeatureOverviewList: React.FC<Props> = ({ features }) => {
                 : "right"
             }
           />
-          {index < features.length - 1 && <Seperator width="big" alignment="center"/>}
+          {index < features.length - 1 && <Separator width="big" alignment="center"/>}
             </>
         ))}
       </FeatureOverviewListLayout>
