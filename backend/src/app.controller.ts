@@ -1,4 +1,12 @@
-import { Controller, Get, Req, Patch, Res, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Patch,
+  Res,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   Server,
@@ -36,5 +44,16 @@ export class AppController {
   @Get('serverlist')
   async getServerList(@Req() request): Promise<UserServerInfoList> {
     return await this.appService.getServerList(request.body.token);
+  }
+
+  @Post('register')
+  async registerUser(@Req() request, @Res() response): Promise<string> {
+    const registerUserStatus = await this.appService.registerUser(request.body);
+    if (
+      typeof registerUserStatus == 'string' &&
+      registerUserStatus == 'successfull'
+    ) {
+      return response.status(HttpStatus.OK).send('User registered');
+    }
   }
 }

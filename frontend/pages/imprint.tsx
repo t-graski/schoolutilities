@@ -57,7 +57,7 @@ export default function Features() {
         </MainContentText>
         <Spacer size="small"></Spacer>
 
-        <p class="urheberechtserklärung">
+        <p className="urheberechtserklärung">
           The layout and design of the web pages are protected by copyright. The
           same applies to the content of the contributions. Further use and
           duplication are only permitted for private purposes, changes to them

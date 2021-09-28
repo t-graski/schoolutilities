@@ -24,6 +24,7 @@
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "mysql2": "^2.3.0",
     "node-fetch": "^2.6.2",

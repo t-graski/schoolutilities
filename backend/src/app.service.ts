@@ -17,11 +17,27 @@ import {
   updateClass,
   updateTimetableEntry,
   getServerIdByGuildId,
-} from './utils';
+} from './schoolUtils';
 import fetch from 'node-fetch';
+import { RegisterUserData } from './types/User';
+import { registerUser } from './userUtils';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CryptoJS = require('crypto-js');
 
 @Injectable()
 export class AppService {
+  async registerUser(userData: RegisterUserData) {
+    userData.password = CryptoJS.DES.encrypt(
+      userData.password,
+      process.env.PASSWORD_ENCRYPTION_KEY,
+    ).toString();
+    const registerUserData = await registerUser(userData);
+    if (registerUserData) {
+      console.log(registerUserData);
+      return 'successfull';
+    }
+  }
+
   //@ts-ignore
   async getServerList(token: string): Promise<UserServerInfoList> {
     let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
@@ -37,15 +53,15 @@ export class AppService {
       adminServer: [],
     };
 
-    for( let discordServer of discordServers ) {
+    for (let discordServer of discordServers) {
       let server: number[] = await getServerIdByGuildId(discordServer.id);
-      if(discordServer.permissions == 2147483647){
-        if(server.length > 0){
+      if (discordServer.permissions == 2147483647) {
+        if (server.length > 0) {
           serverList.sharedAdminServer.push(discordServer);
-        }else{
+        } else {
           serverList.adminServer.push(discordServer);
         }
-      }else if(server.length > 0){
+      } else if (server.length > 0) {
         serverList.sharedServer.push(discordServer);
       }
     }
@@ -90,7 +106,11 @@ export class AppService {
     throw new Error('Server not found');
   }
 
-  async saveTimetableJson(timetableJson: Server["classTimeTable"], guildId, token: string): Promise<boolean> {
+  async saveTimetableJson(
+    timetableJson: Server['classTimeTable'],
+    guildId,
+    token: string,
+  ): Promise<boolean> {
     let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
       method: 'GET',
       headers: {
@@ -108,7 +128,9 @@ export class AppService {
   }
 }
 
-async function saveTimetable(timetableJson: Server["classTimeTable"]): Promise<boolean> {   
+async function saveTimetable(
+  timetableJson: Server['classTimeTable'],
+): Promise<boolean> {
   // let classId = timetableJson.classId;
   // for (let weekday in config.timeTable) {
   //     let timeTable = config.timeTable[weekday];
@@ -126,23 +148,23 @@ async function saveTimetable(timetableJson: Server["classTimeTable"]): Promise<b
   return true;
 }
 
-async function saveSettings(serverJson: Server): Promise<boolean> {   
+async function saveSettings(serverJson: Server): Promise<boolean> {
   let server = await updateServer({
-      guild_id: serverJson.guildId,
-      name: serverJson.name,
-      language: serverJson.language,
-      timezone: serverJson.timeZone,
+    guild_id: serverJson.guildId,
+    name: serverJson.name,
+    language: serverJson.language,
+    timezone: serverJson.timeZone,
   });
-  let server_id = await getServerIdByGuildId(serverJson.guildId)
+  let server_id = await getServerIdByGuildId(serverJson.guildId);
   //@ts-ignore
   let schoolclass = await updateClass({
-      student_id: serverJson.studentId,
-      teacher_id: serverJson.teacherId,
-      checktime: serverJson.checktime,
-      autocheck: serverJson.autocheck,
-      notifications: serverJson.notifications,
-      //@ts-ignore
-      server_id: server_id[0].server_id,
+    student_id: serverJson.studentId,
+    teacher_id: serverJson.teacherId,
+    checktime: serverJson.checktime,
+    autocheck: serverJson.autocheck,
+    notifications: serverJson.notifications,
+    //@ts-ignore
+    server_id: server_id[0].server_id,
   });
   return true;
 }
@@ -179,7 +201,9 @@ async function getServerJsonByGuildId(guild_id): Promise<Server> {
       for (let timeTableEntry of timeTableEntries) {
         let startTimeData = timeTableEntry.starttime.split(':');
         let endTimeData = timeTableEntry.endtime.split(':');
-        if (serverJson.classTimeTable[timeTableEntry.weekday - 1] == undefined) {
+        if (
+          serverJson.classTimeTable[timeTableEntry.weekday - 1] == undefined
+        ) {
           serverJson.classTimeTable[timeTableEntry.weekday - 1] = [];
         }
         let subjects = await getSubjectById(timeTableEntry.subject_id);
