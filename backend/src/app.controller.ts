@@ -23,29 +23,29 @@ import {
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('serverjson')
-  async getServerJson(@Req() request): Promise<Server> {
-    return await this.appService.getServerJson(
-      request.body.guildId,
-      request.body.token,
-    );
-  }
+  // @Get('serverjson')
+  // async getServerJson(@Req() request): Promise<Server> {
+  //   return await this.appService.getServerJson(
+  //     request.body.guildId,
+  //     request.body.token,
+  //   );
+  // }
 
-  @Patch('serverjson')
-  async patchServerJson(@Req() request, @Res() response): Promise<string> {
-    let updateStatus = await this.appService.saveServerJson(
-      request.body.serverJson,
-      request.body.token,
-    );
-    if (updateStatus) {
-      return response.status(HttpStatus.OK).send('Update successfull');
-    }
-  }
+  // @Patch('serverjson')
+  // async patchServerJson(@Req() request, @Res() response): Promise<string> {
+  //   let updateStatus = await this.appService.saveServerJson(
+  //     request.body.serverJson,
+  //     request.body.token,
+  //   );
+  //   if (updateStatus) {
+  //     return response.status(HttpStatus.OK).send('Update successfull');
+  //   }
+  // }
 
-  @Get('serverlist')
-  async getServerList(@Req() request): Promise<UserServerInfoList> {
-    return await this.appService.getServerList(request.body.token);
-  }
+  // @Get('serverlist')
+  // async getServerList(@Req() request): Promise<UserServerInfoList> {
+  //   return await this.appService.getServerList(request.body.token);
+  // }
 
   @Post('register')
   async registerUser(@Req() request, @Res() response): Promise<string> {
@@ -55,6 +55,11 @@ export class AppController {
       registerUserStatus == 'successfull'
     ) {
       return response.status(HttpStatus.OK).send('User registered');
+    } else if (
+      typeof registerUserStatus == 'string' &&
+      registerUserStatus == 'exists'
+    ) {
+      return response.status(HttpStatus.CONFLICT).send('User already exists');
     }
   }
 
@@ -65,6 +70,8 @@ export class AppController {
       return response.status(HttpStatus.OK).send(loginStatus.token);
     } else if (loginStatus.statusCode == HttpStatus.NOT_FOUND) {
       return response.status(HttpStatus.NOT_FOUND).send();
+    } else if (loginStatus.statusCode == HttpStatus.FORBIDDEN) {
+      return response.status(HttpStatus.FORBIDDEN).send();
     } else {
       return response.status(HttpStatus.BAD_REQUEST).send();
     }

@@ -21,28 +21,40 @@ import {
 } from './schoolUtils';
 import fetch from 'node-fetch';
 import { LoginUserData, RegisterUserData } from './types/User';
-import { getUserData, insertToken, registerUser } from './userUtils';
+import {
+  getUserByEmail,
+  getUserData,
+  insertRegisterToken,
+  insertToken,
+  registerUser,
+} from './userUtils';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 
 @Injectable()
 export class AppService {
   async registerUser(userData: RegisterUserData) {
+    const userOfEmail = await getUserByEmail(userData.email);
+    if (userOfEmail && userOfEmail.length > 0) {
+      return 'exists';
+    }
     userData.password = CryptoJS.DES.encrypt(
       userData.password,
       process.env.PASSWORD_ENCRYPTION_KEY,
     ).toString();
     const registerUserData = await registerUser(userData);
     if (registerUserData) {
-      console.log(registerUserData);
+      generateRegisterToken(registerUserData.insertId);
       return 'successfull';
     }
   }
 
   async loginUser(userData: LoginUserData) {
-    let userDbData = await getUserData(userData);
+    const userDbData = await getUserData(userData);
     if (userDbData.length == 0)
       return { statusCode: HttpStatus.NOT_FOUND, token: null };
+    if (userDbData[0] && userDbData[0].email_verified == 0)
+      return { statusCode: HttpStatus.FORBIDDEN, token: null };
     let passwordBytes = CryptoJS.DES.decrypt(
       userDbData[0].password,
       process.env.PASSWORD_ENCRYPTION_KEY,
@@ -52,21 +64,24 @@ export class AppService {
       return { statusCode: HttpStatus.NOT_FOUND, token: null };
     let token = nanoid();
     let insertTokenStatus = await insertToken(userDbData[0].person_id, token);
-    if (!insertTokenStatus || (insertTokenStatus && !insertTokenStatus.insertId))
+    if (
+      !insertTokenStatus ||
+      (insertTokenStatus && !insertTokenStatus.insertId)
+    )
       return { statusCode: HttpStatus.BAD_REQUEST, token: null };
     return { statusCode: HttpStatus.OK, token: token };
   }
 
   //@ts-ignore
   async getServerList(token: string): Promise<UserServerInfoList> {
-    let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
+    const discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     let discordServers = await discordRes.json();
-    let serverList: UserServerInfoList = {
+    const serverList: UserServerInfoList = {
       sharedAdminServer: [],
       sharedServer: [],
       adminServer: [],
@@ -98,7 +113,6 @@ export class AppService {
       },
     });
     let discordServers = await discordRes.json();
-    // @ts-ignore
     for (let discordServer of discordServers) {
       if (discordServer.id === guild_id) {
         console.log(discordServer.id + ' ' + guild_id);
@@ -108,22 +122,21 @@ export class AppService {
     throw new Error('Server not found');
   }
 
-  async saveServerJson(serverJson: Server, token: string): Promise<boolean> {
-    let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    let discordServers = await discordRes.json();
-    // @ts-ignore
-    for (let discordServer of discordServers) {
-      if (discordServer.id === serverJson.guildId) {
-        return await saveSettings(serverJson);
-      }
-    }
-    throw new Error('Server not found');
-  }
+  // async saveServerJson(serverJson: Server, token: string): Promise<boolean> {
+  //   let discordRes = await fetch('https://discord.com/api/users/@me/guilds', {
+  //     method: 'GET',
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   });
+  //   let discordServers = await discordRes.json();
+  //   for (let discordServer of discordServers) {
+  //     if (discordServer.id === serverJson.guildId) {
+  //       return await saveSettings(serverJson);
+  //     }
+  //   }
+  //   throw new Error('Server not found');
+  // }
 
   async saveTimetableJson(
     timetableJson: Server['classTimeTable'],
@@ -137,7 +150,6 @@ export class AppService {
       },
     });
     let discordServers = await discordRes.json();
-    // @ts-ignore
     for (let discordServer of discordServers) {
       if (discordServer.id === guildId) {
         return await saveTimetable(timetableJson);
@@ -145,6 +157,15 @@ export class AppService {
     }
     throw new Error('Server not found');
   }
+}
+
+async function generateRegisterToken(personId: number): Promise<string> {
+  const generatedToken = nanoid();
+  const insertTokenStatus = await insertRegisterToken(personId, generatedToken);
+  console.log(insertTokenStatus);
+  if (!insertTokenStatus || (insertTokenStatus && !insertTokenStatus.insertId))
+    throw new Error('Error while generating token');
+  return generatedToken;
 }
 
 async function saveTimetable(
@@ -167,26 +188,24 @@ async function saveTimetable(
   return true;
 }
 
-async function saveSettings(serverJson: Server): Promise<boolean> {
-  let server = await updateServer({
-    guild_id: serverJson.guildId,
-    name: serverJson.name,
-    language: serverJson.language,
-    timezone: serverJson.timeZone,
-  });
-  let server_id = await getServerIdByGuildId(serverJson.guildId);
-  //@ts-ignore
-  let schoolclass = await updateClass({
-    student_id: serverJson.studentId,
-    teacher_id: serverJson.teacherId,
-    checktime: serverJson.checktime,
-    autocheck: serverJson.autocheck,
-    notifications: serverJson.notifications,
-    //@ts-ignore
-    server_id: server_id[0].server_id,
-  });
-  return true;
-}
+// async function saveSettings(serverJson: Server): Promise<boolean> {
+//   let server = await updateServer({
+//     guild_id: serverJson.guildId,
+//     name: serverJson.name,
+//     language: serverJson.language,
+//     timezone: serverJson.timeZone,
+//   });
+//   let server_id = await getServerIdByGuildId(serverJson.guildId);
+//   let schoolclass = await updateClass({
+//     student_id: serverJson.studentId,
+//     teacher_id: serverJson.teacherId,
+//     checktime: serverJson.checktime,
+//     autocheck: serverJson.autocheck,
+//     notifications: serverJson.notifications,
+//     server_id: server_id[0].server_id,
+//   });
+//   return true;
+// }
 
 async function getServerJsonByGuildId(guild_id): Promise<Server> {
   let serverJson: Server = {

@@ -61,3 +61,27 @@ export async function insertToken(userId: number, token: string): Promise<any> {
     );
   });
 }
+
+export async function insertRegisterToken(userId, token: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'insert into `register_tokens` set person_id=?, token=?',
+      [userId, token],
+      function (error, results, fields) {
+        resolve(results);
+      },
+    );
+  });
+}
+
+export async function getUserByEmail(email: string): Promise<serverTable[]> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'select * from `persons` where email=?',
+      [email],
+      function (error, results, fields) {
+        resolve(results);
+      },
+    );
+  });
+}
