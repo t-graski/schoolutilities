@@ -1,3 +1,5 @@
+import { Timestamp } from "rxjs";
+
 export interface Server {
   guildId: string;
   name: string;
@@ -70,4 +72,17 @@ export interface UserServerInfoList {
     sharedAdminServer: UserServerInfo[],
     sharedServer: UserServerInfo[],
     adminServer: UserServerInfo[],
+}
+
+export interface User {
+  person_id: number,
+  firstname: string,
+  lastname: string,
+  birthdate: Date,
+  school_id: number,
+  class_id: number,
+  email: string, 
+  password: string,
+  email_verified: number,
+  creation_date: Date
 }

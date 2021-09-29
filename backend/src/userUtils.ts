@@ -1,12 +1,14 @@
 const mysql = require('mysql2');
+import { async } from 'rxjs';
 import {
   Server,
   serverTable,
   classTable,
   timeTableEntryTable,
   subjectTable,
+  User,
 } from './server';
-import { RegisterUserData } from './types/User';
+import { LoginUserData, RegisterUserData } from './types/User';
 
 require('dotenv').config();
 const connection = mysql.createConnection({
@@ -18,9 +20,7 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-export async function registerUser(
-  userData: RegisterUserData,
-): Promise<serverTable[]> {
+export async function registerUser(userData: RegisterUserData): Promise<any> {
   return new Promise((resolve, reject) => {
     connection.query(
       'insert into `persons` set firstname=?, lastname=?, email=?, password=?, birthdate=?',
@@ -31,6 +31,30 @@ export async function registerUser(
         userData.password,
         userData.birthDate,
       ],
+      function (error, results, fields) {
+        resolve(results);
+      },
+    );
+  });
+}
+
+export async function getUserData(userData: LoginUserData): Promise<User[]> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'select * from `persons` where email=? ',
+      [userData.email],
+      function (error, results, fields) {
+        resolve(results);
+      },
+    );
+  });
+}
+
+export async function insertToken(userId: number, token: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'insert into `login_tokens` set person_id=?, expire_date=ADDTIME(now(), "06:00:00"), token=?',
+      [userId, token],
       function (error, results, fields) {
         resolve(results);
       },

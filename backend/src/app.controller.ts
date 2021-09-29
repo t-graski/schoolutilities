@@ -6,6 +6,7 @@ import {
   Res,
   HttpStatus,
   Post,
+  Redirect,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
@@ -54,6 +55,18 @@ export class AppController {
       registerUserStatus == 'successfull'
     ) {
       return response.status(HttpStatus.OK).send('User registered');
+    }
+  }
+
+  @Get('login')
+  async loginUser(@Req() request, @Res() response): Promise<any> {
+    const loginStatus = await this.appService.loginUser(request.body);
+    if (loginStatus.statusCode == HttpStatus.OK) {
+      return response.status(HttpStatus.OK).send(loginStatus.token);
+    } else if (loginStatus.statusCode == HttpStatus.NOT_FOUND) {
+      return response.status(HttpStatus.NOT_FOUND).send();
+    } else {
+      return response.status(HttpStatus.BAD_REQUEST).send();
     }
   }
 }
