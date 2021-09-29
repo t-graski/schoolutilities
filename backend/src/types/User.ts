@@ -5,3 +5,8 @@ export interface RegisterUserData {
   lastName: string;
   birthDate: string;
 }
+
+export interface LoginUserData {
+  email: string;
+  password: string;
+}

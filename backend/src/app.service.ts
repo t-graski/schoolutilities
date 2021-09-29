@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { nanoid } from 'nanoid';
 import {
   Server,
   serverTable,
@@ -19,8 +20,8 @@ import {
   getServerIdByGuildId,
 } from './schoolUtils';
 import fetch from 'node-fetch';
-import { RegisterUserData } from './types/User';
-import { registerUser } from './userUtils';
+import { LoginUserData, RegisterUserData } from './types/User';
+import { getUserData, insertToken, registerUser } from './userUtils';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 
@@ -36,6 +37,24 @@ export class AppService {
       console.log(registerUserData);
       return 'successfull';
     }
+  }
+
+  async loginUser(userData: LoginUserData) {
+    let userDbData = await getUserData(userData);
+    if (userDbData.length == 0)
+      return { statusCode: HttpStatus.NOT_FOUND, token: null };
+    let passwordBytes = CryptoJS.DES.decrypt(
+      userDbData[0].password,
+      process.env.PASSWORD_ENCRYPTION_KEY,
+    );
+    let password = passwordBytes.toString(CryptoJS.enc.Utf8);
+    if (userData.password !== password)
+      return { statusCode: HttpStatus.NOT_FOUND, token: null };
+    let token = nanoid();
+    let insertTokenStatus = await insertToken(userDbData[0].person_id, token);
+    if (!insertTokenStatus || (insertTokenStatus && !insertTokenStatus.insertId))
+      return { statusCode: HttpStatus.BAD_REQUEST, token: null };
+    return { statusCode: HttpStatus.OK, token: token };
   }
 
   //@ts-ignore
