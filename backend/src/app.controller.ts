@@ -76,4 +76,19 @@ export class AppController {
       return response.status(HttpStatus.BAD_REQUEST).send();
     }
   }
+
+  @Post('activateAccount')
+  async activateAccount(@Req() request, @Res() response): Promise<any> {
+    const activateAccountStatus = await this.appService.activateAccount(
+      request.body.token,
+    );
+    if (activateAccountStatus == HttpStatus.OK) {
+      return response
+        .setHeader('Access-Control-Allow-Origin', '*')
+        .status(HttpStatus.OK)
+        .send('activated');
+    } else {
+      return response.status(HttpStatus.NOT_FOUND).send('failed');
+    }
+  }
 }

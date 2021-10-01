@@ -8,6 +8,7 @@ import {
   subjectTable,
   User,
 } from './server';
+import { DatabaseUpdate } from './types/Database';
 import { LoginUserData, RegisterUserData } from './types/User';
 
 require('dotenv').config();
@@ -20,7 +21,9 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-export async function registerUser(userData: RegisterUserData): Promise<any> {
+export async function registerUser(
+  userData: RegisterUserData,
+): Promise<DatabaseUpdate> {
   return new Promise((resolve, reject) => {
     connection.query(
       'insert into `persons` set firstname=?, lastname=?, email=?, password=?, birthdate=?',
@@ -50,7 +53,10 @@ export async function getUserData(userData: LoginUserData): Promise<User[]> {
   });
 }
 
-export async function insertToken(userId: number, token: string): Promise<any> {
+export async function insertToken(
+  userId: number,
+  token: string,
+): Promise<DatabaseUpdate> {
   return new Promise((resolve, reject) => {
     connection.query(
       'insert into `login_tokens` set person_id=?, expire_date=ADDTIME(now(), "06:00:00"), token=?',
@@ -62,7 +68,10 @@ export async function insertToken(userId: number, token: string): Promise<any> {
   });
 }
 
-export async function insertRegisterToken(userId, token: string): Promise<any> {
+export async function insertRegisterToken(
+  userId,
+  token: string,
+): Promise<DatabaseUpdate> {
   return new Promise((resolve, reject) => {
     connection.query(
       'insert into `register_tokens` set person_id=?, token=?',
@@ -79,6 +88,46 @@ export async function getUserByEmail(email: string): Promise<serverTable[]> {
     connection.query(
       'select * from `persons` where email=?',
       [email],
+      function (error, results, fields) {
+        resolve(results);
+      },
+    );
+  });
+}
+
+export async function getUnverifiedUserByRegisterToken(
+  token: string,
+): Promise<number[]> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'select person_id from `persons` where person_id IN(select person_id from `register_tokens` where token=?) and email_verified=0',
+      [token],
+      function (error, results, fields) {
+        resolve(results);
+      },
+    );
+  });
+}
+
+export async function deleteRegisterToken(
+  token: string,
+): Promise<DatabaseUpdate> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'delete from `register_tokens` where token=?',
+      [token],
+      function (error, results, fields) {
+        resolve(results);
+      },
+    );
+  });
+}
+
+export async function activateAccount(token: string): Promise<DatabaseUpdate> {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      'update `persons` set email_verified=1 where person_id IN (select person_id from `register_tokens` where token=?)',
+      [token],
       function (error, results, fields) {
         resolve(results);
       },

@@ -29,6 +29,7 @@
     "mysql2": "^2.3.0",
     "nanoid": "^3.1.28",
     "node-fetch": "^2.6.2",
+    "nodemailer": "^6.6.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
