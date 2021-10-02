@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Spacer } from "../../components/Spacer";
 import { Separator } from "../../components/Separator";
 import { useRouter } from "next/router";
+import fetch from 'node-fetch';
 
 const RegisterAuthLayout = styled("div", {
   width: "100%",
@@ -19,18 +20,20 @@ export default function Register() {
   );
   const router = useRouter();
   const { token } = router.query;
-
+  let requestBody = JSON.stringify({
+    token: token,
+  });
+  console.log(token);
   useEffect(() => {
     fetch("http://localhost:8888/api/activateAccount", {
       method: "POST",
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        token,
-      }),
+      body: requestBody,
     })
-      .then((response) => response.status)
+      .then((response) => response)
       .then((statusCode) => {
         console.log(statusCode);
         if (statusCode == 200) {
