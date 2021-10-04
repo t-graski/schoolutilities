@@ -16,16 +16,17 @@ export class AuthService {
 
   async loginUser(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
+    const { password, ...result } = userDbData[0];
     if (userDbData.length == 0)
       return { statusCode: HttpStatus.NOT_FOUND, token: null };
     if (userDbData[0] && userDbData[0].email_verified == 0)
       return { statusCode: HttpStatus.FORBIDDEN, token: null };
     const passwordBytes = CryptoJS.DES.decrypt(
-      userDbData[0].password,
+      password,
       process.env.PASSWORD_ENCRYPTION_KEY,
     );
-    const password = passwordBytes.toString(CryptoJS.enc.Utf8);
-    if (userData.password !== password)
+    const decryptedPassword = passwordBytes.toString(CryptoJS.enc.Utf8);
+    if (userData.password !== decryptedPassword)
       return { statusCode: HttpStatus.NOT_FOUND, token: null };
     const token = nanoid();
     const insertTokenStatus = await this.databaseService.insertToken(
@@ -37,14 +38,14 @@ export class AuthService {
       (insertTokenStatus && !insertTokenStatus.insertId)
     )
       return { statusCode: HttpStatus.BAD_REQUEST, token: null };
-    return { statusCode: HttpStatus.OK, token: token };
+    return result;
   }
 
   async registerUser(userData: RegisterUserData) {
     const userOfEmail = await this.databaseService.getUserData(userData);
-    // if (userOfEmail && userOfEmail.length > 0) {
-    //   return 'exists';
-    // }
+    if (userOfEmail && userOfEmail.length > 0) {
+      return 'exists';
+    }
     userData.password = CryptoJS.DES.encrypt(
       userData.password,
       process.env.PASSWORD_ENCRYPTION_KEY,

@@ -8,7 +8,9 @@ import {
   Post,
   Redirect,
   Body,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
 @Controller('api/auth')
@@ -32,17 +34,19 @@ export class AuthController {
     }
   }
 
+  @UseGuards(AuthGuard('local'))
   @Get('login')
   async loginUser(@Req() request, @Res() response): Promise<any> {
-    const loginStatus = await this.authService.loginUser(request.body);
-    if (loginStatus.statusCode == HttpStatus.OK) {
-      return response.status(HttpStatus.OK).send(loginStatus.token);
-    } else if (loginStatus.statusCode == HttpStatus.NOT_FOUND) {
-      return response.status(HttpStatus.NOT_FOUND).send();
-    } else if (loginStatus.statusCode == HttpStatus.FORBIDDEN) {
-      return response.status(HttpStatus.FORBIDDEN).send();
-    } else {
-      return response.status(HttpStatus.BAD_REQUEST).send();
-    }
+    return request.user;
+    // const loginStatus = await this.authService.loginUser(request.body);
+    // if (loginStatus.statusCode == HttpStatus.OK) {
+    //   return response.status(HttpStatus.OK).send(loginStatus.token);
+    // } else if (loginStatus.statusCode == HttpStatus.NOT_FOUND) {
+    //   return response.status(HttpStatus.NOT_FOUND).send();
+    // } else if (loginStatus.statusCode == HttpStatus.FORBIDDEN) {
+    //   return response.status(HttpStatus.FORBIDDEN).send();
+    // } else {
+    //   return response.status(HttpStatus.BAD_REQUEST).send();
+    // }
   }
 }

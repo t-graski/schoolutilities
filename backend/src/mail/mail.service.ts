@@ -8,7 +8,7 @@ export class MailService {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     const transporter = nodemailer.createTransport({
       name: 'Schoolutilities no reply',
-      host: 'mail.schoolutilities.net',
+      host: 'www.schoolutilities.net',
       port: 465,
       secure: true,
       auth: {
