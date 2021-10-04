@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import { DatabaseService } from 'src/database/database.service';
+import { MailService } from 'src/mail/mail.service';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
 import { UsersService } from '../users/users.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -9,8 +10,8 @@ const CryptoJS = require('crypto-js');
 @Injectable()
 export class AuthService {
   constructor(
-    private authService: AuthService,
     private readonly databaseService: DatabaseService,
+    private readonly mailService: MailService,
   ) {}
 
   async loginUser(userData: LoginUserData) {
@@ -50,7 +51,12 @@ export class AuthService {
     ).toString();
     const registerUserData = await this.databaseService.registerUser(userData);
     if (registerUserData) {
-      generateRegisterToken(registerUserData.insertId, userData.email);
+      generateRegisterToken(
+        registerUserData.insertId,
+        userData.email,
+        this.databaseService,
+        this.mailService,
+      );
       return 'successfull';
     }
   }
@@ -78,9 +84,11 @@ export class AuthService {
 async function generateRegisterToken(
   personId: number,
   email: string,
+  databaseService: DatabaseService,
+  mailService: MailService,
 ): Promise<string> {
   const generatedToken = nanoid();
-  const insertTokenStatus = await this.databaseService.insertRegisterToken(
+  const insertTokenStatus = await databaseService.insertRegisterToken(
     personId,
     generatedToken,
   );
@@ -96,6 +104,6 @@ async function generateRegisterToken(
     text,
     html: text,
   };
-  this.mailService.initMail(message);
+  mailService.initMail(message);
   return generatedToken;
 }

@@ -5,6 +5,8 @@ import { serverTable, User } from 'src/server';
 import { DatabaseUpdate } from 'src/types/Database';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
 
+require('dotenv').config();
+
 @Injectable()
 export class DatabaseService {
   connection: any;
