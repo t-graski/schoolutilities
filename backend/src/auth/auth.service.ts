@@ -60,25 +60,6 @@ export class AuthService {
       return 'successfull';
     }
   }
-
-  async verifyAccount(token: string) {
-    const activateAccountStatus = await this.databaseService.activateAccount(
-      token,
-    );
-
-    if (activateAccountStatus && activateAccountStatus.affectedRows > 0) {
-      const deleteTokenStatus = await this.databaseService.deleteRegisterToken(
-        token,
-      );
-      if (deleteTokenStatus && deleteTokenStatus.affectedRows > 0) {
-        return HttpStatus.OK;
-      } else {
-        return HttpStatus.BAD_REQUEST;
-      }
-    } else {
-      return HttpStatus.NOT_FOUND;
-    }
-  }
 }
 
 async function generateRegisterToken(

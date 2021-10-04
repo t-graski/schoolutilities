@@ -28,7 +28,7 @@ export class UsersService {
     const unverifiedUsersOfToken =
       await this.databaseService.getUnverifiedUserByRegisterToken(token);
     if (unverifiedUsersOfToken.length == 0) return HttpStatus.NOT_FOUND;
-    return await verifyAccount(token);
+    return await verifyAccount(token, this.databaseService);
   }
 }
 
@@ -57,15 +57,11 @@ async function generateRegisterToken(
   return generatedToken;
 }
 
-async function verifyAccount(token: string) {
-  const activateAccountStatus = await this.databaseService.activateAccount(
-    token,
-  );
+async function verifyAccount(token: string, databaseService: DatabaseService) {
+  const activateAccountStatus = await databaseService.activateAccount(token);
 
   if (activateAccountStatus && activateAccountStatus.affectedRows > 0) {
-    const deleteTokenStatus = await this.databaseService.deleteRegisterToken(
-      token,
-    );
+    const deleteTokenStatus = await databaseService.deleteRegisterToken(token);
     if (deleteTokenStatus && deleteTokenStatus.affectedRows > 0) {
       return HttpStatus.OK;
     } else {

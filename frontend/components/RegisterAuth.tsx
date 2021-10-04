@@ -7,12 +7,19 @@ import { Navbar } from "./Navbar";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
 import { Footer } from "./Footer";
+import fetch from "node-fetch";
+
+if (!globalThis.fetch) {
+  //@ts-ignore
+  globalThis.fetch = fetch;
+}
 
 const RegisterAuthLayout = styled("div", {
   width: "100%",
   padding: "0 15vw",
   minHeight: "80vh",
 });
+let isSent = false;
 
 export const RegisterAuth = () => {
   const [authStateInfo, setAuthStateInfo] = useState(
@@ -20,20 +27,18 @@ export const RegisterAuth = () => {
   );
   const router = useRouter();
   const { token } = router.query;
-  let requestBody = JSON.stringify({
-    token: token,
-  });
-  console.log(token);
-  useEffect(() => {
-    fetch("localhost:8888/api/auth/activateAccount", {
+  if (token && !isSent) {
+    isSent = true;
+    let requestBody = JSON.stringify({
+      token: token,
+    });
+    console.log(requestBody);
+    fetch("http://localhost:8888/api/user/activateAccount", {
       method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
       body: requestBody,
+      headers: { "Content-Type": "application/json" },
     })
-      .then((response) => response)
+      .then((response) => response.status)
       .then((statusCode) => {
         console.log(statusCode);
         if (statusCode == 200) {
@@ -42,7 +47,7 @@ export const RegisterAuth = () => {
           setAuthStateInfo("Ihr Account konnte nicht aktiviert werden!");
         }
       });
-  }, []);
+  }
   return (
     <>
       <Navbar
