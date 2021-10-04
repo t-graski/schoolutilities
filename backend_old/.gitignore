@@ -1,0 +1,6 @@
+node_modules
+.env
+datastore/configs.json
+media/*
+*.pem
+datastore/commandInputData.json
