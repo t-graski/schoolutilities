@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Erstellungszeit: 16. Sep 2021 um 19:29
+-- Erstellungszeit: 04. Okt 2021 um 10:58
 -- Server-Version: 5.7.34
 -- PHP-Version: 7.4.16
 
@@ -3395,6 +3395,72 @@ INSERT INTO `discord_timetable_entry` (`timetable_entry_id`, `channel_id`) VALUE
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `login_tokens`
+--
+
+CREATE TABLE `login_tokens` (
+  `login_token_id` int(255) NOT NULL,
+  `person_id` int(255) NOT NULL,
+  `expire_date` date NOT NULL,
+  `token` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `persons`
+--
+
+CREATE TABLE `persons` (
+  `person_id` int(255) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `birthdate` date NOT NULL,
+  `school_id` int(255) DEFAULT NULL,
+  `class_id` int(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email_verified` tinyint(1) NOT NULL DEFAULT '0',
+  `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `person_roles`
+--
+
+CREATE TABLE `person_roles` (
+  `person_id` int(255) NOT NULL,
+  `role_id` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `register_tokens`
+--
+
+CREATE TABLE `register_tokens` (
+  `register_link_id` int(255) NOT NULL,
+  `person_id` int(255) NOT NULL,
+  `token` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `roles`
+--
+
+CREATE TABLE `roles` (
+  `role_id` int(255) NOT NULL,
+  `role_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `school`
 --
 
@@ -6143,6 +6209,30 @@ ALTER TABLE `class`
   ADD PRIMARY KEY (`class_id`);
 
 --
+-- Indizes für die Tabelle `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  ADD PRIMARY KEY (`login_token_id`);
+
+--
+-- Indizes für die Tabelle `persons`
+--
+ALTER TABLE `persons`
+  ADD PRIMARY KEY (`person_id`);
+
+--
+-- Indizes für die Tabelle `register_tokens`
+--
+ALTER TABLE `register_tokens`
+  ADD PRIMARY KEY (`register_link_id`);
+
+--
+-- Indizes für die Tabelle `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`role_id`);
+
+--
 -- Indizes für die Tabelle `school`
 --
 ALTER TABLE `school`
@@ -6169,6 +6259,30 @@ ALTER TABLE `timetable_entry`
 --
 ALTER TABLE `class`
   MODIFY `class_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1163;
+
+--
+-- AUTO_INCREMENT für Tabelle `login_tokens`
+--
+ALTER TABLE `login_tokens`
+  MODIFY `login_token_id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `persons`
+--
+ALTER TABLE `persons`
+  MODIFY `person_id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `register_tokens`
+--
+ALTER TABLE `register_tokens`
+  MODIFY `register_link_id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `role_id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `school`

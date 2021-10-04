@@ -25,7 +25,7 @@ export const RegisterAuth = () => {
   });
   console.log(token);
   useEffect(() => {
-    fetch("http://localhost:8888/api/activateAccount", {
+    fetch("localhost:8888/api/auth/activateAccount", {
       method: "POST",
       headers: {
         Accept: "application/json",
