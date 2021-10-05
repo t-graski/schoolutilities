@@ -1,4 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
@@ -12,11 +13,13 @@ export class AuthService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly mailService: MailService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async loginUser(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
     const { password, ...result } = userDbData[0];
+    console.log(userDbData);
     if (userDbData.length == 0)
       return { statusCode: HttpStatus.NOT_FOUND, token: null };
     if (userDbData[0] && userDbData[0].email_verified == 0)
@@ -30,7 +33,7 @@ export class AuthService {
       return { statusCode: HttpStatus.NOT_FOUND, token: null };
     const token = nanoid();
     const insertTokenStatus = await this.databaseService.insertToken(
-      userDbData[0].person_id,
+      result.person_id,
       token,
     );
     if (
@@ -41,6 +44,12 @@ export class AuthService {
     return result;
   }
 
+  async login(user: any) {
+    const payload = user;
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
   async registerUser(userData: RegisterUserData) {
     const userOfEmail = await this.databaseService.getUserData(userData);
     if (userOfEmail && userOfEmail.length > 0) {

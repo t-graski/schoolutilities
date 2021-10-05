@@ -11,7 +11,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { request } from 'https';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('api/auth')
 export class AuthController {
@@ -34,10 +37,12 @@ export class AuthController {
     }
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Get('login')
   async loginUser(@Req() request, @Res() response): Promise<any> {
-    return request.user;
+    return response
+      .status(HttpStatus.OK)
+      .send(await this.authService.login(request.user));
     // const loginStatus = await this.authService.loginUser(request.body);
     // if (loginStatus.statusCode == HttpStatus.OK) {
     //   return response.status(HttpStatus.OK).send(loginStatus.token);
@@ -48,5 +53,11 @@ export class AuthController {
     // } else {
     //   return response.status(HttpStatus.BAD_REQUEST).send();
     // }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Req() request, @Res() response) {
+    return response.status(HttpStatus.OK).send(request.user);
   }
 }
