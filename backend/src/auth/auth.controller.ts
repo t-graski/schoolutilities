@@ -15,6 +15,7 @@ import { request } from 'https';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
+import { JwtRefreshTokenAuthGuard } from './refreshToken/jwt-refresh-token-auth.guard';
 
 @Controller('api/auth')
 export class AuthController {
@@ -59,5 +60,11 @@ export class AuthController {
   @Get('profile')
   getProfile(@Req() request, @Res() response) {
     return response.status(HttpStatus.OK).send(request.user);
+  }
+
+  @UseGuards(JwtRefreshTokenAuthGuard)
+  @Post('refresh')
+  refreshToken(@Req() request, @Res() response) {
+    return null;
   }
 }

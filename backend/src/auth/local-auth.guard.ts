@@ -13,11 +13,10 @@ export class LocalAuthGuard extends AuthGuard('local') {
   }
 
   async validate(email: string, password: string): Promise<any> {
-    const user = await this.authService.loginUser({
+    const user = await this.authService.getUserDataByEmailAndPassword({
       email,
       password,
     });
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException();
     }

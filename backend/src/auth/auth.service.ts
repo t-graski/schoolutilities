@@ -5,6 +5,8 @@ import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
 import { UsersService } from '../users/users.service';
+import { jwtConstants } from './constants';
+import { RefreshTokenService } from './refreshToken/refreshToken.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 
@@ -14,41 +16,40 @@ export class AuthService {
     private readonly databaseService: DatabaseService,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
-  async loginUser(userData: LoginUserData) {
+  async getUserDataByEmailAndPassword(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
     const { password, ...result } = userDbData[0];
-    console.log(userDbData);
-    if (userDbData.length == 0)
-      return { statusCode: HttpStatus.NOT_FOUND, token: null };
-    if (userDbData[0] && userDbData[0].email_verified == 0)
-      return { statusCode: HttpStatus.FORBIDDEN, token: null };
     const passwordBytes = CryptoJS.DES.decrypt(
       password,
       process.env.PASSWORD_ENCRYPTION_KEY,
     );
     const decryptedPassword = passwordBytes.toString(CryptoJS.enc.Utf8);
-    if (userData.password !== decryptedPassword)
-      return { statusCode: HttpStatus.NOT_FOUND, token: null };
-    const token = nanoid();
-    const insertTokenStatus = await this.databaseService.insertToken(
-      result.person_id,
-      token,
-    );
-    if (
-      !insertTokenStatus ||
-      (insertTokenStatus && !insertTokenStatus.insertId)
-    )
-      return { statusCode: HttpStatus.BAD_REQUEST, token: null };
+    if (userData.password !== decryptedPassword) return null;
     return result;
   }
 
   async login(user: any) {
     const payload = user;
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const refreshToken = this.jwtService.sign(
+      { id: payload.person_id },
+      { expiresIn: jwtConstants.refreshTokenExpiryTime },
+    );
+    const insertReturnValue = await this.refreshTokenService.insertRefreshToken(
+      refreshToken,
+      payload.person_id,
+    );
+    console.log(insertReturnValue);
+    if (insertReturnValue.affectedRows === 1) {
+      return {
+        access_token: this.jwtService.sign(payload),
+        refresh_token: refreshToken,
+      };
+    } else {
+      return null;
+    }
   }
   async registerUser(userData: RegisterUserData) {
     const userOfEmail = await this.databaseService.getUserData(userData);
