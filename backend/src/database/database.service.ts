@@ -51,6 +51,18 @@ export class DatabaseService {
     });
   }
 
+  async getUserDataById(userId: number): Promise<User[]> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        'select * from `persons` where person_id=? ',
+        [userId],
+        function (error, results, fields) {
+          resolve(results);
+        },
+      );
+    });
+  }
+
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(

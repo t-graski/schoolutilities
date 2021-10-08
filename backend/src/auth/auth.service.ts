@@ -1,9 +1,12 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
 import { UsersService } from '../users/users.service';
+import { jwtConstants } from './constants';
+import { RefreshTokenService } from './refreshToken/refreshToken.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 
@@ -12,39 +15,48 @@ export class AuthService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly mailService: MailService,
+    private readonly jwtService: JwtService,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
-  async loginUser(userData: LoginUserData) {
+  async getUserDataByEmailAndPassword(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
-    if (userDbData.length == 0)
-      return { statusCode: HttpStatus.NOT_FOUND, token: null };
-    if (userDbData[0] && userDbData[0].email_verified == 0)
-      return { statusCode: HttpStatus.FORBIDDEN, token: null };
+    const { password, ...result } = userDbData[0];
     const passwordBytes = CryptoJS.DES.decrypt(
-      userDbData[0].password,
+      password,
       process.env.PASSWORD_ENCRYPTION_KEY,
     );
-    const password = passwordBytes.toString(CryptoJS.enc.Utf8);
-    if (userData.password !== password)
-      return { statusCode: HttpStatus.NOT_FOUND, token: null };
-    const token = nanoid();
-    const insertTokenStatus = await this.databaseService.insertToken(
-      userDbData[0].person_id,
-      token,
+    const decryptedPassword = passwordBytes.toString(CryptoJS.enc.Utf8);
+    if (userData.password !== decryptedPassword) return null;
+    return result;
+  }
+
+  async login(user: any) {
+    const payload = user;
+    const refreshToken = this.jwtService.sign(
+      { id: payload.person_id },
+      { expiresIn: jwtConstants.refreshTokenExpiryTime },
     );
-    if (
-      !insertTokenStatus ||
-      (insertTokenStatus && !insertTokenStatus.insertId)
-    )
-      return { statusCode: HttpStatus.BAD_REQUEST, token: null };
-    return { statusCode: HttpStatus.OK, token: token };
+    const insertReturnValue = await this.refreshTokenService.insertRefreshToken(
+      refreshToken,
+      payload.person_id,
+    );
+    console.log(insertReturnValue);
+    if (insertReturnValue.affectedRows === 1) {
+      return {
+        access_token: this.jwtService.sign(payload),
+        refresh_token: refreshToken,
+      };
+    } else {
+      return null;
+    }
   }
 
   async registerUser(userData: RegisterUserData) {
     const userOfEmail = await this.databaseService.getUserData(userData);
-    // if (userOfEmail && userOfEmail.length > 0) {
-    //   return 'exists';
-    // }
+    if (userOfEmail && userOfEmail.length > 0) {
+      return 'exists';
+    }
     userData.password = CryptoJS.DES.encrypt(
       userData.password,
       process.env.PASSWORD_ENCRYPTION_KEY,
