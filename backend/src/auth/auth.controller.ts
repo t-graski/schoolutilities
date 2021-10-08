@@ -44,16 +44,6 @@ export class AuthController {
     return response
       .status(HttpStatus.OK)
       .send(await this.authService.login(request.user));
-    // const loginStatus = await this.authService.loginUser(request.body);
-    // if (loginStatus.statusCode == HttpStatus.OK) {
-    //   return response.status(HttpStatus.OK).send(loginStatus.token);
-    // } else if (loginStatus.statusCode == HttpStatus.NOT_FOUND) {
-    //   return response.status(HttpStatus.NOT_FOUND).send();
-    // } else if (loginStatus.statusCode == HttpStatus.FORBIDDEN) {
-    //   return response.status(HttpStatus.FORBIDDEN).send();
-    // } else {
-    //   return response.status(HttpStatus.BAD_REQUEST).send();
-    // }
   }
 
   @UseGuards(JwtAuthGuard)
