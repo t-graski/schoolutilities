@@ -51,6 +51,7 @@ export class AuthService {
       return null;
     }
   }
+
   async registerUser(userData: RegisterUserData) {
     const userOfEmail = await this.databaseService.getUserData(userData);
     if (userOfEmail && userOfEmail.length > 0) {

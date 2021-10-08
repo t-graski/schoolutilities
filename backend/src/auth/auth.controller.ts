@@ -65,6 +65,6 @@ export class AuthController {
   @UseGuards(JwtRefreshTokenAuthGuard)
   @Post('refresh')
   refreshToken(@Req() request, @Res() response) {
-    return null;
+    return response.status(HttpStatus.OK).send({ token: request.user });
   }
 }
