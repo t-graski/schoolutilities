@@ -2,11 +2,15 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { DatabaseUpdate } from 'src/types/Database';
 import {
+  AddClass,
+  AddClassReturnValue,
   AddDepartment,
   AddDepartmentReturnValue,
   AddSchool,
   AddSchoolReturnValue,
+  ClassTable,
   ReturnMessage,
+  UpdateClass,
   UpdateDepartment,
 } from 'src/types/SchoolAdmin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -54,6 +58,91 @@ export class SchoolAdminService {
     }
   }
 
+  async addClass(body: AddClass): Promise<AddClassReturnValue> {
+    const { departmentId, className } = body;
+    if (!regex.schoolName.test(className)) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Invalid input',
+      };
+    }
+    const classInsertData = await this.insertClass(departmentId, className);
+    if (classInsertData.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'Class added successfully',
+        data: { classId: classInsertData.insertId },
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Class not added',
+      };
+    }
+  }
+
+  async removeClass(classId: number): Promise<ReturnMessage> {
+    const schoolClass = await this.getClassById(classId);
+    if (schoolClass.length === 0) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Class not found',
+      };
+    }
+    const deleteClass = await this.deleteClass(classId);
+    if (deleteClass.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'Class deleted successfully',
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Class not deleted',
+      };
+    }
+  }
+
+  async updateClass(body: UpdateClass): Promise<ReturnMessage> {
+    const { departmentId, className, classId } = body;
+    if (!regex.schoolName.test(className)) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Invalid input',
+      };
+    }
+    const classUpdateData = await this.patchClass(
+      departmentId,
+      className,
+      classId,
+    );
+    if (classUpdateData.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'Class updated successfully',
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Class not updated',
+      };
+    }
+  }
+  getClassById(classId: number): Promise<ClassTable[]> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `select * from class where class_id=?`,
+        [classId],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
   async addDepartment(body: AddDepartment): Promise<AddDepartmentReturnValue> {
     const { name, schoolId, isVisible, childsVisible } = body;
     if (!regex.schoolName.test(name)) {
@@ -150,7 +239,7 @@ export class SchoolAdminService {
   insertSchoolConfig(name, languageId, timezone): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `INSERT INTO school (name, language_id, timezone) VALUES (?, ?, ?)`,
+        `insert into school_config (name, language_id, timezone) values (?,?,?)`,
         [name, languageId, timezone],
         (err, results) => {
           if (err) {
@@ -162,6 +251,55 @@ export class SchoolAdminService {
       );
     });
   }
+
+  insertClass(departmentId, class_name): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `INSERT INTO class (department_id, class_name) VALUES (?, ?)`,
+        [departmentId, class_name],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  deleteClass(classId): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `delete from class where class_id=?`,
+        [classId],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  patchClass(departmentId, class_name, class_id): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `update class set department_id=?, class_name=? where class_id=?`,
+        [departmentId, class_name, class_id],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
   insertDepartment(
     name,
     schoolId,
