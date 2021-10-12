@@ -239,7 +239,7 @@ export class SchoolAdminService {
   insertSchoolConfig(name, languageId, timezone): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `insert into school_config (name, language_id, timezone) values (?,?,?)`,
+        `insert into school (name, language_id, timezone) values (?,?,?)`,
         [name, languageId, timezone],
         (err, results) => {
           if (err) {
