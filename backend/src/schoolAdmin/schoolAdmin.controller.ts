@@ -13,7 +13,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 
-@Controller('api/schooladmin')
+@Controller('api/schoolAdmin')
 export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) {}
 
@@ -44,6 +44,29 @@ export class SchoolAdminController {
   @Put('/updateDepartment')
   async updateDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateDepartment(request.body);
+    return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/addClass')
+  async addClass(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.addClass(request.body);
+    return response.status(result.status).json(result?.data);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/removeClass')
+  async removeClass(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.removeClass(
+      request.body?.classId,
+    );
+    return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/updateClass')
+  async updateClass(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.updateClass(request.body);
     return response.status(result.status).json(result?.message);
   }
 }

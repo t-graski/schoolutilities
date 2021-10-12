@@ -1,3 +1,22 @@
+export interface AddClass {
+  departmentId: number;
+  className: string;
+}
+
+export interface AddClassReturnValue {
+  status: number;
+  message: string;
+  data?: {
+    classId: number;
+  };
+}
+
+export interface UpdateClass {
+  departmentId: number;
+  className: string;
+  classId: number;
+}
+
 export interface AddSchool {
   name: string;
   languageId: number;
@@ -37,4 +56,10 @@ export interface UpdateDepartment {
   departmentId: number;
   isVisible?: string;
   childsVisible?: boolean;
+}
+
+export interface ClassTable {
+  classId: number;
+  className: string;
+  departmentId: number;
 }
