@@ -1,13 +1,9 @@
 import { styled } from "../../stitches.config";
+import React, { useEffect, useState } from "react";
+import { RegistrationField } from "../../components/RegistrationField";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
-import { Headline } from "../../components/Headline";
-import React, { useEffect, useState } from "react";
 import { Spacer } from "../../components/Spacer";
-import { Separator } from "../../components/Separator";
-import { useRouter } from "next/router";
-import fetch from "node-fetch";
-import { RegisterAuth } from "../../components/RegisterAuth";
 
 const RegisterAuthLayout = styled("div", {
   width: "100%",
@@ -18,7 +14,42 @@ const RegisterAuthLayout = styled("div", {
 export default function Register() {
   return (
     <>
-      <RegisterAuth></RegisterAuth>
+      <Navbar
+        links={[
+          {
+            href: "/",
+            label: "Home",
+          },
+          {
+            href: "/features",
+            label: "Features",
+          },
+          {
+            href: "/dashboard",
+            label: "Dashboard",
+          },
+        ]}
+      ></Navbar>
+      <Spacer size="medium"></Spacer>
+      <RegisterAuthLayout>
+        <RegistrationField></RegistrationField>
+      </RegisterAuthLayout>
+      <Footer
+        links={[
+          {
+            href: "/data-policy",
+            label: "Data Policy",
+          },
+          {
+            href: "/imprint",
+            label: "Imprint",
+          },
+          {
+            href: "/logout",
+            label: "Logout",
+          },
+        ]}
+      ></Footer>
     </>
   );
 }
