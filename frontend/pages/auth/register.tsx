@@ -4,10 +4,14 @@ import { RegistrationField } from "../../components/RegistrationField";
 import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { Spacer } from "../../components/Spacer";
+import { RegistrationInfoBox } from "../../components/RegistrationInfoBox";
 
 const RegisterAuthLayout = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
   width: "100%",
-  padding: "0 15vw",
+  gap: "30px",
+  padding: "7vh 15vw",
   minHeight: "80vh",
 });
 
@@ -32,6 +36,7 @@ export default function Register() {
       ></Navbar>
       <Spacer size="medium"></Spacer>
       <RegisterAuthLayout>
+        <RegistrationInfoBox></RegistrationInfoBox>
         <RegistrationField></RegistrationField>
       </RegisterAuthLayout>
       <Footer

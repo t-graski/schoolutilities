@@ -14,6 +14,7 @@ type Props = {
 
 const StyledInputField = styled("input", {
   backgroundColor: "$backgroundTertiary",
+  width: "100%",
   borderRadius: "20px",
   color: "$fontPrimary",
   fontSize: "1.2rem",
