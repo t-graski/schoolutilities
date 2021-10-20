@@ -2,8 +2,8 @@ export interface AddCourse {
     name: string;
     courseDescription?: string;
     schoolId: number;
-    subjectId: number;
-    classId: number;
+    subjectId?: number;
+    classId?: number;
 }
 
 export interface AddCourseReturnValue {
@@ -13,3 +13,19 @@ export interface AddCourseReturnValue {
         courseId: number;
     }
 }
+
+export interface CourseTable {
+    courseId: number;
+    name: string;
+    courseDescription: string;
+    schoolId: number;
+    subjectId: number;
+    classId: number;
+}
+
+export interface UpdateCourse {
+    name: string;
+    courseDescription: string;
+    classId: number;
+    subjectId: number;
+  }
