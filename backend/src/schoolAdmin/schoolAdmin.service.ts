@@ -33,7 +33,7 @@ export class SchoolAdminService {
 
   async addSchoolConfig(body: AddSchool): Promise<AddSchoolReturnValue> {
     const { name, languageId, timezone } = body;
-    if (!regex.schoolName.test(name) || !regex.timezone.test(timezone)) {
+    if (!regex.title.test(name) || !regex.timezone.test(timezone)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
@@ -60,7 +60,7 @@ export class SchoolAdminService {
 
   async addClass(body: AddClass): Promise<AddClassReturnValue> {
     const { departmentId, className } = body;
-    if (!regex.schoolName.test(className)) {
+    if (!regex.title.test(className)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
@@ -105,7 +105,7 @@ export class SchoolAdminService {
 
   async updateClass(body: UpdateClass): Promise<ReturnMessage> {
     const { departmentId, className, classId } = body;
-    if (!regex.schoolName.test(className)) {
+    if (!regex.title.test(className)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
@@ -145,7 +145,7 @@ export class SchoolAdminService {
   }
   async addDepartment(body: AddDepartment): Promise<AddDepartmentReturnValue> {
     const { name, schoolId, isVisible, childsVisible } = body;
-    if (!regex.schoolName.test(name)) {
+    if (!regex.title.test(name)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
@@ -195,7 +195,7 @@ export class SchoolAdminService {
 
   async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
     const { name, isVisible, childsVisible, departmentId } = body;
-    if (!regex.schoolName.test(name)) {
+    if (!regex.title.test(name)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',

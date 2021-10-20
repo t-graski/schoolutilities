@@ -41,7 +41,6 @@ export class AuthService {
       refreshToken,
       payload.person_id,
     );
-    console.log(insertReturnValue);
     if (insertReturnValue.affectedRows === 1) {
       return {
         access_token: this.jwtService.sign(payload),
@@ -85,11 +84,9 @@ async function generateRegisterToken(
     personId,
     generatedToken,
   );
-  console.log(insertTokenStatus);
   if (!insertTokenStatus || (insertTokenStatus && !insertTokenStatus.insertId))
     throw new Error('Error while generating token');
   const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
-  console.log(email);
   const message = {
     from: 'noreply@schoolutilities.net',
     to: email,

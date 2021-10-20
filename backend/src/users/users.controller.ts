@@ -38,7 +38,6 @@ export class UsersController {
     @Res() response,
     @Body() body,
   ): Promise<any> {
-    console.log(body);
     const activateAccountStatus = await this.usersService.activateAccount(
       request.body.token,
     );

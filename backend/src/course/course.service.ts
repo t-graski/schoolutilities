@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { DatabaseUpdate } from 'src/types/Database';
+import { AddCourse, AddCourseReturnValue } from 'src/types/Course'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -19,32 +20,34 @@ export class CourseService {
     this.connection.connect();
   }
   async addCourse(body: AddCourse): Promise<AddCourseReturnValue> {
-    const { name, languageId, timezone } = body;
-    if (!regex.schoolName.test(name) || !regex.timezone.test(timezone)) {
+    const { name, courseDescription, schoolId, subjectId, classId } = body;
+    if (!regex.title.test(name)) {
       return {
-        status: HttpStatus.BAD_REQUEST,
+        status: HttpStatus.NOT_ACCEPTABLE,
         message: 'Invalid input',
       };
     }
-    const schoolInsertData = await this.insertSchoolConfig(
+    const courseInsertData = await this.insertCourse(
       name,
-      languageId,
-      timezone,
+      courseDescription,
+      schoolId,
+      subjectId,
+      classId,
     );
-    if (schoolInsertData.affectedRows === 1) {
+    if (courseInsertData.affectedRows === 1) {
       return {
         status: HttpStatus.OK,
-        message: 'School added successfully',
-        data: { schoolId: schoolInsertData.insertId },
+        message: 'Course added successfully',
+        data: { courseId: courseInsertData.insertId },
       };
     } else {
       return {
         status: HttpStatus.BAD_REQUEST,
-        message: 'School not added',
+        message: 'Course not added',
       };
     }
   }
-  insertSchoolConfig(
+  insertCourse(
     name,
     courseDescription,
     schoolId,
@@ -53,7 +56,7 @@ export class CourseService {
   ): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `insert into course (name, course_description, school_id, subject_id, class_id) values (?,?,?,?,?,?)`,
+        `insert into course (name, course_description, school_id, subject_id, class_id) values (?, ?, ?, ?, ?)`,
         [name, courseDescription, schoolId, subjectId, classId],
         (err, results) => {
           if (err) {

@@ -9,4 +9,4 @@ import { DatabaseModule } from 'src/database/database.module';
   providers: [CourseService],
   exports: [CourseService],
 })
-export class SchoolAdminModule {}
+export class CourseModule {}
