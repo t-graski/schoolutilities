@@ -4,9 +4,8 @@ import Image from "next/image";
 import type * as Stitches from "@stitches/react";
 
 type Props = {
-  label: string;
-  inputType: "text" | "password" | "date" | "email";
-  value: string;
+  inputType: "text" | "password" | "date" | "email" | "checkbox";
+  value: string | boolean;
   onChange: Function;
   iconSrc: string;
   iconAlt: string;
@@ -18,10 +17,17 @@ const StyledInputField = styled("input", {
   borderRadius: "20px",
   color: "$fontPrimary",
   fontSize: "1.2rem",
-  height: "4rem",
   border: "none",
-  padding: "10px 25px",
+  padding: "15px 25px",
   fontFamily: "$fontPrimary",
+  variants: {
+    inputType: {
+      checkbox: {
+        width: "fit-content",
+        margin: "0 20px 0 0",
+      },
+    },
+  },
 });
 
 export const InputField: React.FC<Props> = ({
@@ -29,6 +35,7 @@ export const InputField: React.FC<Props> = ({
   inputType,
   value,
   onChange,
+  children
 }) => {
   return (
     <>
@@ -37,9 +44,11 @@ export const InputField: React.FC<Props> = ({
           type={inputType}
           name={label}
           value={value}
-          placeholder={label}
+          placeholder={children}
           onChange={(e) => onChange(e.target.value)}
+          inputType={inputType}
         />
+        {inputType === "checkbox" && <span>{children}</span>}
       </label>
     </>
   );

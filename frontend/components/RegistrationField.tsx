@@ -4,6 +4,7 @@ import Image from "next/image";
 import type * as Stitches from "@stitches/react";
 import fetch from "node-fetch";
 import { InputField } from "./InputField";
+import { Button } from "./Button";
 
 if (!globalThis.fetch) {
   //@ts-ignore
@@ -18,13 +19,14 @@ const RegistrationLayout = styled("form", {
   gap: "20px",
 });
 
-export const RegistrationField: React.FC<Props> = ({ }) => {
+export const RegistrationField: React.FC<Props> = ({}) => {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [birthDate, setBirthDate] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
+  const [termsAccepted, setTermsAccepted] = React.useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -64,54 +66,79 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
     <>
       <RegistrationLayout onSubmit={handleSubmit}>
         <InputField
-          label="Firstname"
           inputType="text"
           value={firstName}
           onChange={setFirstName}
           iconSrc=""
           iconAlt=""
-        ></InputField>
+        >
+          Firstname
+        </InputField>
         <InputField
-          label="Lastname"
           inputType="text"
           value={lastName}
           onChange={setLastName}
           iconSrc=""
           iconAlt=""
-        ></InputField>
+        >
+          Lastname
+        </InputField>
         <InputField
-          label="Date Of Birth (DD.MM.YYYY)"
           inputType="date"
           value={birthDate}
           onChange={setBirthDate}
           iconSrc=""
           iconAlt=""
-        ></InputField>
+        >
+          Date Of Birth (DD.MM.YYYY)
+        </InputField>
         <InputField
-          label="Email"
           inputType="email"
           value={email}
           onChange={setEmail}
           iconSrc=""
           iconAlt=""
-        ></InputField>
+        >
+          Email
+        </InputField>
         <InputField
-          label="Password"
           inputType="password"
           value={password}
           onChange={setPassword}
           iconSrc=""
           iconAlt=""
-        ></InputField>
+        >
+          Password
+        </InputField>
         <InputField
-          label="Confirm Password"
           inputType="password"
           value={passwordConfirmation}
           onChange={setPasswordConfirmation}
           iconSrc=""
           iconAlt=""
-        ></InputField>
-        <button type="submit">Submit</button>
+        >
+          Confirm Password
+        </InputField>
+        <InputField
+          inputType="checkbox"
+          value={termsAccepted}
+          onChange={() => {}}
+          iconSrc=""
+          iconAlt=""
+        >
+          I agree to all
+          <Link href="/data-policy" target="_blank">
+            <a>Terms & Conditions</a>
+          </Link>
+        </InputField>
+        <Button
+          backgroundColor="primary"
+          color="primary"
+          label="Sign up"
+          onClick={() => {}}
+        >
+          Register
+        </Button>
       </RegistrationLayout>
     </>
   );
