@@ -24,7 +24,9 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Delete('/removeCourse')
   async removeCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.removeCourse(request.body?.courseId);
+    const result = await this.courseService.removeCourse(
+      request.body?.courseId,
+    );
     return response.status(result.status).json(result?.message);
   }
 
@@ -32,6 +34,20 @@ export class CourseController {
   @Put('/updateCourse')
   async updateCourse(@Req() request, @Res() response) {
     const result = await this.courseService.updateCourse(request.body);
+    return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/addUser')
+  async addUser(@Req() request, @Res() response) {
+    const result = await this.courseService.addUser(request.body);
+    return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/removeUser')
+  async removeUser(@Req() request, @Res() response) {
+    const result = await this.courseService.removeUser(request.body);
     return response.status(result.status).json(result?.message);
   }
 }

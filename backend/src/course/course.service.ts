@@ -6,6 +6,10 @@ import {
   AddCourseReturnValue,
   CourseTable,
   UpdateCourse,
+  AddUser,
+  AddUserReturnValue,
+  CourseUser,
+  RemoveUser,
 } from 'src/types/Course';
 import { ReturnMessage } from 'src/types/SchoolAdmin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -77,7 +81,7 @@ export class CourseService {
   }
 
   async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
-    const { name, courseDescription, subjectId, classId } = body;
+    const { courseId, name, courseDescription, subjectId, classId } = body;
     if (!regex.title.test(name) && !regex.title.test(courseDescription)) {
       return {
         status: HttpStatus.BAD_REQUEST,
@@ -85,6 +89,7 @@ export class CourseService {
       };
     }
     const courseUpdateData = await this.patchCourse(
+      courseId,
       name,
       courseDescription,
       subjectId,
@@ -103,6 +108,51 @@ export class CourseService {
     }
   }
 
+  async addUser(body: AddUser): Promise<AddUserReturnValue> {
+    const { courseId, personId } = body;
+    if ((await this.getUser(courseId, personId)).length === 1) {
+      return {
+        status: HttpStatus.CONFLICT,
+        message: 'User already exists',
+      };
+    }
+
+    const courseUserInsertData = await this.insertUser(courseId, personId);
+    if (courseUserInsertData.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'User added successfully',
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'User not added',
+      };
+    }
+  }
+
+  async removeUser(body: RemoveUser): Promise<ReturnMessage> {
+    const { courseId, userId } = body;
+    const userCourse = await this.getUser(courseId, userId);
+    if (userCourse.length === 0) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'User not found',
+      };
+    }
+    const deleteUserCourse = await this.deleteUserCourse(courseId, userId);
+    if (deleteUserCourse.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'User deleted successfully',
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'User not deleted',
+      };
+    }
+  }
   insertCourse(
     name,
     courseDescription = '',
@@ -125,11 +175,33 @@ export class CourseService {
     });
   }
 
-  patchCourse(name, courseDescription, subjectId, classId): Promise<DatabaseUpdate> {
+  insertUser(courseId, personId): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(
-        `update course set name=?, course_description=?, subject_id=?, class_id=?`,
-        [name, courseDescription, subjectId, classId],
+        `insert into course_persons (course_id, person_id) values (?, ?)`,
+        [courseId, personId],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  patchCourse(
+    courseId,
+    name,
+    courseDescription,
+    subjectId,
+    classId,
+  ): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `update course set name=?, course_description=?, subject_id=?, class_id=? where course_id=?`,
+        [name, courseDescription, subjectId, classId, courseId],
         (err, results) => {
           if (err) {
             reject(err);
@@ -156,13 +228,43 @@ export class CourseService {
     });
   }
 
-  
+  deleteUserCourse(courseId, userId): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `delete from course_persons where course_id=? and person_id=?`,
+        [courseId, userId],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
 
   getCourseById(courseId: number): Promise<CourseTable[]> {
     return new Promise((resolve, reject) => {
       this.connection.query(
         `select * from course where course_id=?`,
         [courseId],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  getUser(courseId: number, personId: number): Promise<CourseUser[]> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `select * from course_persons where course_id=? and person_id=?`,
+        [courseId, personId],
         (err, results) => {
           if (err) {
             reject(err);
