@@ -153,6 +153,7 @@ export class CourseService {
       };
     }
   }
+
   insertCourse(
     name,
     courseDescription = '',
@@ -212,6 +213,7 @@ export class CourseService {
       );
     });
   }
+
   deleteCourse(courseId): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(
