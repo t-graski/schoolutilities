@@ -18,7 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       email,
       password,
     });
-    console.log(user);
     if (!user) {
       throw new UnauthorizedException();
     }
