@@ -5,6 +5,7 @@ import type * as Stitches from "@stitches/react";
 import fetch from "node-fetch";
 import { InputField } from "./InputField";
 import { Button } from "./Button";
+import Link from "next/link";
 
 if (!globalThis.fetch) {
   //@ts-ignore
@@ -66,59 +67,53 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     <>
       <RegistrationLayout onSubmit={handleSubmit}>
         <InputField
+          label="Firstname"
           inputType="text"
           value={firstName}
           onChange={setFirstName}
           iconSrc=""
           iconAlt=""
-        >
-          Firstname
-        </InputField>
+        ></InputField>
         <InputField
+          label="Lastname"
           inputType="text"
           value={lastName}
           onChange={setLastName}
           iconSrc=""
           iconAlt=""
-        >
-          Lastname
-        </InputField>
+        ></InputField>
         <InputField
+          label="Date Of Birth (DD.MM.YYYY)"
           inputType="date"
           value={birthDate}
           onChange={setBirthDate}
           iconSrc=""
           iconAlt=""
-        >
-          Date Of Birth (DD.MM.YYYY)
-        </InputField>
+        ></InputField>
         <InputField
+          label="Email"
           inputType="email"
           value={email}
           onChange={setEmail}
           iconSrc=""
           iconAlt=""
-        >
-          Email
-        </InputField>
+        ></InputField>
         <InputField
+          label="Password"
           inputType="password"
           value={password}
           onChange={setPassword}
           iconSrc=""
           iconAlt=""
-        >
-          Password
-        </InputField>
+        ></InputField>
         <InputField
+          label="Password Confirmation"
           inputType="password"
           value={passwordConfirmation}
           onChange={setPasswordConfirmation}
           iconSrc=""
           iconAlt=""
-        >
-          Confirm Password
-        </InputField>
+        ></InputField>
         <InputField
           inputType="checkbox"
           value={termsAccepted}
@@ -126,10 +121,10 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           iconSrc=""
           iconAlt=""
         >
-          I agree to all
-          <Link href="/data-policy" target="_blank">
-            <a>Terms & Conditions</a>
-          </Link>
+          I agree to all{" "}
+          <a href="/data-policy" target="_blank">
+            Terms & Conditions
+          </a>
         </InputField>
         <Button
           backgroundColor="primary"

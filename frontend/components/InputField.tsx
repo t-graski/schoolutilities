@@ -9,10 +9,11 @@ type Props = {
   onChange: Function;
   iconSrc: string;
   iconAlt: string;
+  label?: string;
 };
 
 const StyledInputField = styled("input", {
-  backgroundColor: "$backgroundTertiary",
+  background: "$backgroundTertiary",
   width: "100%",
   borderRadius: "20px",
   color: "$fontPrimary",
@@ -20,8 +21,13 @@ const StyledInputField = styled("input", {
   border: "none",
   padding: "15px 25px",
   fontFamily: "$fontPrimary",
+  fontWeight: "bold",
   variants: {
     inputType: {
+      text: {},
+      password: {},
+      date: {},
+      email: {},
       checkbox: {
         width: "fit-content",
         margin: "0 20px 0 0",
@@ -31,25 +37,42 @@ const StyledInputField = styled("input", {
 });
 
 export const InputField: React.FC<Props> = ({
-  label,
   inputType,
   value,
   onChange,
-  children
+  children,
+  iconSrc,
+  iconAlt,
+  label = "",
 }) => {
-  return (
-    <>
-      <label>
-        <StyledInputField
-          type={inputType}
-          name={label}
-          value={value}
-          placeholder={children}
-          onChange={(e) => onChange(e.target.value)}
-          inputType={inputType}
-        />
-        {inputType === "checkbox" && <span>{children}</span>}
-      </label>
-    </>
-  );
+  if (inputType === "checkbox") {
+    return (
+      <>
+        <label>
+          <StyledInputField
+            type={inputType}
+            name={label}
+            placeholder={label}
+            onChange={(e) => onChange(e.target.checked)}
+            inputType={inputType}
+          />
+          <span>{children}</span>
+        </label>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <label>
+          <StyledInputField
+            type={inputType}
+            name={label}
+            placeholder={label}
+            onChange={(e) => onChange(e.target.value)}
+            inputType={inputType}
+          />
+        </label>
+      </>
+    );
+  }
 };
