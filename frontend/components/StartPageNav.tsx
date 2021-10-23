@@ -85,8 +85,8 @@ export const StartPageNav: React.FC<Props> = ({ links }) => {
         </MainHeaderDescription>
         <Separator width="ultraSmall" alignment="left" />
         <MenuBubbles>
-          {links.map((link) => (
-            <StyledLink href={link.href}>
+          {links.map((link, index) => (
+            <StyledLink href={link.href} key={index}>
               <MenuBubbleIcon>
                 <MenuBubbleImage>
                   <Image

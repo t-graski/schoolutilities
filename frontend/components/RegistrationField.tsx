@@ -28,7 +28,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
   const [password, setPassword] = React.useState("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
   const [termsAccepted, setTermsAccepted] = React.useState(false);
-
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     console.log(
@@ -71,7 +70,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           inputType="text"
           value={firstName}
           onChange={setFirstName}
-          iconSrc=""
+          iconSrc="/images/user.svg"
           iconAlt=""
         ></InputField>
         <InputField
@@ -79,7 +78,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           inputType="text"
           value={lastName}
           onChange={setLastName}
-          iconSrc=""
+          iconSrc="/images/user.svg"
           iconAlt=""
         ></InputField>
         <InputField
@@ -87,7 +86,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           inputType="date"
           value={birthDate}
           onChange={setBirthDate}
-          iconSrc=""
+          iconSrc="/images/user.svg"
           iconAlt=""
         ></InputField>
         <InputField
@@ -95,7 +94,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           inputType="email"
           value={email}
           onChange={setEmail}
-          iconSrc=""
+          iconSrc="/images/user.svg"
           iconAlt=""
         ></InputField>
         <InputField
@@ -103,7 +102,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           inputType="password"
           value={password}
           onChange={setPassword}
-          iconSrc=""
+          iconSrc="/images/user.svg"
           iconAlt=""
         ></InputField>
         <InputField
@@ -111,12 +110,11 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           inputType="password"
           value={passwordConfirmation}
           onChange={setPasswordConfirmation}
-          iconSrc=""
+          iconSrc="/images/user.svg"
           iconAlt=""
         ></InputField>
         <InputField
           inputType="checkbox"
-          value={termsAccepted}
           onChange={() => {}}
           iconSrc=""
           iconAlt=""

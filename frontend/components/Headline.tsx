@@ -6,6 +6,7 @@ import type * as Stitches from "@stitches/react";
 type Props = {
   label: string;
   alignment?: Stitches.VariantProps<typeof Header>["alignment"];
+  fontWeight?: Stitches.VariantProps<typeof Header>["fontWeight"]
 };
 
 const Header = styled("h1", {
@@ -24,13 +25,23 @@ const Header = styled("h1", {
         textAlign: "right",
       },
     },
+    fontWeight: {
+      normal: {
+      },
+      bold: {
+        fontWeight: "700",
+      },
+      extraBold: {
+        fontWeight: "900",
+      },
+    }
   },
 });
 
-export const Headline: React.FC<Props> = ({ label, alignment = "center" }) => {
+export const Headline: React.FC<Props> = ({ label, alignment = "center", fontWeight = "bold" }) => {
   return (
     <>
-      <Header alignment={alignment}>{label}</Header>
+      <Header alignment={alignment} fontWeight={fontWeight}>{label}</Header>
     </>
   );
 };

@@ -22,18 +22,46 @@ const RegistrationLayout = styled("div", {
 
 const StyledText = styled("p", {
   marginTop: "$small",
-  fontSize: "1.2rem",
+  fontSize: "1.3rem",
+});
+
+const StyledHeadline = styled(Headline, {
+  fontWeight: "900",
+});
+
+const ImageLayout = styled("div", {
+  height: "fit-content",
+  position: "relative",
+  marginTop: "30px",
+
+  ["&:before"]: {
+    display: "block",
+    content: "",
+    width: "100%",
+    paddingTop: "calc(100%/1.9)",
+  },
 });
 
 export const RegistrationInfoBox: React.FC<Props> = ({}) => {
   return (
     <>
       <RegistrationLayout>
-        <Headline label="Sign Up" alignment="left"></Headline>
+        <StyledHeadline
+          label="Sign Up"
+          alignment="left"
+          fontWeight="extraBold"
+        ></StyledHeadline>
         <StyledText>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
           euismod, nisl eget consectetur sagittis, nisl nunc egestas
         </StyledText>
+        <ImageLayout>
+          <Image
+            src="/images/auth/Sign-Up-Mockup.png"
+            alt="Sign Up Mockup"
+            layout="fill"
+          ></Image>
+        </ImageLayout>
       </RegistrationLayout>
     </>
   );

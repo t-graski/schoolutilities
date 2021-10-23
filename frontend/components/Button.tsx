@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
 import cookie from "js-cookie";
+import type * as Stitches from "@stitches/react";
 
 type Props = {
-  backgroundColor: string;
-  color: string;
+  backgroundColor: Stitches.VariantProps<typeof StyledButton>["backgroundColor"];
+  color: Stitches.VariantProps<typeof StyledButton>["color"];
   label: string;
   onClick: Function;
 };
@@ -17,6 +18,7 @@ const StyledButton = styled("button", {
   border: "none",
   cursor: "pointer",
   padding: "10px 20px",
+  fontWeight: "bold",
   ":hover": {
     backgroundColor: "$backgroundColor",
     color: "$color",
