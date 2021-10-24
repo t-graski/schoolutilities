@@ -80,6 +80,15 @@ export interface AddJoinCodeReturnValue {
   };
 }
 
+export interface RemoveJoinCode {
+  joinCodeId: number;
+}
+
+export interface RemoveJoinCodeReturnValue {
+  status: number;
+  message: string;
+}
+
 export interface JoinCodeTable {
   joinCodeId: number;
   schoolId: number;
@@ -88,4 +97,10 @@ export interface JoinCodeTable {
   name: string;
   personId: number;
   creationDate: Date;
+}
+
+export interface updateJoinCode {
+  joinCodeId: number;
+  expireDate?: Date;
+  name?: string;
 }
