@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { DatabaseUpdate } from 'src/types/Database';
+import { nanoid } from 'nanoid';
 import {
   AddClass,
   AddClassReturnValue,
@@ -12,6 +13,12 @@ import {
   ReturnMessage,
   UpdateClass,
   UpdateDepartment,
+  AddJoinCode,
+  AddJoinCodeReturnValue,
+  JoinCodeTable,
+  RemoveJoinCode,
+  RemoveJoinCodeReturnValue,
+  updateJoinCode,
 } from 'src/types/SchoolAdmin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
@@ -220,6 +227,71 @@ export class SchoolAdminService {
     }
   }
 
+  async addJoinCode(body: AddJoinCode): Promise<AddJoinCodeReturnValue> {
+    const { schoolId, expireDate, name, personId } = body;
+    const generatedJoinCode = await this.generateJoinCode();
+    const joinCodeInsertData = await this.insertJoinCode(
+      schoolId,
+      expireDate,
+      name,
+      personId,
+      generatedJoinCode,
+    );
+    if (joinCodeInsertData.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'Joincode added successfully',
+        data: {
+          joinCodeId: joinCodeInsertData.insertId,
+          joinCode: generatedJoinCode,
+        },
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Joincode not added',
+      };
+    }
+  }
+
+  async removeJoinCode(
+    body: RemoveJoinCode,
+  ): Promise<RemoveJoinCodeReturnValue> {
+    const { joinCodeId } = body;
+    const joinCodeInsertData = await this.deleteJoinCode(joinCodeId);
+    if (joinCodeInsertData.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'Joincode removed successfully',
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Joincode not removed',
+      };
+    }
+  }
+
+  async updateJoinCode(body: updateJoinCode): Promise<ReturnMessage> {
+    const { joinCodeId, expireDate, name } = body;
+    const joinCodeUpdateData = await this.patchJoinCode(
+      joinCodeId,
+      expireDate,
+      name,
+    );
+    if (joinCodeUpdateData.affectedRows === 1) {
+      return {
+        status: HttpStatus.OK,
+        message: 'Join code updated successfully',
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Join code not updated',
+      };
+    }
+  }
+
   getDepartmentById(departmentId: number): Promise<DatabaseUpdate[]> {
     return new Promise((resolve, reject) => {
       this.connection.query(
@@ -241,6 +313,64 @@ export class SchoolAdminService {
       this.connection.query(
         `insert into school (name, language_id, timezone) values (?,?,?)`,
         [name, languageId, timezone],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  insertJoinCode(
+    schoolId,
+    expireDate,
+    name = '',
+    personId,
+    joinCode,
+  ): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `insert into school_join_codes (school_id, join_code, expire_date, join_code_name, person_creation_id) values (?,?,?,?,?)`,
+        [schoolId, joinCode, expireDate, name, personId],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  deleteJoinCode(joinCodeId): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `delete from school_join_codes where school_join_code_id=?`,
+        [joinCodeId],
+        (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  patchJoinCode(
+    joinCodeId,
+    expireDate = null,
+    name = '',
+  ): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        `update school_join_codes set expire_date=?, join_code_name=? where school_join_code_id=?`,
+        [expireDate, name, joinCodeId],
         (err, results) => {
           if (err) {
             reject(err);
@@ -352,6 +482,48 @@ export class SchoolAdminService {
             reject(err);
           } else {
             resolve(results);
+          }
+        },
+      );
+    });
+  }
+
+  async generateJoinCode(): Promise<string> {
+    let joinCode = nanoid();
+    const joinCodeExists = await this.getJoinCode(joinCode);
+    if (joinCodeExists.length === 0) return joinCode;
+    while ((await this.getJoinCode(joinCode)).length !== 0) {
+      joinCode = nanoid();
+    }
+    return nanoid();
+  }
+
+  getJoinCode(joinCode): Promise<JoinCodeTable[]> {
+    return new Promise<JoinCodeTable[]>((resolve, reject) => {
+      this.connection.query(
+        `select * from school_join_codes where join_code=?`,
+        [joinCode],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        },
+      );
+    });
+  }
+
+  getJoinCodeById(joinCode): Promise<JoinCodeTable[]> {
+    return new Promise<JoinCodeTable[]>((resolve, reject) => {
+      this.connection.query(
+        `select * from school_join_codes where school_join_code_id=?`,
+        [joinCode],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
           }
         },
       );
