@@ -5,9 +5,12 @@ import cookie from "js-cookie";
 import type * as Stitches from "@stitches/react";
 
 type Props = {
-  backgroundColor: Stitches.VariantProps<typeof StyledButton>["backgroundColor"];
+  backgroundColor: Stitches.VariantProps<
+    typeof StyledButton
+  >["backgroundColor"];
   color: Stitches.VariantProps<typeof StyledButton>["color"];
   label: string;
+  disabled?: boolean;
   onClick: Function;
 };
 
@@ -38,6 +41,13 @@ const StyledButton = styled("button", {
         color: "$fontPrimary",
       },
     },
+    isDisabled: {
+      true: {
+        cursor: "not-allowed",
+        opacity: 0.5,
+      },
+      false: {},
+    },
   },
 });
 
@@ -45,6 +55,7 @@ export const Button: React.FC<Props> = ({
   backgroundColor,
   color,
   label,
+  disabled = false,
   onClick,
 }) => {
   return (
@@ -55,6 +66,8 @@ export const Button: React.FC<Props> = ({
         }}
         backgroundColor={backgroundColor}
         color={color}
+        {...(disabled && { disabled: true })}
+        isDisabled={disabled}
       >
         {label}
       </StyledButton>

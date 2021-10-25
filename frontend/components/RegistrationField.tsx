@@ -6,6 +6,7 @@ import fetch from "node-fetch";
 import { InputField } from "./InputField";
 import { Button } from "./Button";
 import Link from "next/link";
+import { regex } from "../misc/regex";
 
 if (!globalThis.fetch) {
   //@ts-ignore
@@ -28,6 +29,33 @@ export const RegistrationField: React.FC<Props> = ({}) => {
   const [password, setPassword] = React.useState("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
   const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const [isDisabled, setDisabled] = React.useState(true);
+
+  checkInputData();
+
+  function checkInputData() {
+    if (
+      firstName &&
+      lastName &&
+      birthDate &&
+      email &&
+      password &&
+      passwordConfirmation &&
+      termsAccepted &&
+      password === passwordConfirmation &&
+      regex.name.test(firstName) &&
+      regex.name.test(lastName) &&
+      regex.email.test(email) &&
+      regex.password.test(password)
+    ) {
+      if (isDisabled) {
+        setDisabled(false);
+      }
+    } else if (!isDisabled) {
+      setDisabled(true);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     console.log(
@@ -72,6 +100,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           onChange={setFirstName}
           iconSrc="/images/user.svg"
           iconAlt=""
+          required={true}
         ></InputField>
         <InputField
           label="Lastname"
@@ -80,6 +109,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           onChange={setLastName}
           iconSrc="/images/user.svg"
           iconAlt=""
+          required={true}
         ></InputField>
         <InputField
           label="Date Of Birth (DD.MM.YYYY)"
@@ -88,6 +118,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           onChange={setBirthDate}
           iconSrc="/images/user.svg"
           iconAlt=""
+          required={true}
         ></InputField>
         <InputField
           label="Email"
@@ -96,6 +127,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           onChange={setEmail}
           iconSrc="/images/user.svg"
           iconAlt=""
+          required={true}
         ></InputField>
         <InputField
           label="Password"
@@ -104,6 +136,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           onChange={setPassword}
           iconSrc="/images/user.svg"
           iconAlt=""
+          required={true}
         ></InputField>
         <InputField
           label="Password Confirmation"
@@ -112,12 +145,14 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           onChange={setPasswordConfirmation}
           iconSrc="/images/user.svg"
           iconAlt=""
+          required={true}
         ></InputField>
         <InputField
           inputType="checkbox"
-          onChange={() => {}}
+          onChange={setTermsAccepted}
           iconSrc=""
           iconAlt=""
+          required={true}
         >
           I agree to all{" "}
           <a href="/data-policy" target="_blank">
@@ -129,6 +164,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           color="primary"
           label="Sign up"
           onClick={() => {}}
+          disabled={isDisabled}
         >
           Register
         </Button>
