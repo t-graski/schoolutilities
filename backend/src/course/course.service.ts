@@ -12,10 +12,13 @@ import {
   RemoveUser,
 } from 'src/types/Course';
 import { ReturnMessage } from 'src/types/SchoolAdmin';
+import { PrismaClient } from '@prisma/client';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
+
+const prisma = new PrismaClient();
 
 @Injectable()
 export class CourseService {
@@ -44,6 +47,27 @@ export class CourseService {
       subjectId,
       classId,
     );
+    prisma.course.create({
+      data: {
+        name,
+        course_description: courseDescription,
+        school: {
+          connect: {
+            school_id: schoolId,
+          },
+        },
+        subject: {
+          connect: {
+            subject_id: subjectId,
+          },
+        },
+        class: {
+          connect: {
+            class_id: classId,
+          },
+        },
+      },
+    });
     if (courseInsertData.affectedRows === 1) {
       return {
         status: HttpStatus.OK,

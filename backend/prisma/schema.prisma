@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model course {
+  course_id          Int             @id @default(autoincrement())
+  name               String          @db.VarChar(255)
+  course_description String          @db.Text
+  school_id          Int
+  subject_id         Int
+  class_id           Int
+  school_classes     school_classes  @relation(fields: [class_id], references: [class_id], onUpdate: Restrict, map: "fk_course_class")
+  schools            schools         @relation(fields: [school_id], references: [school_id], onUpdate: Restrict, map: "fk_course_school")
+  subjects           subjects        @relation(fields: [subject_id], references: [subject_id], onUpdate: Restrict, map: "fk_course_subject")
+  course_persons     course_persons?
+
+  @@index([class_id], map: "fk_course_class")
+  @@index([school_id], map: "fk_course_school")
+  @@index([subject_id], map: "fk_course_subject")
+}
+
+model course_persons {
+  course_id Int     @unique(map: "course_id")
+  person_id Int
+  course    course  @relation(fields: [course_id], references: [course_id], onUpdate: Restrict, map: "fk_course_persons_course_id")
+  persons   persons @relation(fields: [person_id], references: [person_id], onUpdate: Restrict, map: "fk_course_persons_person_id")
+
+  @@index([person_id], map: "fk_course_persons_person_id")
+}
+
+model departments {
+  department_id  Int              @id @default(autoincrement())
+  name           String           @db.VarChar(255)
+  school_id      Int
+  is_visible     Boolean          @default(true)
+  childs_visible Boolean          @default(true)
+  schools        schools          @relation(fields: [school_id], references: [school_id], onUpdate: Restrict, map: "fk_department_school")
+  school_classes school_classes[]
+
+  @@index([school_id], map: "fk_department_school")
+}
+
+model languages {
+  language_id   Int       @id @default(autoincrement())
+  language_name String    @db.VarChar(255)
+  language_tag  String    @db.VarChar(255)
+  schools       schools[]
+}
+
+model login_tokens {
+  login_token_id Int      @id @default(autoincrement())
+  person_id      Int
+  refresh_token  String   @db.VarChar(255)
+  creation_time  DateTime @default(now()) @db.Timestamp(0)
+  persons        persons  @relation(fields: [person_id], references: [person_id], onUpdate: Restrict, map: "fk_login_token_person")
+
+  @@index([person_id], map: "fk_login_token_person")
+}
+
+model person_roles {
+  person_id Int     @unique(map: "person_id")
+  role_id   Int
+  persons   persons @relation(fields: [person_id], references: [person_id], onUpdate: Restrict, map: "fk_person_role_person")
+  roles     roles   @relation(fields: [role_id], references: [role_id], onUpdate: Restrict, map: "fk_person_role_role")
+
+  @@index([role_id], map: "fk_person_role_role")
+}
+
+model persons {
+  person_id       Int               @id @default(autoincrement())
+  firstname       String            @db.VarChar(255)
+  lastname        String            @db.VarChar(255)
+  birthdate       DateTime          @db.Date
+  school_id       Int?
+  class_id        Int?
+  email           String            @db.VarChar(255)
+  password        String            @db.VarChar(255)
+  email_verified  Boolean           @default(false)
+  creation_date   DateTime          @default(now()) @db.Timestamp(0)
+  school_classes  school_classes?   @relation(fields: [class_id], references: [class_id], onDelete: Restrict, onUpdate: Restrict, map: "fk_person_class")
+  schools         schools?          @relation(fields: [school_id], references: [school_id], onDelete: Restrict, onUpdate: Restrict, map: "fk_person_school")
+  course_persons  course_persons[]
+  login_tokens    login_tokens[]
+  person_roles    person_roles?
+  register_tokens register_tokens[]
+
+  @@index([class_id], map: "fk_person_class")
+  @@index([school_id], map: "fk_person_school")
+}
+
+model register_tokens {
+  register_link_id Int     @id @default(autoincrement())
+  person_id        Int
+  token            String  @db.VarChar(255)
+  persons          persons @relation(fields: [person_id], references: [person_id], onUpdate: Restrict, map: "fk_register_token_person")
+
+  @@index([person_id], map: "fk_register_token_person")
+}
+
+model roles {
+  role_id      Int            @id @default(autoincrement())
+  role_name    String         @db.VarChar(255)
+  person_roles person_roles[]
+}
+
+model school_classes {
+  class_id      Int         @id @default(autoincrement())
+  department_id Int
+  class_name    String      @db.VarChar(255)
+  departments   departments @relation(fields: [department_id], references: [department_id], onUpdate: Restrict, map: "fk_school_class_deparment")
+  course        course[]
+  persons       persons[]
+
+  @@index([department_id], map: "fk_school_class_deparment")
+}
+
+model schools {
+  school_id   Int           @id @default(autoincrement())
+  name        String        @db.VarChar(255)
+  language_id Int
+  timezone    String        @db.VarChar(255)
+  languages   languages     @relation(fields: [language_id], references: [language_id], onUpdate: Restrict, map: "fk_school_language")
+  course      course[]
+  departments departments[]
+  persons     persons[]
+
+  @@index([language_id], map: "language_id")
+}
+
+model subjects {
+  subject_id   Int      @id @default(autoincrement())
+  subject_name String   @db.VarChar(255)
+  class_id     Int
+  course       course[]
+}

@@ -14,7 +14,7 @@ import { CourseService } from './course.service';
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addCourse')
   async addCourse(@Req() request, @Res() response) {
     const result = await this.courseService.addCourse(request.body);
