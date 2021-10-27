@@ -40,39 +40,39 @@ export class CourseService {
         message: 'Invalid input',
       };
     }
-    const courseInsertData = await this.insertCourse(
-      name,
-      courseDescription,
-      schoolId,
-      subjectId,
-      classId,
-    );
-    prisma.course.create({
+    // const courseInsertData = await this.insertCourse(
+    //   name,
+    //   courseDescription,
+    //   schoolId,
+    //   subjectId,
+    //   classId,
+    // );
+    const prismaData = await prisma.courses.create({
       data: {
         name,
-        course_description: courseDescription,
-        school: {
+        courseDescription: courseDescription,
+        schools: {
           connect: {
-            school_id: schoolId,
+            schoolId: Number(schoolId),
           },
         },
-        subject: {
+        subjects: {
           connect: {
-            subject_id: subjectId,
+            subjectId: Number(subjectId),
           },
         },
-        class: {
+        schoolClasses: {
           connect: {
-            class_id: classId,
+            classId: Number(classId),
           },
         },
       },
     });
-    if (courseInsertData.affectedRows === 1) {
+    if (prismaData && prismaData.courseId) {
       return {
         status: HttpStatus.OK,
         message: 'Course added successfully',
-        data: { courseId: courseInsertData.insertId },
+        data: prismaData,
       };
     } else {
       return {

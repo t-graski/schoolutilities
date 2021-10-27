@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Erstellungszeit: 26. Okt 2021 um 19:40
+-- Erstellungszeit: 27. Okt 2021 um 21:06
 -- Server-Version: 5.7.34
 -- PHP-Version: 7.4.16
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `course`
+-- Tabellenstruktur für Tabelle `courses`
 --
 
-CREATE TABLE `course` (
+CREATE TABLE `courses` (
   `course_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `course_description` text NOT NULL,
@@ -35,6 +35,15 @@ CREATE TABLE `course` (
   `subject_id` int(11) NOT NULL,
   `class_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Daten für Tabelle `courses`
+--
+
+INSERT INTO `courses` (`course_id`, `name`, `course_description`, `school_id`, `subject_id`, `class_id`) VALUES
+(1, 'Math 2021 2022', 'Basic Algebra', 1, 1, 1),
+(2, 'Math 2021 2022', 'Basic Algebra', 1, 1, 1),
+(3, 'Math 2022 2023', 'AP CALC', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -224,6 +233,13 @@ CREATE TABLE `school_classes` (
   `class_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `school_classes`
+--
+
+INSERT INTO `school_classes` (`class_id`, `department_id`, `class_name`) VALUES
+(1, 2, 'Halösi');
+
 -- --------------------------------------------------------
 
 --
@@ -237,13 +253,20 @@ CREATE TABLE `subjects` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Daten für Tabelle `subjects`
+--
+
+INSERT INTO `subjects` (`subject_id`, `subject_name`, `class_id`) VALUES
+(1, 'Test', 1);
+
+--
 -- Indizes der exportierten Tabellen
 --
 
 --
--- Indizes für die Tabelle `course`
+-- Indizes für die Tabelle `courses`
 --
-ALTER TABLE `course`
+ALTER TABLE `courses`
   ADD PRIMARY KEY (`course_id`),
   ADD KEY `fk_course_school` (`school_id`),
   ADD KEY `fk_course_subject` (`subject_id`),
@@ -329,10 +352,10 @@ ALTER TABLE `subjects`
 --
 
 --
--- AUTO_INCREMENT für Tabelle `course`
+-- AUTO_INCREMENT für Tabelle `courses`
 --
-ALTER TABLE `course`
-  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `courses`
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `departments`
@@ -380,7 +403,7 @@ ALTER TABLE `schools`
 -- AUTO_INCREMENT für Tabelle `school_classes`
 --
 ALTER TABLE `school_classes`
-  MODIFY `class_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `class_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `subjects`
@@ -393,9 +416,9 @@ ALTER TABLE `subjects`
 --
 
 --
--- Constraints der Tabelle `course`
+-- Constraints der Tabelle `courses`
 --
-ALTER TABLE `course`
+ALTER TABLE `courses`
   ADD CONSTRAINT `fk_course_class` FOREIGN KEY (`class_id`) REFERENCES `school_classes` (`class_id`),
   ADD CONSTRAINT `fk_course_school` FOREIGN KEY (`school_id`) REFERENCES `schools` (`school_id`),
   ADD CONSTRAINT `fk_course_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`subject_id`);
@@ -404,7 +427,7 @@ ALTER TABLE `course`
 -- Constraints der Tabelle `course_persons`
 --
 ALTER TABLE `course_persons`
-  ADD CONSTRAINT `fk_course_persons_course_id` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`),
+  ADD CONSTRAINT `fk_course_persons_course_id` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`),
   ADD CONSTRAINT `fk_course_persons_person_id` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`);
 
 --

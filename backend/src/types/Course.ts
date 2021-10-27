@@ -11,6 +11,11 @@ export interface AddCourseReturnValue {
   message: string;
   data?: {
     courseId: number;
+    name: string;
+    courseDescription: string;
+    schoolId: number;
+    subjectId: number;
+    classId: number;
   };
 }
 
