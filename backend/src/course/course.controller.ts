@@ -14,14 +14,14 @@ import { CourseService } from './course.service';
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/addCourse')
   async addCourse(@Req() request, @Res() response) {
     const result = await this.courseService.addCourse(request.body);
     return response.status(result.status).json(result?.data);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete('/removeCourse')
   async removeCourse(@Req() request, @Res() response) {
     const result = await this.courseService.removeCourse(
@@ -37,7 +37,7 @@ export class CourseController {
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  
   @Post('/addUser')
   async addUser(@Req() request, @Res() response) {
     const result = await this.courseService.addUser(request.body);

@@ -93,7 +93,6 @@ export class CourseService {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Course not found',
-        data: course,
       };
     }
 
@@ -117,27 +116,45 @@ export class CourseService {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Course not deleted',
-        data: deleteCourse,
       };
     }
   }
 
   async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
     const { courseId, name, courseDescription, subjectId, classId } = body;
-    if (!regex.title.test(name) && !regex.title.test(courseDescription)) {
+    if (
+      !validator.isLength(name, LENGTHS.COURSE_NAME) ||
+      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
+    ) {
       return {
-        status: HttpStatus.BAD_REQUEST,
+        status: HttpStatus.NOT_ACCEPTABLE,
         message: 'Invalid input',
       };
     }
-    const courseUpdateData = await this.patchCourse(
-      courseId,
-      name,
-      courseDescription,
-      subjectId,
-      classId,
-    );
-    if (courseUpdateData.affectedRows === 1) {
+
+    const course: object | null = await prisma.courses.findUnique({
+      where: {
+        courseId: Number(courseId),
+      },
+    });
+
+    if (!course) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Course not found',
+      };
+    }
+
+    const patchCourse = await prisma.courses.update({
+      where: { courseId: Number(courseId) },
+      data: {
+        name: name,
+        courseDescription: courseDescription,
+        subjectId: Number(subjectId),
+        classId: Number(classId),
+      },
+    });
+    if (patchCourse) {
       return {
         status: HttpStatus.OK,
         message: 'Course updated successfully',
@@ -152,25 +169,45 @@ export class CourseService {
 
   async addUser(body: AddUser): Promise<AddUserReturnValue> {
     const { courseId, personId } = body;
-    if ((await this.getUser(courseId, personId)).length === 1) {
+
+    const courseUser: object | null = await prisma.courses.findUnique({
+      where: {
+        members: {
+          some: {
+            personId: Number(personId),
+          },
+        },
+      },
+    });
+
+    if (courseUser) {
       return {
         status: HttpStatus.CONFLICT,
         message: 'User already exists',
       };
     }
-
-    const courseUserInsertData = await this.insertUser(courseId, personId);
-    if (courseUserInsertData.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'User added successfully',
-      };
-    } else {
+    try {
+      const addCourseUser = await prisma.courses.update({
+        data: {
+          members: {
+            connect: {
+              personId: Number(personId),
+            },
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'User not added',
       };
     }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'User added successfully',
+    };
   }
 
   async removeUser(body: RemoveUser): Promise<ReturnMessage> {
@@ -196,103 +233,11 @@ export class CourseService {
     }
   }
 
-  insertCourse(
-    name,
-    courseDescription = '',
-    schoolId,
-    subjectId = null,
-    classId = null,
-  ): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `insert into course (name, course_description, school_id, subject_id, class_id) values (?, ?, ?, ?, ?)`,
-        [name, courseDescription, schoolId, subjectId, classId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  insertUser(courseId, personId): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `insert into course_persons (course_id, person_id) values (?, ?)`,
-        [courseId, personId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  patchCourse(
-    courseId,
-    name,
-    courseDescription,
-    subjectId,
-    classId,
-  ): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `update course set name=?, course_description=?, subject_id=?, class_id=? where course_id=?`,
-        [name, courseDescription, subjectId, classId, courseId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  deleteCourse(courseId): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `delete from course where course_id=?`,
-        [courseId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
   deleteUserCourse(courseId, userId): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(
         `delete from course_persons where course_id=? and person_id=?`,
         [courseId, userId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  getCourseById(courseId: number): Promise<CourseTable[]> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `select * from course where course_id=?`,
-        [courseId],
         (err, results) => {
           if (err) {
             reject(err);

@@ -7,16 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model coursePersons {
-  courseId Int     @unique(map: "courseId") @map("course_id")
-  personId Int     @map("person_id")
-  courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
-  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
+// model coursePersons {
+//   courseId Int     @map("course_id")
+//   personId Int     @map("person_id")
+//   courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
+//   persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
 
 
-  @@index([personId], map: "fkCoursepersonspersonid")
-  @@map("course_persons")
-}
+//   @@unique([courseId, personId], name: "coursePersonId")
+//   @@index([personId], map: "fkCoursepersonspersonid")
+//   @@map("course_persons")
+// }
 
 model departments {
   departmentId  Int             @id @default(autoincrement()) @map("department_id")
@@ -71,7 +72,7 @@ model persons {
   creationDate   DateTime         @default(now()) @map("creation_date") @db.Timestamp(0)
   schoolClasses  schoolClasses?   @relation(fields: [classId], references: [classId], onDelete: Restrict, onUpdate: Restrict, map: "fkPersonclass")
   schools        schools?         @relation(fields: [schoolId], references: [schoolId], onDelete: Restrict, onUpdate: Restrict, map: "fkPersonschool")
-  coursePersons  coursePersons[]
+  attendingCourses courses[] @relation(references: [courseId])
   loginTokens    loginTokens[]
   personRoles    personRoles?
   registerTokens registerTokens[]
@@ -138,7 +139,7 @@ model courses {
   schoolClasses     schoolClasses  @relation(fields: [classId], references: [classId], onUpdate: Restrict, map: "fkCourseclass")
   schools           schools        @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkCourseschool")
   subjects          subjects       @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
-  coursePersons     coursePersons?
+  members           persons[]      @relation(references: [personId]) 
 
   @@index([classId], map: "fkCourseclass")
   @@index([schoolId], map: "fkCourseschool")
