@@ -16,12 +16,14 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtRefreshTokenAuthGuard } from './refreshToken/jwt-refresh-token-auth.guard';
+import { isDate } from 'src/misc/dateHelper';
 
 @Controller('api/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('register')
   async registerUser(@Req() request, @Res() response): Promise<string> {
+    isDate(request.body.birthDate);
     const registerUserStatus = await this.authService.registerUser(
       request.body,
     );
