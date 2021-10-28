@@ -12,7 +12,7 @@ import {
   RemoveUser,
 } from 'src/types/Course';
 import { ReturnMessage } from 'src/types/SchoolAdmin';
-import { PrismaClient } from '@prisma/client';
+import { courses, PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import { LENGTHS } from 'src/misc/parameterConstants';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -170,12 +170,11 @@ export class CourseService {
   async addUser(body: AddUser): Promise<AddUserReturnValue> {
     const { courseId, personId } = body;
 
-    const courseUser: object | null = await prisma.courses.findUnique({
+    const courseUser: object | null = await prisma.coursePersons.findUnique({
       where: {
-        members: {
-          some: {
-            personId: Number(personId),
-          },
+        coursePersonId: {
+          courseId: Number(courseId),
+          personId: Number(personId),
         },
       },
     });
@@ -187,13 +186,10 @@ export class CourseService {
       };
     }
     try {
-      const addCourseUser = await prisma.courses.update({
+      const prismaData = await prisma.coursePersons.create({
         data: {
-          members: {
-            connect: {
-              personId: Number(personId),
-            },
-          },
+          courseId: Number(courseId),
+          personId: Number(personId),
         },
       });
     } catch (err) {
