@@ -13,6 +13,8 @@ import {
 } from 'src/types/Course';
 import { ReturnMessage } from 'src/types/SchoolAdmin';
 import { PrismaClient } from '@prisma/client';
+import validator from 'validator';
+import { LENGTHS } from 'src/misc/parameterConstants';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -34,19 +36,16 @@ export class CourseService {
   }
   async addCourse(body: AddCourse): Promise<AddCourseReturnValue> {
     const { name, courseDescription, schoolId, subjectId, classId } = body;
-    if (!regex.title.test(name)) {
+    if (
+      !validator.isLength(name, LENGTHS.COURSE_NAME) ||
+      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
+    ) {
       return {
         status: HttpStatus.NOT_ACCEPTABLE,
         message: 'Invalid input',
       };
     }
-    // const courseInsertData = await this.insertCourse(
-    //   name,
-    //   courseDescription,
-    //   schoolId,
-    //   subjectId,
-    //   classId,
-    // );
+
     const prismaData = await prisma.courses.create({
       data: {
         name,
@@ -68,6 +67,7 @@ export class CourseService {
         },
       },
     });
+
     if (prismaData && prismaData.courseId) {
       return {
         status: HttpStatus.OK,
@@ -83,23 +83,41 @@ export class CourseService {
   }
 
   async removeCourse(courseId: number): Promise<ReturnMessage> {
-    const course = await this.getCourseById(courseId);
-    if (course.length === 0) {
+    const course: object | null = await prisma.courses.findUnique({
+      where: {
+        courseId: Number(courseId),
+      },
+    });
+
+    if (!course) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Course not found',
+        data: course,
       };
     }
-    const deleteClass = await this.deleteCourse(courseId);
-    if (deleteClass.affectedRows === 1) {
+
+    const deleteCourse = await prisma.courses.delete({
+      where: {
+        courseId: Number(courseId),
+      },
+      select: {
+        courseId: true,
+        name: true,
+      },
+    });
+
+    if (deleteCourse) {
       return {
         status: HttpStatus.OK,
         message: 'Course deleted successfully',
+        data: deleteCourse,
       };
     } else {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Course not deleted',
+        data: deleteCourse,
       };
     }
   }

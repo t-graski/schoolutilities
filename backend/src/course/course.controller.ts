@@ -21,7 +21,7 @@ export class CourseController {
     return response.status(result.status).json(result?.data);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('/removeCourse')
   async removeCourse(@Req() request, @Res() response) {
     const result = await this.courseService.removeCourse(
