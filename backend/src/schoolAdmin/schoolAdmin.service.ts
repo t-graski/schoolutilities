@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { DatabaseUpdate } from 'src/types/Database';
 import { nanoid } from 'nanoid';
+import { requestDb } from 'src/misc/requestDb';
 import {
   AddClass,
   AddClassReturnValue,
@@ -306,6 +307,7 @@ export class SchoolAdminService {
         },
       );
     });
+
   }
 
   insertSchoolConfig(name, languageId, timezone): Promise<DatabaseUpdate> {
