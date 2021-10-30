@@ -23,11 +23,16 @@ const RegistrationLayout = styled("form", {
 
 export const RegistrationField: React.FC<Props> = ({}) => {
   const [firstName, setFirstName] = React.useState("");
+  const [firstNameValid, setFirstNameValid] = React.useState(false);
   const [lastName, setLastName] = React.useState("");
+  const [lastNameValid, setLastNameValid] = React.useState(false);
   const [birthDate, setBirthDate] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [emailValid, setEmailValid] = React.useState(false);
   const [password, setPassword] = React.useState("");
+  const [passwordValid, setPasswordValid] = React.useState(false);
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
+  const [passwordConfirmationValid, setPasswordConfirmationValid] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(true);
 
@@ -35,18 +40,14 @@ export const RegistrationField: React.FC<Props> = ({}) => {
 
   function checkInputData() {
     if (
-      firstName &&
-      lastName &&
+      firstNameValid &&
+      lastNameValid &&
       birthDate &&
-      email &&
-      password &&
-      passwordConfirmation &&
+      emailValid &&
+      passwordValid &&
+      passwordConfirmationValid &&
       termsAccepted &&
-      password === passwordConfirmation &&
-      regex.name.test(firstName) &&
-      regex.name.test(lastName) &&
-      regex.email.test(email) &&
-      regex.password.test(password)
+      password === passwordConfirmation
     ) {
       if (isDisabled) {
         setDisabled(false);
@@ -101,6 +102,9 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           iconSrc="/images/user.svg"
           iconAlt=""
           required={true}
+          regex={regex.name}
+          setValidInput={setFirstNameValid}
+          errorMessage="Please enter a valid firstname"
         ></InputField>
         <InputField
           label="Lastname"
@@ -110,6 +114,9 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           iconSrc="/images/user.svg"
           iconAlt=""
           required={true}
+          regex={regex.name}
+          setValidInput={setLastNameValid}
+          errorMessage="Please enter a valid name"
         ></InputField>
         <InputField
           label="Date Of Birth (DD.MM.YYYY)"
@@ -128,6 +135,9 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           iconSrc="/images/user.svg"
           iconAlt=""
           required={true}
+          regex={regex.email}
+          setValidInput={setEmailValid}
+          errorMessage="Please enter a valid email"
         ></InputField>
         <InputField
           label="Password"
@@ -137,6 +147,9 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           iconSrc="/images/user.svg"
           iconAlt=""
           required={true}
+          regex={regex.password}
+          setValidInput={setPasswordValid}
+          errorMessage="Please enter a valid password"
         ></InputField>
         <InputField
           label="Password Confirmation"
@@ -146,6 +159,9 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           iconSrc="/images/user.svg"
           iconAlt=""
           required={true}
+          regex={regex.password}
+          setValidInput={setPasswordConfirmationValid}
+          errorMessage="Please enter a valid password"
         ></InputField>
         <InputField
           inputType="checkbox"

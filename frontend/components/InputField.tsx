@@ -11,6 +11,9 @@ type Props = {
   iconAlt: string;
   required?: boolean;
   label?: string;
+  regex?: RegExp;
+  setValidInput?: Function;
+  errorMessage?: string;
 };
 
 const StyledInputField = styled("input", {
@@ -57,6 +60,10 @@ const StyledLabel = styled("label", {
   height: "fit-content",
 });
 
+const ErrorMessage = styled("span", {
+  color: "red",
+});
+
 export const InputField: React.FC<Props> = ({
   inputType,
   value,
@@ -66,6 +73,9 @@ export const InputField: React.FC<Props> = ({
   iconAlt,
   required = false,
   label = "",
+  regex,
+  setValidInput,
+  errorMessage = "",
 }) => {
   if (inputType === "checkbox") {
     return (
@@ -84,6 +94,7 @@ export const InputField: React.FC<Props> = ({
       </>
     );
   } else {
+    const [isInputValid, setIsInputValid] = React.useState(null);
     return (
       <>
         <InputFieldLayout>
@@ -94,12 +105,24 @@ export const InputField: React.FC<Props> = ({
               value={value}
               name={label}
               placeholder={label}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e) => {
+                if (regex && regex.test(e.target.value)) {
+                  setValidInput(true);
+                  setIsInputValid(true);
+                } else {
+                  setValidInput(false);
+                  setIsInputValid(false);
+                }
+                onChange(e.target.value);
+              }}
               inputType={inputType}
               {...(required && { required: true })}
             />
           </StyledLabel>
         </InputFieldLayout>
+        {errorMessage && isInputValid === false && (
+          <ErrorMessage>{errorMessage}</ErrorMessage>
+        )}
       </>
     );
   }
