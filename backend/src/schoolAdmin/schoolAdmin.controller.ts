@@ -17,21 +17,21 @@ import { SchoolAdminService } from './schoolAdmin.service';
 export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addSchoolConfig')
   async addSchoolConfig(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addSchoolConfig(request.body);
-    return response.status(result.status).json(result?.data);
+    return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addDepartment')
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
     return response.status(result.status).json(result?.data);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('/removeDepartment')
   async removeDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeDepartment(
@@ -40,21 +40,21 @@ export class SchoolAdminController {
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put('/updateDepartment')
   async updateDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateDepartment(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addClass')
   async addClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addClass(request.body);
-    return response.status(result.status).json(result?.data);
+    return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('/removeClass')
   async removeClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeClass(
@@ -63,28 +63,28 @@ export class SchoolAdminController {
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put('/updateClass')
   async updateClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateClass(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/joinCode')
   async addJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addJoinCode(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('/joinCode')
   async removeJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeJoinCode(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put('/joinCode')
   async updateJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateJoinCode(request.body);

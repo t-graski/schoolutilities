@@ -37,7 +37,7 @@ export class CourseController {
     return response.status(result.status).json(result?.message);
   }
 
-  
+  @UseGuards(JwtAuthGuard)
   @Post('/addUser')
   async addUser(@Req() request, @Res() response) {
     const result = await this.courseService.addUser(request.body);

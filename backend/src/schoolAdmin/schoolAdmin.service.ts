@@ -2,7 +2,9 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { DatabaseUpdate } from 'src/types/Database';
 import { nanoid } from 'nanoid';
-import { requestDb } from 'src/misc/requestDb';
+import validator from 'validator';
+import { PrismaClient } from '@prisma/client';
+import { LENGTHS } from 'src/misc/parameterConstants';
 import {
   AddClass,
   AddClassReturnValue,
@@ -26,6 +28,7 @@ const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
+const prisma = new PrismaClient();
 @Injectable()
 export class SchoolAdminService {
   connection: any;
@@ -39,66 +42,120 @@ export class SchoolAdminService {
     this.connection.connect();
   }
 
-  async addSchoolConfig(body: AddSchool): Promise<AddSchoolReturnValue> {
+  async addSchoolConfig(body: AddSchool): Promise<ReturnMessage> {
     const { name, languageId, timezone } = body;
-    if (!regex.title.test(name) || !regex.timezone.test(timezone)) {
+    // TODO check languageId is number
+    if ( 
+      !validator.isLength(name, LENGTHS.CLASS_NAME) ||
+      !regex.timezone.test(timezone)
+    ) {
       return {
-        status: HttpStatus.BAD_REQUEST,
+        status: HttpStatus.NOT_ACCEPTABLE,
         message: 'Invalid input',
       };
     }
-    const schoolInsertData = await this.insertSchoolConfig(
-      name,
-      languageId,
-      timezone,
-    );
-    if (schoolInsertData.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'School added successfully',
-        data: { schoolId: schoolInsertData.insertId },
-      };
-    } else {
+
+    try {
+      const addSchoolConfig = await prisma.schools.create({
+        data: {
+          name,
+          languages: {
+            connect: {
+              languageId: Number(languageId),
+            },
+          },
+          timezone,
+        },
+      });
+    } catch (err) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'School not added',
       };
     }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'School added successfully',
+    };
   }
 
-  async addClass(body: AddClass): Promise<AddClassReturnValue> {
+  async addClass(body: AddClass): Promise<ReturnMessage> {
     const { departmentId, className } = body;
-    if (!regex.title.test(className)) {
+    // TODO check departmentId is number
+    if (!validator.isLength(className, LENGTHS.CLASS_NAME)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
       };
     }
-    const classInsertData = await this.insertClass(departmentId, className);
-    if (classInsertData.affectedRows === 1) {
+
+    const isNotAvailable: object | null = await prisma.schoolClasses.findFirst({
+      where: {
+        departmentId: Number(departmentId),
+        className: className,
+      },
+    });
+
+    if (isNotAvailable) {
       return {
-        status: HttpStatus.OK,
-        message: 'Class added successfully',
-        data: { classId: classInsertData.insertId },
+        status: HttpStatus.CONFLICT,
+        message: 'Already exists',
       };
-    } else {
+    }
+
+    try {
+      const addClass = await prisma.schoolClasses.create({
+        data: {
+          departments: {
+            connect: {
+              departmentId,
+            },
+          },
+          className,
+        },
+      });
+    } catch (err) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Class not added',
       };
     }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Class added successfully',
+    };
   }
 
   async removeClass(classId: number): Promise<ReturnMessage> {
-    const schoolClass = await this.getClassById(classId);
-    if (schoolClass.length === 0) {
+    if (!validator.isNumeric(classId)) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Invalid input',
+      };
+    }
+
+    const schoolClass: object | null = await prisma.schoolClasses.findUnique({
+      where: {
+        classId: Number(classId),
+      },
+    });
+
+    if (!schoolClass) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Class not found',
       };
     }
-    const deleteClass = await this.deleteClass(classId);
-    if (deleteClass.affectedRows === 1) {
+
+    const deleteClass = await prisma.schoolClasses.delete({
+      where: {
+        classId: Number(classId),
+      },
+    });
+
+    if (deleteClass) {
       return {
         status: HttpStatus.OK,
         message: 'Class deleted successfully',
@@ -307,7 +364,6 @@ export class SchoolAdminService {
         },
       );
     });
-
   }
 
   insertSchoolConfig(name, languageId, timezone): Promise<DatabaseUpdate> {

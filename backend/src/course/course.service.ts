@@ -1,18 +1,14 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { regex } from 'src/regex';
-import { DatabaseUpdate } from 'src/types/Database';
 import {
   AddCourse,
   AddCourseReturnValue,
-  CourseTable,
   UpdateCourse,
   AddUser,
   AddUserReturnValue,
-  CourseUser,
   RemoveUser,
 } from 'src/types/Course';
 import { ReturnMessage } from 'src/types/SchoolAdmin';
-import { courses, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import { LENGTHS } from 'src/misc/parameterConstants';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -34,7 +30,7 @@ export class CourseService {
     });
     this.connection.connect();
   }
-  async addCourse(body: AddCourse): Promise<AddCourseReturnValue> {
+  async addCourse(body: AddCourse): Promise<ReturnMessage> {
     const { name, courseDescription, schoolId, subjectId, classId } = body;
     if (
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
@@ -193,7 +189,6 @@ export class CourseService {
         },
       });
     } catch (err) {
-      console.log(err);
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'User not added',
@@ -207,16 +202,30 @@ export class CourseService {
   }
 
   async removeUser(body: RemoveUser): Promise<ReturnMessage> {
-    const { courseId, userId } = body;
-    const userCourse = await this.getUser(courseId, userId);
-    if (userCourse.length === 0) {
+    const { courseId, personId } = body;
+    const courseUser: object | null = await prisma.coursePersons.findUnique({
+      where: {
+        coursePersonId: {
+          courseId: Number(courseId),
+          personId: Number(personId),
+        },
+      },
+    });
+    if (!courseUser) {
       return {
-        status: HttpStatus.BAD_REQUEST,
+        status: HttpStatus.NOT_FOUND,
         message: 'User not found',
       };
     }
-    const deleteUserCourse = await this.deleteUserCourse(courseId, userId);
-    if (deleteUserCourse.affectedRows === 1) {
+    const deleteCourseUser = await prisma.coursePersons.delete({
+      where: {
+        coursePersonId: {
+          courseId: Number(courseId),
+          personId: Number(personId),
+        },
+      },
+    });
+    if (deleteCourseUser) {
       return {
         status: HttpStatus.OK,
         message: 'User deleted successfully',
@@ -227,37 +236,5 @@ export class CourseService {
         message: 'User not deleted',
       };
     }
-  }
-
-  deleteUserCourse(courseId, userId): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `delete from course_persons where course_id=? and person_id=?`,
-        [courseId, userId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  getUser(courseId: number, personId: number): Promise<CourseUser[]> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `select * from course_persons where course_id=? and person_id=?`,
-        [courseId, personId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
   }
 }
