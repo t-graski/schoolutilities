@@ -31,4 +31,8 @@ export const LENGTHS = {
     min: 1,
     max: 25,
   },
+  JOIN_CODE_NAME: {
+    min: 0,
+    max: 25,
+  }
 };

@@ -28,7 +28,7 @@ export class SchoolAdminController {
   @Post('/addDepartment')
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
-    return response.status(result.status).json(result?.data);
+    return response.status(result.status).json(result?.message);
   }
 
   // @UseGuards(JwtAuthGuard)

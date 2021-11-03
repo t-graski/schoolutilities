@@ -154,10 +154,17 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Class not removed',
-      };
+      if (err.code === 'P2003') {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Class is referenced somewhere',
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Class not removed',
+        };
+      }
     }
 
     return {
@@ -209,13 +216,30 @@ export class SchoolAdminService {
     const { name, schoolId, isVisible, childsVisible } = body;
     if (
       !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
-      !validator.isNumeric(schoolId)
+      !validator.isNumeric(schoolId) ||
+      !validator.isBoolean(isVisible) ||
+      !validator.isBoolean(childsVisible)
     ) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
       };
     }
+
+    const isNotAvailable = await prisma.departments.findFirst({
+      where: {
+        schoolId: Number(schoolId),
+        name: name,
+      },
+    });
+
+    if (isNotAvailable) {
+      return {
+        status: HttpStatus.CONFLICT,
+        message: 'Already exists',
+      };
+    }
+
     try {
       await prisma.departments.create({
         data: {
@@ -225,8 +249,8 @@ export class SchoolAdminService {
               schoolId: Number(schoolId),
             },
           },
-          isVisible,
-          childsVisible,
+          isVisible: this.toBoolean(isVisible),
+          childsVisible: this.toBoolean(childsVisible),
         },
       });
     } catch (err) {
@@ -269,10 +293,17 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Department not removed',
-      };
+      if (err.code === 'P2003') {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Department is referenced somewhere',
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'Department not removed',
+        };
+      }
     }
 
     return {
@@ -283,6 +314,7 @@ export class SchoolAdminService {
 
   async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
     const { name, isVisible, childsVisible, departmentId } = body;
+
     if (
       !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
       !validator.isNumeric(departmentId) ||
@@ -315,8 +347,8 @@ export class SchoolAdminService {
         },
         data: {
           name,
-          isVisible,
-          childsVisible,
+          isVisible: this.toBoolean(isVisible),
+          childsVisible: this.toBoolean(childsVisible),
         },
       });
     } catch (err) {
@@ -633,5 +665,9 @@ export class SchoolAdminService {
         },
       );
     });
+  }
+
+  toBoolean(value): boolean {
+    return value === '1';
   }
 }
