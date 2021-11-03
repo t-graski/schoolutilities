@@ -34,7 +34,7 @@ export interface AddSchoolReturnValue {
 export interface AddDepartment {
   name: string;
   schoolId: number;
-  isVisible?: string;
+  isVisible?: boolean;
   childsVisible?: boolean;
 }
 
@@ -55,7 +55,7 @@ export interface ReturnMessage {
 export interface UpdateDepartment {
   name: string;
   departmentId: number;
-  isVisible?: string;
+  isVisible?: boolean;
   childsVisible?: boolean;
 }
 

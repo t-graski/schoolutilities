@@ -27,4 +27,8 @@ export const LENGTHS = {
     min: 1,
     max: 25,
   },
+  DEPARTMENT_NAME: {
+    min: 1,
+    max: 25,
+  },
 };

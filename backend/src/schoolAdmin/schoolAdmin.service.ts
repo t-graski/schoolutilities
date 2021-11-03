@@ -7,12 +7,9 @@ import { PrismaClient } from '@prisma/client';
 import { LENGTHS } from 'src/misc/parameterConstants';
 import {
   AddClass,
-  AddClassReturnValue,
   AddDepartment,
   AddDepartmentReturnValue,
   AddSchool,
-  AddSchoolReturnValue,
-  ClassTable,
   ReturnMessage,
   UpdateClass,
   UpdateDepartment,
@@ -44,10 +41,10 @@ export class SchoolAdminService {
 
   async addSchoolConfig(body: AddSchool): Promise<ReturnMessage> {
     const { name, languageId, timezone } = body;
-    // TODO check languageId is number
-    if ( 
+    if (
       !validator.isLength(name, LENGTHS.CLASS_NAME) ||
-      !regex.timezone.test(timezone)
+      !regex.timezone.test(timezone) ||
+      !validator.isNumeric(languageId)
     ) {
       return {
         status: HttpStatus.NOT_ACCEPTABLE,
@@ -56,7 +53,7 @@ export class SchoolAdminService {
     }
 
     try {
-      const addSchoolConfig = await prisma.schools.create({
+      await prisma.schools.create({
         data: {
           name,
           languages: {
@@ -82,15 +79,17 @@ export class SchoolAdminService {
 
   async addClass(body: AddClass): Promise<ReturnMessage> {
     const { departmentId, className } = body;
-    // TODO check departmentId is number
-    if (!validator.isLength(className, LENGTHS.CLASS_NAME)) {
+    if (
+      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
+      !validator.isNumeric(departmentId)
+    ) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
       };
     }
 
-    const isNotAvailable: object | null = await prisma.schoolClasses.findFirst({
+    const isNotAvailable = await prisma.schoolClasses.findFirst({
       where: {
         departmentId: Number(departmentId),
         className: className,
@@ -105,7 +104,7 @@ export class SchoolAdminService {
     }
 
     try {
-      const addClass = await prisma.schoolClasses.create({
+      await prisma.schoolClasses.create({
         data: {
           departments: {
             connect: {
@@ -136,7 +135,7 @@ export class SchoolAdminService {
       };
     }
 
-    const schoolClass: object | null = await prisma.schoolClasses.findUnique({
+    const schoolClass = await prisma.schoolClasses.findUnique({
       where: {
         classId: Number(classId),
       },
@@ -148,141 +147,189 @@ export class SchoolAdminService {
         message: 'Class not found',
       };
     }
-
-    const deleteClass = await prisma.schoolClasses.delete({
-      where: {
-        classId: Number(classId),
-      },
-    });
-
-    if (deleteClass) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Class deleted successfully',
-      };
-    } else {
+    try {
+      await prisma.schoolClasses.delete({
+        where: {
+          classId: Number(classId),
+        },
+      });
+    } catch (err) {
       return {
         status: HttpStatus.BAD_REQUEST,
-        message: 'Class not deleted',
+        message: 'Class not removed',
       };
     }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Class removed successfully',
+    };
   }
 
   async updateClass(body: UpdateClass): Promise<ReturnMessage> {
     const { departmentId, className, classId } = body;
-    if (!regex.title.test(className)) {
+    if (
+      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
+      !validator.isNumeric(departmentId) ||
+      !validator.isNumeric(classId)
+    ) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
       };
     }
-    const classUpdateData = await this.patchClass(
-      departmentId,
-      className,
-      classId,
-    );
-    if (classUpdateData.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Class updated successfully',
-      };
-    } else {
+    try {
+      await prisma.schoolClasses.update({
+        where: {
+          classId: Number(classId),
+        },
+        data: {
+          className,
+          departments: {
+            connect: {
+              departmentId: Number(departmentId),
+            },
+          },
+        },
+      });
+    } catch (err) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Class not updated',
       };
     }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Class updated successfully',
+    };
   }
-  getClassById(classId: number): Promise<ClassTable[]> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `select * from class where class_id=?`,
-        [classId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
+
   async addDepartment(body: AddDepartment): Promise<AddDepartmentReturnValue> {
     const { name, schoolId, isVisible, childsVisible } = body;
-    if (!regex.title.test(name)) {
+    if (
+      !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
+      !validator.isNumeric(schoolId)
+    ) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
       };
     }
-    const departmentInsertData = await this.insertDepartment(
-      name,
-      schoolId,
-      isVisible,
-      childsVisible,
-    );
-    if (departmentInsertData.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Department added successfully',
-        data: { departmentId: departmentInsertData.insertId },
-      };
-    } else {
+    try {
+      await prisma.departments.create({
+        data: {
+          name,
+          schools: {
+            connect: {
+              schoolId: Number(schoolId),
+            },
+          },
+          isVisible,
+          childsVisible,
+        },
+      });
+    } catch (err) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Department not added',
       };
     }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Department added successfully',
+    };
   }
 
   async removeDepartment(departmentId: number): Promise<ReturnMessage> {
-    const department = await this.getDepartmentById(departmentId);
-    if (department.length === 0) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Department not found',
-      };
-    }
-    const deleteDepartment = await this.deleteDepartment(departmentId);
-    if (deleteDepartment.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Department deleted successfully',
-      };
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Department not deleted',
-      };
-    }
-  }
-
-  async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
-    const { name, isVisible, childsVisible, departmentId } = body;
-    if (!regex.title.test(name)) {
+    if (!validator.isNumeric(departmentId)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',
       };
     }
-    const departmentUpdateData = await this.patchDepartment(
-      name,
-      isVisible,
-      childsVisible,
-      departmentId,
-    );
-    if (departmentUpdateData.affectedRows === 1) {
+
+    const department = await prisma.departments.findUnique({
+      where: {
+        departmentId: Number(departmentId),
+      },
+    });
+
+    if (!department) {
       return {
-        status: HttpStatus.OK,
-        message: 'Department updated successfully',
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Department not found',
       };
-    } else {
+    }
+    try {
+      await prisma.departments.delete({
+        where: {
+          departmentId: Number(departmentId),
+        },
+      });
+    } catch (err) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Department not removed',
+      };
+    }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Department removed successfully',
+    };
+  }
+
+  async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
+    const { name, isVisible, childsVisible, departmentId } = body;
+    if (
+      !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
+      !validator.isNumeric(departmentId) ||
+      !validator.isBoolean(isVisible) ||
+      !validator.isBoolean(childsVisible)
+    ) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Invalid input',
+      };
+    }
+
+    const department = await prisma.departments.findUnique({
+      where: {
+        departmentId: Number(departmentId),
+      },
+    });
+
+    if (!department) {
+      return {
+        status: HttpStatus.CONFLICT,
+        message: 'Department not found',
+      };
+    }
+
+    try {
+      await prisma.departments.update({
+        where: {
+          departmentId: Number(departmentId),
+        },
+        data: {
+          name,
+          isVisible,
+          childsVisible,
+        },
+      });
+    } catch (err) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Department not updated',
       };
     }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Department updated successfully',
+    };
   }
 
   async addJoinCode(body: AddJoinCode): Promise<AddJoinCodeReturnValue> {
