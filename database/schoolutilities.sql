@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Nov 03, 2021 at 05:53 PM
+-- Generation Time: Nov 04, 2021 at 02:06 PM
 -- Server version: 5.7.35
 -- PHP Version: 7.4.20
 
@@ -373,13 +373,16 @@ ALTER TABLE `schools`
 --
 ALTER TABLE `school_classes`
   ADD PRIMARY KEY (`class_id`),
-  ADD KEY `fk_school_class_deparment` (`department_id`);
+  ADD KEY `fk_school_class_department` (`department_id`);
 
 --
 -- Indexes for table `school_join_codes`
 --
 ALTER TABLE `school_join_codes`
-  ADD PRIMARY KEY (`school_join_code_id`);
+  ADD PRIMARY KEY (`school_join_code_id`),
+  ADD UNIQUE KEY `join_code` (`join_code`),
+  ADD KEY `fk_school_join_code_school` (`school_id`),
+  ADD KEY `fk_school_join_code_person` (`person_creation_id`);
 
 --
 -- Indexes for table `subjects`
@@ -449,7 +452,7 @@ ALTER TABLE `school_classes`
 -- AUTO_INCREMENT for table `school_join_codes`
 --
 ALTER TABLE `school_join_codes`
-  MODIFY `school_join_code_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `school_join_code_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `subjects`
@@ -519,6 +522,13 @@ ALTER TABLE `schools`
 --
 ALTER TABLE `school_classes`
   ADD CONSTRAINT `fk_school_class_deparment` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
+
+--
+-- Constraints for table `school_join_codes`
+--
+ALTER TABLE `school_join_codes`
+  ADD CONSTRAINT `fk_school_join_code_person` FOREIGN KEY (`person_creation_id`) REFERENCES `persons` (`person_id`),
+  ADD CONSTRAINT `fk_school_join_code_school` FOREIGN KEY (`school_id`) REFERENCES `schools` (`school_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

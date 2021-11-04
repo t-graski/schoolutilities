@@ -366,35 +366,89 @@ export class SchoolAdminService {
 
   async addJoinCode(body: AddJoinCode): Promise<AddJoinCodeReturnValue> {
     const { schoolId, expireDate, name, personId } = body;
-    const generatedJoinCode = await this.generateJoinCode();
-    const joinCodeInsertData = await this.insertJoinCode(
-      schoolId,
-      expireDate,
-      name,
-      personId,
-      generatedJoinCode,
-    );
-    if (joinCodeInsertData.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Joincode added successfully',
-        data: {
-          joinCodeId: joinCodeInsertData.insertId,
-          joinCode: generatedJoinCode,
-        },
-      };
-    } else {
+
+    if (
+      !validator.isNumeric(schoolId) ||
+      !validator.isLength(name, LENGTHS.JOIN_CODE_NAME) ||
+      !validator.isNumeric(personId)
+    ) {
       return {
         status: HttpStatus.BAD_REQUEST,
-        message: 'Joincode not added',
+        message: 'Invalid input',
       };
     }
+
+    const nameIsNotAvailable = await prisma.schoolJoinCodes.findFirst({
+      where: {
+        schoolId: Number(schoolId),
+        joinCodeName: name,
+      },
+    });
+
+    if (nameIsNotAvailable) {
+      return {
+        status: HttpStatus.CONFLICT,
+        message: 'Already exists',
+      };
+    }
+
+    const schoolJoinCodes = await prisma.schoolJoinCodes.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+    });
+
+    if (schoolJoinCodes.length >= LENGTHS.MAX_JOIN_CODES) {
+      return {
+        status: HttpStatus.FORBIDDEN,
+        message: 'Maximum number of join codes reached',
+      };
+    }
+
+    const joinCode = await this.generateJoinCode();
+    try {
+      await prisma.schoolJoinCodes.create({
+        data: {
+          schools: {
+            connect: {
+              schoolId: Number(schoolId),
+            },
+          },
+          joinCodeName: name,
+          joinCode,
+          expireDate: new Date(expireDate),
+          persons: {
+            connect: {
+              personId: Number(personId),
+            },
+          },
+        },
+      });
+    } catch (err) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Join code not added',
+      };
+    }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Join code added successfully',
+    };
   }
 
   async removeJoinCode(
     body: RemoveJoinCode,
   ): Promise<RemoveJoinCodeReturnValue> {
     const { joinCodeId } = body;
+
+    if (!validator.isNumeric(joinCodeId)) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Invalid input',
+      };
+    }
+
     const joinCodeInsertData = await this.deleteJoinCode(joinCodeId);
     if (joinCodeInsertData.affectedRows === 1) {
       return {
@@ -627,28 +681,23 @@ export class SchoolAdminService {
 
   async generateJoinCode(): Promise<string> {
     let joinCode = nanoid();
-    const joinCodeExists = await this.getJoinCode(joinCode);
-    if (joinCodeExists.length === 0) return joinCode;
-    while ((await this.getJoinCode(joinCode)).length !== 0) {
+    const joinCodeExists = await prisma.schoolJoinCodes.findUnique({
+      where: {
+        joinCode: joinCode,
+      },
+    });
+
+    if (!joinCodeExists) return joinCode;
+    while (
+      await !prisma.schoolJoinCodes.findUnique({
+        where: {
+          joinCode: joinCode,
+        },
+      })
+    ) {
       joinCode = nanoid();
     }
-    return nanoid();
-  }
-
-  getJoinCode(joinCode): Promise<JoinCodeTable[]> {
-    return new Promise<JoinCodeTable[]>((resolve, reject) => {
-      this.connection.query(
-        `select * from school_join_codes where join_code=?`,
-        [joinCode],
-        (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        },
-      );
-    });
+    return joinCode;
   }
 
   getJoinCodeById(joinCode): Promise<JoinCodeTable[]> {

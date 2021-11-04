@@ -77,9 +77,10 @@ model persons {
   personRoles      personRoles?
   registerTokens   registerTokens[]
 
+  coursePersons coursePersons[]
   @@index([classId], map: "fkPersonclass")
   @@index([schoolId], map: "fkPersonschool")
-  coursePersons coursePersons[]
+  schoolJoinCodes schoolJoinCodes[]
 }
 
 model registerTokens {
@@ -102,11 +103,11 @@ model schoolClasses {
   classId      Int         @id @default(autoincrement()) @map("class_id")
   departmentId Int         @map("department_id")
   className    String      @map("class_name") @db.VarChar(255)
-  departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdeparment")
+  departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
   courses      courses[]
   persons      persons[]
 
-  @@index([departmentId], map: "fkSchoolclassdeparment")
+  @@index([departmentId], map: "fkSchoolclassdepartment")
   @@map("school_classes")
 }
 
@@ -121,6 +122,7 @@ model schools {
   persons     persons[]
 
   @@index([languageId], map: "languageId")
+  schoolJoinCodes schoolJoinCodes[]
 }
 
 model subjects {
@@ -142,8 +144,36 @@ model courses {
   subjects          subjects      @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
   members           persons[]     @relation(references: [personId])
 
+  coursePersons coursePersons[]
   @@index([classId], map: "fkCourseclass")
   @@index([schoolId], map: "fkCourseschool")
   @@index([subjectId], map: "fkCoursesubject")
-  coursePersons coursePersons[]
 }
+
+model schoolJoinCodes {
+  schoolJoinCodeId Int      @id @default(autoincrement()) @map("school_join_code_id")
+  schoolId         Int      @map("school_id")
+  joinCode         String   @unique(map: "joinCode") @map("join_code") @db.VarChar(255) 
+  expireDate       DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  joinCodeName     String   @map("join_code_name") @db.VarChar(255)
+  personCreationId Int      @map("person_creation_id")
+  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  persons          persons  @relation(fields: [personCreationId], references: [personId], onUpdate: Restrict, map: "fkSchoolJoinCodePerson")
+  schools          schools  @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkSchoolJoinCodeSchool")
+
+  @@index([personCreationId], map: "fkSchoolJoinCodePerson")
+  @@index([schoolId], map: "fkSchoolJoinCodeSchool")
+  @@map("school_join_codes")
+}
+
+// model schoolClasses {
+//   classId      Int         @id @default(autoincrement()) @map("class_id")
+//   departmentId Int         @map("department_id")
+//   className    String      @map("class_name") @db.VarChar(255)
+//   departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
+//   courses      courses[]
+//   persons      persons[]
+
+//   @@index([departmentId], map: "fkSchoolclassdepartment")
+//   @@map("school_classes")
+// }
