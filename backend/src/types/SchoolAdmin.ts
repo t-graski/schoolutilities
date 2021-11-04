@@ -100,8 +100,12 @@ export interface JoinCodeTable {
   creationDate: Date;
 }
 
-export interface updateJoinCode {
+export interface UpdateJoinCode {
   joinCodeId: number;
   expireDate?: Date;
   name?: string;
+}
+
+export interface GetAllJoinCodes {
+  schoolId: number;
 }

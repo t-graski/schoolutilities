@@ -18,7 +18,8 @@ import {
   JoinCodeTable,
   RemoveJoinCode,
   RemoveJoinCodeReturnValue,
-  updateJoinCode,
+  UpdateJoinCode,
+  GetAllJoinCodes,
 } from 'src/types/SchoolAdmin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
@@ -463,7 +464,37 @@ export class SchoolAdminService {
     }
   }
 
-  async updateJoinCode(body: updateJoinCode): Promise<ReturnMessage> {
+  async getAllJoinCodes(body: GetAllJoinCodes): Promise<ReturnMessage> {
+    const { schoolId } = body;
+    console.log(schoolId);
+
+    const joinCodes = await prisma.schoolJoinCodes.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        joinCodeName: true,
+        expireDate: true,
+        joinCode: true,
+        personCreationId: true,
+      },
+    });
+
+    if (!joinCodes) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'No join codes found',
+      };
+    }
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Join codes found',
+      data: joinCodes,
+    };
+  }
+
+  async updateJoinCode(body: UpdateJoinCode): Promise<ReturnMessage> {
     const { joinCodeId, expireDate, name } = body;
     const joinCodeUpdateData = await this.patchJoinCode(
       joinCodeId,

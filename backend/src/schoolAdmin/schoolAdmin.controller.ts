@@ -90,4 +90,11 @@ export class SchoolAdminController {
     const result = await this.schoolAdminService.updateJoinCode(request.body);
     return response.status(result.status).json(result?.message);
   }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('joinCode')
+  async getJoinCodes(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.getAllJoinCodes(request.body);
+    return response.status(result.status).json(result?.data);
+  }
 }
