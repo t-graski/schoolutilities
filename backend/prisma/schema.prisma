@@ -145,6 +145,7 @@ model courses {
   members           persons[]     @relation(references: [personId])
 
   coursePersons coursePersons[]
+  @@unique([name, schoolId], map: "uniqueCourseNameSchoolId")
   @@index([classId], map: "fkCourseclass")
   @@index([schoolId], map: "fkCourseschool")
   @@index([subjectId], map: "fkCoursesubject")

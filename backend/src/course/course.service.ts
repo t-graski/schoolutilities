@@ -1,16 +1,15 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
   AddCourse,
-  AddCourseReturnValue,
   UpdateCourse,
+  RemoveCourse,
   AddUser,
-  AddUserReturnValue,
   RemoveUser,
+  ReturnMessage,
 } from 'src/types/Course';
-import { ReturnMessage } from 'src/types/SchoolAdmin';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
-import { LENGTHS } from 'src/misc/parameterConstants';
+import { LENGTHS, RETURN_DATA } from 'src/misc/parameterConstants';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -34,86 +33,84 @@ export class CourseService {
     const { name, courseDescription, schoolId, subjectId, classId } = body;
     if (
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
-      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
+      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION) ||
+      !validator.isNumeric(schoolId) ||
+      !validator.isNumeric(subjectId) ||
+      !validator.isNumeric(classId)
     ) {
-      return {
-        status: HttpStatus.NOT_ACCEPTABLE,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
-    const prismaData = await prisma.courses.create({
-      data: {
+    const isNotAvailable = await prisma.courses.findFirst({
+      where: {
         name,
-        courseDescription: courseDescription,
-        schools: {
-          connect: {
-            schoolId: Number(schoolId),
-          },
-        },
-        subjects: {
-          connect: {
-            subjectId: Number(subjectId),
-          },
-        },
-        schoolClasses: {
-          connect: {
-            classId: Number(classId),
-          },
-        },
+        schoolId: Number(schoolId),
       },
     });
 
-    if (prismaData && prismaData.courseId) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Course added successfully',
-        data: prismaData,
-      };
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Course not added',
-      };
+    if (isNotAvailable) {
+      return RETURN_DATA.ALREADY_EXISTS;
     }
+
+    try {
+      await prisma.courses.create({
+        data: {
+          name,
+          courseDescription: courseDescription,
+          schools: {
+            connect: {
+              schoolId: Number(schoolId),
+            },
+          },
+          subjects: {
+            connect: {
+              subjectId: Number(subjectId),
+            },
+          },
+          schoolClasses: {
+            connect: {
+              classId: Number(classId),
+            },
+          },
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+    return RETURN_DATA.SUCCESS;
   }
 
-  async removeCourse(courseId: number): Promise<ReturnMessage> {
-    const course: object | null = await prisma.courses.findUnique({
+  async removeCourse(body: RemoveCourse): Promise<ReturnMessage> {
+    const { courseId } = body;
+
+    if (!validator.isNumeric(courseId)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const course = await prisma.courses.findUnique({
       where: {
         courseId: Number(courseId),
       },
     });
 
     if (!course) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Course not found',
-      };
+      return RETURN_DATA.NOT_FOUND;
     }
 
-    const deleteCourse = await prisma.courses.delete({
-      where: {
-        courseId: Number(courseId),
-      },
-      select: {
-        courseId: true,
-        name: true,
-      },
-    });
-
-    if (deleteCourse) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Course deleted successfully',
-        data: deleteCourse,
-      };
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Course not deleted',
-      };
+    try {
+      await prisma.courses.delete({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          courseId: true,
+          name: true,
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
     }
+    return RETURN_DATA.SUCCESS;
   }
 
   async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
@@ -163,7 +160,7 @@ export class CourseService {
     }
   }
 
-  async addUser(body: AddUser): Promise<AddUserReturnValue> {
+  async addUser(body: AddUser): Promise<ReturnMessage> {
     const { courseId, personId } = body;
 
     const courseUser: object | null = await prisma.coursePersons.findUnique({
