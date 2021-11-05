@@ -4,20 +4,17 @@ import { DatabaseUpdate } from 'src/types/Database';
 import { nanoid } from 'nanoid';
 import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
-import { LENGTHS } from 'src/misc/parameterConstants';
+import { LENGTHS, RETURN_DATA } from 'src/misc/parameterConstants';
 import {
   AddClass,
   AddDepartment,
-  AddDepartmentReturnValue,
   AddSchool,
   ReturnMessage,
   UpdateClass,
   UpdateDepartment,
   AddJoinCode,
-  AddJoinCodeReturnValue,
   JoinCodeTable,
   RemoveJoinCode,
-  RemoveJoinCodeReturnValue,
   UpdateJoinCode,
   GetAllJoinCodes,
 } from 'src/types/SchoolAdmin';
@@ -25,8 +22,8 @@ import {
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
-
 const prisma = new PrismaClient();
+
 @Injectable()
 export class SchoolAdminService {
   connection: any;
@@ -47,10 +44,7 @@ export class SchoolAdminService {
       !regex.timezone.test(timezone) ||
       !validator.isNumeric(languageId)
     ) {
-      return {
-        status: HttpStatus.NOT_ACCEPTABLE,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
     try {
@@ -66,16 +60,9 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'School not added',
-      };
+      return RETURN_DATA.DATABASE_ERORR;
     }
-
-    return {
-      status: HttpStatus.OK,
-      message: 'School added successfully',
-    };
+    return RETURN_DATA.SUCCESS;
   }
 
   async addClass(body: AddClass): Promise<ReturnMessage> {
@@ -84,10 +71,7 @@ export class SchoolAdminService {
       !validator.isLength(className, LENGTHS.CLASS_NAME) ||
       !validator.isNumeric(departmentId)
     ) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
     const isNotAvailable = await prisma.schoolClasses.findFirst({
@@ -98,10 +82,7 @@ export class SchoolAdminService {
     });
 
     if (isNotAvailable) {
-      return {
-        status: HttpStatus.CONFLICT,
-        message: 'Already exists',
-      };
+      return RETURN_DATA.ALREADY_EXISTS;
     }
 
     try {
@@ -116,24 +97,14 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Class not added',
-      };
+      return RETURN_DATA.DATABASE_ERORR;
     }
-
-    return {
-      status: HttpStatus.OK,
-      message: 'Class added successfully',
-    };
+    return RETURN_DATA.SUCCESS;
   }
 
   async removeClass(classId: number): Promise<ReturnMessage> {
     if (!validator.isNumeric(classId)) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
     const schoolClass = await prisma.schoolClasses.findUnique({
@@ -143,11 +114,9 @@ export class SchoolAdminService {
     });
 
     if (!schoolClass) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Class not found',
-      };
+      return RETURN_DATA.NOT_FOUND;
     }
+
     try {
       await prisma.schoolClasses.delete({
         where: {
@@ -155,23 +124,14 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
+      // Foreign key constraint failed
       if (err.code === 'P2003') {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'Class is referenced somewhere',
-        };
+        return RETURN_DATA.REFERENCE_ERROR;
       } else {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'Class not removed',
-        };
+        return RETURN_DATA.DATABASE_ERORR;
       }
     }
-
-    return {
-      status: HttpStatus.OK,
-      message: 'Class removed successfully',
-    };
+    return RETURN_DATA.SUCCESS;
   }
 
   async updateClass(body: UpdateClass): Promise<ReturnMessage> {
@@ -181,10 +141,7 @@ export class SchoolAdminService {
       !validator.isNumeric(departmentId) ||
       !validator.isNumeric(classId)
     ) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
     try {
       await prisma.schoolClasses.update({
@@ -201,19 +158,12 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Class not updated',
-      };
+      return RETURN_DATA.DATABASE_ERORR;
     }
-
-    return {
-      status: HttpStatus.OK,
-      message: 'Class updated successfully',
-    };
+    return RETURN_DATA.SUCCESS;
   }
 
-  async addDepartment(body: AddDepartment): Promise<AddDepartmentReturnValue> {
+  async addDepartment(body: AddDepartment): Promise<ReturnMessage> {
     const { name, schoolId, isVisible, childsVisible } = body;
     if (
       !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
@@ -221,10 +171,7 @@ export class SchoolAdminService {
       !validator.isBoolean(isVisible) ||
       !validator.isBoolean(childsVisible)
     ) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
     const isNotAvailable = await prisma.departments.findFirst({
@@ -235,10 +182,7 @@ export class SchoolAdminService {
     });
 
     if (isNotAvailable) {
-      return {
-        status: HttpStatus.CONFLICT,
-        message: 'Already exists',
-      };
+      return RETURN_DATA.ALREADY_EXISTS;
     }
 
     try {
@@ -255,24 +199,15 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Department not added',
-      };
+      return RETURN_DATA.DATABASE_ERORR;
     }
-
-    return {
-      status: HttpStatus.OK,
-      message: 'Department added successfully',
-    };
+    return RETURN_DATA.SUCCESS;
   }
 
-  async removeDepartment(departmentId: number): Promise<ReturnMessage> {
+  async removeDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
+    const { departmentId } = body;
     if (!validator.isNumeric(departmentId)) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
     const department = await prisma.departments.findUnique({
@@ -282,10 +217,7 @@ export class SchoolAdminService {
     });
 
     if (!department) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Department not found',
-      };
+      return RETURN_DATA.NOT_FOUND;
     }
     try {
       await prisma.departments.delete({
@@ -294,38 +226,25 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
+      // Foreign key constraint failed
       if (err.code === 'P2003') {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'Department is referenced somewhere',
-        };
+        return RETURN_DATA.REFERENCE_ERROR;
       } else {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'Department not removed',
-        };
+        return RETURN_DATA.DATABASE_ERORR;
       }
     }
-
-    return {
-      status: HttpStatus.OK,
-      message: 'Department removed successfully',
-    };
+    return RETURN_DATA.SUCCESS;
   }
 
   async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
     const { name, isVisible, childsVisible, departmentId } = body;
-
     if (
       !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
       !validator.isNumeric(departmentId) ||
       !validator.isBoolean(isVisible) ||
       !validator.isBoolean(childsVisible)
     ) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
     const department = await prisma.departments.findUnique({
@@ -335,10 +254,7 @@ export class SchoolAdminService {
     });
 
     if (!department) {
-      return {
-        status: HttpStatus.CONFLICT,
-        message: 'Department not found',
-      };
+      return RETURN_DATA.NOT_FOUND;
     }
 
     try {
@@ -353,30 +269,20 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Department not updated',
-      };
+      return RETURN_DATA.DATABASE_ERORR;
     }
-
-    return {
-      status: HttpStatus.OK,
-      message: 'Department updated successfully',
-    };
+    return RETURN_DATA.SUCCESS;
   }
 
-  async addJoinCode(body: AddJoinCode): Promise<AddJoinCodeReturnValue> {
+  async addJoinCode(body: AddJoinCode): Promise<ReturnMessage> {
     const { schoolId, expireDate, name, personId } = body;
-
     if (
       !validator.isNumeric(schoolId) ||
       !validator.isLength(name, LENGTHS.JOIN_CODE_NAME) ||
-      !validator.isNumeric(personId)
+      !validator.isNumeric(personId) ||
+      !(new Date(expireDate).getTime() > 0)
     ) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
     const nameIsNotAvailable = await prisma.schoolJoinCodes.findFirst({
@@ -387,10 +293,7 @@ export class SchoolAdminService {
     });
 
     if (nameIsNotAvailable) {
-      return {
-        status: HttpStatus.CONFLICT,
-        message: 'Already exists',
-      };
+      return RETURN_DATA.ALREADY_EXISTS;
     }
 
     const schoolJoinCodes = await prisma.schoolJoinCodes.findMany({
@@ -400,10 +303,7 @@ export class SchoolAdminService {
     });
 
     if (schoolJoinCodes.length >= LENGTHS.MAX_JOIN_CODES) {
-      return {
-        status: HttpStatus.FORBIDDEN,
-        message: 'Maximum number of join codes reached',
-      };
+      return RETURN_DATA.MAX_JOIN_CODES_REACHED;
     }
 
     const joinCode = await this.generateJoinCode();
@@ -426,47 +326,87 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Join code not added',
-      };
-    }
+      console.log(err);
 
-    return {
-      status: HttpStatus.OK,
-      message: 'Join code added successfully',
-    };
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+    return RETURN_DATA.SUCCESS;
   }
 
-  async removeJoinCode(
-    body: RemoveJoinCode,
-  ): Promise<RemoveJoinCodeReturnValue> {
+  async removeJoinCode(body: RemoveJoinCode): Promise<ReturnMessage> {
     const { joinCodeId } = body;
-
     if (!validator.isNumeric(joinCodeId)) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Invalid input',
-      };
+      return RETURN_DATA.INVALID_INPUT;
     }
 
-    const joinCodeInsertData = await this.deleteJoinCode(joinCodeId);
-    if (joinCodeInsertData.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Joincode removed successfully',
-      };
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Joincode not removed',
-      };
+    const joinCode = await prisma.schoolJoinCodes.findUnique({
+      where: {
+        schoolJoinCodeId: Number(joinCodeId),
+      },
+    });
+
+    if (!joinCode) {
+      return RETURN_DATA.NOT_FOUND;
     }
+
+    try {
+      await prisma.schoolJoinCodes.delete({
+        where: {
+          schoolJoinCodeId: Number(joinCodeId),
+        },
+      });
+    } catch (err) {
+      // Foreign key constraint failed
+      if (err.code === 'P2003') {
+        return RETURN_DATA.REFERENCE_ERROR;
+      } else {
+        return RETURN_DATA.DATABASE_ERORR;
+      }
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async updateJoinCode(body: UpdateJoinCode): Promise<ReturnMessage> {
+    const { joinCodeId, expireDate, name } = body;
+    if (
+      !validator.isNumeric(joinCodeId) ||
+      !(new Date(expireDate).getTime() > 0) ||
+      !validator.isLength(name, LENGTHS.JOIN_CODE_NAME)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const joinCode = await prisma.schoolJoinCodes.findUnique({
+      where: {
+        schoolJoinCodeId: Number(joinCodeId),
+      },
+    });
+
+    if (!joinCode) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+    try {
+      await prisma.schoolJoinCodes.update({
+        where: {
+          schoolJoinCodeId: Number(joinCodeId),
+        },
+        data: {
+          joinCodeName: name,
+          expireDate: new Date(expireDate),
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+    return RETURN_DATA.SUCCESS;
   }
 
   async getAllJoinCodes(body: GetAllJoinCodes): Promise<ReturnMessage> {
     const { schoolId } = body;
-    console.log(schoolId);
+
+    if (!validator.isNumeric(schoolId)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
 
     const joinCodes = await prisma.schoolJoinCodes.findMany({
       where: {
@@ -481,233 +421,12 @@ export class SchoolAdminService {
     });
 
     if (!joinCodes) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'No join codes found',
-      };
+      return RETURN_DATA.NOT_FOUND;
     }
-
     return {
       status: HttpStatus.OK,
-      message: 'Join codes found',
       data: joinCodes,
     };
-  }
-
-  async updateJoinCode(body: UpdateJoinCode): Promise<ReturnMessage> {
-    const { joinCodeId, expireDate, name } = body;
-    const joinCodeUpdateData = await this.patchJoinCode(
-      joinCodeId,
-      expireDate,
-      name,
-    );
-    if (joinCodeUpdateData.affectedRows === 1) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Join code updated successfully',
-      };
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Join code not updated',
-      };
-    }
-  }
-
-  getDepartmentById(departmentId: number): Promise<DatabaseUpdate[]> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `select * from departments where department_id=?`,
-        [departmentId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  insertSchoolConfig(name, languageId, timezone): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `insert into school (name, language_id, timezone) values (?,?,?)`,
-        [name, languageId, timezone],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  insertJoinCode(
-    schoolId,
-    expireDate,
-    name = '',
-    personId,
-    joinCode,
-  ): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `insert into school_join_codes (school_id, join_code, expire_date, join_code_name, person_creation_id) values (?,?,?,?,?)`,
-        [schoolId, joinCode, expireDate, name, personId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  deleteJoinCode(joinCodeId): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `delete from school_join_codes where school_join_code_id=?`,
-        [joinCodeId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  patchJoinCode(
-    joinCodeId,
-    expireDate = null,
-    name = '',
-  ): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `update school_join_codes set expire_date=?, join_code_name=? where school_join_code_id=?`,
-        [expireDate, name, joinCodeId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  insertClass(departmentId, class_name): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `INSERT INTO class (department_id, class_name) VALUES (?, ?)`,
-        [departmentId, class_name],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  deleteClass(classId): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `delete from class where class_id=?`,
-        [classId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  patchClass(departmentId, class_name, class_id): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `update class set department_id=?, class_name=? where class_id=?`,
-        [departmentId, class_name, class_id],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  insertDepartment(
-    name,
-    schoolId,
-    isVisible,
-    childsVisible,
-  ): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `INSERT INTO departments (name, school_id, is_visible, childs_visible) VALUES (?, ?, ?, ?)`,
-        [name, schoolId, isVisible ? 1 : 0, childsVisible ? 1 : 0],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  deleteDepartment(departmentId): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `delete from departments where department_id=?`,
-        [departmentId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
-  }
-
-  patchDepartment(
-    name,
-    isVisible,
-    childsVisible,
-    departmentId,
-  ): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        `update departments set name=?, is_visible=?, childs_visible=? where department_id=?`,
-        [name, isVisible ? 0 : 1, childsVisible ? 0 : 1, departmentId],
-        (err, results) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        },
-      );
-    });
   }
 
   async generateJoinCode(): Promise<string> {

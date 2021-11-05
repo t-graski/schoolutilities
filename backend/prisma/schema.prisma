@@ -77,10 +77,10 @@ model persons {
   personRoles      personRoles?
   registerTokens   registerTokens[]
 
-  coursePersons coursePersons[]
+  coursePersons   coursePersons[]
+  schoolJoinCodes schoolJoinCodes[]
   @@index([classId], map: "fkPersonclass")
   @@index([schoolId], map: "fkPersonschool")
-  schoolJoinCodes schoolJoinCodes[]
 }
 
 model registerTokens {
@@ -121,8 +121,8 @@ model schools {
   departments departments[]
   persons     persons[]
 
-  @@index([languageId], map: "languageId")
   schoolJoinCodes schoolJoinCodes[]
+  @@index([languageId], map: "languageId")
 }
 
 model subjects {
@@ -153,7 +153,7 @@ model courses {
 model schoolJoinCodes {
   schoolJoinCodeId Int      @id @default(autoincrement()) @map("school_join_code_id")
   schoolId         Int      @map("school_id")
-  joinCode         String   @unique(map: "joinCode") @map("join_code") @db.VarChar(255) 
+  joinCode         String   @unique(map: "joinCode") @map("join_code") @db.VarChar(255)
   expireDate       DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
   joinCodeName     String   @map("join_code_name") @db.VarChar(255)
   personCreationId Int      @map("person_creation_id")
@@ -165,15 +165,3 @@ model schoolJoinCodes {
   @@index([schoolId], map: "fkSchoolJoinCodeSchool")
   @@map("school_join_codes")
 }
-
-// model schoolClasses {
-//   classId      Int         @id @default(autoincrement()) @map("class_id")
-//   departmentId Int         @map("department_id")
-//   className    String      @map("class_name") @db.VarChar(255)
-//   departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
-//   courses      courses[]
-//   persons      persons[]
-
-//   @@index([departmentId], map: "fkSchoolclassdepartment")
-//   @@map("school_classes")
-// }
