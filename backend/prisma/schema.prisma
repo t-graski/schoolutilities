@@ -61,12 +61,12 @@ model personRoles {
 
 model persons {
   personId         Int              @id @default(autoincrement()) @map("person_id")
-  firstname        String           @db.VarChar(255)
-  lastname         String           @db.VarChar(255)
-  birthdate        DateTime         @db.Date
+  firstName        String           @db.VarChar(255)
+  lastName         String           @db.VarChar(255)
+  birthDate        DateTime         @db.Date
   schoolId         Int?             @map("school_id")
   classId          Int?             @map("class_id")
-  email            String           @db.VarChar(255)
+  email            String           @unique(map: "email") @db.VarChar(255)
   password         String           @db.VarChar(255)
   emailVerified    Boolean          @default(false) @map("email_verified")
   creationDate     DateTime         @default(now()) @map("creation_date") @db.Timestamp(0)

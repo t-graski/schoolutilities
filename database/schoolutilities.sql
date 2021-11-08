@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db:3306
--- Generation Time: Nov 04, 2021 at 02:06 PM
+-- Generation Time: Nov 08, 2021 at 06:20 PM
 -- Server version: 5.7.35
 -- PHP Version: 7.4.20
 
@@ -42,9 +42,10 @@ CREATE TABLE `courses` (
 
 INSERT INTO `courses` (`course_id`, `name`, `course_description`, `school_id`, `subject_id`, `class_id`) VALUES
 (40, 'Math 2', '', 1, 1, 1),
-(41, 'Math', '2', 1, 1, 1),
+(41, 'Mathe', '2', 1, 1, 1),
 (42, 'Math', '2', 1, 1, 1),
-(43, 'Math', '2', 1, 1, 1);
+(43, 'Maeth', '2', 1, 1, 1),
+(44, 'Math v2', '2', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -274,6 +275,15 @@ CREATE TABLE `school_join_codes` (
   `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `school_join_codes`
+--
+
+INSERT INTO `school_join_codes` (`school_join_code_id`, `school_id`, `join_code`, `expire_date`, `join_code_name`, `person_creation_id`, `creation_date`) VALUES
+(1, 1, 'un6jfgeBFBcXDzmlGBv7B', '2021-10-22 12:00:00', 'code...', 2, '2021-11-05 22:26:34'),
+(2, 1, '8oni4w7ZZb3hJpa83cihg', '2021-10-22 12:00:00', 'codee...', 2, '2021-11-05 22:35:07'),
+(3, 1, 'Slq90dBqZHq50sHLtSlc-', '2021-10-22 12:00:00', 'codeee...', 2, '2021-11-05 22:38:08');
+
 -- --------------------------------------------------------
 
 --
@@ -302,6 +312,7 @@ INSERT INTO `subjects` (`subject_id`, `subject_name`, `class_id`) VALUES
 --
 ALTER TABLE `courses`
   ADD PRIMARY KEY (`course_id`),
+  ADD UNIQUE KEY `unique_course_name_school_id` (`name`,`school_id`),
   ADD KEY `fk_course_school` (`school_id`),
   ADD KEY `fk_course_subject` (`subject_id`),
   ADD KEY `fk_course_class` (`class_id`);
@@ -373,16 +384,13 @@ ALTER TABLE `schools`
 --
 ALTER TABLE `school_classes`
   ADD PRIMARY KEY (`class_id`),
-  ADD KEY `fk_school_class_department` (`department_id`);
+  ADD KEY `fk_school_class_deparment` (`department_id`);
 
 --
 -- Indexes for table `school_join_codes`
 --
 ALTER TABLE `school_join_codes`
-  ADD PRIMARY KEY (`school_join_code_id`),
-  ADD UNIQUE KEY `join_code` (`join_code`),
-  ADD KEY `fk_school_join_code_school` (`school_id`),
-  ADD KEY `fk_school_join_code_person` (`person_creation_id`);
+  ADD PRIMARY KEY (`school_join_code_id`);
 
 --
 -- Indexes for table `subjects`
@@ -398,7 +406,7 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -452,7 +460,7 @@ ALTER TABLE `school_classes`
 -- AUTO_INCREMENT for table `school_join_codes`
 --
 ALTER TABLE `school_join_codes`
-  MODIFY `school_join_code_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `school_join_code_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `subjects`
@@ -522,13 +530,6 @@ ALTER TABLE `schools`
 --
 ALTER TABLE `school_classes`
   ADD CONSTRAINT `fk_school_class_deparment` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
-
---
--- Constraints for table `school_join_codes`
---
-ALTER TABLE `school_join_codes`
-  ADD CONSTRAINT `fk_school_join_code_person` FOREIGN KEY (`person_creation_id`) REFERENCES `persons` (`person_id`),
-  ADD CONSTRAINT `fk_school_join_code_school` FOREIGN KEY (`school_id`) REFERENCES `schools` (`school_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

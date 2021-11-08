@@ -2,12 +2,9 @@ import {
   Controller,
   Get,
   Req,
-  Patch,
   Res,
   HttpStatus,
   Post,
-  Redirect,
-  Body,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -21,21 +18,9 @@ import { JwtRefreshTokenAuthGuard } from './refreshToken/jwt-refresh-token-auth.
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('register')
-  async registerUser(@Req() request, @Res() response): Promise<string> {
-    const registerUserStatus = await this.authService.registerUser(
-      request.body,
-    );
-    if (
-      typeof registerUserStatus == 'string' &&
-      registerUserStatus == 'successfull'
-    ) {
-      return response.status(HttpStatus.OK).send('User registered');
-    } else if (
-      typeof registerUserStatus == 'string' &&
-      registerUserStatus == 'exists'
-    ) {
-      return response.status(HttpStatus.CONFLICT).send('User already exists');
-    }
+  async registerUser(@Req() request, @Res() response) {
+    const result = await this.authService.registerUser(request.body);
+    return response.status(result.status).json(result?.message);
   }
 
   @UseGuards(LocalAuthGuard)

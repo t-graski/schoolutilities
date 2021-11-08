@@ -1,5 +1,14 @@
 import { HttpStatus } from '@nestjs/common';
 
+export const PASSWORD = {
+  minLength: 8,
+  minLowercase: 1,
+  minUppercase: 1,
+  minNumbers: 1,
+  minSymbols: 1,
+  returnScore: false,
+};
+
 export const LENGTHS = {
   PERSON_NAME: {
     min: 3,
@@ -40,14 +49,14 @@ export const LENGTHS = {
   MAX_JOIN_CODES: 10,
 };
 
-export const RETURN_MESSAGES = {
+const RETURN_MESSAGES = {
   INVALID_INPUT_MESSAGE: 'Invalid input',
-  DATABASE_ERORR_MESSAGE: 'Database error', 
+  DATABASE_ERORR_MESSAGE: 'Database error',
   SUCCESS_MESSAGE: 'Operation successfully executed',
   ALREADY_EXISTS_MESSAGE: 'Entry already exists',
   NOT_FOUND_MESSAGE: 'Entry not found',
   REFERENCE_ERROR_MESSAGE: 'Foreign key reference error',
-  MAX_JOIN_CODES_REACHED_MESSAGE: `Maximum number of join codes reached (${LENGTHS.MAX_JOIN_CODES})`
+  MAX_JOIN_CODES_REACHED_MESSAGE: `Maximum number of join codes reached (${LENGTHS.MAX_JOIN_CODES})`,
 };
 
 export const RETURN_DATA = {
@@ -67,7 +76,7 @@ export const RETURN_DATA = {
     status: HttpStatus.CONFLICT,
     message: RETURN_MESSAGES.ALREADY_EXISTS_MESSAGE,
   },
-  NOT_FOUND: {  
+  NOT_FOUND: {
     status: HttpStatus.NOT_FOUND,
     message: RETURN_MESSAGES.NOT_FOUND_MESSAGE,
   },

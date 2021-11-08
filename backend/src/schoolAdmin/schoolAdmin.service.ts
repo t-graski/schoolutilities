@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { regex } from 'src/regex';
-import { DatabaseUpdate } from 'src/types/Database';
 import { nanoid } from 'nanoid';
 import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
@@ -326,8 +325,6 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      console.log(err);
-
       return RETURN_DATA.DATABASE_ERORR;
     }
     return RETURN_DATA.SUCCESS;

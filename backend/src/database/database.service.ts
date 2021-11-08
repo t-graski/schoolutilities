@@ -1,10 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 import { Injectable } from '@nestjs/common';
-import { serverTable, User } from 'src/server';
-import { DatabaseUpdate } from 'src/types/Database';
+import { DatabaseUpdate, ReturnMessage } from 'src/types/Database';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
+import { LENGTHS, RETURN_DATA, PASSWORD } from 'src/misc/parameterConstants';
+import validator from 'validator';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 require('dotenv').config();
 
 @Injectable()
@@ -21,46 +24,71 @@ export class DatabaseService {
     this.connection.connect();
   }
 
-  async registerUser(userData: RegisterUserData): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        'insert into `persons` set firstname=?, lastname=?, email=?, password=?, birthdate=?',
-        [
-          userData.firstName,
-          userData.lastName,
-          userData.email,
-          userData.password,
-          userData.birthDate,
-        ],
-        function (error, results, fields) {
-          resolve(results);
-        },
-      );
+  async registerUser(body: RegisterUserData): Promise<ReturnMessage> {
+    const { email, password, firstName, lastName, birthDate } = body;
+    if (
+      !validator.isEmail(email) ||
+      !validator.isStrongPassword(password, PASSWORD) ||
+      !validator.isLength(firstName, LENGTHS.PERSON_NAME) ||
+      !validator.isLength(lastName, LENGTHS.PERSON_NAME) ||
+      !(new Date(birthDate).getTime() > 0)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const isNotAvailable = await prisma.persons.findFirst({
+      where: {
+        email,
+      },
     });
+    if (isNotAvailable) {
+      return RETURN_DATA.ALREADY_EXISTS;
+    }
+
+    try {
+      await prisma.persons.create({
+        data: {
+          firstName,
+          lastName,
+          birthDate: new Date(birthDate),
+          email,
+          password,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+    return RETURN_DATA.SUCCESS;
   }
 
-  async getUserData(userData: LoginUserData): Promise<User[]> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        'select * from `persons` where email=? ',
-        [userData.email],
-        function (error, results, fields) {
-          resolve(results);
-        },
-      );
+  async getUserData(body: LoginUserData): Promise<object> {
+    const { email } = body;
+    const user = await prisma.persons.findUnique({
+      where: {
+        email: email,
+      },
     });
+    return user;
   }
 
-  async getUserDataById(userId: number): Promise<User[]> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        'select * from `persons` where person_id=? ',
-        [userId],
-        function (error, results, fields) {
-          resolve(results);
-        },
-      );
+  async getUserIdByEmail(email: string): Promise<object> {
+    const user = await prisma.persons.findUnique({
+      where: {
+        email: email,
+      },
     });
+    return user;
+  }
+
+  async getUserDataById(userId: number): Promise<object> {
+    const user = await prisma.persons.findUnique({
+      where: {
+        personId: userId,
+      },
+    });
+    return user;
   }
 
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {

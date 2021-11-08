@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
+import { ReturnMessage } from 'src/types/Database';
 import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
 import { jwtConstants } from './constants';
 import { RefreshTokenService } from './refreshToken/refreshToken.service';
+import { PrismaClient } from '@prisma/client';
+import { RETURN_DATA } from 'src/misc/parameterConstants';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
+const prisma = new PrismaClient();
 
 @Injectable()
 export class AuthService {
@@ -50,41 +54,48 @@ export class AuthService {
     }
   }
 
-  async registerUser(userData: RegisterUserData) {
-    const userOfEmail = await this.databaseService.getUserData(userData);
-    if (userOfEmail && userOfEmail.length > 0) {
-      return 'exists';
-    }
-    userData.password = CryptoJS.DES.encrypt(
-      userData.password,
+  async registerUser(body: RegisterUserData) {
+    body.password = CryptoJS.DES.encrypt(
+      body.password,
       process.env.PASSWORD_ENCRYPTION_KEY,
     ).toString();
-    const registerUserData = await this.databaseService.registerUser(userData);
-    if (registerUserData) {
-      generateRegisterToken(
-        registerUserData.insertId,
-        userData.email,
-        this.databaseService,
-        this.mailService,
-      );
-      return 'successfull';
+    
+    const registerUser = await this.databaseService.registerUser(body);
+    if (registerUser.status === HttpStatus.OK) {
+      generateRegisterToken(body.email, this.databaseService, this.mailService);
+      return RETURN_DATA.SUCCESS;
+    } else {
+      return {
+        status: registerUser.status,
+        message: registerUser.message,
+      };
     }
   }
 }
 
 async function generateRegisterToken(
-  personId: number,
   email: string,
   databaseService: DatabaseService,
   mailService: MailService,
 ): Promise<string> {
   const generatedToken = nanoid();
-  const insertTokenStatus = await databaseService.insertRegisterToken(
-    personId,
-    generatedToken,
-  );
-  if (!insertTokenStatus || (insertTokenStatus && !insertTokenStatus.insertId))
-    throw new Error('Error while generating token');
+  const userId = await databaseService.getUserIdByEmail(email);
+
+  try {
+    await prisma.registerTokens.create({
+      data: {
+        persons: {
+          connect: {
+            personId: Number(userId['personId']),
+          },
+        },
+        token: generatedToken,
+      },
+    });
+  } catch (error) {
+    throw new Error('Error while generating token: ' + error);
+  }
+
   const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
   const message = {
     from: 'noreply@schoolutilities.net',
