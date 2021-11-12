@@ -8,6 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+        - name: Go to frontend folder
+          working-directory: ./frontend
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v2
           with:
