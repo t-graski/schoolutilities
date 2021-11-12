@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
-        - name: Go to frontend folder
-          working-directory: ./frontend
         - uses: actions/setup-node@v2
           with:
             node-version: "12"
-        - run: npm install
-        - run: npm run build
-        - run: npx next export
+        - name: Go to the frontend directory
+          working-directory: ./frontend  
+          run: npm install
+          run: npm run build
+          run: npx next export
         - uses: easingthemes/ssh-deploy@v2.1.1
           env:
             SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
