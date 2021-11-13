@@ -14,7 +14,8 @@ jobs:
             node-version: "12"
         - name: Build nextjs app 
           working-directory: ./frontend  
-          run: npm install
+          run: |
+               npm install
                npm run build
                npx next export
         - uses: easingthemes/ssh-deploy@v2.2.11
@@ -24,4 +25,3 @@ jobs:
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
             TARGET: ${{ secrets.REMOTE_TARGET }}       
-                
