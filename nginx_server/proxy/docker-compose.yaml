@@ -1,0 +1,18 @@
+version: '2'
+services:
+proxy:
+build: ./
+networks:
+- example1
+- example2
+ports:
+- 3000:80
+- 3000:443
+
+networks:
+example1:
+external:
+name: example1_default
+example2:
+external:
+name: example2_default
