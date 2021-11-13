@@ -34,4 +34,4 @@ jobs:
                      docker run --name schoolutilities-frontend -d -p 80:80 schoolutilities-frontend 
             host: ${{ secrets.REMOTE_HOST }}
             username: ${{ secrets.REMOTE_USER }}
-            privateKey: ${{ secrets.SSH_PRIVATE_KEY }}  
+            password: ${{ secrets.SSH_PRIVATE_KEY }}  
