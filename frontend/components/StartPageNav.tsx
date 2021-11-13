@@ -86,7 +86,7 @@ export const StartPageNav: React.FC<Props> = ({ links }) => {
         <MainContentLayout>
           <MainHeader>SchoolUtilities</MainHeader>
           <MainHeaderDescription>
-            The easiest way to manage your school discord server
+            The simplest way to manage your school discord server
           </MainHeaderDescription>
           <StyledHr />
           <MenuBubbles>
