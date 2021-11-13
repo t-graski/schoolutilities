@@ -29,7 +29,7 @@ jobs:
           uses: appleboy/ssh-action@v0.1.4
           with:
             script: |
-                     ls -al 
+                     cd ../home/REMOTE_USER/
                      docker build -t schoolutilities-frontend .
                      docker run --name schoolutilities-frontend -d -p 80:80 schoolutilities-frontend 
             host: ${{ secrets.REMOTE_HOST }}
