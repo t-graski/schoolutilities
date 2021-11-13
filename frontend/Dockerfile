@@ -1,5 +1,5 @@
 FROM node
-EXPOSE 443
+EXPOSE 3000
 WORKDIR /schoolutilites-frontend
 COPY . .
 RUN npm install -g npm@8.1.3
