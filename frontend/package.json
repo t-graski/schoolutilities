@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider; next build",
+    "build": "next build",
     "start": "export NODE_OPTIONS=--openssl-legacy-provider; next start"
   },
   "dependencies": {
