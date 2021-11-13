@@ -26,13 +26,12 @@ jobs:
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
             TARGET: ${{ secrets.REMOTE_TARGET }} 
         - name: Connect to remote server via SSH
-          uses: garygrossgarten/github-action-ssh@release
+          uses: appleboy/ssh-action@v0.1.4
           with:
-            command: |
+            script: |
                      cd frontend
                      docker build -t schoolutilities-frontend .
                      docker run --name schoolutilities-frontend -d -p 80:80 schoolutilities-frontend 
             host: ${{ secrets.REMOTE_HOST }}
             username: ${{ secrets.REMOTE_USER }}
-            passphrase: " "
             privateKey: ${{ secrets.SSH_PRIVATE_KEY }}  
