@@ -17,11 +17,11 @@ jobs:
           run: |
                npm install
                npm run build
-               npx next export
         - uses: easingthemes/ssh-deploy@v2.2.11
           env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-            SOURCE: "frontend/out/"
+            SOURCE: "frontend/"
+            EXCLUDE: "node_modules"
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
             TARGET: ${{ secrets.REMOTE_TARGET }}       
