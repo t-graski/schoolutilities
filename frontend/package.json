@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "export NODE_OPTIONS=--openssl-legacy-provider; next start -p 80"
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider; next start -p 443"
   },
   "dependencies": {
     "@stitches/react": "^1.2.1",
