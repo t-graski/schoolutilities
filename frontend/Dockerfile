@@ -1,7 +1,6 @@
 FROM node
-EXPOSE 80
-EXPOSE 443
-WORKDIR /schoolutilities
+EXPOSE 3000
+WORKDIR /server
 COPY . .
 RUN npm install
 RUN npm run build
