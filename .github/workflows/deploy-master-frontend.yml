@@ -30,8 +30,8 @@ jobs:
           with:
             script: |
                      cd ../home/REMOTE_USER/
-                     npm --version
-                     docker build -t schoolutilities-frontend .
+                     docker build -t schoolutilities-frontend . 
+                     docker kill schoolutilities-frontend
                      docker run --name schoolutilities-frontend -d -p 3000:3000 schoolutilities-frontend 
             host: ${{ secrets.REMOTE_HOST }}
             username: ${{ secrets.REMOTE_USER }}
