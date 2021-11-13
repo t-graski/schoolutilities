@@ -1,6 +1,6 @@
 FROM node
 EXPOSE 3000
-WORKDIR /server
+WORKDIR /
 COPY . .
 RUN npm install
 RUN npm run build
