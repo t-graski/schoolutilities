@@ -16,8 +16,7 @@ const MainContentLayout = styled("div", {
   padding: "0 8vw",
   width: "100%",
   marginTop: "140px",
-  minHeighht: "85vh",
-  minHeight: "100vh",
+  minHeight: "85vh",
 });
 
 const MainHeader = styled("h1", {

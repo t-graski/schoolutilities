@@ -24,18 +24,35 @@ export default function AboutUs() {
             href: "/features",
             label: "Features",
           },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
         ]}
       ></Navbar>
       <Spacer size="medium"></Spacer>
       <Headline label="About Us"></Headline>
       <Separator width="small" alignment="center" />
-      <AboutUsItem imageSrc="/media/tobias_graski.svg" imageAlt="tobias" name="Tobias" position="Chief Executive Officer" description="This is some sample text" roles={["Backend", "Database"]} />
-      <AboutUsItem imageSrc="/media/david_woegerbauer.svg" imageAlt="david" name="David" position="Chief Technology Officer" description="This is some sample text" roles={["Frontend", "Backend"]} />
-      <AboutUsItem imageSrc="/media/florian_doppler.svg" imageAlt="florian" name="Florian" position="Chief Design Officer" description="This is some sample text" roles={["Design", "Frotend"]} />
+      <AboutUsItem
+        imageSrc="/images/tobias_graski.svg"
+        imageAlt="tobias"
+        name="Tobias"
+        position="Chief Executive Officer"
+        description=""
+        roles={["Management", "Backend Developer", "Network Developer"]}
+      />
+      <AboutUsItem
+        imageSrc="/images/david_woegerbauer.svg"
+        imageAlt="david"
+        name="David"
+        position="Chief Technology Officer"
+        description=""
+        roles={["Management", "Frontend Developer", "Backend Developer"]}
+      />
+      <AboutUsItem
+        imageSrc="/images/florian_doppler.svg"
+        imageAlt="florian"
+        name="Florian"
+        position="Chief Design Officer"
+        description=""
+        roles={["Design", "Frontend Developer"]}
+      />
       <Footer
         links={[
           {

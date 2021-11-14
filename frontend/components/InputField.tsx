@@ -66,6 +66,10 @@ const ErrorMessage = styled("span", {
   color: "red",
 });
 
+const StyledImage = styled(Image, {
+  filter: "invert(100%)",
+});
+
 export const InputField: React.FC<Props> = ({
   inputType,
   value,
@@ -102,7 +106,7 @@ export const InputField: React.FC<Props> = ({
     return (
       <>
         <InputFieldLayout>
-          <Image src={iconSrc} alt={iconAlt} width="30" height="30" />
+          <StyledImage src={iconSrc} alt={iconAlt} width="30" height="30" />
           <StyledLabel>
             <StyledInputField
               type={inputType}

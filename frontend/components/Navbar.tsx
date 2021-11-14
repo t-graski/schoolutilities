@@ -212,7 +212,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
               </li>
             ))}
           </StyledLinkList>
-          <StyledAccountLink
+          {/* <StyledAccountLink
             href={userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL}
           >
             <AccountButton>
@@ -231,7 +231,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
                 {userData ? userData.username : "Login"}
               </AccountButtonText>
             </AccountButton>
-          </StyledAccountLink>
+          </StyledAccountLink> */}
         </NavbarContentLayout>
       </NavbarLayout>
     </>
