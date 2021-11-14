@@ -70,7 +70,7 @@ export default function Home() {
             // },
             {
               href: "/auth/register",
-              label: "Registrieren",
+              label: "Register",
               imageSrc: "/images/change_log.svg",
               imageAlt: "Register",
             },
