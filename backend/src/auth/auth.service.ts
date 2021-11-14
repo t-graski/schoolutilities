@@ -1,10 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
-import { UsersService } from '../users/users.service';
 import { jwtConstants } from './constants';
 import { RefreshTokenService } from './refreshToken/refreshToken.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -41,7 +40,6 @@ export class AuthService {
       refreshToken,
       payload.person_id,
     );
-    console.log(insertReturnValue);
     if (insertReturnValue.affectedRows === 1) {
       return {
         access_token: this.jwtService.sign(payload),

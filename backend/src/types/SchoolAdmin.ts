@@ -63,3 +63,44 @@ export interface ClassTable {
   className: string;
   departmentId: number;
 }
+
+export interface AddJoinCode {
+  schoolId: number;
+  expireDate: Date;
+  name?: string;
+  personId: number;
+}
+
+export interface AddJoinCodeReturnValue {
+  status: number;
+  message: string;
+  data?: {
+    joinCodeId: number;
+    joinCode: string;
+  };
+}
+
+export interface RemoveJoinCode {
+  joinCodeId: number;
+}
+
+export interface RemoveJoinCodeReturnValue {
+  status: number;
+  message: string;
+}
+
+export interface JoinCodeTable {
+  joinCodeId: number;
+  schoolId: number;
+  joinCode: string;
+  expireDate: Date;
+  name: string;
+  personId: number;
+  creationDate: Date;
+}
+
+export interface updateJoinCode {
+  joinCodeId: number;
+  expireDate?: Date;
+  name?: string;
+}

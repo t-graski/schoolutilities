@@ -69,4 +69,25 @@ export class SchoolAdminController {
     const result = await this.schoolAdminService.updateClass(request.body);
     return response.status(result.status).json(result?.message);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/joinCode')
+  async addJoinCode(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.addJoinCode(request.body);
+    return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/joinCode')
+  async removeJoinCode(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.removeJoinCode(request.body);
+    return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/joinCode')
+  async updateJoinCode(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.updateJoinCode(request.body);
+    return response.status(result.status).json(result?.message);
+  }
 }
