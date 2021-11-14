@@ -33,9 +33,9 @@ export default function AboutUs() {
       <Spacer size="medium"></Spacer>
       <Headline label="About Us"></Headline>
       <Separator width="small" alignment="center" />
-      <AboutUsItem imageSrc="/media/user.svg" imageAlt="user" name="Tobias" position="Chief Executive Officer" description="This is some sample text" roles={["Backend", "Database"]} />
-      <AboutUsItem imageSrc="/media/user.svg" imageAlt="user" name="David" position="Chief Technology Officer" description="This is some sample text" roles={["Frontend", "Backend"]} />
-      <AboutUsItem imageSrc="/media/user.svg" imageAlt="user" name="Florian" position="Chief Design Officer" description="This is some sample text" roles={["Design", "Frotend"]} />
+      <AboutUsItem imageSrc="/media/tobias_graski.svg" imageAlt="tobias" name="Tobias" position="Chief Executive Officer" description="This is some sample text" roles={["Backend", "Database"]} />
+      <AboutUsItem imageSrc="/media/david_woegerbauer.svg" imageAlt="david" name="David" position="Chief Technology Officer" description="This is some sample text" roles={["Frontend", "Backend"]} />
+      <AboutUsItem imageSrc="/media/florian_doppler.svg" imageAlt="florian" name="Florian" position="Chief Design Officer" description="This is some sample text" roles={["Design", "Frotend"]} />
       <Footer
         links={[
           {
