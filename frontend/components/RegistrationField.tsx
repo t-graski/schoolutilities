@@ -7,6 +7,7 @@ import { InputField } from "./InputField";
 import { Button } from "./Button";
 import Link from "next/link";
 import { regex } from "../misc/regex";
+import { useRouter } from "next/router";
 
 if (!globalThis.fetch) {
   //@ts-ignore
@@ -32,9 +33,12 @@ export const RegistrationField: React.FC<Props> = ({}) => {
   const [password, setPassword] = React.useState("");
   const [passwordValid, setPasswordValid] = React.useState(false);
   const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
-  const [passwordConfirmationValid, setPasswordConfirmationValid] = React.useState(false);
+  const [passwordConfirmationValid, setPasswordConfirmationValid] =
+    React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(true);
+
+  const [signUpInfo, setSignUpInfo] = React.useState("");
 
   checkInputData();
 
@@ -68,7 +72,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
         password,
       })
     );
-    // Send post request to the url with data of the form
     fetch("http://localhost:8888/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
@@ -84,107 +87,112 @@ export const RegistrationField: React.FC<Props> = ({}) => {
       .then((statusCode) => {
         console.log(statusCode);
         if (statusCode == 200) {
-          console.log("Success");
+          setSignUpInfo("Ihr Account wurde erfolgreich erstellt");
         } else {
-          console.log("Error");
+          setSignUpInfo("Ihr Account konnte nicht erstellt werden");
         }
       });
   }
 
   return (
     <>
-      <RegistrationLayout onSubmit={handleSubmit}>
-        <InputField
-          label="Firstname"
-          inputType="text"
-          value={firstName}
-          onChange={setFirstName}
-          iconSrc="/images/user.svg"
-          iconAlt=""
-          required={true}
-          regex={regex.name}
-          setValidInput={setFirstNameValid}
-          errorMessage="Please enter a valid firstname"
-        ></InputField>
-        <InputField
-          label="Lastname"
-          inputType="text"
-          value={lastName}
-          onChange={setLastName}
-          iconSrc="/images/user.svg"
-          iconAlt=""
-          required={true}
-          regex={regex.name}
-          setValidInput={setLastNameValid}
-          errorMessage="Please enter a valid name"
-        ></InputField>
-        <InputField
-          label="Date Of Birth (DD.MM.YYYY)"
-          inputType="date"
-          value={birthDate}
-          onChange={setBirthDate}
-          iconSrc="/images/user.svg"
-          iconAlt=""
-          required={true}
-        ></InputField>
-        <InputField
-          label="Email"
-          inputType="email"
-          value={email}
-          onChange={setEmail}
-          iconSrc="/images/user.svg"
-          iconAlt=""
-          required={true}
-          regex={regex.email}
-          setValidInput={setEmailValid}
-          errorMessage="Please enter a valid email"
-        ></InputField>
-        <InputField
-          label="Password"
-          inputType="password"
-          value={password}
-          onChange={setPassword}
-          iconSrc="/images/user.svg"
-          iconAlt=""
-          required={true}
-          regex={regex.password}
-          setValidInput={setPasswordValid}
-          errorMessage="Please enter a valid password"
-        ></InputField>
-        <InputField
-          label="Password Confirmation"
-          inputType="password"
-          value={passwordConfirmation}
-          onChange={setPasswordConfirmation}
-          iconSrc="/images/user.svg"
-          iconAlt=""
-          required={true}
-          regex={regex.password}
-          setValidInput={setPasswordConfirmationValid}
-          errorMessage="Please enter a valid password"
-        ></InputField>
-        <InputField
-          inputType="checkbox"
-          onChange={setTermsAccepted}
-          iconSrc=""
-          iconAlt=""
-          required={true}
-        >
-          I agree to all{" "}
-          <a href="/data-policy" target="_blank">
-            Terms & Conditions
-          </a>
-        </InputField>
-        <Button
-          backgroundColor="primary"
-          color="primary"
-          label="Sign up"
-          onClick={() => {}}
-          disabled={isDisabled}
-        >
-          Register
-        </Button>
-      </RegistrationLayout>
+      {!signUpInfo && (
+        <RegistrationLayout onSubmit={handleSubmit}>
+          <InputField
+            label="Firstname"
+            inputType="text"
+            value={firstName}
+            onChange={setFirstName}
+            iconSrc="/images/user.svg"
+            iconAlt=""
+            required={true}
+            regex={regex.name}
+            setValidInput={setFirstNameValid}
+            errorMessage="Please enter a valid firstname"
+          ></InputField>
+          <InputField
+            label="Lastname"
+            inputType="text"
+            value={lastName}
+            onChange={setLastName}
+            iconSrc="/images/user.svg"
+            iconAlt=""
+            required={true}
+            regex={regex.name}
+            setValidInput={setLastNameValid}
+            errorMessage="Please enter a valid name"
+          ></InputField>
+          <InputField
+            label="Date Of Birth (DD.MM.YYYY)"
+            inputType="date"
+            value={birthDate}
+            onChange={setBirthDate}
+            iconSrc="/images/user.svg"
+            iconAlt=""
+            required={true}
+            min="1900-01-01"
+            max={new Date().toJSON().split("T")[0]}
+          ></InputField>
+          <InputField
+            label="Email"
+            inputType="email"
+            value={email}
+            onChange={setEmail}
+            iconSrc="/images/user.svg"
+            iconAlt=""
+            required={true}
+            regex={regex.email}
+            setValidInput={setEmailValid}
+            errorMessage="Please enter a valid email"
+          ></InputField>
+          <InputField
+            label="Password"
+            inputType="password"
+            value={password}
+            onChange={setPassword}
+            iconSrc="/images/user.svg"
+            iconAlt=""
+            required={true}
+            regex={regex.password}
+            setValidInput={setPasswordValid}
+            errorMessage="Please enter a valid password"
+          ></InputField>
+          <InputField
+            label="Password Confirmation"
+            inputType="password"
+            value={passwordConfirmation}
+            onChange={setPasswordConfirmation}
+            iconSrc="/images/user.svg"
+            iconAlt=""
+            required={true}
+            regex={regex.password}
+            setValidInput={setPasswordConfirmationValid}
+            errorMessage="Please enter a valid password"
+          ></InputField>
+          <InputField
+            inputType="checkbox"
+            onChange={setTermsAccepted}
+            iconSrc=""
+            iconAlt=""
+            required={true}
+          >
+            I agree to all{" "}
+            <a href="/data-policy" target="_blank">
+              Terms & Conditions
+            </a>
+          </InputField>
+          <Button
+            backgroundColor="primary"
+            color="primary"
+            label="Sign up"
+            onClick={() => {}}
+            disabled={isDisabled}
+          >
+            Register
+          </Button>
+        </RegistrationLayout>
+      )}
+      <h3>{signUpInfo}</h3>
     </>
   );
 };

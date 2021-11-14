@@ -14,6 +14,8 @@ type Props = {
   regex?: RegExp;
   setValidInput?: Function;
   errorMessage?: string;
+  min?: string;
+  max?: string;
 };
 
 const StyledInputField = styled("input", {
@@ -76,6 +78,8 @@ export const InputField: React.FC<Props> = ({
   regex,
   setValidInput,
   errorMessage = "",
+  min,
+  max,
 }) => {
   if (inputType === "checkbox") {
     return (
@@ -106,17 +110,25 @@ export const InputField: React.FC<Props> = ({
               name={label}
               placeholder={label}
               onChange={(e) => {
-                if (regex && regex.test(e.target.value)) {
-                  setValidInput(true);
-                  setIsInputValid(true);
+                let inputValueValid = regex && regex.test(e.target.value);
+                if (setValidInput) {
+                  setValidInput(inputValueValid);
+                }
+                if (isInputValid == null && !inputValueValid) {
+                  setTimeout(() => {
+                    if (regex && !regex.test(e.target.value)) {
+                      setIsInputValid(false);
+                    }
+                  }, 2000);
                 } else {
-                  setValidInput(false);
-                  setIsInputValid(false);
+                  setIsInputValid(inputValueValid);
                 }
                 onChange(e.target.value);
               }}
               inputType={inputType}
               {...(required && { required: true })}
+              {...(min && { min })}
+              {...(max && { max })}
             />
           </StyledLabel>
         </InputFieldLayout>
