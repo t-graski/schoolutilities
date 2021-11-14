@@ -1,6 +1,6 @@
-import React from 'react'
-import NextDocument, { Html, Head, Main, NextScript } from 'next/document'
-import { getCssText } from '../stitches.config'
+import React from "react";
+import NextDocument, { Html, Head, Main, NextScript } from "next/document";
+import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
   render() {
@@ -50,7 +50,45 @@ export default class Document extends NextDocument {
             crossOrigin="anonymous"
           />
           <script type="text/javascript" src="/redirectLogin.js">
+            <script
+              async
+              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+            ></script>
           </script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+              <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+
+                gtag('config', 'G-879Y3BTW0K');
+              </script>`,
+            }}
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `   
+                <script>
+                  (function (h, o, t, j, a, r) {
+                      h.hj =
+                          h.hj ||
+                          function () {
+                              (h.hj.q = h.hj.q || []).push(arguments);
+                          };
+                      h._hjSettings = { hjid: 2566202, hjsv: 6 };
+                      a = o.getElementsByTagName('head')[0];
+                      r = o.createElement('script');
+                      r.async = 1;
+                      r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                      a.appendChild(r);
+                  })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+                </script>`,
+            }}
+          ></script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
@@ -111,6 +149,6 @@ export default class Document extends NextDocument {
           <NextScript />
         </body>
       </Html>
-    )
+    );
   }
 }

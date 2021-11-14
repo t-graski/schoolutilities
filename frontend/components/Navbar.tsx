@@ -206,8 +206,8 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
 
         <NavbarContentLayout>
           <StyledLinkList isOnMain={isOnMain}>
-            {links.map((link) => (
-              <li>
+            {links.map((link, index) => (
+              <li key={index}>
                 <StyledLink href={link.href}>{link.label}</StyledLink>
               </li>
             ))}
