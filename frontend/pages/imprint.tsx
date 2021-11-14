@@ -52,6 +52,8 @@ export default function Features() {
           CEO: Tobias Graski
           <br />
           CTO: David Wögerbauer
+          <br />
+          CDO: Florian Doppler
         </MainContentText>
         <Spacer size="small"></Spacer>
 
