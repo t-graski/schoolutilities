@@ -52,8 +52,7 @@ export const RegistrationInfoBox: React.FC<Props> = ({}) => {
           fontWeight="extraBold"
         ></StyledHeadline>
         <StyledText>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          euismod, nisl eget consectetur sagittis, nisl nunc egestas
+        Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!
         </StyledText>
         <ImageLayout>
           <Image
