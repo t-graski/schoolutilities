@@ -33,7 +33,7 @@ export const RegisterAuth = () => {
       token: token,
     });
     console.log(requestBody);
-    fetch("http://localhost:8888/api/user/activateAccount", {
+    fetch("http://168.119.227.44:8888/api/user/activateAccount", {
       method: "POST",
       body: requestBody,
       headers: { "Content-Type": "application/json" },

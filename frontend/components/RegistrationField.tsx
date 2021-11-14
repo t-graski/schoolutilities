@@ -72,7 +72,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
         password,
       })
     );
-    fetch("http://localhost:8888/api/auth/register", {
+    fetch("http://168.119.227.44:8888/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
         firstName,

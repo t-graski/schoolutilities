@@ -49,11 +49,11 @@ export default function Features() {
           contact@schoolutilities.com
           </a>
           <br />
-          CEO: Tobias Graski
+          Chief Executive Officer: Tobias Graski
           <br />
-          CTO: David Wögerbauer
+          Chief Technology Officer: David Wögerbauer
           <br />
-          CDO: Florian Doppler
+          Chief Design Officer: Florian Doppler
         </MainContentText>
         <Spacer size="small"></Spacer>
 
