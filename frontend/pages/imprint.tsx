@@ -44,16 +44,16 @@ export default function Features() {
         <h2>SchoolUtilities</h2>
         <Spacer size="small"></Spacer>
         <MainContentText>
-          Auhirschgasse 5 A-4030 Linz
-          <br />
           E-Mail:{" "}
-          <a href="mailto:schoolutilities.bot@gmail.com">
-            schoolutilities.bot@gmail.com
+          <a href="mailto:contact@schoolutilities.com">
+          contact@schoolutilities.com
           </a>
           <br />
           CEO: Tobias Graski
           <br />
-          CDO: David Wögerbauer
+          CTO: David Wögerbauer
+          <br />
+          CDO: Florian Doppler
         </MainContentText>
         <Spacer size="small"></Spacer>
 
