@@ -75,8 +75,8 @@ export const AboutUsItem: React.FC<AboutUsItem> = ({
           <ImageDimension>
             <Image
               layout="fill"
-              src="/images/avatar.png"
-              alt="SchoolUtilities Logo"
+              src={imageSrc}
+              alt={imageAlt}
             ></Image>
           </ImageDimension>
           <VerticalLine></VerticalLine>

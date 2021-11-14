@@ -49,11 +49,7 @@ export default function Home() {
           {
             href: "/features",
             label: "Features",
-          },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
+          }
         ]}
         isOnMain={true}
       ></Navbar>
@@ -71,7 +67,7 @@ export default function Home() {
             {
               href: "/auth/register",
               label: "Register",
-              imageSrc: "/images/change_log.svg",
+              imageSrc: "/images/user.svg",
               imageAlt: "Register",
             },
             {

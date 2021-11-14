@@ -72,7 +72,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
         password,
       })
     );
-    fetch("https://168.119.227.44:8888/api/auth/register", {
+    fetch("https://backend.schoolutilities.net:8888/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
         firstName,
@@ -87,9 +87,9 @@ export const RegistrationField: React.FC<Props> = ({}) => {
       .then((statusCode) => {
         console.log(statusCode);
         if (statusCode == 200) {
-          setSignUpInfo("Ihr Account wurde erfolgreich erstellt");
+          setSignUpInfo("Your account has been created");
         } else {
-          setSignUpInfo("Ihr Account konnte nicht erstellt werden");
+          setSignUpInfo("Your account could not be created");
         }
       });
   }
@@ -120,7 +120,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             required={true}
             regex={regex.name}
             setValidInput={setLastNameValid}
-            errorMessage="Please enter a valid name"
+            errorMessage="Please enter a valid lastname"
           ></InputField>
           <InputField
             label="Date Of Birth (DD.MM.YYYY)"
