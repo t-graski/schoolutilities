@@ -6,6 +6,7 @@
     "start": "export NODE_OPTIONS=--openssl-legacy-provider; next start"
   },
   "dependencies": {
+    "@radix-ui/react-tooltip": "^0.1.1",
     "@stitches/react": "^1.2.1",
     "@types/react": "^17.0.26",
     "axios": "^0.21.4",
