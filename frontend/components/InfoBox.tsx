@@ -12,7 +12,12 @@ if (!globalThis.fetch) {
   globalThis.fetch = fetch;
 }
 
-type Props = {};
+type Props = {
+  headline: string;
+  info: string;
+  imageSrc: string;
+  imageAlt: string;
+};
 
 const RegistrationLayout = styled("div", {
   display: "flex",
@@ -42,24 +47,23 @@ const ImageLayout = styled("div", {
   },
 });
 
-export const RegistrationInfoBox: React.FC<Props> = ({}) => {
+export const InfoBox: React.FC<Props> = ({
+  headline,
+  info,
+  imageSrc,
+  imageAlt,
+}) => {
   return (
     <>
       <RegistrationLayout>
         <StyledHeadline
-          label="Sign Up"
+          label={headline}
           alignment="left"
           fontWeight="extraBold"
         ></StyledHeadline>
-        <StyledText>
-        Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!
-        </StyledText>
+        <StyledText>{info}</StyledText>
         <ImageLayout>
-          <Image
-            src="/images/auth/Sign-Up-Mockup.png"
-            alt="Sign Up Mockup"
-            layout="fill"
-          ></Image>
+          <Image src={imageSrc} alt={imageAlt} layout="fill"></Image>
         </ImageLayout>
       </RegistrationLayout>
     </>
