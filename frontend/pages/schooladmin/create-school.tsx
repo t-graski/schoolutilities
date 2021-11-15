@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Footer } from "../../components/Footer";
 import { Navbar } from "../../components/Navbar";
 import { Progressbar } from "../../components/Progressbar";
+import { SchoolDetailField } from "../../components/SchoolDetailField";
+import { SetupProgressSite } from "../../components/SetupProgressSite";
 import { Spacer } from "../../components/Spacer";
 import { styled } from "../../stitches.config";
 
@@ -16,22 +18,26 @@ export default function CreateSchool() {
     {
       label: "School Details",
       isDone: true,
-      isActive: true,
+      isActive: false,
+      component: SchoolDetailField,
     },
     {
       label: "Departments",
       isDone: false,
-      isActive: false,
+      isActive: true,
+      component: SchoolDetailField,
     },
     {
       label: "Students",
       isDone: false,
       isActive: false,
+      component: SchoolDetailField,
     },
     {
       label: "Classes",
       isDone: false,
       isActive: false,
+      component: SchoolDetailField,
     },
   ]);
 
@@ -51,7 +57,7 @@ export default function CreateSchool() {
       ></Navbar>
       <Spacer size="medium"></Spacer>
       <CreateSchoolLayout>
-        <Progressbar steps={progressSteps}></Progressbar>
+        <SetupProgressSite steps={progressSteps}></SetupProgressSite>
       </CreateSchoolLayout>
       <Footer
         links={[

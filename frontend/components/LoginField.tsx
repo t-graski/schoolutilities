@@ -46,7 +46,7 @@ export const LoginField: React.FC<Props> = ({}) => {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    fetch("https://www.schoolutilities.net:3333/api/auth/login", {
+    fetch("http://localhost:8888/api/auth/login", {
       method: "POST",
       body: JSON.stringify({
         email,

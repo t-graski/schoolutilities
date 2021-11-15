@@ -22,6 +22,8 @@ const ProgressbarLayout = styled("div", {
   flexDirection: "column",
   width: "100%",
   height: "40px",
+  marginRight: "40px",
+  boxSizing: "border-box",
   position: "relative",
 });
 
@@ -91,12 +93,12 @@ export const Progressbar: React.FC<Props> = ({ steps }) => {
   return (
     <>
       <ProgressbarLayout>
+        <StyledProgressbarBackground></StyledProgressbarBackground>
         <StyledProgressbar
           css={{
             width: `${progress}%`,
           }}
         ></StyledProgressbar>
-        <StyledProgressbarBackground></StyledProgressbarBackground>
         {steps.map((step, index) => {
           const stepProgress = (index * 100) / steps.length;
           return (
@@ -108,6 +110,7 @@ export const Progressbar: React.FC<Props> = ({ steps }) => {
               state={
                 step.isDone ? "done" : step.isActive ? "active" : "default"
               }
+              title={step.label}
             ></ProgressPoint>
           );
         })}

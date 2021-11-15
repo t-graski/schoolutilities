@@ -173,10 +173,10 @@ const StyledAccountLink = styled("a", {
 
 export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
   const [userData, setUserData] = useState(null);
-  if (cookie.get("access_token")) {
-    let token = cookie.get("access_token");
+  if (cookie.get("accessToken")) {
+    let token = cookie.get("accessToken");
     useEffect(() => {
-      fetch("https://discord.com/api/users/@me", {
+      fetch("http://localhost:8888/api/auth/profile", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -186,6 +186,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
         .then((response) => response.json())
         .then((jsonResponse) => {
           setUserData(jsonResponse);
+          console.log(userData);
         });
     }, []);
   }
@@ -212,26 +213,22 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
               </li>
             ))}
           </StyledLinkList>
-          {/* <StyledAccountLink
-            href={userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL}
+          <StyledAccountLink
+            href={userData ? "/auth/login" : "/auth/login"}
           >
             <AccountButton>
               <AccountButtonIconLayout>
                 <StyledAccountImage
                   layout="fill"
-                  src={
-                    userData
-                      ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}`
-                      : "/images/user.svg"
-                  }
+                  src="/images/user.svg"
                   alt="SchoolUtilities Logo"
                 />
               </AccountButtonIconLayout>
               <AccountButtonText>
-                {userData ? userData.username : "Login"}
+                {userData ? userData.firstname : "Login"}
               </AccountButtonText>
             </AccountButton>
-          </StyledAccountLink> */}
+          </StyledAccountLink>
         </NavbarContentLayout>
       </NavbarLayout>
     </>

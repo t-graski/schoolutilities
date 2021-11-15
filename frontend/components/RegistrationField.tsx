@@ -72,7 +72,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
         password,
       })
     );
-    fetch("https://www.schoolutilities.net:3333/api/auth/register", {
+    fetch("http://localhost:8888/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
         firstName,
