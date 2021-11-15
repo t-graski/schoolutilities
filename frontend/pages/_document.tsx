@@ -49,19 +49,19 @@ export default class Document extends NextDocument {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          <script type="text/javascript" src="/redirectLogin.js">
-            <script
-              async
-              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-            ></script>
-          </script>
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+          ></script>
           <script
             dangerouslySetInnerHTML={{
               __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', 'G-879Y3BTW0K');`,
+                gtag('config', 'G-879Y3BTW0K', {
+                  page_path: window.location.pathname,
+                });`,
             }}
           ></script>
           <style
