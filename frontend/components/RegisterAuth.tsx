@@ -60,10 +60,6 @@ export const RegisterAuth = () => {
             href: "/features",
             label: "Features",
           },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
         ]}
       ></Navbar>
       <Spacer size="medium"></Spacer>

@@ -28,10 +28,6 @@ export default function Register() {
             href: "/features",
             label: "Features",
           },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
         ]}
       ></Navbar>
       <Spacer size="medium"></Spacer>

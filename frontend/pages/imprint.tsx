@@ -31,10 +31,6 @@ export default function Features() {
             href: "/features",
             label: "Features",
           },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
         ]}
       ></Navbar>
       <Spacer size="medium"></Spacer>
@@ -46,7 +42,7 @@ export default function Features() {
         <MainContentText>
           E-Mail:{" "}
           <a href="mailto:contact@schoolutilities.com">
-          contact@schoolutilities.com
+            contact@schoolutilities.com
           </a>
           <br />
           Chief Executive Officer: Tobias Graski
