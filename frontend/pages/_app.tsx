@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { globalCss } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
-import * as gtag from "../lib/gtag";
 
 const globalStyles = globalCss({
   "*": {
@@ -26,15 +25,6 @@ function App({ Component, pageProps }: AppProps) {
     hotjar.initialize(2700632, 6);
   }, []);
   const router = useRouter();
-  useEffect(() => {
-    const handleRouteChange = (url) => {
-      gtag.pageview(url);
-    };
-    router.events.on("routeChangeComplete", handleRouteChange);
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router.events]);
 
   globalStyles();
 
