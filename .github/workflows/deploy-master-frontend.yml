@@ -1,40 +1,40 @@
-# name: Deploy frontend
+name: Deploy frontend
 
-# on:
-#   push:
-#     branches:
-#       - master
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#         - uses: actions/checkout@v2
-#         - uses: actions/setup-node@v2
-#           with:
-#             node-version: "12"
-#         - name: Build nextjs app 
-#           working-directory: ./frontend  
-#           run: |
-#                npm install
-#                npm run build
-#         - uses: easingthemes/ssh-deploy@v2.2.11
-#           env:
-#             SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-#             SOURCE: "frontend/"
-#             EXCLUDE: "node_modules"
-#             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-#             REMOTE_USER: ${{ secrets.REMOTE_USER }}
-#             TARGET: ${{ secrets.REMOTE_TARGET }} 
-#         - name: Connect to remote server via SSH
-#           uses: appleboy/ssh-action@v0.1.4
-#           with:
-#             script: |
-#                      cd ../home/REMOTE_USER/
-#                      docker build -t schoolutilities-frontend . 
-#                      docker stop schoolutilities-frontend || true && docker rm schoolutilities-frontend || true
-#                      docker run --name schoolutilities-frontend -d -p 3000:3000 schoolutilities-frontend 
-#             host: ${{ secrets.REMOTE_HOST }}
-#             username: ${{ secrets.REMOTE_USER }}
-#             password: ""
-#             key: ${{ secrets.SSH_PRIVATE_KEY }}   
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v2
+          with:
+            node-version: "12"
+        - name: Build nextjs app 
+          working-directory: ./frontend  
+          run: |
+               npm install
+               npm run build
+        - uses: easingthemes/ssh-deploy@v2.2.11
+          env:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            SOURCE: "frontend/"
+            EXCLUDE: "node_modules"
+            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
+            TARGET: ${{ secrets.REMOTE_TARGET }} 
+        - name: Connect to remote server via SSH
+          uses: appleboy/ssh-action@v0.1.4
+          with:
+            script: |
+                     cd ../home/REMOTE_USER/
+                     docker build -t schoolutilities-frontend . 
+                     docker stop schoolutilities-frontend || true && docker rm schoolutilities-frontend || true
+                     docker run --name schoolutilities-frontend -d -p 3000:3000 schoolutilities-frontend 
+            host: ${{ secrets.REMOTE_HOST }}
+            username: ${{ secrets.REMOTE_USER }}
+            password: ""
+            key: ${{ secrets.SSH_PRIVATE_KEY }}   
 
