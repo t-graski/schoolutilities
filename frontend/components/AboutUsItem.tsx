@@ -56,10 +56,10 @@ const ImageLayout = styled("div", {
   justifyContent: "center",
 });
 
-const AboutUsRolesTitle = styled("h3",{
+const AboutUsRolesTitle = styled("h3", {
   paddingBottom: "0.9vh",
-  paddingTop: "1vh"
-})
+  paddingTop: "1vh",
+});
 export const AboutUsItem: React.FC<AboutUsItem> = ({
   imageSrc,
   imageAlt,
@@ -75,14 +75,14 @@ export const AboutUsItem: React.FC<AboutUsItem> = ({
           <ImageDimension>
             <Image
               layout="fill"
-              src="/images/avatar.png"
-              alt="SchoolUtilities Logo"
+              src={imageSrc}
+              alt={imageAlt}
             ></Image>
           </ImageDimension>
           <VerticalLine></VerticalLine>
         </ImageLayout>
         <AboutUsTextLayout>
-        <Spacer size="verySmall"></Spacer>
+          <Spacer size="verySmall"></Spacer>
           <AboutUsTextHeader>
             {name} ({position})
           </AboutUsTextHeader>
@@ -90,7 +90,7 @@ export const AboutUsItem: React.FC<AboutUsItem> = ({
           <AboutUsTextRoles>
             <AboutUsRolesTitle>Roles:</AboutUsRolesTitle>
             {roles.map((role, index) => (
-              <li>{role}</li>
+              <li key={index}>{role}</li>
             ))}
           </AboutUsTextRoles>
         </AboutUsTextLayout>

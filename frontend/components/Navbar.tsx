@@ -206,13 +206,13 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
 
         <NavbarContentLayout>
           <StyledLinkList isOnMain={isOnMain}>
-            {links.map((link) => (
-              <li>
+            {links.map((link, index) => (
+              <li key={index}>
                 <StyledLink href={link.href}>{link.label}</StyledLink>
               </li>
             ))}
           </StyledLinkList>
-          <StyledAccountLink
+          {/* <StyledAccountLink
             href={userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL}
           >
             <AccountButton>
@@ -231,7 +231,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
                 {userData ? userData.username : "Login"}
               </AccountButtonText>
             </AccountButton>
-          </StyledAccountLink>
+          </StyledAccountLink> */}
         </NavbarContentLayout>
       </NavbarLayout>
     </>

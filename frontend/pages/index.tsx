@@ -49,24 +49,26 @@ export default function Home() {
           {
             href: "/features",
             label: "Features",
-          },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
+          }
         ]}
         isOnMain={true}
       ></Navbar>
       <Maincontent>
         <StartPageNav
           links={[
+            // {
+            //   href: userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL,
+            //   label: userData ? "Dashboard" : "Login with Discord",
+            //   imageSrc: userData
+            //     ? "/images/business-report.svg"
+            //     : "/images/discord.svg",
+            //   imageAlt: "Discord logo",
+            // },
             {
-              href: userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL,
-              label: userData ? "Dashboard" : "Login with Discord",
-              imageSrc: userData
-                ? "/images/business-report.svg"
-                : "/images/discord.svg",
-              imageAlt: "Discord logo",
+              href: "/auth/register",
+              label: "Register",
+              imageSrc: "/images/user.svg",
+              imageAlt: "Register",
             },
             {
               href: "/features",
@@ -79,12 +81,6 @@ export default function Home() {
               label: "About us",
               imageSrc: "/images/about_us.svg",
               imageAlt: "Speech bubble",
-            },
-            {
-              href: "/change-log",
-              label: "Change Log",
-              imageSrc: "/images/change_log.svg",
-              imageAlt: "Change Log",
             },
           ]}
         ></StartPageNav>
