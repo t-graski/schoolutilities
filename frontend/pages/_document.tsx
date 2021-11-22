@@ -30,6 +30,7 @@ export default class Document extends NextDocument {
             type="font/woff"
             crossOrigin="anonymous"
           />
+          
           <link
             rel="preload"
             href="/fonts/montserrat-v18-latin-500.woff"
