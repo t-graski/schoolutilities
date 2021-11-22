@@ -30,7 +30,7 @@ jobs:
           uses: appleboy/ssh-action@v0.1.4
           with:
             script: |
-                     cd ../home/backend/
+                     cd ../home/REMOTE_USER/
                      docker build -t schoolutilities-backend . 
                      docker stop schoolutilities-backend || true && docker rm schoolutilities-backend || true
                      docker run --name schoolutilities-backend -d -p 8888:8888 schoolutilities-backend 
