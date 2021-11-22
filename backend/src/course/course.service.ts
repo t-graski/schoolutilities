@@ -13,6 +13,7 @@ import {
 } from 'src/types/Course';
 import { ReturnMessage } from 'src/types/SchoolAdmin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
