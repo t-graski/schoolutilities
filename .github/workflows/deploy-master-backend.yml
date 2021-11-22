@@ -1,9 +1,11 @@
-name: Deploy frontend
+name: Deploy backend
 
 on:
   push:
     branches:
       - master
+    paths: 
+      -  ./backend
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,5 +39,5 @@ jobs:
             username: ${{ secrets.BACKEND_REMOTE_USER }}
             password: ""
             key: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}  
-                    
+
 
