@@ -34,7 +34,7 @@ jobs:
                      docker build -t schoolutilities-backend . 
                      docker stop schoolutilities-backend || true && docker rm schoolutilities-backend || true
                      docker run --name schoolutilities-backend -d -p 8888:8888 schoolutilities-backend 
-            host: ${{ secrets.BACKENDREMOTE_HOST }}
+            host: ${{ secrets.BACKEND_REMOTE_HOST }}
             username: ${{ secrets.BACKEND_REMOTE_USER }}
             password: ""
             key: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}  
