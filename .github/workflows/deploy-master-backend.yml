@@ -13,7 +13,7 @@ jobs:
         - uses: actions/setup-node@v2
           with:
             node-version: "12"
-        - name: Build nextjs app 
+        - name: Build nestjs app 
           working-directory: ./backend 
           run: |
                npm install
@@ -38,6 +38,4 @@ jobs:
             username: ${{ secrets.BACKEND_REMOTE_USER }}
             password: ""
             key: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}  
-
-
 
