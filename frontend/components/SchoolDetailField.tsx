@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
 import type * as Stitches from "@stitches/react";
@@ -27,19 +27,23 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
   const [schoolTimezoneValid, setSchoolTimezoneValid] = React.useState(false);
   const [isDisabled, setIsDisabled] = React.useState(false);
 
-  checkInputData();
-
-  function checkInputData() {
+  useEffect(() => {
     if (schoolNameValid && schoolLanguageValid && schoolTimezoneValid) {
       if (isDisabled) {
         setIsDisabled(false);
         setDisabled(false);
       }
+      // save schoolName, schoolLanguage, schoolTimezone as schoolDetails with to localStorage
+      localStorage.setItem("schoolDetails", JSON.stringify({
+        schoolName,
+        schoolLanguage,
+        schoolTimezone
+      }));
     } else if (!isDisabled) {
       setIsDisabled(true);
       setDisabled(true);
     }
-  }
+  });
 
   return (
     <>
@@ -80,15 +84,6 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           setValidInput={setSchoolTimezoneValid}
           errorMessage="Please enter a valid Timezone"
         ></InputField>
-        <Button
-          backgroundColor="primary"
-          color="primary"
-          label="Sign up"
-          onClick={() => {}}
-          disabled={isDisabled}
-        >
-          Register
-        </Button>
       </SchoolDetailLayout>
     </>
   );

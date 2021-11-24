@@ -30,7 +30,6 @@ const StyledInputField = styled("input", {
   borderBottom: "solid 1px transparent",
   fontFamily: "$fontPrimary",
   fontWeight: "bold",
-  marginLeft: "20px",
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },
@@ -56,10 +55,12 @@ const InputFieldLayout = styled("div", {
   borderRadius: "20px",
   border: "none",
   padding: "15px 20px",
+  gap: "20px",
 });
 
 const StyledLabel = styled("label", {
   height: "fit-content",
+  width: "100%",
 });
 
 const ErrorMessage = styled("span", {

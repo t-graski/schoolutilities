@@ -86,6 +86,8 @@ export const Progressbar: React.FC<Props> = ({ steps }) => {
       if (steps[i - 1].isDone) {
         setProgress((i * 100) / steps.length + 1);
         break;
+      } else {
+        setProgress(0);
       }
     }
   });

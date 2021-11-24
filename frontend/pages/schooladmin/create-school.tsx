@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Footer } from "../../components/Footer";
+import { LoginField } from "../../components/LoginField";
 import { Navbar } from "../../components/Navbar";
 import { Progressbar } from "../../components/Progressbar";
 import { SchoolDetailField } from "../../components/SchoolDetailField";
@@ -17,14 +18,14 @@ export default function CreateSchool() {
   const [progressSteps, setProgressSteps] = useState([
     {
       label: "School Details",
-      isDone: true,
-      isActive: false,
+      isDone: false,
+      isActive: true,
       component: SchoolDetailField,
     },
     {
       label: "Departments",
       isDone: false,
-      isActive: true,
+      isActive: false,
       component: SchoolDetailField,
     },
     {
