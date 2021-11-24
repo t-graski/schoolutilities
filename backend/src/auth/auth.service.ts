@@ -37,7 +37,7 @@ export class AuthService {
   async login(user: any) {
     const payload = user;
     const refreshToken = this.jwtService.sign(
-      { id: payload.person_id },
+      { id: payload.personi_d },
       { expiresIn: jwtConstants.refreshTokenExpiryTime },
     );
     const insertReturnValue = await this.refreshTokenService.insertRefreshToken(
@@ -104,6 +104,6 @@ async function generateRegisterToken(
     text,
     html: text,
   };
-  mailService.initMail(message);
+  mailService.sendMail(message);
   return generatedToken;
 }
