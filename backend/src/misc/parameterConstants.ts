@@ -47,6 +47,7 @@ export const LENGTHS = {
     max: 25,
   },
   MAX_JOIN_CODES: 10,
+  MAX_FILE_SIZE: 50000,
 };
 
 const RETURN_MESSAGES = {
@@ -57,6 +58,9 @@ const RETURN_MESSAGES = {
   NOT_FOUND_MESSAGE: 'Entry not found',
   REFERENCE_ERROR_MESSAGE: 'Foreign key reference error',
   MAX_JOIN_CODES_REACHED_MESSAGE: `Maximum number of join codes reached (${LENGTHS.MAX_JOIN_CODES})`,
+  INVALID_FILE_MESSAGE: 'Invalid file type provided',
+  FILE_SIZE_EXCEEDED_MESSAGE: `Maximum file size exceeded ${LENGTHS.MAX_FILE_SIZE} bytes`,
+  NO_FILE_PROVIDED_MESSAGE: 'No file provided',
 };
 
 export const RETURN_DATA = {
@@ -88,4 +92,26 @@ export const RETURN_DATA = {
     status: HttpStatus.FORBIDDEN,
     message: RETURN_MESSAGES.MAX_JOIN_CODES_REACHED_MESSAGE,
   },
+  INVALID_FILE: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.INVALID_FILE_MESSAGE,
+  },
+  MAX_FILE_SIZE_EXCEEDED: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.FILE_SIZE_EXCEEDED_MESSAGE,
+  },
+  NO_FILE_PROVIDED: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.NO_FILE_PROVIDED_MESSAGE,
+  },
+};
+
+export const ID_STARTERS = {
+  INTERNAL: 0,
+  USER: 1,
+  SCHOOL: 2,
+  DEPARTMENT: 3,
+  CLASS: 4,
+  COURSE: 5,
+  FILES: 6,
 };
