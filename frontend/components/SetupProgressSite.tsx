@@ -51,6 +51,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
       label: step.label,
       isDone: step.isDone,
       isActive: step.isActive,
+      component: step.component,
     });
   });
 
@@ -83,6 +84,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
         }
         return step;
       });
+      console.log(tempProgressbarContent);
       setProgressbarContent(tempProgressbarContent);
     }
   }
@@ -90,7 +92,8 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   return (
     <>
       <ProgressLayout>
-        {steps.map((step, index) => {
+        {progressbarContent.map((step, index) => {
+          console.log(progressbarContent);
           if (step.isActive) {
             return (
               <step.component key={index} setDisabled={setIsButtonDisabled} />

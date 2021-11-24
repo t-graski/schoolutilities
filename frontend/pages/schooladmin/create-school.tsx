@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DepartmentsDetailField } from "../../components/DepartmentsDetailField";
 import { Footer } from "../../components/Footer";
 import { LoginField } from "../../components/LoginField";
 import { Navbar } from "../../components/Navbar";
@@ -26,7 +27,7 @@ export default function CreateSchool() {
       label: "Departments",
       isDone: false,
       isActive: false,
-      component: SchoolDetailField,
+      component: DepartmentsDetailField,
     },
     {
       label: "Students",

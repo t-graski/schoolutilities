@@ -34,14 +34,25 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         setDisabled(false);
       }
       // save schoolName, schoolLanguage, schoolTimezone as schoolDetails with to localStorage
-      localStorage.setItem("schoolDetails", JSON.stringify({
-        schoolName,
-        schoolLanguage,
-        schoolTimezone
-      }));
-    } else if (!isDisabled) {
-      setIsDisabled(true);
-      setDisabled(true);
+      localStorage.setItem(
+        "schoolDetails",
+        JSON.stringify({
+          schoolName,
+          schoolLanguage,
+          schoolTimezone,
+        })
+      );
+    } else {
+      // read data from localStorage
+      const schoolDetails = JSON.parse(localStorage.getItem("schoolDetails"));
+      if (schoolDetails) {
+        setSchoolName(schoolDetails.schoolName);
+        setSchoolLanguage(schoolDetails.schoolLanguage);
+        setSchoolTimezone(schoolDetails.schoolTimezone);
+      } else if (!isDisabled) {
+        setIsDisabled(true);
+        setDisabled(true);
+      }
     }
   });
 
