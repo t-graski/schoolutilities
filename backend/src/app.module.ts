@@ -6,7 +6,7 @@ import { UsersModule } from './users/users.module';
 import { CourseModule } from './course/course.module';
 import { SchoolAdminModule } from './schoolAdmin/schoolAdmin.module';
 import { GeneralConfigModule } from './generalConfig/generalConfig.module';
-import { FileUploadModule } from './fileUpload/fileUpload.module';
+import { FileUploadModule } from './file/file.module';
 
 @Module({
   imports: [

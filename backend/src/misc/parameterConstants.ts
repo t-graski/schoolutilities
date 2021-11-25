@@ -47,7 +47,7 @@ export const LENGTHS = {
     max: 25,
   },
   MAX_JOIN_CODES: 10,
-  MAX_FILE_SIZE: 50000,
+  MAX_FILE_SIZE: 100000000,
 };
 
 const RETURN_MESSAGES = {

@@ -1,18 +1,18 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { nanoid } from 'nanoid';
 import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
-import { LENGTHS, RETURN_DATA } from 'src/misc/parameterConstants';
+import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
+import { v4 as uuidv4 } from 'uuid';
 import {
   AddClass,
-  AddDepartment,
   AddSchool,
   ReturnMessage,
   UpdateClass,
+  AddDepartment,
   UpdateDepartment,
   AddJoinCode,
-  JoinCodeTable,
   RemoveJoinCode,
   UpdateJoinCode,
   GetAllJoinCodes,
@@ -49,6 +49,7 @@ export class SchoolAdminService {
     try {
       await prisma.schools.create({
         data: {
+          schoolUUID: `${ID_STARTERS.SCHOOL}${uuidv4()}`,
           name,
           languages: {
             connect: {
@@ -87,6 +88,7 @@ export class SchoolAdminService {
     try {
       await prisma.schoolClasses.create({
         data: {
+          classUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
           departments: {
             connect: {
               departmentId,
@@ -187,6 +189,7 @@ export class SchoolAdminService {
     try {
       await prisma.departments.create({
         data: {
+          departmentUUID: `${ID_STARTERS.DEPARTMENT}${uuidv4()}`,
           name,
           schools: {
             connect: {
@@ -445,22 +448,6 @@ export class SchoolAdminService {
       joinCode = nanoid();
     }
     return joinCode;
-  }
-
-  getJoinCodeById(joinCode): Promise<JoinCodeTable[]> {
-    return new Promise<JoinCodeTable[]>((resolve, reject) => {
-      this.connection.query(
-        `select * from school_join_codes where school_join_code_id=?`,
-        [joinCode],
-        (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        },
-      );
-    });
   }
 
   toBoolean(value): boolean {

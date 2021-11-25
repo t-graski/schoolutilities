@@ -20,7 +20,7 @@ export class AuthController {
   @Post('register')
   async registerUser(@Req() request, @Res() response) {
     const result = await this.authService.registerUser(request.body);
-    return response.status(result.status).json(result?.message);
+    return response.status(result.status).send(result?.message);
   }
 
   @UseGuards(LocalAuthGuard)

@@ -20,13 +20,14 @@ model coursePersons {
 }
 
 model departments {
-  departmentId  Int             @id @default(autoincrement()) @map("department_id")
-  name          String          @db.VarChar(255)
-  schoolId      Int             @map("school_id")
-  isVisible     Boolean         @default(true) @map("is_visible")
-  childsVisible Boolean         @default(true) @map("childs_visible")
-  schools       schools         @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkDepartmentschool")
-  schoolClasses schoolClasses[]
+  departmentId   Int             @id @default(autoincrement()) @map("department_id")
+  departmentUUID String          @map("department_uuid") @db.VarChar(255)
+  name           String          @db.VarChar(255)
+  schoolId       Int             @map("school_id")
+  isVisible      Boolean         @default(true) @map("is_visible")
+  childsVisible  Boolean         @default(true) @map("childs_visible")
+  schools        schools         @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkDepartmentschool")
+  schoolClasses  schoolClasses[]
 
   @@index([schoolId], map: "fkDepartmentschool")
 }
@@ -61,6 +62,7 @@ model personRoles {
 
 model persons {
   personId         Int              @id @default(autoincrement()) @map("person_id")
+  personUUID       String           @map("person_uuid") @db.VarChar(255)
   firstName        String           @db.VarChar(255)
   lastName         String           @db.VarChar(255)
   birthDate        DateTime         @db.Date
@@ -101,6 +103,7 @@ model roles {
 
 model schoolClasses {
   classId      Int         @id @default(autoincrement()) @map("class_id")
+  classUUID    String      @map("class_uuid") @db.VarChar(255)
   departmentId Int         @map("department_id")
   className    String      @map("class_name") @db.VarChar(255)
   departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
@@ -113,6 +116,7 @@ model schoolClasses {
 
 model schools {
   schoolId    Int           @id @default(autoincrement()) @map("school_id")
+  schoolUUID  String        @map("school_uuid") @db.VarChar(255)
   name        String        @db.VarChar(255)
   languageId  Int           @map("language_id")
   timezone    String        @db.VarChar(255)
@@ -134,6 +138,7 @@ model subjects {
 
 model courses {
   courseId          Int           @id @default(autoincrement()) @map("course_id")
+  courseUUID        String        @map("course_uuid") @db.VarChar(255)
   name              String        @db.VarChar(255)
   courseDescription String        @map("course_description") @db.Text
   schoolId          Int           @map("school_id")
@@ -165,4 +170,15 @@ model schoolJoinCodes {
   @@index([personCreationId], map: "fkSchoolJoinCodePerson")
   @@index([schoolId], map: "fkSchoolJoinCodeSchool")
   @@map("school_join_codes")
+}
+
+model courseFiles {
+  courseFileId   Int      @id @default(autoincrement()) @map("course_file_id")
+  courseFileUUID String   @map("course_file_uuid") @db.VarChar(255)
+  fileName       String   @map("file_name") @db.VarChar(255)
+  dateUploaded   DateTime @default(now()) @map("date_uploaded") @db.Timestamp(0)
+  fileSize       Int      @map("file_size")
+  fileType       String   @map("file_type") @db.VarChar(255)
+
+  @@map("course_files")
 }

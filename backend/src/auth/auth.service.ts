@@ -1,7 +1,6 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
-import { ReturnMessage } from 'src/types/Database';
 import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
@@ -59,7 +58,7 @@ export class AuthService {
       body.password,
       process.env.PASSWORD_ENCRYPTION_KEY,
     ).toString();
-    
+
     const registerUser = await this.databaseService.registerUser(body);
     if (registerUser.status === HttpStatus.OK) {
       generateRegisterToken(body.email, this.databaseService, this.mailService);

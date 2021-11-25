@@ -3,8 +3,14 @@ const mysql = require('mysql2');
 import { Injectable } from '@nestjs/common';
 import { DatabaseUpdate, ReturnMessage } from 'src/types/Database';
 import { LoginUserData, RegisterUserData } from 'src/types/User';
-import { LENGTHS, RETURN_DATA, PASSWORD } from 'src/misc/parameterConstants';
+import {
+  LENGTHS,
+  RETURN_DATA,
+  PASSWORD,
+  ID_STARTERS,
+} from 'src/misc/parameterConstants';
 import validator from 'validator';
+import { v4 as uuidv4 } from 'uuid';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -26,6 +32,7 @@ export class DatabaseService {
 
   async registerUser(body: RegisterUserData): Promise<ReturnMessage> {
     const { email, password, firstName, lastName, birthDate } = body;
+
     if (
       !validator.isEmail(email) ||
       !validator.isStrongPassword(password, PASSWORD) ||
@@ -48,6 +55,7 @@ export class DatabaseService {
     try {
       await prisma.persons.create({
         data: {
+          personUUID: `${ID_STARTERS.USER}${uuidv4()}`,
           firstName,
           lastName,
           birthDate: new Date(birthDate),
@@ -56,8 +64,6 @@ export class DatabaseService {
         },
       });
     } catch (error) {
-      console.log(error);
-
       return RETURN_DATA.DATABASE_ERORR;
     }
     return RETURN_DATA.SUCCESS;

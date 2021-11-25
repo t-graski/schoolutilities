@@ -9,7 +9,8 @@ import {
 } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
-import { LENGTHS, RETURN_DATA } from 'src/misc/parameterConstants';
+import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
+import { v4 as uuidv4 } from 'uuid';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -55,6 +56,7 @@ export class CourseService {
     try {
       await prisma.courses.create({
         data: {
+          courseUUID: `${ID_STARTERS.COURSE}${uuidv4()}`,
           name,
           courseDescription: courseDescription,
           schools: {

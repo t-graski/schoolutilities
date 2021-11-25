@@ -16,5 +16,9 @@ export const imageFileFilter = (req, file, callback) => {
 export const editFileName = (req, file, callback) => {
   const uuid = uuidv4();
   const fileExtName = extname(file.originalname);
-  callback(null, `${ID_STARTERS.FILES}${uuid}${fileExtName}`);
+  callback(
+    null,
+    `${ID_STARTERS.FILES}${uuid}${fileExtName}`,
+    (req.originalName = file.filename),
+  );
 };
