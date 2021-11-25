@@ -14,6 +14,9 @@ import { AboutUsItem } from "../components/AboutUsItem";
 export default function AboutUs() {
   return (
     <>
+      <Head>
+        <title>About Us - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {

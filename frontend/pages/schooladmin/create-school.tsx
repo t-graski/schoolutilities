@@ -8,6 +8,7 @@ import { SchoolDetailField } from "../../components/SchoolDetailField";
 import { SetupProgressSite } from "../../components/SetupProgressSite";
 import { Spacer } from "../../components/Spacer";
 import { styled } from "../../stitches.config";
+import Head from "next/head";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",
@@ -45,6 +46,9 @@ export default function CreateSchool() {
 
   return (
     <>
+      <Head>
+        <title>School Setup - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {

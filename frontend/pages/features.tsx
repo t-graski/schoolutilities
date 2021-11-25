@@ -6,10 +6,14 @@ import React from "react";
 import { Spacer } from "../components/Spacer";
 import { Separator } from "../components/Separator";
 import { FeatureOverviewList } from "../components/FeatureOverviewList";
+import Head from "next/head";
 
 export default function Features() {
   return (
     <>
+      <Head>
+        <title>Features - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {

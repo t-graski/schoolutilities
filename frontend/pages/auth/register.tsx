@@ -5,6 +5,7 @@ import { Navbar } from "../../components/Navbar";
 import { Footer } from "../../components/Footer";
 import { Spacer } from "../../components/Spacer";
 import { InfoBox } from "../../components/InfoBox";
+import Head from "next/head";
 
 const RegisterAuthLayout = styled("div", {
   display: "grid",
@@ -18,6 +19,9 @@ const RegisterAuthLayout = styled("div", {
 export default function Register() {
   return (
     <>
+      <Head>
+        <title>Register - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {

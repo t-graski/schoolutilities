@@ -107,7 +107,9 @@ export const InputField: React.FC<Props> = ({
     return (
       <>
         <InputFieldLayout>
-          <StyledImage src={iconSrc} alt={iconAlt} width="30" height="30" />
+          {iconSrc && (
+            <StyledImage src={iconSrc} alt={iconAlt} width="30" height="30" />
+          )}
           <StyledLabel>
             <StyledInputField
               type={inputType}

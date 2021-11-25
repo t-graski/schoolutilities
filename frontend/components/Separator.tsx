@@ -10,7 +10,7 @@ type Props = {
 
 const StyledHr = styled("div", {
   border: "2px solid $fontPrimary",
-  margin: "20px 0",
+  margin: "0",
   variants: {
     width: {
       big: {

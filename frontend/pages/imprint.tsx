@@ -5,6 +5,7 @@ import { Headline } from "../components/Headline";
 import React from "react";
 import { Spacer } from "../components/Spacer";
 import { Separator } from "../components/Separator";
+import Head from "next/head";
 
 const ImprintLayout = styled("div", {
   width: "100%",
@@ -21,6 +22,9 @@ const MainContentText = styled("p", {
 export default function Features() {
   return (
     <>
+      <Head>
+        <title>Imprint - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {

@@ -19,6 +19,7 @@ export const {
       fontSecondary: "#242424",
       specialPrimary: "#eda33f",
       specialSecondary: "#738adb",
+      specialTertiary: "#D23737",
     },
     shadows: {
       accountButton: "0px 0px 5px 0px #eda33f",
