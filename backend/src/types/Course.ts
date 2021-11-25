@@ -53,3 +53,4 @@ export interface RemoveUser {
   courseId: number;
   userId: number;
 }
+
