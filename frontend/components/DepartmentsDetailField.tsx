@@ -143,10 +143,8 @@ const PopUpButtonLayout = styled("div", {
 });
 
 export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
-  const initialState = {
-    departments: [],
-  };
-  const [{ departments }, setDepartments] = React.useState(initialState);
+  const [departments, setDepartments] = React.useState([]);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [isDisabled, setIsDisabled] = React.useState(false);
   const [popUpIsVisible, setPopUpIsVisible] = React.useState(false);
   const [departmentName, setDepartmentName] = React.useState("");
@@ -154,7 +152,24 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
   const [departmentId, setDepartmentId] = React.useState(-1);
 
   useEffect(() => {
-    if (departments.length > 0) {
+    const storage = JSON.parse(localStorage.getItem("departments"));
+    if (isFirstTime) {
+      if (!storage.departments) {
+        localStorage.setItem(
+          "departments",
+          JSON.stringify({
+            departments: [],
+          })
+        );
+      }
+      if (storage && storage.departments) {
+        setDepartments(storage.departments);
+      } else if (!isDisabled) {
+        setIsDisabled(true);
+        setDisabled(true);
+      }
+      setIsFirstTime(false);
+    } else if (storage && departments !== storage.departments) {
       if (isDisabled) {
         setIsDisabled(false);
         setDisabled(false);
@@ -165,16 +180,24 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
           departments,
         })
       );
-    } else {
-      const storage = JSON.parse(localStorage.getItem("departments"));
-      if (storage && storage.departments) {
-        setDepartments({ departments: storage.departments });
-      } else if (!isDisabled) {
-        setIsDisabled(true);
-        setDisabled(true);
-      }
     }
   });
+
+  function savePopUpInput() {
+    if (departmentId == -1) {
+      setDepartments([...departments, departmentName]);
+    } else {
+      const newDepartments = departments.map((department, index) => {
+        if (index == departmentId) {
+          return departmentName;
+        } else {
+          return department;
+        }
+      });
+      setDepartments(newDepartments);
+    }
+    setPopUpIsVisible(false);
+  }
 
   return (
     <>
@@ -221,28 +244,15 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                 />
                 <Button
                   label={departmentId == -1 ? "Add" : "Edit"}
-                  onClick={() => {
-                    if (departmentId == -1) {
-                      setDepartments({
-                        departments: [...departments, departmentName],
-                      });
-                    } else {
-                      const newDepartments = departments.map(
-                        (department, index) => {
-                          if (index == departmentId) {
-                            return departmentName;
-                          } else {
-                            return department;
-                          }
-                        }
-                      );
-                      setDepartments({ departments: newDepartments });
-                    }
-                    setPopUpIsVisible(false);
-                  }}
+                  onClick={savePopUpInput}
                   backgroundColor={"primary"}
                   color={"primary"}
-                  disabled={!departmentNameValid}
+                  disabled={
+                    !departmentNameValid ||
+                    (departmentId != -1 &&
+                      departmentName == departments[departmentId])
+                  }
+                  type="submit"
                 />
               </PopUpButtonLayout>
             </PopUpContentLayout>
@@ -291,9 +301,10 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     let newDepartments = departments.filter(
                       (department, departmentIndex) => departmentIndex !== index
                     );
-                    setDepartments({ departments: newDepartments });
+                    setDepartments(newDepartments);
                     if (newDepartments.length == 0) {
-                      setDepartments(initialState);
+                      setDepartments([]);
+                      console.log(departments);
                     }
                   }}
                 >

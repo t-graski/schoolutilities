@@ -12,6 +12,7 @@ type Props = {
   label: string;
   disabled?: boolean;
   onClick: Function;
+  type?: "button" | "submit" | "reset";
 };
 
 const StyledButton = styled("button", {
@@ -60,6 +61,7 @@ export const Button: React.FC<Props> = ({
   label,
   disabled = false,
   onClick,
+  type = "button",
 }) => {
   return (
     <>
@@ -71,6 +73,7 @@ export const Button: React.FC<Props> = ({
         color={color}
         {...(disabled && { disabled: true })}
         isDisabled={disabled}
+        type={type}
       >
         {label}
       </StyledButton>
