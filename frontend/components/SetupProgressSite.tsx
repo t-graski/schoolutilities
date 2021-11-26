@@ -56,11 +56,10 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   });
 
   useEffect(() => {
-    steps.forEach((step, index) => {
-      if (step.isActive) {
-        setActiveStep(index);
-      }
-    });
+    if (cookie.get("activeStep")) {
+      setActiveStep(parseInt(cookie.get("activeStep")));
+      changePage(0);
+    }
     setProgressbarContent(tempProgressbarContent);
   }, [steps]);
 
@@ -70,6 +69,8 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
       activeStep + stepLength < progressbarContent.length
     ) {
       setActiveStep(activeStep + stepLength);
+      cookie.set("activeStep", activeStep + stepLength);
+      console.log(cookie.get("activeStep"));
 
       tempProgressbarContent = tempProgressbarContent.map((step, index) => {
         if (index === activeStep + stepLength) {
@@ -123,7 +124,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
               color="primary"
               label="NEXT"
               onClick={() => {
-                console.log(localStorage.getItem("schoolDetails"))
+                console.log(localStorage.getItem("schoolDetails"));
                 changePage(1);
               }}
             ></Button>

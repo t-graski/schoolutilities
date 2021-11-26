@@ -25,6 +25,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
   const [schoolLanguageValid, setSchoolLanguageValid] = React.useState(false);
   const [schoolTimezone, setSchoolTimezone] = React.useState("");
   const [schoolTimezoneValid, setSchoolTimezoneValid] = React.useState(false);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [isDisabled, setIsDisabled] = React.useState(false);
 
   useEffect(() => {
@@ -33,7 +34,6 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         setIsDisabled(false);
         setDisabled(false);
       }
-      // save schoolName, schoolLanguage, schoolTimezone as schoolDetails with to localStorage
       localStorage.setItem(
         "schoolDetails",
         JSON.stringify({
@@ -43,16 +43,27 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         })
       );
     } else {
-      // read data from localStorage
       const schoolDetails = JSON.parse(localStorage.getItem("schoolDetails"));
-      if (schoolDetails) {
+      console.log(schoolDetails);
+      if (schoolDetails && isFirstTime) {
         setSchoolName(schoolDetails.schoolName);
         setSchoolLanguage(schoolDetails.schoolLanguage);
         setSchoolTimezone(schoolDetails.schoolTimezone);
+        // check if all values are valid
+        if (
+          schoolDetails.schoolName &&
+          schoolDetails.schoolLanguage &&
+          schoolDetails.schoolTimezone
+        ) {
+          setSchoolNameValid(true);
+          setSchoolLanguageValid(true);
+          setSchoolTimezoneValid(true);
+        }
       } else if (!isDisabled) {
         setIsDisabled(true);
         setDisabled(true);
       }
+      setIsFirstTime(false);
     }
   });
 
@@ -60,40 +71,40 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
     <>
       <SchoolDetailLayout>
         <InputField
-          label="Name"
+          label="School name"
           inputType="text"
           value={schoolName}
           onChange={setSchoolName}
-          iconSrc="/images/user.svg"
-          iconAlt=""
+          iconSrc="/images/school_name_icon.svg"
+          iconAlt="school_name_icon"
           required={true}
           regex={regex.name}
           setValidInput={setSchoolNameValid}
-          errorMessage="Please enter a valid name"
+          errorMessage="Your school needs a name, doesn't it?"
         ></InputField>
         <InputField
           label="Language"
           inputType="text"
           value={schoolLanguage}
           onChange={setSchoolLanguage}
-          iconSrc="/images/user.svg"
-          iconAlt=""
+          iconSrc="/images/language_icon.svg"
+          iconAlt="language_icon"
           required={true}
           regex={regex.name}
           setValidInput={setSchoolLanguageValid}
-          errorMessage="Please enter a valid language"
+          errorMessage="Tell us the language you speak in your school"
         ></InputField>
         <InputField
           label="Timezone (GMT+0)"
           inputType="text"
           value={schoolTimezone}
           onChange={setSchoolTimezone}
-          iconSrc="/images/user.svg"
-          iconAlt=""
+          iconSrc="/images/timezone_icon.svg"
+          iconAlt="timezone_icon"
           required={true}
           regex={regex.name}
           setValidInput={setSchoolTimezoneValid}
-          errorMessage="Please enter a valid Timezone"
+          errorMessage="Try to select a timezone in the drop-down menu"
         ></InputField>
       </SchoolDetailLayout>
     </>

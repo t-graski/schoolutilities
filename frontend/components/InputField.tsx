@@ -65,6 +65,7 @@ const StyledLabel = styled("label", {
 
 const ErrorMessage = styled("span", {
   color: "red",
+  paddingLeft: "10px",
 });
 
 const StyledImage = styled(Image, {

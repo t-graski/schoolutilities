@@ -154,7 +154,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
   useEffect(() => {
     const storage = JSON.parse(localStorage.getItem("departments"));
     if (isFirstTime) {
-      if (!storage.departments) {
+      if (storage && !storage.departments) {
         localStorage.setItem(
           "departments",
           JSON.stringify({
