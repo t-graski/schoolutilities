@@ -31,6 +31,14 @@ export class SchoolAdminController {
     return response.status(result.status).json(result?.message);
   }
 
+  //endpoint for addDepartments
+  // @UseGuards(JwtAuthGuard)
+  @Post('/addDepartments')
+  async addDepartments(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.addDepartments(request.body);
+    return response.status(result.status).json(result?.message);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Delete('/removeDepartment')
   async removeDepartment(@Req() request, @Res() response) {

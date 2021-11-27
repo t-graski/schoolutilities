@@ -61,6 +61,7 @@ const RETURN_MESSAGES = {
   INVALID_FILE_MESSAGE: 'Invalid file type provided',
   FILE_SIZE_EXCEEDED_MESSAGE: `Maximum file size exceeded ${LENGTHS.MAX_FILE_SIZE} bytes`,
   NO_FILE_PROVIDED_MESSAGE: 'No file provided',
+  DEPARTMENTS_SAME_NAMES: 'Department name occurs multiple times',
 };
 
 export const RETURN_DATA = {
@@ -103,6 +104,10 @@ export const RETURN_DATA = {
   NO_FILE_PROVIDED: {
     status: HttpStatus.BAD_REQUEST,
     message: RETURN_MESSAGES.NO_FILE_PROVIDED_MESSAGE,
+  },
+  DEPARTMENTS_SAME_NAMES: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.DEPARTMENTS_SAME_NAMES,
   },
 };
 

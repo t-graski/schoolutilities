@@ -206,6 +206,45 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
+  async addDepartments(body): Promise<ReturnMessage> {
+    if (body.departments.length <= 1) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const names = body.departments.map((department) => department.name);
+    const isNotUnique = names.some((name, index) => {
+      return names.indexOf(name) !== index;
+    });
+
+    if (isNotUnique) {
+      return RETURN_DATA.DEPARTMENTS_SAME_NAMES;
+    }
+
+    for (const department of body.departments) {
+      const isNotAvailable = await prisma.departments.findFirst({
+        where: {
+          schoolId: Number(department.schoolId),
+          name: department.name,
+        },
+      });
+      if (isNotAvailable) {
+        return RETURN_DATA.ALREADY_EXISTS;
+      }
+    }
+
+    try {
+      for (const department of body.departments) {
+        let addDepartment = await this.addDepartment(department);
+        if (addDepartment.status != 200) {
+          return addDepartment;
+        }
+      }
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
   async removeDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
     const { departmentId } = body;
     if (!validator.isNumeric(departmentId)) {
