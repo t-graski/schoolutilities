@@ -42,6 +42,7 @@ const ButtonLayout = styled("div", {
 export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [activeStep, setActiveStep] = useState(-1);
+  const [statusInfo, setStatusInfo] = useState("");
 
   if (cookie.get("activeStep")) {
     if (activeStep == -1) {
@@ -56,29 +57,61 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   }
 
   function saveInputs() {
-    // fetch("http://localhost:8888/api/schooladmin/addschoolconfig", {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     name: ,
-    //     languageId: 1,
-    //     timezone: ""
-    //   }),
-    //   headers: { "Content-Type": "application/json" },
-    // })
-    //   .then((response) => {
-    //     if (response.status == 200) {
-    //       setSignUpInfo("You are logged in");
-    //       return response.json();
-    //     } else {
-    //       setSignUpInfo("You are not logged in");
-    //     }
-    //   })
-    //   .then((data) => {
-    //     if (data) {
-    //       cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
-    //       cookie.set("refreshToken", data.refresh_token, { expires: 7 });
-    //     }
-    //   });
+    const schoolDetails = JSON.parse(localStorage.getItem("schoolDetails"));
+    console.log({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${cookie.get("accessToken")}`,
+    });
+    fetch("http://localhost:8888/api/schooladmin/addschoolconfig", {
+      method: "POST",
+      body: JSON.stringify({
+        name: schoolDetails.schoolName,
+        languageId: 2,
+        timezone: schoolDetails.schoolTimezone,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookie.get("accessToken")}`,
+      },
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          setStatusInfo("School added");
+          return response.json();
+        } else {
+          setStatusInfo("There was an error creating the school");
+        }
+      })
+      .then(async (data) => {
+        if (data && data.schoolId) {
+          let creationGoneWrong = false;
+          const storage = JSON.parse(localStorage.getItem("departments"));
+          await storage.departments.forEach(async (department) => {
+            await fetch("http://localhost:8888/api/schooladmin/addDepartment", {
+              method: "POST",
+              body: JSON.stringify({
+                name: department,
+                schoolId: data.schoolId,
+                isVisible: true,
+                childsVisible: true,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cookie.get("accessToken")}`,
+              },
+            }).then((response) => {
+              if (response.status != 200) {
+                creationGoneWrong = true;
+              }
+            });
+          });
+          if(creationGoneWrong){
+            setStatusInfo("There was an error creating the departments");
+          } else {
+            setStatusInfo("Departments created");
+          }
+        }
+      });
   }
 
   return (
@@ -130,6 +163,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
           </ButtonLayout>
         </NavigationLayout>
       </ProgressLayout>
+      <h2>{statusInfo}</h2>
     </>
   );
 };

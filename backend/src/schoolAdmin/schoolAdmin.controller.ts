@@ -17,14 +17,14 @@ import { SchoolAdminService } from './schoolAdmin.service';
 export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addSchoolConfig')
   async addSchoolConfig(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addSchoolConfig(request.body);
     return response.status(result.status).json(result?.data);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addDepartment')
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
