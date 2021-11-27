@@ -22,14 +22,19 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
   const [schoolName, setSchoolName] = React.useState("");
   const [schoolNameValid, setSchoolNameValid] = React.useState(false);
   const [schoolLanguage, setSchoolLanguage] = React.useState("");
-  const [schoolLanguageValid, setSchoolLanguageValid] = React.useState(false);
   const [schoolTimezone, setSchoolTimezone] = React.useState("");
-  const [schoolTimezoneValid, setSchoolTimezoneValid] = React.useState(false);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [isDisabled, setIsDisabled] = React.useState(false);
 
+  console.log(schoolTimezone);
   useEffect(() => {
-    if (schoolNameValid && schoolLanguageValid && schoolTimezoneValid) {
+    if (
+      schoolNameValid &&
+      schoolLanguage &&
+      schoolTimezone &&
+      schoolLanguage != "Language" &&
+      schoolTimezone != "Timezone"
+    ) {
       if (isDisabled) {
         setIsDisabled(false);
         setDisabled(false);
@@ -44,7 +49,6 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
       );
     } else {
       const schoolDetails = JSON.parse(localStorage.getItem("schoolDetails"));
-      console.log(schoolDetails);
       if (schoolDetails && isFirstTime) {
         setSchoolName(schoolDetails.schoolName);
         setSchoolLanguage(schoolDetails.schoolLanguage);
@@ -56,8 +60,6 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           schoolDetails.schoolTimezone
         ) {
           setSchoolNameValid(true);
-          setSchoolLanguageValid(true);
-          setSchoolTimezoneValid(true);
         }
       } else if (!isDisabled) {
         setIsDisabled(true);
@@ -84,27 +86,66 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         ></InputField>
         <InputField
           label="Language"
-          inputType="text"
+          inputType="select"
           value={schoolLanguage}
           onChange={setSchoolLanguage}
           iconSrc="/images/language_icon.svg"
           iconAlt="language_icon"
           required={true}
-          regex={regex.name}
-          setValidInput={setSchoolLanguageValid}
           errorMessage="Tell us the language you speak in your school"
+          selectOptions={["Language", "English"]}
+          selectValue={schoolLanguage}
         ></InputField>
         <InputField
           label="Timezone (GMT+0)"
-          inputType="text"
+          inputType="select"
           value={schoolTimezone}
           onChange={setSchoolTimezone}
           iconSrc="/images/timezone_icon.svg"
           iconAlt="timezone_icon"
           required={true}
-          regex={regex.name}
-          setValidInput={setSchoolTimezoneValid}
           errorMessage="Try to select a timezone in the drop-down menu"
+          selectOptions={[
+            "Timezone",
+            "GMT-11:00 (Samoa)",
+            "GMT-10:00 (Hawaii)",
+            "GMT-09:00 (Alaska)",
+            "GMT-08:00 (Pacific Time)",
+            "GMT-07:00 (Mountain Time)",
+            "GMT-06:00 (Central Time)",
+            "GMT-05:00 (Eastern Time)",
+            "GMT-04:00 (Atlantic Time)",
+            "GMT-03:30 (Newfoundland)",
+            "GMT-03:00 (Brasilia)",
+            "GMT-02:00 (Mid-Atlantic)",
+            "GMT-01:00 (Cape Verde)",
+            "GMT+00:00 (Greenwich Mean Time)",
+            "GMT+01:00 (Central European Time)",
+            "GMT+02:00 (Eastern European Time)",
+            "GMT+03:00 (Eastern African Time)",
+            "GMT+03:30 (Iran)",
+            "GMT+04:00 (Western African Time)",
+            "GMT+04:30 (Afghanistan)",
+            "GMT+05:00 (Pakistan)",
+            "GMT+05:30 (India)",
+            "GMT+05:45 (India Standard Time)",
+            "GMT+06:00 (Bangladesh)",
+            "GMT+06:30 (Myanmar)",
+            "GMT+07:00 (Indochina)",
+            "GMT+08:00 (China)",
+            "GMT+08:45 (Australia Western Standard Time)",
+            "GMT+09:00 (Japan)",
+            "GMT+09:30 (Australia Central Standard Time)",
+            "GMT+10:00 (Australia Eastern Standard Time)",
+            "GMT+10:30 (Lord Howe Standard Time)",
+            "GMT+11:00 (Solomon Standard Time)",
+            "GMT+11:30 (Norfolk Standard Time)",
+            "GMT+12:00 (New Zealand Standard Time)",
+            "GMT+12:45 (Chatham Standard Time)",
+            "GMT+13:00 (Tonga Standard Time)",
+            "GMT+14:00 (Line Islands Standard Time)",
+          ]}
+          selectValue={schoolTimezone}
         ></InputField>
       </SchoolDetailLayout>
     </>

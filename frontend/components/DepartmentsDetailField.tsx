@@ -170,7 +170,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
       }
       setIsFirstTime(false);
     } else if (storage && departments !== storage.departments) {
-      if (isDisabled) {
+      if (isDisabled && departments.length > 0) {
         setIsDisabled(false);
         setDisabled(false);
       }
@@ -186,6 +186,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
   function savePopUpInput() {
     if (departmentId == -1) {
       setDepartments([...departments, departmentName]);
+      setDisabled(false);
     } else {
       const newDepartments = departments.map((department, index) => {
         if (index == departmentId) {
@@ -196,6 +197,13 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
       });
       setDepartments(newDepartments);
     }
+
+    localStorage.setItem(
+      "departments",
+      JSON.stringify({
+        departments,
+      })
+    );
     setPopUpIsVisible(false);
   }
 

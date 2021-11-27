@@ -30,18 +30,6 @@ export default function CreateSchool() {
       isActive: false,
       component: DepartmentsDetailField,
     },
-    {
-      label: "Students",
-      isDone: false,
-      isActive: false,
-      component: SchoolDetailField,
-    },
-    {
-      label: "Classes",
-      isDone: false,
-      isActive: false,
-      component: SchoolDetailField,
-    },
   ]);
 
   return (

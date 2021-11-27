@@ -4,7 +4,9 @@ import Image from "next/image";
 import type * as Stitches from "@stitches/react";
 
 type Props = {
-  inputType: "text" | "password" | "date" | "email" | "checkbox";
+  inputType: "text" | "password" | "date" | "email" | "checkbox" | "select";
+  selectOptions?: string[];
+  selectValue?: string;
   value?: string;
   onChange: Function;
   iconSrc: string;
@@ -72,8 +74,28 @@ const StyledImage = styled(Image, {
   filter: "invert(100%)",
 });
 
+const StyledSelectField = styled("select", {
+  background: "$backgroundTertiary",
+  width: "100%",
+  color: "$fontPrimary",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+  border: "none",
+  outline: "none",
+  padding: "0.5rem 0",
+  borderBottom: "solid 1px transparent",
+  fontFamily: "$fontPrimary",
+  fontWeight: "bold",
+  ["&:focus"]: {
+    borderBottom: "solid 1px $colors$fontPrimary",
+  },
+});
+
+
 export const InputField: React.FC<Props> = ({
   inputType,
+  selectOptions,
+  selectValue,
   value,
   onChange,
   children,
@@ -90,17 +112,38 @@ export const InputField: React.FC<Props> = ({
   if (inputType === "checkbox") {
     return (
       <>
-        <label>
-          <StyledInputField
-            type={inputType}
+        <StyledInputField
+          type={inputType}
+          name={label}
+          placeholder={label}
+          onChange={(e) => onChange(e.target.checked)}
+          inputType={inputType}
+          {...(required && { required: true })}
+        />
+        <span>{children}</span>
+      </>
+    );
+  } else if (inputType === "select") {
+    return (
+      <>
+        <InputFieldLayout>
+          {iconSrc && (
+            <StyledImage src={iconSrc} alt={iconAlt} width="30" height="30" />
+          )}
+          <StyledSelectField
             name={label}
             placeholder={label}
-            onChange={(e) => onChange(e.target.checked)}
-            inputType={inputType}
+            onChange={(e) => onChange(e.target.value)}
             {...(required && { required: true })}
-          />
-          <span>{children}</span>
-        </label>
+            value={selectValue}
+          >
+            {selectOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </StyledSelectField>
+        </InputFieldLayout>
       </>
     );
   } else {

@@ -14,8 +14,6 @@ import { Spacer } from "./Spacer";
 type Props = {
   steps: {
     label: string;
-    isDone: boolean;
-    isActive: boolean;
     component: any;
   }[];
 };
@@ -42,60 +40,52 @@ const ButtonLayout = styled("div", {
 });
 
 export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
-  const [progressbarContent, setProgressbarContent] = useState([]);
-  let tempProgressbarContent = [];
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  steps.forEach((step, index) => {
-    tempProgressbarContent.push({
-      label: step.label,
-      isDone: step.isDone,
-      isActive: step.isActive,
-      component: step.component,
-    });
-  });
+  const [activeStep, setActiveStep] = useState(-1);
 
-  useEffect(() => {
-    if (cookie.get("activeStep")) {
-      setActiveStep(parseInt(cookie.get("activeStep")));
-      changePage(0);
+  if (cookie.get("activeStep")) {
+    if (activeStep == -1) {
+      // setActiveStep(parseInt(cookie.get("activeStep")));
+      setActiveStep(0);
+    } else if (activeStep != parseInt(cookie.get("activeStep"))) {
+      cookie.set("activeStep", activeStep);
     }
-    setProgressbarContent(tempProgressbarContent);
-  }, [steps]);
+  } else if (activeStep == -1) {
+    setActiveStep(0);
+    cookie.set("activeStep", activeStep);
+  }
 
-  function changePage(stepLength: number) {
-    if (
-      activeStep + stepLength >= 0 &&
-      activeStep + stepLength < progressbarContent.length
-    ) {
-      setActiveStep(activeStep + stepLength);
-      cookie.set("activeStep", activeStep + stepLength);
-      console.log(cookie.get("activeStep"));
-
-      tempProgressbarContent = tempProgressbarContent.map((step, index) => {
-        if (index === activeStep + stepLength) {
-          step.isActive = true;
-        } else {
-          step.isActive = false;
-        }
-        if (index < activeStep + stepLength) {
-          step.isDone = true;
-        } else {
-          step.isDone = false;
-        }
-        return step;
-      });
-      console.log(tempProgressbarContent);
-      setProgressbarContent(tempProgressbarContent);
-    }
+  function saveInputs() {
+    // fetch("http://localhost:8888/api/schooladmin/addschoolconfig", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     name: ,
+    //     languageId: 1,
+    //     timezone: ""
+    //   }),
+    //   headers: { "Content-Type": "application/json" },
+    // })
+    //   .then((response) => {
+    //     if (response.status == 200) {
+    //       setSignUpInfo("You are logged in");
+    //       return response.json();
+    //     } else {
+    //       setSignUpInfo("You are not logged in");
+    //     }
+    //   })
+    //   .then((data) => {
+    //     if (data) {
+    //       cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
+    //       cookie.set("refreshToken", data.refresh_token, { expires: 7 });
+    //     }
+    //   });
   }
 
   return (
     <>
       <ProgressLayout>
-        {progressbarContent.map((step, index) => {
-          console.log(progressbarContent);
-          if (step.isActive) {
+        {steps.map((step, index) => {
+          if (index == activeStep) {
             return (
               <step.component key={index} setDisabled={setIsButtonDisabled} />
             );
@@ -109,23 +99,32 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
             color="primary"
             label="BACK"
             onClick={() => {
-              changePage(-1);
+              setActiveStep(activeStep - 1);
             }}
           ></Button>
           <ProgressbarLayout>
-            <Progressbar steps={progressbarContent} />
+            <Progressbar
+              steps={steps}
+              activeStep={activeStep}
+              setActiveStep={setActiveStep}
+            />
           </ProgressbarLayout>
           <ButtonLayout>
             <Button
               disabled={
-                activeStep + 1 === progressbarContent.length || isButtonDisabled
+                (activeStep + 1 === steps.length && isButtonDisabled) ||
+                isButtonDisabled
               }
               backgroundColor="primary"
               color="primary"
-              label="NEXT"
+              label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
               onClick={() => {
-                console.log(localStorage.getItem("schoolDetails"));
-                changePage(1);
+                if (activeStep + 1 === steps.length) {
+                  saveInputs();
+                  cookie.remove("activeStep");
+                } else {
+                  setActiveStep(activeStep + 1);
+                }
               }}
             ></Button>
           </ButtonLayout>

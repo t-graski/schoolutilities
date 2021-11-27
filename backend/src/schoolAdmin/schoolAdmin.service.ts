@@ -40,7 +40,7 @@ export class SchoolAdminService {
 
   async addSchoolConfig(body: AddSchool): Promise<AddSchoolReturnValue> {
     const { name, languageId, timezone } = body;
-    if (!regex.title.test(name) || !regex.timezone.test(timezone)) {
+    if (!regex.title.test(name)) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'Invalid input',

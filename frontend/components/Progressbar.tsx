@@ -12,9 +12,10 @@ import cookie from "js-cookie";
 type Props = {
   steps: {
     label: string;
-    isDone: boolean;
-    isActive: boolean;
+    component?: any;
   }[];
+  activeStep: number;
+  setActiveStep: (step: number) => void;
 };
 
 const ProgressbarLayout = styled("div", {
@@ -78,19 +79,14 @@ const ProgressPoint = styled("div", {
   },
 });
 
-export const Progressbar: React.FC<Props> = ({ steps }) => {
-  const [progress, setProgress] = useState(null);
+export const Progressbar: React.FC<Props> = ({ steps, activeStep }) => {
+  const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    for (let i = steps.length; i > 0; i--) {
-      if (steps[i - 1].isDone) {
-        setProgress((i * 100) / steps.length + 1);
-        break;
-      } else {
-        setProgress(0);
-      }
-    }
-  });
+  console.log(activeStep);
+  const tempProgress = (activeStep * 100) / steps.length;
+  if (tempProgress != progress) {
+    setProgress(tempProgress);
+  }
 
   return (
     <>
@@ -102,7 +98,7 @@ export const Progressbar: React.FC<Props> = ({ steps }) => {
           }}
         ></StyledProgressbar>
         {steps.map((step, index) => {
-          const stepProgress = (index * 100) / steps.length;
+          const stepProgress = (index * 100) / steps.length - 1;
           return (
             <ProgressPoint
               key={index}
@@ -110,7 +106,11 @@ export const Progressbar: React.FC<Props> = ({ steps }) => {
                 left: `${stepProgress + 100 / steps.length}%`,
               }}
               state={
-                step.isDone ? "done" : step.isActive ? "active" : "default"
+                index < activeStep
+                  ? "done"
+                  : index == activeStep
+                  ? "active"
+                  : "default"
               }
               title={step.label}
             ></ProgressPoint>
