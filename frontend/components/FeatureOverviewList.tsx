@@ -30,6 +30,7 @@ export const FeatureOverviewList: React.FC<Props> = ({ features }) => {
                 ? "left"
                 : "right"
             }
+            key={index}
           />
           {index < features.length - 1 && <Separator width="big" alignment="center"/>}
             </>
