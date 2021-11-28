@@ -7,6 +7,8 @@ import { Button } from "./Button";
 import Link from "next/link";
 import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
+import { Headline } from "./Headline";
+import { Separator } from "./Separator";
 
 type Props = {
   setDisabled: Function;
@@ -72,6 +74,12 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
   return (
     <>
       <SchoolDetailLayout>
+        <Headline
+          label="School Setup"
+          alignment="left"
+          fontWeight="bold"
+        ></Headline>
+        <Separator width="small" alignment="left"></Separator>
         <InputField
           label="School name"
           inputType="text"

@@ -46,7 +46,6 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
 
   if (cookie.get("activeStep")) {
     if (activeStep == -1) {
-      // setActiveStep(parseInt(cookie.get("activeStep")));
       setActiveStep(0);
     } else if (activeStep != parseInt(cookie.get("activeStep"))) {
       cookie.set("activeStep", activeStep);
@@ -105,10 +104,10 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
               }
             });
           });
-          if(creationGoneWrong){
+          if (creationGoneWrong) {
             setStatusInfo("There was an error creating the departments");
           } else {
-            setStatusInfo("Departments created");
+            setStatusInfo("School successfully created");
           }
         }
       });
@@ -116,54 +115,57 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
 
   return (
     <>
-      <ProgressLayout>
-        {steps.map((step, index) => {
-          if (index == activeStep) {
-            return (
-              <step.component key={index} setDisabled={setIsButtonDisabled} />
-            );
-          }
-        })}
-        <Spacer size="small"></Spacer>
-        <NavigationLayout>
-          <Button
-            disabled={activeStep === 0 || isButtonDisabled}
-            backgroundColor="primary"
-            color="primary"
-            label="BACK"
-            onClick={() => {
-              setActiveStep(activeStep - 1);
-            }}
-          ></Button>
-          <ProgressbarLayout>
-            <Progressbar
-              steps={steps}
-              activeStep={activeStep}
-              setActiveStep={setActiveStep}
-            />
-          </ProgressbarLayout>
-          <ButtonLayout>
+      {!statusInfo ? (
+        <ProgressLayout>
+          {steps.map((step, index) => {
+            if (index == activeStep) {
+              return (
+                <step.component key={index} setDisabled={setIsButtonDisabled} />
+              );
+            }
+          })}
+          <Spacer size="small"></Spacer>
+          <NavigationLayout>
             <Button
-              disabled={
-                (activeStep + 1 === steps.length && isButtonDisabled) ||
-                isButtonDisabled
-              }
+              disabled={activeStep === 0 || isButtonDisabled}
               backgroundColor="primary"
               color="primary"
-              label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
+              label="BACK"
               onClick={() => {
-                if (activeStep + 1 === steps.length) {
-                  saveInputs();
-                  cookie.remove("activeStep");
-                } else {
-                  setActiveStep(activeStep + 1);
-                }
+                setActiveStep(activeStep - 1);
               }}
             ></Button>
-          </ButtonLayout>
-        </NavigationLayout>
-      </ProgressLayout>
-      <h2>{statusInfo}</h2>
+            <ProgressbarLayout>
+              <Progressbar
+                steps={steps}
+                activeStep={activeStep}
+                setActiveStep={setActiveStep}
+              />
+            </ProgressbarLayout>
+            <ButtonLayout>
+              <Button
+                disabled={
+                  (activeStep + 1 === steps.length && isButtonDisabled) ||
+                  isButtonDisabled
+                }
+                backgroundColor="primary"
+                color="primary"
+                label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
+                onClick={() => {
+                  if (activeStep + 1 === steps.length) {
+                    saveInputs();
+                    cookie.remove("activeStep");
+                  } else {
+                    setActiveStep(activeStep + 1);
+                  }
+                }}
+              ></Button>
+            </ButtonLayout>
+          </NavigationLayout>
+        </ProgressLayout>
+      ) : (
+        <h2>{statusInfo}</h2>
+      )}
     </>
   );
 };
