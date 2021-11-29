@@ -205,6 +205,20 @@ CREATE TABLE `register_tokens` (
   `token` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Daten für Tabelle `register_tokens`
+--
+
+INSERT INTO `register_tokens` (`register_link_id`, `person_id`, `token`) VALUES
+(1, 1, 'akjVD3xc_WnsLjcyEeb7z'),
+(7, 7, '2A8YTMAYi6hs3OJjXcy36'),
+(10, 10, 'EZrVEjlpxLBiBP3mej_yi'),
+(11, 11, 'TalbGqFlowNtkFHkvHt2A'),
+(13, 2, 'w60TVhlo-9zJIitQj7Z18'),
+(14, 3, 'V8YVaXr8yycqCQDAi90ZK'),
+(15, 4, 'ZM4thn4E8b2t467gyC0tR'),
+(17, 7, 'KlD_653pUw8MkPh1zdNEq');
+
 -- --------------------------------------------------------
 
 --
@@ -436,7 +450,7 @@ ALTER TABLE `persons`
 -- AUTO_INCREMENT for table `register_tokens`
 --
 ALTER TABLE `register_tokens`
-  MODIFY `register_link_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `register_link_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `roles`

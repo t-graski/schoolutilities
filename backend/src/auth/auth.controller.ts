@@ -24,7 +24,7 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @Get('login')
+  @Post('login')
   async loginUser(@Req() request, @Res() response): Promise<any> {
     return response
       .status(HttpStatus.OK)
