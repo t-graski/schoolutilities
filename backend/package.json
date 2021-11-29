@@ -21,12 +21,15 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@casl/ability": "^5.4.3",
     "@nestjs/common": "^8.0.11",
+    "@nestjs/config": "github:nestjs/config",
     "@nestjs/core": "^8.0.0",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.0.1",
     "@nestjs/platform-express": "^8.0.0",
     "@prisma/client": "^3.3.0",
+    "bcrypt": "^5.0.1",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "mime-types": "^2.1.34",

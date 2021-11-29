@@ -61,9 +61,7 @@ export class RefreshTokenService {
       );
     });
   }
-  async getNewJwtToken(userId: any) {
-    const userData = await this.databaseService.getUserDataById(userId);
-    const { password, ...result } = userData[0];
-    return this.jwtService.sign(result);
+  async getNewJwtToken(personUUID: any) {
+    return this.jwtService.sign(personUUID);
   }
 }

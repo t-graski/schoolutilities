@@ -3,11 +3,18 @@ import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
-import { LoginUserData, RegisterUserData } from 'src/types/User';
+import {
+  LoginUserData,
+  RegisterUserData,
+  UserData,
+  UserRole,
+  UserRoleData,
+} from 'src/types/User';
 import { jwtConstants } from './constants';
 import { RefreshTokenService } from './refreshToken/refreshToken.service';
 import { PrismaClient } from '@prisma/client';
 import { RETURN_DATA } from 'src/misc/parameterConstants';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 const prisma = new PrismaClient();
@@ -23,34 +30,66 @@ export class AuthService {
 
   async getUserDataByEmailAndPassword(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
-    const { password, ...result } = userDbData[0];
+    const { password, ...result } = userDbData;
     const passwordBytes = CryptoJS.DES.decrypt(
       password,
       process.env.PASSWORD_ENCRYPTION_KEY,
     );
     const decryptedPassword = passwordBytes.toString(CryptoJS.enc.Utf8);
+
     if (userData.password !== decryptedPassword) return null;
+    result.roles = await this.getRoles(result.personId);
     return result;
+  }
+
+  async getRoles(userId: number): Promise<UserRole[]> {
+    const roles = await prisma.personRoles.findMany({
+      where: {
+        personId: Number(userId),
+      },
+      select: {
+        schoolId: true,
+        roleId: true,
+      },
+    });
+    return roles;
+  }
+
+  async getRoleNameById(roleId: string): Promise<string> {
+    const roleName = await prisma.roles.findFirst({
+      where: {
+        roleId: Number(roleId),
+      },
+      select: {
+        roleName: true,
+      },
+    });
+    return roleName.roleName;
   }
 
   async login(user: any) {
     const payload = user;
+    const personUUID = await this.databaseService.getUserUUIDByEmail(
+      payload.email,
+    );
     const refreshToken = this.jwtService.sign(
-      { id: payload.personi_d },
+      { id: { personUUID } },
       { expiresIn: jwtConstants.refreshTokenExpiryTime },
     );
+
     const insertReturnValue = await this.refreshTokenService.insertRefreshToken(
       refreshToken,
       payload.person_id,
     );
-    if (insertReturnValue.affectedRows === 1) {
-      return {
-        access_token: this.jwtService.sign(payload),
-        refresh_token: refreshToken,
-      };
-    } else {
-      return null;
-    }
+
+    return {
+      access_token: this.jwtService.sign({ personUUID }),
+      refresh_token: refreshToken,
+    };
+  }
+
+  async decodeJWT(jwt: string) {
+    return this.jwtService.decode(jwt);
   }
 
   async registerUser(body: RegisterUserData) {

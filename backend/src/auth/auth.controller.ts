@@ -26,9 +26,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Get('login')
   async loginUser(@Req() request, @Res() response): Promise<any> {
+
     return response
       .status(HttpStatus.OK)
-      .send(await this.authService.login(request.user));
+      .send(await this.authService.login(request.body));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -41,5 +42,11 @@ export class AuthController {
   @Post('refresh')
   refreshToken(@Req() request, @Res() response) {
     return response.status(HttpStatus.OK).send({ token: request.user });
+  }
+
+  @Get('roles')
+  async getRoles(@Req() request, @Res() response) {
+    const result = await this.authService.getRoles(request.body);
+    return response.status(HttpStatus.OK).send(result);
   }
 }

@@ -16,6 +16,7 @@ import {
   RemoveJoinCode,
   UpdateJoinCode,
   GetAllJoinCodes,
+  GetDepartment,
 } from 'src/types/SchoolAdmin';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
@@ -164,6 +165,33 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
+  async getDepartments(body: GetDepartment): Promise<ReturnMessage> {
+    const { schoolId } = body;
+    if (!validator.isNumeric(schoolId)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    try {
+      const departments = await prisma.departments.findMany({
+        where: {
+          schoolId: Number(schoolId),
+        },
+      });
+
+      const departmentsWithoutIds = departments.map((department) => {
+        const { departmentId, schoolId, ...rest } = department;
+        return rest;
+      });
+
+      return {
+        status: HttpStatus.OK,
+        data: departmentsWithoutIds,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+  }
+
   async addDepartment(body: AddDepartment): Promise<ReturnMessage> {
     const { name, schoolId, isVisible, childsVisible } = body;
     if (
@@ -207,7 +235,7 @@ export class SchoolAdminService {
   }
 
   async addDepartments(body): Promise<ReturnMessage> {
-    if (body.departments.length <= 1) {
+    if (body.data.departments.length == 0) {
       return RETURN_DATA.INVALID_INPUT;
     }
 

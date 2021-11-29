@@ -7,6 +7,7 @@ import { CourseModule } from './course/course.module';
 import { SchoolAdminModule } from './schoolAdmin/schoolAdmin.module';
 import { GeneralConfigModule } from './generalConfig/generalConfig.module';
 import { FileUploadModule } from './file/file.module';
+// import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { FileUploadModule } from './file/file.module';
     GeneralConfigModule,
     CourseModule,
     FileUploadModule,
+    // CaslModule,
   ],
   controllers: [AppController],
   providers: [AppService],
