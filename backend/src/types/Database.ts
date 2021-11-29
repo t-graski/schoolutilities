@@ -7,3 +7,9 @@ export interface DatabaseUpdate {
   warningStatus: number;
   changedRows: number;
 }
+
+export interface ReturnMessage {
+  status: number;
+  message?: string;
+  data?: string | Object;
+}

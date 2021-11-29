@@ -6,25 +6,21 @@ export interface AddCourse {
   classId?: number;
 }
 
-export interface AddCourseReturnValue {
-  status: number;
-  message: string;
-  data?: {
-    courseId: number;
-  };
-}
-
 export interface AddUser {
   courseId: number;
   personId: number;
 }
 
-export interface AddUserReturnValue {
-  status: number;
-  message: string;
-  data?: {
-    courseId: number;
-  };
+export interface RemoveCourse {
+  courseId: number;
+}
+
+export interface UpdateCourse {
+  courseId: number;
+  name: string;
+  courseDescription: string;
+  classId: number;
+  subjectId: number;
 }
 
 export interface CourseTable {
@@ -36,14 +32,6 @@ export interface CourseTable {
   classId: number;
 }
 
-export interface UpdateCourse {
-  courseId: number;
-  name: string;
-  courseDescription: string;
-  classId: number;
-  subjectId: number;
-}
-
 export interface CourseUser {
   courseId: number;
   personId: number;
@@ -51,5 +39,11 @@ export interface CourseUser {
 
 export interface RemoveUser {
   courseId: number;
-  userId: number;
+  personId: number;
+}
+
+export interface ReturnMessage {
+  status: number;
+  message?: string;
+  data?: string | Object;
 }

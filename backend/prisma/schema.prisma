@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model coursePersons {
+  courseId Int     @map("course_id")
+  personId Int     @map("person_id")
+  courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
+  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
+
+
+  @@unique([courseId, personId], name: "coursePersonId")
+  @@index([personId], map: "fkCoursepersonspersonid")
+  @@map("course_persons")
+}
+
+model departments {
+  departmentId   Int             @id @default(autoincrement()) @map("department_id")
+  departmentUUID String          @map("department_uuid") @db.VarChar(255)
+  name           String          @db.VarChar(255)
+  schoolId       Int             @map("school_id")
+  isVisible      Boolean         @default(true) @map("is_visible")
+  childsVisible  Boolean         @default(true) @map("childs_visible")
+  schools        schools         @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkDepartmentschool")
+  schoolClasses  schoolClasses[]
+
+  @@index([schoolId], map: "fkDepartmentschool")
+}
+
+model languages {
+  languageId   Int       @id @default(autoincrement()) @map("language_id")
+  languageName String    @map("language_name") @db.VarChar(255)
+  languageTag  String    @map("language_tag") @db.VarChar(255)
+  schools      schools[]
+}
+
+model loginTokens {
+  loginTokenId Int      @id @default(autoincrement())
+  personId     Int      @map("person_id")
+  refreshToken String   @map("refresh_token") @db.VarChar(255)
+  creationTime DateTime @default(now()) @map("creation_time") @db.Timestamp(0)
+  persons      persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkLogintokenperson")
+
+  @@index([personId], map: "fkLogintokenperson")
+  @@map("login_tokens")
+}
+
+model personRoles {
+  personId Int     @unique(map: "personId") @map("person_id")
+  roleId   Int     @map("role_id")
+  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonroleperson")
+  roles    roles   @relation(fields: [roleId], references: [roleId], onUpdate: Restrict, map: "fkPersonrolerole")
+
+  @@index([roleId], map: "fkPersonrolerole")
+  @@map("peron_roles")
+}
+
+model persons {
+  personId         Int              @id @default(autoincrement()) @map("person_id")
+  personUUID       String           @map("person_uuid") @db.VarChar(255)
+  firstName        String           @db.VarChar(255)
+  lastName         String           @db.VarChar(255)
+  birthDate        DateTime         @db.Date
+  schoolId         Int?             @map("school_id")
+  classId          Int?             @map("class_id")
+  email            String           @unique(map: "email") @db.VarChar(255)
+  password         String           @db.VarChar(255)
+  emailVerified    Boolean          @default(false) @map("email_verified")
+  creationDate     DateTime         @default(now()) @map("creation_date") @db.Timestamp(0)
+  schoolClasses    schoolClasses?   @relation(fields: [classId], references: [classId], onDelete: Restrict, onUpdate: Restrict, map: "fkPersonclass")
+  schools          schools?         @relation(fields: [schoolId], references: [schoolId], onDelete: Restrict, onUpdate: Restrict, map: "fkPersonschool")
+  attendingCourses courses[]        @relation(references: [courseId])
+  loginTokens      loginTokens[]
+  personRoles      personRoles?
+  registerTokens   registerTokens[]
+
+  coursePersons   coursePersons[]
+  schoolJoinCodes schoolJoinCodes[]
+  @@index([classId], map: "fkPersonclass")
+  @@index([schoolId], map: "fkPersonschool")
+}
+
+model registerTokens {
+  registerLinkId Int     @id @default(autoincrement()) @map("register_link_id")
+  personId       Int     @map("person_id")
+  token          String  @db.VarChar(255)
+  persons        persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkRegistertokenperson")
+
+  @@index([personId], map: "fkRegistertokenperson")
+  @@map("register_tokens")
+}
+
+model roles {
+  roleId      Int           @id @default(autoincrement()) @map("role_id")
+  roleName    String        @map("role_name") @db.VarChar(255)
+  personRoles personRoles[]
+}
+
+model schoolClasses {
+  classId      Int         @id @default(autoincrement()) @map("class_id")
+  classUUID    String      @map("class_uuid") @db.VarChar(255)
+  departmentId Int         @map("department_id")
+  className    String      @map("class_name") @db.VarChar(255)
+  departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
+  courses      courses[]
+  persons      persons[]
+
+  @@index([departmentId], map: "fkSchoolclassdepartment")
+  @@map("school_classes")
+}
+
+model schools {
+  schoolId    Int           @id @default(autoincrement()) @map("school_id")
+  schoolUUID  String        @map("school_uuid") @db.VarChar(255)
+  name        String        @db.VarChar(255)
+  languageId  Int           @map("language_id")
+  timezone    String        @db.VarChar(255)
+  languages   languages     @relation(fields: [languageId], references: [languageId], onUpdate: Restrict, map: "fkSchoollanguage")
+  courses     courses[]
+  departments departments[]
+  persons     persons[]
+
+  schoolJoinCodes schoolJoinCodes[]
+  @@index([languageId], map: "languageId")
+}
+
+model subjects {
+  subjectId   Int       @id @default(autoincrement()) @map("subject_id")
+  subjectName String    @map("subject_name") @db.VarChar(255)
+  classId     Int       @map("class_id")
+  courses     courses[]
+}
+
+model courses {
+  courseId          Int           @id @default(autoincrement()) @map("course_id")
+  courseUUID        String        @map("course_uuid") @db.VarChar(255)
+  name              String        @db.VarChar(255)
+  courseDescription String        @map("course_description") @db.Text
+  schoolId          Int           @map("school_id")
+  subjectId         Int           @map("subject_id")
+  classId           Int           @map("class_id")
+  schoolClasses     schoolClasses @relation(fields: [classId], references: [classId], onUpdate: Restrict, map: "fkCourseclass")
+  schools           schools       @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkCourseschool")
+  subjects          subjects      @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
+  members           persons[]     @relation(references: [personId])
+
+  coursePersons coursePersons[]
+  @@unique([name, schoolId], map: "uniqueCourseNameSchoolId")
+  @@index([classId], map: "fkCourseclass")
+  @@index([schoolId], map: "fkCourseschool")
+  @@index([subjectId], map: "fkCoursesubject")
+}
+
+model schoolJoinCodes {
+  schoolJoinCodeId Int      @id @default(autoincrement()) @map("school_join_code_id")
+  schoolId         Int      @map("school_id")
+  joinCode         String   @unique(map: "joinCode") @map("join_code") @db.VarChar(255)
+  expireDate       DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  joinCodeName     String   @map("join_code_name") @db.VarChar(255)
+  personCreationId Int      @map("person_creation_id")
+  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  persons          persons  @relation(fields: [personCreationId], references: [personId], onUpdate: Restrict, map: "fkSchoolJoinCodePerson")
+  schools          schools  @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkSchoolJoinCodeSchool")
+
+  @@index([personCreationId], map: "fkSchoolJoinCodePerson")
+  @@index([schoolId], map: "fkSchoolJoinCodeSchool")
+  @@map("school_join_codes")
+}
+
+model courseFiles {
+  courseFileId   Int      @id @default(autoincrement()) @map("course_file_id")
+  courseFileUUID String   @map("course_file_uuid") @db.VarChar(255)
+  fileName       String   @map("file_name") @db.VarChar(255)
+  dateUploaded   DateTime @default(now()) @map("date_uploaded") @db.Timestamp(0)
+  fileSize       Int      @map("file_size")
+  fileType       String   @map("file_type") @db.VarChar(255)
+
+  @@map("course_files")
+}

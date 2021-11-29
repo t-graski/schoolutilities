@@ -21,14 +21,22 @@ export class SchoolAdminController {
   @Post('/addSchoolConfig')
   async addSchoolConfig(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addSchoolConfig(request.body);
-    return response.status(result.status).json(result?.data);
+    return response.status(result.status).json(result?.message);
   }
 
   // @UseGuards(JwtAuthGuard)
   @Post('/addDepartment')
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
-    return response.status(result.status).json(result?.data);
+    return response.status(result.status).json(result?.message);
+  }
+
+  //endpoint for addDepartments
+  // @UseGuards(JwtAuthGuard)
+  @Post('/addDepartments')
+  async addDepartments(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.addDepartments(request.body);
+    return response.status(result.status).json(result?.message);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -51,7 +59,7 @@ export class SchoolAdminController {
   @Post('/addClass')
   async addClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addClass(request.body);
-    return response.status(result.status).json(result?.data);
+    return response.status(result.status).json(result?.message);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -89,5 +97,12 @@ export class SchoolAdminController {
   async updateJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateJoinCode(request.body);
     return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('joinCode')
+  async getJoinCodes(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.getAllJoinCodes(request.body);
+    return response.status(result.status).json(result?.data);
   }
 }

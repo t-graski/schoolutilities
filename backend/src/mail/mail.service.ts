@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { logMailSend } from '../misc/logger';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const nodemailer = require('nodemailer');
 
 @Injectable()
 export class MailService {
-  async initMail(message) {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  async sendMail(message) {
     const transporter = nodemailer.createTransport({
-      name: 'Schoolutilities no reply',
+      name: 'Schoolutilities Noreply',
       host: 'mail.schoolutilities.net',
       port: 465,
       secure: true,
@@ -18,7 +18,6 @@ export class MailService {
     });
 
     const mail = await transporter.sendMail(message);
-
-    console.log('Email sent: %s', mail.messageId);
+    logMailSend(Date.now(), message.to);
   }
 }
