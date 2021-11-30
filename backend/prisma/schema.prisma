@@ -53,7 +53,7 @@ model loginTokens {
 model personRoles {
   personId Int     @unique(map: "personId") @map("person_id")
   roleId   Int     @map("role_id")
-  schoolId Int     @map("school_id") 
+  schoolId Int     @map("school_id")
   persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonroleperson")
   roles    roles   @relation(fields: [roleId], references: [roleId], onUpdate: Restrict, map: "fkPersonrolerole")
 
@@ -182,4 +182,11 @@ model courseFiles {
   fileType       String   @map("file_type") @db.VarChar(255)
 
   @@map("course_files")
+}
+
+model timezones {
+  timezoneId    Int       @id @default(autoincrement()) @map("timezone_id")
+  timezoneUUID  String    @map("timezone_uuid") @db.VarChar(255)
+  timezoneName  String    @map("timezone_name") @db.VarChar(255)
+
 }

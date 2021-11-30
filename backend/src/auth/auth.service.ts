@@ -14,6 +14,7 @@ import { jwtConstants } from './constants';
 import { RefreshTokenService } from './refreshToken/refreshToken.service';
 import { PrismaClient } from '@prisma/client';
 import { RETURN_DATA } from 'src/misc/parameterConstants';
+import { Role } from 'src/roles/role.enum';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -55,6 +56,29 @@ export class AuthService {
     return roles;
   }
 
+  async isPermitted(
+    personUUID: string,
+    requiredRoles: Role[],
+    schoolId: number,
+  ): Promise<boolean> {
+    const personId = await this.getPersonIdByUUID(personUUID);
+    const requiredRole = requiredRoles[0];
+    const roleId = await this.getRoleIdByName(requiredRole);
+    const hasRole = await prisma.personRoles.findMany({
+      where: {
+        personId: Number(personId.personId),
+        roleId: Number(roleId.roleId),
+        schoolId: Number(schoolId),
+      },
+    });
+    console.log(hasRole);
+
+    if (hasRole.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
   async getRoleNameById(roleId: string): Promise<string> {
     const roleName = await prisma.roles.findFirst({
       where: {
@@ -65,6 +89,28 @@ export class AuthService {
       },
     });
     return roleName.roleName;
+  }
+
+  async getPersonIdByUUID(personUUID: string) {
+    return await prisma.persons.findFirst({
+      where: {
+        personUUID,
+      },
+      select: {
+        personId: true,
+      },
+    });
+  }
+
+  async getRoleIdByName(roleName: string): Promise<any> {
+    return await prisma.roles.findFirst({
+      where: {
+        roleName,
+      },
+      select: {
+        roleId: true,
+      },
+    });
   }
 
   async login(user: any) {

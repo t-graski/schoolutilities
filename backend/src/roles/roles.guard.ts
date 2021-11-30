@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { AuthService } from 'src/auth/auth.service';
 import { Role } from './role.enum';
 import { ROLES_KEY } from './roles.decorator';
+import { ID_STARTERS } from '../misc/parameterConstants';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -26,14 +27,20 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    console.log(
-      await this.authService.decodeJWT(
-        request.headers.authorization.split(' ')[1],
-      ),
+    const jwt = await this.authService.decodeJWT(
+      request.headers.authorization.split(' ')[1],
     );
 
-    const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.roles?.includes(role));
-    return true;
+    const schoolId = request.body.schoolId;
+    const jwtArray = Object.keys(jwt).map((key) => jwt[key]);
+    const personUUID = jwtArray[0];
+
+    if (personUUID.startsWith(ID_STARTERS.INTERNAL)) return true;
+
+    return await this.authService.isPermitted(
+      personUUID,
+      requiredRoles,
+      schoolId,
+    );
   }
 }

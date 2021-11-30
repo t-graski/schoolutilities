@@ -119,4 +119,5 @@ export const ID_STARTERS = {
   CLASS: 4,
   COURSE: 5,
   FILES: 6,
+  TIMEZONES: 7,
 };
