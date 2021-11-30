@@ -8,6 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { Action } from 'rxjs/internal/scheduler/Action';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
@@ -59,7 +60,7 @@ export class SchoolAdminController {
 
   //@UseGuards(JwtAuthGuard)
   @Get('/departments')
-  @Roles(Role.Admin)
+  @Roles(Role.Supervisor)
   async getDepartments(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getDepartments(request.body);
     return response.status(result.status).json(result?.data);

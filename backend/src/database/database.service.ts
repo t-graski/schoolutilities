@@ -102,6 +102,9 @@ export class DatabaseService {
       where: {
         email: email,
       },
+      select: {
+        personId: true,
+      },
     });
     return user;
   }

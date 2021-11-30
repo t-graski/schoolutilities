@@ -185,8 +185,17 @@ model courseFiles {
 }
 
 model timezones {
-  timezoneId    Int       @id @default(autoincrement()) @map("timezone_id")
-  timezoneUUID  String    @map("timezone_uuid") @db.VarChar(255)
-  timezoneName  String    @map("timezone_name") @db.VarChar(255)
+  timezoneId   Int    @id @default(autoincrement()) @map("timezone_id")
+  timezoneUUID String @map("timezone_uuid") @db.VarChar(255)
+  timezoneName String @map("timezone_name") @db.VarChar(255)
+}
 
+model emailLog {
+  emailId       Int      @id @default(autoincrement()) @map("email_id")
+  emailUUID     String   @map("email_uuid") @db.VarChar(255)
+  personId      Int      @map("person_id")
+  emailDate     DateTime @default(now()) @map("email_date") @db.Timestamp(0)
+  emailSubject  String   @map("email_subject") @db.VarChar(255)
+  emailReceiver String   @map("email_receiver") @db.VarChar(255)
+  @@map("email_log")
 }

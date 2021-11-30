@@ -71,12 +71,22 @@ export class AuthService {
         schoolId: Number(schoolId),
       },
     });
-    console.log(hasRole);
+    return hasRole.length > 0;
+  }
 
-    if (hasRole.length > 0) {
-      return true;
+  async getUserRoleName(personUUID: string, schoolId: number): Promise<any> {
+    const personId = await this.getPersonIdByUUID(personUUID);
+    const roleName = await prisma.personRoles.findMany({
+      where: {
+        personId: Number(personId.personId),
+        schoolId: Number(schoolId),
+      },
+    });
+    if (roleName.length > 0) {
+      return this.getRoleNameById(roleName[0].roleId.toString());
+    } else {
+      return null;
     }
-    return false;
   }
 
   async getRoleNameById(roleId: string): Promise<string> {

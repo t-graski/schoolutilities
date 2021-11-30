@@ -120,4 +120,5 @@ export const ID_STARTERS = {
   COURSE: 5,
   FILES: 6,
   TIMEZONES: 7,
+  EMAIL: 8,
 };
