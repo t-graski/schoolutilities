@@ -91,7 +91,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Get('/getClasses')
+  @Post('/getClasses')
   async getClasses(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getClasses(request.body);
     return response

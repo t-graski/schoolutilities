@@ -20,13 +20,15 @@ export type SideDashboardProps = {
     onClickImageAlt: string;
     onClickImageFunction: Function;
   };
+  isOpen: boolean;
+  setIsOpen: Function;
 };
 
 const DashboardNavbarLayout = styled("div", {
   padding: "20px",
   paddingBottom: "120px",
   backgroundColor: "$backgroundQuaternary",
-  width: "30vw",
+  width: "100%",
   maxWidth: "350px",
   height: "100vh",
   alignItems: "center",
@@ -110,7 +112,7 @@ const SpecialLinkLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  width: "30vw",
+  width: "33.33vw",
   color: "$fontPrimary",
   maxWidth: "350px",
   "&[data-size='small']": {
@@ -160,16 +162,16 @@ const SvgIconLayout = styled("div", {
 export const SideDashboard: React.FC<SideDashboardProps> = ({
   links,
   specialButton,
+  isOpen,
+  setIsOpen,
 }) => {
-  const [isOpen, setIsOpen] = React.useState(true);
-
   const LinkLayout = styled("a", {
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
     gap: "20px",
-    width: "calc(30vw-40px)",
+    width: "calc(33.33vw-40px)",
     padding: "24px",
     borderRadius: "$normal",
     backgroundColor: "$backgroundTertiary",

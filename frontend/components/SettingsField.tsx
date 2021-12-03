@@ -13,12 +13,20 @@ import { Spacer } from "./Spacer";
 import { getAccessToken } from "../misc/authHelper";
 
 type Props = {
+  headline: string;
+  addNewEntryHeadline: string;
+  addEditEntryHeadline: string;
+  popUpInputFieldPlaceholder: string;
+  getAllEntriesUrl: string;
 };
 
 const SchoolDetailLayout = styled("form", {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
+  justifySelf: "center",
+  width: "100%",
+  padding: "20px",
 });
 
 const HeaderLayout = styled("div", {
@@ -45,16 +53,17 @@ const AddIconLayout = styled("div", {
 
 const AddIconPlus = styled("p", {
   fontSize: "80px",
+  color: "$fontPrimary",
 });
 
-const DepartmentsLayout = styled("div", {
+const SettingsEntriesLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
   width: "100%",
 });
 
-const DepartmentLayout = styled("div", {
+const SettingsEntryLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
   gap: "20px",
@@ -66,18 +75,19 @@ const DepartmentLayout = styled("div", {
   borderRadius: "20px",
 });
 
-const DepartmentName = styled("p", {
+const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
+  color: "$fontPrimary",
 });
 
-const DepartmentIcons = styled("div", {
+const SettingsEntryIcons = styled("div", {
   display: "flex",
   flexDirection: "row",
   gap: "20px",
 });
 
-const DepartmentEditIcon = styled("div", {
+const SettingsEntryEditIcon = styled("div", {
   display: "flex",
   width: "40px",
   height: "40px",
@@ -88,7 +98,7 @@ const DepartmentEditIcon = styled("div", {
   cursor: "pointer",
 });
 
-const DepartmentDeleteIcon = styled("div", {
+const SettingsEntryDeleteIcon = styled("div", {
   display: "flex",
   width: "40px",
   height: "40px",
@@ -142,51 +152,58 @@ const PopUpButtonLayout = styled("div", {
   gap: "20px",
 });
 
-export const DepartmentsDetailField: React.FC<Props> = ({
+export const SettingsField: React.FC<Props> = ({
+  headline,
+  addNewEntryHeadline,
+  addEditEntryHeadline,
+  popUpInputFieldPlaceholder,
+  getAllEntriesUrl,
 }) => {
-  const [departments, setDepartments] = React.useState([]);
+  const [settingsEntries, setSettingsEntries] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [popUpIsVisible, setPopUpIsVisible] = React.useState(false);
-  const [departmentName, setDepartmentName] = React.useState("");
-  const [departmentNameValid, setDepartmentNameValid] = React.useState(false);
-  const [departmentId, setDepartmentId] = React.useState("");
+  const [settingsEntryName, setSettingsEntryName] = React.useState("");
+  const [settingsEntryNameValid, setSettingsEntryNameValid] =
+    React.useState(false);
+  const [settingsEntryId, setSettingsEntryId] = React.useState("");
   const [error, setError] = React.useState("");
 
   useEffect(() => {
     if (isFirstTime) {
-      updateDepartmentsFromDatabase();
+      updateSettingsEntriesFromDatabase();
       setIsFirstTime(false);
     }
   });
 
-  async function updateDepartmentsFromDatabase() {
+  async function updateSettingsEntriesFromDatabase() {
     let accessToken = await getAccessToken();
-    const returnValue = await fetch(
-      "http://localhost:8080/api/schooladmin/getDepartments",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const returnValue = await fetch(getAllEntriesUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        schoolUUID: "292e08acd-9b11-4970-a509-ab643e2bfd9b",
+      }),
+    });
     const json = await returnValue.json();
-    setDepartments(json);
+    console.log(json);
+    setSettingsEntries(json);
   }
 
   function savePopUpInput() {
-    if (departmentId == "") {
-      addDepartment();
+    if (settingsEntryId == "") {
+      addSettingsEntry();
     } else {
-      editDepartment();
+      editSettingsEntry();
     }
     setPopUpIsVisible(false);
   }
 
-  async function addDepartment() {
+  async function addSettingsEntry() {
     const data = {
-      name: departmentName,
+      name: settingsEntryName,
       isVisible: true,
       childsVisible: true,
     };
@@ -205,20 +222,20 @@ export const DepartmentsDetailField: React.FC<Props> = ({
     } else {
       const body = await returnValue.json();
       setError("");
-      setDepartments([
-        ...departments,
+      setSettingsEntries([
+        ...settingsEntries,
         {
-          name: departmentName,
+          name: settingsEntryName,
           departmentUUID: body.departmentUUID,
         },
       ]);
     }
   }
 
-  async function editDepartment() {
+  async function editSettingsEntry() {
     const data = {
-      departmentUUID: departmentId,
-      name: departmentName,
+      departmentUUID: settingsEntryId,
+      name: settingsEntryName,
       isVisible: true,
       childsVisible: true,
     };
@@ -236,19 +253,19 @@ export const DepartmentsDetailField: React.FC<Props> = ({
       setError("Fehler beim Speichern");
     } else {
       setError("");
-      const newDepartments = departments.map((department, index) => {
-        if (department.departmentUUID == departmentId) {
-          department.name = departmentName;
+      const newDepartments = settingsEntries.map((department, index) => {
+        if (department.departmentUUID == settingsEntryId) {
+          department.name = settingsEntryName;
           return department;
         } else {
           return department;
         }
       });
-      setDepartments(newDepartments);
+      setSettingsEntries(newDepartments);
     }
   }
 
-  async function deleteDepartment(id) {
+  async function deleteSettingsEntry(id) {
     const data = {
       departmentUUID: id,
     };
@@ -266,13 +283,13 @@ export const DepartmentsDetailField: React.FC<Props> = ({
       setError("Fehler beim löschen");
     } else {
       setError("");
-      let newDepartments = departments.filter(
-        (department) => department.departmentUUID == id
+      let newSettingsEntries = settingsEntries.filter(
+        (settingsEntry) => settingsEntry.departmentUUID == id
       );
 
-      setDepartments(newDepartments);
-      if (newDepartments.length == 0) {
-        setDepartments([]);
+      setSettingsEntries(newSettingsEntries);
+      if (newSettingsEntries.length == 0) {
+        setSettingsEntries([]);
       }
     }
   }
@@ -284,28 +301,28 @@ export const DepartmentsDetailField: React.FC<Props> = ({
           <PopUpLayout>
             <PopUpContentLayout>
               <StyledPopUpHeadline>
-                {departmentId == ""
-                  ? "Add a new department"
-                  : "Edit a department"}
+                {settingsEntryId == ""
+                  ? addNewEntryHeadline
+                  : addEditEntryHeadline}
               </StyledPopUpHeadline>
               <Separator width="ultraSmall" alignment="left" />
               <StyledInputField>
                 <InputField
-                  label="Department name"
+                  label={popUpInputFieldPlaceholder}
                   inputType="text"
-                  value={departmentName}
+                  value={settingsEntryName}
                   onChange={(event) => {
-                    setDepartmentName(event);
+                    setSettingsEntryName(event);
                     if (regex.name.test(event)) {
-                      setDepartmentNameValid(true);
+                      setSettingsEntryNameValid(true);
                     } else {
-                      setDepartmentNameValid(false);
+                      setSettingsEntryNameValid(false);
                     }
                   }}
                   iconSrc={""}
                   iconAlt={""}
                   regex={regex.name}
-                  setValidInput={setDepartmentNameValid}
+                  setValidInput={setSettingsEntryNameValid}
                   min="2"
                   max="30"
                 />
@@ -314,21 +331,21 @@ export const DepartmentsDetailField: React.FC<Props> = ({
                 <Button
                   label="Close"
                   onClick={() => {
-                    setDepartmentName("");
+                    setSettingsEntryName("");
                     setPopUpIsVisible(false);
                   }}
                   backgroundColor={"secondary"}
                   color={"primary"}
                 />
                 <Button
-                  label={departmentId == "" ? "Add" : "Edit"}
+                  label={settingsEntryId == "" ? "Add" : "Edit"}
                   onClick={savePopUpInput}
                   backgroundColor={"primary"}
                   color={"primary"}
                   disabled={
-                    !departmentNameValid ||
-                    (departmentId != "" &&
-                      departmentName == departments[departmentId])
+                    !settingsEntryNameValid ||
+                    (settingsEntryId != "" &&
+                      settingsEntryName == settingsEntries[settingsEntryId])
                   }
                   type="submit"
                 />
@@ -339,7 +356,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({
         <HeaderLayout>
           <InformationLayout>
             <Headline
-              label="Department Setup"
+              label={headline}
               alignment="left"
               fontWeight="bold"
             ></Headline>
@@ -347,8 +364,8 @@ export const DepartmentsDetailField: React.FC<Props> = ({
           </InformationLayout>
           <AddIconLayout
             onClick={() => {
-              setDepartmentName("");
-              setDepartmentId("");
+              setSettingsEntryName("");
+              setSettingsEntryId("");
               setPopUpIsVisible(true);
             }}
           >
@@ -356,15 +373,15 @@ export const DepartmentsDetailField: React.FC<Props> = ({
           </AddIconLayout>
         </HeaderLayout>
         {error}
-        <DepartmentsLayout>
-          {departments.map((department, index) => (
-            <DepartmentLayout key={index}>
-              <DepartmentName>{department}</DepartmentName>
-              <DepartmentIcons>
-                <DepartmentEditIcon
+        <SettingsEntriesLayout>
+          {settingsEntries.map((department, index) => (
+            <SettingsEntryLayout key={index}>
+              <SettingsEntryName>{department.className}</SettingsEntryName>
+              <SettingsEntryIcons>
+                <SettingsEntryEditIcon
                   onClick={() => {
-                    setDepartmentName(department.name);
-                    setDepartmentId(department.departmentUUID);
+                    setSettingsEntryName(department.className);
+                    setSettingsEntryId(department.classUUID);
                     setPopUpIsVisible(true);
                   }}
                 >
@@ -374,10 +391,10 @@ export const DepartmentsDetailField: React.FC<Props> = ({
                     width={20}
                     height={20}
                   />
-                </DepartmentEditIcon>
-                <DepartmentDeleteIcon
+                </SettingsEntryEditIcon>
+                <SettingsEntryDeleteIcon
                   onClick={() => {
-                    deleteDepartment(index);
+                    deleteSettingsEntry(index);
                   }}
                 >
                   <Image
@@ -386,11 +403,11 @@ export const DepartmentsDetailField: React.FC<Props> = ({
                     width={20}
                     height={20}
                   />
-                </DepartmentDeleteIcon>
-              </DepartmentIcons>
-            </DepartmentLayout>
+                </SettingsEntryDeleteIcon>
+              </SettingsEntryIcons>
+            </SettingsEntryLayout>
           ))}
-        </DepartmentsLayout>
+        </SettingsEntriesLayout>
       </SchoolDetailLayout>
     </>
   );
