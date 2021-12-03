@@ -115,6 +115,9 @@ export default class Document extends NextDocument {
     src: local(''), url('/fonts/montserrat-v18-latin-900.woff2') format('woff2'),
         /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-900.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+#__next {
+  height: 100%;
+}
 `,
             }}
           />

@@ -1,20 +1,12 @@
 import React, { useEffect } from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
-import type * as Stitches from "@stitches/react";
-import { InputField } from "./InputField";
-import { Button } from "./Button";
 import Link from "next/link";
-import { regex } from "../misc/regex";
-import { useRouter } from "next/router";
-import { Headline } from "./Headline";
-import { Separator } from "./Separator";
+import { SvgIcon } from "./SvgIcon";
 
-type Props = {
+export type SideDashboardProps = {
   links: {
-    imageSrc: string;
-    imageDarkSrc: string;
-    imageAlt: string;
+    iconName: string;
     label: string;
     href: string;
     highlighted?: boolean;
@@ -32,20 +24,14 @@ type Props = {
 
 const DashboardNavbarLayout = styled("div", {
   padding: "20px",
+  paddingBottom: "120px",
   backgroundColor: "$backgroundQuaternary",
   width: "30vw",
+  maxWidth: "350px",
   height: "100vh",
-  position: "fixed",
   alignItems: "center",
-  top: "0",
-  left: "0",
-  variants: {
-    size: {
-      small: {
-        width: "10vw",
-      },
-      normal: {},
-    },
+  "&[data-size='small']": {
+    width: "fit-content",
   },
 });
 
@@ -53,7 +39,12 @@ const DashboardTopLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
-  height: "85%",
+  height: "100%",
+  overflowY: "scroll",
+  "&::-webkit-scrollbar": {
+    display: "none",
+  },
+  scrollbarWidth: "none",
 });
 
 const LogoLayout = styled("div", {
@@ -63,12 +54,16 @@ const LogoLayout = styled("div", {
   gap: "20px",
   alignItems: "center",
   width: "100%",
+  height: "75px",
   justifySelf: "flex-start",
 });
 
 const LogoHeadline = styled("h1", {
   fontWeight: "normal",
   color: "$specialPrimary",
+  "&[data-size='small']": {
+    display: "none",
+  },
 });
 
 const BoldFont = styled("span", {
@@ -81,52 +76,22 @@ const HamburgerMenuButton = styled("button", {
   backgroundColor: "transparent",
   border: "none",
   cursor: "pointer",
+  padding: "0 24px",
 });
 
 const LinksLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
+  display: "grid",
   gap: "33px",
   width: "100%",
-});
-
-const LinkLayout = styled("a", {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "flex-start",
-  alignItems: "center",
-  gap: "20px",
-  width: "100%",
-  padding: "24px",
-  borderRadius: "$normal",
-  backgroundColor: "$backgroundTertiary",
-  cursor: "pointer",
-  variants: {
-    color: {
-      primary: {},
-      secondary: {
-        backgroundColor: "$fontPrimary",
-      },
-      special: {
-        backgroundColor: "$specialPrimary",
-      },
-    },
-    size: {
-      small: {
-        padding: "15px",
-        justifyContent: "center",
-        width: "fit-content",
-      },
-      normal: {},
-    },
-  },
 });
 
 const LinkLabel = styled("p", {
   fontWeight: "bold",
   variants: {
     color: {
-      primary: {},
+      primary: {
+        color: "$fontPrimary",
+      },
       secondary: {
         color: "$backgroundTertiary",
       },
@@ -145,15 +110,12 @@ const SpecialLinkLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  variants: {
-    size: {
-      small: {
-        width: "10vw",
-      },
-      normal: {
-        width: "30vw",
-      },
-    },
+  width: "30vw",
+  color: "$fontPrimary",
+  maxWidth: "350px",
+  "&[data-size='small']": {
+    justifyContent: "center",
+    width: "fit-content",
   },
 });
 
@@ -178,12 +140,60 @@ const SecondButtonLayout = styled("div", {
   width: "100%",
 });
 
-export const SideDashboard: React.FC<Props> = ({ links, specialButton }) => {
+const SvgIconLayout = styled("div", {
+  display: "inline-block",
+  width: "30px",
+  height: "30px",
+  color: "black",
+  variants: {
+    color: {
+      highlighted: {
+        color: "$backgroundTertiary",
+      },
+      normal: {
+        color: "$fontPrimary",
+      },
+    },
+  },
+});
+
+export const SideDashboard: React.FC<SideDashboardProps> = ({
+  links,
+  specialButton,
+}) => {
   const [isOpen, setIsOpen] = React.useState(true);
+
+  const LinkLayout = styled("a", {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    gap: "20px",
+    width: "calc(30vw-40px)",
+    padding: "24px",
+    borderRadius: "$normal",
+    backgroundColor: "$backgroundTertiary",
+    cursor: "pointer",
+    "&[data-size='small']": {
+      justifyContent: "center",
+      width: "fit-content",
+    },
+    variants: {
+      color: {
+        primary: {},
+        secondary: {
+          backgroundColor: "$fontPrimary",
+        },
+        special: {
+          backgroundColor: "$specialPrimary",
+        },
+      },
+    },
+  });
 
   return (
     <>
-      <DashboardNavbarLayout size={isOpen ? "normal" : "small"}>
+      <DashboardNavbarLayout data-size={isOpen ? "normal" : "small"}>
         <DashboardTopLayout>
           <LogoLayout>
             <Image
@@ -192,13 +202,11 @@ export const SideDashboard: React.FC<Props> = ({ links, specialButton }) => {
               width={70}
               height={70}
             />
-            {isOpen && (
-              <LogoHeadline>
-                School
-                <br />
-                <BoldFont>Utilities</BoldFont>
-              </LogoHeadline>
-            )}
+            <LogoHeadline data-size={isOpen ? "normal" : "small"}>
+              School
+              <br />
+              <BoldFont>Utilities</BoldFont>
+            </LogoHeadline>
           </LogoLayout>
           <HamburgerMenuButton
             onClick={() => {
@@ -221,14 +229,13 @@ export const SideDashboard: React.FC<Props> = ({ links, specialButton }) => {
                 <Link href={link.href} key={index}>
                   <LinkLayout
                     color={link.highlighted ? "secondary" : "primary"}
-                    size={isOpen ? "normal" : "small"}
+                    data-size={isOpen ? "normal" : "small"}
                   >
-                    <Image
-                      src={link.highlighted ? link.imageDarkSrc : link.imageSrc}
-                      alt={link.imageAlt}
-                      width={30}
-                      height={30}
-                    />
+                    <SvgIconLayout
+                      color={link.highlighted ? "highlighted" : "normal"}
+                    >
+                      <SvgIcon iconName={link.iconName} />
+                    </SvgIconLayout>
                     {isOpen && (
                       <LinkLabel
                         color={link.highlighted ? "secondary" : "primary"}
@@ -243,10 +250,13 @@ export const SideDashboard: React.FC<Props> = ({ links, specialButton }) => {
           </LinksLayout>
         </DashboardTopLayout>
         {specialButton && (
-          <SpecialLinkLayout size={isOpen ? "normal" : "small"}>
+          <SpecialLinkLayout data-size={isOpen ? "normal" : "small"}>
             <SecondButtonLayout>
               <Link href={specialButton.href}>
-                <LinkLayout color="special" size={isOpen ? "normal" : "small"}>
+                <LinkLayout
+                  color="special"
+                  data-size={isOpen ? "normal" : "small"}
+                >
                   <Image
                     src={specialButton.imageSrc}
                     alt={specialButton.imageAlt}

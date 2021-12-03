@@ -9,6 +9,7 @@ import { SetupProgressSite } from "../../../components/SetupProgressSite";
 import { Spacer } from "../../../components/Spacer";
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
+import { SiteLayout } from "../../../components/SiteLayout";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",
@@ -33,7 +34,7 @@ export default function CreateSchool() {
   ]);
 
   return (
-    <>
+    <SiteLayout>
       <Head>
         <title>School Setup - SchoolUtilities</title>
       </Head>
@@ -69,6 +70,6 @@ export default function CreateSchool() {
           },
         ]}
       ></Footer>
-    </>
+    </SiteLayout>
   );
 }

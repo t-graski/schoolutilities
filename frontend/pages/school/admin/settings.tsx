@@ -17,6 +17,15 @@ const CreateSchoolLayout = styled("div", {
   padding: "50px",
 });
 
+const SettingsLayout = styled("div", {
+  display: "flex",
+  width: "100vw",
+  height: "100vh",
+  position: "fixed",
+  top: 0,
+  left: 0,
+});
+
 export default function CreateSchool() {
   const [progressSteps, setProgressSteps] = useState([
     {
@@ -38,50 +47,44 @@ export default function CreateSchool() {
       <Head>
         <title>School Setup - SchoolUtilities</title>
       </Head>
-      <SideDashboard
-        links={[
-          {
-            imageSrc: "/images/icons/department_icon.svg",
-            imageDarkSrc: "/images/icons/department_dark_icon.svg",
-            imageAlt: "Department Icon",
-            label: "Departments",
-            href: "/school/admin/departments",
-            highlighted: true,
-          },
-          {
-            imageSrc: "/images/icons/department_icon.svg",
-            imageDarkSrc: "/images/icons/department_dark_icon.svg",
-            imageAlt: "Class Icon",
-            label: "Classes",
-            href: "/school/admin/classes",
-          },
-          {
-            imageSrc: "/images/icons/department_icon.svg",
-            imageDarkSrc: "/images/icons/department_dark_icon.svg",
-            imageAlt: "Student Icon",
-            label: "Students",
-            href: "/school/admin/students",
-          },
-          {
-            imageSrc: "/images/icons/department_icon.svg",
-            imageDarkSrc: "/images/icons/department_dark_icon.svg",
-            imageAlt: "Teacher Icon",
-            label: "Teachers",
-            href: "/school/admin/teachers",
-          },
-        ]}
-        specialButton={{
-          imageSrc: "/images/icons/round_user_icon.svg",
-          imageAlt: "User Icon",
-          label: "John Doe",
-          href: "/school/admin/profile",
-          onClickImageSrc: "/images/icons/logout_icon.svg",
-          onClickImageAlt: "Logout Icon",
-          onClickImageFunction: () => {
-            console.log("Logout");
-          },
-        }}
-      ></SideDashboard>
+      <SettingsLayout>
+        <SideDashboard
+          links={[
+            {
+              iconName: "SvgDepartment",
+              label: "Departments",
+              href: "/school/admin/settings?site=departments",
+              highlighted: true,
+            },
+            {
+              iconName: "SvgClass",
+              label: "Classes",
+              href: "/school/admin/classes",
+            },
+            {
+              iconName: "SvgStudent",
+              label: "Students",
+              href: "/school/admin/students",
+            },
+            {
+              iconName: "SvgTeacher",
+              label: "Teachers",
+              href: "/school/admin/teachers",
+            },
+          ]}
+          specialButton={{
+            imageSrc: "/images/icons/round_user_icon.svg",
+            imageAlt: "User Icon",
+            label: "John Doe",
+            href: "/school/admin/profile",
+            onClickImageSrc: "/images/icons/logout_icon.svg",
+            onClickImageAlt: "Logout Icon",
+            onClickImageFunction: () => {
+              console.log("Logout");
+            },
+          }}
+        ></SideDashboard>
+      </SettingsLayout>
     </>
   );
 }

@@ -19,7 +19,9 @@ const FooterLayout = styled("footer", {
   alignItems: "center",
   lineHeight: "1.2rem",
   flexDirection: "column",
-  marginTop: "80px",
+  position: "relative",
+  bottom: "0",
+  left: "0",
   backgroundColor: "$fontTertiary",
 });
 
@@ -53,9 +55,14 @@ const FooterLink = styled("a", {
   },
 });
 
+const FooterSpacer = styled("div", {
+  height: "200px",
+});
+
 export const Footer: React.FC<Props> = ({ links, isOnMain }) => {
   return (
     <>
+      <FooterSpacer></FooterSpacer>
       <FooterLayout>
         <FooterNavbar>
           <FooterList>

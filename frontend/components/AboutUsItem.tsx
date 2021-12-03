@@ -73,11 +73,7 @@ export const AboutUsItem: React.FC<AboutUsItem> = ({
       <AboutUsLayout>
         <ImageLayout>
           <ImageDimension>
-            <Image
-              layout="fill"
-              src={imageSrc}
-              alt={imageAlt}
-            ></Image>
+            <Image layout="fill" src={imageSrc} alt={imageAlt}></Image>
           </ImageDimension>
           <VerticalLine></VerticalLine>
         </ImageLayout>
