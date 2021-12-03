@@ -11,7 +11,9 @@ import {
 } from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { UserPermissions } from 'src/types/SchoolAdmin';
+import { Role } from 'src/roles/role.enum';
 
 const prisma = new PrismaClient();
 require('dotenv').config();
@@ -79,7 +81,6 @@ export class DatabaseService {
         personId: Number(userId),
       },
     });
-    console.log(roles);
   }
 
   async getUserData(body: LoginUserData): Promise<UserData> {
@@ -139,6 +140,15 @@ export class DatabaseService {
     return school.schoolId;
   }
 
+  async getSchoolUUIDById(schoolId: number): Promise<string> {
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolId: Number(schoolId),
+      },
+    });
+    return school.schoolUUID;
+  }
+
   async getPersonIdByUUID(personUUID: string): Promise<number> {
     const person = await prisma.persons.findFirst({
       where: {
@@ -149,6 +159,55 @@ export class DatabaseService {
       },
     });
     return person.personId;
+  }
+
+  async getDepartmentIdByUUID(departmentUUID: string): Promise<any> {
+    const department = await prisma.departments.findFirst({
+      where: {
+        departmentUUID: departmentUUID,
+      },
+      select: {
+        departmentId: true,
+      },
+    });
+    return department.departmentId;
+  }
+
+  async getPersonRolesByPersonUUID(personUUID: string): Promise<any> {
+    const personId = await this.getPersonIdByUUID(personUUID);
+
+    let schools = await prisma.schoolPersons.findMany({
+      where: {
+        personId: personId,
+      },
+      select: {
+        schoolId: true,
+      },
+    });
+
+    let schoolRoles = [];
+    for (const school of schools) {
+      const role = await prisma.personRoles.findFirst({
+        where: {
+          personId: personId,
+          schoolId: school.schoolId,
+        },
+        select: {
+          roleId: true,
+        },
+      });
+
+      let schoolUUID = await this.getSchoolUUIDById(school.schoolId);
+
+      let roleName = Object.keys(Role)[role.roleId];
+
+      schoolRoles.push({
+        schoolUUID,
+        roleName,
+      });
+    }
+
+    return schoolRoles;
   }
 
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {

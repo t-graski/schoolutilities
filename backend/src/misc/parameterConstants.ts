@@ -57,6 +57,7 @@ const RETURN_MESSAGES = {
   ALREADY_EXISTS_MESSAGE: 'Entry already exists',
   NOT_FOUND_MESSAGE: 'Entry not found',
   REFERENCE_ERROR_MESSAGE: 'Foreign key reference error',
+  UNIQUE_ERROR_MESSAGE: 'Unique constraint error',
   MAX_JOIN_CODES_REACHED_MESSAGE: `Maximum number of join codes reached (${LENGTHS.MAX_JOIN_CODES})`,
   INVALID_FILE_MESSAGE: 'Invalid file type provided',
   FILE_SIZE_EXCEEDED_MESSAGE: `Maximum file size exceeded ${LENGTHS.MAX_FILE_SIZE} bytes`,
@@ -88,6 +89,10 @@ export const RETURN_DATA = {
   REFERENCE_ERROR: {
     status: HttpStatus.BAD_REQUEST,
     message: RETURN_MESSAGES.REFERENCE_ERROR_MESSAGE,
+  },
+  UNIQUE_ERROR: {
+    status: HttpStatus.CONFLICT,
+    message: RETURN_MESSAGES.UNIQUE_ERROR_MESSAGE,
   },
   MAX_JOIN_CODES_REACHED: {
     status: HttpStatus.FORBIDDEN,

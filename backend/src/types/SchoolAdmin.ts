@@ -22,8 +22,8 @@ export interface GetDepartment {
 export interface AddDepartment {
   name: string;
   schoolId: number;
-  isVisible?: boolean;
-  childsVisible?: boolean;
+  isVisible?: string;
+  childsVisible?: string;
 }
 
 export interface RemoveDepartment {
@@ -32,7 +32,7 @@ export interface RemoveDepartment {
 
 export interface UpdateDepartment {
   name: string;
-  departmentId: number;
+  departmentUUID: string;
   isVisible?: boolean;
   childsVisible?: boolean;
 }
@@ -82,4 +82,8 @@ export interface ReturnMessage {
   status: number;
   message?: string;
   data?: string | Object;
+}
+
+export interface UserPermissions {
+  personUUID: string;
 }
