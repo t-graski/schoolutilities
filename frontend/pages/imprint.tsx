@@ -5,6 +5,7 @@ import { Headline } from "../components/Headline";
 import React from "react";
 import { Spacer } from "../components/Spacer";
 import { Separator } from "../components/Separator";
+import Head from "next/head";
 
 const ImprintLayout = styled("div", {
   width: "100%",
@@ -21,6 +22,9 @@ const MainContentText = styled("p", {
 export default function Features() {
   return (
     <>
+      <Head>
+        <title>Imprint - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {
@@ -31,10 +35,6 @@ export default function Features() {
             href: "/features",
             label: "Features",
           },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
         ]}
       ></Navbar>
       <Spacer size="medium"></Spacer>
@@ -44,16 +44,16 @@ export default function Features() {
         <h2>SchoolUtilities</h2>
         <Spacer size="small"></Spacer>
         <MainContentText>
-          Auhirschgasse 5 A-4030 Linz
-          <br />
           E-Mail:{" "}
-          <a href="mailto:schoolutilities.bot@gmail.com">
-            schoolutilities.bot@gmail.com
+          <a href="mailto:contact@schoolutilities.com">
+            contact@schoolutilities.com
           </a>
           <br />
-          CEO: Tobias Graski
+          Chief Executive Officer: Tobias Graski
           <br />
-          CDO: David Wögerbauer
+          Chief Technology Officer: David Wögerbauer
+          <br />
+          Chief Design Officer: Florian Doppler
         </MainContentText>
         <Spacer size="small"></Spacer>
 

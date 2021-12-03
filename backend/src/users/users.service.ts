@@ -42,7 +42,8 @@ async function generateRegisterToken(
   );
   if (!insertTokenStatus || (insertTokenStatus && !insertTokenStatus.insertId))
     throw new Error('Error while generating token');
-  const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
+  const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register-approved?token=${generatedToken}`;
+  console.log(email);
   const message = {
     from: 'noreply@schoolutilities.net',
     to: email,

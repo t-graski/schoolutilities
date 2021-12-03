@@ -5,6 +5,7 @@ import { StartPageNav } from "../components/StartPageNav";
 import React, { useEffect, useState } from "react";
 import cookie from "js-cookie";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -40,6 +41,20 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>SchoolUtilities</title>
+        <meta property="og:type" content="SchoolUtilities"></meta>
+        <meta property="og:url" content="https://schoolutilities.net/"></meta>
+        <meta property="og:title" content="SchoolUtilities"></meta>
+        <meta
+          property="og:description"
+          content="The easiest way to manage your school discord server"
+        ></meta>
+        <meta
+          property="og:image"
+          content="https://i.imgur.com/KJ63K3r.png"
+        ></meta>
+      </Head>
       <Navbar
         links={[
           {
@@ -50,23 +65,25 @@ export default function Home() {
             href: "/features",
             label: "Features",
           },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
         ]}
         isOnMain={true}
       ></Navbar>
       <Maincontent>
         <StartPageNav
           links={[
+            // {
+            //   href: userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL,
+            //   label: userData ? "Dashboard" : "Login with Discord",
+            //   imageSrc: userData
+            //     ? "/images/business-report.svg"
+            //     : "/images/discord.svg",
+            //   imageAlt: "Discord logo",
+            // },
             {
-              href: userData ? "/dashboard" : process.env.DISCORD_LOGIN_URL,
-              label: userData ? "Dashboard" : "Login with Discord",
-              imageSrc: userData
-                ? "/images/business-report.svg"
-                : "/images/discord.svg",
-              imageAlt: "Discord logo",
+              href: "/auth/register",
+              label: "Register",
+              imageSrc: "/images/user.svg",
+              imageAlt: "Register",
             },
             {
               href: "/features",
@@ -79,12 +96,6 @@ export default function Home() {
               label: "About us",
               imageSrc: "/images/about_us.svg",
               imageAlt: "Speech bubble",
-            },
-            {
-              href: "/change-log",
-              label: "Change Log",
-              imageSrc: "/images/change_log.svg",
-              imageAlt: "Change Log",
             },
           ]}
         ></StartPageNav>

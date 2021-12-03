@@ -2,6 +2,7 @@ import { styled } from "../stitches.config";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import React from "react";
+import Head from "next/head";
 import { Spacer } from "../components/Spacer";
 
 const StyledDiv = styled("div", {
@@ -12,6 +13,9 @@ const StyledDiv = styled("div", {
 export default function DataPolicy() {
   return (
     <>
+      <Head>
+        <title>Data Policy - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {
@@ -22,17 +26,13 @@ export default function DataPolicy() {
             href: "/features",
             label: "Features",
           },
-          {
-            href: "/dashboard",
-            label: "Dashboard",
-          },
         ]}
       ></Navbar>
       <Spacer size="medium"></Spacer>
       <StyledDiv>
-      <div
-        dangerouslySetInnerHTML={{
-          __html: `
+        <div
+          dangerouslySetInnerHTML={{
+            __html: `
         <style>
         [data-custom-class='body'], [data-custom-class='body'] * {
                 background: transparent !important;
@@ -88,7 +88,7 @@ export default function DataPolicy() {
             <div style="color: #595959;font-size: 14px;font-family: Arial;padding-top:16px;">This privacy policy was created using <a style="color: rgb(48, 48, 241) !important;" href="https://termly.io/products/privacy-policy-generator/?ftseo">Termly’s Privacy Policy Generator</a>.</div>
     </div>
       `,
-        }}
+          }}
         ></div>
       </StyledDiv>
       <Footer
