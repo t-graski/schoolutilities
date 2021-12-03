@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseUpdate, ReturnMessage } from 'src/types/Database';
 import { LoginUserData, RegisterUserData, UserData } from 'src/types/User';
 import {
@@ -12,7 +12,7 @@ import {
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { UserPermissions } from 'src/types/SchoolAdmin';
+import { GetDepartments, UserPermissions } from 'src/types/SchoolAdmin';
 import { Role } from 'src/roles/role.enum';
 
 const prisma = new PrismaClient();
@@ -208,6 +208,35 @@ export class DatabaseService {
     }
 
     return schoolRoles;
+  }
+
+  async getDepartmentIds(body: GetDepartments): Promise<any> {
+    const { schoolUUID } = body;
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId = await this.getSchoolIdByUUID(schoolUUID);
+
+    try {
+      const departments = await prisma.departments.findMany({
+        where: {
+          schoolId: Number(schoolId),
+        },
+      });
+
+      //remove everything but the departmentId from departments
+      const departmentIds = departments.map((department) => {
+        return department.departmentId;
+      });
+
+      return {
+        status: HttpStatus.OK,
+        data: departmentIds,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
   }
 
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {

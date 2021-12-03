@@ -15,8 +15,16 @@ export interface AddSchool {
   timezone: string;
 }
 
+export interface GetClasses {
+  schoolUUID: string;
+}
+
 export interface GetDepartment {
   schoolId: number;
+}
+
+export interface GetDepartments {
+  schoolUUID: string;
 }
 
 export interface AddDepartment {

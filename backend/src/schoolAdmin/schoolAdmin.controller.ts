@@ -67,7 +67,7 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/addClass')
   async addClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addClass(request.body);
@@ -88,6 +88,15 @@ export class SchoolAdminController {
   async updateClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateClass(request.body);
     return response.status(result.status).json(result?.message);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Get('/getClasses')
+  async getClasses(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.getClasses(request.body);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)

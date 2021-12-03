@@ -20,6 +20,8 @@ import {
   GetDepartment,
   JoinSchool,
   UserPermissions,
+  GetClasses,
+  GetDepartments,
 } from 'src/types/SchoolAdmin';
 import { DatabaseService } from 'src/database/database.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -96,13 +98,14 @@ export class SchoolAdminService {
           classUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
           departments: {
             connect: {
-              departmentId,
+              departmentId: Number(departmentId),
             },
           },
           className,
         },
       });
     } catch (err) {
+      console.log(err);
       return RETURN_DATA.DATABASE_ERORR;
     }
     return RETURN_DATA.SUCCESS;
@@ -169,11 +172,42 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getDepartments(body: GetDepartment): Promise<ReturnMessage> {
-    const { schoolId } = body;
-    if (!validator.isNumeric(schoolId)) {
+  async getClasses(body: GetClasses): Promise<ReturnMessage> {
+    const { schoolUUID } = body;
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
+
+    const departments = await this.databaseService.getDepartmentIds({
+      schoolUUID,
+    });
+
+    let classes = [];
+    try {
+      for (const department of departments.data) {
+        const departmentClasses = await prisma.schoolClasses.findMany({
+          where: {
+            departmentId: department,
+          },
+        });
+        classes.push(...departmentClasses);
+      }
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: classes,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+  }
+
+  async getDepartments(body: GetDepartments): Promise<ReturnMessage> {
+    const { schoolUUID } = body;
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 
     try {
       const departments = await prisma.departments.findMany({
@@ -246,7 +280,9 @@ export class SchoolAdminService {
   }
 
   async addDepartments(body): Promise<ReturnMessage> {
-    if (body.data.departments.length == 0) {
+    console.log(body);
+
+    if (body.departments.length == 0) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
