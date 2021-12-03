@@ -1,10 +1,5 @@
-import { Injectable, HttpStatus, Logger } from '@nestjs/common';
-import { regex } from 'src/regex';
-import { nanoid } from 'nanoid';
-import validator from 'validator';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
-import { v4 as uuidv4 } from 'uuid';
 import { Cron } from '@nestjs/schedule';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
@@ -15,8 +10,6 @@ const prisma = new PrismaClient();
 @Injectable()
 export class StatisticsService {
   constructor() {}
-
-  //cron pattern for once every hour
 
   // @Cron('18 * * * * *')
   async getStatistics() {
@@ -62,5 +55,9 @@ export class StatisticsService {
         emailVerified: false,
       },
     });
+  }
+
+  async sentEmails() {
+    return await prisma.emailLog.count();
   }
 }

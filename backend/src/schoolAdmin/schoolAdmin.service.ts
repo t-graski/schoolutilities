@@ -17,7 +17,9 @@ import {
   UpdateJoinCode,
   GetAllJoinCodes,
   GetDepartment,
+  JoinSchool,
 } from 'src/types/SchoolAdmin';
+import { DatabaseService } from 'src/database/database.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -27,7 +29,7 @@ const prisma = new PrismaClient();
 @Injectable()
 export class SchoolAdminService {
   connection: any;
-  constructor() {
+  constructor(private readonly databaseService: DatabaseService) {
     this.connection = mysql.createConnection({
       host: process.env.DATABASE_HOST,
       user: process.env.DATABASE_USER,
@@ -340,6 +342,100 @@ export class SchoolAdminService {
     } catch (err) {
       return RETURN_DATA.DATABASE_ERORR;
     }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async joinSchool(body: JoinSchool): Promise<ReturnMessage> {
+    const { personUUID, schoolUUID } = body;
+    if (
+      !validator.isUUID(personUUID.slice(1), 4) ||
+      !validator.isUUID(schoolUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const person = await prisma.persons.findFirst({
+      where: {
+        personUUID: personUUID,
+      },
+    });
+
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+    });
+
+    if (!school || !person) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+
+    try {
+      await prisma.schoolPersons.create({
+        data: {
+          persons: {
+            connect: {
+              personId: personId,
+            },
+          },
+          schools: {
+            connect: {
+              schoolId: schoolId,
+            },
+          },
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async leaveSchool(body: JoinSchool): Promise<ReturnMessage> {
+    const { personUUID, schoolUUID } = body;
+    if (
+      !validator.isUUID(personUUID.slice(1), 4) ||
+      !validator.isUUID(schoolUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const person = await prisma.persons.findUnique({
+      where: {
+        personUUID: personUUID,
+      },
+    });
+
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+    });
+
+    if (!school || !person) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+
+    try {
+      await prisma.schoolPersons.delete({
+        where: {
+          schoolPersonId: {
+            personId: personId,
+            schoolId: schoolId,
+          },
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+
     return RETURN_DATA.SUCCESS;
   }
 

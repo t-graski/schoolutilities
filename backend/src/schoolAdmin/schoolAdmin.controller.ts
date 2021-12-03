@@ -8,7 +8,6 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { Action } from 'rxjs/internal/scheduler/Action';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
@@ -58,12 +57,14 @@ export class SchoolAdminController {
     return response.status(result.status).json(result?.message);
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/departments')
-  @Roles(Role.Supervisor)
+  @Roles(Role.Student)
   async getDepartments(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getDepartments(request.body);
-    return response.status(result.status).json(result?.data);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -115,5 +116,23 @@ export class SchoolAdminController {
   async getJoinCodes(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getAllJoinCodes(request.body);
     return response.status(result.status).json(result?.data);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Post('joinSchool')
+  async joinSchool(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.joinSchool(request.body);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Post('leaveSchool')
+  async leaveSchool(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.leaveSchool(request.body);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 }

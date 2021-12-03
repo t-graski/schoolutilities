@@ -8,7 +8,6 @@ import { SchoolAdminModule } from './schoolAdmin/schoolAdmin.module';
 import { GeneralConfigModule } from './generalConfig/generalConfig.module';
 import { FileUploadModule } from './file/file.module';
 import { StatisticsModule } from './statistics/statistics.module';
-// import { CaslModule } from './casl/casl.module';
 import { TimezoneModule } from './timezone/timezone.module';
 
 @Module({
@@ -21,7 +20,6 @@ import { TimezoneModule } from './timezone/timezone.module';
     FileUploadModule,
     StatisticsModule,
     TimezoneModule,
-    // CaslModule,
   ],
   controllers: [AppController],
   providers: [AppService],

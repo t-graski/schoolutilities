@@ -127,6 +127,30 @@ export class DatabaseService {
     return user.personUUID;
   }
 
+  async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+      select: {
+        schoolId: true,
+      },
+    });
+    return school.schoolId;
+  }
+
+  async getPersonIdByUUID(personUUID: string): Promise<number> {
+    const person = await prisma.persons.findFirst({
+      where: {
+        personUUID: personUUID,
+      },
+      select: {
+        personId: true,
+      },
+    });
+    return person.personId;
+  }
+
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(

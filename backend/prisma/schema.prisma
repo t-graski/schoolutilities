@@ -16,6 +16,7 @@ model coursePersons {
 
   @@unique([courseId, personId], name: "coursePersonId")
   @@index([personId], map: "fkCoursepersonspersonid")
+  @@index([courseId], map: "fkCoursepersonscourseid")
   @@map("course_persons")
 }
 
@@ -63,18 +64,14 @@ model personRoles {
 
 model persons {
   personId         Int              @id @default(autoincrement()) @map("person_id")
-  personUUID       String           @map("person_uuid") @db.VarChar(255)
+  personUUID       String           @unique(map: "personUUID") @map("person_uuid") @db.VarChar(255)
   firstName        String           @db.VarChar(255)
   lastName         String           @db.VarChar(255)
   birthDate        DateTime         @db.Date
-  schoolId         Int?             @map("school_id")
-  classId          Int?             @map("class_id")
   email            String           @unique(map: "email") @db.VarChar(255)
   password         String           @db.VarChar(255)
   emailVerified    Boolean          @default(false) @map("email_verified")
   creationDate     DateTime         @default(now()) @map("creation_date") @db.Timestamp(0)
-  schoolClasses    schoolClasses?   @relation(fields: [classId], references: [classId], onDelete: Restrict, onUpdate: Restrict, map: "fkPersonclass")
-  schools          schools?         @relation(fields: [schoolId], references: [schoolId], onDelete: Restrict, onUpdate: Restrict, map: "fkPersonschool")
   attendingCourses courses[]        @relation(references: [courseId])
   loginTokens      loginTokens[]
   personRoles      personRoles?
@@ -82,8 +79,7 @@ model persons {
 
   coursePersons   coursePersons[]
   schoolJoinCodes schoolJoinCodes[]
-  @@index([classId], map: "fkPersonclass")
-  @@index([schoolId], map: "fkPersonschool")
+  schoolPersons   schoolPersons[]
 }
 
 model registerTokens {
@@ -109,7 +105,6 @@ model schoolClasses {
   className    String      @map("class_name") @db.VarChar(255)
   departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
   courses      courses[]
-  persons      persons[]
 
   @@index([departmentId], map: "fkSchoolclassdepartment")
   @@map("school_classes")
@@ -124,9 +119,9 @@ model schools {
   languages   languages     @relation(fields: [languageId], references: [languageId], onUpdate: Restrict, map: "fkSchoollanguage")
   courses     courses[]
   departments departments[]
-  persons     persons[]
 
   schoolJoinCodes schoolJoinCodes[]
+  schoolPersons   schoolPersons[]
   @@index([languageId], map: "languageId")
 }
 
@@ -197,5 +192,19 @@ model emailLog {
   emailDate     DateTime @default(now()) @map("email_date") @db.Timestamp(0)
   emailSubject  String   @map("email_subject") @db.VarChar(255)
   emailReceiver String   @map("email_receiver") @db.VarChar(255)
+
   @@map("email_log")
+}
+
+model schoolPersons {
+  schoolId Int     @map("school_id")
+  personId Int     @map("person_id")
+  schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkSchoolPersonSchoolId")
+  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkSchoolPersonPersonId")
+
+
+  @@unique([schoolId, personId], name: "schoolPersonId")
+  @@index([schoolId], map: "fkSchoolPersonSchoolId")
+  @@index([personId], map: "fkSchoolPersonPersonId")
+  @@map("school_persons")
 }
