@@ -16,7 +16,10 @@ import {
   RemoveJoinCode,
   UpdateJoinCode,
   GetAllJoinCodes,
+  GetDepartment,
+  JoinSchool,
 } from 'src/types/SchoolAdmin';
+import { DatabaseService } from 'src/database/database.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -26,7 +29,7 @@ const prisma = new PrismaClient();
 @Injectable()
 export class SchoolAdminService {
   connection: any;
-  constructor() {
+  constructor(private readonly databaseService: DatabaseService) {
     this.connection = mysql.createConnection({
       host: process.env.DATABASE_HOST,
       user: process.env.DATABASE_USER,
@@ -164,6 +167,33 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
+  async getDepartments(body: GetDepartment): Promise<ReturnMessage> {
+    const { schoolId } = body;
+    if (!validator.isNumeric(schoolId)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    try {
+      const departments = await prisma.departments.findMany({
+        where: {
+          schoolId: Number(schoolId),
+        },
+      });
+
+      const departmentsWithoutIds = departments.map((department) => {
+        const { departmentId, schoolId, ...rest } = department;
+        return rest;
+      });
+
+      return {
+        status: HttpStatus.OK,
+        data: departmentsWithoutIds,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+  }
+
   async addDepartment(body: AddDepartment): Promise<ReturnMessage> {
     const { name, schoolId, isVisible, childsVisible } = body;
     if (
@@ -207,7 +237,7 @@ export class SchoolAdminService {
   }
 
   async addDepartments(body): Promise<ReturnMessage> {
-    if (body.departments.length <= 1) {
+    if (body.data.departments.length == 0) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
@@ -312,6 +342,100 @@ export class SchoolAdminService {
     } catch (err) {
       return RETURN_DATA.DATABASE_ERORR;
     }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async joinSchool(body: JoinSchool): Promise<ReturnMessage> {
+    const { personUUID, schoolUUID } = body;
+    if (
+      !validator.isUUID(personUUID.slice(1), 4) ||
+      !validator.isUUID(schoolUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const person = await prisma.persons.findFirst({
+      where: {
+        personUUID: personUUID,
+      },
+    });
+
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+    });
+
+    if (!school || !person) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+
+    try {
+      await prisma.schoolPersons.create({
+        data: {
+          persons: {
+            connect: {
+              personId: personId,
+            },
+          },
+          schools: {
+            connect: {
+              schoolId: schoolId,
+            },
+          },
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async leaveSchool(body: JoinSchool): Promise<ReturnMessage> {
+    const { personUUID, schoolUUID } = body;
+    if (
+      !validator.isUUID(personUUID.slice(1), 4) ||
+      !validator.isUUID(schoolUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const person = await prisma.persons.findUnique({
+      where: {
+        personUUID: personUUID,
+      },
+    });
+
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+    });
+
+    if (!school || !person) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+
+    try {
+      await prisma.schoolPersons.delete({
+        where: {
+          schoolPersonId: {
+            personId: personId,
+            schoolId: schoolId,
+          },
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+
     return RETURN_DATA.SUCCESS;
   }
 

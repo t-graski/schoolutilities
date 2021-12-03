@@ -4,16 +4,18 @@ import {
   Delete,
   Req,
   Res,
-  HttpStatus,
   Post,
-  Body,
   Put,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
+import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 
 @Controller('api/schoolAdmin')
+@UseGuards(RolesGuard)
 export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) {}
 
@@ -26,12 +28,12 @@ export class SchoolAdminController {
 
   // @UseGuards(JwtAuthGuard)
   @Post('/addDepartment')
+  //@Roles(Role.Admin)
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  //endpoint for addDepartments
   // @UseGuards(JwtAuthGuard)
   @Post('/addDepartments')
   async addDepartments(@Req() request, @Res() response) {
@@ -53,6 +55,16 @@ export class SchoolAdminController {
   async updateDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateDepartment(request.body);
     return response.status(result.status).json(result?.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/departments')
+  @Roles(Role.Student)
+  async getDepartments(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.getDepartments(request.body);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -104,5 +116,23 @@ export class SchoolAdminController {
   async getJoinCodes(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getAllJoinCodes(request.body);
     return response.status(result.status).json(result?.data);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Post('joinSchool')
+  async joinSchool(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.joinSchool(request.body);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Post('leaveSchool')
+  async leaveSchool(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.leaveSchool(request.body);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 }

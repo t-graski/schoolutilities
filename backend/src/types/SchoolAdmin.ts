@@ -15,6 +15,10 @@ export interface AddSchool {
   timezone: string;
 }
 
+export interface GetDepartment {
+  schoolId: number;
+}
+
 export interface AddDepartment {
   name: string;
   schoolId: number;
@@ -39,6 +43,11 @@ export interface ClassTable {
   departmentId: number;
 }
 
+export interface JoinSchool {
+  schoolUUID: string;
+  personUUID: string;
+}
+
 export interface AddJoinCode {
   schoolId: number;
   expireDate: Date;
@@ -52,7 +61,7 @@ export interface RemoveJoinCode {
 
 export interface UpdateJoinCode {
   joinCodeId: number;
-  expireDate?: Date;
+  expireDate?: string;
   name?: string;
 }
 export interface JoinCodeTable {

@@ -2,7 +2,7 @@
 const mysql = require('mysql2');
 import { Injectable } from '@nestjs/common';
 import { DatabaseUpdate, ReturnMessage } from 'src/types/Database';
-import { LoginUserData, RegisterUserData } from 'src/types/User';
+import { LoginUserData, RegisterUserData, UserData } from 'src/types/User';
 import {
   LENGTHS,
   RETURN_DATA,
@@ -69,11 +69,29 @@ export class DatabaseService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getUserData(body: LoginUserData): Promise<object> {
+  async getUserRoles(userId: string): Promise<string[]> {
+    if (!validator.isNumeric(userId)) {
+      return [];
+    }
+
+    const roles = await prisma.personRoles.findMany({
+      where: {
+        personId: Number(userId),
+      },
+    });
+    console.log(roles);
+  }
+
+  async getUserData(body: LoginUserData): Promise<UserData> {
     const { email } = body;
     const user = await prisma.persons.findUnique({
       where: {
         email: email,
+      },
+      select: {
+        personId: true,
+        email: true,
+        password: true,
       },
     });
     return user;
@@ -84,17 +102,53 @@ export class DatabaseService {
       where: {
         email: email,
       },
+      select: {
+        personId: true,
+      },
     });
     return user;
   }
 
-  async getUserDataById(userId: number): Promise<object> {
-    const user = await prisma.persons.findUnique({
+  async getUserDataById(userId: number): Promise<UserData> {
+    const user = await prisma.persons.findFirst({
       where: {
         personId: userId,
       },
     });
     return user;
+  }
+
+  async getUserUUIDByEmail(email: string): Promise<string> {
+    const user = await prisma.persons.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    return user.personUUID;
+  }
+
+  async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+      select: {
+        schoolId: true,
+      },
+    });
+    return school.schoolId;
+  }
+
+  async getPersonIdByUUID(personUUID: string): Promise<number> {
+    const person = await prisma.persons.findFirst({
+      where: {
+        personUUID: personUUID,
+      },
+      select: {
+        personId: true,
+      },
+    });
+    return person.personId;
   }
 
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {
