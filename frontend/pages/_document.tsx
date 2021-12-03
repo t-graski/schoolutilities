@@ -1,6 +1,6 @@
-import React from 'react'
-import NextDocument, { Html, Head, Main, NextScript } from 'next/document'
-import { getCssText } from '../stitches.config'
+import React from "react";
+import NextDocument, { Html, Head, Main, NextScript } from "next/document";
+import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
   render() {
@@ -49,8 +49,21 @@ export default class Document extends NextDocument {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          <script type="text/javascript" src="/redirectLogin.js">
-          </script>
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-879Y3BTW0K', {
+                  page_path: window.location.pathname,
+                });`,
+            }}
+          ></script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
@@ -111,6 +124,6 @@ export default class Document extends NextDocument {
           <NextScript />
         </body>
       </Html>
-    )
+    );
   }
 }

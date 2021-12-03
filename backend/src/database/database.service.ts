@@ -157,7 +157,11 @@ export class DatabaseService {
         'insert into `login_tokens` set person_id=?, expire_date=ADDTIME(now(), "06:00:00"), token=?',
         [userId, token],
         function (error, results, fields) {
-          resolve(results);
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
         },
       );
     });
@@ -169,7 +173,11 @@ export class DatabaseService {
         'insert into `register_tokens` set person_id=?, token=?',
         [userId, token],
         function (error, results, fields) {
-          resolve(results);
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
         },
       );
     });
@@ -181,7 +189,11 @@ export class DatabaseService {
         'select person_id from `persons` where person_id IN(select person_id from `register_tokens` where token=?) and email_verified=0',
         [token],
         function (error, results, fields) {
-          resolve(results);
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
         },
       );
     });
@@ -193,7 +205,11 @@ export class DatabaseService {
         'delete from `register_tokens` where token=?',
         [token],
         function (error, results, fields) {
-          resolve(results);
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
         },
       );
     });
@@ -205,7 +221,11 @@ export class DatabaseService {
         'update `persons` set email_verified=1 where person_id IN (select person_id from `register_tokens` where token=?)',
         [token],
         function (error, results, fields) {
-          resolve(results);
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
         },
       );
     });
