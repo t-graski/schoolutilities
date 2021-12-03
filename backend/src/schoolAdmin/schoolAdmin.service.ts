@@ -5,6 +5,7 @@ import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
 import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
+import { Role, RoleOrder } from '../roles/role.enum';
 import {
   AddClass,
   AddSchool,
@@ -18,6 +19,9 @@ import {
   GetAllJoinCodes,
   GetDepartment,
   JoinSchool,
+  UserPermissions,
+  GetClasses,
+  GetDepartments,
 } from 'src/types/SchoolAdmin';
 import { DatabaseService } from 'src/database/database.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -94,13 +98,14 @@ export class SchoolAdminService {
           classUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
           departments: {
             connect: {
-              departmentId,
+              departmentId: Number(departmentId),
             },
           },
           className,
         },
       });
     } catch (err) {
+      console.log(err);
       return RETURN_DATA.DATABASE_ERORR;
     }
     return RETURN_DATA.SUCCESS;
@@ -167,11 +172,42 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getDepartments(body: GetDepartment): Promise<ReturnMessage> {
-    const { schoolId } = body;
-    if (!validator.isNumeric(schoolId)) {
+  async getClasses(body: GetClasses): Promise<ReturnMessage> {
+    const { schoolUUID } = body;
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
+
+    const departments = await this.databaseService.getDepartmentIds({
+      schoolUUID,
+    });
+
+    let classes = [];
+    try {
+      for (const department of departments.data) {
+        const departmentClasses = await prisma.schoolClasses.findMany({
+          where: {
+            departmentId: department,
+          },
+        });
+        classes.push(...departmentClasses);
+      }
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: classes,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERORR;
+    }
+  }
+
+  async getDepartments(body: GetDepartments): Promise<ReturnMessage> {
+    const { schoolUUID } = body;
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 
     try {
       const departments = await prisma.departments.findMany({
@@ -217,7 +253,7 @@ export class SchoolAdminService {
     }
 
     try {
-      await prisma.departments.create({
+      let department = await prisma.departments.create({
         data: {
           departmentUUID: `${ID_STARTERS.DEPARTMENT}${uuidv4()}`,
           name,
@@ -230,14 +266,23 @@ export class SchoolAdminService {
           childsVisible: this.toBoolean(childsVisible),
         },
       });
+
+      delete department.departmentId;
+      delete department.schoolId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: department,
+      };
     } catch (err) {
       return RETURN_DATA.DATABASE_ERORR;
     }
-    return RETURN_DATA.SUCCESS;
   }
 
   async addDepartments(body): Promise<ReturnMessage> {
-    if (body.data.departments.length == 0) {
+    console.log(body);
+
+    if (body.departments.length == 0) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
@@ -276,10 +321,14 @@ export class SchoolAdminService {
   }
 
   async removeDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
-    const { departmentId } = body;
-    if (!validator.isNumeric(departmentId)) {
+    const { departmentUUID } = body;
+    if (!validator.isUUID(departmentUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
+
+    const departmentId = await this.databaseService.getDepartmentIdByUUID(
+      departmentUUID,
+    );
 
     const department = await prisma.departments.findUnique({
       where: {
@@ -308,15 +357,19 @@ export class SchoolAdminService {
   }
 
   async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
-    const { name, isVisible, childsVisible, departmentId } = body;
+    const { departmentUUID, name, isVisible, childsVisible } = body;
     if (
       !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
-      !validator.isNumeric(departmentId) ||
+      !validator.isUUID(departmentUUID.slice(1), 4) ||
       !validator.isBoolean(isVisible) ||
       !validator.isBoolean(childsVisible)
     ) {
       return RETURN_DATA.INVALID_INPUT;
     }
+
+    const departmentId = await this.databaseService.getDepartmentIdByUUID(
+      departmentUUID,
+    );
 
     const department = await prisma.departments.findUnique({
       where: {
@@ -340,6 +393,9 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
+      if (err.code === 'P2002') {
+        return RETURN_DATA.UNIQUE_ERROR;
+      }
       return RETURN_DATA.DATABASE_ERORR;
     }
     return RETURN_DATA.SUCCESS;
@@ -611,6 +667,22 @@ export class SchoolAdminService {
       joinCode = nanoid();
     }
     return joinCode;
+  }
+
+  async getUserPermissions(body: UserPermissions): Promise<ReturnMessage> {
+    const { personUUID } = body;
+    if (!validator.isUUID(personUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const personRoles = await this.databaseService.getPersonRolesByPersonUUID(
+      personUUID,
+    );
+
+    return {
+      status: HttpStatus.OK,
+      data: personRoles,
+    };
   }
 
   toBoolean(value): boolean {
