@@ -1,12 +1,12 @@
 export interface AddClass {
-  departmentId: number;
+  departmentUUID: string;
   className: string;
 }
 
 export interface UpdateClass {
-  departmentId: number;
+  departmentUUID: string;
   className: string;
-  classId: number;
+  classUUID: string;
 }
 
 export interface AddSchool {
@@ -29,7 +29,7 @@ export interface GetDepartments {
 
 export interface AddDepartment {
   name: string;
-  schoolId: number;
+  schoolUUID: string;
   isVisible?: string;
   childsVisible?: string;
 }
@@ -57,18 +57,18 @@ export interface JoinSchool {
 }
 
 export interface AddJoinCode {
-  schoolId: number;
-  expireDate: Date;
+  schoolUUID: string;
+  expireDate?: Date;
   name?: string;
-  personId: number;
+  personUUID: string;
 }
 
 export interface RemoveJoinCode {
-  joinCodeId: number;
+  joinCode: string;
 }
 
 export interface UpdateJoinCode {
-  joinCodeId: number;
+  joinCode: string;
   expireDate?: string;
   name?: string;
 }
@@ -83,7 +83,7 @@ export interface JoinCodeTable {
 }
 
 export interface GetAllJoinCodes {
-  schoolId: number;
+  schoolUUID: string;
 }
 
 export interface ReturnMessage {
@@ -94,4 +94,10 @@ export interface ReturnMessage {
 
 export interface UserPermissions {
   personUUID: string;
+}
+
+export interface DecodedJWT {
+  personUUID: string;
+  exp: number;
+  iat: number;
 }

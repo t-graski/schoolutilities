@@ -128,6 +128,36 @@ export class DatabaseService {
     return user.personUUID;
   }
 
+  async getPersonById(personId: number): Promise<any> {
+    const person = await prisma.persons.findFirst({
+      where: {
+        personId: personId,
+      },
+      select: {
+        personId: true,
+        personUUID: true,
+        firstName: true,
+        lastName: true,
+        birthDate: true,
+        email: true,
+      },
+    });
+
+    return person;
+  }
+
+  async getSchoolUUIDByJoinCode(joinCode: string): Promise<string> {
+    const schoolId = await prisma.schoolJoinCodes.findFirst({
+      where: {
+        joinCode: joinCode,
+      },
+      select: {
+        schoolId: true,
+      },
+    });
+    return this.getSchoolUUIDById(schoolId.schoolId);
+  }
+
   async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
     const school = await prisma.schools.findFirst({
       where: {
@@ -173,6 +203,18 @@ export class DatabaseService {
     return department.departmentId;
   }
 
+  async getClassIdByUUID(classUUID: string): Promise<any> {
+    const classId = await prisma.schoolClasses.findFirst({
+      where: {
+        classUUID: classUUID,
+      },
+      select: {
+        classId: true,
+      },
+    });
+    return classId.classId;
+  }
+
   async getPersonRolesByPersonUUID(personUUID: string): Promise<any> {
     const personId = await this.getPersonIdByUUID(personUUID);
 
@@ -210,7 +252,7 @@ export class DatabaseService {
     return schoolRoles;
   }
 
-  async getDepartmentIds(body: GetDepartments): Promise<any> {
+  async getDepartments(body: GetDepartments): Promise<any> {
     const { schoolUUID } = body;
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
@@ -225,14 +267,9 @@ export class DatabaseService {
         },
       });
 
-      //remove everything but the departmentId from departments
-      const departmentIds = departments.map((department) => {
-        return department.departmentId;
-      });
-
       return {
         status: HttpStatus.OK,
-        data: departmentIds,
+        data: departments,
       };
     } catch (err) {
       return RETURN_DATA.DATABASE_ERORR;

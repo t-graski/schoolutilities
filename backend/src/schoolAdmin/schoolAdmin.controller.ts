@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/roles/role.enum';
@@ -57,9 +58,9 @@ export class SchoolAdminController {
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/departments')
-  @Roles(Role.Student)
+  // @Roles(Role.Student)
   async getDepartments(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getDepartments(request.body);
     return response
@@ -71,27 +72,33 @@ export class SchoolAdminController {
   @Post('/addClass')
   async addClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addClass(request.body);
-    return response.status(result.status).json(result?.message);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Delete('/removeClass')
-  async removeClass(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.removeClass(
-      request.body?.classId,
-    );
-    return response.status(result.status).json(result?.message);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Put('/updateClass')
-  async updateClass(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.updateClass(request.body);
-    return response.status(result.status).json(result?.message);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Get('/getClasses')
+  @Delete('/removeClass')
+  async removeClass(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.removeClass(
+      request.body.classUUID,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Put('/updateClass')
+  async updateClass(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.updateClass(request.body);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Post('/getClasses')
   async getClasses(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getClasses(request.body);
     return response
@@ -99,38 +106,44 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('/joinCode')
   async addJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addJoinCode(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('/joinCode')
   async removeJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeJoinCode(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Put('/joinCode')
   async updateJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateJoinCode(request.body);
     return response.status(result.status).json(result?.message);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('joinCode')
-  async getJoinCodes(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.getAllJoinCodes(request.body);
+  // @UseGuards(JwtAuthGuard)
+  @Get('joinCode/:schoolUUID')
+  async getJoinCodes(@Param() params, @Res() response) {
+    const result = await this.schoolAdminService.getAllJoinCodes(
+      params.schoolUUID,
+    );
     return response.status(result.status).json(result?.data);
   }
 
   // @UseGuards(JwtAuthGuard)
   @Post('joinSchool')
   async joinSchool(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.joinSchool(request.body);
+    const token = request.headers.authorization.split(' ')[1];
+    const result = await this.schoolAdminService.joinSchool(
+      request.body.joinCode,
+      token,
+    );
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
@@ -143,6 +156,14 @@ export class SchoolAdminController {
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
+  }
+
+  @Get('/getPersons/:schoolUUID')
+  async getPersonsOfSchool(@Param() params, @Res() response) {
+    const result = await this.schoolAdminService.getPersonsOfSchool(
+      params.schoolUUID,
+    );
+    return response.status(result.status).json(result?.data);
   }
 
   @Get('userPermissions')
