@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
 import { Spacer } from "./Spacer";
+import { SvgIcon } from "./SvgIcon";
 
 type Props = {
   setDisabled: Function;
@@ -21,7 +22,7 @@ const SchoolDetailLayout = styled("form", {
   gap: "20px",
 });
 
-const HeaderLayout = styled("div", {
+const HeaderLayout = styled("div", { 
   width: "100%",
   display: "flex",
   flexDirection: "row",
@@ -45,6 +46,7 @@ const AddIconLayout = styled("div", {
 
 const AddIconPlus = styled("p", {
   fontSize: "80px",
+  color: "$fontPrimary",
 });
 
 const DepartmentsLayout = styled("div", {
@@ -69,6 +71,7 @@ const DepartmentLayout = styled("div", {
 const DepartmentName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
+  color: "$fontPrimary",
 });
 
 const DepartmentIcons = styled("div", {
@@ -82,10 +85,12 @@ const DepartmentEditIcon = styled("div", {
   width: "40px",
   height: "40px",
   justifyContent: "center",
+  padding: "10px",
   alignItems: "center",
   borderRadius: "50%",
   backgroundColor: "$specialSecondary",
   cursor: "pointer",
+  color: "$fontPrimary",
 });
 
 const DepartmentDeleteIcon = styled("div", {
@@ -93,10 +98,12 @@ const DepartmentDeleteIcon = styled("div", {
   width: "40px",
   height: "40px",
   justifyContent: "center",
+  padding: "10px",
   alignItems: "center",
   borderRadius: "50%",
   backgroundColor: "$specialTertiary",
   cursor: "pointer",
+  color: "$fontPrimary",
 });
 
 const PopUpLayout = styled("div", {
@@ -297,12 +304,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     setPopUpIsVisible(true);
                   }}
                 >
-                  <Image
-                    src="/images/icons/edit_icon.svg"
-                    alt=""
-                    width={20}
-                    height={20}
-                  />
+                  <SvgIcon iconName="SvgEdit"></SvgIcon>
                 </DepartmentEditIcon>
                 <DepartmentDeleteIcon
                   onClick={() => {
@@ -316,12 +318,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     }
                   }}
                 >
-                  <Image
-                    src="/images/icons/delete_icon.svg"
-                    alt=""
-                    width={20}
-                    height={20}
-                  />
+                  <SvgIcon iconName="SvgDelete"></SvgIcon>
                 </DepartmentDeleteIcon>
               </DepartmentIcons>
             </DepartmentLayout>

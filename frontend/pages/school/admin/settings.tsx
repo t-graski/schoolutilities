@@ -10,9 +10,10 @@ import { Spacer } from "../../../components/Spacer";
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
 import { SideDashboard } from "../../../components/SideDashboard";
-import { SettingsField } from "../../../components/SettingsField";
+import { SettingsField } from "../../../components/DepartmentsSettingsField";
 import { useRouter } from "next/router";
 import SvgDepartment from "../../../components/svg/SvgDepartment";
+import cookie from "js-cookie";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",
@@ -56,6 +57,9 @@ export default function CreateSchool() {
   ]);
   const [isOpen, setIsOpen] = React.useState(true);
   const router = useRouter();
+  if (!cookie.get("schoolUUID")) {
+    // router.push("/");
+  }
 
   let urlParam;
   if (router.query && router.query.tab) {
@@ -72,7 +76,19 @@ export default function CreateSchool() {
             addNewEntryHeadline="Add New Class"
             addEditEntryHeadline="Edit Class"
             popUpInputFieldPlaceholder="Class Name"
-            getAllEntriesUrl="http://localhost:8888/api/schooladmin/getClasses"
+            dbEntryUrl="localhost:8888/api/schooladmin/class"
+            dbEntriesUrl="localhost:8888/api/schooladmin/classes"
+            getAllEntriesBody={{
+              schoolUUID: "292e08acd-9b11-4970-a509-ab643e2bfd9b",
+            }}
+            editEntryBody={{
+              classUUID: "",
+              name: "",
+            }}
+            addEntryBody={{
+              name: "",
+            }}
+            UUIDField=""
           />
         );
       case "students":
@@ -82,7 +98,12 @@ export default function CreateSchool() {
             addNewEntryHeadline="Add New Student"
             addEditEntryHeadline="Edit Student"
             popUpInputFieldPlaceholder="Student Name"
-            getAllEntriesUrl="http://localhost:8888/api/schooladmin/getClasses"
+            dbEntryUrl="localhost:8888/api/schooladmin/student"
+            dbEntriesUrl="localhost:8888/api/schooladmin/students"
+            getAllEntriesBody={undefined}
+            editEntryBody={undefined}
+            addEntryBody={undefined}
+            UUIDField=""
           />
         );
       case "teachers":
@@ -92,17 +113,27 @@ export default function CreateSchool() {
             addNewEntryHeadline="Add New Class"
             addEditEntryHeadline="Edit Class"
             popUpInputFieldPlaceholder="Class Name"
-            getAllEntriesUrl="http://localhost:8888/api/schooladmin/getClasses"
+            dbEntryUrl="localhost:8888/api/schooladmin/teacher"
+            dbEntriesUrl="localhost:8888/api/schooladmin/teachers"
+            getAllEntriesBody={undefined}
+            editEntryBody={undefined}
+            addEntryBody={undefined}
+            UUIDField=""
           />
         );
       default:
         return (
           <SettingsField
-            headline="Class Settings"
-            addNewEntryHeadline="Add New Class"
-            addEditEntryHeadline="Edit Class"
-            popUpInputFieldPlaceholder="Class Name"
-            getAllEntriesUrl="http://localhost:8888/api/schooladmin/getClasses"
+            headline="Department Settings"
+            addNewEntryHeadline="Add New Department"
+            addEditEntryHeadline="Edit Department"
+            popUpInputFieldPlaceholder="Department Name"
+            dbEntryUrl="localhost:8888/api/schooladmin/department"
+            dbEntriesUrl="localhost:8888/api/schooladmin/departments"
+            getAllEntriesBody={undefined}
+            editEntryBody={undefined}
+            addEntryBody={undefined}
+            UUIDField=""
           />
         );
     }

@@ -15,7 +15,6 @@ const FooterLayout = styled("footer", {
   display: "flex",
   justifyContent: "center",
   fontSize: "1rem",
-  paddingBottom: "20px",
   alignItems: "center",
   lineHeight: "1.2rem",
   flexDirection: "column",
@@ -23,6 +22,7 @@ const FooterLayout = styled("footer", {
   bottom: "0",
   left: "0",
   backgroundColor: "$fontTertiary",
+  color: "$fontPrimary",
 });
 
 const FooterNavbar = styled("nav", {
@@ -73,12 +73,6 @@ export const Footer: React.FC<Props> = ({ links, isOnMain }) => {
             ))}
           </FooterList>
         </FooterNavbar>
-        <div>
-          Icons made by Freepik, Icongeek26 from{" "}
-          <a href="https://www.flaticon.com/" title="Flaticon">
-            www.flaticon.com
-          </a>
-        </div>
       </FooterLayout>
     </>
   );

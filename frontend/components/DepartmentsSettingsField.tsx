@@ -13,11 +13,6 @@ import { Spacer } from "./Spacer";
 import { getAccessToken } from "../misc/authHelper";
 
 type Props = {
-  headline: string;
-  addNewEntryHeadline: string;
-  addEditEntryHeadline: string;
-  popUpInputFieldPlaceholder: string;
-  getAllEntriesUrl: string;
 };
 
 const SchoolDetailLayout = styled("form", {
@@ -109,55 +104,7 @@ const SettingsEntryDeleteIcon = styled("div", {
   cursor: "pointer",
 });
 
-const PopUpLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  width: "100vw",
-  height: "100vh",
-  backgroundColor: "rgba(0,0,0,0.7)",
-  position: "absolute",
-  top: "0",
-  left: "0",
-  zIndex: "10",
-});
-
-const PopUpContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
-  width: "50%",
-  backgroundColor: "$backgroundPrimary",
-  padding: "30px",
-  borderRadius: "20px",
-});
-
-const StyledInputField = styled("div", {
-  marginTop: "15px",
-  marginBottom: "15px",
-});
-
-const StyledPopUpHeadline = styled("h2", {
-  fontSize: "2.5rem",
-  fontWeight: "bold",
-  color: "$fontPrimary",
-  margin: "0",
-});
-
-const PopUpButtonLayout = styled("div", {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "flex-end",
-  gap: "20px",
-});
-
-export const SettingsField: React.FC<Props> = ({
-  headline,
-  addNewEntryHeadline,
-  addEditEntryHeadline,
-  popUpInputFieldPlaceholder,
-  getAllEntriesUrl,
+export const DepartmentsSettingsField: React.FC<Props> = ({
 }) => {
   const [settingsEntries, setSettingsEntries] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
@@ -177,15 +124,13 @@ export const SettingsField: React.FC<Props> = ({
 
   async function updateSettingsEntriesFromDatabase() {
     let accessToken = await getAccessToken();
-    const returnValue = await fetch(getAllEntriesUrl, {
+    const returnValue = await fetch(dbEntryUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({
-        schoolUUID: "292e08acd-9b11-4970-a509-ab643e2bfd9b",
-      }),
+      body: JSON.stringify(getAllEntriesBody),
     });
     const json = await returnValue.json();
     console.log(json);
@@ -203,88 +148,74 @@ export const SettingsField: React.FC<Props> = ({
 
   async function addSettingsEntry() {
     const data = {
+      ...addEntryBody,
       name: settingsEntryName,
-      isVisible: true,
-      childsVisible: true,
     };
-    const returnValue = await fetch(
-      "http://localhost:8080/api/schooladmin/addDepartment",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const returnValue = await fetch(dbEntryUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (returnValue.status !== 200) {
       setError("Fehler beim hinzufügen");
     } else {
       const body = await returnValue.json();
       setError("");
-      setSettingsEntries([
-        ...settingsEntries,
-        {
-          name: settingsEntryName,
-          departmentUUID: body.departmentUUID,
-        },
-      ]);
+      let entry = {
+        name: settingsEntryName,
+      };
+      entry[UUIDField] = body[UUIDField];
+      setSettingsEntries([...settingsEntries, entry]);
     }
   }
 
   async function editSettingsEntry() {
     const data = {
-      departmentUUID: settingsEntryId,
+      ...editEntryBody,
       name: settingsEntryName,
-      isVisible: true,
-      childsVisible: true,
     };
-    const returnValue = await fetch(
-      "http://localhost:8080/api/schooladmin/updateDepartment",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    data[UUIDField] = settingsEntryId;
+    const returnValue = await fetch(dbEntryUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (returnValue.status !== 200) {
       setError("Fehler beim Speichern");
     } else {
       setError("");
-      const newDepartments = settingsEntries.map((department, index) => {
-        if (department.departmentUUID == settingsEntryId) {
-          department.name = settingsEntryName;
-          return department;
+      const newEntries = settingsEntries.map((entry, index) => {
+        if (entry[UUIDField] == settingsEntryId) {
+          entry.name = settingsEntryName;
+          return entry;
         } else {
-          return department;
+          return entry;
         }
       });
-      setSettingsEntries(newDepartments);
+      setSettingsEntries(newEntries);
     }
   }
 
   async function deleteSettingsEntry(id) {
-    const data = {
-      departmentUUID: id,
-    };
-    const returnValue = await fetch(
-      "http://localhost:8080/api/schooladmin/removeDepartment",
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const data = {};
+    data[UUIDField] = id;
+    const returnValue = await fetch(dbEntryUrl, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (returnValue.status !== 200) {
       setError("Fehler beim löschen");
     } else {
       setError("");
       let newSettingsEntries = settingsEntries.filter(
-        (settingsEntry) => settingsEntry.departmentUUID == id
+        (settingsEntry) => settingsEntry[UUIDField] == id
       );
 
       setSettingsEntries(newSettingsEntries);
@@ -298,60 +229,11 @@ export const SettingsField: React.FC<Props> = ({
     <>
       <SchoolDetailLayout>
         {popUpIsVisible && (
-          <PopUpLayout>
-            <PopUpContentLayout>
-              <StyledPopUpHeadline>
-                {settingsEntryId == ""
-                  ? addNewEntryHeadline
-                  : addEditEntryHeadline}
-              </StyledPopUpHeadline>
-              <Separator width="ultraSmall" alignment="left" />
-              <StyledInputField>
-                <InputField
-                  label={popUpInputFieldPlaceholder}
-                  inputType="text"
-                  value={settingsEntryName}
-                  onChange={(event) => {
-                    setSettingsEntryName(event);
-                    if (regex.name.test(event)) {
-                      setSettingsEntryNameValid(true);
-                    } else {
-                      setSettingsEntryNameValid(false);
-                    }
-                  }}
-                  iconSrc={""}
-                  iconAlt={""}
-                  regex={regex.name}
-                  setValidInput={setSettingsEntryNameValid}
-                  min="2"
-                  max="30"
-                />
-              </StyledInputField>
-              <PopUpButtonLayout>
-                <Button
-                  label="Close"
-                  onClick={() => {
-                    setSettingsEntryName("");
-                    setPopUpIsVisible(false);
-                  }}
-                  backgroundColor={"secondary"}
-                  color={"primary"}
-                />
-                <Button
-                  label={settingsEntryId == "" ? "Add" : "Edit"}
-                  onClick={savePopUpInput}
-                  backgroundColor={"primary"}
-                  color={"primary"}
-                  disabled={
-                    !settingsEntryNameValid ||
-                    (settingsEntryId != "" &&
-                      settingsEntryName == settingsEntries[settingsEntryId])
-                  }
-                  type="submit"
-                />
-              </PopUpButtonLayout>
-            </PopUpContentLayout>
-          </PopUpLayout>
+          <SettingsPopUp
+            headline=""
+          >
+
+          </SettingsPopUp>
         )}
         <HeaderLayout>
           <InformationLayout>
@@ -374,14 +256,14 @@ export const SettingsField: React.FC<Props> = ({
         </HeaderLayout>
         {error}
         <SettingsEntriesLayout>
-          {settingsEntries.map((department, index) => (
+          {settingsEntries.map((entry, index) => (
             <SettingsEntryLayout key={index}>
-              <SettingsEntryName>{department.className}</SettingsEntryName>
+              <SettingsEntryName>{entry.name}</SettingsEntryName>
               <SettingsEntryIcons>
                 <SettingsEntryEditIcon
                   onClick={() => {
-                    setSettingsEntryName(department.className);
-                    setSettingsEntryId(department.classUUID);
+                    setSettingsEntryName(entry.name);
+                    setSettingsEntryId(entry[UUIDField]);
                     setPopUpIsVisible(true);
                   }}
                 >

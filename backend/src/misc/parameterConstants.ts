@@ -52,7 +52,7 @@ export const LENGTHS = {
 
 const RETURN_MESSAGES = {
   INVALID_INPUT_MESSAGE: 'Invalid input',
-  DATABASE_ERORR_MESSAGE: 'Database error',
+  DATABASE_ERROR_MESSAGE: 'Database error',
   SUCCESS_MESSAGE: 'Operation successfully executed',
   ALREADY_EXISTS_MESSAGE: 'Entry already exists',
   NOT_FOUND_MESSAGE: 'Entry not found',
@@ -70,9 +70,9 @@ export const RETURN_DATA = {
     status: HttpStatus.BAD_REQUEST,
     message: RETURN_MESSAGES.INVALID_INPUT_MESSAGE,
   },
-  DATABASE_ERORR: {
+  DATABASE_ERROR: {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
-    message: RETURN_MESSAGES.DATABASE_ERORR_MESSAGE,
+    message: RETURN_MESSAGES.DATABASE_ERROR_MESSAGE,
   },
   SUCCESS: {
     status: HttpStatus.OK,

@@ -64,7 +64,7 @@ export class MailService {
         data: mails,
       };
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 }

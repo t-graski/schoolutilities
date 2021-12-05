@@ -1,11 +1,11 @@
 export interface AddClass {
   departmentUUID: string;
-  className: string;
+  name: string;
 }
 
 export interface UpdateClass {
-  departmentUUID: string;
-  className: string;
+  // departmentUUID: string;
+  name: string;
   classUUID: string;
 }
 
