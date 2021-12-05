@@ -25,8 +25,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async loginUser(@Req() request, @Res() response): Promise<any> {
-
+  async loginUser(@Req() request, @Res() response) {
     return response
       .status(HttpStatus.OK)
       .send(await this.authService.login(request.body));

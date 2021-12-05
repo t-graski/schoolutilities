@@ -15,6 +15,7 @@ import { RefreshTokenService } from './refreshToken/refreshToken.service';
 import { PrismaClient } from '@prisma/client';
 import { RETURN_DATA } from 'src/misc/parameterConstants';
 import { Role } from 'src/roles/role.enum';
+import { DecodedJWT } from 'src/types/SchoolAdmin';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
@@ -144,7 +145,7 @@ export class AuthService {
     };
   }
 
-  async decodeJWT(jwt: string) {
+  async decodeJWT(jwt: string): Promise<any> {
     return this.jwtService.decode(jwt);
   }
 
