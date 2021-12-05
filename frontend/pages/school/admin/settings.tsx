@@ -10,7 +10,10 @@ import { Spacer } from "../../../components/Spacer";
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
 import { SideDashboard } from "../../../components/SideDashboard";
-import { SettingsField } from "../../../components/DepartmentsSettingsField";
+import {
+  DepartmentsSettingsField,
+  SettingsField,
+} from "../../../components/DepartmentsSettingsField";
 import { useRouter } from "next/router";
 import SvgDepartment from "../../../components/svg/SvgDepartment";
 import cookie from "js-cookie";
@@ -122,20 +125,7 @@ export default function CreateSchool() {
           />
         );
       default:
-        return (
-          <SettingsField
-            headline="Department Settings"
-            addNewEntryHeadline="Add New Department"
-            addEditEntryHeadline="Edit Department"
-            popUpInputFieldPlaceholder="Department Name"
-            dbEntryUrl="localhost:8888/api/schooladmin/department"
-            dbEntriesUrl="localhost:8888/api/schooladmin/departments"
-            getAllEntriesBody={undefined}
-            editEntryBody={undefined}
-            addEntryBody={undefined}
-            UUIDField=""
-          />
-        );
+        return <DepartmentsSettingsField></DepartmentsSettingsField>;
     }
   }
 

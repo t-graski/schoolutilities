@@ -235,8 +235,7 @@ export class SchoolAdminService {
     }
   }
 
-  async getDepartments(body: GetDepartments): Promise<ReturnMessage> {
-    const { schoolUUID } = body;
+  async getDepartments(schoolUUID: string): Promise<ReturnMessage> {
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }

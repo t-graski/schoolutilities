@@ -44,7 +44,7 @@ const AddIconPlus = styled("p", {
   color: "$fontPrimary",
 });
 
-export const SettingsField: React.FC<Props> = ({
+export const SettingsHeader: React.FC<Props> = ({
   headline,
   addFunction
 }) => {
