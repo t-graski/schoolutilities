@@ -48,7 +48,10 @@ export class SchoolAdminController {
   @Delete('/department')
   async removeDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeDepartment(request.body);
-    return response.status(result.status).json(result?.message);
+    return response
+      .setHeader('Access-Control-Allow-Origin', '*')
+      .status(result.status)
+      .json(result?.message);
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -100,9 +103,9 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Post('/classes')
-  async getClasses(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.getClasses(request.body);
+  @Get('/classes/:schoolUUID')
+  async getClasses(@Param() params, @Res() response) {
+    const result = await this.schoolAdminService.getClasses(params.schoolUUID);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

@@ -24,7 +24,7 @@ export class StatisticsService {
     //     (await this.userWithoutVerifiedEmail()),
     // );
 
-    // go through all files in backend folder that end with .ts and sum the lines togehter
+    // go through all files in backend folder that end with .ts and sum the lines together
     const files = require('glob');
     const backendFiles = files.sync('../backend/src/**/*.ts');
 
@@ -37,7 +37,7 @@ export class StatisticsService {
       lines += currentFile;
     });
 
-    //do the same for frotend but ending with .tsx
+    //do the same for frontend but ending with .tsx
 
     const componentFiles = files.sync('../frontend/components/*.tsx');
     let componentLines = 0;

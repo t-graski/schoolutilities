@@ -44,30 +44,22 @@ const AddIconPlus = styled("p", {
   color: "$fontPrimary",
 });
 
-export const SettingsHeader: React.FC<Props> = ({
-  headline,
-  addFunction
-}) => {
-
+export const SettingsHeader: React.FC<Props> = ({ headline, addFunction }) => {
   return (
     <>
-      <SchoolDetailLayout>
-        <HeaderLayout>
-          <InformationLayout>
-            <Headline
-              label={headline}
-              alignment="left"
-              fontWeight="bold"
-            ></Headline>
-            <Separator width="small" alignment="left"></Separator>
-          </InformationLayout>
-          <AddIconLayout
-            onClick={() => addFunction()}
-          >
-            <AddIconPlus>+</AddIconPlus>
-          </AddIconLayout>
-        </HeaderLayout>
-      </SchoolDetailLayout>
+      <HeaderLayout>
+        <InformationLayout>
+          <Headline
+            label={headline}
+            alignment="left"
+            fontWeight="bold"
+          ></Headline>
+          <Separator width="small" alignment="left"></Separator>
+        </InformationLayout>
+        <AddIconLayout onClick={() => addFunction()}>
+          <AddIconPlus>+</AddIconPlus>
+        </AddIconLayout>
+      </HeaderLayout>
     </>
   );
 };

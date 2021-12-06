@@ -19,7 +19,7 @@ export class TimezoneService {
         });
       }
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
     return RETURN_DATA.SUCCESS;
   }
@@ -33,7 +33,7 @@ export class TimezoneService {
       });
       return RETURN_DATA.SUCCESS;
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 

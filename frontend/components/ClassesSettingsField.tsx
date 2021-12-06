@@ -44,6 +44,11 @@ const SettingsEntryName = styled("p", {
   color: "$fontPrimary",
 });
 
+const DepartmentName = styled("p", {
+  fontSize: "1rem",
+  color: "$fontPrimary",
+});
+
 const StyledInputField = styled("div", {
   marginTop: "15px",
   marginBottom: "15px",
@@ -54,13 +59,15 @@ const SettingsEntryLink = styled("a", {
   cursor: "pointer",
 });
 
-export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
+export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const [departments, setDepartments] = React.useState([]);
+  const [classes, setClasses] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [popUpIsVisible, setPopUpIsVisible] = React.useState(false);
-  const [departmentName, setDepartmentName] = React.useState("");
-  const [departmentNameValid, setDepartmentNameValid] = React.useState(false);
-  const [departmentId, setDepartmentId] = React.useState("");
+  const [schoolClassName, setSchoolClassName] = React.useState("");
+  const [schoolClassNameValid, setSchoolClassNameValid] = React.useState(false);
+  const [departmentUUID, setDepartmentUUId] = React.useState("");
+  const [schoolClassId, setSchoolClassId] = React.useState("");
   const [error, setError] = React.useState("");
   const router = useRouter();
 
@@ -69,11 +76,35 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       updateSettingsEntriesFromDatabase();
       setIsFirstTime(false);
     }
+    // if (router.query && router.query.departmentUUID) {
+    //   let newSettingsEntries = classes.filter(
+    //     (schoolClass) =>
+    //       schoolClass.departmentUUID === router.query.departmentUUID
+    //   );
+
+    //   if (newSettingsEntries.length != classes.length) {
+    //     setClasses(newSettingsEntries);
+    //   }
+    // }
   });
 
   async function updateSettingsEntriesFromDatabase() {
     let accessToken = await getAccessToken();
-    const returnValue = await fetch(
+    let returnValue = await fetch(
+      "http://localhost:8888/api/schooladmin/classes/292e08acd-9b11-4970-a509-ab643e2bfd9b",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    let json = await returnValue.json();
+    console.log(json);
+    setClasses(json);
+
+    returnValue = await fetch(
       "http://localhost:8888/api/schooladmin/departments/292e08acd-9b11-4970-a509-ab643e2bfd9b",
       {
         method: "GET",
@@ -83,13 +114,13 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
         },
       }
     );
-    const json = await returnValue.json();
+    json = await returnValue.json();
     console.log(json);
     setDepartments(json);
   }
 
   function savePopUpInput() {
-    if (departmentId == "") {
+    if (schoolClassId == "") {
       addSettingsEntry();
     } else {
       editSettingsEntry();
@@ -99,13 +130,11 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
 
   async function addSettingsEntry() {
     const data = {
-      schoolUUID: "292e08acd-9b11-4970-a509-ab643e2bfd9b",
-      departmentName: departmentName,
-      isVisible: "true",
-      childsVisible: "true",
+      departmentUUID,
+      className: schoolClassName,
     };
     const returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/department",
+      "http://localhost:8888/api/schooladmin/class",
       {
         method: "POST",
         headers: {
@@ -116,26 +145,30 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     );
     if (returnValue.status !== 200) {
       setError("Fehler beim hinzufügen");
+      console.log(returnValue);
     } else {
       const body = await returnValue.json();
       setError("");
       let entry = {
-        departmentUUID: body.departmentUUID,
-        departmentName: departmentName,
+        classUUID: body.classUUID,
+        className: schoolClassName,
+        departmentUUID,
+        departmentName: departments.find(
+          (department) => department.departmentUUID === departmentUUID
+        ).departmentName,
       };
-      setDepartments([...departments, entry]);
+      setClasses([...classes, entry]);
     }
   }
 
   async function editSettingsEntry() {
     const data = {
-      departmentUUID: departmentId,
-      departmentName: departmentName,
-      isVisible: "true",
-      childsVisible: "true",
+      classUUID: schoolClassId,
+      departmentUUID,
+      className: schoolClassName,
     };
     const returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/department",
+      "http://localhost:8888/api/schooladmin/class",
       {
         method: "PUT",
         headers: {
@@ -148,22 +181,22 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       setError("Error trying to save");
     } else {
       setError("");
-      const newEntries = departments.map((department, index) => {
-        if (department.departmentUUID == departmentId) {
-          console.log(department.departmentName);
-          department.departmentName = departmentName;
-          return department;
+      const newEntries = classes.map((schoolClass, index) => {
+        if (schoolClass.classUUID == schoolClassId) {
+          console.log(schoolClass.className);
+          schoolClass.className = schoolClassName;
+          return schoolClass;
         } else {
-          return department;
+          return schoolClass;
         }
       });
-      setDepartments(newEntries);
+      setClasses(newEntries);
     }
   }
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/department",
+      "http://localhost:8888/api/schooladmin/class",
       {
         method: "DELETE",
         headers: {
@@ -171,22 +204,22 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
           "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
-          departmentUUID: id,
+          classUUID: id,
         }),
       }
     );
     if (returnValue.status !== 200) {
-      setError("Error trying to save");
+      setError("Error trying to delete");
       console.log(returnValue);
     } else {
       setError("");
-      let newSettingsEntries = departments.filter(
-        (department) => department.departmentUUID !== id
+      let newSettingsEntries = classes.filter(
+        (schoolClass) => schoolClass.classUUID !== id
       );
 
-      setDepartments(newSettingsEntries);
+      setClasses(newSettingsEntries);
       if (newSettingsEntries.length == 0) {
-        setDepartments([]);
+        setClasses([]);
       }
     }
   }
@@ -196,62 +229,80 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       <SchoolDetailLayout>
         {popUpIsVisible && (
           <SettingsPopUp
-            headline={departmentId == "" ? "Add new entry" : "Edit entry"}
-            inputValid={departmentNameValid}
-            saveLabel={departmentId == "" ? "Add" : "Save"}
+            headline={schoolClassId == "" ? "Add new entry" : "Edit entry"}
+            inputValid={schoolClassNameValid}
+            saveLabel={schoolClassId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
             closeFunction={() => {
               setPopUpIsVisible(false);
-              setDepartmentName("");
-              setDepartmentNameValid(false);
+              setSchoolClassName("");
+              setSchoolClassNameValid(false);
             }}
           >
             <StyledInputField>
               <InputField
-                label="Department departmentName"
+                label="SchoolClass className"
                 inputType="text"
-                value={departmentName}
+                value={schoolClassName}
                 onChange={(event) => {
-                  setDepartmentName(event);
+                  setSchoolClassName(event);
                   if (regex.name.test(event)) {
-                    setDepartmentNameValid(true);
+                    setSchoolClassNameValid(true);
                   } else {
-                    setDepartmentNameValid(false);
+                    setSchoolClassNameValid(false);
                   }
                 }}
                 iconSrc={""}
                 iconAlt={""}
                 regex={regex.name}
-                setValidInput={setDepartmentNameValid}
+                setValidInput={setSchoolClassNameValid}
                 min="2"
                 max="30"
               />
+              <Spacer size="verySmall" />
+              <InputField
+                inputType="select"
+                selectValue={departmentUUID}
+                selectOptions={departments.map((department) => {
+                  return {
+                    value: department.departmentUUID,
+                    label: department.departmentName,
+                  };
+                })}
+                onChange={(event) => {
+                  setDepartmentUUId(event);
+                }}
+                iconSrc={""}
+                iconAlt={""}
+              ></InputField>
             </StyledInputField>
           </SettingsPopUp>
         )}
         <SettingsHeader
-          headline="Departments"
+          headline="Classes"
           addFunction={() => {
-            setDepartmentName("");
-            setDepartmentId("");
+            setSchoolClassName("");
+            setSchoolClassId("");
             setPopUpIsVisible(true);
+            setDepartmentUUId(departments[0].departmentUUID);
           }}
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {departments.map((entry, index) => (
+          {classes.map((entry, index) => (
             <SettingsEntryLayout
-              key={entry.departmentUUID}
-              data-key={entry.departmentUUID}
+              key={entry.classUUID}
+              data-key={entry.classUUID}
             >
               <SettingsEntry
                 editFunction={() => {
-                  setDepartmentName(entry.departmentName);
-                  setDepartmentId(entry.departmentUUID);
+                  setSchoolClassName(entry.className);
+                  setSchoolClassId(entry.classUUID);
+                  setDepartmentUUId(entry.departmentUUID);
                   setPopUpIsVisible(true);
                 }}
                 deleteFunction={() => {
-                  deleteSettingsEntry(entry.departmentUUID);
+                  deleteSettingsEntry(entry.classUUID);
                 }}
                 highlighted={
                   router.query &&
@@ -259,15 +310,16 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                   entry.departmentUUID == router.query.departmentUUID
                 }
               >
-                <Link
-                  href={`/school/admin/settings?tab=classes&departmentUUID=${entry.departmentUUID}`}
-                >
-                  <SettingsEntryLink>
-                    <SettingsEntryName>
-                      {entry.departmentName}
-                    </SettingsEntryName>
-                  </SettingsEntryLink>
-                </Link>
+                <>
+                  <SettingsEntryName>{entry.className}</SettingsEntryName>
+                  <Link
+                    href={`/school/admin/settings?departmentUUID=${entry.departmentUUID}`}
+                  >
+                    <SettingsEntryLink>
+                      <DepartmentName>{entry.departmentName}</DepartmentName>
+                    </SettingsEntryLink>
+                  </Link>
+                </>
               </SettingsEntry>
             </SettingsEntryLayout>
           ))}

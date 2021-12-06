@@ -17,6 +17,7 @@ import {
 import { useRouter } from "next/router";
 import SvgDepartment from "../../../components/svg/SvgDepartment";
 import cookie from "js-cookie";
+import { ClassesSettingsField } from "../../../components/ClassesSettingsField";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",
@@ -25,22 +26,12 @@ const CreateSchoolLayout = styled("div", {
 });
 
 const SettingsLayout = styled("div", {
-  display: "grid",
+  display: "flex",
   width: "100vw",
   height: "100vh",
   position: "fixed",
   top: 0,
   left: 0,
-  gridTemplateColumns: "1fr 2fr",
-  gridTemplateRows: "1fr",
-  variants: {
-    layout: {
-      small: {
-        gridTemplateColumns: "1fr 15fr",
-      },
-      normal: {},
-    },
-  },
 });
 
 export default function CreateSchool() {
@@ -73,27 +64,7 @@ export default function CreateSchool() {
   function getSecondPart() {
     switch (urlParam) {
       case "classes":
-        return (
-          <SettingsField
-            headline="Class Settings"
-            addNewEntryHeadline="Add New Class"
-            addEditEntryHeadline="Edit Class"
-            popUpInputFieldPlaceholder="Class Name"
-            dbEntryUrl="localhost:8888/api/schooladmin/class"
-            dbEntriesUrl="localhost:8888/api/schooladmin/classes"
-            getAllEntriesBody={{
-              schoolUUID: "292e08acd-9b11-4970-a509-ab643e2bfd9b",
-            }}
-            editEntryBody={{
-              classUUID: "",
-              name: "",
-            }}
-            addEntryBody={{
-              name: "",
-            }}
-            UUIDField=""
-          />
-        );
+        return <ClassesSettingsField />;
       case "students":
         return (
           <SettingsField
@@ -134,7 +105,7 @@ export default function CreateSchool() {
       <Head>
         <title>School Setup - SchoolUtilities</title>
       </Head>
-      <SettingsLayout layout={isOpen ? "normal" : "small"}>
+      <SettingsLayout>
         <SideDashboard
           links={[
             {

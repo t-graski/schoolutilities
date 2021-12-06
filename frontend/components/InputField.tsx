@@ -5,7 +5,10 @@ import type * as Stitches from "@stitches/react";
 
 type Props = {
   inputType: "text" | "password" | "date" | "email" | "checkbox" | "select";
-  selectOptions?: string[];
+  selectOptions?: {
+    value: string;
+    label: string;
+  }[];
   selectValue?: string;
   value?: string;
   onChange: Function;
@@ -91,7 +94,6 @@ const StyledSelectField = styled("select", {
   },
 });
 
-
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
@@ -138,8 +140,8 @@ export const InputField: React.FC<Props> = ({
             value={selectValue}
           >
             {selectOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </StyledSelectField>

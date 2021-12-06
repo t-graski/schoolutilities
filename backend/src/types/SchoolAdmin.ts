@@ -1,11 +1,11 @@
 export interface AddClass {
   departmentUUID: string;
-  name: string;
+  className: string;
 }
 
 export interface UpdateClass {
-  // departmentUUID: string;
-  name: string;
+  departmentUUID: string;
+  className: string;
   classUUID: string;
 }
 
@@ -28,7 +28,7 @@ export interface GetDepartments {
 }
 
 export interface AddDepartment {
-  name: string;
+  departmentName: string;
   schoolUUID: string;
   isVisible?: string;
   childsVisible?: string;

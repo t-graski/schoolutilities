@@ -36,7 +36,7 @@ export class FileUploadService {
         },
       });
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
     return RETURN_DATA.SUCCESS;
   }
@@ -67,7 +67,7 @@ export class FileUploadService {
         data: file,
       };
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 
@@ -101,7 +101,7 @@ export class FileUploadService {
         data: file,
       };
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 
@@ -139,7 +139,7 @@ export class FileUploadService {
     } catch (error) {
       console.log(error);
 
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 }

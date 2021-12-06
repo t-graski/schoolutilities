@@ -77,9 +77,9 @@ export class SchoolAdminService {
   }
 
   async addClass(body: AddClass): Promise<ReturnMessage> {
-    const { departmentUUID, name } = body;
+    const { departmentUUID, className } = body;
     if (
-      !validator.isLength(name, LENGTHS.CLASS_NAME) ||
+      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
       !validator.isUUID(departmentUUID.slice(1), 4)
     ) {
       return RETURN_DATA.INVALID_INPUT;
@@ -92,7 +92,7 @@ export class SchoolAdminService {
     const isNotAvailable = await prisma.schoolClasses.findFirst({
       where: {
         departmentId: Number(departmentId),
-        className: name,
+        className: className,
       },
     });
 
@@ -109,7 +109,7 @@ export class SchoolAdminService {
               departmentId: Number(departmentId),
             },
           },
-          className: name,
+          className: className,
         },
       });
 
@@ -160,15 +160,19 @@ export class SchoolAdminService {
   }
 
   async updateClass(body: UpdateClass): Promise<ReturnMessage> {
-    const { name, classUUID } = body;
+    const { className, classUUID, departmentUUID } = body;
     if (
-      !validator.isLength(name, LENGTHS.CLASS_NAME) ||
-      !validator.isUUID(classUUID.slice(1), 4)
+      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
+      !validator.isUUID(classUUID.slice(1), 4) ||
+      !validator.isUUID(departmentUUID.slice(1), 4)
     ) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
     const classId = await this.databaseService.getClassIdByUUID(classUUID);
+    const departmentId = await this.databaseService.getDepartmentIdByUUID(
+      departmentUUID,
+    );
 
     try {
       const schoolClass = await prisma.schoolClasses.update({
@@ -176,7 +180,12 @@ export class SchoolAdminService {
           classId: Number(classId),
         },
         data: {
-          className: name,
+          className: className,
+          departments: {
+            connect: {
+              departmentId: Number(departmentId),
+            },
+          },
         },
       });
 
@@ -195,8 +204,7 @@ export class SchoolAdminService {
     }
   }
 
-  async getClasses(body: GetClasses): Promise<ReturnMessage> {
-    const { schoolUUID } = body;
+  async getClasses(schoolUUID: string): Promise<ReturnMessage> {
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
@@ -217,6 +225,7 @@ export class SchoolAdminService {
         const filteredClasses = departmentClasses.map((departmentClass) => {
           return {
             departmentUUID: department.departmentUUID,
+            departmentName: department.name,
             classUUID: departmentClass.classUUID,
             className: departmentClass.className,
           };
@@ -229,8 +238,6 @@ export class SchoolAdminService {
         data: classes,
       };
     } catch (err) {
-      console.log(err);
-
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
@@ -250,12 +257,17 @@ export class SchoolAdminService {
       });
 
       const departmentsWithoutIds = departments.map((department) => {
-        const { departmentId, schoolId, ...rest } = department;
-        return rest;
+        const { departmentUUID, name, isVisible, childsVisible } = department;
+        return {
+          departmentUUID: departmentUUID,
+          departmentName: name,
+          isVisible: isVisible,
+          childsVisible: childsVisible,
+        };
       });
 
       return {
-        status: HttpStatus.OK,
+        status: RETURN_DATA.SUCCESS.status,
         data: departmentsWithoutIds,
       };
     } catch (err) {
@@ -264,9 +276,9 @@ export class SchoolAdminService {
   }
 
   async addDepartment(body: AddDepartment): Promise<ReturnMessage> {
-    const { name, schoolUUID, isVisible, childsVisible } = body;
+    const { departmentName, schoolUUID, isVisible, childsVisible } = body;
     if (
-      !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
+      !validator.isLength(departmentName, LENGTHS.DEPARTMENT_NAME) ||
       !validator.isUUID(schoolUUID.slice(1), 4) ||
       !validator.isBoolean(isVisible) ||
       !validator.isBoolean(childsVisible)
@@ -279,7 +291,7 @@ export class SchoolAdminService {
     const isNotAvailable = await prisma.departments.findFirst({
       where: {
         schoolId: Number(schoolId),
-        name: name,
+        name: departmentName,
       },
     });
 
@@ -291,7 +303,7 @@ export class SchoolAdminService {
       const department = await prisma.departments.create({
         data: {
           departmentUUID: `${ID_STARTERS.DEPARTMENT}${uuidv4()}`,
-          name,
+          name: departmentName,
           schools: {
             connect: {
               schoolId: Number(schoolId),
@@ -315,8 +327,6 @@ export class SchoolAdminService {
   }
 
   async addDepartments(body): Promise<ReturnMessage> {
-    console.log(body);
-
     if (body.departments.length == 0) {
       return RETURN_DATA.INVALID_INPUT;
     }

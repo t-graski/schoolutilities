@@ -66,7 +66,7 @@ export class DatabaseService {
         },
       });
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
     return RETURN_DATA.SUCCESS;
   }
@@ -272,7 +272,7 @@ export class DatabaseService {
         data: departments,
       };
     } catch (err) {
-      return RETURN_DATA.DATABASE_ERORR;
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 

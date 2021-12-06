@@ -6,6 +6,7 @@ import { SvgIcon } from "./SvgIcon";
 type Props = {
   editFunction: Function;
   deleteFunction: Function;
+  highlighted?: boolean;
 };
 
 const SettingsEntryLayout = styled("div", {
@@ -18,6 +19,14 @@ const SettingsEntryLayout = styled("div", {
   justifyContent: "space-between",
   backgroundColor: "$backgroundTertiary",
   borderRadius: "20px",
+  variants: {
+    highlighted: {
+      true: {
+        border: "4px solid $specialPrimary",
+      },
+      false: {},
+    },
+  },
 });
 
 const SettingsEntryIcons = styled("div", {
@@ -54,10 +63,11 @@ export const SettingsEntry: React.FC<Props> = ({
   children,
   editFunction,
   deleteFunction,
+  highlighted = false,
 }) => {
   return (
     <>
-      <SettingsEntryLayout>
+      <SettingsEntryLayout highlighted={highlighted}>
         <div>{children}</div>
         <SettingsEntryIcons>
           <SettingsEntryEditIcon
