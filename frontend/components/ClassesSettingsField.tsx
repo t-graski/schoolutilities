@@ -59,11 +59,18 @@ const SettingsEntryLink = styled("a", {
   cursor: "pointer",
 });
 
+const StyledDeleteText = styled("p", {
+  fontSize: "1rem",
+  color: "$fontPrimary",
+  marginTop: "15px",
+});
+
 export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const [departments, setDepartments] = React.useState([]);
   const [classes, setClasses] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
-  const [popUpIsVisible, setPopUpIsVisible] = React.useState(false);
+  const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
+  const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [schoolClassName, setSchoolClassName] = React.useState("");
   const [schoolClassNameValid, setSchoolClassNameValid] = React.useState(false);
   const [departmentUUID, setDepartmentUUId] = React.useState("");
@@ -125,7 +132,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
     } else {
       editSettingsEntry();
     }
-    setPopUpIsVisible(false);
+    setEditPopUpIsVisible(false);
   }
 
   async function addSettingsEntry() {
@@ -185,6 +192,10 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
         if (schoolClass.classUUID == schoolClassId) {
           console.log(schoolClass.className);
           schoolClass.className = schoolClassName;
+          schoolClass.departmentName = departments.find(
+            (department) => department.departmentUUID === departmentUUID
+          ).departmentName;
+          schoolClass.departmentUUID = departmentUUID;
           return schoolClass;
         } else {
           return schoolClass;
@@ -227,14 +238,14 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
   return (
     <>
       <SchoolDetailLayout>
-        {popUpIsVisible && (
+        {editPopUpIsVisible && (
           <SettingsPopUp
             headline={schoolClassId == "" ? "Add new entry" : "Edit entry"}
             inputValid={schoolClassNameValid}
             saveLabel={schoolClassId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
             closeFunction={() => {
-              setPopUpIsVisible(false);
+              setEditPopUpIsVisible(false);
               setSchoolClassName("");
               setSchoolClassNameValid(false);
             }}
@@ -278,12 +289,33 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
             </StyledInputField>
           </SettingsPopUp>
         )}
+        {deletePopUpIsVisible && (
+          <SettingsPopUp
+            headline={`Remove ${schoolClassName}`}
+            inputValid={true}
+            saveLabel="Confirm"
+            saveFunction={() => {
+              deleteSettingsEntry(schoolClassId);
+              setDeletePopUpIsVisible(false);
+            }}
+            closeFunction={() => {
+              setDeletePopUpIsVisible(false);
+              setSchoolClassName("");
+              setSchoolClassNameValid(false);
+            }}
+          >
+            <StyledDeleteText>
+              This action cannot be undone. This will permanently delete this
+              class.
+            </StyledDeleteText>
+          </SettingsPopUp>
+        )}
         <SettingsHeader
           headline="Classes"
           addFunction={() => {
             setSchoolClassName("");
             setSchoolClassId("");
-            setPopUpIsVisible(true);
+            setEditPopUpIsVisible(true);
             setDepartmentUUId(departments[0].departmentUUID);
           }}
         ></SettingsHeader>
@@ -299,10 +331,13 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                   setSchoolClassName(entry.className);
                   setSchoolClassId(entry.classUUID);
                   setDepartmentUUId(entry.departmentUUID);
-                  setPopUpIsVisible(true);
+                  setEditPopUpIsVisible(true);
+                  setSchoolClassNameValid(true);
                 }}
                 deleteFunction={() => {
-                  deleteSettingsEntry(entry.classUUID);
+                  setSchoolClassId(entry.classUUID);
+                  setSchoolClassName(entry.className);
+                  setDeletePopUpIsVisible(true);
                 }}
                 highlighted={
                   router.query &&

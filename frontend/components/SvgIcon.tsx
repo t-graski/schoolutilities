@@ -4,8 +4,11 @@ import SvgClass from "./svg/SvgClass";
 import SvgDelete from "./svg/SvgDelete";
 import SvgDepartment from "./svg/SvgDepartment";
 import SvgEdit from "./svg/SvgEdit";
+import SvgQuality from "./svg/SvgQuality";
 import SvgStudent from "./svg/SvgStudent";
 import SvgTeacher from "./svg/SvgTeacher";
+import SvgUser from "./svg/SvgUser";
+import SvgWarning from "./svg/SvgWarning";
 
 type Props = {
   iconName: string;
@@ -25,6 +28,12 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgDelete alt="Delete Icon" />;
     case "SvgEdit":
       return <SvgEdit alt="Edit Icon" />;
+    case "SvgUser":
+      return <SvgUser alt="User Icon" />;
+    case "SvgQuality":
+      return <SvgQuality alt="Quality Icon" />;
+    case "SvgWarning":
+      return <SvgWarning alt="Warning Icon" />;
     default:
       return <SvgClass />;
   }

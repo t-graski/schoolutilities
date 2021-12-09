@@ -39,7 +39,7 @@ export interface RemoveDepartment {
 }
 
 export interface UpdateDepartment {
-  name: string;
+  departmentName: string;
   departmentUUID: string;
   isVisible?: boolean;
   childsVisible?: boolean;

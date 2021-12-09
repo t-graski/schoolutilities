@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
 import cookie from "js-cookie";
+import { SvgIcon } from "./SvgIcon";
 
 type Props = {
   links: {
@@ -154,17 +155,9 @@ const AccountButtonIconLayout = styled("div", {
   position: "relative",
   marginRight: "10px",
   borderRadius: "50%",
-
-  ["&:before"]: {
-    display: "block",
-    content: "",
-    width: "30px",
-    paddingTop: "30px",
-  },
-});
-
-const StyledAccountImage = styled(Image, {
-  borderRadius: "50%",
+  width: "30px",
+  height: "30px",
+  color: "$fontPrimary",
 });
 
 const StyledAccountLink = styled("a", {
@@ -213,16 +206,10 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
               </li>
             ))}
           </StyledLinkList>
-          <StyledAccountLink
-            href={userData ? "/auth/login" : "/auth/login"}
-          >
+          <StyledAccountLink href={userData ? "/auth/login" : "/auth/login"}>
             <AccountButton>
               <AccountButtonIconLayout>
-                <StyledAccountImage
-                  layout="fill"
-                  src="/images/user.svg"
-                  alt="SchoolUtilities Logo"
-                />
+                <SvgIcon iconName="SvgUser"></SvgIcon>
               </AccountButtonIconLayout>
               <AccountButtonText>
                 {userData ? userData.firstname : "Login"}

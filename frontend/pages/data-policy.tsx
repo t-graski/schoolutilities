@@ -63,6 +63,9 @@ export default function DataPolicy() {
       font-family: Arial !important;
       word-break: break-word !important;
               }
+              * {
+                color: #ffffff;
+              }
       </style>
       
             <div data-custom-class="body">

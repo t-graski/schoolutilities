@@ -402,9 +402,9 @@ export class SchoolAdminService {
   }
 
   async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
-    const { departmentUUID, name, isVisible, childsVisible } = body;
+    const { departmentUUID, departmentName, isVisible, childsVisible } = body;
     if (
-      !validator.isLength(name, LENGTHS.DEPARTMENT_NAME) ||
+      !validator.isLength(departmentName, LENGTHS.DEPARTMENT_NAME) ||
       !validator.isUUID(departmentUUID.slice(1), 4) ||
       !validator.isBoolean(isVisible) ||
       !validator.isBoolean(childsVisible)
@@ -432,7 +432,7 @@ export class SchoolAdminService {
           departmentId: Number(departmentId),
         },
         data: {
-          name,
+          name: departmentName,
           isVisible: this.toBoolean(isVisible),
           childsVisible: this.toBoolean(childsVisible),
         },

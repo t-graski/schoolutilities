@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { Progressbar } from "./Progressbar";
 import { Spacer } from "./Spacer";
+import { SvgIcon } from "./SvgIcon";
+import { Headline } from "./Headline";
 
 type Props = {
   steps: {
@@ -39,10 +41,68 @@ const ButtonLayout = styled("div", {
   justifySelf: "flex-end",
 });
 
+const SuccessLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  padding: "0 10vw",
+  gap: "40px",
+  color: "$fontPrimary",
+});
+
+const StyledHeadline = styled("h1", {
+  fontSize: "2.5rem",
+  fontWeight: "bold",
+  textAlign: "center",
+});
+
+const SuccessImageLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100px",
+  height: "100px",
+
+  variants: {
+    color: {
+      success: {
+        color: "$specialPrimary",
+      },
+      error: {
+        color: "$specialTertiary",
+      },
+    },
+  },
+});
+
+const SuccessDescription = styled("p", {
+  fontSize: "1.5rem",
+});
+
+const StyledLink = styled("a", {
+  color: "$specialPrimary",
+  fontSize: "1.2rem",
+  fontWeight: "bold",
+  padding: "20px",
+  border: "2px solid $specialPrimary",
+  borderRadius: "25px",
+  textDecoration: "none",
+  cursor: "pointer",
+  transition: "all 0.2s",
+
+  "&:hover": {
+    backgroundColor: "$specialPrimary",
+    color: "$fontPrimary",
+  },
+});
+
 export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [activeStep, setActiveStep] = useState(-1);
-  const [statusInfo, setStatusInfo] = useState("");
+  const [statusInfo, setStatusInfo] = useState(null);
 
   if (cookie.get("activeStep")) {
     if (activeStep == -1) {
@@ -75,10 +135,24 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
     })
       .then((response) => {
         if (response.status == 200) {
-          setStatusInfo("School added");
           return response.json();
         } else {
-          setStatusInfo("There was an error creating the school");
+          setStatusInfo("");
+          setStatusInfo({
+            statusHeadline: "There was an error creating the school",
+            statusDescription: "Please try again later",
+            statusIcon: "SvgWarning",
+            statusColor: "error",
+            linkVisibility: false,
+          });
+          setStatusInfo({
+            statusHeadline: "Your School was successfully created",
+            statusDescription:
+              "You can now manage your school, create classes and add users to your school.",
+            statusIcon: "SvgQuality",
+            statusColor: "success",
+            linkVisibility: true,
+          });
         }
       })
       .then(async (data) => {
@@ -105,9 +179,22 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
             });
           });
           if (creationGoneWrong) {
-            setStatusInfo("There was an error creating the departments");
+            setStatusInfo({
+              statusHeadline: "There was an error creating the departments",
+              statusDescription: "Please try again later",
+              statusIcon: "SvgWarning",
+              statusColor: "error",
+              linkVisibility: false,
+            });
           } else {
-            setStatusInfo("School successfully created");
+            setStatusInfo({
+              statusHeadline: "Your School was successfully created",
+              statusDescription:
+                "You can now manage your school, create classes and add users to your school.",
+              statusIcon: "SvgQuality",
+              statusColor: "success",
+              linkVisibility: true,
+            });
           }
         }
       });
@@ -115,57 +202,76 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
 
   return (
     <>
-      {!statusInfo ? (
-        <ProgressLayout>
-          {steps.map((step, index) => {
-            if (index == activeStep) {
-              return (
-                <step.component key={index} setDisabled={setIsButtonDisabled} />
-              );
-            }
-          })}
-          <Spacer size="small"></Spacer>
-          <NavigationLayout>
+      <ProgressLayout>
+        {steps.map((step, index) => {
+          if (index == activeStep) {
+            return (
+              <step.component key={index} setDisabled={setIsButtonDisabled} />
+            );
+          }
+        })}
+        {steps.length == activeStep && statusInfo && (
+          <>
+            <SuccessLayout>
+              <StyledHeadline>
+                {statusInfo && statusInfo.statusHeadline}
+              </StyledHeadline>
+              <SuccessImageLayout color={statusInfo && statusInfo.statusColor}>
+                <SvgIcon iconName={statusInfo.statusIcon}></SvgIcon>
+              </SuccessImageLayout>
+              <SuccessDescription>
+                {statusInfo && statusInfo.statusDescription}
+              </SuccessDescription>
+              {statusInfo && statusInfo.linkVisibility && (
+                <Link href="/school/admin/settings">
+                  <StyledLink>Manage School now</StyledLink>
+                </Link>
+              )}
+            </SuccessLayout>
+          </>
+        )}
+        <Spacer size="small"></Spacer>
+        <NavigationLayout>
+          <Button
+            disabled={activeStep === 0 || isButtonDisabled}
+            backgroundColor="primary"
+            color="primary"
+            label="BACK"
+            onClick={() => {
+              setActiveStep(activeStep - 1);
+            }}
+            isVisible={!statusInfo}
+          ></Button>
+          <ProgressbarLayout>
+            <Progressbar
+              steps={steps}
+              activeStep={activeStep}
+              setActiveStep={setActiveStep}
+            />
+          </ProgressbarLayout>
+          <ButtonLayout>
             <Button
-              disabled={activeStep === 0 || isButtonDisabled}
+              disabled={
+                (activeStep + 1 === steps.length && isButtonDisabled) ||
+                isButtonDisabled
+              }
               backgroundColor="primary"
               color="primary"
-              label="BACK"
+              label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
               onClick={() => {
-                setActiveStep(activeStep - 1);
-              }}
-            ></Button>
-            <ProgressbarLayout>
-              <Progressbar
-                steps={steps}
-                activeStep={activeStep}
-                setActiveStep={setActiveStep}
-              />
-            </ProgressbarLayout>
-            <ButtonLayout>
-              <Button
-                disabled={
-                  (activeStep + 1 === steps.length && isButtonDisabled) ||
-                  isButtonDisabled
+                if (activeStep + 1 === steps.length) {
+                  saveInputs();
+                  cookie.remove("activeStep");
+                  setActiveStep(activeStep + 1);
+                } else {
+                  setActiveStep(activeStep + 1);
                 }
-                backgroundColor="primary"
-                color="primary"
-                label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
-                onClick={() => {
-                  if (activeStep + 1 === steps.length) {
-                    saveInputs();
-                    cookie.remove("activeStep");
-                  } else {
-                    setActiveStep(activeStep + 1);
-                  }
-                }}
-              ></Button>
-            </ButtonLayout>
-          </NavigationLayout>
-        </ProgressLayout>
-      ) : (
-        <h2>{statusInfo}</h2>
-      )}
+              }}
+              isVisible={!statusInfo}
+            ></Button>
+          </ButtonLayout>
+        </NavigationLayout>
+      </ProgressLayout>
     </>
   );
 };

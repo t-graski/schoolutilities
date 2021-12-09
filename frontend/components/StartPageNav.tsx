@@ -17,6 +17,7 @@ const MainContentLayout = styled("div", {
   width: "100%",
   marginTop: "140px",
   minHeight: "85vh",
+  color: "$fontPrimary",
 });
 
 const MainHeader = styled("h1", {
@@ -26,6 +27,7 @@ const MainHeader = styled("h1", {
 
 const MainHeaderDescription = styled("p", {
   fontSize: "1.5rem",
+  marginBottom: "10px",
 });
 
 const MenuBubbles = styled("div", {

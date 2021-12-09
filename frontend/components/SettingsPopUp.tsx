@@ -72,7 +72,7 @@ export const SettingsPopUp: React.FC<Props> = ({
           {children}
           <PopUpButtonLayout>
             <Button
-              label="Close"
+              label="Cancel"
               onClick={() => {
                 closeFunction();
               }}

@@ -54,6 +54,18 @@ const SettingsEntryLink = styled("a", {
   cursor: "pointer",
 });
 
+const StyledError = styled("p", {
+  color: "$specialTertiary",
+  fontSize: "1.5rem",
+  fontWeight: "700",
+  marginTop: "15px",
+  marginBottom: "15px",
+  border: "solid 2px $specialTertiary",
+  padding: "20px",
+  width: "fit-content",
+  borderRadius: "25px",
+});
+
 export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   const [departments, setDepartments] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
@@ -213,11 +225,6 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                 value={departmentName}
                 onChange={(event) => {
                   setDepartmentName(event);
-                  if (regex.name.test(event)) {
-                    setDepartmentNameValid(true);
-                  } else {
-                    setDepartmentNameValid(false);
-                  }
                 }}
                 iconSrc={""}
                 iconAlt={""}
@@ -237,7 +244,9 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
             setPopUpIsVisible(true);
           }}
         ></SettingsHeader>
-        {error}
+        {error && (
+            <StyledError>{error}</StyledError>
+        )}
         <SettingsEntriesLayout>
           {departments.map((entry, index) => (
             <SettingsEntryLayout

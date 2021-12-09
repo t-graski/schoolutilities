@@ -22,7 +22,7 @@ const SchoolDetailLayout = styled("form", {
   gap: "20px",
 });
 
-const HeaderLayout = styled("div", { 
+const HeaderLayout = styled("div", {
   width: "100%",
   display: "flex",
   flexDirection: "row",
@@ -149,8 +149,14 @@ const PopUpButtonLayout = styled("div", {
   gap: "20px",
 });
 
+const Description = styled("p", {
+  fontSize: "1.2rem",
+  color: "$fontPrimary",
+  margin: "15px 0",
+});
+
 export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
-  const [departments, setDepartments] = React.useState([]);
+  const [departments, setDepartments] = React.useState(["Default Department"]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [isDisabled, setIsDisabled] = React.useState(false);
   const [popUpIsVisible, setPopUpIsVisible] = React.useState(false);
@@ -172,8 +178,8 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
       if (storage && storage.departments) {
         setDepartments(storage.departments);
       } else if (!isDisabled) {
-        setIsDisabled(true);
-        setDisabled(true);
+        setIsDisabled(false);
+        setDisabled(false);
       }
       setIsFirstTime(false);
     } else if (storage && departments !== storage.departments) {
@@ -280,6 +286,9 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
               alignment="left"
               fontWeight="bold"
             ></Headline>
+            <Description>
+              Here you can add and edit the departments of your school.
+            </Description>
             <Separator width="small" alignment="left"></Separator>
           </InformationLayout>
           <AddIconLayout
