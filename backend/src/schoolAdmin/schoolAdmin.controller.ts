@@ -174,7 +174,9 @@ export class SchoolAdminController {
     const result = await this.schoolAdminService.getPersonsOfSchool(
       params.schoolUUID,
     );
-    return response.status(result.status).json(result?.data);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   @Get('userPermissions')

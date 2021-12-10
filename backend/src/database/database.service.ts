@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { GetDepartments, UserPermissions } from 'src/types/SchoolAdmin';
 import { Role } from 'src/roles/role.enum';
+import { log } from 'console';
 
 const prisma = new PrismaClient();
 require('dotenv').config();
