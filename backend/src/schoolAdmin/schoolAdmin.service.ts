@@ -605,22 +605,26 @@ export class SchoolAdminService {
 
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+    const role = await this.databaseService.getUserRoles(personId.toString());
 
-    const role = await this.databaseService.getUserRoles(personId);
-    console.log(role);
+    const roleEntry = role.find((entry) => entry.schoolId === schoolId);
+    if (roleEntry.roleId === 1) {
+      console.log('test');
 
-    const isOnlyUser = await prisma.schoolPersons.findFirst({
+      return RETURN_DATA.LAST_USER;
+    }
+
+    const isOnlyUser = await prisma.schoolPersons.findMany({
       where: {
-        persons: {
-          personId: personId,
-        },
         schools: {
           schoolId: schoolId,
         },
       },
     });
 
-    const isOnlyUserArray = [isOnlyUser];
+    const isOnlyUserArray = isOnlyUser.map((entry) => entry.schoolId);
+
+    console.log(isOnlyUserArray.length);
 
     if (isOnlyUserArray.length == 1) return RETURN_DATA.LAST_USER;
 
