@@ -23,8 +23,14 @@ export class SchoolAdminController {
   // @UseGuards(JwtAuthGuard)
   @Post('/addSchoolConfig')
   async addSchoolConfig(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.addSchoolConfig(request.body);
-    return response.status(result.status).json(result?.message);
+    const jwt = request.headers.authorization.split(' ')[1];
+    const result = await this.schoolAdminService.addSchoolConfig(
+      request.body,
+      jwt,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   // @UseGuards(JwtAuthGuard)
