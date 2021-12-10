@@ -11,15 +11,18 @@ export async function getAccessToken(): Promise<string> {
 }
 
 async function refreshAccessToken(refreshToken: string): Promise<string> {
-  const accessTokenResponse = await fetch("http://localhost:8888/api/auth/refresh", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      token: refreshToken,
-    }),
-  });
+  const accessTokenResponse = await fetch(
+    "http://localhost:8888/api/auth/refresh",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: refreshToken,
+      }),
+    }
+  );
   const responseJson = await accessTokenResponse.json();
   if (responseJson.token) {
     cookie.set("accessToken", responseJson.token, {
@@ -28,5 +31,33 @@ async function refreshAccessToken(refreshToken: string): Promise<string> {
     return responseJson.token;
   } else {
     return "";
+  }
+}
+
+export async function getUserData(): Promise<any> {
+  const accessToken = await getAccessToken();
+  let userProfile = cookie.get("userProfile");
+  if (accessToken && !userProfile) {
+    const userDataResponse = await fetch(
+      "http://localhost:8888/api/user/profile",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const responseJson = await userDataResponse.json();
+    if (responseJson.firstName) {
+      cookie.set("userProfile", JSON.stringify(responseJson), {
+        expires: 1,
+      });
+      return responseJson;
+    } else {
+      return {};
+    }
+  } else if (userProfile) {
+    return JSON.parse(userProfile);
+  } else {
+    return {};
   }
 }

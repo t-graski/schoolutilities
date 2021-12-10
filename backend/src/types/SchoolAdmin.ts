@@ -69,7 +69,7 @@ export interface RemoveJoinCode {
 export interface UpdateJoinCode {
   joinCode: string;
   expireDate?: string;
-  name?: string;
+  joinCodeName?: string;
 }
 export interface JoinCodeTable {
   joinCodeId: number;

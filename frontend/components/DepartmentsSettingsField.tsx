@@ -134,7 +134,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       }
     );
     if (returnValue.status !== 200) {
-      setError("Fehler beim hinzufügen");
+      setError("Error while saving department");
     } else {
       const body = await returnValue.json();
       setError("");
@@ -227,7 +227,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
           >
             <StyledInputField>
               <InputField
-                label="Department departmentName"
+                label="Departmentname"
                 inputType="text"
                 value={departmentName}
                 onChange={(event) => {

@@ -149,7 +149,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       }
     );
     if (returnValue.status !== 200) {
-      setError("Fehler beim hinzufügen");
+      setError("Error while saving class");
       console.log(returnValue);
     } else {
       const body = await returnValue.json();
@@ -250,7 +250,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
           >
             <StyledInputField>
               <InputField
-                label="SchoolClass className"
+                label="Classname"
                 inputType="text"
                 value={schoolClassName}
                 onChange={(event) => {

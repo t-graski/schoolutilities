@@ -649,7 +649,7 @@ export class SchoolAdminService {
 
     if (
       !validator.isUUID(schoolUUID.slice(1), 4) ||
-      !validator.isLength(name, LENGTHS.JOIN_CODE_NAME) ||
+      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME) ||
       !validator.isUUID(personUUID.slice(1), 4) ||
       !(new Date(expireDate).getTime() > 0)
     ) {
@@ -682,7 +682,7 @@ export class SchoolAdminService {
 
     const joinCode = await this.generateJoinCode();
     try {
-      await prisma.schoolJoinCodes.create({
+      const joinCodeData = await prisma.schoolJoinCodes.create({
         data: {
           schools: {
             connect: {
@@ -699,10 +699,18 @@ export class SchoolAdminService {
           },
         },
       });
+
+      delete joinCodeData.schoolJoinCodeId;
+      delete joinCodeData.schoolId;
+      delete joinCodeData.personCreationId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: joinCodeData,
+      };
     } catch (err) {
       return RETURN_DATA.DATABASE_ERROR;
     }
-    return RETURN_DATA.SUCCESS;
   }
 
   async removeJoinCode(body: RemoveJoinCode): Promise<ReturnMessage> {
@@ -740,10 +748,10 @@ export class SchoolAdminService {
   }
 
   async updateJoinCode(body: UpdateJoinCode): Promise<ReturnMessage> {
-    const { joinCode, expireDate, name = '' } = body;
+    const { joinCode, expireDate, joinCodeName = '' } = body;
     if (
       !(new Date(expireDate).getTime() > 0) ||
-      !validator.isLength(name, LENGTHS.JOIN_CODE_NAME)
+      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME)
     ) {
       return RETURN_DATA.INVALID_INPUT;
     }
@@ -764,7 +772,7 @@ export class SchoolAdminService {
           joinCode,
         },
         data: {
-          joinCodeName: name,
+          joinCodeName,
           expireDate: new Date(expireDate),
         },
       });

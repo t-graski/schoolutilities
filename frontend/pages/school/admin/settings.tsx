@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
 import { Footer } from "../../../components/Footer";
 import { LoginField } from "../../../components/LoginField";
@@ -10,14 +10,14 @@ import { Spacer } from "../../../components/Spacer";
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
 import { SideDashboard } from "../../../components/SideDashboard";
-import {
-  DepartmentsSettingsField,
-} from "../../../components/DepartmentsSettingsField";
+import { DepartmentsSettingsField } from "../../../components/DepartmentsSettingsField";
 import { useRouter } from "next/router";
 import SvgDepartment from "../../../components/svg/SvgDepartment";
 import cookie from "js-cookie";
 import { ClassesSettingsField } from "../../../components/ClassesSettingsField";
 import { PersonsSettingsField } from "../../../components/PersonsSettingsField";
+import { JoinCodesSettingsField } from "../../../components/JoinCodesSettingsField";
+import { getUserData } from "../../../misc/authHelper";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",
@@ -36,7 +36,18 @@ const SettingsLayout = styled("div", {
 
 export default function CreateSchool() {
   const [isOpen, setIsOpen] = React.useState(true);
+  const [userData, setUserData] = useState(null);
   const router = useRouter();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    const fetchedData = await getUserData();
+    setUserData(fetchedData);
+  }
+
   if (!cookie.get("schoolUUID")) {
     // router.push("/");
   }
@@ -52,13 +63,9 @@ export default function CreateSchool() {
       case "classes":
         return <ClassesSettingsField />;
       case "persons":
-        return (
-          <PersonsSettingsField />
-        );
+        return <PersonsSettingsField />;
       case "join-codes":
-        return (
-          <JoinCodesSettingsField />
-        );
+        return <JoinCodesSettingsField />;
       default:
         return <DepartmentsSettingsField></DepartmentsSettingsField>;
     }
@@ -97,7 +104,7 @@ export default function CreateSchool() {
             },
             {
               iconName: "SvgTeacher",
-              label: "Join Codes",
+              label: "Invite Codes",
               href: "/school/admin/settings?tab=join-codes",
               highlighted: urlParam == "join-codes" ? true : false,
             },
@@ -105,7 +112,9 @@ export default function CreateSchool() {
           specialButton={{
             imageSrc: "/images/icons/round_user_icon.svg",
             imageAlt: "User Icon",
-            label: "John Doe",
+            label: userData
+              ? userData.firstName + " " + userData.lastName
+              : "User",
             href: "/school/admin/profile",
             onClickImageSrc: "/images/icons/logout_icon.svg",
             onClickImageAlt: "Logout Icon",
