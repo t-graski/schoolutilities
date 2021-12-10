@@ -808,6 +808,7 @@ export class SchoolAdminService {
     }
   }
 
+
   toBoolean(value): boolean {
     return value === '1';
   }

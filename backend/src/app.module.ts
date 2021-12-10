@@ -9,6 +9,7 @@ import { GeneralConfigModule } from './generalConfig/generalConfig.module';
 import { FileUploadModule } from './file/file.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { TimezoneModule } from './timezone/timezone.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TimezoneModule } from './timezone/timezone.module';
     FileUploadModule,
     StatisticsModule,
     TimezoneModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

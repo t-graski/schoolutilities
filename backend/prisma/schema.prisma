@@ -77,9 +77,10 @@ model persons {
   personRoles      personRoles?
   registerTokens   registerTokens[]
 
-  coursePersons   coursePersons[]
-  schoolJoinCodes schoolJoinCodes[]
-  schoolPersons   schoolPersons[]
+  coursePersons    coursePersons[]
+  schoolJoinCodes  schoolJoinCodes[]
+  schoolPersons    schoolPersons[]
+  emailChangeToken emailChangeToken[]
 }
 
 model registerTokens {
@@ -207,4 +208,16 @@ model schoolPersons {
   @@index([schoolId], map: "fkSchoolPersonSchoolId")
   @@index([personId], map: "fkSchoolPersonPersonId")
   @@map("school_persons")
+}
+
+model emailChangeToken {
+  emailChangeId Int     @id @default(autoincrement()) @map("email_change_id")
+  personId      Int     @map("person_id")
+  token         String  @unique(map: "token") @map("token") @db.VarChar(255)
+  newEmail      String  @map("new_email") @db.VarChar(255)
+  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkEmailChangePersonId")
+
+
+  @@index([personId], map: "fkEmailChangePersonId")
+  @@map("email_change_token")
 }
