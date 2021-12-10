@@ -47,7 +47,10 @@ export class SchoolAdminService {
     this.connection.connect();
   }
 
-  async addSchoolConfig(body: AddSchool): Promise<ReturnMessage> {
+  async addSchoolConfig(
+    body: AddSchool,
+    token: string,
+  ): Promise<ReturnMessage> {
     const { name, languageId, timezone } = body;
     if (
       !validator.isLength(name, LENGTHS.CLASS_NAME) ||
@@ -57,8 +60,12 @@ export class SchoolAdminService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
+    const jwt = await this.authService.decodeJWT(token);
+    const personUUID = jwt.personUUID;
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+
     try {
-      await prisma.schools.create({
+      const school = await prisma.schools.create({
         data: {
           schoolUUID: `${ID_STARTERS.SCHOOL}${uuidv4()}`,
           name,
@@ -70,10 +77,34 @@ export class SchoolAdminService {
           timezone,
         },
       });
+
+      await prisma.schoolPersons.create({
+        data: {
+          schools: {
+            connect: {
+              schoolId: Number(school.schoolId),
+            },
+          },
+          persons: {
+            connect: {
+              personId: Number(personId),
+            },
+          },
+        },
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: {
+          schoolUUID: school.schoolUUID,
+          schoolName: school.name,
+          languageId: school.languageId == 1 ? 'de' : 'en',
+          timezone: school.timezone,
+        },
+      };
     } catch (err) {
       return RETURN_DATA.DATABASE_ERROR;
     }
-    return RETURN_DATA.SUCCESS;
   }
 
   async addClass(body: AddClass): Promise<ReturnMessage> {
@@ -807,7 +838,6 @@ export class SchoolAdminService {
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
-
 
   toBoolean(value): boolean {
     return value === '1';
