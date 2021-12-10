@@ -31,4 +31,13 @@ export class UserController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  @Get('/profile')
+  async getProfile(@Res() response, @Req() request) {
+    const jwt = request.headers.authorization.split(' ')[1];
+    const result = await this.userService.getProfile(jwt);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }
