@@ -641,10 +641,10 @@ export class SchoolAdminService {
   }
 
   async addJoinCode(body: AddJoinCode, token: string): Promise<ReturnMessage> {
-    const { schoolUUID, expireDate, name = '' } = body;
+    const { schoolUUID, expireDate, joinCodeName = '' } = body;
     const jwt = await this.authService.decodeJWT(token);
     const personUUID = jwt.personUUID;
-    
+
     if (
       !validator.isUUID(schoolUUID.slice(1), 4) ||
       !validator.isLength(name, LENGTHS.JOIN_CODE_NAME) ||
@@ -660,7 +660,7 @@ export class SchoolAdminService {
     const nameIsNotAvailable = await prisma.schoolJoinCodes.findFirst({
       where: {
         schoolId: Number(schoolId),
-        joinCodeName: name,
+        joinCodeName: joinCodeName,
       },
     });
 
@@ -687,7 +687,7 @@ export class SchoolAdminService {
               schoolId: Number(schoolId),
             },
           },
-          joinCodeName: name,
+          joinCodeName: joinCodeName,
           joinCode,
           expireDate: new Date(expireDate),
           persons: {
