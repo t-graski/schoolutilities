@@ -12,12 +12,12 @@ import Head from "next/head";
 import { SideDashboard } from "../../../components/SideDashboard";
 import {
   DepartmentsSettingsField,
-  SettingsField,
 } from "../../../components/DepartmentsSettingsField";
 import { useRouter } from "next/router";
 import SvgDepartment from "../../../components/svg/SvgDepartment";
 import cookie from "js-cookie";
 import { ClassesSettingsField } from "../../../components/ClassesSettingsField";
+import { PersonsSettingsField } from "../../../components/PersonsSettingsField";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",
@@ -35,20 +35,6 @@ const SettingsLayout = styled("div", {
 });
 
 export default function CreateSchool() {
-  const [progressSteps, setProgressSteps] = useState([
-    {
-      label: "School Details",
-      isDone: false,
-      isActive: true,
-      component: SchoolDetailField,
-    },
-    {
-      label: "Departments",
-      isDone: false,
-      isActive: false,
-      component: DepartmentsDetailField,
-    },
-  ]);
   const [isOpen, setIsOpen] = React.useState(true);
   const router = useRouter();
   if (!cookie.get("schoolUUID")) {
@@ -65,35 +51,13 @@ export default function CreateSchool() {
     switch (urlParam) {
       case "classes":
         return <ClassesSettingsField />;
-      case "students":
+      case "persons":
         return (
-          <SettingsField
-            headline="Student Settings"
-            addNewEntryHeadline="Add New Student"
-            addEditEntryHeadline="Edit Student"
-            popUpInputFieldPlaceholder="Student Name"
-            dbEntryUrl="localhost:8888/api/schooladmin/student"
-            dbEntriesUrl="localhost:8888/api/schooladmin/students"
-            getAllEntriesBody={undefined}
-            editEntryBody={undefined}
-            addEntryBody={undefined}
-            UUIDField=""
-          />
+          <PersonsSettingsField />
         );
-      case "teachers":
+      case "join-codes":
         return (
-          <SettingsField
-            headline="Teacher Settings"
-            addNewEntryHeadline="Add New Class"
-            addEditEntryHeadline="Edit Class"
-            popUpInputFieldPlaceholder="Class Name"
-            dbEntryUrl="localhost:8888/api/schooladmin/teacher"
-            dbEntriesUrl="localhost:8888/api/schooladmin/teachers"
-            getAllEntriesBody={undefined}
-            editEntryBody={undefined}
-            addEntryBody={undefined}
-            UUIDField=""
-          />
+          <JoinCodesSettingsField />
         );
       default:
         return <DepartmentsSettingsField></DepartmentsSettingsField>;
@@ -113,9 +77,9 @@ export default function CreateSchool() {
               label: "Departments",
               href: "/school/admin/settings?tab=departments",
               highlighted:
-                urlParam != "teachers" &&
+                urlParam != "persons" &&
                 urlParam != "classes" &&
-                urlParam != "students"
+                urlParam != "join-codes"
                   ? true
                   : false,
             },
@@ -127,15 +91,15 @@ export default function CreateSchool() {
             },
             {
               iconName: "SvgStudent",
-              label: "Students",
-              href: "/school/admin/settings?tab=students",
-              highlighted: urlParam == "students" ? true : false,
+              label: "Persons",
+              href: "/school/admin/settings?tab=persons",
+              highlighted: urlParam == "persons" ? true : false,
             },
             {
               iconName: "SvgTeacher",
-              label: "Teachers",
-              href: "/school/admin/settings?tab=teachers",
-              highlighted: urlParam == "teachers" ? true : false,
+              label: "Join Codes",
+              href: "/school/admin/settings?tab=join-codes",
+              highlighted: urlParam == "join-codes" ? true : false,
             },
           ]}
           specialButton={{
@@ -146,7 +110,9 @@ export default function CreateSchool() {
             onClickImageSrc: "/images/icons/logout_icon.svg",
             onClickImageAlt: "Logout Icon",
             onClickImageFunction: () => {
-              console.log("Logout");
+              cookie.remove("accessToken");
+              cookie.remove("refreshToken");
+              router.push("/");
             },
           }}
           isOpen={isOpen}

@@ -5,7 +5,7 @@ import { Separator } from "./Separator";
 
 type Props = {
   headline: string;
-  addFunction: Function;
+  addFunction?: Function;
 };
 
 const SchoolDetailLayout = styled("form", {
@@ -56,9 +56,11 @@ export const SettingsHeader: React.FC<Props> = ({ headline, addFunction }) => {
           ></Headline>
           <Separator width="small" alignment="left"></Separator>
         </InformationLayout>
-        <AddIconLayout onClick={() => addFunction()}>
-          <AddIconPlus>+</AddIconPlus>
-        </AddIconLayout>
+        {addFunction && (
+          <AddIconLayout onClick={() => addFunction()}>
+            <AddIconPlus>+</AddIconPlus>
+          </AddIconLayout>
+        )}
       </HeaderLayout>
     </>
   );

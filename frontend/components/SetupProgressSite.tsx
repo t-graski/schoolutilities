@@ -12,6 +12,7 @@ import { Progressbar } from "./Progressbar";
 import { Spacer } from "./Spacer";
 import { SvgIcon } from "./SvgIcon";
 import { Headline } from "./Headline";
+import { getAccessToken } from "../misc/authHelper";
 
 type Props = {
   steps: {
@@ -115,58 +116,42 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
     cookie.set("activeStep", activeStep);
   }
 
-  function saveInputs() {
+  async function saveInputs() {
+    let accessToken = await getAccessToken();
     const schoolDetails = JSON.parse(localStorage.getItem("schoolDetails"));
     console.log({
       "Content-Type": "application/json",
-      Authorization: `Bearer ${cookie.get("accessToken")}`,
+      Authorization: `Bearer ${accessToken}`,
     });
-    fetch("http://localhost:8888/api/schooladmin/addschoolconfig", {
-      method: "POST",
-      body: JSON.stringify({
-        name: schoolDetails.schoolName,
-        languageId: 2,
-        timezone: schoolDetails.schoolTimezone,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cookie.get("accessToken")}`,
-      },
-    })
-      .then((response) => {
-        if (response.status == 200) {
-          return response.json();
-        } else {
-          setStatusInfo("");
-          setStatusInfo({
-            statusHeadline: "There was an error creating the school",
-            statusDescription: "Please try again later",
-            statusIcon: "SvgWarning",
-            statusColor: "error",
-            linkVisibility: false,
-          });
-          setStatusInfo({
-            statusHeadline: "Your School was successfully created",
-            statusDescription:
-              "You can now manage your school, create classes and add users to your school.",
-            statusIcon: "SvgQuality",
-            statusColor: "success",
-            linkVisibility: true,
-          });
-        }
-      })
-      .then(async (data) => {
-        if (data && data.schoolId) {
+    const schoolResponse = await fetch(
+      "http://localhost:8888/api/schooladmin/addschoolconfig",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          name: schoolDetails.schoolName,
+          languageId: 2,
+          timezone: schoolDetails.schoolTimezone,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    if (schoolResponse) {
+      if (schoolResponse.status == 200) {
+        let data = await schoolResponse.json();
+        if (data && data.schoolUUID) {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
           await storage.departments.forEach(async (department) => {
-            await fetch("http://localhost:8888/api/schooladmin/addDepartment", {
+            await fetch("http://localhost:8888/api/schooladmin/department", {
               method: "POST",
               body: JSON.stringify({
-                name: department,
-                schoolId: data.schoolId,
-                isVisible: true,
-                childsVisible: true,
+                departmentName: department,
+                schoolUUID: data.schoolUUID,
+                isVisible: "true",
+                childsVisible: "true",
               }),
               headers: {
                 "Content-Type": "application/json",
@@ -197,7 +182,16 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
             });
           }
         }
-      });
+      } else {
+        setStatusInfo({
+          statusHeadline: "There was an error creating the school",
+          statusDescription: "Please try again later",
+          statusIcon: "SvgWarning",
+          statusColor: "error",
+          linkVisibility: false,
+        });
+      }
+    }
   }
 
   return (
@@ -258,9 +252,9 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
               backgroundColor="primary"
               color="primary"
               label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
-              onClick={() => {
+              onClick={async () => {
                 if (activeStep + 1 === steps.length) {
-                  saveInputs();
+                  await saveInputs();
                   cookie.remove("activeStep");
                   setActiveStep(activeStep + 1);
                 } else {

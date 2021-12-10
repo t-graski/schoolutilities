@@ -11,21 +11,21 @@ export async function getAccessToken(): Promise<string> {
 }
 
 async function refreshAccessToken(refreshToken: string): Promise<string> {
-  const accessTokenResponse = await fetch("localhost:8888/api/auth/refresh", {
+  const accessTokenResponse = await fetch("http://localhost:8888/api/auth/refresh", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      refreshToken: refreshToken,
+      token: refreshToken,
     }),
   });
   const responseJson = await accessTokenResponse.json();
-  if (responseJson.accessToken) {
-    cookie.set("accessToken", responseJson.accessToken, {
+  if (responseJson.token) {
+    cookie.set("accessToken", responseJson.token, {
       expires: 1 / 96,
     });
-    return responseJson.accessToken;
+    return responseJson.token;
   } else {
     return "";
   }

@@ -227,6 +227,7 @@ export class DatabaseService {
         personId: true,
       },
     });
+    console.log(person);
     return person.personId;
   }
 

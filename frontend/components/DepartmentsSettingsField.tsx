@@ -14,6 +14,7 @@ import { getAccessToken } from "../misc/authHelper";
 import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
+import cookie from "js-cookie";
 
 type Props = {};
 
@@ -74,30 +75,36 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   const [departmentNameValid, setDepartmentNameValid] = React.useState(false);
   const [departmentId, setDepartmentId] = React.useState("");
   const [error, setError] = React.useState("");
+  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
 
   useEffect(() => {
-    if (isFirstTime) {
-      updateSettingsEntriesFromDatabase();
-      setIsFirstTime(false);
-    }
+    updateSettingsEntriesFromDatabase();
   });
 
   async function updateSettingsEntriesFromDatabase() {
     let accessToken = await getAccessToken();
-    const returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/departments/292e08acd-9b11-4970-a509-ab643e2bfd9b",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const json = await returnValue.json();
-    console.log(json);
-    setDepartments(json);
+    if (!accessToken) {
+      router.push("/auth/login");
+    }
+    if (!schoolUUID) {
+      router.push("/profile/school-selection");
+    }
+    if (accessToken && schoolUUID && isFirstTime) {
+      const response = await fetch(
+        `http://localhost:8888/api/schooladmin/departments/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const departments = await response.json();
+      setDepartments(departments);
+      setIsFirstTime(false);
+    }
   }
 
   function savePopUpInput() {
@@ -111,7 +118,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
 
   async function addSettingsEntry() {
     const data = {
-      schoolUUID: "292e08acd-9b11-4970-a509-ab643e2bfd9b",
+      schoolUUID,
       departmentName: departmentName,
       isVisible: "true",
       childsVisible: "true",
@@ -244,9 +251,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
             setPopUpIsVisible(true);
           }}
         ></SettingsHeader>
-        {error && (
-            <StyledError>{error}</StyledError>
-        )}
+        {error && <StyledError>{error}</StyledError>}
         <SettingsEntriesLayout>
           {departments.map((entry, index) => (
             <SettingsEntryLayout

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { SvgIcon } from "./SvgIcon";
 
 type Props = {
-  editFunction: Function;
+  editFunction?: Function;
   deleteFunction: Function;
   highlighted?: boolean;
 };
@@ -70,18 +70,20 @@ export const SettingsEntry: React.FC<Props> = ({
       <SettingsEntryLayout highlighted={highlighted}>
         <div>{children}</div>
         <SettingsEntryIcons>
-          <SettingsEntryEditIcon
-            onClick={() => {
-              editFunction();
-            }}
-          >
-            <Image
-              src="/images/icons/edit_icon.svg"
-              alt=""
-              width={20}
-              height={20}
-            />
-          </SettingsEntryEditIcon>
+          {editFunction && (
+            <SettingsEntryEditIcon
+              onClick={() => {
+                editFunction();
+              }}
+            >
+              <Image
+                src="/images/icons/edit_icon.svg"
+                alt=""
+                width={20}
+                height={20}
+              />
+            </SettingsEntryEditIcon>
+          )}
           <SettingsEntryDeleteIcon
             onClick={() => {
               deleteFunction();

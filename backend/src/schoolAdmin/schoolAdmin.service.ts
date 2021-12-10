@@ -53,9 +53,9 @@ export class SchoolAdminService {
   ): Promise<ReturnMessage> {
     const { name, languageId, timezone } = body;
     if (
-      !validator.isLength(name, LENGTHS.CLASS_NAME) ||
-      !regex.timezone.test(timezone) ||
-      !validator.isNumeric(languageId)
+      !validator.isLength(name, LENGTHS.CLASS_NAME)
+      // !regex.timezone.test(timezone) ||
+      // !validator.isNumeric(languageId)
     ) {
       return RETURN_DATA.INVALID_INPUT;
     }
@@ -123,8 +123,6 @@ export class SchoolAdminService {
         },
       };
     } catch (err) {
-      console.log(err);
-
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

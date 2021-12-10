@@ -15,6 +15,7 @@ const LoginLayout = styled("form", {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
+  color: "$fontPrimary",
 });
 
 export const LoginField: React.FC<Props> = ({}) => {
@@ -23,7 +24,7 @@ export const LoginField: React.FC<Props> = ({}) => {
   const [password, setPassword] = React.useState("");
   const [passwordValid, setPasswordValid] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(true);
-
+  const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [signUpInfo, setSignUpInfo] = React.useState("");
 
   checkInputData();
@@ -44,8 +45,10 @@ export const LoginField: React.FC<Props> = ({}) => {
     }
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
+    if (event) {
+      event.preventDefault();
+    }
     fetch("http://localhost:8888/api/auth/login", {
       method: "POST",
       body: JSON.stringify({
@@ -57,6 +60,7 @@ export const LoginField: React.FC<Props> = ({}) => {
       .then((response) => {
         if (response.status == 200) {
           setSignUpInfo("You are logged in");
+          setLoggedIn(true);
           return response.json();
         } else {
           setSignUpInfo("You are not logged in");
@@ -79,8 +83,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
@@ -90,8 +93,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.password}
             setValidInput={setPasswordValid}
@@ -99,16 +101,16 @@ export const LoginField: React.FC<Props> = ({}) => {
           <Button
             backgroundColor="primary"
             color="primary"
-            label="Sign up"
-            onClick={() => {}}
+            label="Sign in"
+            onClick={() => {
+              handleSubmit();
+            }}
             disabled={isDisabled}
-          >
-            Register
-          </Button>
+          ></Button>
         </LoginLayout>
       )}
       <h3>{signUpInfo}</h3>
-      {signUpInfo && (
+      {isLoggedIn && (
         <Button
           backgroundColor="primary"
           color="primary"
@@ -118,9 +120,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             cookie.remove("refreshToken");
             setSignUpInfo("");
           }}
-        >
-          Register
-        </Button>
+        ></Button>
       )}
     </>
   );

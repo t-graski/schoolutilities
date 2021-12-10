@@ -14,6 +14,7 @@ import { getAccessToken } from "../misc/authHelper";
 import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
+import cookie from "js-cookie";
 
 type Props = {};
 
@@ -76,6 +77,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const [departmentUUID, setDepartmentUUId] = React.useState("");
   const [schoolClassId, setSchoolClassId] = React.useState("");
   const [error, setError] = React.useState("");
+  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
 
   useEffect(() => {
@@ -83,47 +85,43 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       updateSettingsEntriesFromDatabase();
       setIsFirstTime(false);
     }
-    // if (router.query && router.query.departmentUUID) {
-    //   let newSettingsEntries = classes.filter(
-    //     (schoolClass) =>
-    //       schoolClass.departmentUUID === router.query.departmentUUID
-    //   );
-
-    //   if (newSettingsEntries.length != classes.length) {
-    //     setClasses(newSettingsEntries);
-    //   }
-    // }
   });
 
   async function updateSettingsEntriesFromDatabase() {
     let accessToken = await getAccessToken();
-    let returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/classes/292e08acd-9b11-4970-a509-ab643e2bfd9b",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    let json = await returnValue.json();
-    console.log(json);
-    setClasses(json);
+    if (!accessToken) {
+      router.push("/auth/login");
+    }
+    if (!schoolUUID) {
+      router.push("/profile/school-selection");
+    }
+    if (accessToken && schoolUUID && isFirstTime) {
+      let returnValue = await fetch(
+        `http://localhost:8888/api/schooladmin/classes/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      let json = await returnValue.json();
+      setClasses(json);
 
-    returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/departments/292e08acd-9b11-4970-a509-ab643e2bfd9b",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    json = await returnValue.json();
-    console.log(json);
-    setDepartments(json);
+      returnValue = await fetch(
+        `http://localhost:8888/api/schooladmin/departments/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      json = await returnValue.json();
+      setDepartments(json);
+    }
   }
 
   function savePopUpInput() {

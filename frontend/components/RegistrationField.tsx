@@ -22,6 +22,14 @@ const RegistrationLayout = styled("form", {
   gap: "20px",
 });
 
+const StyledAreement = styled("div", {
+  color: "$fontPrimary",
+});
+
+const StyledLInk = styled("a", {
+  color: "$fontPrimary",
+});
+
 export const RegistrationField: React.FC<Props> = ({}) => {
   const [firstName, setFirstName] = React.useState("");
   const [firstNameValid, setFirstNameValid] = React.useState(false);
@@ -61,17 +69,10 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     }
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    console.log(
-      JSON.stringify({
-        firstName,
-        lastName,
-        birthDate,
-        email,
-        password,
-      })
-    );
+  async function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
+    if (event) {
+      event.preventDefault();
+    }
     fetch("http://localhost:8888/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
@@ -176,23 +177,41 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             iconAlt=""
             required={true}
           >
-            I agree to all{" "}
-            <a href="/data-policy" target="_blank">
-              Terms & Conditions
-            </a>
+            <StyledAreement>
+              I agree to all{" "}
+              <StyledLInk href="/data-policy" target="_blank">
+                Terms & Conditions
+              </StyledLInk>
+            </StyledAreement>
           </InputField>
           <Button
             backgroundColor="primary"
             color="primary"
             label="Sign up"
-            onClick={() => {}}
+            onClick={() => {
+              handleSubmit();
+            }}
             disabled={isDisabled}
-          >
-            Register
-          </Button>
+          ></Button>
         </RegistrationLayout>
       )}
-      <h3>{signUpInfo}</h3>
+      {signUpInfo && (
+        <>
+          <p>{signUpInfo}</p>
+          <Link href="/login">
+            <a>
+              <Button
+                backgroundColor="primary"
+                color="primary"
+                label="Login"
+                onClick={() => {
+                  handleSubmit();
+                }}
+              ></Button>
+            </a>
+          </Link>
+        </>
+      )}
     </>
   );
 };

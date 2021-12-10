@@ -2,6 +2,7 @@ import React from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
 import type * as Stitches from "@stitches/react";
+import { SvgIcon } from "./SvgIcon";
 
 type Props = {
   inputType: "text" | "password" | "date" | "email" | "checkbox" | "select";
@@ -12,8 +13,7 @@ type Props = {
   selectValue?: string;
   value?: string;
   onChange: Function;
-  iconSrc: string;
-  iconAlt: string;
+  iconName: string;
   required?: boolean;
   label?: string;
   regex?: RegExp;
@@ -87,11 +87,22 @@ const StyledSelectField = styled("select", {
   outline: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
-  fontFamily: "$fontPrimary",
+  fontFamily: "Montserrat",
   fontWeight: "bold",
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },
+});
+
+const ImageLayout = styled("div", {
+  display: "flex",
+  width: "30px",
+  height: "30px",
+  color: "$fontPrimary",
+});
+
+const StyledOption = styled("option", {
+  fontFamily: "Montserrat",
 });
 
 export const InputField: React.FC<Props> = ({
@@ -101,8 +112,7 @@ export const InputField: React.FC<Props> = ({
   value,
   onChange,
   children,
-  iconSrc,
-  iconAlt,
+  iconName,
   required = false,
   label = "",
   regex,
@@ -129,8 +139,10 @@ export const InputField: React.FC<Props> = ({
     return (
       <>
         <InputFieldLayout>
-          {iconSrc && (
-            <StyledImage src={iconSrc} alt={iconAlt} width="30" height="30" />
+          {iconName && (
+            <ImageLayout>
+              <SvgIcon iconName={iconName} />
+            </ImageLayout>
           )}
           <StyledSelectField
             name={label}
@@ -140,9 +152,9 @@ export const InputField: React.FC<Props> = ({
             value={selectValue}
           >
             {selectOptions.map((option) => (
-              <option key={option.value} value={option.value}>
+              <StyledOption key={option.value} value={option.value}>
                 {option.label}
-              </option>
+              </StyledOption>
             ))}
           </StyledSelectField>
         </InputFieldLayout>
@@ -153,8 +165,10 @@ export const InputField: React.FC<Props> = ({
     return (
       <>
         <InputFieldLayout>
-          {iconSrc && (
-            <StyledImage src={iconSrc} alt={iconAlt} width="30" height="30" />
+          {iconName && (
+            <ImageLayout>
+              <SvgIcon iconName={iconName} />
+            </ImageLayout>
           )}
           <StyledLabel>
             <StyledInputField

@@ -45,20 +45,7 @@ const SchoolName = styled("p", {
 });
 
 export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
-  const [schools, setSchools] = useState([
-    {
-      id: "1",
-      name: "School 1",
-    },
-    {
-      id: "2",
-      name: "School 2",
-    },
-    {
-      id: "3",
-      name: "School 3",
-    },
-  ]);
+  const [schools, setSchools] = useState([]);
   useEffect(() => {
     updateSchoolsFromDatabase();
   }, []);
@@ -66,14 +53,14 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
 
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
-    // let response = await fetch("https://api.school-dashboard.com/api/schools", {
-    //     method: "GET",
-    //   headers: {
-    //     Authorization: `Bearer ${accessToken}`,
-    //   },
-    // });
-    // let schools = await response.json();
-    // setSchools(schools);
+    let response = await fetch("http://localhost:8888/api/user/getSchools", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    let schools = await response.json();
+    setSchools(schools);
   }
 
   return (
@@ -81,13 +68,13 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
       <SchoolList>
         {schools.map((school) => (
           <SchoolLayout
-            key={school.id}
+            key={school.schoolUUID}
             onClick={() => {
-              cookie.set("schoolId", school.id);
+              cookie.set("schoolUUID", school.schoolUUID);
               router.push("/school/admin/settings");
             }}
           >
-            <SchoolName>{school.name}</SchoolName>
+            <SchoolName>{school.schoolName}</SchoolName>
           </SchoolLayout>
         ))}
       </SchoolList>
