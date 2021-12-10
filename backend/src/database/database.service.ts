@@ -72,7 +72,7 @@ export class DatabaseService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getUserRoles(userId: number): Promise<string[]> {
+  async getUserRoles(userId: string): Promise<any> {
     if (!validator.isNumeric(userId)) {
       return [];
     }
@@ -82,6 +82,7 @@ export class DatabaseService {
         personId: Number(userId),
       },
     });
+    return roles;
   }
 
   async getUserData(body: LoginUserData): Promise<UserData> {
