@@ -120,8 +120,11 @@ export class SchoolAdminController {
   // @UseGuards(JwtAuthGuard)
   @Post('/joinCode')
   async addJoinCode(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.addJoinCode(request.body);
-    return response.status(result.status).json(result?.message);
+    const jwt = request.headers.authorization.split(' ')[1];
+    const result = await this.schoolAdminService.addJoinCode(request.body, jwt);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   // @UseGuards(JwtAuthGuard)

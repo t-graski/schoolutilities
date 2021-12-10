@@ -72,7 +72,7 @@ export class DatabaseService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getUserRoles(userId: string): Promise<string[]> {
+  async getUserRoles(userId: number): Promise<string[]> {
     if (!validator.isNumeric(userId)) {
       return [];
     }

@@ -548,6 +548,26 @@ export class SchoolAdminService {
           },
         },
       });
+
+      await prisma.personRoles.create({
+        data: {
+          persons: {
+            connect: {
+              personId: personId,
+            },
+          },
+          roles: {
+            connect: {
+              roleId: 2,
+            },
+          },
+          schools: {
+            connect: {
+              schoolId: schoolId,
+            },
+          },
+        },
+      });
     } catch (err) {
       if (err.code === 'P2002') {
         return RETURN_DATA.ALREADY_EXISTS;
@@ -586,6 +606,24 @@ export class SchoolAdminService {
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
 
+    const role = await this.databaseService.getUserRoles(personId);
+    console.log(role);
+
+    const isOnlyUser = await prisma.schoolPersons.findFirst({
+      where: {
+        persons: {
+          personId: personId,
+        },
+        schools: {
+          schoolId: schoolId,
+        },
+      },
+    });
+
+    const isOnlyUserArray = [isOnlyUser];
+
+    if (isOnlyUserArray.length == 1) return RETURN_DATA.LAST_USER;
+
     try {
       await prisma.schoolPersons.delete({
         where: {
@@ -602,9 +640,11 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async addJoinCode(body: AddJoinCode): Promise<ReturnMessage> {
-    const { schoolUUID, expireDate, name = '', personUUID } = body;
-
+  async addJoinCode(body: AddJoinCode, token: string): Promise<ReturnMessage> {
+    const { schoolUUID, expireDate, name = '' } = body;
+    const jwt = await this.authService.decodeJWT(token);
+    const personUUID = jwt.personUUID;
+    
     if (
       !validator.isUUID(schoolUUID.slice(1), 4) ||
       !validator.isLength(name, LENGTHS.JOIN_CODE_NAME) ||

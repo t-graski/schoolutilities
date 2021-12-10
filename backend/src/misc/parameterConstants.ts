@@ -62,7 +62,8 @@ const RETURN_MESSAGES = {
   INVALID_FILE_MESSAGE: 'Invalid file type provided',
   FILE_SIZE_EXCEEDED_MESSAGE: `Maximum file size exceeded ${LENGTHS.MAX_FILE_SIZE} bytes`,
   NO_FILE_PROVIDED_MESSAGE: 'No file provided',
-  DEPARTMENTS_SAME_NAMES: 'Department name occurs multiple times',
+  DEPARTMENTS_SAME_NAMES_MESSAGE: 'Department name occurs multiple times',
+  LAST_USER_MESSAGE: 'Cannot delete last user',
 };
 
 export const RETURN_DATA = {
@@ -112,8 +113,12 @@ export const RETURN_DATA = {
   },
   DEPARTMENTS_SAME_NAMES: {
     status: HttpStatus.BAD_REQUEST,
-    message: RETURN_MESSAGES.DEPARTMENTS_SAME_NAMES,
+    message: RETURN_MESSAGES.DEPARTMENTS_SAME_NAMES_MESSAGE,
   },
+  LAST_USER: {
+    status: HttpStatus.CONFLICT,
+    message: RETURN_MESSAGES.LAST_USER_MESSAGE,
+  }
 };
 
 export const ID_STARTERS = {
