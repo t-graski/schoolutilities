@@ -152,6 +152,38 @@ export class UserService {
     }
   }
 
+  async getProfile(token: string): Promise<ReturnMessage> {
+    const jwt = await this.authService.decodeJWT(token);
+    const personUUID = jwt.personUUID;
+
+    if (!validator.isUUID(personUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    try {
+      const person = await prisma.persons.findFirst({
+        where: {
+          personUUID,
+        },
+        select: {
+          personUUID: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          creationDate: true,
+          birthDate: true,
+        },
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: person,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
   parseLanguage(id: number) {
     return id === 1 ? 'de' : 'en';
   }
