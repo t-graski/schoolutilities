@@ -54,9 +54,10 @@ model loginTokens {
 model personRoles {
   personId Int     @unique(map: "personId") @map("person_id")
   roleId   Int     @map("role_id")
-  schoolId Int     @map("school_id")
+  schoolId Int     @map("school_id")@unique
   persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonroleperson")
   roles    roles   @relation(fields: [roleId], references: [roleId], onUpdate: Restrict, map: "fkPersonrolerole")
+  schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkPersonroleschool")
 
   @@index([roleId], map: "fkPersonrolerole")
   @@map("person_roles")
@@ -118,6 +119,7 @@ model schools {
   languageId  Int           @map("language_id")
   timezone    String        @db.VarChar(255)
   languages   languages     @relation(fields: [languageId], references: [languageId], onUpdate: Restrict, map: "fkSchoollanguage")
+  personRoles personRoles?
   courses     courses[]
   departments departments[]
 

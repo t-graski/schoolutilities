@@ -93,6 +93,26 @@ export class SchoolAdminService {
         },
       });
 
+      await prisma.personRoles.create({
+        data: {
+          roles: {
+            connect: {
+              roleId: 1,
+            },
+          },
+          persons: {
+            connect: {
+              personId: Number(personId),
+            },
+          },
+          schools: {
+            connect: {
+              schoolId: Number(school.schoolId),
+            },
+          },
+        },
+      });
+
       return {
         status: RETURN_DATA.SUCCESS.status,
         data: {
@@ -103,6 +123,8 @@ export class SchoolAdminService {
         },
       };
     } catch (err) {
+      console.log(err);
+
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
@@ -817,6 +839,7 @@ export class SchoolAdminService {
         const personData = await this.databaseService.getPersonById(
           person.personId,
         );
+
         const personRole =
           await this.databaseService.getPersonRolesByPersonUUID(
             personData.personUUID,
@@ -835,6 +858,8 @@ export class SchoolAdminService {
         data: personsData,
       };
     } catch (err) {
+      console.log(err);
+
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
