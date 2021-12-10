@@ -110,6 +110,18 @@ export class DatabaseService {
     return user;
   }
 
+  async getPersonEmailByUUID(personUUID: string): Promise<string> {
+    const person = await prisma.persons.findFirst({
+      where: {
+        personUUID: personUUID,
+      },
+      select: {
+        email: true,
+      },
+    });
+    return person.email;
+  }
+
   async getUserDataById(userId: number): Promise<UserData> {
     const user = await prisma.persons.findFirst({
       where: {
@@ -126,6 +138,15 @@ export class DatabaseService {
       },
     });
     return user.personUUID;
+  }
+
+  async getPersonByEmail(email: string): Promise<any> {
+    const person = await prisma.persons.findFirst({
+      where: {
+        email: email,
+      },
+    });
+    return person;
   }
 
   async getPersonById(personId: number): Promise<any> {
@@ -156,6 +177,23 @@ export class DatabaseService {
       },
     });
     return this.getSchoolUUIDById(schoolId.schoolId);
+  }
+
+  async getSchoolById(schoolId: number): Promise<any> {
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolId: schoolId,
+      },
+      select: {
+        schoolId: true,
+        schoolUUID: true,
+        name: true,
+        languageId: true,
+        timezone: true,
+      },
+    });
+
+    return school;
   }
 
   async getSchoolIdByUUID(schoolUUID: string): Promise<number> {

@@ -18,7 +18,7 @@ import { Role } from 'src/roles/role.enum';
 import { DecodedJWT } from 'src/types/SchoolAdmin';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const CryptoJS = require('crypto-js');
+const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 @Injectable()
@@ -33,15 +33,12 @@ export class AuthService {
   async getUserDataByEmailAndPassword(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
     const { password, ...result } = userDbData;
-    const passwordBytes = CryptoJS.DES.decrypt(
-      password,
-      process.env.PASSWORD_ENCRYPTION_KEY,
-    );
-    const decryptedPassword = passwordBytes.toString(CryptoJS.enc.Utf8);
 
-    if (userData.password !== decryptedPassword) return null;
-    result.roles = await this.getRoles(result.personId);
-    return result;
+    if (bcrypt.compareSync(userData.password, password)) {
+      result.roles = await this.getRoles(result.personId);
+      return result;
+    }
+    return null;
   }
 
   async getRoles(userId: number): Promise<UserRole[]> {
@@ -150,10 +147,7 @@ export class AuthService {
   }
 
   async registerUser(body: RegisterUserData) {
-    body.password = CryptoJS.DES.encrypt(
-      body.password,
-      process.env.PASSWORD_ENCRYPTION_KEY,
-    ).toString();
+    body.password = await bcrypt.hash(body.password, 10);
 
     const registerUser = await this.databaseService.registerUser(body);
     if (registerUser.status === HttpStatus.OK) {
