@@ -1,6 +1,6 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
+import { Navbar } from "../components/OldNavbar";
+import { Footer } from "../components/OldFooter";
 import React from "react";
 import Head from "next/head";
 import { Spacer } from "../components/Spacer";

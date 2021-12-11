@@ -1,78 +1,150 @@
+import Link from "next/link";
 import React from "react";
 import { styled } from "../stitches.config";
+import Image from "next/image";
+import { SvgIcon } from "./SvgIcon";
 
-type Props = {
-  links: {
-    href: string;
-    label: string;
-  }[];
-  isOnMain?: boolean;
-};
+type Props = {};
 
 const FooterLayout = styled("footer", {
-  width: "100%",
-  padding: "0 10%",
   display: "flex",
-  justifyContent: "center",
-  fontSize: "1rem",
-  alignItems: "center",
-  lineHeight: "1.2rem",
   flexDirection: "column",
-  position: "relative",
-  bottom: "0",
-  left: "0",
-  backgroundColor: "$fontTertiary",
+  alignItems: "center",
+  width: "100vw",
+  gap: "40px",
+  padding: "4vh 5vw",
+  backgroundColor: "$backgroundQuaternary",
   color: "$fontPrimary",
 });
 
-const FooterNavbar = styled("nav", {
-  width: "fit-content",
-  transition: "all 200ms",
-});
-
-const FooterList = styled("ul", {
+const FooterContentLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
-  width: "fit-content",
-  padding: "5vh 0",
-  listStyle: "none",
+  justifyContent: "space-between",
+  width: "100%",
+  maxWidth: "1200px",
+  margin: "0 auto",
 });
 
-const FooterListElement = styled("li", {
-  display: "list-item",
-  textAlign: "match-parent",
+const LogoLayout = styled("div", {
+  display: "flex",
+  width: "120px",
 });
 
-const FooterLink = styled("a", {
-  color: "$fontPrimary",
-  textDecoration: "none",
-  margin: "0 4vw",
-  fontSize: "1.5rem",
+const LinkLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  gap: "1.5vh",
+});
+
+const LinkHeadline = styled("div", {
+  fontSize: "1.3rem",
+  fontWeight: "bold",
   textTransform: "uppercase",
-  transition: "all 200ms",
+  marginBottom: "0.5vh",
+});
+
+const StyledLink = styled("a", {
+  display: "flex",
+  alignItems: "center",
+  gap: "15px",
+  fontSize: "1.1rem",
+  textDecoration: "none",
+  color: "$fontPrimary",
+  cursor: "pointer",
+  transition: "color 0.2s ease-in-out",
   "&:hover": {
     color: "$specialPrimary",
   },
 });
 
 const FooterSpacer = styled("div", {
-  height: "200px",
+  display: "flex",
+  height: "2px",
+  backgroundColor: "$fontPrimary",
+  width: "100%",
 });
 
-export const Footer: React.FC<Props> = ({ links, isOnMain }) => {
+const StyledRightText = styled("div", {
+  fontSize: "1.1rem",
+  textAlign: "left",
+  marginBottom: "0.5vh",
+});
+
+const ImprintLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "30px",
+});
+
+export const Footer: React.FC<Props> = ({}) => {
   return (
     <>
-      <FooterSpacer></FooterSpacer>
       <FooterLayout>
-        <FooterNavbar>
-          <FooterList>
-            {links.map((link, index) => (
-              <FooterListElement key={index}>
-                <FooterLink href={link.href}>{link.label}</FooterLink>
-              </FooterListElement>
-            ))}
-          </FooterList>
-        </FooterNavbar>
+        <FooterContentLayout>
+          <LogoLayout>
+            <SvgIcon iconName="SvgClosedLogo" />
+          </LogoLayout>
+          <LinkLayout>
+            <LinkHeadline>Company</LinkHeadline>
+            <Link href="/data-policy">
+              <StyledLink>Contact Us</StyledLink>
+            </Link>
+          </LinkLayout>
+          <LinkLayout>
+            <LinkHeadline>Language</LinkHeadline>
+            <Link href="/">
+              <StyledLink>
+                <Image
+                  src="/images/English.png"
+                  alt="English"
+                  width="30"
+                  height="30"
+                />
+                English
+              </StyledLink>
+            </Link>
+            <Link href="/">
+              <StyledLink>
+                <Image
+                  src="/images/German.png"
+                  alt="German"
+                  width="30"
+                  height="30"
+                />
+                German
+              </StyledLink>
+            </Link>
+          </LinkLayout>
+          <LinkLayout>
+            <LinkHeadline>Support Us</LinkHeadline>
+            <Link href="/">
+              <StyledLink>
+                <Image
+                  src="/images/Patreon.png"
+                  alt="Patreon"
+                  width="30"
+                  height="30"
+                />
+                Patreon
+              </StyledLink>
+            </Link>
+          </LinkLayout>
+        </FooterContentLayout>
+        <FooterSpacer />
+        <FooterContentLayout>
+          <StyledRightText>
+            © 2021, SchoolUtilities - All Rights Reserved
+          </StyledRightText>
+          <ImprintLayout>
+            <Link href="/data-policy">
+              <StyledLink>Data-Policy</StyledLink>
+            </Link>
+            <Link href="/imprint">
+              <StyledLink>Imprint</StyledLink>
+            </Link>
+          </ImprintLayout>
+        </FooterContentLayout>
       </FooterLayout>
     </>
   );

@@ -3,10 +3,10 @@ import { styled } from "../stitches.config";
 import Image from "next/image";
 import { Spacer } from "./Spacer";
 import { useRouter } from "next/router";
-import { Navbar } from "./Navbar";
+import { Navbar } from "./OldNavbar";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
-import { Footer } from "./Footer";
+import { Footer } from "./OldFooter";
 import fetch from "node-fetch";
 
 if (!globalThis.fetch) {

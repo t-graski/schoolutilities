@@ -87,7 +87,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     if (!accessToken) {
       router.push("/auth/login");
     }
-    if (!schoolUUID) {
+    if (!schoolUUID && accessToken) {
       router.push("/profile/school-selection");
     }
     if (accessToken && schoolUUID && isFirstTime) {

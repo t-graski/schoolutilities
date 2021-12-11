@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
-import { Footer } from "../../../components/Footer";
+import { Footer } from "../../../components/OldFooter";
 import { LoginField } from "../../../components/LoginField";
-import { Navbar } from "../../../components/Navbar";
+import { Navbar } from "../../../components/OldNavbar";
 import { Progressbar } from "../../../components/Progressbar";
 import { SchoolDetailField } from "../../../components/SchoolDetailField";
 import { SetupProgressSite } from "../../../components/SetupProgressSite";

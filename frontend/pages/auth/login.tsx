@@ -1,7 +1,7 @@
 import { styled } from "../../stitches.config";
 import React, { useEffect, useState } from "react";
-import { Navbar } from "../../components/Navbar";
-import { Footer } from "../../components/Footer";
+import { Navbar } from "../../components/OldNavbar";
+import { Footer } from "../../components/OldFooter";
 import { Spacer } from "../../components/Spacer";
 import { InfoBox } from "../../components/InfoBox";
 import { LoginField } from "../../components/LoginField";

@@ -1,8 +1,8 @@
 import Head from "next/head";
 import { styled } from "../stitches.config";
 import StitchesLogo from "../components/StitchesLogo";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
+import { Navbar } from "../components/OldNavbar";
+import { Footer } from "../components/OldFooter";
 import { Headline } from "../components/Headline";
 import React from "react";
 import { Spacer } from "../components/Spacer";

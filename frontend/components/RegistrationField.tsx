@@ -105,7 +105,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             value={firstName}
             onChange={setFirstName}
             iconSrc="/images/user.svg"
-            iconAlt=""
             required={true}
             regex={regex.name}
             setValidInput={setFirstNameValid}
@@ -117,7 +116,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             value={lastName}
             onChange={setLastName}
             iconSrc="/images/user.svg"
-            iconAlt=""
             required={true}
             regex={regex.name}
             setValidInput={setLastNameValid}
@@ -129,7 +127,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             value={birthDate}
             onChange={setBirthDate}
             iconSrc="/images/user.svg"
-            iconAlt=""
             required={true}
             min="1900-01-01"
             max={new Date().toJSON().split("T")[0]}
@@ -140,7 +137,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             value={email}
             onChange={setEmail}
             iconSrc="/images/user.svg"
-            iconAlt=""
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
@@ -152,7 +148,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             value={password}
             onChange={setPassword}
             iconSrc="/images/user.svg"
-            iconAlt=""
             required={true}
             regex={regex.password}
             setValidInput={setPasswordValid}
@@ -164,7 +159,6 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
             iconSrc="/images/user.svg"
-            iconAlt=""
             required={true}
             regex={regex.password}
             setValidInput={setPasswordConfirmationValid}
@@ -173,8 +167,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           <InputField
             inputType="checkbox"
             onChange={setTermsAccepted}
-            iconSrc=""
-            iconAlt=""
+            iconName=""
             required={true}
           >
             <StyledAreement>

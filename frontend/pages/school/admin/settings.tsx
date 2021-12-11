@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
-import { Footer } from "../../../components/Footer";
+import { Footer } from "../../../components/OldFooter";
 import { LoginField } from "../../../components/LoginField";
-import { Navbar } from "../../../components/Navbar";
+import { Navbar } from "../../../components/OldNavbar";
 import { Progressbar } from "../../../components/Progressbar";
 import { SchoolDetailField } from "../../../components/SchoolDetailField";
 import { SetupProgressSite } from "../../../components/SetupProgressSite";
@@ -17,7 +17,7 @@ import cookie from "js-cookie";
 import { ClassesSettingsField } from "../../../components/ClassesSettingsField";
 import { PersonsSettingsField } from "../../../components/PersonsSettingsField";
 import { JoinCodesSettingsField } from "../../../components/JoinCodesSettingsField";
-import { getUserData } from "../../../misc/authHelper";
+import { getAccessToken, getUserData } from "../../../misc/authHelper";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",
@@ -37,6 +37,7 @@ const SettingsLayout = styled("div", {
 export default function CreateSchool() {
   const [isOpen, setIsOpen] = React.useState(true);
   const [userData, setUserData] = useState(null);
+  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
 
   useEffect(() => {
@@ -44,12 +45,15 @@ export default function CreateSchool() {
   }, []);
 
   async function fetchData() {
+    let accessToken = await getAccessToken();
+    if (!accessToken) {
+      router.push("/auth/login");
+    }
+    if (!schoolUUID && accessToken) {
+      router.push("/profile/school-selection");
+    }
     const fetchedData = await getUserData();
     setUserData(fetchedData);
-  }
-
-  if (!cookie.get("schoolUUID")) {
-    // router.push("/");
   }
 
   let urlParam;

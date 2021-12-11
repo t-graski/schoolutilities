@@ -12,8 +12,8 @@ const globalStyles = globalCss({
     padding: 0,
   },
   body: {
-    fontFamily: "Montserrat",
-    fontWeight: "500",
+    fontFamily: "Poppins",
+    fontWeight: "400",
     backgroundColor: "#2f3136",
     overflowX: "hidden",
     minHeight: "100vh",

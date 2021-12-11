@@ -1,7 +1,7 @@
 import React from "react";
 import { RegisterAuth } from "../../components/RegisterAuth";
 import Head from "next/head";
-import { Navbar } from "../../components/Navbar";
+import { Navbar } from "../../components/OldNavbar";
 import { Spacer } from "../../components/Spacer";
 import { Headline } from "../../components/Headline";
 import { Separator } from "../../components/Separator";

@@ -531,6 +531,8 @@ export class SchoolAdminService {
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
 
+    console.log(personId);
+
     try {
       await prisma.schoolPersons.create({
         data: {
@@ -570,6 +572,7 @@ export class SchoolAdminService {
       if (err.code === 'P2002') {
         return RETURN_DATA.ALREADY_EXISTS;
       }
+      console.log(err);
       return RETURN_DATA.DATABASE_ERROR;
     }
 
