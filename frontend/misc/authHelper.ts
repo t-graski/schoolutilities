@@ -61,3 +61,10 @@ export async function getUserData(): Promise<any> {
     return {};
   }
 }
+
+
+export function logout(){
+  cookie.remove("accessToken");
+  cookie.remove("refreshToken");
+  cookie.remove("userProfile");
+}

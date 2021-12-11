@@ -6,6 +6,7 @@ import { Spacer } from "../../components/Spacer";
 import { Headline } from "../../components/Headline";
 import { Separator } from "../../components/Separator";
 import { SchoolSelectionList } from "../../components/SchoolSelectionList";
+import { SchoolJoin } from "../../components/SchoolJoin";
 
 export default function RegisterApproved() {
   return (
@@ -26,11 +27,11 @@ export default function RegisterApproved() {
         ]}
       ></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="School selection"></Headline>
+      <Headline label="Join a school"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
-      <SchoolSelectionList>
-      </SchoolSelectionList>
+      <SchoolJoin>
+      </SchoolJoin>
     </>
   );
 }

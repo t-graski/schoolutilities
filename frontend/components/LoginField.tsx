@@ -8,6 +8,7 @@ import Link from "next/link";
 import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
+import { logout } from "../misc/authHelper";
 
 type Props = {};
 
@@ -16,6 +17,13 @@ const LoginLayout = styled("form", {
   flexDirection: "column",
   gap: "20px",
   color: "$fontPrimary",
+});
+
+const StyledInfo = styled("div", {
+  fontSize: "1.5rem",
+  color: "$fontPrimary",
+  fontWeight: "bold",
+  marginBottom: "20px",
 });
 
 export const LoginField: React.FC<Props> = ({}) => {
@@ -32,6 +40,7 @@ export const LoginField: React.FC<Props> = ({}) => {
   useEffect(() => {
     if (cookie.get("refreshToken") || cookie.get("accessToken")) {
       setSignUpInfo("You are already logged in!");
+      setLoggedIn(true);
     }
   }, []);
 
@@ -109,16 +118,16 @@ export const LoginField: React.FC<Props> = ({}) => {
           ></Button>
         </LoginLayout>
       )}
-      <h3>{signUpInfo}</h3>
+      <StyledInfo>{signUpInfo}</StyledInfo>
       {isLoggedIn && (
         <Button
           backgroundColor="primary"
           color="primary"
           label="Logout"
           onClick={() => {
-            cookie.remove("accessToken");
-            cookie.remove("refreshToken");
+            logout();
             setSignUpInfo("");
+            setLoggedIn(false);
           }}
         ></Button>
       )}

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import cookie from "js-cookie";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { logout } from "../misc/authHelper";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -18,7 +19,7 @@ export default function Home() {
   const router = useRouter();
   let path = router.query;
   if (path && path.logout) {
-    cookie.remove("access_token");
+    logout();
   }
 
   const [userData, setUserData] = useState(null);

@@ -198,7 +198,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
       {signUpInfo && (
         <>
           <p>{signUpInfo}</p>
-          <Link href="/login">
+          <Link href="/auth/login">
             <a>
               <Button
                 backgroundColor="primary"
