@@ -8,6 +8,7 @@ import Link from "next/link";
 import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
+import { logout } from "../misc/authHelper";
 
 type Props = {};
 
@@ -15,6 +16,14 @@ const LoginLayout = styled("form", {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
+  color: "$fontPrimary",
+});
+
+const StyledInfo = styled("div", {
+  fontSize: "1.5rem",
+  color: "$fontPrimary",
+  fontWeight: "bold",
+  marginBottom: "20px",
 });
 
 export const LoginField: React.FC<Props> = ({}) => {
@@ -23,7 +32,7 @@ export const LoginField: React.FC<Props> = ({}) => {
   const [password, setPassword] = React.useState("");
   const [passwordValid, setPasswordValid] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(true);
-
+  const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [signUpInfo, setSignUpInfo] = React.useState("");
 
   checkInputData();
@@ -31,6 +40,7 @@ export const LoginField: React.FC<Props> = ({}) => {
   useEffect(() => {
     if (cookie.get("refreshToken") || cookie.get("accessToken")) {
       setSignUpInfo("You are already logged in!");
+      setLoggedIn(true);
     }
   }, []);
 
@@ -44,9 +54,11 @@ export const LoginField: React.FC<Props> = ({}) => {
     }
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    fetch("https://www.schoolutilities.net:3333/api/auth/login", {
+  async function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
+    if (event) {
+      event.preventDefault();
+    }
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
       method: "POST",
       body: JSON.stringify({
         email,
@@ -57,6 +69,7 @@ export const LoginField: React.FC<Props> = ({}) => {
       .then((response) => {
         if (response.status == 200) {
           setSignUpInfo("You are logged in");
+          setLoggedIn(true);
           return response.json();
         } else {
           setSignUpInfo("You are not logged in");
@@ -79,8 +92,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
@@ -90,8 +102,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.password}
             setValidInput={setPasswordValid}
@@ -99,28 +110,26 @@ export const LoginField: React.FC<Props> = ({}) => {
           <Button
             backgroundColor="primary"
             color="primary"
-            label="Sign up"
-            onClick={() => {}}
+            label="Sign in"
+            onClick={() => {
+              handleSubmit();
+            }}
             disabled={isDisabled}
-          >
-            Register
-          </Button>
+          ></Button>
         </LoginLayout>
       )}
-      <h3>{signUpInfo}</h3>
-      {signUpInfo && (
+      <StyledInfo>{signUpInfo}</StyledInfo>
+      {isLoggedIn && (
         <Button
           backgroundColor="primary"
           color="primary"
           label="Logout"
           onClick={() => {
-            cookie.remove("accessToken");
-            cookie.remove("refreshToken");
+            logout();
             setSignUpInfo("");
+            setLoggedIn(false);
           }}
-        >
-          Register
-        </Button>
+        ></Button>
       )}
     </>
   );

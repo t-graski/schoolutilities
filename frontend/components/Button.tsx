@@ -12,6 +12,8 @@ type Props = {
   label: string;
   disabled?: boolean;
   onClick: Function;
+  type?: "button" | "submit" | "reset";
+  isVisible?: boolean;
 };
 
 const StyledButton = styled("button", {
@@ -35,6 +37,9 @@ const StyledButton = styled("button", {
       primary: {
         backgroundColor: "$specialSecondary",
       },
+      secondary: {
+        backgroundColor: "$backgroundTertiary",
+      },
     },
     color: {
       primary: {
@@ -48,6 +53,12 @@ const StyledButton = styled("button", {
       },
       false: {},
     },
+    isVisible: {
+      true: {},
+      false: {
+        opacity: 0,
+      },
+    },
   },
 });
 
@@ -57,6 +68,8 @@ export const Button: React.FC<Props> = ({
   label,
   disabled = false,
   onClick,
+  type = "button",
+  isVisible = true,
 }) => {
   return (
     <>
@@ -68,6 +81,8 @@ export const Button: React.FC<Props> = ({
         color={color}
         {...(disabled && { disabled: true })}
         isDisabled={disabled}
+        type={type}
+        isVisible={isVisible}
       >
         {label}
       </StyledButton>

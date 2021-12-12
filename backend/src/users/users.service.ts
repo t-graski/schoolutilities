@@ -19,7 +19,7 @@ export class UsersService {
     ).toString();
     const registerUserData = await this.databaseService.registerUser(userData);
     if (registerUserData) {
-      generateRegisterToken(registerUserData.insertId, userData.email);
+      //generateRegisterToken(registerUserData.insertId, userData.email);
       return 'successfull';
     }
   }

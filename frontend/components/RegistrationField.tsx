@@ -22,6 +22,14 @@ const RegistrationLayout = styled("form", {
   gap: "20px",
 });
 
+const StyledAreement = styled("div", {
+  color: "$fontPrimary",
+});
+
+const StyledLInk = styled("a", {
+  color: "$fontPrimary",
+});
+
 export const RegistrationField: React.FC<Props> = ({}) => {
   const [firstName, setFirstName] = React.useState("");
   const [firstNameValid, setFirstNameValid] = React.useState(false);
@@ -61,18 +69,11 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     }
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    console.log(
-      JSON.stringify({
-        firstName,
-        lastName,
-        birthDate,
-        email,
-        password,
-      })
-    );
-    fetch("https://www.schoolutilities.net:3333/api/auth/register", {
+  async function handleSubmit(event?: React.FormEvent<HTMLFormElement>) {
+    if (event) {
+      event.preventDefault();
+    }
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
       method: "POST",
       body: JSON.stringify({
         firstName,
@@ -103,8 +104,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={firstName}
             onChange={setFirstName}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.name}
             setValidInput={setFirstNameValid}
@@ -115,8 +115,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={lastName}
             onChange={setLastName}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.name}
             setValidInput={setLastNameValid}
@@ -127,8 +126,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="date"
             value={birthDate}
             onChange={setBirthDate}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             min="1900-01-01"
             max={new Date().toJSON().split("T")[0]}
@@ -138,8 +136,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
@@ -150,8 +147,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.password}
             setValidInput={setPasswordValid}
@@ -162,8 +158,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
-            iconSrc="/images/user.svg"
-            iconAlt=""
+            iconName="SvgUser"
             required={true}
             regex={regex.password}
             setValidInput={setPasswordConfirmationValid}
@@ -172,27 +167,44 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           <InputField
             inputType="checkbox"
             onChange={setTermsAccepted}
-            iconSrc=""
-            iconAlt=""
+            iconName=""
             required={true}
           >
-            I agree to all{" "}
-            <a href="/data-policy" target="_blank">
-              Terms & Conditions
-            </a>
+            <StyledAreement>
+              I agree to all{" "}
+              <StyledLInk href="/data-policy" target="_blank">
+                Terms & Conditions
+              </StyledLInk>
+            </StyledAreement>
           </InputField>
           <Button
             backgroundColor="primary"
             color="primary"
             label="Sign up"
-            onClick={() => {}}
+            onClick={() => {
+              handleSubmit();
+            }}
             disabled={isDisabled}
-          >
-            Register
-          </Button>
+          ></Button>
         </RegistrationLayout>
       )}
-      <h3>{signUpInfo}</h3>
+      {signUpInfo && (
+        <>
+          <p>{signUpInfo}</p>
+          <Link href="/auth/login">
+            <a>
+              <Button
+                backgroundColor="primary"
+                color="primary"
+                label="Login"
+                onClick={() => {
+                  handleSubmit();
+                }}
+              ></Button>
+            </a>
+          </Link>
+        </>
+      )}
     </>
   );
 };

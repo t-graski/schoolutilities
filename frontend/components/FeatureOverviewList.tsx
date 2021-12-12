@@ -19,8 +19,7 @@ export const FeatureOverviewList: React.FC<Props> = ({ features }) => {
         {features.map((feature, index) => (
             <>
           <FeatureOverview
-            imageSrc={feature.imageSrc}
-            imageAlt={feature.imageAlt}
+            iconName={feature.iconName}
             title={feature.title}
             description={feature.description}
             imagePosition={

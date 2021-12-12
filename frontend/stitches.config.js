@@ -14,11 +14,13 @@ export const {
       backgroundPrimary: "#2f3136",
       backgroundSecondary: "#202225",
       backgroundTertiary: "#4b4c4e",
+      backgroundQuaternary: "#1A1C1E",
       fontTertiary: "#3c3f46",
       fontPrimary: "#ffffff",
       fontSecondary: "#242424",
       specialPrimary: "#eda33f",
       specialSecondary: "#738adb",
+      specialTertiary: "#D23737",
     },
     shadows: {
       accountButton: "0px 0px 5px 0px #eda33f",
@@ -28,10 +30,10 @@ export const {
     space: {
       "2-small": "4px",
       "1-small": "8px",
-      "small": "16px",
-      "normal": "24px",
-      "medium": "32px",
-      "large": "48px",
+      small: "16px",
+      normal: "24px",
+      medium: "32px",
+      large: "48px",
       "1-large": "64px",
     },
     sizes: {
@@ -51,7 +53,10 @@ export const {
       6: "21px",
     },
     fonts: {
-      system: "Montserrat",
+      system: "Poppins",
+    },
+    radii: {
+      normal: "25px",
     },
   },
   utils: {

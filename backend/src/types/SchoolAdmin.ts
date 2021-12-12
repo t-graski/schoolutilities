@@ -1,20 +1,12 @@
 export interface AddClass {
-  departmentId: number;
+  departmentUUID: string;
   className: string;
-}
-
-export interface AddClassReturnValue {
-  status: number;
-  message: string;
-  data?: {
-    classId: number;
-  };
 }
 
 export interface UpdateClass {
-  departmentId: number;
+  departmentUUID: string;
   className: string;
-  classId: number;
+  classUUID: string;
 }
 
 export interface AddSchool {
@@ -23,38 +15,33 @@ export interface AddSchool {
   timezone: string;
 }
 
-export interface AddSchoolReturnValue {
-  status: number;
-  message: string;
-  data?: {
-    schoolId: number;
-  };
+export interface GetClasses {
+  schoolUUID: string;
+}
+
+export interface GetDepartment {
+  schoolId: number;
+}
+
+export interface GetDepartments {
+  schoolUUID: string;
 }
 
 export interface AddDepartment {
-  name: string;
-  schoolId: number;
+  departmentName: string;
+  schoolUUID: string;
   isVisible?: string;
-  childsVisible?: boolean;
+  childsVisible?: string;
 }
 
-export interface AddDepartmentReturnValue {
-  status: number;
-  message: string;
-  data?: {
-    departmentId: number;
-  };
-}
-
-export interface ReturnMessage {
-  status: number;
-  message: string;
+export interface RemoveDepartment {
+  departmentId: number;
 }
 
 export interface UpdateDepartment {
-  name: string;
-  departmentId: number;
-  isVisible?: string;
+  departmentName: string;
+  departmentUUID: string;
+  isVisible?: boolean;
   childsVisible?: boolean;
 }
 
@@ -64,31 +51,26 @@ export interface ClassTable {
   departmentId: number;
 }
 
-export interface AddJoinCode {
-  schoolId: number;
-  expireDate: Date;
-  name?: string;
-  personId: number;
+export interface JoinSchool {
+  schoolUUID: string;
+  personUUID: string;
 }
 
-export interface AddJoinCodeReturnValue {
-  status: number;
-  message: string;
-  data?: {
-    joinCodeId: number;
-    joinCode: string;
-  };
+export interface AddJoinCode {
+  schoolUUID: string;
+  expireDate?: Date;
+  joinCodeName?: string;
 }
 
 export interface RemoveJoinCode {
-  joinCodeId: number;
+  joinCode: string;
 }
 
-export interface RemoveJoinCodeReturnValue {
-  status: number;
-  message: string;
+export interface UpdateJoinCode {
+  joinCode: string;
+  expireDate?: string;
+  joinCodeName?: string;
 }
-
 export interface JoinCodeTable {
   joinCodeId: number;
   schoolId: number;
@@ -99,8 +81,22 @@ export interface JoinCodeTable {
   creationDate: Date;
 }
 
-export interface updateJoinCode {
-  joinCodeId: number;
-  expireDate?: Date;
-  name?: string;
+export interface GetAllJoinCodes {
+  schoolUUID: string;
+}
+
+export interface ReturnMessage {
+  status: number;
+  message?: string;
+  data?: string | Object;
+}
+
+export interface UserPermissions {
+  personUUID: string;
+}
+
+export interface DecodedJWT {
+  personUUID: string;
+  exp: number;
+  iat: number;
 }

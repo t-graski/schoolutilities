@@ -3,10 +3,10 @@ import { styled } from "../stitches.config";
 import Image from "next/image";
 import { Spacer } from "./Spacer";
 import { useRouter } from "next/router";
-import { Navbar } from "./Navbar";
+import { Navbar } from "./OldNavbar";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
-import { Footer } from "./Footer";
+import { Footer } from "./OldFooter";
 import fetch from "node-fetch";
 
 if (!globalThis.fetch) {
@@ -33,7 +33,7 @@ export const RegisterAuth = () => {
       token: token,
     });
     console.log(requestBody);
-    fetch("https://www.schoolutilities.net:3333/api/user/activateAccount", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/activateAccount`, {
       method: "POST",
       body: requestBody,
       headers: { "Content-Type": "application/json" },

@@ -5,13 +5,6 @@ const { save } = require('./misc/utils.js');
 const fs = require('fs');
 const { serverConfiguration } = require('./misc/utils');
 
-let commandInputData;
-try {
-    commandInputData = require('./datastore/commandInputData.json');
-} catch (error) {
-    commandInputData = [];
-}
-
 // const client = new Discord.Client({
 //     partials: ['MESSAGE', 'CHANNEL','REACTION'],
 //     ws: {
@@ -135,6 +128,7 @@ function checkPresence() {
         }
     });
 }
+
 // Checks if a specific time is between two other times, also works with timezone
 function timeInRange(startTime, endTime, timezone) {
     timezone = Number(timezone.split('gmt')[1]);
@@ -155,34 +149,3 @@ function generateNewKey() {
     process.env.key = key;
 }
 
-// import module
-const express = require('express');
-const https = require('https');
-const http = require('http');
-// var privateKey = fs.readFileSync('/etc/letsencrypt/archive/schoolutilities.net/privkey7.pem', 'utf8');
-// var certificate = fs.readFileSync('/etc/letsencrypt/archive/schoolutilities.net/cert7.pem', 'utf8');
-// var credentials = { key: privateKey, cert: certificate };
-
-// import router
-const interfaceRouter = require('./routes/route.js');
-const { log } = require('console');
-
-// specify http server port
-const port = 443;
-
-// create express application
-const app = express();
-
-// mount middleware
-app.use(express.static('public'));
-app.use(express.json()); // parse JSON payload and place result in req.body
-app.use('/api/', interfaceRouter);
-
-// var httpsServer = https.createServer(credentials, app);
-var httpServer = http.createServer(app);
-// httpsServer.listen(port, () => {
-//  console.log(`Server listening on port ${port}`);
-// });
-httpServer.listen(process.env.PORT, () => {
-    console.log(`Server listening on port ${process.env.PORT}`);
-});

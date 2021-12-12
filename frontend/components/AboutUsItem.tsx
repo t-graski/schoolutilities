@@ -15,6 +15,7 @@ export type AboutUsItem = {
 const AboutUsLayout = styled("div", {
   padding: "1.5vh 15vw",
   display: "flex",
+  color: "$fontPrimary",
 });
 
 const ImageDimension = styled("div", {
@@ -73,11 +74,7 @@ export const AboutUsItem: React.FC<AboutUsItem> = ({
       <AboutUsLayout>
         <ImageLayout>
           <ImageDimension>
-            <Image
-              layout="fill"
-              src={imageSrc}
-              alt={imageAlt}
-            ></Image>
+            <Image layout="fill" src={imageSrc} alt={imageAlt}></Image>
           </ImageDimension>
           <VerticalLine></VerticalLine>
         </ImageLayout>

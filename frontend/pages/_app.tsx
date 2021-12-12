@@ -10,13 +10,13 @@ const globalStyles = globalCss({
     boxSizing: "border-box",
     margin: 0,
     padding: 0,
-    color: "#ffffff",
   },
   body: {
-    fontFamily: "Montserrat",
-    fontWeight: "500",
+    fontFamily: "Poppins",
+    fontWeight: "400",
     backgroundColor: "#2f3136",
     overflowX: "hidden",
+    minHeight: "100vh",
   },
 });
 

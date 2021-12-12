@@ -1,15 +1,17 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
+import { Navbar } from "../components/OldNavbar";
+import { Footer } from "../components/OldFooter";
 import { Headline } from "../components/Headline";
 import React from "react";
 import { Spacer } from "../components/Spacer";
 import { Separator } from "../components/Separator";
+import Head from "next/head";
 
 const ImprintLayout = styled("div", {
   width: "100%",
   padding: "0 15vw",
   minHeight: "80vh",
+  color: "$fontPrimary",
 });
 
 const MainContentText = styled("p", {
@@ -21,6 +23,9 @@ const MainContentText = styled("p", {
 export default function Features() {
   return (
     <>
+      <Head>
+        <title>Imprint - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {

@@ -1,7 +1,8 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
+import { Navbar } from "../components/OldNavbar";
+import { Footer } from "../components/OldFooter";
 import React from "react";
+import Head from "next/head";
 import { Spacer } from "../components/Spacer";
 
 const StyledDiv = styled("div", {
@@ -12,6 +13,9 @@ const StyledDiv = styled("div", {
 export default function DataPolicy() {
   return (
     <>
+      <Head>
+        <title>Data Policy - SchoolUtilities</title>
+      </Head>
       <Navbar
         links={[
           {
@@ -58,6 +62,9 @@ export default function DataPolicy() {
       font-size: 14px !important;
       font-family: Arial !important;
       word-break: break-word !important;
+              }
+              * {
+                color: #ffffff;
               }
       </style>
       
