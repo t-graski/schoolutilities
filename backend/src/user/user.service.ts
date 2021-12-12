@@ -184,44 +184,36 @@ export class UserService {
     }
   }
 
+  async activateNewEmail(token: string): Promise<ReturnMessage> {
+    const person = await prisma.emailChangeToken.findFirst({
+      where: {
+        token,
+      },
+      select: {
+        personId: true,
+        newEmail: true,
+      },
+    });
+
+    if (!person) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+    try {
+      await prisma.persons.update({
+        where: {
+          personId: Number(person.personId),
+        },
+        data: {
+          email: person.newEmail,
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
   parseLanguage(id: number) {
     return id === 1 ? 'de' : 'en';
   }
 }
-
-// async function generateEmailChangeToken(
-//   email: string,
-//   databaseService: DatabaseService,
-//   mailService: MailService,
-// ): Promise<string> {
-//   const generatedToken = nanoid();
-
-//   try {
-//     await prisma.registerTokens.create({
-//       data: {
-//         persons: {
-//           connect: {
-//             personId: Number(userId['personId']),
-//           },
-//         },
-//         token: generatedToken,
-//       },
-//     });
-//   } catch (error) {
-//     throw new Error('Error while generating token: ' + error);
-//   }
-
-//   const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
-//   const html = `
-//     <iframe title="Email" src="localhost:3000/school/admin/settings"></iframe>
-//     `;
-//   const message = {
-//     from: 'noreply@schoolutilities.net',
-//     to: email,
-//     subject: 'Registrierungsbestätigung - Schoolutilities',
-//     text,
-//     html,
-//   };
-//   mailService.sendMail(message);
-//   return generatedToken;
-// }

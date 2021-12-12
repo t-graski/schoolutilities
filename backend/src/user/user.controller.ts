@@ -23,6 +23,14 @@ export class UserController {
     return response.status(result.status).json(result?.message);
   }
 
+  @Post('/activateNewEmail')
+  async activateNewEmail(@Req() request, @Res() response) {
+    const result = await this.userService.activateNewEmail(request.body.token);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
   @Get('/getSchools')
   async getSchools(@Res() response, @Req() request) {
     const jwt = request.headers.authorization.split(' ')[1];
