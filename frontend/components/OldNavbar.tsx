@@ -169,7 +169,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
   if (cookie.get("accessToken")) {
     let token = cookie.get("accessToken");
     useEffect(() => {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/profile`, {
+      fetch(`https://backend.schoolutilities.net:3333/api/auth/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
