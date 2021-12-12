@@ -85,7 +85,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             </StyledLink>
           </Link>
           <Link href="/about">
-            <StyledLink marked={router.pathname === "/about"}>ABOUT</StyledLink>
+            <StyledLink marked={router.pathname === "/about-us"}>ABOUT</StyledLink>
           </Link>
         </NavLinksLayout>
       </NavbarLayout>
