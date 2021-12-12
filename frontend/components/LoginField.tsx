@@ -58,7 +58,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`https://backend.schoolutilities.net:3333/api/auth/login`, {
+    fetch(`http://localhost:8888/api/auth/login`, {
       method: "POST",
       body: JSON.stringify({
         email,

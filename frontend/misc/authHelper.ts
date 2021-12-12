@@ -12,7 +12,7 @@ export async function getAccessToken(): Promise<string> {
 
 async function refreshAccessToken(refreshToken: string): Promise<string> {
   const accessTokenResponse = await fetch(
-    `https://backend.schoolutilities.net:3333/api/auth/refresh`,
+    `http://localhost:8888/api/auth/refresh`,
     {
       method: "POST",
       headers: {
@@ -39,7 +39,7 @@ export async function getUserData(): Promise<any> {
   let userProfile = cookie.get("userProfile");
   if (accessToken && !userProfile) {
     const userDataResponse = await fetch(
-      `https://backend.schoolutilities.net:3333/api/user/profile`,
+      `http://localhost:8888/api/user/profile`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

@@ -97,7 +97,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/classes/${schoolUUID}`,
+        `http://localhost:8888/api/schooladmin/classes/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -110,7 +110,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       setClasses(json);
 
       returnValue = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/departments/${schoolUUID}`,
+        `http://localhost:8888/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -139,7 +139,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
+      `http://localhost:8888/api/schooladmin/class`,
       {
         method: "POST",
         headers: {
@@ -173,7 +173,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
+      `http://localhost:8888/api/schooladmin/class`,
       {
         method: "PUT",
         headers: {
@@ -205,7 +205,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
+      `http://localhost:8888/api/schooladmin/class`,
       {
         method: "DELETE",
         headers: {

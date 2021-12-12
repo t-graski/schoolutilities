@@ -16,6 +16,7 @@ import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
 import { SvgIcon } from "./SvgIcon";
+import { LoadingAnimation } from "./LoadingAnimation";
 
 type Props = {};
 
@@ -124,7 +125,7 @@ const SettingsSpacer = styled("div", {
 const ProfileDataColumn = styled("div", {
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center",
+  marginRight: "40px",
   gap: "10px",
 });
 
@@ -138,14 +139,97 @@ const InputLabel = styled("p", {
   width: "100%",
 });
 
+const StatusInfo = styled("p", {
+  fontWeight: "500",
+  fontSize: "1.8rem",
+  color: "$fontPrimary",
+  margin: "0",
+  marginBottom: "10px",
+  textAlign: "left",
+  width: "100%",
+});
+
+const ButtonLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "20px",
+});
+
 export const ProfileSettings: React.FC<Props> = ({}) => {
-    const [userInfo, setUserInfo] = useState({
-        firstName: "Firstname",
-        lastName: "Lastname",
-        email: "Email",
-        creationDate: "",
-        birthDate: new Date().toISOString(),
+  const router = useRouter();
+  const [statusInfo, setStatusInfo] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    firstName: "Firstname",
+    lastName: "Lastname",
+    email: "Email",
+    creationDate: "",
+    birthDate: new Date().toISOString(),
+  });
+  const [isFirstTime, setIsFirstTime] = useState(true);
+  let initialUserInfo = {
+    firstName: "Firstname",
+    lastName: "Lastname",
+    email: "Email",
+    creationDate: "",
+    birthDate: new Date().toISOString(),
+  };
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  useEffect(() => {
+    if (isFirstTime) {
+      getUserInfo();
+      setIsFirstTime(false);
+    }
+  });
+
+  async function getUserInfo() {
+    const token = await getAccessToken();
+    if (!token) {
+      router.push("/auth/login");
+    }
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:8888/api/user/profile`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
+    if (response.status !== 200) {
+      setStatusInfo("Error: " + response.status);
+    } else {
+      const data = await response.json();
+      setUserInfo(data);
+    }
+    setIsLoading(false);
+  }
+
+  async function saveChanges() {
+    const token = await getAccessToken();
+    if (!token) {
+      router.push("/auth/login");
+    }
+    setIsLoading(true);
+    const response = await fetch(`http://localhost:8888/api/user/changeEmail`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        newEmail: userInfo.email,
+      }),
+    });
+    if (response.status !== 200) {
+      setStatusInfo("Error: " + response.status);
+    } else {
+      setUserInfo(initialUserInfo);
+      setStatusInfo(
+        "You now have to verify your new email address to complete the change."
+      );
+    }
+    setIsLoading(false);
+  }
+
   return (
     <>
       <ProfileLayout>
@@ -156,13 +240,29 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           <ProfileName>{cookie.get("username")}</ProfileName>
           <ProfileNavigationLinks>
             <SpecialLinkLayout>
-              <Link href="">
-                <LinkLayout color="special">
+              <Link href="/profile/settings">
+                <LinkLayout color={"special"}>
                   <IconLayout>
                     <SvgIcon iconName="SvgHome" />
                   </IconLayout>
                   <LinkContentLayout>
                     <LinkLabel color="special">Account</LinkLabel>
+
+                    <LinkArrow color="special">
+                      <SvgIcon iconName="SvgRightArrow" />
+                    </LinkArrow>
+                  </LinkContentLayout>
+                </LinkLayout>
+              </Link>
+            </SpecialLinkLayout>
+            <SpecialLinkLayout>
+              <Link href="/profile/settings?tab=schools">
+                <LinkLayout color="primary">
+                  <IconLayout>
+                    <SvgIcon iconName="SvgUser" />
+                  </IconLayout>
+                  <LinkContentLayout>
+                    <LinkLabel color="special">Schools</LinkLabel>
 
                     <LinkArrow color="special">
                       <SvgIcon iconName="SvgRightArrow" />
@@ -182,6 +282,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
             value={userInfo.firstName}
             onChange={(e) => {}}
             iconName={""}
+            editable={false}
           />
           <Spacer size="verySmall"></Spacer>
           <InputLabel>Date of Birth</InputLabel>
@@ -191,10 +292,53 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
             value={new Date(userInfo.birthDate).toLocaleDateString()}
             onChange={(e) => {}}
             iconName={""}
+            editable={false}
           />
           <Spacer size="verySmall"></Spacer>
+          <ButtonLayout>
+            <Button
+              backgroundColor={"primary"}
+              color={"primary"}
+              label="SAVE CHANGES"
+              onClick={saveChanges}
+            ></Button>
+            <Button
+              backgroundColor={"secondary"}
+              color={"primary"}
+              label="RESET"
+              onClick={() => {
+                setStatusInfo("");
+                getUserInfo();
+              }}
+            ></Button>
+          </ButtonLayout>
+        </ProfileDataColumn>
+        <ProfileDataColumn>
+          <InputLabel>Lastname</InputLabel>
+          <InputField
+            inputType="text"
+            label="Lastname"
+            value={userInfo.lastName}
+            onChange={(e) => {}}
+            iconName={""}
+            editable={false}
+          />
+          <Spacer size="verySmall"></Spacer>
+          <InputLabel>Email</InputLabel>
+          <InputField
+            inputType="email"
+            label="Email"
+            value={userInfo.email}
+            onChange={(e) => {
+              setUserInfo({ ...userInfo, email: e });
+            }}
+            iconName={""}
+          />
+          <Spacer size="verySmall"></Spacer>
+          {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
         </ProfileDataColumn>
       </ProfileLayout>
+      <LoadingAnimation isVisible={isLoading} />
     </>
   );
 };

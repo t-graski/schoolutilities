@@ -24,6 +24,7 @@ const SchoolDetailLayout = styled("form", {
   flexDirection: "column",
   gap: "20px",
   justifySelf: "center",
+  marginTop: "12vh",
   width: "100%",
   padding: "40px 60px",
   overflowY: "scroll",
@@ -106,7 +107,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     if (accessToken && schoolUUID && isFirstTime) {
       setIsLoading(true);
       const response = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/departments/${schoolUUID}`,
+        `http://localhost:8888/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -140,7 +141,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     };
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
+      `http://localhost:8888/api/schooladmin/department`,
       {
         method: "POST",
         headers: {
@@ -176,7 +177,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     };
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
+      `http://localhost:8888/api/schooladmin/department`,
       {
         method: "PUT",
         headers: {
@@ -207,7 +208,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   async function deleteSettingsEntry(id) {
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
+      `http://localhost:8888/api/schooladmin/department`,
       {
         method: "DELETE",
         headers: {

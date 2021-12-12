@@ -20,13 +20,13 @@ const NavbarLayout = styled("div", {
   width: "100vw",
   padding: "0 79px",
   color: "$fontPrimary",
-  height: "18vh",
+  height: "12vh",
   zIndex: "1",
 });
 
 const LogoLayout = styled("div", {
   display: "flex",
-  width: "160px",
+  width: "130px",
   height: "fit-content",
   color: "$fontPrimary",
 });
@@ -84,7 +84,7 @@ export const Navbar: React.FC<Props> = ({}) => {
               FEATURES
             </StyledLink>
           </Link>
-          <Link href="/about">
+          <Link href="/about-us">
             <StyledLink marked={router.pathname === "/about-us"}>ABOUT</StyledLink>
           </Link>
         </NavLinksLayout>

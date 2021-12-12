@@ -51,7 +51,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
     const token = await getAccessToken();
     if (joinCodeValid && token) {
       const res = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/joinSchool`,
+        `http://localhost:8888/api/schooladmin/joinSchool`,
         {
           method: "POST",
           headers: {
