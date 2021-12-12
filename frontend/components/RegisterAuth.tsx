@@ -50,40 +50,12 @@ export const RegisterAuth = () => {
   }
   return (
     <>
-      <Navbar
-        links={[
-          {
-            href: "/",
-            label: "Home",
-          },
-          {
-            href: "/features",
-            label: "Features",
-          },
-        ]}
-      ></Navbar>
       <Spacer size="medium"></Spacer>
       <Headline label="Registrierungs-Bestätigung"></Headline>
       <Separator width="small" alignment="center" />
       <RegisterAuthLayout>
         <h2>{authStateInfo}</h2>
       </RegisterAuthLayout>
-      <Footer
-        links={[
-          {
-            href: "/data-policy",
-            label: "Data Policy",
-          },
-          {
-            href: "/imprint",
-            label: "Imprint",
-          },
-          {
-            href: "/logout",
-            label: "Logout",
-          },
-        ]}
-      ></Footer>
     </>
   );
 };

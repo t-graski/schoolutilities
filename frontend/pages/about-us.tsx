@@ -1,8 +1,8 @@
 import Head from "next/head";
 import { styled } from "../stitches.config";
 import StitchesLogo from "../components/StitchesLogo";
-import { Navbar } from "../components/OldNavbar";
-import { Footer } from "../components/OldFooter";
+import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
 import { Headline } from "../components/Headline";
 import React from "react";
 import { Spacer } from "../components/Spacer";
@@ -17,18 +17,7 @@ export default function AboutUs() {
       <Head>
         <title>About Us - SchoolUtilities</title>
       </Head>
-      <Navbar
-        links={[
-          {
-            href: "/",
-            label: "Home",
-          },
-          {
-            href: "/features",
-            label: "Features",
-          },
-        ]}
-      ></Navbar>
+      <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
       <Headline label="About Us"></Headline>
       <Separator width="small" alignment="center" />
@@ -56,22 +45,7 @@ export default function AboutUs() {
         description=""
         roles={["Design", "Frontend Developer"]}
       />
-      <Footer
-        links={[
-          {
-            href: "/data-policy",
-            label: "Data Policy",
-          },
-          {
-            href: "/imprint",
-            label: "Imprint",
-          },
-          {
-            href: "/logout",
-            label: "Logout",
-          },
-        ]}
-      ></Footer>
+      <Footer></Footer>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { styled } from "../../stitches.config";
 import React, { useEffect, useState } from "react";
-import { Navbar } from "../../components/OldNavbar";
-import { Footer } from "../../components/OldFooter";
+import { Navbar } from "../../components/Navbar";
+import { Footer } from "../../components/Footer";
 import { Spacer } from "../../components/Spacer";
 import { InfoBox } from "../../components/InfoBox";
 import { LoginField } from "../../components/LoginField";
@@ -22,18 +22,7 @@ export default function Register() {
       <Head>
         <title>Login - SchoolUtilities</title>
       </Head>
-      <Navbar
-        links={[
-          {
-            href: "/",
-            label: "Home",
-          },
-          {
-            href: "/features",
-            label: "Features",
-          },
-        ]}
-      ></Navbar>
+      <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
       <LoginAuthLayout>
         <InfoBox
@@ -44,22 +33,7 @@ export default function Register() {
         ></InfoBox>
         <LoginField></LoginField>
       </LoginAuthLayout>
-      <Footer
-        links={[
-          {
-            href: "/data-policy",
-            label: "Data Policy",
-          },
-          {
-            href: "/imprint",
-            label: "Imprint",
-          },
-          {
-            href: "/logout",
-            label: "Logout",
-          },
-        ]}
-      ></Footer>
+      <Footer></Footer>
     </>
   );
 }
