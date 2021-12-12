@@ -19,12 +19,6 @@ import { PersonsSettingsField } from "../../../components/PersonsSettingsField";
 import { JoinCodesSettingsField } from "../../../components/JoinCodesSettingsField";
 import { getAccessToken, getUserData } from "../../../misc/authHelper";
 
-const CreateSchoolLayout = styled("div", {
-  display: "flex",
-  width: "100%",
-  padding: "50px",
-});
-
 const SettingsLayout = styled("div", {
   display: "flex",
   width: "100vw",

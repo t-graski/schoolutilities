@@ -53,7 +53,7 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
 
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
-    let response = await fetch("http://localhost:8888/api/user/getSchools", {
+    let response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,

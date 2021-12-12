@@ -12,7 +12,7 @@ export async function getAccessToken(): Promise<string> {
 
 async function refreshAccessToken(refreshToken: string): Promise<string> {
   const accessTokenResponse = await fetch(
-    "http://localhost:8888/api/auth/refresh",
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/refresh`,
     {
       method: "POST",
       headers: {
@@ -39,7 +39,7 @@ export async function getUserData(): Promise<any> {
   let userProfile = cookie.get("userProfile");
   if (accessToken && !userProfile) {
     const userDataResponse = await fetch(
-      "http://localhost:8888/api/user/profile",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -62,8 +62,7 @@ export async function getUserData(): Promise<any> {
   }
 }
 
-
-export function logout(){
+export function logout() {
   cookie.remove("accessToken");
   cookie.remove("refreshToken");
   cookie.remove("userProfile");

@@ -15,6 +15,7 @@ import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
+import { LoadingAnimation } from "./LoadingAnimation";
 
 type Props = {};
 
@@ -67,13 +68,25 @@ const StyledError = styled("p", {
   borderRadius: "25px",
 });
 
+const LoadingLayout = styled("div", {
+  position: "relative",
+});
+
+const StyledDeleteText = styled("p", {
+  fontSize: "1rem",
+  color: "$fontPrimary",
+  marginTop: "15px",
+});
+
 export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   const [departments, setDepartments] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
-  const [popUpIsVisible, setPopUpIsVisible] = React.useState(false);
+  const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
+  const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [departmentName, setDepartmentName] = React.useState("");
   const [departmentNameValid, setDepartmentNameValid] = React.useState(false);
   const [departmentId, setDepartmentId] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
@@ -91,8 +104,9 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       router.push("/profile/school-selection");
     }
     if (accessToken && schoolUUID && isFirstTime) {
+      setIsLoading(true);
       const response = await fetch(
-        `http://localhost:8888/api/schooladmin/departments/${schoolUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -104,6 +118,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       const departments = await response.json();
       setDepartments(departments);
       setIsFirstTime(false);
+      setIsLoading(false);
     }
   }
 
@@ -113,7 +128,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     } else {
       editSettingsEntry();
     }
-    setPopUpIsVisible(false);
+    setEditPopUpIsVisible(false);
   }
 
   async function addSettingsEntry() {
@@ -122,9 +137,10 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       departmentName: departmentName,
       isVisible: "true",
       childsVisible: "true",
-    };
+    };    
+    setIsLoading(true);
     const returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/department",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
       {
         method: "POST",
         headers: {
@@ -135,6 +151,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     );
     if (returnValue.status !== 200) {
       setError("Error while saving department");
+      setIsLoading(false);
     } else {
       const body = await returnValue.json();
       setError("");
@@ -142,6 +159,10 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
         departmentUUID: body.departmentUUID,
         departmentName: departmentName,
       };
+      setDepartmentId("");
+      setDepartmentName("");
+      setDepartmentNameValid(false);
+      setIsLoading(false);
       setDepartments([...departments, entry]);
     }
   }
@@ -153,8 +174,9 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       isVisible: "true",
       childsVisible: "true",
     };
+    setIsLoading(true);
     const returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/department",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
       {
         method: "PUT",
         headers: {
@@ -165,6 +187,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     );
     if (returnValue.status !== 200) {
       setError("Error trying to save");
+      setIsLoading(false);
     } else {
       setError("");
       const newEntries = departments.map((department, index) => {
@@ -176,13 +199,15 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
           return department;
         }
       });
+      setIsLoading(false);
       setDepartments(newEntries);
     }
   }
 
   async function deleteSettingsEntry(id) {
+    setIsLoading(true);
     const returnValue = await fetch(
-      "http://localhost:8888/api/schooladmin/department",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
       {
         method: "DELETE",
         headers: {
@@ -196,7 +221,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     );
     if (returnValue.status !== 200) {
       setError("Error trying to save");
-      console.log(returnValue);
+      setIsLoading(false);
     } else {
       setError("");
       let newSettingsEntries = departments.filter(
@@ -207,20 +232,21 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       if (newSettingsEntries.length == 0) {
         setDepartments([]);
       }
+      setIsLoading(false);
     }
   }
 
   return (
     <>
       <SchoolDetailLayout>
-        {popUpIsVisible && (
+        {editPopUpIsVisible && (
           <SettingsPopUp
             headline={departmentId == "" ? "Add new entry" : "Edit entry"}
             inputValid={departmentNameValid}
             saveLabel={departmentId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
             closeFunction={() => {
-              setPopUpIsVisible(false);
+              setEditPopUpIsVisible(false);
               setDepartmentName("");
               setDepartmentNameValid(false);
             }}
@@ -233,8 +259,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                 onChange={(event) => {
                   setDepartmentName(event);
                 }}
-                iconSrc={""}
-                iconAlt={""}
+                iconName=""
                 regex={regex.name}
                 setValidInput={setDepartmentNameValid}
                 min="2"
@@ -243,49 +268,74 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
             </StyledInputField>
           </SettingsPopUp>
         )}
+        {deletePopUpIsVisible && (
+          <SettingsPopUp
+            headline={`Remove ${departmentName}`}
+            inputValid={true}
+            saveLabel="Confirm"
+            saveFunction={() => {
+              deleteSettingsEntry(departmentId);
+              setDeletePopUpIsVisible(false);
+            }}
+            closeFunction={() => {
+              setDeletePopUpIsVisible(false);
+              setDepartmentName("");
+              setDepartmentNameValid(false);
+            }}
+          >
+            <StyledDeleteText>
+              This action cannot be undone. This will permanently delete this
+              department.
+            </StyledDeleteText>
+          </SettingsPopUp>
+        )}
         <SettingsHeader
           headline="Departments"
           addFunction={() => {
             setDepartmentName("");
             setDepartmentId("");
-            setPopUpIsVisible(true);
+            setEditPopUpIsVisible(true);
           }}
         ></SettingsHeader>
-        {error && <StyledError>{error}</StyledError>}
-        <SettingsEntriesLayout>
-          {departments.map((entry, index) => (
-            <SettingsEntryLayout
-              key={entry.departmentUUID}
-              data-key={entry.departmentUUID}
-            >
-              <SettingsEntry
-                editFunction={() => {
-                  setDepartmentName(entry.departmentName);
-                  setDepartmentId(entry.departmentUUID);
-                  setPopUpIsVisible(true);
-                }}
-                deleteFunction={() => {
-                  deleteSettingsEntry(entry.departmentUUID);
-                }}
-                highlighted={
-                  router.query &&
-                  router.query.departmentUUID &&
-                  entry.departmentUUID == router.query.departmentUUID
-                }
+        <LoadingLayout>
+          <LoadingAnimation isVisible={isLoading} />
+          {error && <StyledError>{error}</StyledError>}
+          <SettingsEntriesLayout>
+            {departments.map((entry, index) => (
+              <SettingsEntryLayout
+                key={entry.departmentUUID}
+                data-key={entry.departmentUUID}
               >
-                <Link
-                  href={`/school/admin/settings?tab=classes&departmentUUID=${entry.departmentUUID}`}
+                <SettingsEntry
+                  editFunction={() => {
+                    setDepartmentName(entry.departmentName);
+                    setDepartmentId(entry.departmentUUID);
+                    setEditPopUpIsVisible(true);
+                  }}
+                  deleteFunction={() => {
+                    setDeletePopUpIsVisible(true);
+                    setDepartmentId(entry.departmentUUID);
+                  }}
+                  highlighted={
+                    router.query &&
+                    router.query.departmentUUID &&
+                    entry.departmentUUID == router.query.departmentUUID
+                  }
                 >
-                  <SettingsEntryLink>
-                    <SettingsEntryName>
-                      {entry.departmentName}
-                    </SettingsEntryName>
-                  </SettingsEntryLink>
-                </Link>
-              </SettingsEntry>
-            </SettingsEntryLayout>
-          ))}
-        </SettingsEntriesLayout>
+                  <Link
+                    href={`/school/admin/settings?tab=classes&departmentUUID=${entry.departmentUUID}`}
+                  >
+                    <SettingsEntryLink>
+                      <SettingsEntryName>
+                        {entry.departmentName}
+                      </SettingsEntryName>
+                    </SettingsEntryLink>
+                  </Link>
+                </SettingsEntry>
+              </SettingsEntryLayout>
+            ))}
+          </SettingsEntriesLayout>
+        </LoadingLayout>
       </SchoolDetailLayout>
     </>
   );

@@ -1,9 +1,9 @@
 import React from "react";
 import { styled } from "../stitches.config";
+import { SvgIcon } from "./SvgIcon";
 
 export type FeatureOverviewProps = {
-  imageSrc: string;
-  imageAlt: string;
+  iconName: string;
   title: string;
   description: string;
   imagePosition?: "left" | "right";
@@ -16,10 +16,11 @@ const FeatureLayout = styled('div', {
     gridGap: "2vw",
     padding: "3vw",
     alignItems: "center",
+    color: "$fontPrimary",
 });
 
 const IconBackground = styled('div', {
-    padding: "2.5vw",
+    padding: "3.2vw",
     borderRadius: "50%",
     backgroundColor: "$specialSecondary",
     margin: "3vw",
@@ -71,8 +72,7 @@ const StyledDescription = styled('p', {
 });
 
 export const FeatureOverview: React.FC<FeatureOverviewProps> = ({ 
-  imageSrc,
-  imageAlt,
+  iconName,
   title,
   description,
   imagePosition="left",
@@ -81,7 +81,7 @@ export const FeatureOverview: React.FC<FeatureOverviewProps> = ({
     <>
         <FeatureLayout>
             <IconBackground imagePosition={imagePosition}>
-                <StyledImage src={imageSrc} alt={imageAlt}/>
+                <SvgIcon iconName={iconName} />
             </IconBackground>
             <FeatureDescriptionLayout imagePosition={imagePosition}>
                 <StyledHeadline>{title}</StyledHeadline>

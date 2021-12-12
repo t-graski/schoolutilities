@@ -28,6 +28,7 @@ const LogoLayout = styled("div", {
   display: "flex",
   width: "160px",
   height: "fit-content",
+  color: "$fontPrimary",
 });
 
 const NavLinksLayout = styled("div", {
@@ -67,9 +68,13 @@ export const Navbar: React.FC<Props> = ({}) => {
   return (
     <>
       <NavbarLayout>
-        <LogoLayout>
-          <SvgIcon iconName="SvgOpenLogo" />
-        </LogoLayout>
+        <Link href="/">
+          <a>
+            <LogoLayout>
+              <SvgIcon iconName="SvgOpenLogo" />
+            </LogoLayout>
+          </a>
+        </Link>
         <NavLinksLayout>
           <Link href="/">
             <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>

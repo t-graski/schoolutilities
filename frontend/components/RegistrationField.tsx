@@ -73,7 +73,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch("http://localhost:8888/api/auth/register", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
       method: "POST",
       body: JSON.stringify({
         firstName,
@@ -104,7 +104,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={firstName}
             onChange={setFirstName}
-            iconSrc="/images/user.svg"
+            iconName="SvgUser"
             required={true}
             regex={regex.name}
             setValidInput={setFirstNameValid}
@@ -115,7 +115,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={lastName}
             onChange={setLastName}
-            iconSrc="/images/user.svg"
+            iconName="SvgUser"
             required={true}
             regex={regex.name}
             setValidInput={setLastNameValid}
@@ -126,7 +126,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="date"
             value={birthDate}
             onChange={setBirthDate}
-            iconSrc="/images/user.svg"
+            iconName="SvgUser"
             required={true}
             min="1900-01-01"
             max={new Date().toJSON().split("T")[0]}
@@ -136,7 +136,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconSrc="/images/user.svg"
+            iconName="SvgUser"
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
@@ -147,7 +147,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconSrc="/images/user.svg"
+            iconName="SvgUser"
             required={true}
             regex={regex.password}
             setValidInput={setPasswordValid}
@@ -158,7 +158,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
-            iconSrc="/images/user.svg"
+            iconName="SvgUser"
             required={true}
             regex={regex.password}
             setValidInput={setPasswordConfirmationValid}

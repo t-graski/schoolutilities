@@ -103,18 +103,19 @@ export const AccordionItem = StyledItem;
 export const AccordionTrigger = React.forwardRef(
   ({ children, ...props }, forwardedRef) => (
     <StyledHeader>
-      <StyledTrigger {...props} ref={forwardedRef}>
+      {/* <StyledTrigger {...props} ref={forwardedRef}>
         {children}
         <StyledChevron aria-hidden />
-      </StyledTrigger>
+      </StyledTrigger> */}
     </StyledHeader>
   )
 );
 export const AccordionContent = React.forwardRef(
   ({ children, ...props }, forwardedRef) => (
-    <StyledContent {...props} ref={forwardedRef}>
-      <StyledContentText>{children}</StyledContentText>
-    </StyledContent>
+    // <StyledContent {...props} ref={forwardedRef}>
+    //   <StyledContentText>{children}</StyledContentText>
+    // </StyledContent>
+    <></>
   )
 );
 
@@ -140,7 +141,7 @@ export default function RegisterApproved() {
       <Headline label="FAQ"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
-      <Accordion type="single" defaultValue="item-1">
+      {/* <Accordion type="single" defaultValue="item-1">
         <AccordionItem value="item-1">
           <AccordionTrigger>Is it accessible?</AccordionTrigger>
           <AccordionContent>
@@ -162,7 +163,7 @@ export default function RegisterApproved() {
             Yes! You can animate the Accordion with CSS or JavaScript.
           </AccordionContent>
         </AccordionItem>
-      </Accordion>
+      </Accordion> */}
     </>
   );
 }

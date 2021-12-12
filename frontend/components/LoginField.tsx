@@ -58,7 +58,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch("http://localhost:8888/api/auth/login", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
       method: "POST",
       body: JSON.stringify({
         email,

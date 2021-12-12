@@ -85,8 +85,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           inputType="text"
           value={schoolName}
           onChange={setSchoolName}
-          iconSrc="/images/school_name_icon.svg"
-          iconAlt="school_name_icon"
+          iconName="SvgUser"
           required={true}
           regex={regex.name}
           setValidInput={setSchoolNameValid}
@@ -97,8 +96,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           inputType="select"
           value={schoolLanguage}
           onChange={setSchoolLanguage}
-          iconSrc="/images/language_icon.svg"
-          iconAlt="language_icon"
+          iconName="SvgUser"
           required={true}
           errorMessage="Tell us the language you speak in your school"
           selectOptions={[
@@ -112,8 +110,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           inputType="select"
           value={schoolTimezone}
           onChange={setSchoolTimezone}
-          iconSrc="/images/timezone_icon.svg"
-          iconAlt="timezone_icon"
+          iconName="SvgUser"
           required={true}
           errorMessage="Try to select a timezone in the drop-down menu"
           selectOptions={[

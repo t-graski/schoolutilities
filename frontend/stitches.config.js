@@ -53,7 +53,7 @@ export const {
       6: "21px",
     },
     fonts: {
-      system: "Montserrat",
+      system: "Poppins",
     },
     radii: {
       normal: "25px",

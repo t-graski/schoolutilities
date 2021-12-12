@@ -245,8 +245,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                       setDepartmentNameValid(false);
                     }
                   }}
-                  iconSrc={""}
-                  iconAlt={""}
+                  iconName=""
                   regex={regex.name}
                   setValidInput={setDepartmentNameValid}
                   min="2"

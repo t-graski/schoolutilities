@@ -62,7 +62,7 @@ export const GeneralListItem: React.FC<Props> = ({
         <Button
           backgroundColor={"primary"}
           color={"primary"}
-          label={"HOW TO USE"}
+          label={buttonText}
           onClick={() => {
             router.push(href);
           }}

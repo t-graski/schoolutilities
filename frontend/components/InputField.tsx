@@ -14,6 +14,7 @@ type Props = {
   value?: string;
   onChange: Function;
   iconName: string;
+  editable?: boolean;
   required?: boolean;
   label?: string;
   regex?: RegExp;
@@ -87,7 +88,6 @@ const StyledSelectField = styled("select", {
   outline: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
-  fontFamily: "Montserrat",
   fontWeight: "bold",
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
@@ -102,7 +102,6 @@ const ImageLayout = styled("div", {
 });
 
 const StyledOption = styled("option", {
-  fontFamily: "Montserrat",
 });
 
 export const InputField: React.FC<Props> = ({
@@ -113,6 +112,7 @@ export const InputField: React.FC<Props> = ({
   onChange,
   children,
   iconName,
+  editable = true,
   required = false,
   label = "",
   regex,

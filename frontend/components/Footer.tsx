@@ -28,7 +28,8 @@ const FooterContentLayout = styled("div", {
 
 const LogoLayout = styled("div", {
   display: "flex",
-  width: "120px",
+  width: "150px",
+  height: "fit-content",
 });
 
 const LinkLayout = styled("div", {
@@ -63,6 +64,7 @@ const FooterSpacer = styled("div", {
   height: "2px",
   backgroundColor: "$fontPrimary",
   width: "100%",
+  maxWidth: "1200px",
 });
 
 const StyledRightText = styled("div", {
@@ -82,9 +84,18 @@ export const Footer: React.FC<Props> = ({}) => {
     <>
       <FooterLayout>
         <FooterContentLayout>
-          <LogoLayout>
-            <SvgIcon iconName="SvgClosedLogo" />
-          </LogoLayout>
+          <Link href="/">
+            <a>
+              <LogoLayout>
+                <Image
+                  src="/images/Schoolutilities_Logo_Closed.png"
+                  alt="SchoolUtilities Logo"
+                  width="150"
+                  height="98"
+                />
+              </LogoLayout>
+            </a>
+          </Link>
           <LinkLayout>
             <LinkHeadline>Company</LinkHeadline>
             <Link href="/data-policy">
