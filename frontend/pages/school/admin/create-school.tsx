@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
-import { Footer } from "../../../components/OldFooter";
+import { Footer } from "../../../components/Footer";
 import { LoginField } from "../../../components/LoginField";
-import { Navbar } from "../../../components/OldNavbar";
+import { Navbar } from "../../../components/Navbar";
 import { Progressbar } from "../../../components/Progressbar";
 import { SchoolDetailField } from "../../../components/SchoolDetailField";
 import { SetupProgressSite } from "../../../components/SetupProgressSite";
@@ -38,38 +38,12 @@ export default function CreateSchool() {
       <Head>
         <title>School Setup - SchoolUtilities</title>
       </Head>
-      <Navbar
-        links={[
-          {
-            href: "/",
-            label: "Home",
-          },
-          {
-            href: "/features",
-            label: "Features",
-          },
-        ]}
-      ></Navbar>
+      <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
       <CreateSchoolLayout>
         <SetupProgressSite steps={progressSteps}></SetupProgressSite>
       </CreateSchoolLayout>
-      <Footer
-        links={[
-          {
-            href: "/data-policy",
-            label: "Data Policy",
-          },
-          {
-            href: "/imprint",
-            label: "Imprint",
-          },
-          {
-            href: "/logout",
-            label: "Logout",
-          },
-        ]}
-      ></Footer>
+      <Footer></Footer>
     </SiteLayout>
   );
 }

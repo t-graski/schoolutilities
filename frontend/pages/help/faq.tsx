@@ -10,6 +10,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { keyframes, styled } from "@stitches/react";
 import { blackA, mauve, violet } from "@radix-ui/colors";
+import { Footer } from "../../components/Footer";
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -164,6 +165,7 @@ export default function RegisterApproved() {
           </AccordionContent>
         </AccordionItem>
       </Accordion> */}
+      <Footer></Footer>
     </>
   );
 }
