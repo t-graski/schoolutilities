@@ -106,7 +106,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     if (accessToken && schoolUUID && isFirstTime) {
       setIsLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
+        `https://backend.schoolutilities.net:3333/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -137,10 +137,10 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       departmentName: departmentName,
       isVisible: "true",
       childsVisible: "true",
-    };    
+    };
     setIsLoading(true);
     const returnValue = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
       {
         method: "POST",
         headers: {
@@ -176,7 +176,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     };
     setIsLoading(true);
     const returnValue = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
       {
         method: "PUT",
         headers: {
@@ -207,7 +207,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   async function deleteSettingsEntry(id) {
     setIsLoading(true);
     const returnValue = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
       {
         method: "DELETE",
         headers: {

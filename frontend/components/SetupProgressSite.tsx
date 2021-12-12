@@ -124,7 +124,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
       Authorization: `Bearer ${accessToken}`,
     });
     const schoolResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/addschoolconfig`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/addschoolconfig`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -145,19 +145,22 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
           await storage.departments.forEach(async (department) => {
-            await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`, {
-              method: "POST",
-              body: JSON.stringify({
-                departmentName: department,
-                schoolUUID: data.schoolUUID,
-                isVisible: "true",
-                childsVisible: "true",
-              }),
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cookie.get("accessToken")}`,
-              },
-            }).then((response) => {
+            await fetch(
+              `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  departmentName: department,
+                  schoolUUID: data.schoolUUID,
+                  isVisible: "true",
+                  childsVisible: "true",
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${cookie.get("accessToken")}`,
+                },
+              }
+            ).then((response) => {
               if (response.status != 200) {
                 creationGoneWrong = true;
               }
