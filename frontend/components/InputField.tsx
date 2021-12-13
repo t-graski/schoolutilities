@@ -130,7 +130,7 @@ export const InputField: React.FC<Props> = ({
           onChange={(e) => onChange(e.target.checked)}
           inputType={inputType}
           {...(required && { required: true })}
-          {...(editable && { readonly: true })}
+          {...(editable && { readOnly: true })}
         />
         <span>{children}</span>
       </>
@@ -150,7 +150,7 @@ export const InputField: React.FC<Props> = ({
             onChange={(e) => onChange(e.target.value)}
             {...(required && { required: true })}
             value={selectValue}
-            {...(editable && { readonly: true })}
+            {...(editable && { readOnly: true })}
           >
             {selectOptions.map((option) => (
               <StyledOption key={option.value} value={option.value}>
@@ -177,7 +177,7 @@ export const InputField: React.FC<Props> = ({
               value={value}
               name={label}
               placeholder={label}
-              {...(editable && { readonly: true })}
+              {...(editable && { readOnly: true })}
               onChange={(e) => {
                 let inputValueValid = regex && regex.test(e.target.value);
                 if (setValidInput) {

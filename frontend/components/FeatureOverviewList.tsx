@@ -17,7 +17,7 @@ export const FeatureOverviewList: React.FC<Props> = ({ features }) => {
     <>
       <FeatureOverviewListLayout>
         {features.map((feature, index) => (
-            <>
+            <div key={index}>
           <FeatureOverview
             iconName={feature.iconName}
             title={feature.title}
@@ -29,10 +29,9 @@ export const FeatureOverviewList: React.FC<Props> = ({ features }) => {
                 ? "left"
                 : "right"
             }
-            key={index}
           />
           {index < features.length - 1 && <Separator width="big" alignment="center"/>}
-            </>
+            </div>
         ))}
       </FeatureOverviewListLayout>
     </>
