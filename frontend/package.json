@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider; next start"
   },
   "dependencies": {
     "@radix-ui/colors": "^0.1.8",
