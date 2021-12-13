@@ -129,17 +129,19 @@ export const Footer: React.FC<Props> = ({}) => {
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Support Us</LinkHeadline>
-            <Link href="/">
-              <StyledLink>
-                <Image
-                  src="/images/Patreon.png"
-                  alt="Patreon"
-                  width="30"
-                  height="30"
-                />
-                Patreon
-              </StyledLink>
-            </Link>
+
+            <StyledLink
+              href="https://www.patreon.com/schoolutilities"
+              target="_blank"
+            >
+              <Image
+                src="/images/Patreon.png"
+                alt="Patreon"
+                width="30"
+                height="30"
+              />
+              Patreon
+            </StyledLink>
           </LinkLayout>
         </FooterContentLayout>
         <FooterSpacer />
