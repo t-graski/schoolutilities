@@ -33,7 +33,7 @@ export class RolesGuard implements CanActivate {
 
     const jwtArray = Object.keys(jwt).map((key) => jwt[key]);
     const personUUID = jwtArray[0];
-    
+
     if (requiredRoles.includes(Role.Supervisor)) {
       if (personUUID.startsWith(ID_STARTERS.INTERNAL)) return true;
       return false;
@@ -49,10 +49,6 @@ export class RolesGuard implements CanActivate {
 
     if (RoleOrder[userRoleName] < RoleOrder[requiredRoles[0]]) return true;
 
-    return await this.authService.isPermitted(
-      personUUID,
-      requiredRoles,
-      schoolId,
-    );
+    return this.authService.isPermitted(personUUID, requiredRoles, schoolId);
   }
 }

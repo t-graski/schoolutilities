@@ -35,7 +35,7 @@ export class SchoolAdminController {
 
   // @UseGuards(JwtAuthGuard)
   @Post('/department')
-  //@Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
     return response
