@@ -150,7 +150,6 @@ export const InputField: React.FC<Props> = ({
             onChange={(e) => onChange(e.target.value)}
             {...(required && { required: true })}
             value={selectValue}
-            readOnly={!editable}
           >
             {selectOptions.map((option) => (
               <StyledOption key={option.value} value={option.value}>
