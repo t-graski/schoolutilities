@@ -20,10 +20,19 @@ const LoginLayout = styled("form", {
 });
 
 const StyledInfo = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
   fontSize: "1.5rem",
   color: "$fontPrimary",
   fontWeight: "bold",
   marginBottom: "20px",
+});
+
+const ButtonLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "20px",
 });
 
 export const LoginField: React.FC<Props> = ({}) => {
@@ -58,7 +67,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`http://localhost:8888/api/auth/login`, {
+    fetch(`https://backend.schoolutilities.net:3333/api/auth/login`, {
       method: "POST",
       body: JSON.stringify({
         email,
@@ -118,19 +127,33 @@ export const LoginField: React.FC<Props> = ({}) => {
           ></Button>
         </LoginLayout>
       )}
-      <StyledInfo>{signUpInfo}</StyledInfo>
-      {isLoggedIn && (
-        <Button
-          backgroundColor="primary"
-          color="primary"
-          label="Logout"
-          onClick={() => {
-            logout();
-            setSignUpInfo("");
-            setLoggedIn(false);
-          }}
-        ></Button>
-      )}
+      <StyledInfo>
+        <p>{signUpInfo}</p>
+        {isLoggedIn && (
+          <ButtonLayout>
+            <Link href="/profile/settings">
+              <a>
+                <Button
+                  backgroundColor="primary"
+                  color="primary"
+                  label="See your profile"
+                  onClick={() => {}}
+                ></Button>
+              </a>
+            </Link>
+            <Button
+              backgroundColor="secondary"
+              color="primary"
+              label="Logout"
+              onClick={() => {
+                logout();
+                setSignUpInfo("");
+                setLoggedIn(false);
+              }}
+            ></Button>
+          </ButtonLayout>
+        )}
+      </StyledInfo>
     </>
   );
 };

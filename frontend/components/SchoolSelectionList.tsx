@@ -53,12 +53,15 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
 
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
-    let response = await fetch(`http://localhost:8888/api/user/getSchools`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    let response = await fetch(
+      `https://backend.schoolutilities.net:3333/api/user/getSchools`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     let fetchedSchools = await response.json();
     console.log(fetchedSchools);
     if (fetchedSchools.length == 0) {

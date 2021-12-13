@@ -73,7 +73,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`http://localhost:8888/api/auth/register`, {
+    fetch(`https://backend.schoolutilities.net:3333/api/auth/register`, {
       method: "POST",
       body: JSON.stringify({
         firstName,
@@ -186,6 +186,18 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             }}
             disabled={isDisabled}
           ></Button>
+          <Link href="/auth/login">
+            <a>
+              <Button
+                backgroundColor="secondary"
+                color="primary"
+                label="Login instead"
+                onClick={() => {
+                  handleSubmit();
+                }}
+              ></Button>
+            </a>
+          </Link>
         </RegistrationLayout>
       )}
       {signUpInfo && (

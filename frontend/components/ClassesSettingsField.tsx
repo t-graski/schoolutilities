@@ -25,6 +25,7 @@ const SchoolDetailLayout = styled("form", {
   justifySelf: "center",
   width: "100%",
   padding: "40px 60px",
+  marginTop: "12vh",
   overflowY: "scroll",
 });
 
@@ -97,7 +98,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
-        `http://localhost:8888/api/schooladmin/classes/${schoolUUID}`,
+        `https://backend.schoolutilities.net:3333/api/schooladmin/classes/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -110,7 +111,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       setClasses(json);
 
       returnValue = await fetch(
-        `http://localhost:8888/api/schooladmin/departments/${schoolUUID}`,
+        `https://backend.schoolutilities.net:3333/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -139,7 +140,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `http://localhost:8888/api/schooladmin/class`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
       {
         method: "POST",
         headers: {
@@ -173,7 +174,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `http://localhost:8888/api/schooladmin/class`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
       {
         method: "PUT",
         headers: {
@@ -205,7 +206,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
-      `http://localhost:8888/api/schooladmin/class`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
       {
         method: "DELETE",
         headers: {

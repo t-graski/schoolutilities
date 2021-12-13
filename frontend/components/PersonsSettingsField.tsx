@@ -25,6 +25,7 @@ const SchoolDetailLayout = styled("form", {
   justifySelf: "center",
   width: "100%",
   padding: "40px 60px",
+  marginTop: "12vh",
   overflowY: "scroll",
 });
 
@@ -93,7 +94,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
-        `http://localhost:8888/api/schooladmin/getPersons/${schoolUUID}`,
+        `https://backend.schoolutilities.net:3333/api/schooladmin/getPersons/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -109,7 +110,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
-      `http://localhost:8888/api/schooladmin/leaveSchool`,
+      `https://backend.schoolutilities.net:3333/api/schooladmin/leaveSchool`,
       {
         method: "POST",
         headers: {

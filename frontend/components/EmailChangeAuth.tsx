@@ -21,9 +21,9 @@ const RegisterAuthLayout = styled("div", {
 });
 let isSent = false;
 
-export const RegisterAuth = () => {
+export const EmailChangeAuth = () => {
   const [authStateInfo, setAuthStateInfo] = useState(
-    "Ihr Account wird gerade aktiviert..."
+    "Ihre Email wird gerade geändert..."
   );
   const router = useRouter();
   const { token } = router.query;
@@ -33,7 +33,7 @@ export const RegisterAuth = () => {
       token: token,
     });
     console.log(requestBody);
-    fetch(`https://backend.schoolutilities.net:3333/api/user/activateAccount`, {
+    fetch(`https://backend.schoolutilities.net:3333/api/user/activateNewEmail`, {
       method: "POST",
       body: requestBody,
       headers: { "Content-Type": "application/json" },
@@ -42,16 +42,16 @@ export const RegisterAuth = () => {
       .then((statusCode) => {
         console.log(statusCode);
         if (statusCode == 200) {
-          setAuthStateInfo("Ihr Account wurde erfolgreich aktiviert!");
+          setAuthStateInfo("Ihre Email wurde erfolgreich geändert");
         } else {
-          setAuthStateInfo("Ihr Account konnte nicht aktiviert werden!");
+          setAuthStateInfo("Ihre Email konnte nicht geändert werden");
         }
       });
   }
   return (
     <>
       <Spacer size="medium"></Spacer>
-      <Headline label="Registrierungs-Bestätigung"></Headline>
+      <Headline label="Email-Änderungs-Bestätigung"></Headline>
       <Separator width="small" alignment="center" />
       <RegisterAuthLayout>
         <h2>{authStateInfo}</h2>

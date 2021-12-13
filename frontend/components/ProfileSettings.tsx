@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
 import { Spacer } from "./Spacer";
-import { getAccessToken } from "../misc/authHelper";
+import { getAccessToken, logout } from "../misc/authHelper";
 import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
@@ -155,6 +155,43 @@ const ButtonLayout = styled("div", {
   gap: "20px",
 });
 
+const SchoolList = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+});
+
+const SchoolLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  padding: "22px 20px",
+  borderRadius: "20px",
+  backgroundColor: "$backgroundTertiary",
+  transition: "all 100ms ease-in-out",
+  // boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
+  "&:hover": {
+    boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
+  },
+  cursor: "pointer",
+});
+
+const SchoolName = styled("p", {
+  fontSize: "20px",
+  fontWeight: "bold",
+  marginBottom: "10px",
+  margin: 0,
+  color: "$fontPrimary",
+});
+
+const NoSchoolsText = styled("p", {
+  fontSize: "1.2rem",
+  fontWeight: "bold",
+  marginBottom: "10px",
+  margin: 0,
+  color: "$fontPrimary",
+});
+
 export const ProfileSettings: React.FC<Props> = ({}) => {
   const router = useRouter();
   const [statusInfo, setStatusInfo] = useState("");
@@ -166,18 +203,32 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     birthDate: new Date().toISOString(),
   });
   const [isFirstTime, setIsFirstTime] = useState(true);
-  let initialUserInfo = {
-    firstName: "Firstname",
-    lastName: "Lastname",
-    email: "Email",
-    creationDate: "",
-    birthDate: new Date().toISOString(),
-  };
   const [isLoading, setIsLoading] = React.useState(false);
+  const [schools, setSchools] = useState([]);
+
+  async function updateSchoolsFromDatabase() {
+    let accessToken = await getAccessToken();
+    let response = await fetch(
+      `https://backend.schoolutilities.net:3333/api/user/getSchools`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    let fetchedSchools = await response.json();
+    console.log(fetchedSchools);
+    if (fetchedSchools.length == 0) {
+      router.push("/profile/school-join");
+    }
+    setSchools(fetchedSchools);
+  }
 
   useEffect(() => {
     if (isFirstTime) {
       getUserInfo();
+      updateSchoolsFromDatabase();
       setIsFirstTime(false);
     }
   });
@@ -188,12 +239,15 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
       router.push("/auth/login");
     }
     setIsLoading(true);
-    const response = await fetch(`http://localhost:8888/api/user/profile`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `https://backend.schoolutilities.net:3333/api/user/profile`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (response.status !== 200) {
       setStatusInfo("Error: " + response.status);
     } else {
@@ -205,24 +259,28 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
 
   async function saveChanges() {
     const token = await getAccessToken();
+    console.log(token);
     if (!token) {
       router.push("/auth/login");
     }
     setIsLoading(true);
-    const response = await fetch(`http://localhost:8888/api/user/changeEmail`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        newEmail: userInfo.email,
-      }),
-    });
+    const response = await fetch(
+      `https://backend.schoolutilities.net:3333/api/user/changeEmail`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          newEmail: userInfo.email,
+        }),
+      }
+    );
     if (response.status !== 200) {
       setStatusInfo("Error: " + response.status);
     } else {
-      setUserInfo(initialUserInfo);
+      getUserInfo();
       setStatusInfo(
         "You now have to verify your new email address to complete the change."
       );
@@ -241,7 +299,9 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           <ProfileNavigationLinks>
             <SpecialLinkLayout>
               <Link href="/profile/settings">
-                <LinkLayout color={"special"}>
+                <LinkLayout
+                  color={router.query.tab !== "schools" ? "special" : "primary"}
+                >
                   <IconLayout>
                     <SvgIcon iconName="SvgHome" />
                   </IconLayout>
@@ -257,7 +317,9 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
             </SpecialLinkLayout>
             <SpecialLinkLayout>
               <Link href="/profile/settings?tab=schools">
-                <LinkLayout color="primary">
+                <LinkLayout
+                  color={router.query.tab == "schools" ? "special" : "primary"}
+                >
                   <IconLayout>
                     <SvgIcon iconName="SvgUser" />
                   </IconLayout>
@@ -274,69 +336,133 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           </ProfileNavigationLinks>
         </GeneralProfileNavbarLayout>
         <SettingsSpacer></SettingsSpacer>
-        <ProfileDataColumn>
-          <InputLabel>Firstname</InputLabel>
-          <InputField
-            inputType="text"
-            label="Firstname"
-            value={userInfo.firstName}
-            onChange={(e) => {}}
-            iconName={""}
-            editable={false}
-          />
-          <Spacer size="verySmall"></Spacer>
-          <InputLabel>Date of Birth</InputLabel>
-          <InputField
-            inputType="text"
-            label="Date of Birth"
-            value={new Date(userInfo.birthDate).toLocaleDateString()}
-            onChange={(e) => {}}
-            iconName={""}
-            editable={false}
-          />
-          <Spacer size="verySmall"></Spacer>
-          <ButtonLayout>
-            <Button
-              backgroundColor={"primary"}
-              color={"primary"}
-              label="SAVE CHANGES"
-              onClick={saveChanges}
-            ></Button>
-            <Button
-              backgroundColor={"secondary"}
-              color={"primary"}
-              label="RESET"
-              onClick={() => {
-                setStatusInfo("");
-                getUserInfo();
-              }}
-            ></Button>
-          </ButtonLayout>
-        </ProfileDataColumn>
-        <ProfileDataColumn>
-          <InputLabel>Lastname</InputLabel>
-          <InputField
-            inputType="text"
-            label="Lastname"
-            value={userInfo.lastName}
-            onChange={(e) => {}}
-            iconName={""}
-            editable={false}
-          />
-          <Spacer size="verySmall"></Spacer>
-          <InputLabel>Email</InputLabel>
-          <InputField
-            inputType="email"
-            label="Email"
-            value={userInfo.email}
-            onChange={(e) => {
-              setUserInfo({ ...userInfo, email: e });
-            }}
-            iconName={""}
-          />
-          <Spacer size="verySmall"></Spacer>
-          {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
-        </ProfileDataColumn>
+        {router.query.tab !== "schools" ? (
+          <>
+            <ProfileDataColumn>
+              <InputLabel>Firstname</InputLabel>
+              <InputField
+                inputType="text"
+                label="Firstname"
+                value={userInfo.firstName}
+                onChange={(e) => {}}
+                iconName={""}
+                editable={false}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <InputLabel>Date of Birth</InputLabel>
+              <InputField
+                inputType="text"
+                label="Date of Birth"
+                value={new Date(userInfo.birthDate).toLocaleDateString()}
+                onChange={(e) => {}}
+                iconName={""}
+                editable={false}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <ButtonLayout>
+                <Button
+                  backgroundColor={"primary"}
+                  color={"primary"}
+                  label="SAVE CHANGES"
+                  onClick={saveChanges}
+                ></Button>
+                <Button
+                  backgroundColor={"secondary"}
+                  color={"primary"}
+                  label="RESET"
+                  onClick={() => {
+                    setStatusInfo("");
+                    getUserInfo();
+                  }}
+                ></Button>
+              </ButtonLayout>
+              {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
+            </ProfileDataColumn>
+            <ProfileDataColumn>
+              <InputLabel>Lastname</InputLabel>
+              <InputField
+                inputType="text"
+                label="Lastname"
+                value={userInfo.lastName}
+                onChange={(e) => {}}
+                iconName={""}
+                editable={false}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <InputLabel>Email</InputLabel>
+              <InputField
+                inputType="email"
+                label="Email"
+                value={userInfo.email}
+                onChange={(e) => {
+                  setUserInfo({ ...userInfo, email: e });
+                }}
+                iconName={""}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <Button
+                backgroundColor={"secondary"}
+                color={"primary"}
+                label="LOGOUT"
+                onClick={() => {
+                  logout();
+                  router.push("/auth/login");
+                }}
+              ></Button>
+            </ProfileDataColumn>
+          </>
+        ) : (
+          <>
+            <ProfileDataColumn>
+              <InputLabel>Your schools</InputLabel>
+              <SchoolList>
+                {schools.map((school) => (
+                  <SchoolLayout
+                    key={school.schoolUUID}
+                    onClick={() => {
+                      cookie.set("schoolUUID", school.schoolUUID);
+                      router.push("/school/admin/settings");
+                    }}
+                  >
+                    <SchoolName>{school.schoolName}</SchoolName>
+                  </SchoolLayout>
+                ))}
+                {schools.length == 0 && (
+                  <NoSchoolsText>You have no schools yet.</NoSchoolsText>
+                )}
+              </SchoolList>
+            </ProfileDataColumn>
+            <ProfileDataColumn>
+              <Link href="/profile/school-join">
+                <a>
+                  <Button
+                    backgroundColor={"primary"}
+                    color={"primary"}
+                    label="JOIN A SCHOOL"
+                    onClick={() => {
+                      setStatusInfo("");
+                      getUserInfo();
+                    }}
+                  ></Button>
+                </a>
+              </Link>
+              <Spacer size="verySmall"></Spacer>
+              <Link href="/school/admin/create-school">
+                <a>
+                  <Button
+                    backgroundColor={"secondary"}
+                    color={"primary"}
+                    label="CREATE A SCHOOL"
+                    onClick={() => {
+                      setStatusInfo("");
+                      getUserInfo();
+                    }}
+                  ></Button>
+                </a>
+              </Link>
+            </ProfileDataColumn>
+          </>
+        )}
       </ProfileLayout>
       <LoadingAnimation isVisible={isLoading} />
     </>
