@@ -26,6 +26,7 @@ const SchoolDetailLayout = styled("form", {
   width: "100%",
   padding: "40px 60px",
   overflowY: "scroll",
+  marginTop: "12vh",
 });
 
 const SettingsEntriesLayout = styled("div", {

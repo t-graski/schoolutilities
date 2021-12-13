@@ -10,12 +10,13 @@ import { useRouter } from "next/router";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
 import { Spacer } from "./Spacer";
-import { getAccessToken } from "../misc/authHelper";
+import { getAccessToken, logout } from "../misc/authHelper";
 import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
 import { SvgIcon } from "./SvgIcon";
+import { LoadingAnimation } from "./LoadingAnimation";
 
 type Props = {};
 
@@ -124,7 +125,7 @@ const SettingsSpacer = styled("div", {
 const ProfileDataColumn = styled("div", {
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center",
+  marginRight: "40px",
   gap: "10px",
 });
 
@@ -138,14 +139,155 @@ const InputLabel = styled("p", {
   width: "100%",
 });
 
+const StatusInfo = styled("p", {
+  fontWeight: "500",
+  fontSize: "1.8rem",
+  color: "$fontPrimary",
+  margin: "0",
+  marginBottom: "10px",
+  textAlign: "left",
+  width: "100%",
+});
+
+const ButtonLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "20px",
+});
+
+const SchoolList = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+});
+
+const SchoolLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  padding: "22px 20px",
+  borderRadius: "20px",
+  backgroundColor: "$backgroundTertiary",
+  transition: "all 100ms ease-in-out",
+  // boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
+  "&:hover": {
+    boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
+  },
+  cursor: "pointer",
+});
+
+const SchoolName = styled("p", {
+  fontSize: "20px",
+  fontWeight: "bold",
+  marginBottom: "10px",
+  margin: 0,
+  color: "$fontPrimary",
+});
+
+const NoSchoolsText = styled("p", {
+  fontSize: "1.2rem",
+  fontWeight: "bold",
+  marginBottom: "10px",
+  margin: 0,
+  color: "$fontPrimary",
+});
+
 export const ProfileSettings: React.FC<Props> = ({}) => {
-    const [userInfo, setUserInfo] = useState({
-        firstName: "Firstname",
-        lastName: "Lastname",
-        email: "Email",
-        creationDate: "",
-        birthDate: new Date().toISOString(),
-    });
+  const router = useRouter();
+  const [statusInfo, setStatusInfo] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    firstName: "Firstname",
+    lastName: "Lastname",
+    email: "Email",
+    creationDate: "",
+    birthDate: new Date().toISOString(),
+  });
+  const [isFirstTime, setIsFirstTime] = useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [schools, setSchools] = useState([]);
+
+  async function updateSchoolsFromDatabase() {
+    let accessToken = await getAccessToken();
+    let response = await fetch(
+      `https://backend.schoolutilities.net:3333/api/user/getSchools`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    let fetchedSchools = await response.json();
+    console.log(fetchedSchools);
+    if (fetchedSchools.length == 0) {
+      router.push("/profile/school-join");
+    }
+    setSchools(fetchedSchools);
+  }
+
+  useEffect(() => {
+    if (isFirstTime) {
+      getUserInfo();
+      updateSchoolsFromDatabase();
+      setIsFirstTime(false);
+    }
+  });
+
+  async function getUserInfo() {
+    const token = await getAccessToken();
+    if (!token) {
+      router.push("/auth/login");
+    }
+    setIsLoading(true);
+    const response = await fetch(
+      `https://backend.schoolutilities.net:3333/api/user/profile`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status !== 200) {
+      setStatusInfo("Error: " + response.status);
+    } else {
+      const data = await response.json();
+      setUserInfo(data);
+    }
+    setIsLoading(false);
+  }
+
+  async function saveChanges() {
+    const token = await getAccessToken();
+    console.log(token);
+    if (!token) {
+      router.push("/auth/login");
+    }
+    setIsLoading(true);
+    const response = await fetch(
+      `https://backend.schoolutilities.net:3333/api/user/changeEmail`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          newEmail: userInfo.email,
+        }),
+      }
+    );
+    if (response.status !== 200) {
+      setStatusInfo("Error: " + response.status);
+    } else {
+      getUserInfo();
+      setStatusInfo(
+        "You now have to verify your new email address to complete the change."
+      );
+    }
+    setIsLoading(false);
+  }
+
   return (
     <>
       <ProfileLayout>
@@ -156,8 +298,10 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           <ProfileName>{cookie.get("username")}</ProfileName>
           <ProfileNavigationLinks>
             <SpecialLinkLayout>
-              <Link href="">
-                <LinkLayout color="special">
+              <Link href="/profile/settings">
+                <LinkLayout
+                  color={router.query.tab !== "schools" ? "special" : "primary"}
+                >
                   <IconLayout>
                     <SvgIcon iconName="SvgHome" />
                   </IconLayout>
@@ -171,30 +315,156 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 </LinkLayout>
               </Link>
             </SpecialLinkLayout>
+            <SpecialLinkLayout>
+              <Link href="/profile/settings?tab=schools">
+                <LinkLayout
+                  color={router.query.tab == "schools" ? "special" : "primary"}
+                >
+                  <IconLayout>
+                    <SvgIcon iconName="SvgUser" />
+                  </IconLayout>
+                  <LinkContentLayout>
+                    <LinkLabel color="special">Schools</LinkLabel>
+
+                    <LinkArrow color="special">
+                      <SvgIcon iconName="SvgRightArrow" />
+                    </LinkArrow>
+                  </LinkContentLayout>
+                </LinkLayout>
+              </Link>
+            </SpecialLinkLayout>
           </ProfileNavigationLinks>
         </GeneralProfileNavbarLayout>
         <SettingsSpacer></SettingsSpacer>
-        <ProfileDataColumn>
-          <InputLabel>Firstname</InputLabel>
-          <InputField
-            inputType="text"
-            label="Firstname"
-            value={userInfo.firstName}
-            onChange={(e) => {}}
-            iconName={""}
-          />
-          <Spacer size="verySmall"></Spacer>
-          <InputLabel>Date of Birth</InputLabel>
-          <InputField
-            inputType="text"
-            label="Date of Birth"
-            value={new Date(userInfo.birthDate).toLocaleDateString()}
-            onChange={(e) => {}}
-            iconName={""}
-          />
-          <Spacer size="verySmall"></Spacer>
-        </ProfileDataColumn>
+        {router.query.tab !== "schools" ? (
+          <>
+            <ProfileDataColumn>
+              <InputLabel>Firstname</InputLabel>
+              <InputField
+                inputType="text"
+                label="Firstname"
+                value={userInfo.firstName}
+                onChange={(e) => {}}
+                iconName={""}
+                editable={false}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <InputLabel>Date of Birth</InputLabel>
+              <InputField
+                inputType="text"
+                label="Date of Birth"
+                value={new Date(userInfo.birthDate).toLocaleDateString()}
+                onChange={(e) => {}}
+                iconName={""}
+                editable={false}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <ButtonLayout>
+                <Button
+                  backgroundColor={"primary"}
+                  color={"primary"}
+                  label="SAVE CHANGES"
+                  onClick={saveChanges}
+                ></Button>
+                <Button
+                  backgroundColor={"secondary"}
+                  color={"primary"}
+                  label="RESET"
+                  onClick={() => {
+                    setStatusInfo("");
+                    getUserInfo();
+                  }}
+                ></Button>
+              </ButtonLayout>
+              {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
+            </ProfileDataColumn>
+            <ProfileDataColumn>
+              <InputLabel>Lastname</InputLabel>
+              <InputField
+                inputType="text"
+                label="Lastname"
+                value={userInfo.lastName}
+                onChange={(e) => {}}
+                iconName={""}
+                editable={false}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <InputLabel>Email</InputLabel>
+              <InputField
+                inputType="email"
+                label="Email"
+                value={userInfo.email}
+                onChange={(e) => {
+                  setUserInfo({ ...userInfo, email: e });
+                }}
+                iconName={""}
+              />
+              <Spacer size="verySmall"></Spacer>
+              <Button
+                backgroundColor={"secondary"}
+                color={"primary"}
+                label="LOGOUT"
+                onClick={() => {
+                  logout();
+                  router.push("/auth/login");
+                }}
+              ></Button>
+            </ProfileDataColumn>
+          </>
+        ) : (
+          <>
+            <ProfileDataColumn>
+              <InputLabel>Your schools</InputLabel>
+              <SchoolList>
+                {schools.map((school) => (
+                  <SchoolLayout
+                    key={school.schoolUUID}
+                    onClick={() => {
+                      cookie.set("schoolUUID", school.schoolUUID);
+                      router.push("/school/admin/settings");
+                    }}
+                  >
+                    <SchoolName>{school.schoolName}</SchoolName>
+                  </SchoolLayout>
+                ))}
+                {schools.length == 0 && (
+                  <NoSchoolsText>You have no schools yet.</NoSchoolsText>
+                )}
+              </SchoolList>
+            </ProfileDataColumn>
+            <ProfileDataColumn>
+              <Link href="/profile/school-join">
+                <a>
+                  <Button
+                    backgroundColor={"primary"}
+                    color={"primary"}
+                    label="JOIN A SCHOOL"
+                    onClick={() => {
+                      setStatusInfo("");
+                      getUserInfo();
+                    }}
+                  ></Button>
+                </a>
+              </Link>
+              <Spacer size="verySmall"></Spacer>
+              <Link href="/school/admin/create-school">
+                <a>
+                  <Button
+                    backgroundColor={"secondary"}
+                    color={"primary"}
+                    label="CREATE A SCHOOL"
+                    onClick={() => {
+                      setStatusInfo("");
+                      getUserInfo();
+                    }}
+                  ></Button>
+                </a>
+              </Link>
+            </ProfileDataColumn>
+          </>
+        )}
       </ProfileLayout>
+      <LoadingAnimation isVisible={isLoading} />
     </>
   );
 };

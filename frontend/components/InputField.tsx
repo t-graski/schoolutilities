@@ -101,8 +101,7 @@ const ImageLayout = styled("div", {
   color: "$fontPrimary",
 });
 
-const StyledOption = styled("option", {
-});
+const StyledOption = styled("option", {});
 
 export const InputField: React.FC<Props> = ({
   inputType,
@@ -131,6 +130,7 @@ export const InputField: React.FC<Props> = ({
           onChange={(e) => onChange(e.target.checked)}
           inputType={inputType}
           {...(required && { required: true })}
+          {...(editable && { readonly: true })}
         />
         <span>{children}</span>
       </>
@@ -150,6 +150,7 @@ export const InputField: React.FC<Props> = ({
             onChange={(e) => onChange(e.target.value)}
             {...(required && { required: true })}
             value={selectValue}
+            {...(editable && { readonly: true })}
           >
             {selectOptions.map((option) => (
               <StyledOption key={option.value} value={option.value}>
@@ -176,6 +177,7 @@ export const InputField: React.FC<Props> = ({
               value={value}
               name={label}
               placeholder={label}
+              {...(editable && { readonly: true })}
               onChange={(e) => {
                 let inputValueValid = regex && regex.test(e.target.value);
                 if (setValidInput) {

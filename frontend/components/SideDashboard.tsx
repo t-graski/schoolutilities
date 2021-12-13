@@ -27,10 +27,10 @@ export type SideDashboardProps = {
 const DashboardNavbarLayout = styled("div", {
   padding: "20px",
   paddingBottom: "120px",
-  backgroundColor: "$backgroundQuaternary",
   width: "100%",
   maxWidth: "350px",
-  height: "100vh",
+  marginTop: "12vh",
+  height: "88vh",
   alignItems: "center",
   "&[data-size='small']": {
     width: "fit-content",
@@ -197,7 +197,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
     <>
       <DashboardNavbarLayout data-size={isOpen ? "normal" : "small"}>
         <DashboardTopLayout>
-          <LogoLayout>
+          {/* <LogoLayout>
             <Image
               src="/images/avatar 1.png"
               alt="logo"
@@ -209,7 +209,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
               <br />
               <BoldFont>Utilities</BoldFont>
             </LogoHeadline>
-          </LogoLayout>
+          </LogoLayout> */}
           <HamburgerMenuButton
             onClick={() => {
               setIsOpen(!isOpen);

@@ -186,9 +186,7 @@ async function generateRegisterToken(
   }
 
   const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
-  const html = `
-  <iframe title="Email" src="localhost:3000/school/admin/settings"></iframe>
-  `;
+  const html = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
   const message = {
     from: 'noreply@schoolutilities.net',
     to: email,

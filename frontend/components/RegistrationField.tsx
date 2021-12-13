@@ -186,6 +186,18 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             }}
             disabled={isDisabled}
           ></Button>
+          <Link href="/auth/login">
+            <a>
+              <Button
+                backgroundColor="secondary"
+                color="primary"
+                label="Login instead"
+                onClick={() => {
+                  handleSubmit();
+                }}
+              ></Button>
+            </a>
+          </Link>
         </RegistrationLayout>
       )}
       {signUpInfo && (

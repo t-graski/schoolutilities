@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
 import { Footer } from "../../../components/OldFooter";
 import { LoginField } from "../../../components/LoginField";
-import { Navbar } from "../../../components/OldNavbar";
+import { Navbar } from "../../../components/Navbar";
 import { Progressbar } from "../../../components/Progressbar";
 import { SchoolDetailField } from "../../../components/SchoolDetailField";
 import { SetupProgressSite } from "../../../components/SetupProgressSite";
@@ -75,6 +75,7 @@ export default function CreateSchool() {
         <title>School Setup - SchoolUtilities</title>
       </Head>
       <SettingsLayout>
+        <Navbar></Navbar>
         <SideDashboard
           links={[
             {
@@ -113,7 +114,7 @@ export default function CreateSchool() {
             label: userData
               ? userData.firstName + " " + userData.lastName
               : "User",
-            href: "/school/admin/profile",
+            href: "/profile/settings",
             onClickImageSrc: "/images/icons/logout_icon.svg",
             onClickImageAlt: "Logout Icon",
             onClickImageFunction: () => {
