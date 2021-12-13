@@ -33,11 +33,14 @@ export const EmailChangeAuth = () => {
       token: token,
     });
     console.log(requestBody);
-    fetch(`https://backend.schoolutilities.net:3333/api/user/activateNewEmail`, {
-      method: "POST",
-      body: requestBody,
-      headers: { "Content-Type": "application/json" },
-    })
+    fetch(
+      `https://backend.schoolutilities.net:3333/api/user/activateNewEmail`,
+      {
+        method: "POST",
+        body: requestBody,
+        headers: { "Content-Type": "application/json" },
+      }
+    )
       .then((response) => response.status)
       .then((statusCode) => {
         console.log(statusCode);
