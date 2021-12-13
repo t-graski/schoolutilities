@@ -46,20 +46,21 @@ const Divider = styled("div", {
 
 export const GeneralList: React.FC<Props> = ({ items }) => {
   const router = useRouter();
+  let counter = 0;
   return (
     <>
       <GeneralListLayout>
         {items.map((item, index) => (
           <>
             <GeneralListItem
-              key={index}
+              key={counter++}
               title={item.title}
               href={item.href}
               buttonText={item.buttonText}
               description={item.description}
               iconName={item.iconName}
             />
-            <Divider key={index} visible={index !== items.length - 1} />
+            <Divider key={counter++} visible={index !== items.length - 1} />
           </>
         ))}
       </GeneralListLayout>
