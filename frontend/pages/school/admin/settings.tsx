@@ -17,7 +17,7 @@ import cookie from "js-cookie";
 import { ClassesSettingsField } from "../../../components/ClassesSettingsField";
 import { PersonsSettingsField } from "../../../components/PersonsSettingsField";
 import { JoinCodesSettingsField } from "../../../components/JoinCodesSettingsField";
-import { getAccessToken, getUserData } from "../../../misc/authHelper";
+import { getAccessToken, getUserData, logout } from "../../../misc/authHelper";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -118,8 +118,7 @@ export default function CreateSchool() {
             onClickImageSrc: "/images/icons/logout_icon.svg",
             onClickImageAlt: "Logout Icon",
             onClickImageFunction: () => {
-              cookie.remove("accessToken");
-              cookie.remove("refreshToken");
+              logout();
               router.push("/");
             },
           }}
