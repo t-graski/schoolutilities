@@ -218,10 +218,6 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
       }
     );
     let fetchedSchools = await response.json();
-    console.log(fetchedSchools);
-    if (fetchedSchools.length == 0) {
-      router.push("/profile/school-join");
-    }
     setSchools(fetchedSchools);
   }
 
