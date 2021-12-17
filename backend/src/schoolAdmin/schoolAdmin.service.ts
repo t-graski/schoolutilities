@@ -295,12 +295,18 @@ export class SchoolAdminService {
     }
   }
 
-  async getDepartments(schoolUUID: string): Promise<ReturnMessage> {
+  async getDepartments(
+    schoolUUID: string,
+    token: string,
+  ): Promise<ReturnMessage> {
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
+    const jwt = await this.authService.decodeJWT(token);
+    const personUUID = jwt.personUUID;
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
 
     try {
       const departments = await prisma.departments.findMany({
@@ -308,6 +314,17 @@ export class SchoolAdminService {
           schoolId: Number(schoolId),
         },
       });
+
+      const person = await prisma.schoolPersons.findFirst({
+        where: {
+          personId: Number(personId),
+          schoolId: Number(schoolId),
+        },
+      });
+
+      if (!person) {
+        return RETURN_DATA.NOT_FOUND;
+      }
 
       const departmentsWithoutIds = departments.map((department) => {
         const { departmentUUID, name, isVisible, childsVisible } = department;

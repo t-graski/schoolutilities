@@ -57,9 +57,10 @@ export class AuthService {
   async isPermitted(
     personUUID: string,
     requiredRoles: Role[],
-    schoolId: number,
+    schoolUUID: string,
   ): Promise<boolean> {
     const personId = await this.getPersonIdByUUID(personUUID);
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const requiredRole = requiredRoles[0];
     const roleId = await this.getRoleIdByName(requiredRole);
     const hasRole = await prisma.personRoles.findMany({
@@ -72,8 +73,9 @@ export class AuthService {
     return hasRole.length > 0;
   }
 
-  async getUserRoleName(personUUID: string, schoolId: number): Promise<any> {
+  async getUserRoleName(personUUID: string, schoolUUID: string): Promise<any> {
     const personId = await this.getPersonIdByUUID(personUUID);
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const roleName = await prisma.personRoles.findMany({
       where: {
         personId: Number(personId.personId),
@@ -186,9 +188,7 @@ async function generateRegisterToken(
   }
 
   const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
-  const html = `
-  <iframe title="Email" src="localhost:3000/school/admin/settings"></iframe>
-  `;
+  const html = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
   const message = {
     from: 'noreply@schoolutilities.net',
     to: email,

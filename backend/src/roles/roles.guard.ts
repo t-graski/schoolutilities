@@ -39,10 +39,10 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    const schoolId = request.body.schoolId;
+    const schoolUUID = request.body.schoolId;
     const userRoleName = await this.authService.getUserRoleName(
       personUUID,
-      schoolId,
+      schoolUUID,
     );
 
     if (personUUID.startsWith(ID_STARTERS.INTERNAL)) return true;
@@ -52,7 +52,7 @@ export class RolesGuard implements CanActivate {
     return await this.authService.isPermitted(
       personUUID,
       requiredRoles,
-      schoolId,
+      schoolUUID,
     );
   }
 }

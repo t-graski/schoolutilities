@@ -102,7 +102,7 @@ export class UserService {
 
       const message = {
         from: 'noreply@schoolutilities.net',
-        to: oldEmail,
+        to: newEmail,
         subject: 'Email Change - SchoolUtilities',
         text,
         html,

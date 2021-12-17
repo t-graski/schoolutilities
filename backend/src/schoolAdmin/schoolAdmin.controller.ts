@@ -69,10 +69,12 @@ export class SchoolAdminController {
 
   // @UseGuards(JwtAuthGuard)
   @Get('/departments/:schoolUUID')
-  // @Roles(Role.Student)
-  async getDepartments(@Param() params, @Res() response) {
+  @Roles(Role.Student)
+  async getDepartments(@Param() params, @Res() response, @Req() request) {
+    const jwt = request.headers.authorization.split(' ')[1];
     const result = await this.schoolAdminService.getDepartments(
       params.schoolUUID,
+      jwt,
     );
     return response
       .status(result.status)
