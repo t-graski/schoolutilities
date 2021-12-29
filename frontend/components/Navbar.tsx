@@ -126,7 +126,6 @@ const LinkLabel = styled("p", {
   },
 });
 
-
 export const Navbar: React.FC<Props> = ({}) => {
   const [userData, setUserData] = useState({
     firstName: "",
@@ -155,14 +154,16 @@ export const Navbar: React.FC<Props> = ({}) => {
           <Link href="/">
             <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>
           </Link>
-          <Link href="/features">
-            <StyledLink marked={router.pathname === "/features"}>
-              FEATURES
+          <Link href="/profile/school-selection">
+            <StyledLink
+              marked={router.pathname === "/profile/school-selection"}
+            >
+              MY SCHOOLS
             </StyledLink>
           </Link>
-          <Link href="/about-us">
-            <StyledLink marked={router.pathname === "/about-us"}>
-              ABOUT
+          <Link href="/bot-dashboard">
+            <StyledLink marked={router.pathname === "/bot-dashboard"}>
+              BOT DASHBOARD
             </StyledLink>
           </Link>
           {userData && userData.firstName && (

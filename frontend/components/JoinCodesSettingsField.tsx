@@ -106,7 +106,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
     }
     if (accessToken && schoolUUID && isFirstTime) {
       const response = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/joinCode/${schoolUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -138,7 +138,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
       expireDate: "2022-10-22 14:00:00",
     };
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/joinCode`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode`,
       {
         method: "POST",
         headers: {
@@ -171,7 +171,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
     };
     console.log(data);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/joinCode`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode`,
       {
         method: "PUT",
         headers: {
@@ -200,7 +200,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
   async function deleteSettingsEntry(id) {
     let accessToken = await getAccessToken();
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/joinCode`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode`,
       {
         method: "DELETE",
         headers: {

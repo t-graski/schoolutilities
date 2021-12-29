@@ -15,6 +15,7 @@ import SvgInfo from "./svg/SvgInfo";
 import SvgOpenLogo from "./svg/SvgOpenLogo";
 import SvgQuality from "./svg/SvgQuality";
 import SvgRightArrow from "./svg/SvgRightArrow";
+import SvgSchool from "./svg/SvgSchool";
 import SvgStudent from "./svg/SvgStudent";
 import SvgTeacher from "./svg/SvgTeacher";
 import SvgTimetable from "./svg/SvgTimetable";
@@ -67,6 +68,8 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgHome alt="Home Icon" />;
     case "SvgRightArrow":
       return <SvgRightArrow alt="Right Arrow Icon" />;
+    case "SvgSchool":
+      return <SvgSchool alt="School Icon" />;
     default:
       return <SvgClass />;
   }

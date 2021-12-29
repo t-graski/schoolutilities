@@ -67,29 +67,37 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`https://backend.schoolutilities.net:3333/api/auth/login`, {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => {
-        if (response.status == 200) {
-          setSignUpInfo("You are logged in");
-          setLoggedIn(true);
-          return response.json();
-        } else {
-          setSignUpInfo("You are not logged in");
-        }
+    try {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: { "Content-Type": "application/json" },
       })
-      .then((data) => {
-        if (data) {
-          cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
-          cookie.set("refreshToken", data.refresh_token, { expires: 7 });
-        }
-      });
+        .then((response) => {
+          console.log(response);
+          if (response.status == 200) {
+            setSignUpInfo("You are logged in");
+            setLoggedIn(true);
+            return response.json();
+          } else {
+            setSignUpInfo("You are not logged in");
+          }
+        })
+        .then((data) => {
+          if (data) {
+            cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
+            cookie.set("refreshToken", data.refresh_token, { expires: 7 });
+          }
+        });
+    } catch (err) {
+      setSignUpInfo(
+        "Ihre Eingaben konnten nicht verarbeitet werden, versuchen Sie es später erneut"
+      );
+      console.log(err);
+    }
   }
 
   return (

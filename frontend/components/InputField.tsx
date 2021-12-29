@@ -17,7 +17,8 @@ type Props = {
   editable?: boolean;
   required?: boolean;
   label?: string;
-  regex?: RegExp;
+  validatorFunction?: Function;
+  validatorParams?: [any?];
   setValidInput?: Function;
   errorMessage?: string;
   min?: string;
@@ -114,7 +115,8 @@ export const InputField: React.FC<Props> = ({
   editable = true,
   required = false,
   label = "",
-  regex,
+  validatorFunction,
+  validatorParams,
   setValidInput,
   errorMessage = "",
   min,
@@ -178,13 +180,18 @@ export const InputField: React.FC<Props> = ({
               placeholder={label}
               readOnly={!editable}
               onChange={(e) => {
-                let inputValueValid = regex && regex.test(e.target.value);
+                let inputValueValid =
+                  validatorFunction &&
+                  validatorFunction(e.target.value, ...validatorParams);
                 if (setValidInput) {
                   setValidInput(inputValueValid);
                 }
                 if (isInputValid == null && !inputValueValid) {
                   setTimeout(() => {
-                    if (regex && !regex.test(e.target.value)) {
+                    if (
+                      validatorFunction &&
+                      validatorFunction(e.target.value, ...validatorParams)
+                    ) {
                       setIsInputValid(false);
                     }
                   }, 2000);
