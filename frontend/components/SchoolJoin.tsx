@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import { InputField } from "./InputField";
 import { regex } from "../misc/regex";
 import { Button } from "./Button";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 export type SideDashboardProps = {};
 
@@ -81,8 +83,9 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
           <InputField
             inputType={"text"}
             onChange={setJoinCode}
-            iconName={""}
-            regex={regex.name}
+            iconName={""}            
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[LENGTHS.JOIN_CODE_NAME]}
             setValidInput={setJoinCodeValid}
             errorMessage="Please enter a valid join code"
             label="Join Code"

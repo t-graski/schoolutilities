@@ -16,6 +16,8 @@ import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
 import { LoadingAnimation } from "./LoadingAnimation";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -261,7 +263,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                   setDepartmentName(event);
                 }}
                 iconName=""
-                regex={regex.name}
+                validatorFunction={validator.isLength}
+                validatorParams={[LENGTHS.NAME]}
                 setValidInput={setDepartmentNameValid}
                 min="2"
                 max="30"

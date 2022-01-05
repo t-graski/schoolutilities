@@ -9,6 +9,8 @@ import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { logout } from "../misc/authHelper";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -111,7 +113,8 @@ export const LoginField: React.FC<Props> = ({}) => {
             onChange={setEmail}
             iconName="SvgUser"
             required={true}
-            regex={regex.email}
+            validatorFunction={validator.isEmail}
+            validatorParams={[LENGTHS.EMAIL]}
             setValidInput={setEmailValid}
           ></InputField>
           <InputField
@@ -121,7 +124,8 @@ export const LoginField: React.FC<Props> = ({}) => {
             onChange={setPassword}
             iconName="SvgUser"
             required={true}
-            regex={regex.password}
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[PASSWORD]}
             setValidInput={setPasswordValid}
           ></InputField>
           <Button

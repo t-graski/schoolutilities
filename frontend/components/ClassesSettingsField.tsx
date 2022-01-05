@@ -15,6 +15,8 @@ import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -263,7 +265,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                   }
                 }}
                 iconName=""
-                regex={regex.name}
+                validatorFunction={validator.isLength}
+                validatorParams={[LENGTHS.NAME]}
                 setValidInput={setSchoolClassNameValid}
                 min="2"
                 max="30"

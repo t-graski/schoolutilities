@@ -15,6 +15,8 @@ import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -253,7 +255,8 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
                   setJoinCodeName(event);
                 }}
                 iconName=""
-                regex={regex.name}
+                validatorFunction={validator.isLength}
+                validatorParams={[LENGTHS.NAME]}
                 setValidInput={setJoinCodeNameValid}
                 min="2"
                 max="30"
