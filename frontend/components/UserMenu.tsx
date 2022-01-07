@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled, keyframes } from "@stitches/react";
-import { violet, mauve, blackA } from "@radix-ui/colors";
 import {
   HamburgerMenuIcon,
   DotFilledIcon,
   CheckIcon,
   ChevronRightIcon,
 } from "@radix-ui/react-icons";
+import cookie from "js-cookie";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { getAccessToken } from "../misc/authHelper";
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -33,9 +35,9 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
-  backgroundColor: "white",
-  borderRadius: 6,
-  padding: 5,
+  backgroundColor: "$backgroundTertiary",
+  borderRadius: 15,
+  padding: 8,
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
   "@media (prefers-reduced-motion: no-preference)": {
@@ -55,24 +57,25 @@ const itemStyles = {
   all: "unset",
   fontSize: 13,
   lineHeight: 1,
-  color: violet.violet11,
-  borderRadius: 3,
+  color: "$fontPrimary",
+  borderRadius: 5,
   display: "flex",
   alignItems: "center",
   height: 25,
-  padding: "0 5px",
+  padding: "3px 8px",
   position: "relative",
   paddingLeft: 25,
   userSelect: "none",
+  cursor: "pointer",
 
   "&[data-disabled]": {
-    color: mauve.mauve8,
+    color: "$fontPrimary",
     pointerEvents: "none",
   },
 
   "&:focus": {
-    backgroundColor: violet.violet9,
-    color: violet.violet1,
+    backgroundColor: "$specialPrimary",
+    color: "$fontPrimary",
   },
 };
 
@@ -85,8 +88,8 @@ const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
 });
 const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
   '&[data-state="open"]': {
-    backgroundColor: violet.violet4,
-    color: violet.violet11,
+    backgroundColor: "$specialPrimary",
+    color: "$fontPrimary",
   },
   ...itemStyles,
 });
@@ -95,12 +98,12 @@ const StyledLabel = styled(DropdownMenuPrimitive.Label, {
   paddingLeft: 25,
   fontSize: 12,
   lineHeight: "25px",
-  color: mauve.mauve11,
+  color: "$fontPrimary",
 });
 
 const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
-  backgroundColor: violet.violet6,
+  backgroundColor: "$fontPrimary",
   margin: 5,
 });
 
@@ -115,6 +118,8 @@ const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
 
 const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
   fill: "white",
+  position: "relative",
+  right: -10,
 });
 
 // Exports
@@ -137,9 +142,9 @@ const Box = styled("div", {});
 const RightSlot = styled("div", {
   marginLeft: "auto",
   paddingLeft: 20,
-  color: mauve.mauve11,
+  color: "$fontPrimary",
   ":focus > &": { color: "white" },
-  "[data-disabled] &": { color: mauve.mauve8 },
+  "[data-disabled] &": { color: "$fontPrimary" },
 });
 
 const IconButton = styled("button", {
@@ -151,11 +156,11 @@ const IconButton = styled("button", {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  color: violet.violet11,
+  color: "$fontPrimary",
   backgroundColor: "white",
-  boxShadow: `0 2px 10px ${blackA.blackA7}`,
-  "&:hover": { backgroundColor: violet.violet3 },
-  "&:focus": { boxShadow: `0 0 0 2px black` },
+  boxShadow: `0 2px 10px $fontPrimary`,
+  "&:hover": { backgroundColor: "$fontPrimary" },
+  "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
 });
 
 const LinkLayout = styled("a", {
@@ -215,12 +220,75 @@ const LinkLabel = styled("p", {
   },
 });
 
-const StyledLink = styled("a", {});
+const StyledLink = styled(Link, {
+  "& a": {
+    color: "fontPrimary",
+    textDecoration: "none",
+  },
+  "& a:hover": {
+    textDecoration: "underline",
+  },
+});
 
 export const UserMenu = (userName) => {
   const [bookmarksChecked, setBookmarksChecked] = React.useState(true);
   const [urlsChecked, setUrlsChecked] = React.useState(false);
   const [person, setPerson] = React.useState("pedro");
+  const router = useRouter();
+  const [schools, setSchools] = useState([]);
+  const [isFirstTime, setIsFirstTime] = useState(true);
+  const [userInfo, setUserInfo] = useState({
+    firstName: "Firstname",
+    lastName: "Lastname",
+    email: "Email",
+    creationDate: "",
+    birthDate: new Date().toISOString(),
+  });
+
+  async function updateSchoolsFromDatabase() {
+    let accessToken = await getAccessToken();
+    let response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    let fetchedSchools = await response.json();
+    setSchools(fetchedSchools);
+    console.log(fetchedSchools);
+  }
+
+  useEffect(() => {
+    if (isFirstTime) {
+      getUserInfo();
+      updateSchoolsFromDatabase();
+      setIsFirstTime(false);
+    }
+  });
+
+  async function getUserInfo() {
+    const token = await getAccessToken();
+    if (!token) {
+      router.push("/auth/login");
+    }
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status !== 200) {
+    } else {
+      const data = await response.json();
+      setUserInfo(data);
+    }
+  }
 
   return (
     <Box>
@@ -231,17 +299,13 @@ export const UserMenu = (userName) => {
           </IconLayout>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent sideOffset={5}>
-          <DropdownMenuItem>
-            <Link href="/school/admin/create-school">
-              <StyledLink>Manage Profile</StyledLink>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            New Window <RightSlot>⌘+N</RightSlot>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            New Private Window <RightSlot>⇧+⌘+N</RightSlot>
+        <DropdownMenuContent sideOffset={5} alignOffset={0}>
+          <DropdownMenuItem
+            onClick={() => {
+              router.push("/profile/settings");
+            }}
+          >
+            Manage Profile
           </DropdownMenuItem>
           <DropdownMenu>
             <DropdownMenuTriggerItem>
@@ -251,52 +315,37 @@ export const UserMenu = (userName) => {
               </RightSlot>
             </DropdownMenuTriggerItem>
             <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-              <DropdownMenuItem>Save Page As…</DropdownMenuItem>
-              <DropdownMenuItem>Create Shortcut…</DropdownMenuItem>
-              <DropdownMenuItem>Name Window…</DropdownMenuItem>
+              {schools.map((school) => (
+                <DropdownMenuItem
+                  key={school.schoolUUID}
+                  onClick={() => {
+                    cookie.set("schoolUUID", school.schoolUUID);
+                    router.push("/school/admin/settings");
+                    if (router.pathname.includes("/school/admin/settings")) {
+                      router.reload();
+                    }
+                  }}
+                >
+                  {school.schoolName}
+                </DropdownMenuItem>
+              ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link href="/school/admin/create-school">
-                  <StyledLink>Create new school</StyledLink>
-                </Link>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/profile/school-join");
+                }}
+              >
+                Join a school
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/school/admin/create-school");
+                }}
+              >
+                Create new school
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem
-            checked={bookmarksChecked}
-            onCheckedChange={setBookmarksChecked}
-          >
-            <DropdownMenuItemIndicator>
-              <CheckIcon />
-            </DropdownMenuItemIndicator>
-            Show Bookmarks <RightSlot>⌘+B</RightSlot>
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem
-            checked={urlsChecked}
-            onCheckedChange={setUrlsChecked}
-          >
-            <DropdownMenuItemIndicator>
-              <CheckIcon />
-            </DropdownMenuItemIndicator>
-            Show Full URLs
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>People</DropdownMenuLabel>
-          <DropdownMenuRadioGroup value={person} onValueChange={setPerson}>
-            <DropdownMenuRadioItem value="pedro">
-              <DropdownMenuItemIndicator>
-                <DotFilledIcon />
-              </DropdownMenuItemIndicator>
-              Pedro Duarte
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="colm">
-              <DropdownMenuItemIndicator>
-                <DotFilledIcon />
-              </DropdownMenuItemIndicator>
-              Colm Tuite
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
           <DropdownMenuArrow />
         </DropdownMenuContent>
       </DropdownMenu>
