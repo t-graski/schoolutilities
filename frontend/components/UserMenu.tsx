@@ -11,7 +11,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getAccessToken } from "../misc/authHelper";
+import { getAccessToken, logout } from "../misc/authHelper";
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -345,6 +345,14 @@ export const UserMenu = (userName) => {
                 Create new school
               </DropdownMenuItem>
             </DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() => {
+                logout();
+                router.push("/");
+              }}
+            >
+              Logout
+            </DropdownMenuItem>
           </DropdownMenu>
           <DropdownMenuArrow />
         </DropdownMenuContent>
