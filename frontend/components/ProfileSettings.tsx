@@ -159,6 +159,7 @@ const SchoolList = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "100%",
+  gap: "25px",
 });
 
 const SchoolLayout = styled("div", {

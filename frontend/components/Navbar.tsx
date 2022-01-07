@@ -6,6 +6,7 @@ import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { getUserData } from "../misc/authHelper";
+import UserMenu from "./UserMenu";
 
 type Props = {};
 
@@ -64,7 +65,6 @@ const SpecialLinkLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  width: "100%",
   color: "$fontPrimary",
 });
 
@@ -74,7 +74,6 @@ const LinkLayout = styled("a", {
   justifyContent: "flex-start",
   alignItems: "center",
   gap: "20px",
-  width: "100%",
   padding: "15px 20px",
   borderRadius: "20px",
   backgroundColor: "$backgroundTertiary",
@@ -169,16 +168,8 @@ export const Navbar: React.FC<Props> = ({}) => {
           {userData && userData.firstName && (
             <SpecialLinkLayout>
               <Link href="/profile/settings">
-                <LinkLayout color="primary">
-                  <IconLayout>
-                    <SvgIcon iconName="SvgUser" />
-                  </IconLayout>
-                  <LinkContentLayout>
-                    <LinkLabel color="special">
-                      {userData.firstName} {userData.lastName}
-                    </LinkLabel>
-                  </LinkContentLayout>
-                </LinkLayout>
+                <UserMenu userName={`${userData.firstName} ${userData.lastName}`}>
+                </UserMenu>
               </Link>
             </SpecialLinkLayout>
           )}
