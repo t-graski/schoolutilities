@@ -12,6 +12,7 @@ import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { getAccessToken, logout } from "../misc/authHelper";
+import { useTheme } from "next-themes";
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -35,7 +36,7 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$backgroundSecondary",
   borderRadius: 15,
   padding: 8,
   boxShadow:
@@ -55,13 +56,14 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
 
 const itemStyles = {
   all: "unset",
-  fontSize: 13,
   lineHeight: 1,
   color: "$fontPrimary",
   borderRadius: 5,
   display: "flex",
   alignItems: "center",
   height: 25,
+  fontWeight: "500",
+  fontSize: "1.05rem",
   padding: "3px 8px",
   position: "relative",
   paddingLeft: 25,
@@ -117,7 +119,7 @@ const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
 });
 
 const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
-  fill: "white",
+  fill: "$fontPrimary",
   position: "relative",
   right: -10,
 });
@@ -143,7 +145,7 @@ const RightSlot = styled("div", {
   marginLeft: "auto",
   paddingLeft: 20,
   color: "$fontPrimary",
-  ":focus > &": { color: "white" },
+  ":focus > &": { color: "$fontPrimary" },
   "[data-disabled] &": { color: "$fontPrimary" },
 });
 
@@ -157,7 +159,7 @@ const IconButton = styled("button", {
   alignItems: "center",
   justifyContent: "center",
   color: "$fontPrimary",
-  backgroundColor: "white",
+  backgroundColor: "$fontPrimary",
   boxShadow: `0 2px 10px $fontPrimary`,
   "&:hover": { backgroundColor: "$fontPrimary" },
   "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
@@ -171,7 +173,7 @@ const LinkLayout = styled("a", {
   gap: "20px",
   padding: "15px 20px",
   borderRadius: "20px",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$backgroundSecondary",
   cursor: "pointer",
   "&[data-size='small']": {
     justifyContent: "center",
@@ -244,6 +246,7 @@ export const UserMenu = (userName) => {
     creationDate: "",
     birthDate: new Date().toISOString(),
   });
+  const { theme, setTheme } = useTheme();
 
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
@@ -305,8 +308,33 @@ export const UserMenu = (userName) => {
               router.push("/profile/settings");
             }}
           >
-            Manage Profile
+            Profile
           </DropdownMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTriggerItem>
+              Theme
+              <RightSlot>
+                <ChevronRightIcon />
+              </RightSlot>
+            </DropdownMenuTriggerItem>
+            <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                <DropdownMenuRadioItem value="dark">
+                  <DropdownMenuItemIndicator>
+                    <DotFilledIcon />
+                  </DropdownMenuItemIndicator>
+                  Dark
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="light">
+                  <DropdownMenuItemIndicator>
+                    <DotFilledIcon />
+                  </DropdownMenuItemIndicator>
+                  Light
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenuSeparator />
           <DropdownMenu>
             <DropdownMenuTriggerItem>
               Schools
@@ -345,6 +373,7 @@ export const UserMenu = (userName) => {
                 Create new school
               </DropdownMenuItem>
             </DropdownMenuContent>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 logout();

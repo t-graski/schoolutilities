@@ -27,6 +27,7 @@ const RegistrationLayout = styled("form", {
 
 const StyledAreement = styled("div", {
   color: "$fontPrimary",
+  width: "fit-content",
 });
 
 const StyledLInk = styled("a", {
@@ -165,7 +166,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={firstName}
             onChange={setFirstName}
-            iconName="SvgUser"
+            iconName="SvgName"
             required={true}
             validatorFunction={validator.isLength}
             validatorParams={[LENGTHS.PERSON_NAME]}
@@ -177,7 +178,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={lastName}
             onChange={setLastName}
-            iconName="SvgUser"
+            iconName="SvgName"
             required={true}
             validatorFunction={validator.isLength}
             validatorParams={[LENGTHS.PERSON_NAME]}
@@ -189,7 +190,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="date"
             value={birthDate}
             onChange={setBirthDate}
-            iconName="SvgUser"
+            iconName="SvgBirthDate"
             required={true}
             min="1900-01-01"
             max={new Date().toJSON().split("T")[0]}
@@ -199,7 +200,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconName="SvgUser"
+            iconName="SvgEmail"
             required={true}
             validatorFunction={validator.isEmail}
             validatorParams={[]}
@@ -211,7 +212,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconName="SvgUser"
+            iconName="SvgPassword"
             required={true}
             validatorFunction={validator.isStrongPassword}
             validatorParams={[PASSWORD]}
@@ -223,7 +224,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
-            iconName="SvgUser"
+            iconName="SvgPassword"
             required={true}
             validatorFunction={validator.isStrongPassword}
             validatorParams={[PASSWORD]}
