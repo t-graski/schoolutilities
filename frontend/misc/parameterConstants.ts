@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+
 
 export const PASSWORD = {
   minLength: 8,
@@ -64,61 +64,6 @@ const RETURN_MESSAGES = {
   NO_FILE_PROVIDED_MESSAGE: 'No file provided',
   DEPARTMENTS_SAME_NAMES_MESSAGE: 'Department name occurs multiple times',
   LAST_USER_MESSAGE: 'Cannot delete last user',
-};
-
-export const RETURN_DATA = {
-  INVALID_INPUT: {
-    status: HttpStatus.BAD_REQUEST,
-    message: RETURN_MESSAGES.INVALID_INPUT_MESSAGE,
-  },
-  DATABASE_ERROR: {
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    message: RETURN_MESSAGES.DATABASE_ERROR_MESSAGE,
-  },
-  SUCCESS: {
-    status: HttpStatus.OK,
-    message: RETURN_MESSAGES.SUCCESS_MESSAGE,
-  },
-  ALREADY_EXISTS: {
-    status: HttpStatus.CONFLICT,
-    message: RETURN_MESSAGES.ALREADY_EXISTS_MESSAGE,
-  },
-  NOT_FOUND: {
-    status: HttpStatus.NOT_FOUND,
-    message: RETURN_MESSAGES.NOT_FOUND_MESSAGE,
-  },
-  REFERENCE_ERROR: {
-    status: HttpStatus.BAD_REQUEST,
-    message: RETURN_MESSAGES.REFERENCE_ERROR_MESSAGE,
-  },
-  UNIQUE_ERROR: {
-    status: HttpStatus.CONFLICT,
-    message: RETURN_MESSAGES.UNIQUE_ERROR_MESSAGE,
-  },
-  MAX_JOIN_CODES_REACHED: {
-    status: HttpStatus.FORBIDDEN,
-    message: RETURN_MESSAGES.MAX_JOIN_CODES_REACHED_MESSAGE,
-  },
-  INVALID_FILE: {
-    status: HttpStatus.BAD_REQUEST,
-    message: RETURN_MESSAGES.INVALID_FILE_MESSAGE,
-  },
-  MAX_FILE_SIZE_EXCEEDED: {
-    status: HttpStatus.BAD_REQUEST,
-    message: RETURN_MESSAGES.FILE_SIZE_EXCEEDED_MESSAGE,
-  },
-  NO_FILE_PROVIDED: {
-    status: HttpStatus.BAD_REQUEST,
-    message: RETURN_MESSAGES.NO_FILE_PROVIDED_MESSAGE,
-  },
-  DEPARTMENTS_SAME_NAMES: {
-    status: HttpStatus.BAD_REQUEST,
-    message: RETURN_MESSAGES.DEPARTMENTS_SAME_NAMES_MESSAGE,
-  },
-  LAST_USER: {
-    status: HttpStatus.CONFLICT,
-    message: RETURN_MESSAGES.LAST_USER_MESSAGE,
-  }
 };
 
 export const ID_STARTERS = {

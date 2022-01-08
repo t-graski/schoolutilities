@@ -15,9 +15,9 @@ export const {
       backgroundSecondary: "#202225",
       backgroundTertiary: "#4b4c4e",
       backgroundQuaternary: "#1A1C1E",
-      fontTertiary: "#3c3f46",
       fontPrimary: "#ffffff",
       fontSecondary: "#242424",
+      fontTertiary: "#3c3f46",
       specialPrimary: "#eda33f",
       specialSecondary: "#738adb",
       specialTertiary: "#D23737",
@@ -80,5 +80,21 @@ export const {
   media: {
     bp1: "(min-width: 520px)",
     bp2: "(min-width: 900px)",
+  },
+});
+
+
+export const lightTheme = createTheme({
+  colors: {
+    backgroundPrimary: "#F0F1F5",
+    backgroundSecondary: "#D9D9D9",
+    backgroundTertiary: "#4b4c4e",
+    backgroundQuaternary: "#E0E2EB",
+    fontPrimary: "#242424",
+    fontSecondary: "#ffffff",
+    fontTertiary: "#3c3f46",
+    specialPrimary: "#eda33f",
+    specialSecondary: "#738adb",
+    specialTertiary: "#D23737",
   },
 });

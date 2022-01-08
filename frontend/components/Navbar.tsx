@@ -6,6 +6,7 @@ import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { getUserData } from "../misc/authHelper";
+import UserMenu from "./UserMenu";
 
 type Props = {};
 
@@ -64,7 +65,6 @@ const SpecialLinkLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  width: "100%",
   color: "$fontPrimary",
 });
 
@@ -74,7 +74,6 @@ const LinkLayout = styled("a", {
   justifyContent: "flex-start",
   alignItems: "center",
   gap: "20px",
-  width: "100%",
   padding: "15px 20px",
   borderRadius: "20px",
   backgroundColor: "$backgroundTertiary",
@@ -126,7 +125,6 @@ const LinkLabel = styled("p", {
   },
 });
 
-
 export const Navbar: React.FC<Props> = ({}) => {
   const [userData, setUserData] = useState({
     firstName: "",
@@ -155,32 +153,23 @@ export const Navbar: React.FC<Props> = ({}) => {
           <Link href="/">
             <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>
           </Link>
-          <Link href="/features">
-            <StyledLink marked={router.pathname === "/features"}>
-              FEATURES
+          <Link href="/profile/school-selection">
+            <StyledLink
+              marked={router.pathname === "/profile/school-selection"}
+            >
+              MY SCHOOLS
             </StyledLink>
           </Link>
-          <Link href="/about-us">
-            <StyledLink marked={router.pathname === "/about-us"}>
-              ABOUT
+          <Link href="/bot-dashboard">
+            <StyledLink marked={router.pathname === "/bot-dashboard"}>
+              BOT DASHBOARD
             </StyledLink>
           </Link>
-          {userData && userData.firstName && (
-            <SpecialLinkLayout>
-              <Link href="/profile/settings">
-                <LinkLayout color="primary">
-                  <IconLayout>
-                    <SvgIcon iconName="SvgUser" />
-                  </IconLayout>
-                  <LinkContentLayout>
-                    <LinkLabel color="special">
-                      {userData.firstName} {userData.lastName}
-                    </LinkLabel>
-                  </LinkContentLayout>
-                </LinkLayout>
-              </Link>
-            </SpecialLinkLayout>
-          )}
+          <SpecialLinkLayout>
+            <Link href="/profile/settings">
+              <UserMenu></UserMenu>
+            </Link>
+          </SpecialLinkLayout>
         </NavLinksLayout>
       </NavbarLayout>
     </>

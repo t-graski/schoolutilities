@@ -12,12 +12,14 @@ const FeatureOverviewListLayout = styled("div", {
   padding: "0 15vw",
 });
 
+const FeatureOverviewListItem = styled("div", {});
+
 export const FeatureOverviewList: React.FC<Props> = ({ features }) => {
   return (
     <>
       <FeatureOverviewListLayout>
         {features.map((feature, index) => (
-            <div key={index}>
+            <FeatureOverviewListItem key={index}>
           <FeatureOverview
             iconName={feature.iconName}
             title={feature.title}
@@ -31,7 +33,7 @@ export const FeatureOverviewList: React.FC<Props> = ({ features }) => {
             }
           />
           {index < features.length - 1 && <Separator width="big" alignment="center"/>}
-            </div>
+            </FeatureOverviewListItem>
         ))}
       </FeatureOverviewListLayout>
     </>

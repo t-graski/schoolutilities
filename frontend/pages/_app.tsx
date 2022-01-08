@@ -1,9 +1,10 @@
 import React from "react";
 import { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import { globalCss } from "../stitches.config";
+import { globalCss, lightTheme } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
+import { ThemeProvider } from "next-themes";
 
 const globalStyles = globalCss({
   "*": {
@@ -14,8 +15,8 @@ const globalStyles = globalCss({
   body: {
     fontFamily: "Poppins",
     fontWeight: "400",
-    backgroundColor: "#2f3136",
     overflowX: "hidden",
+    backgroundColor: "$backgroundPrimary",
     minHeight: "100vh",
   },
 });
@@ -30,7 +31,16 @@ function App({ Component, pageProps }: AppProps) {
 
   const isDocs = router.pathname.includes("/docs");
 
-  return <Component {...pageProps} router={router} />;
+  return (
+    <ThemeProvider
+      disableTransitionOnChange
+      attribute="class"
+      value={{light: lightTheme.className, dark: "dark-theme"}}
+      defaultTheme="system"
+    >
+      <Component {...pageProps} router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;

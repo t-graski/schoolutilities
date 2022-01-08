@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import { InputField } from "./InputField";
 import { regex } from "../misc/regex";
 import { Button } from "./Button";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 export type SideDashboardProps = {};
 
@@ -51,7 +53,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
     const token = await getAccessToken();
     if (joinCodeValid && token) {
       const res = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/joinSchool`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinSchool`,
         {
           method: "POST",
           headers: {
@@ -65,7 +67,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
       );
       if (res.ok) {
         cookie.set("schoolUUID", joinCode, { expires: 1 });
-        router.push("/school/dashboard");
+        router.push("/school/admin/settings");
       } else {
         console.log("Error: ", res.status);
       }
@@ -81,8 +83,9 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
           <InputField
             inputType={"text"}
             onChange={setJoinCode}
-            iconName={""}
-            regex={regex.name}
+            iconName={""}            
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[LENGTHS.JOIN_CODE_NAME]}
             setValidInput={setJoinCodeValid}
             errorMessage="Please enter a valid join code"
             label="Join Code"

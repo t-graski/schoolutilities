@@ -11,6 +11,8 @@ import { Headline } from "./Headline";
 import { Separator } from "./Separator";
 import { Spacer } from "./Spacer";
 import { SvgIcon } from "./SvgIcon";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {
   setDisabled: Function;
@@ -246,7 +248,8 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     }
                   }}
                   iconName=""
-                  regex={regex.name}
+                  validatorFunction={validator.isLength}
+                  validatorParams={[LENGTHS.NAME]}
                   setValidInput={setDepartmentNameValid}
                   min="2"
                   max="30"

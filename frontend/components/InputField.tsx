@@ -17,7 +17,8 @@ type Props = {
   editable?: boolean;
   required?: boolean;
   label?: string;
-  regex?: RegExp;
+  validatorFunction?: Function;
+  validatorParams?: [any?];
   setValidInput?: Function;
   errorMessage?: string;
   min?: string;
@@ -26,6 +27,7 @@ type Props = {
 
 const StyledInputField = styled("input", {
   background: "$backgroundTertiary",
+  display: "inline-block",
   width: "100%",
   color: "$fontPrimary",
   fontSize: "1.2rem",
@@ -50,6 +52,16 @@ const StyledInputField = styled("input", {
         margin: "0 20px 0 0",
       },
     },
+    editable: {
+      true: {},
+      false: {
+        background: "transparent",
+        border: "none",
+        ["&:focus"]: {
+          borderBottom: "none",
+        },
+      },
+    },
   },
 });
 
@@ -62,6 +74,16 @@ const InputFieldLayout = styled("div", {
   border: "none",
   padding: "15px 20px",
   gap: "20px",
+
+  variants: {
+    editable: {
+      true: {},
+      false: {
+        background: "transparent",
+        border: "none",
+      },
+    },
+  },
 });
 
 const StyledLabel = styled("label", {
@@ -103,6 +125,12 @@ const ImageLayout = styled("div", {
 
 const StyledOption = styled("option", {});
 
+const FieldLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+});
+
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
@@ -114,7 +142,8 @@ export const InputField: React.FC<Props> = ({
   editable = true,
   required = false,
   label = "",
-  regex,
+  validatorFunction,
+  validatorParams,
   setValidInput,
   errorMessage = "",
   min,
@@ -123,16 +152,18 @@ export const InputField: React.FC<Props> = ({
   if (inputType === "checkbox") {
     return (
       <>
-        <StyledInputField
-          type={inputType}
-          name={label}
-          placeholder={label}
-          onChange={(e) => onChange(e.target.checked)}
-          inputType={inputType}
-          {...(required && { required: true })}
-          readOnly={!editable}
-        />
-        <span>{children}</span>
+        <FieldLayout>
+          <StyledInputField
+            type={inputType}
+            name={label}
+            placeholder={label}
+            onChange={(e) => onChange(e.target.checked)}
+            inputType={inputType}
+            {...(required && { required: true })}
+            readOnly={!editable}
+          />
+          <span>{children}</span>
+        </FieldLayout>
       </>
     );
   } else if (inputType === "select") {
@@ -164,7 +195,7 @@ export const InputField: React.FC<Props> = ({
     const [isInputValid, setIsInputValid] = React.useState(null);
     return (
       <>
-        <InputFieldLayout>
+        <InputFieldLayout editable={editable}>
           {iconName && (
             <ImageLayout>
               <SvgIcon iconName={iconName} />
@@ -176,15 +207,21 @@ export const InputField: React.FC<Props> = ({
               value={value}
               name={label}
               placeholder={label}
+              editable={editable}
               readOnly={!editable}
               onChange={(e) => {
-                let inputValueValid = regex && regex.test(e.target.value);
+                let inputValueValid =
+                  validatorFunction &&
+                  validatorFunction(e.target.value, ...validatorParams);
                 if (setValidInput) {
                   setValidInput(inputValueValid);
                 }
                 if (isInputValid == null && !inputValueValid) {
                   setTimeout(() => {
-                    if (regex && !regex.test(e.target.value)) {
+                    if (
+                      validatorFunction &&
+                      validatorFunction(e.target.value, ...validatorParams)
+                    ) {
                       setIsInputValid(false);
                     }
                   }, 2000);

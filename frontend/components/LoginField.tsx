@@ -9,6 +9,8 @@ import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { logout } from "../misc/authHelper";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -67,29 +69,37 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`https://backend.schoolutilities.net:3333/api/auth/login`, {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => {
-        if (response.status == 200) {
-          setSignUpInfo("You are logged in");
-          setLoggedIn(true);
-          return response.json();
-        } else {
-          setSignUpInfo("You are not logged in");
-        }
+    try {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: { "Content-Type": "application/json" },
       })
-      .then((data) => {
-        if (data) {
-          cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
-          cookie.set("refreshToken", data.refresh_token, { expires: 7 });
-        }
-      });
+        .then((response) => {
+          console.log(response);
+          if (response.status == 200) {
+            setSignUpInfo("You are logged in");
+            setLoggedIn(true);
+            return response.json();
+          } else {
+            setSignUpInfo("You are not logged in");
+          }
+        })
+        .then((data) => {
+          if (data) {
+            cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
+            cookie.set("refreshToken", data.refresh_token, { expires: 7 });
+          }
+        });
+    } catch (err) {
+      setSignUpInfo(
+        "Ihre Eingaben konnten nicht verarbeitet werden, versuchen Sie es später erneut"
+      );
+      console.log(err);
+    }
   }
 
   return (
@@ -103,7 +113,8 @@ export const LoginField: React.FC<Props> = ({}) => {
             onChange={setEmail}
             iconName="SvgUser"
             required={true}
-            regex={regex.email}
+            validatorFunction={validator.isEmail}
+            validatorParams={[LENGTHS.EMAIL]}
             setValidInput={setEmailValid}
           ></InputField>
           <InputField
@@ -113,7 +124,8 @@ export const LoginField: React.FC<Props> = ({}) => {
             onChange={setPassword}
             iconName="SvgUser"
             required={true}
-            regex={regex.password}
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[PASSWORD]}
             setValidInput={setPasswordValid}
           ></InputField>
           <Button

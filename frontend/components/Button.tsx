@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { styled } from "../stitches.config";
+import { lightTheme, styled } from "../stitches.config";
 import Image from "next/image";
 import cookie from "js-cookie";
 import type * as Stitches from "@stitches/react";
@@ -40,10 +40,16 @@ const StyledButton = styled("button", {
       secondary: {
         backgroundColor: "$backgroundTertiary",
       },
+      tertiary: {
+        backgroundColor: "$specialPrimary",
+      },
     },
     color: {
       primary: {
         color: "$fontPrimary",
+        [`.${lightTheme} &`]: {
+          color: "$fontSecondary",
+        },
       },
     },
     isDisabled: {

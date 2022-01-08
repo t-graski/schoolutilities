@@ -159,6 +159,7 @@ const SchoolList = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "100%",
+  gap: "25px",
 });
 
 const SchoolLayout = styled("div", {
@@ -209,7 +210,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
     let response = await fetch(
-      `https://backend.schoolutilities.net:3333/api/user/getSchools`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
       {
         method: "GET",
         headers: {
@@ -236,7 +237,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     }
     setIsLoading(true);
     const response = await fetch(
-      `https://backend.schoolutilities.net:3333/api/user/profile`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -261,7 +262,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     }
     setIsLoading(true);
     const response = await fetch(
-      `https://backend.schoolutilities.net:3333/api/user/changeEmail`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/changeEmail`,
       {
         method: "POST",
         headers: {
@@ -362,7 +363,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   label="SAVE CHANGES"
                   onClick={saveChanges}
                 ></Button>
-                <Button
+                {/* <Button
                   backgroundColor={"secondary"}
                   color={"primary"}
                   label="RESET"
@@ -370,7 +371,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     setStatusInfo("");
                     getUserInfo();
                   }}
-                ></Button>
+                ></Button> */}
               </ButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
@@ -396,7 +397,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 iconName={""}
               />
               <Spacer size="verySmall"></Spacer>
-              <Button
+              {/* <Button
                 backgroundColor={"secondary"}
                 color={"primary"}
                 label="LOGOUT"
@@ -404,7 +405,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   logout();
                   router.push("/auth/login");
                 }}
-              ></Button>
+              ></Button> */}
             </ProfileDataColumn>
           </>
         ) : (

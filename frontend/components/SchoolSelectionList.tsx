@@ -54,7 +54,7 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
     let response = await fetch(
-      `https://backend.schoolutilities.net:3333/api/user/getSchools`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
       {
         method: "GET",
         headers: {

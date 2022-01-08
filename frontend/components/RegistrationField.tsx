@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
 import type * as Stitches from "@stitches/react";
@@ -8,6 +8,9 @@ import { Button } from "./Button";
 import Link from "next/link";
 import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
+import { SvgIcon } from "./SvgIcon";
 
 if (!globalThis.fetch) {
   //@ts-ignore
@@ -24,10 +27,68 @@ const RegistrationLayout = styled("form", {
 
 const StyledAreement = styled("div", {
   color: "$fontPrimary",
+  width: "fit-content",
 });
 
 const StyledLInk = styled("a", {
   color: "$fontPrimary",
+});
+
+const SuccessLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  gap: "40px",
+  color: "$fontPrimary",
+});
+
+const StyledHeadline = styled("h1", {
+  fontSize: "2.5rem",
+  fontWeight: "bold",
+  textAlign: "center",
+});
+
+const SuccessImageLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100px",
+  height: "100px",
+
+  variants: {
+    color: {
+      success: {
+        color: "$specialPrimary",
+      },
+      error: {
+        color: "$specialTertiary",
+      },
+    },
+  },
+});
+
+const SuccessDescription = styled("p", {
+  fontSize: "1.5rem",
+});
+
+const StyledLink = styled("a", {
+  color: "$specialPrimary",
+  fontSize: "1.2rem",
+  fontWeight: "bold",
+  padding: "20px",
+  border: "2px solid $specialPrimary",
+  borderRadius: "25px",
+  textDecoration: "none",
+  cursor: "pointer",
+  transition: "all 0.2s",
+
+  "&:hover": {
+    backgroundColor: "$specialPrimary",
+    color: "$fontPrimary",
+  },
 });
 
 export const RegistrationField: React.FC<Props> = ({}) => {
@@ -45,8 +106,8 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(true);
-
   const [signUpInfo, setSignUpInfo] = React.useState("");
+  const [signUpWorking, setSignUpWorking] = React.useState(false);
 
   checkInputData();
 
@@ -73,7 +134,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`https://backend.schoolutilities.net:3333/api/auth/register`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
       method: "POST",
       body: JSON.stringify({
         firstName,
@@ -89,6 +150,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
         console.log(statusCode);
         if (statusCode == 200) {
           setSignUpInfo("Your account has been created");
+          setSignUpWorking(true);
         } else {
           setSignUpInfo("Your account could not be created");
         }
@@ -104,9 +166,10 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={firstName}
             onChange={setFirstName}
-            iconName="SvgUser"
+            iconName="SvgName"
             required={true}
-            regex={regex.name}
+            validatorFunction={validator.isLength}
+            validatorParams={[LENGTHS.PERSON_NAME]}
             setValidInput={setFirstNameValid}
             errorMessage="Please enter a valid firstname"
           ></InputField>
@@ -115,9 +178,10 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="text"
             value={lastName}
             onChange={setLastName}
-            iconName="SvgUser"
+            iconName="SvgName"
             required={true}
-            regex={regex.name}
+            validatorFunction={validator.isLength}
+            validatorParams={[LENGTHS.PERSON_NAME]}
             setValidInput={setLastNameValid}
             errorMessage="Please enter a valid lastname"
           ></InputField>
@@ -126,7 +190,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="date"
             value={birthDate}
             onChange={setBirthDate}
-            iconName="SvgUser"
+            iconName="SvgBirthDate"
             required={true}
             min="1900-01-01"
             max={new Date().toJSON().split("T")[0]}
@@ -136,9 +200,10 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconName="SvgUser"
+            iconName="SvgEmail"
             required={true}
-            regex={regex.email}
+            validatorFunction={validator.isEmail}
+            validatorParams={[]}
             setValidInput={setEmailValid}
             errorMessage="Please enter a valid email"
           ></InputField>
@@ -147,9 +212,10 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconName="SvgUser"
+            iconName="SvgPassword"
             required={true}
-            regex={regex.password}
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[PASSWORD]}
             setValidInput={setPasswordValid}
             errorMessage="Please enter a valid password"
           ></InputField>
@@ -158,9 +224,10 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             inputType="password"
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
-            iconName="SvgUser"
+            iconName="SvgPassword"
             required={true}
-            regex={regex.password}
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[PASSWORD]}
             setValidInput={setPasswordConfirmationValid}
             errorMessage="Please enter a valid password"
           ></InputField>
@@ -202,19 +269,29 @@ export const RegistrationField: React.FC<Props> = ({}) => {
       )}
       {signUpInfo && (
         <>
-          <p>{signUpInfo}</p>
-          <Link href="/auth/login">
-            <a>
-              <Button
-                backgroundColor="primary"
-                color="primary"
-                label="Login"
+          <SuccessLayout>
+            <StyledHeadline>{signUpInfo}</StyledHeadline>
+            <SuccessImageLayout color={signUpWorking ? "success" : "error"}>
+              <SvgIcon
+                iconName={signUpWorking ? "SvgQuality" : "SvgWarning"}
+              ></SvgIcon>
+            </SuccessImageLayout>
+            <SuccessDescription>
+              {signUpWorking
+                ? "You can now join a school, or create a school"
+                : ""}
+            </SuccessDescription>
+            <Link href={signUpWorking ? "/profile/settings" : "/auth/register"}>
+              <StyledLink
                 onClick={() => {
-                  handleSubmit();
+                  setSignUpInfo("");
+                  setSignUpWorking(false);
                 }}
-              ></Button>
-            </a>
-          </Link>
+              >
+                {signUpWorking ? "Manage your Account now" : "Try again"}
+              </StyledLink>
+            </Link>
+          </SuccessLayout>
         </>
       )}
     </>

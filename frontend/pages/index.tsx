@@ -52,10 +52,10 @@ export default function Home() {
             and teachers. With incredible features and
             the right design, we make this possible."
             descriptionLine="This is SchoolUtilities."
-            buttonText="JOIN US"
+            buttonText="REGISTER NOW"
             buttonLink="/auth/register"
             linkText="LEARN MORE"
-            linkUrl="/features"
+            linkUrl="/learn-more"
           ></StartPageBox>
         </FirstBoxLayout>
         <GeneralList
@@ -64,24 +64,24 @@ export default function Home() {
               title: "Discord-Bot",
               description:
                 "Take a look at our Discord-Bot, which reminds you on upcoming Events and simplifies your life.",
-              href: "https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot",
-              buttonText: "INVITE",
+              href: "/bot",
+              buttonText: "LET'S GET STARTED",
               iconName: "SvgDiscordLogo",
             },
             {
-              title: "Features",
+              title: "Create School",
               description:
-                "Learn more about all the features, our service has available for you. Don’t worry, we’ve got you covered.",
-              href: "/features",
+                "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
+              href: "/school/admin/create-school",
               buttonText: "GET ME THERE",
-              iconName: "SvgChecklist",
+              iconName: "SvgSchool",
             },
             {
               title: "About Us",
               description:
                 "We think it’s cool to know who the people behind a service are. Learn more about us and our role in the team.",
               href: "/about-us",
-              buttonText: "OK, LET’S GO",
+              buttonText: "LEARN MORE",
               iconName: "SvgInfo",
             },
           ]}

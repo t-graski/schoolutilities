@@ -101,6 +101,18 @@ export const Footer: React.FC<Props> = ({}) => {
             <Link href="/imprint">
               <StyledLink>Contact Us</StyledLink>
             </Link>
+            <Link href="/about-us">
+              <StyledLink>About Us</StyledLink>
+            </Link>
+          </LinkLayout>
+          <LinkLayout>
+            <LinkHeadline>Help</LinkHeadline>
+            <Link href="/help/help-center">
+              <StyledLink>Help Center</StyledLink>
+            </Link>
+            <Link href="/help/faq">
+              <StyledLink>FAQ</StyledLink>
+            </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Language</LinkHeadline>

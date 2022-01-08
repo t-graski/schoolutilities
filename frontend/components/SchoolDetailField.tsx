@@ -9,6 +9,8 @@ import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {
   setDisabled: Function;
@@ -87,7 +89,8 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           onChange={setSchoolName}
           iconName="SvgUser"
           required={true}
-          regex={regex.name}
+          validatorFunction={validator.isLength}
+          validatorParams={[LENGTHS.NAME]}
           setValidInput={setSchoolNameValid}
           errorMessage="Your school needs a name, doesn't it?"
         ></InputField>
