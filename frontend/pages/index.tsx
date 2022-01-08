@@ -52,7 +52,7 @@ export default function Home() {
             and teachers. With incredible features and
             the right design, we make this possible."
             descriptionLine="This is SchoolUtilities."
-            buttonText="JOIN US"
+            buttonText="REGISTER NOW"
             buttonLink="/auth/register"
             linkText="LEARN MORE"
             linkUrl="/learn-more"

@@ -165,14 +165,11 @@ export const Navbar: React.FC<Props> = ({}) => {
               BOT DASHBOARD
             </StyledLink>
           </Link>
-          {userData && userData.firstName && (
-            <SpecialLinkLayout>
-              <Link href="/profile/settings">
-                <UserMenu userName={`${userData.firstName} ${userData.lastName}`}>
-                </UserMenu>
-              </Link>
-            </SpecialLinkLayout>
-          )}
+          <SpecialLinkLayout>
+            <Link href="/profile/settings">
+              <UserMenu></UserMenu>
+            </Link>
+          </SpecialLinkLayout>
         </NavLinksLayout>
       </NavbarLayout>
     </>

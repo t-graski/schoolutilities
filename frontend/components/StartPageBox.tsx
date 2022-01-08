@@ -78,7 +78,7 @@ export const StartPageBox: React.FC<Props> = ({
         </StartPageBoxDescriptionLine>
         <div>
           <Button
-            backgroundColor={"primary"}
+            backgroundColor={"tertiary"}
             color={"primary"}
             label={buttonText}
             onClick={() => {

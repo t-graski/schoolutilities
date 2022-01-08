@@ -232,36 +232,29 @@ const StyledLink = styled(Link, {
   },
 });
 
-export const UserMenu = (userName) => {
-  const [bookmarksChecked, setBookmarksChecked] = React.useState(true);
-  const [urlsChecked, setUrlsChecked] = React.useState(false);
-  const [person, setPerson] = React.useState("pedro");
+export const UserMenu = () => {
   const router = useRouter();
   const [schools, setSchools] = useState([]);
   const [isFirstTime, setIsFirstTime] = useState(true);
-  const [userInfo, setUserInfo] = useState({
-    firstName: "Firstname",
-    lastName: "Lastname",
-    email: "Email",
-    creationDate: "",
-    birthDate: new Date().toISOString(),
-  });
+  const [userInfo, setUserInfo] = useState(null);
   const { theme, setTheme } = useTheme();
 
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
-    let response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    let fetchedSchools = await response.json();
-    setSchools(fetchedSchools);
-    console.log(fetchedSchools);
+    if (accessToken) {
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      let fetchedSchools = await response.json();
+      setSchools(fetchedSchools);
+      console.log(fetchedSchools);
+    }
   }
 
   useEffect(() => {
@@ -274,22 +267,21 @@ export const UserMenu = (userName) => {
 
   async function getUserInfo() {
     const token = await getAccessToken();
-    if (!token) {
-      router.push("/auth/login");
-    }
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+    if (token) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status !== 200) {
+      } else {
+        const data = await response.json();
+        setUserInfo(data);
       }
-    );
-    if (response.status !== 200) {
-    } else {
-      const data = await response.json();
-      setUserInfo(data);
     }
   }
 
@@ -303,86 +295,141 @@ export const UserMenu = (userName) => {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent sideOffset={5} alignOffset={0}>
-          <DropdownMenuItem
-            onClick={() => {
-              router.push("/profile/settings");
-            }}
-          >
-            Profile
-          </DropdownMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTriggerItem>
-              Theme
-              <RightSlot>
-                <ChevronRightIcon />
-              </RightSlot>
-            </DropdownMenuTriggerItem>
-            <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-                <DropdownMenuRadioItem value="dark">
-                  <DropdownMenuItemIndicator>
-                    <DotFilledIcon />
-                  </DropdownMenuItemIndicator>
-                  Dark
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="light">
-                  <DropdownMenuItemIndicator>
-                    <DotFilledIcon />
-                  </DropdownMenuItemIndicator>
-                  Light
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenuSeparator />
-          <DropdownMenu>
-            <DropdownMenuTriggerItem>
-              Schools
-              <RightSlot>
-                <ChevronRightIcon />
-              </RightSlot>
-            </DropdownMenuTriggerItem>
-            <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-              {schools.map((school) => (
+          {userInfo && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/profile/settings");
+                }}
+              >
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenu>
+                <DropdownMenuTriggerItem>
+                  Theme
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  <DropdownMenuRadioGroup
+                    value={theme}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="dark">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      Dark
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="light">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      Light
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem>
+                  Schools
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  {schools.map((school) => (
+                    <DropdownMenuItem
+                      key={school.schoolUUID}
+                      onClick={() => {
+                        cookie.set("schoolUUID", school.schoolUUID);
+                        router.push("/school/admin/settings");
+                        if (
+                          router.pathname.includes("/school/admin/settings")
+                        ) {
+                          router.reload();
+                        }
+                      }}
+                    >
+                      {school.schoolName}
+                    </DropdownMenuItem>
+                  ))}
+                  {schools.length > 0 && <DropdownMenuSeparator />}
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push("/profile/school-join");
+                    }}
+                  >
+                    Join a school
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push("/school/admin/create-school");
+                    }}
+                  >
+                    Create new school
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  key={school.schoolUUID}
                   onClick={() => {
-                    cookie.set("schoolUUID", school.schoolUUID);
-                    router.push("/school/admin/settings");
-                    if (router.pathname.includes("/school/admin/settings")) {
-                      router.reload();
-                    }
+                    logout();
+                    router.push("/");
                   }}
                 >
-                  {school.schoolName}
+                  Logout
                 </DropdownMenuItem>
-              ))}
+              </DropdownMenu>
+            </>
+          )}
+          {!userInfo && (
+            <>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/auth/register");
+                }}
+              >
+                Register
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push("/auth/login");
+                }}
+              >
+                Login
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/profile/school-join");
-                }}
-              >
-                Join a school
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/school/admin/create-school");
-                }}
-              >
-                Create new school
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                logout();
-                router.push("/");
-              }}
-            >
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem>
+                  Theme
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  <DropdownMenuRadioGroup
+                    value={theme}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="dark">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      Dark
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="light">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      Light
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
           <DropdownMenuArrow />
         </DropdownMenuContent>
       </DropdownMenu>

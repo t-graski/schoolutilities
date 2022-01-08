@@ -40,6 +40,9 @@ const StyledButton = styled("button", {
       secondary: {
         backgroundColor: "$backgroundTertiary",
       },
+      tertiary: {
+        backgroundColor: "$specialPrimary",
+      },
     },
     color: {
       primary: {

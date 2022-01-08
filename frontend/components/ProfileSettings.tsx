@@ -363,7 +363,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   label="SAVE CHANGES"
                   onClick={saveChanges}
                 ></Button>
-                <Button
+                {/* <Button
                   backgroundColor={"secondary"}
                   color={"primary"}
                   label="RESET"
@@ -371,7 +371,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     setStatusInfo("");
                     getUserInfo();
                   }}
-                ></Button>
+                ></Button> */}
               </ButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
@@ -397,7 +397,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 iconName={""}
               />
               <Spacer size="verySmall"></Spacer>
-              <Button
+              {/* <Button
                 backgroundColor={"secondary"}
                 color={"primary"}
                 label="LOGOUT"
@@ -405,7 +405,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   logout();
                   router.push("/auth/login");
                 }}
-              ></Button>
+              ></Button> */}
             </ProfileDataColumn>
           </>
         ) : (
