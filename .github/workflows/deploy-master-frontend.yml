@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths: 
+      - 'frontend/**'  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
             EXCLUDE: "node_modules"
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
-            TARGET: ${{ secrets.REMOTE_TARGET }} 
+            TARGET: ${{ secrets.TARGET }} 
         - name: Connect to remote server via SSH
           uses: appleboy/ssh-action@v0.1.4
           with:
