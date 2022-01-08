@@ -4,4 +4,4 @@ WORKDIR /schoolutilities-backend
 COPY . .
 RUN npm install -g npm@7.5.5
 RUN npm install
-CMD ["npm run", "start:prod"]
+CMD ["npm", "start"]
