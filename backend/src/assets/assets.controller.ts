@@ -37,7 +37,7 @@ export class AssetsController {
     );
   }
 
-  @Roles(Role.Supervisor)
+  // @Roles(Role.Supervisor)
   @Get('/list/logo')
   async listLogos(@Res() response) {
     const dir = process.env.LOGO_PATH;

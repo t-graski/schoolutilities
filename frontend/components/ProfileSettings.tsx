@@ -24,7 +24,7 @@ const ProfileLayout = styled("div", {
   display: "grid",
   justifyContent: "center",
   padding: "3vh 6vw 10vh",
-  gridTemplateColumns: "4fr 1fr 5fr 5fr",
+  gridTemplateColumns: "4fr 1fr 6fr 6fr",
 });
 
 const GeneralProfileNavbarLayout = styled("div", {});
@@ -38,7 +38,11 @@ const ProfileImageLayout = styled("div", {
   color: "$fontPrimary",
 });
 
-const ProfileName = styled("div", {});
+const ProfileName = styled("div", {
+  width: "100%",
+  textAlign: "center",
+  color: "$fontPrimary",
+});
 
 const ProfileNavigationLinks = styled("div", {});
 
@@ -200,7 +204,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     firstName: "Firstname",
     lastName: "Lastname",
     email: "Email",
-    creationDate: "",
+    creationDate: new Date().toISOString(),
     birthDate: new Date().toISOString(),
   });
   const [isFirstTime, setIsFirstTime] = useState(true);
@@ -233,7 +237,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
   async function getUserInfo() {
     const token = await getAccessToken();
     if (!token) {
-      router.push("/auth/login");
+      router.push("/auth?tab=login");
     }
     setIsLoading(true);
     const response = await fetch(
@@ -250,6 +254,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     } else {
       const data = await response.json();
       setUserInfo(data);
+      console.log(data);
     }
     setIsLoading(false);
   }
@@ -258,7 +263,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     const token = await getAccessToken();
     console.log(token);
     if (!token) {
-      router.push("/auth/login");
+      router.push("/auth?tab=login");
     }
     setIsLoading(true);
     const response = await fetch(
@@ -285,6 +290,12 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     setIsLoading(false);
   }
 
+  const longDateCreationDate = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
+  }).format(new Date(userInfo.creationDate));
+
   return (
     <>
       <ProfileLayout>
@@ -292,7 +303,9 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           <ProfileImageLayout>
             <SvgIcon iconName="SvgUser" />
           </ProfileImageLayout>
-          <ProfileName>{cookie.get("username")}</ProfileName>
+          <ProfileName>
+            {userInfo.firstName} {userInfo.lastName}
+          </ProfileName>
           <ProfileNavigationLinks>
             <SpecialLinkLayout>
               <Link href="/profile/settings">
@@ -336,7 +349,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
         {router.query.tab !== "schools" ? (
           <>
             <ProfileDataColumn>
-              <InputLabel>Firstname</InputLabel>
+              {/* <InputLabel>Firstname</InputLabel>
               <InputField
                 inputType="text"
                 label="Firstname"
@@ -344,7 +357,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 onChange={(e) => {}}
                 iconName={""}
                 editable={false}
-              />
+              /> */}
               <Spacer size="verySmall"></Spacer>
               <InputLabel>Date of Birth</InputLabel>
               <InputField
@@ -376,7 +389,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
             <ProfileDataColumn>
-              <InputLabel>Lastname</InputLabel>
+              {/* <InputLabel>Lastname</InputLabel>
               <InputField
                 inputType="text"
                 label="Lastname"
@@ -384,7 +397,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 onChange={(e) => {}}
                 iconName={""}
                 editable={false}
-              />
+              /> */}
               <Spacer size="verySmall"></Spacer>
               <InputLabel>Email</InputLabel>
               <InputField
@@ -403,9 +416,22 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 label="LOGOUT"
                 onClick={() => {
                   logout();
-                  router.push("/auth/login");
+                  router.push("/auth?tab=login");
                 }}
               ></Button> */}
+              <InputLabel>User Since</InputLabel>
+              <InputField
+                inputType="text"
+                label="User Since"
+                value={longDateCreationDate}
+                onChange={(e) => {}}
+                iconName={""}
+                editable={false}
+              />
+            </ProfileDataColumn>
+
+            <ProfileDataColumn>
+              {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
           </>
         ) : (

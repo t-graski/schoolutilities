@@ -134,7 +134,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth?tab=register`, {
       method: "POST",
       body: JSON.stringify({
         firstName,
@@ -253,7 +253,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             }}
             disabled={isDisabled}
           ></Button>
-          <Link href="/auth/login">
+          <Link href="/auth?tab=login">
             <a>
               <Button
                 backgroundColor="secondary"
@@ -281,7 +281,9 @@ export const RegistrationField: React.FC<Props> = ({}) => {
                 ? "You can now join a school, or create a school"
                 : ""}
             </SuccessDescription>
-            <Link href={signUpWorking ? "/profile/settings" : "/auth/register"}>
+            <Link
+              href={signUpWorking ? "/profile/settings" : "/auth?tab=register"}
+            >
               <StyledLink
                 onClick={() => {
                   setSignUpInfo("");

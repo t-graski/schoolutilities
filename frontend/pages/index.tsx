@@ -53,7 +53,7 @@ export default function Home() {
             the right design, we make this possible."
             descriptionLine="This is SchoolUtilities."
             buttonText="REGISTER NOW"
-            buttonLink="/auth/register"
+            buttonLink="/auth?tab=register"
             linkText="LEARN MORE"
             linkUrl="/learn-more"
           ></StartPageBox>

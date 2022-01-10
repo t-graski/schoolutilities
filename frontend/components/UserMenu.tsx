@@ -360,7 +360,11 @@ export const UserMenu = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
-                <DropdownMenuTriggerItem>
+                <DropdownMenuTriggerItem
+                  onClick={() => {
+                    router.push("/profile/school-selection");
+                  }}
+                >
                   Schools
                   <RightSlot>
                     <ChevronRightIcon />
@@ -415,14 +419,14 @@ export const UserMenu = () => {
             <>
               <DropdownMenuItem
                 onClick={() => {
-                  router.push("/auth/register");
+                  router.push("/auth?tab=register");
                 }}
               >
                 Register
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  router.push("/auth/login");
+                  router.push("/auth?tab=login");
                 }}
               >
                 Login

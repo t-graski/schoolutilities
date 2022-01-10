@@ -1,5 +1,4 @@
 import React from "react";
-import { RegisterAuth } from "../../components/RegisterAuth";
 import Head from "next/head";
 import { Navbar } from "../../components/Navbar";
 import { Spacer } from "../../components/Spacer";
