@@ -137,8 +137,6 @@ export class FileUploadService {
         data: `${fileUUID.courseFileUUID}`,
       };
     } catch (error) {
-      console.log(error);
-
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

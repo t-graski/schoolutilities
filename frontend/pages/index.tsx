@@ -77,12 +77,12 @@ export default function Home() {
               iconName: "SvgSchool",
             },
             {
-              title: "About Us",
+              title: "Premium",
               description:
-                "We think it’s cool to know who the people behind a service are. Learn more about us and our role in the team.",
-              href: "/about-us",
+                "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
+              href: "/premium",
               buttonText: "LEARN MORE",
-              iconName: "SvgInfo",
+              iconName: "SvgPremium",
             },
           ]}
         ></GeneralList>

@@ -10,6 +10,7 @@ import { FileUploadModule } from './file/file.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { TimezoneModule } from './timezone/timezone.module';
 import { UserModule } from './user/user.module';
+import { AssetsModule } from './assets/assets.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserModule } from './user/user.module';
     StatisticsModule,
     TimezoneModule,
     UserModule,
+    AssetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

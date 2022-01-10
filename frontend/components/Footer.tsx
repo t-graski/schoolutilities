@@ -98,7 +98,7 @@ export const Footer: React.FC<Props> = ({}) => {
           </Link>
           <LinkLayout>
             <LinkHeadline>Company</LinkHeadline>
-            <Link href="/imprint">
+            <Link href="/contact-us">
               <StyledLink>Contact Us</StyledLink>
             </Link>
             <Link href="/about-us">
@@ -165,7 +165,7 @@ export const Footer: React.FC<Props> = ({}) => {
             <Link href="/data-policy">
               <StyledLink>Data-Policy</StyledLink>
             </Link>
-            <Link href="/imprint">
+            <Link href="/contact-us">
               <StyledLink>Imprint</StyledLink>
             </Link>
           </ImprintLayout>

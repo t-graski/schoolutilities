@@ -193,8 +193,8 @@ const LinkLayout = styled("a", {
 });
 
 const IconLayout = styled("div", {
-  width: "30px",
-  height: "30px",
+  width: "35px",
+  height: "35px",
 });
 
 const LinkContentLayout = styled("div", {
@@ -290,7 +290,7 @@ export const UserMenu = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <IconLayout>
-            <SvgIcon iconName="SvgUser" />
+            <SvgIcon iconName="SvgRoundUser" />
           </IconLayout>
         </DropdownMenuTrigger>
 
@@ -328,6 +328,33 @@ export const UserMenu = () => {
                         <DotFilledIcon />
                       </DropdownMenuItemIndicator>
                       Light
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem>
+                  Language
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  <DropdownMenuRadioGroup
+                    value={theme}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="english">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      English
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="german">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      German
                     </DropdownMenuRadioItem>
                   </DropdownMenuRadioGroup>
                 </DropdownMenuContent>
