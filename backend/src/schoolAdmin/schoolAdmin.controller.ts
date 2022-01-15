@@ -191,4 +191,16 @@ export class SchoolAdminController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  // @Get('/information/:schoolUUID')
+  // async getSchoolInformation(@Param() params, @Res() response, @Req() request) {
+  //   const token = request.headers.authorization.split(' ')[1];
+  //   const result = await this.schoolAdminService.getSchoolInformation(
+  //     params.schoolUUID,
+  //     token,
+  //   );
+  //   return response
+  //     .status(result.status)
+  //     .json(result?.data ? result.data : result.message);
+  // }
 }

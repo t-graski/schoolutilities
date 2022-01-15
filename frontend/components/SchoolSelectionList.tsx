@@ -53,21 +53,25 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
 
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
-    let response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    if (!accessToken) {
+      router.push("/auth?tab=login");
+    } else {
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      let fetchedSchools = await response.json();
+      console.log(fetchedSchools);
+      if (fetchedSchools.length == 0) {
+        router.push("/profile/school-join");
       }
-    );
-    let fetchedSchools = await response.json();
-    console.log(fetchedSchools);
-    if (fetchedSchools.length == 0) {
-      router.push("/profile/school-join");
+      setSchools(fetchedSchools);
     }
-    setSchools(fetchedSchools);
   }
 
   return (

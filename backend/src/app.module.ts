@@ -11,6 +11,7 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { TimezoneModule } from './timezone/timezone.module';
 import { UserModule } from './user/user.module';
 import { AssetsModule } from './assets/assets.module';
+import { StatusModule } from './status/status.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AssetsModule } from './assets/assets.module';
     TimezoneModule,
     UserModule,
     AssetsModule,
+    StatusModule,
   ],
   controllers: [AppController],
   providers: [AppService],

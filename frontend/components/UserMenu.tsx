@@ -362,6 +362,37 @@ export const UserMenu = () => {
               <DropdownMenu>
                 <DropdownMenuTriggerItem
                   onClick={() => {
+                    router.push("/school/course");
+                  }}
+                >
+                  Courses
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  {schools.map((school) => (
+                    <DropdownMenuItem
+                      key={school.schoolUUID}
+                      onClick={() => {
+                      }}
+                    >
+                      {school.schoolName}
+                    </DropdownMenuItem>
+                  ))}
+                  {schools.length > 0 && <DropdownMenuSeparator />}
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push("/school/course/create-course");
+                    }}
+                  >
+                    Create a course
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem
+                  onClick={() => {
                     router.push("/profile/school-selection");
                   }}
                 >
@@ -403,16 +434,16 @@ export const UserMenu = () => {
                     Create new school
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    logout();
-                    router.push("/");
-                  }}
-                >
-                  Logout
-                </DropdownMenuItem>
               </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  logout();
+                  router.push("/");
+                }}
+              >
+                Logout
+              </DropdownMenuItem>
             </>
           )}
           {!userInfo && (

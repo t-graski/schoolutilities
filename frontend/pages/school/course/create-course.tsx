@@ -10,23 +10,25 @@ import { Spacer } from "../../../components/Spacer";
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
 import { SiteLayout } from "../../../components/SiteLayout";
+import { CourseCreateProgressSite } from "../../../components/CourseCreateProgressSite";
+import { CourseCreateDetailField } from "../../../components/CourseCreateDetailField";
 
-const CreateSchoolLayout = styled("div", {
+const CreateCourseLayout = styled("div", {
   display: "flex",
   width: "100%",
   padding: "50px",
 });
 
-export default function CreateSchool() {
+export default function CreateCourse() {
   const [progressSteps, setProgressSteps] = useState([
     {
-      label: "School Details",
+      label: "Create course",
       isDone: false,
       isActive: true,
-      component: SchoolDetailField,
+      component: CourseCreateDetailField,
     },
     {
-      label: "Departments",
+      label: "Add members",
       isDone: false,
       isActive: false,
       component: DepartmentsDetailField,
@@ -36,13 +38,13 @@ export default function CreateSchool() {
   return (
     <SiteLayout>
       <Head>
-        <title>School Setup - SchoolUtilities</title>
+        <title>Course Setup - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="small"></Spacer>
-      <CreateSchoolLayout>
-        <SetupProgressSite steps={progressSteps}></SetupProgressSite>
-      </CreateSchoolLayout>
+      <CreateCourseLayout>
+        <CourseCreateProgressSite steps={progressSteps}></CourseCreateProgressSite>
+      </CreateCourseLayout>
       <Footer></Footer>
     </SiteLayout>
   );

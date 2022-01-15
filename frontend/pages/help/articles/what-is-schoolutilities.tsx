@@ -11,8 +11,16 @@ import { GeneralLayout } from "../../../components/article/GeneralLayout";
 import { StyledLink } from "../../../components/article/Link";
 import { ImageLayout } from "../../../components/article/ImageLayout";
 import Image from "next/image";
+import { ArticleDetails } from "../../../components/article/ArticleDetails";
 
 export default function Article() {
+  const articleDetails = {
+    title: "What is SchoolUtilities?",
+    author: "Tobias Graski",
+    date: "2020-05-01",
+    readingTime: "5 min read",
+  }
+
   return (
     <>
       <Head>
@@ -22,6 +30,7 @@ export default function Article() {
       <Spacer size="medium"></Spacer>
       <Headline label="What is SchoolUtilities?"></Headline>
       <Separator width="small" alignment="center" />
+      <ArticleDetails {...articleDetails}></ArticleDetails>
       <Spacer size="small"></Spacer>
       <GeneralLayout>
         <ArticleLayout>

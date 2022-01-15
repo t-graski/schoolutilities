@@ -48,6 +48,11 @@ const StyledLink = styled("a", {
   cursor: "pointer",
   fontSize: "1.7rem",
   paddingBottom: "5px",
+  transition: "all 200ms ease-in-out",
+  "&:hover": {
+    color: "$specialPrimary",
+  },
+
   variants: {
     marked: {
       true: {

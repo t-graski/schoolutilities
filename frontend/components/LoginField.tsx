@@ -111,7 +111,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconName="SvgUser"
+            iconName="SvgEmail"
             required={true}
             validatorFunction={validator.isEmail}
             validatorParams={[LENGTHS.EMAIL]}
@@ -122,7 +122,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconName="SvgUser"
+            iconName="SvgPassword"
             required={true}
             validatorFunction={validator.isStrongPassword}
             validatorParams={[PASSWORD]}

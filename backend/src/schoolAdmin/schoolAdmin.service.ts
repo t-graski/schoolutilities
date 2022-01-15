@@ -917,6 +917,29 @@ export class SchoolAdminService {
     }
   }
 
+  // async getSchoolInformation(
+  //   schoolUUID: string,
+  //   token: string,
+  // ): Promise<ReturnMessage> {
+  //   if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+  //     return RETURN_DATA.INVALID_INPUT;
+  //   }
+
+  //   const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+  //   const school = await prisma.schools.findUnique({
+  //     where: {
+  //       schoolId: Number(schoolId),
+  //     },
+  //     select: {
+  //       schoolName: true,
+  //       schoolUUID: true,
+  //       schoolDescription: true,
+  //       schoolCreationDate: true,
+  //     },
+  //   });
+  // }
+
   toBoolean(value): boolean {
     return value === '1';
   }

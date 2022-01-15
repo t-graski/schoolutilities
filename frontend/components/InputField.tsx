@@ -1,11 +1,19 @@
 import React from "react";
-import { styled } from "../stitches.config";
+import { styled, styles } from "../stitches.config";
 import Image from "next/image";
 import type * as Stitches from "@stitches/react";
 import { SvgIcon } from "./SvgIcon";
+import Select from "react-select";
 
 type Props = {
-  inputType: "text" | "password" | "date" | "email" | "checkbox" | "select";
+  inputType:
+    | "text"
+    | "password"
+    | "date"
+    | "email"
+    | "checkbox"
+    | "select"
+    | "search-select";
   selectOptions?: {
     value: string;
     label: string;
@@ -131,6 +139,120 @@ const FieldLayout = styled("div", {
   alignItems: "center",
 });
 
+const StyledSelect = styled(Select, {
+  width: "100%",
+  color: "$fontPrimary",
+  background: "transparent",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+  border: "none",
+  outline: "none",
+  padding: "0.5rem 0",
+  borderBottom: "solid 1px transparent",
+  fontWeight: "bold",
+  ["&:focus"]: {
+    borderBottom: "solid 1px $colors$fontPrimary",
+  },
+});
+
+const selectStyled = {
+  option: (provided, state) => ({
+    ...provided,
+    color: state.isSelected ? "$colors$fontPrimary" : "$fontPrimary",
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+  }),
+  control: (provided, state) => ({
+    ...provided,
+    border: "none",
+    borderBottom: "solid 1px transparent",
+    background: "transparent",
+    color: styles.theme.colors.fontPrimary,
+    fontSize: "1.2rem",
+    lineHeight: "1.5rem",
+    fontWeight: "bold",
+    ["&:focus"]: {
+      borderBottom: `solid 1px ${styles.theme.colors.fontPrimary}`,
+    },
+  }),
+
+  menu: (provided, state) => ({
+    ...provided,
+    background: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors.fontPrimary,
+    fontSize: "1.2rem",
+    lineHeight: "1.5rem",
+    fontWeight: "bold",
+    padding: "0",
+  }),
+
+  singleValue: (provided, state) => ({
+    ...provided,
+    color: styles.theme.colors.fontPrimary,
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+  }),
+
+  indicatorSeparator: (provided, state) => ({
+    ...provided,
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+  }),
+
+  dropdownIndicator: (provided, state) => ({
+    ...provided,
+    color: styles.theme.colors.fontPrimary,
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+
+    "&:hover": {
+      backgroundColor: styles.theme.colors.backgroundTertiary,
+    },
+
+    "&:active": {
+      backgroundColor: styles.theme.colors.backgroundTertiary,
+    },
+
+    "&:focus": {
+      backgroundColor: styles.theme.colors.backgroundTertiary,
+    },
+  }),
+
+  clearIndicator: (provided, state) => ({
+    ...provided,
+    color: styles.theme.colors.fontPrimary,
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+  }),
+
+  container: (provided, state) => ({
+    ...provided,
+    background: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors.fontPrimary,
+    fontSize: "1.2rem",
+    lineHeight: "1.5rem",
+    fontWeight: "bold",
+
+    ["&:focus"]: {
+      borderBottom: `solid 1px ${styles.theme.colors.fontPrimary}`,
+    },
+  }),
+
+  menuList: (provided, state) => ({
+    ...provided,
+    background: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors.fontPrimary,
+    fontSize: "1.2rem",
+    lineHeight: "1.5rem",
+    fontWeight: "bold",
+  }),
+
+  input: (provided, state) => ({
+    ...provided,
+    color: "#acadae",
+  }),
+
+  placeholder: (provided, state) => ({
+    ...provided,
+    color: "#acadae",
+  }),
+};
+
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
@@ -166,6 +288,33 @@ export const InputField: React.FC<Props> = ({
         </FieldLayout>
       </>
     );
+  } else if (inputType === "search-select") {
+    return (
+      <>
+        <InputFieldLayout>
+          {iconName && (
+            <ImageLayout>
+              <SvgIcon iconName={iconName} />
+            </ImageLayout>
+          )}
+          <StyledSelect
+            styles={selectStyled}
+            options={selectOptions}
+            isSearchable={true}
+            isClearable={true}
+            isDisabled={!editable}
+            onChange={(e: {value: string, label: string}) => {
+              console.log(e);
+              if(e && e.value){
+                onChange(e.value);
+              } else {
+                onChange("");
+              }
+            }}
+          ></StyledSelect>
+        </InputFieldLayout>
+      </>
+    );
   } else if (inputType === "select") {
     return (
       <>
@@ -176,7 +325,6 @@ export const InputField: React.FC<Props> = ({
             </ImageLayout>
           )}
           <StyledSelectField
-            name={label}
             placeholder={label}
             onChange={(e) => onChange(e.target.value)}
             {...(required && { required: true })}

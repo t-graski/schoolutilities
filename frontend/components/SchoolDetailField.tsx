@@ -11,6 +11,7 @@ import { Headline } from "./Headline";
 import { Separator } from "./Separator";
 import validator from "validator";
 import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
+import { Spacer } from "./Spacer";
 
 type Props = {
   setDisabled: Function;
@@ -76,18 +77,21 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
   return (
     <>
       <SchoolDetailLayout>
-        <Headline
-          label="School Setup"
-          alignment="left"
-          fontWeight="bold"
-        ></Headline>
-        <Separator width="small" alignment="left"></Separator>
+        <div>
+          <Headline
+            label="School Setup"
+            alignment="left"
+            fontWeight="bold"
+          ></Headline>
+          <Separator width="small" alignment="left"></Separator>
+        </div>
+        <Spacer size="verySmall"></Spacer>
         <InputField
           label="School name"
           inputType="text"
           value={schoolName}
           onChange={setSchoolName}
-          iconName="SvgUser"
+          iconName="SvgSchool"
           required={true}
           validatorFunction={validator.isLength}
           validatorParams={[LENGTHS.NAME]}
@@ -96,24 +100,24 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         ></InputField>
         <InputField
           label="Language"
-          inputType="select"
+          inputType="search-select"
           value={schoolLanguage}
           onChange={setSchoolLanguage}
-          iconName="SvgUser"
+          iconName="SvgLanguage"
           required={true}
           errorMessage="Tell us the language you speak in your school"
           selectOptions={[
-            { value: "", label: "Language" },
+            { value: "german", label: "German" },
             { value: "english", label: "English" },
           ]}
           selectValue={schoolLanguage}
         ></InputField>
         <InputField
           label="Timezone (GMT+0)"
-          inputType="select"
+          inputType="search-select"
           value={schoolTimezone}
           onChange={setSchoolTimezone}
-          iconName="SvgUser"
+          iconName="SvgTimezone"
           required={true}
           errorMessage="Try to select a timezone in the drop-down menu"
           selectOptions={[
