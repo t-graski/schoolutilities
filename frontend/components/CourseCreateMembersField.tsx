@@ -20,8 +20,8 @@ type Props = {
   inputData: {
     courseName: string;
     courseDescription: string;
-    classes: number[];
-    members: number[];
+    classes: string[];
+    members: string[];
   };
   setInputData: Function;
 };
@@ -87,7 +87,6 @@ export const CourseCreateMembersField: React.FC<Props> = ({
     );
     const memberData = await memberResponse.json();
     setMembers(memberData.map((member) => { return { value: member.personUUID, label: `${member.lastName} ${member.firstName}` } }));
-    console.log(memberData);
   }
 
   return (
@@ -106,6 +105,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
         <InputField
           label="Classes"
           inputType="search-select"
+          selectValue={inputData.classes}
           onChange={(e) => {
             setInputData({
               ...inputData,
@@ -121,7 +121,9 @@ export const CourseCreateMembersField: React.FC<Props> = ({
         <InputField
           label="Persons"
           inputType="search-select"
+          selectValue={inputData.members}
           onChange={(e) => {
+              console.log(e);
             setInputData({
               ...inputData,
               members: e,

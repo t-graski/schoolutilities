@@ -18,7 +18,7 @@ type Props = {
     value: string;
     label: string;
   }[];
-  selectValue?: string;
+  selectValue?: string | string[];
   selectMultiValues?: boolean;
   value?: string;
   onChange: Function;
@@ -252,7 +252,7 @@ const selectStyled = {
     ...provided,
     color: "#acadae",
   }),
-  
+
   multiValue: (provided, state) => ({
     ...provided,
     backgroundColor: styles.theme.colors.backgroundTertiary,
@@ -312,6 +312,7 @@ export const InputField: React.FC<Props> = ({
       </>
     );
   } else if (inputType === "search-select") {
+    console.log(selectValue);
     return (
       <>
         <InputFieldLayout>
@@ -325,17 +326,11 @@ export const InputField: React.FC<Props> = ({
             options={selectOptions}
             isSearchable={true}
             isClearable={true}
+            defaultValue={selectValue}
             isDisabled={!editable}
             className={selectMultiValues ? "basic-multi-select" : ""}
             isMulti={selectMultiValues}
-            onChange={(e: {value: string, label: string}) => {
-              console.log(e);
-              if(e && e.value){
-                onChange(e.value);
-              } else {
-                onChange("");
-              }
-            }}
+            onChange={onChange}
           ></StyledSelect>
         </InputFieldLayout>
       </>

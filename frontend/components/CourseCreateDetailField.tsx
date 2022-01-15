@@ -18,8 +18,8 @@ type Props = {
   inputData: {
     courseName: string;
     courseDescription: string;
-    classes: number[];
-    members: number[];
+    classes: string[];
+    members: string[];
   };
   setInputData: Function;
 };
