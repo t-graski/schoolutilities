@@ -20,6 +20,18 @@ model coursePersons {
   @@map("course_persons")
 }
 
+model courseClasses {
+  courseId      Int           @map("course_id")
+  classId       Int           @map("class_id")
+  courses       courses       @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCourseclasscourse")
+  schoolClasses schoolClasses @relation(fields: [classId], references: [classId], onUpdate: Restrict, map: "fkCourseclassclass")
+
+  @@unique([courseId, classId], name: "courseClassId")
+  @@index([courseId], map: "fkCourseclasscourse")
+  @@index([classId], map: "fkCourseclassclass")
+  @@map("course_classes")
+}
+
 model departments {
   departmentId   Int             @id @default(autoincrement()) @map("department_id")
   departmentUUID String          @map("department_uuid") @db.VarChar(255)
@@ -106,8 +118,8 @@ model schoolClasses {
   departmentId Int         @map("department_id")
   className    String      @map("class_name") @db.VarChar(255)
   departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
-  courses      courses[]
 
+  courseClasses courseClasses[]
   @@index([departmentId], map: "fkSchoolclassdepartment")
   @@map("school_classes")
 }
@@ -136,21 +148,22 @@ model subjects {
 }
 
 model courses {
-  courseId          Int           @id @default(autoincrement()) @map("course_id")
-  courseUUID        String        @map("course_uuid") @db.VarChar(255)
-  name              String        @db.VarChar(255)
-  courseDescription String        @map("course_description") @db.Text
-  schoolId          Int           @map("school_id")
-  subjectId         Int           @map("subject_id")
-  classId           Int           @map("class_id")
-  schoolClasses     schoolClasses @relation(fields: [classId], references: [classId], onUpdate: Restrict, map: "fkCourseclass")
-  schools           schools       @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkCourseschool")
-  subjects          subjects      @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
-  members           persons[]     @relation(references: [personId])
+  courseId          Int      @id @default(autoincrement()) @map("course_id")
+  courseUUID        String   @map("course_uuid") @db.VarChar(255)
+  name              String   @db.VarChar(255)
+  courseDescription String   @map("course_description") @db.Text
+  schoolId          Int      @map("school_id")
+  subjectId         Int      @map("subject_id")
+  creationDate      DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId  Int      @map("person_creation_id")
+
+  schools  schools   @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkCourseschool")
+  subjects subjects  @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
+  members  persons[] @relation(references: [personId])
 
   coursePersons coursePersons[]
+  courseClasses courseClasses[]
   @@unique([name, schoolId], map: "uniqueCourseNameSchoolId")
-  @@index([classId], map: "fkCourseclass")
   @@index([schoolId], map: "fkCourseschool")
   @@index([subjectId], map: "fkCoursesubject")
 }

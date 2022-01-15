@@ -64,6 +64,7 @@ const RETURN_MESSAGES = {
   NO_FILE_PROVIDED_MESSAGE: 'No file provided',
   DEPARTMENTS_SAME_NAMES_MESSAGE: 'Department name occurs multiple times',
   LAST_USER_MESSAGE: 'Cannot delete last user',
+  FORBIDDEN_MESSAGE: 'Forbidden',
 };
 
 export const RETURN_DATA = {
@@ -118,7 +119,11 @@ export const RETURN_DATA = {
   LAST_USER: {
     status: HttpStatus.CONFLICT,
     message: RETURN_MESSAGES.LAST_USER_MESSAGE,
-  }
+  },
+  FORBIDDEN: {
+    status: HttpStatus.FORBIDDEN,
+    message: RETURN_MESSAGES.FORBIDDEN_MESSAGE,
+  },
 };
 
 export const ID_STARTERS = {

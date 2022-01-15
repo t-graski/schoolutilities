@@ -11,6 +11,8 @@ import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthService } from 'src/auth/auth.service';
+import { DatabaseService } from 'src/database/database.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,26 +23,27 @@ const prisma = new PrismaClient();
 @Injectable()
 export class CourseService {
   connection: any;
-  constructor() {
-    this.connection = mysql.createConnection({
-      host: process.env.DATABASE_HOST,
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-    });
-    this.connection.connect();
-  }
-  async addCourse(body: AddCourse): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolId, subjectId, classId } = body;
+  constructor(
+    private readonly authService: AuthService,
+    private readonly databaseService: DatabaseService,
+  ) {}
+  async addCourse(body: AddCourse, token: string): Promise<ReturnMessage> {
+    const { name, courseDescription, schoolUUID, persons, classes } = body;
+
+    const jwt = await this.authService.decodeJWT(token);
+    const personUUID = jwt.personUUID;
+
     if (
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
-      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION) ||
-      !validator.isNumeric(schoolId) ||
-      !validator.isNumeric(subjectId) ||
-      !validator.isNumeric(classId)
+      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
     ) {
       return RETURN_DATA.INVALID_INPUT;
     }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId = await (
+      await this.authService.getPersonIdByUUID(personUUID)
+    ).personId;
 
     const isNotAvailable = await prisma.courses.findFirst({
       where: {
@@ -54,40 +57,87 @@ export class CourseService {
     }
 
     try {
-      await prisma.courses.create({
+      const courseData = await prisma.courses.create({
         data: {
           courseUUID: `${ID_STARTERS.COURSE}${uuidv4()}`,
           name,
-          courseDescription: courseDescription,
-          schools: {
-            connect: {
-              schoolId: Number(schoolId),
-            },
-          },
-          subjects: {
-            connect: {
-              subjectId: Number(subjectId),
-            },
-          },
-          schoolClasses: {
-            connect: {
-              classId: Number(classId),
-            },
-          },
+          courseDescription,
+          schoolId: Number(schoolId),
+          subjectId: 0,
+          personCreationId: Number(personId),
         },
       });
+
+      if (persons) {
+        for (let person of persons) {
+          if (!validator.isUUID(person.slice(1), 4)) {
+            return RETURN_DATA.INVALID_INPUT;
+          }
+
+          const personId = await (
+            await this.authService.getPersonIdByUUID(person)
+          ).personId;
+
+          await prisma.coursePersons.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseData.courseId),
+                },
+              },
+              persons: {
+                connect: {
+                  personId: Number(personId),
+                },
+              },
+            },
+          });
+        }
+      }
+
+      if (classes) {
+        for (let schoolClass of classes) {
+          if (!validator.isUUID(schoolClass.slice(1), 4)) {
+            return RETURN_DATA.INVALID_INPUT;
+          }
+
+          const schoolId = await this.databaseService.getClassIdByUUID(
+            schoolClass,
+          );
+
+          await prisma.courseClasses.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseData.courseId),
+                },
+              },
+              schoolClasses: {
+                connect: {
+                  classId: Number(schoolId),
+                },
+              },
+            },
+          });
+        }
+      }
     } catch (err) {
+      console.log(err);
+
       return RETURN_DATA.DATABASE_ERROR;
     }
+
     return RETURN_DATA.SUCCESS;
   }
 
   async removeCourse(body: RemoveCourse): Promise<ReturnMessage> {
-    const { courseId } = body;
+    const { courseUUID } = body;
 
-    if (!validator.isNumeric(courseId)) {
+    if (!validator.isUUID(courseUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
+
+    const courseId = await this.databaseService;
 
     const course = await prisma.courses.findUnique({
       where: {
@@ -116,7 +166,7 @@ export class CourseService {
   }
 
   async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
-    const { courseId, name, courseDescription, subjectId, classId } = body;
+    const { courseId, name, courseDescription, subjectId } = body;
     if (
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
       !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
@@ -146,7 +196,6 @@ export class CourseService {
         name: name,
         courseDescription: courseDescription,
         subjectId: Number(subjectId),
-        classId: Number(classId),
       },
     });
     if (patchCourse) {
@@ -234,6 +283,211 @@ export class CourseService {
         status: HttpStatus.BAD_REQUEST,
         message: 'User not deleted',
       };
+    }
+  }
+
+  async getAllCourses(
+    schoolUUID: string,
+    token: string,
+  ): Promise<ReturnMessage> {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const jwt = await this.authService.decodeJWT(token);
+    const personUUID = jwt.personUUID;
+
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    const personInSchool = await prisma.schoolPersons.findUnique({
+      where: {
+        schoolPersonId: {
+          schoolId: Number(schoolId),
+          personId: Number(personId),
+        },
+      },
+    });
+
+    if (!personInSchool) return RETURN_DATA.FORBIDDEN;
+
+    const courseData = [];
+    try {
+      const courses = await prisma.courses.findMany({
+        where: {
+          schoolId: Number(schoolId),
+        },
+        select: {
+          courseUUID: true,
+          name: true,
+          courseDescription: true,
+          schoolId: true,
+          creationDate: true,
+          personCreationId: true,
+        },
+      });
+
+      for (let course of courses) {
+        const creator = await prisma.persons.findUnique({
+          where: {
+            personId: Number(course.personCreationId),
+          },
+          select: {
+            personUUID: true,
+            firstName: true,
+            lastName: true,
+          },
+        });
+
+        const courseDataItem = {
+          courseUUID: course.courseUUID,
+          courseName: course.name,
+          courseDescription: course.courseDescription,
+          creationDate: course.creationDate,
+          creator: {
+            personUUID: creator.personUUID,
+            firstName: creator.firstName,
+            lastName: creator.lastName,
+          },
+        };
+        courseData.push(courseDataItem);
+      }
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: courseData,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getCourseInfo(
+    courseUUID: string,
+    token: string,
+  ): Promise<ReturnMessage> {
+    if (!validator.isUUID(courseUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const jwt = await this.authService.decodeJWT(token);
+    const personUUID = jwt.personUUID;
+
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+    const courseId = await this.databaseService.getCourseUUIDById(courseUUID);
+
+    const personInCourse = await prisma.coursePersons.findUnique({
+      where: {
+        coursePersonId: {
+          courseId: Number(courseId),
+          personId: Number(personId),
+        },
+      },
+    });
+
+    if (!personInCourse) return RETURN_DATA.FORBIDDEN;
+
+    const courseData = [];
+
+    try {
+      const course = await prisma.courses.findUnique({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          courseUUID: true,
+          name: true,
+          courseDescription: true,
+          schoolId: true,
+          creationDate: true,
+          personCreationId: true,
+        },
+      });
+
+      const creator = await prisma.persons.findUnique({
+        where: {
+          personId: Number(course.personCreationId),
+        },
+        select: {
+          personUUID: true,
+          firstName: true,
+          lastName: true,
+        },
+      });
+
+      const persons = await prisma.coursePersons.findMany({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          personId: true,
+        },
+      });
+
+      const personsData = [];
+
+      for (let person of persons) {
+        const personData = await prisma.persons.findUnique({
+          where: {
+            personId: Number(person.personId),
+          },
+          select: {
+            personUUID: true,
+            firstName: true,
+            lastName: true,
+          },
+        });
+        personsData.push(personData);
+      }
+
+      //get all classes of course
+      const classes = await prisma.courseClasses.findMany({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          classId: true,
+        },
+      });
+
+      const classesData = [];
+
+      if (classes) {
+        for (let schoolClass of classes) {
+          const classData = await prisma.schoolClasses.findUnique({
+            where: {
+              classId: Number(schoolClass.classId),
+            },
+            select: {
+              classUUID: true,
+              className: true,
+            },
+          });
+          classesData.push(classData);
+        }
+      }
+
+      const courseDataItem = {
+        courseUUID: course.courseUUID,
+        courseName: course.name,
+        courseDescription: course.courseDescription,
+        creationDate: course.creationDate,
+        creator: {
+          personUUID: creator.personUUID,
+          firstName: creator.firstName,
+          lastName: creator.lastName,
+        },
+        persons: personsData,
+        classes: classesData,
+      };
+
+      courseData.push(courseDataItem);
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: courseData,
+      };
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 }

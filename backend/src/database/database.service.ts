@@ -254,6 +254,29 @@ export class DatabaseService {
     });
     return classId.classId;
   }
+  async getCourseUUIDById(courseUUID: string): Promise<any> {
+    const course = await prisma.courses.findFirst({
+      where: {
+        courseUUID: courseUUID,
+      },
+      select: {
+        courseId: true,
+      },
+    });
+    return course.courseId;
+  }
+
+  async getCourseIdByUUID(courseUUID: string): Promise<any> {
+    const course = await prisma.courses.findFirst({
+      where: {
+        courseUUID: courseUUID,
+      },
+      select: {
+        courseId: true,
+      },
+    });
+    return course.courseId;
+  }
 
   async getPersonRolesByPersonUUID(personUUID: string): Promise<any> {
     const personId = await this.getPersonIdByUUID(personUUID);
