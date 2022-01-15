@@ -19,6 +19,7 @@ type Props = {
     label: string;
   }[];
   selectValue?: string;
+  selectMultiValues?: boolean;
   value?: string;
   onChange: Function;
   iconName: string;
@@ -251,12 +252,34 @@ const selectStyled = {
     ...provided,
     color: "#acadae",
   }),
+  
+  multiValue: (provided, state) => ({
+    ...provided,
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors.fontPrimary,
+    fontSize: "1.2rem",
+    lineHeight: "1.5rem",
+    fontWeight: "bold",
+  }),
+
+  multiValueLabel: (provided, state) => ({
+    ...provided,
+    color: styles.theme.colors.fontPrimary,
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+  }),
+
+  multiValueRemove: (provided, state) => ({
+    ...provided,
+    color: styles.theme.colors.fontPrimary,
+    backgroundColor: styles.theme.colors.backgroundTertiary,
+  }),
 };
 
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
   selectValue,
+  selectMultiValues,
   value,
   onChange,
   children,
@@ -303,6 +326,8 @@ export const InputField: React.FC<Props> = ({
             isSearchable={true}
             isClearable={true}
             isDisabled={!editable}
+            className={selectMultiValues ? "basic-multi-select" : ""}
+            isMulti={selectMultiValues}
             onChange={(e: {value: string, label: string}) => {
               console.log(e);
               if(e && e.value){

@@ -12,6 +12,7 @@ import Head from "next/head";
 import { SiteLayout } from "../../../components/SiteLayout";
 import { CourseCreateProgressSite } from "../../../components/CourseCreateProgressSite";
 import { CourseCreateDetailField } from "../../../components/CourseCreateDetailField";
+import { CourseCreateMembersField } from "../../../components/CourseCreateMembersField";
 
 const CreateCourseLayout = styled("div", {
   display: "flex",
@@ -31,7 +32,7 @@ export default function CreateCourse() {
       label: "Add members",
       isDone: false,
       isActive: false,
-      component: DepartmentsDetailField,
+      component: CourseCreateMembersField,
     },
   ]);
 
