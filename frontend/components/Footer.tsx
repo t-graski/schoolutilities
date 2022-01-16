@@ -159,7 +159,7 @@ export const Footer: React.FC<Props> = ({}) => {
         <FooterSpacer />
         <FooterContentLayout>
           <StyledRightText>
-            © 2021, SchoolUtilities - All Rights Reserved
+            © 2022, SchoolUtilities - All Rights Reserved
           </StyledRightText>
           <ImprintLayout>
             <Link href="/data-policy">

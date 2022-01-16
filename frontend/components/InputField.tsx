@@ -4,6 +4,8 @@ import Image from "next/image";
 import type * as Stitches from "@stitches/react";
 import { SvgIcon } from "./SvgIcon";
 import Select from "react-select";
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 type Props = {
   inputType:
@@ -138,6 +140,7 @@ const FieldLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
+  gap: "20px",
 });
 
 const StyledSelect = styled(Select, {
@@ -266,6 +269,7 @@ const selectStyled = {
     ...provided,
     color: styles.theme.colors.fontPrimary,
     backgroundColor: styles.theme.colors.backgroundTertiary,
+    border: `solid 1px ${styles.theme.colors.fontPrimary}`,
   }),
 
   multiValueRemove: (provided, state) => ({
@@ -274,6 +278,38 @@ const selectStyled = {
     backgroundColor: styles.theme.colors.backgroundTertiary,
   }),
 };
+
+const StyledCheckbox = styled(CheckboxPrimitive.Root, {
+  all: "unset",
+  backgroundColor: "$backgroundTertiary",
+  width: 25,
+  height: 25,
+  borderRadius: 4,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  cursor: "pointer",
+  boxShadow: `0 2px 10px $backgroundSecondary`,
+  "&:hover": { backgroundColor: "$backgroundTertiary" },
+  "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
+});
+
+const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
+  color: "$fontPrimary",
+});
+
+// Exports
+const Checkbox = StyledCheckbox;
+const CheckboxIndicator = StyledIndicator;
+
+// Your app...
+const Flex = styled("div", { display: "flex" });
+const Label = styled("label", {
+  color: "white",
+  fontSize: 15,
+  lineHeight: 1,
+  userSelect: "none",
+});
 
 export const InputField: React.FC<Props> = ({
   inputType,
@@ -298,15 +334,11 @@ export const InputField: React.FC<Props> = ({
     return (
       <>
         <FieldLayout>
-          <StyledInputField
-            type={inputType}
-            name={label}
-            placeholder={label}
-            onChange={(e) => onChange(e.target.checked)}
-            inputType={inputType}
-            {...(required && { required: true })}
-            readOnly={!editable}
-          />
+          <Checkbox id="c1" onCheckedChange={(checked) => {onChange(checked)}}>
+            <CheckboxIndicator>
+              <CheckIcon />
+            </CheckboxIndicator>
+          </Checkbox>
           <span>{children}</span>
         </FieldLayout>
       </>
@@ -330,7 +362,9 @@ export const InputField: React.FC<Props> = ({
             isDisabled={!editable}
             className={selectMultiValues ? "basic-multi-select" : ""}
             isMulti={selectMultiValues}
-            onChange={onChange}
+            onChange={(value) => {
+              onChange(value);
+            }}
           ></StyledSelect>
         </InputFieldLayout>
       </>

@@ -150,7 +150,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
         setStatusInfo({
           statusHeadline: "Your Course was successfully created",
           statusDescription:
-            "You can now manage your couirse, create classes and add users to your course.",
+            "You can now manage your course, create classes and add users to your course.",
           statusIcon: "SvgQuality",
           statusColor: "success",
           linkVisibility: true,

@@ -12,13 +12,12 @@ type Props = {};
 
 const NavbarLayout = styled("div", {
   display: "flex",
-  position: "fixed",
+  position: "absolute",
   top: 0,
   left: 0,
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
-  backgroundColor: "$backgroundPrimary",
   width: "100vw",
   padding: "0 45px",
   color: "$fontPrimary",

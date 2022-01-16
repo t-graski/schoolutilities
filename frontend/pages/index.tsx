@@ -9,6 +9,8 @@ import Head from "next/head";
 import { logout } from "../misc/authHelper";
 import { StartPageBox } from "../components/StartPageBox";
 import { GeneralList } from "../components/GeneralList";
+import StartpageArtwork from "../components/svg/StartpageArtwork";
+import Image from "next/image";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -22,6 +24,15 @@ const FirstBoxLayout = styled("div", {
   width: "100vw",
   marginTop: "18vh",
   height: "82vh",
+});
+
+const ArtworkLayout = styled("div", {
+  display: "block",
+  width: "55vw",
+  height: "80vh",
+  position: "absolute",
+  top: "0",
+  right: "0",
 });
 
 export default function Home() {
@@ -43,6 +54,9 @@ export default function Home() {
           ></meta>
         </Head>
         <Navbar />
+        <ArtworkLayout>
+          <Image layout="fill" src="/images/artwork.png" />
+        </ArtworkLayout>
         <FirstBoxLayout>
           <StartPageBox
             title="LET’S MAKE"
