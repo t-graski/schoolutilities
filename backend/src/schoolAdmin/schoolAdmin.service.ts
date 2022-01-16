@@ -51,7 +51,7 @@ export class SchoolAdminService {
     body: AddSchool,
     token: string,
   ): Promise<ReturnMessage> {
-    const { name, languageId, timezone, description } = body;
+    const { name, languageId, timezone, description = '' } = body;
     if (
       !validator.isLength(name, LENGTHS.CLASS_NAME)
       // !regex.timezone.test(timezone) ||
@@ -120,6 +120,7 @@ export class SchoolAdminService {
         data: {
           schoolUUID: school.schoolUUID,
           schoolName: school.name,
+          description,
           languageId: school.languageId == 1 ? 'de' : 'en',
           timezone: school.timezone,
         },
@@ -1089,7 +1090,6 @@ export class SchoolAdminService {
       }
     }
 
-    //add department data to school data
     schoolData[schoolUUID].departments = departmentData;
 
     const coursesData = [];
@@ -1151,7 +1151,6 @@ export class SchoolAdminService {
       coursesData.push(courseDataItem);
     }
 
-    //add courses data to school data
     schoolData[schoolUUID].courses = coursesData;
 
     return {

@@ -6,21 +6,22 @@ import { Spacer } from "../../components/Spacer";
 import { Headline } from "../../components/Headline";
 import { Separator } from "../../components/Separator";
 import { SchoolSelectionList } from "../../components/SchoolSelectionList";
-import { SchoolJoin } from "../../components/SchoolJoin";
 import { Footer } from "../../components/Footer";
+import { Changelog } from "../../components/Changelog";
 
 export default function RegisterApproved() {
   return (
     <>
       <Head>
-        <title>School Join - SchoolUtilities</title>
+        <title>Change-Logs - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="Join a school"></Headline>
-      <Separator width="small" alignment="center" />
+      <Headline label="Change-Logs"></Headline>
       <Spacer size="verySmall"></Spacer>
-      <SchoolJoin></SchoolJoin>
+      <Separator width="small" alignment="center" />
+      <Spacer size="small"></Spacer>
+      <Changelog></Changelog>
       <Footer></Footer>
     </>
   );

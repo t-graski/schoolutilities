@@ -269,6 +269,8 @@ const selectStyled = {
     ...provided,
     color: styles.theme.colors.fontPrimary,
     backgroundColor: styles.theme.colors.backgroundTertiary,
+    padding: "8px",
+    borderRadius: "5px",
     border: `solid 1px ${styles.theme.colors.fontPrimary}`,
   }),
 
@@ -276,6 +278,7 @@ const selectStyled = {
     ...provided,
     color: styles.theme.colors.fontPrimary,
     backgroundColor: styles.theme.colors.backgroundTertiary,
+    cursor: "pointer",
   }),
 };
 
@@ -334,7 +337,12 @@ export const InputField: React.FC<Props> = ({
     return (
       <>
         <FieldLayout>
-          <Checkbox id="c1" onCheckedChange={(checked) => {onChange(checked)}}>
+          <Checkbox
+            id="c1"
+            onCheckedChange={(checked) => {
+              onChange(checked);
+            }}
+          >
             <CheckboxIndicator>
               <CheckIcon />
             </CheckboxIndicator>
@@ -419,14 +427,12 @@ export const InputField: React.FC<Props> = ({
                   setValidInput(inputValueValid);
                 }
                 if (isInputValid == null && !inputValueValid) {
-                  setTimeout(() => {
-                    if (
-                      validatorFunction &&
-                      validatorFunction(e.target.value, ...validatorParams)
-                    ) {
-                      setIsInputValid(false);
-                    }
-                  }, 2000);
+                  if (
+                    validatorFunction &&
+                    validatorFunction(e.target.value, ...validatorParams)
+                  ) {
+                    setIsInputValid(false);
+                  }
                 } else {
                   setIsInputValid(inputValueValid);
                 }

@@ -16,56 +16,23 @@ import { CourseCreateMembersField } from "../../../components/CourseCreateMember
 import cookie from "js-cookie";
 import { useRouter } from "next/router";
 import { getAccessToken } from "../../../misc/authHelper";
-
-const CreateCourseLayout = styled("div", {
-  display: "flex",
-  width: "100%",
-  padding: "50px",
-});
+import { CourseSelectionList } from "../../../components/CourseSelectionList";
+import { Headline } from "../../../components/Headline";
+import { Separator } from "../../../components/Separator";
 
 export default function CreateCourse() {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!getAccessToken()) {
-      router.push("/auth?tab=login");
-    } else if (!cookie.get("schoolUUID")) {
-      router.push(
-        "/profile/school-selection?redirect=/school/course/create-course"
-      );
-    }
-  }, []);
-
-  const [progressSteps, setProgressSteps] = useState([
-    {
-      label: "Create course",
-      isDone: false,
-      isActive: true,
-      component: CourseCreateDetailField,
-    },
-    {
-      label: "Add members",
-      isDone: false,
-      isActive: false,
-      component: CourseCreateMembersField,
-    },
-  ]);
 
   return (
-    <>
-      <SiteLayout>
-        <Head>
-          <title>Course Setup - SchoolUtilities</title>
-        </Head>
-        <Navbar></Navbar>
-        <Spacer size="small"></Spacer>
-        <CreateCourseLayout>
-          <CourseCreateProgressSite
-            steps={progressSteps}
-          ></CourseCreateProgressSite>
-        </CreateCourseLayout>
-      </SiteLayout>
+    <SiteLayout>
+      <Head>
+        <title>Course Setup - SchoolUtilities</title>
+      </Head>
+      <Navbar></Navbar>
+      <Spacer size="medium"></Spacer>
+      <Headline label="Course selection"></Headline>
+      <Separator width="small" alignment="center" />
+      <CourseSelectionList></CourseSelectionList>
       <Footer></Footer>
-    </>
+    </SiteLayout>
   );
 }

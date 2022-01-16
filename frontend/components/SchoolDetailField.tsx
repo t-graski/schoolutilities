@@ -100,7 +100,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         ></InputField>
         <InputField
           label="Language"
-          inputType="search-select"
+          inputType="select"
           value={schoolLanguage}
           onChange={setSchoolLanguage}
           iconName="SvgLanguage"
@@ -114,7 +114,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         ></InputField>
         <InputField
           label="Timezone (GMT+0)"
-          inputType="search-select"
+          inputType="select"
           value={schoolTimezone}
           onChange={setSchoolTimezone}
           iconName="SvgTimezone"

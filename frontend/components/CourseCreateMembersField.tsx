@@ -70,11 +70,14 @@ export const CourseCreateMembersField: React.FC<Props> = ({
       }
     );
     const classData = await classResponse.json();
-    setClasses(
-      classData.map((schoolClass) => {
-        return { value: schoolClass.classUUID, label: schoolClass.className };
-      })
-    );
+    console.log(classData);
+    if (classData.length > 0) {
+      setClasses(
+        classData.map((schoolClass) => {
+          return { value: schoolClass.classUUID, label: schoolClass.className };
+        })
+      );
+    }
     const memberResponse = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
       {
@@ -86,7 +89,14 @@ export const CourseCreateMembersField: React.FC<Props> = ({
       }
     );
     const memberData = await memberResponse.json();
-    setMembers(memberData.map((member) => { return { value: member.personUUID, label: `${member.lastName} ${member.firstName}` } }));
+    setMembers(
+      memberData.map((member) => {
+        return {
+          value: member.personUUID,
+          label: `${member.lastName} ${member.firstName}`,
+        };
+      })
+    );
   }
 
   return (
@@ -123,7 +133,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
           inputType="search-select"
           selectValue={inputData.members}
           onChange={(e) => {
-              console.log(e);
+            console.log(e);
             setInputData({
               ...inputData,
               members: e,

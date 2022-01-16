@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 
 export type SideDashboardProps = {};
 
-const SchoolList = styled("div", {
+const CourseList = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -17,7 +17,7 @@ const SchoolList = styled("div", {
   width: "100%",
 });
 
-const SchoolLayout = styled("div", {
+const CourseLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -35,7 +35,7 @@ const SchoolLayout = styled("div", {
   cursor: "pointer",
 });
 
-const SchoolName = styled("p", {
+const CourseName = styled("p", {
   fontSize: "20px",
   fontWeight: "bold",
   marginBottom: "10px",
@@ -43,20 +43,22 @@ const SchoolName = styled("p", {
   color: "$fontPrimary",
 });
 
-export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
-  const [schools, setSchools] = useState([]);
+export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
-    updateSchoolsFromDatabase();
+    updateCoursesFromDatabase();
   }, []);
   const router = useRouter();
 
-  async function updateSchoolsFromDatabase() {
+  async function updateCoursesFromDatabase() {
     let accessToken = await getAccessToken();
     if (!accessToken) {
-      router.push("/auth?tab=login");
+      router.push("/auth?tab=login&redirect=/school/course");
+    } else if (!cookie.get("schoolUUID")) {
+      router.push("/profile/school-selection?redirect=/school/course")
     } else {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${cookie.get("schoolUUID")}`,
         {
           method: "GET",
           headers: {
@@ -64,38 +66,26 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
           },
         }
       );
-      let fetchedSchools = await response.json();
-      console.log(fetchedSchools);
-      if (fetchedSchools.length == 0) {
-        router.push("/profile/school-join");
-      }
-      setSchools(fetchedSchools);
+      let fetchedCourses = await response.json();
+      console.log(response);
+      setCourses(fetchedCourses);
     }
   }
 
   return (
     <>
-      <SchoolList>
-        {schools.map((school) => (
-          <SchoolLayout
-            key={school.schoolUUID}
+      <CourseList>
+        {Array.isArray(courses) && courses.map((course) => (
+          <CourseLayout
+            key={course.courseUUID}
             onClick={() => {
-              cookie.set("schoolUUID", school.schoolUUID);
-              let redirectRoute: string = Array.isArray(router.query.redirect)
-                ? router.query.redirect[0]
-                : router.query.redirect;
-              if (router.query && redirectRoute) {
-                // router.push to the redirect url with decoded url
-                router.push(decodeURIComponent(redirectRoute));
-              } else {
-                router.push("/school/admin/settings");
-              }
+                router.push(`/school/course/${course.courseUUID}`);
             }}
           >
-            <SchoolName>{school.schoolName}</SchoolName>
-          </SchoolLayout>
+            <CourseName>{course.courseName}</CourseName>
+          </CourseLayout>
         ))}
-      </SchoolList>
+      </CourseList>
     </>
   );
 };

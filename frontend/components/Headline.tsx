@@ -36,6 +36,12 @@ const Header = styled("h1", {
       },
     },
     size: {
+      superSmall: {
+        fontSize: "0.5rem",
+      },
+      verySmall: {
+        fontSize: "1.5rem",
+      },
       small: {
         fontSize: "2.5rem",
       },

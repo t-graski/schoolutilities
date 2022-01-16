@@ -121,13 +121,18 @@ export class CourseService {
           });
         }
       }
-    } catch (err) {
-      console.log(err);
 
+      delete courseData.courseId;
+      delete courseData.schoolId;
+      delete courseData.subjectId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: courseData,
+      };
+    } catch (err) {
       return RETURN_DATA.DATABASE_ERROR;
     }
-
-    return RETURN_DATA.SUCCESS;
   }
 
   async removeCourse(body: RemoveCourse): Promise<ReturnMessage> {
@@ -386,8 +391,7 @@ export class CourseService {
 
     if (!personInCourse) return RETURN_DATA.FORBIDDEN;
 
-    const courseData = [];
-
+    const courseData = {};
     try {
       const course = await prisma.courses.findUnique({
         where: {
@@ -439,7 +443,6 @@ export class CourseService {
         personsData.push(personData);
       }
 
-      //get all classes of course
       const classes = await prisma.courseClasses.findMany({
         where: {
           courseId: Number(courseId),
@@ -480,7 +483,8 @@ export class CourseService {
         classes: classesData,
       };
 
-      courseData.push(courseDataItem);
+      //add coursedata item to coursedata object
+      courseData[courseDataItem.courseUUID] = courseDataItem;
 
       return {
         status: RETURN_DATA.SUCCESS.status,

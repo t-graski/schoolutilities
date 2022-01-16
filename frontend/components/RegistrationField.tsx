@@ -134,7 +134,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth?tab=register`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register`, {
       method: "POST",
       body: JSON.stringify({
         firstName,

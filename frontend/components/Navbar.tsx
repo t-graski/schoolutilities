@@ -164,9 +164,9 @@ export const Navbar: React.FC<Props> = ({}) => {
               MY SCHOOLS
             </StyledLink>
           </Link>
-          <Link href="/bot-dashboard">
-            <StyledLink marked={router.pathname === "/bot-dashboard"}>
-              BOT DASHBOARD
+          <Link href="/change-logs">
+            <StyledLink marked={router.pathname === "/change-logs"}>
+              CHANGE-LOG
             </StyledLink>
           </Link>
           <SpecialLinkLayout>

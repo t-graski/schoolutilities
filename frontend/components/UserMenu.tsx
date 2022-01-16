@@ -235,6 +235,7 @@ const StyledLink = styled(Link, {
 export const UserMenu = () => {
   const router = useRouter();
   const [schools, setSchools] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
   const { theme, setTheme } = useTheme();
@@ -253,7 +254,19 @@ export const UserMenu = () => {
       );
       let fetchedSchools = await response.json();
       setSchools(fetchedSchools);
-      console.log(fetchedSchools);
+      if (cookie.get("schoolUUID")) {
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${cookie.get("schoolUUID")}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let fetchedCourses = await response.json();
+        setCourses(fetchedCourses);
+      }
     }
   }
 
@@ -306,60 +319,6 @@ export const UserMenu = () => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenu>
-                <DropdownMenuTriggerItem>
-                  Theme
-                  <RightSlot>
-                    <ChevronRightIcon />
-                  </RightSlot>
-                </DropdownMenuTriggerItem>
-                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-                  <DropdownMenuRadioGroup
-                    value={theme}
-                    onValueChange={setTheme}
-                  >
-                    <DropdownMenuRadioItem value="dark">
-                      <DropdownMenuItemIndicator>
-                        <DotFilledIcon />
-                      </DropdownMenuItemIndicator>
-                      Dark
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="light">
-                      <DropdownMenuItemIndicator>
-                        <DotFilledIcon />
-                      </DropdownMenuItemIndicator>
-                      Light
-                    </DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTriggerItem>
-                  Language
-                  <RightSlot>
-                    <ChevronRightIcon />
-                  </RightSlot>
-                </DropdownMenuTriggerItem>
-                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-                  <DropdownMenuRadioGroup
-                    value={theme}
-                    onValueChange={setTheme}
-                  >
-                    <DropdownMenuRadioItem value="english">
-                      <DropdownMenuItemIndicator>
-                        <DotFilledIcon />
-                      </DropdownMenuItemIndicator>
-                      English
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="german">
-                      <DropdownMenuItemIndicator>
-                        <DotFilledIcon />
-                      </DropdownMenuItemIndicator>
-                      German
-                    </DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
                 <DropdownMenuTriggerItem
                   onClick={() => {
                     router.push("/school/course");
@@ -371,16 +330,17 @@ export const UserMenu = () => {
                   </RightSlot>
                 </DropdownMenuTriggerItem>
                 <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-                  {schools.map((school) => (
+                  {Array.isArray(courses) && courses.map((course) => (
                     <DropdownMenuItem
-                      key={school.schoolUUID}
+                      key={course.courseUUID}
                       onClick={() => {
+                        router.push(`/school/course/${course.courseUUID}`);
                       }}
                     >
-                      {school.schoolName}
+                      {course.courseName}
                     </DropdownMenuItem>
                   ))}
-                  {schools.length > 0 && <DropdownMenuSeparator />}
+                  {courses.length > 0 && <DropdownMenuSeparator />}
                   <DropdownMenuItem
                     onClick={() => {
                       router.push("/school/course/create-course");
@@ -433,6 +393,60 @@ export const UserMenu = () => {
                   >
                     Create new school
                   </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem>
+                  Theme
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  <DropdownMenuRadioGroup
+                    value={theme}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="dark">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      Dark
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="light">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      Light
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem>
+                  Language
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  <DropdownMenuRadioGroup
+                    value={theme}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="english">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      English
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="german">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      German
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenuSeparator />
