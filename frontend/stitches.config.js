@@ -1,14 +1,6 @@
 import { createStitches } from "@stitches/react";
 
-export const {
-  config,
-  createTheme,
-  css,
-  getCssText,
-  globalCss,
-  styled,
-  theme,
-} = createStitches({
+export const styles = {
   theme: {
     colors: {
       backgroundPrimary: "#2f3136",
@@ -81,7 +73,17 @@ export const {
     bp1: "(min-width: 520px)",
     bp2: "(min-width: 900px)",
   },
-});
+};
+
+export const {
+  config,
+  createTheme,
+  css,
+  getCssText,
+  globalCss,
+  styled,
+  theme,
+} = createStitches(styles);
 
 
 export const lightTheme = createTheme({

@@ -7,12 +7,12 @@ module.exports = {
     return [
       {
         source: "/register",
-        destination: "/auth/register",
+        destination: "/auth?tab=register",
         permanent: true,
       },
       {
         source: "/login",
-        destination: "/auth/login",
+        destination: "/auth?tab=login",
         permanent: true,
       },
       {

@@ -15,14 +15,18 @@ import SvgEmail from "./svg/SvgEmail";
 import SvgHome from "./svg/SvgHome";
 import SvgInfo from "./svg/SvgInfo";
 import SvgPassword from "./svg/SvgKey";
+import SvgLanguage from "./svg/SvgLanguage";
 import SvgName from "./svg/SvgName";
 import SvgOpenLogo from "./svg/SvgOpenLogo";
+import SvgPremium from "./svg/SvgPremium";
 import SvgQuality from "./svg/SvgQuality";
 import SvgRightArrow from "./svg/SvgRightArrow";
+import SvgRoundUser from "./svg/SvgRoundUser";
 import SvgSchool from "./svg/SvgSchool";
 import SvgStudent from "./svg/SvgStudent";
 import SvgTeacher from "./svg/SvgTeacher";
 import SvgTimetable from "./svg/SvgTimetable";
+import SvgTimezone from "./svg/SvgTimezone";
 import SvgUser from "./svg/SvgUser";
 import SvgWarning from "./svg/SvgWarning";
 
@@ -82,6 +86,14 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgEmail alt="Email Icon" />;
     case "SvgPassword":
       return <SvgPassword alt="Password Icon" />;
+    case "SvgRoundUser":
+      return <SvgRoundUser alt="User Icon" />;
+    case "SvgPremium":
+      return <SvgPremium alt="Premium Icon" />;
+    case "SvgTimezone":
+      return <SvgTimezone alt="Timezone Icon" />;
+    case "SvgLanguage":
+      return <SvgLanguage alt="Language Icon" />;
     default:
       return <SvgClass />;
   }

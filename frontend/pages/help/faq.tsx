@@ -1,5 +1,4 @@
 import React from "react";
-import { RegisterAuth } from "../../components/RegisterAuth";
 import Head from "next/head";
 import { Navbar } from "../../components/Navbar";
 import { Spacer } from "../../components/Spacer";
@@ -215,7 +214,7 @@ export default function RegisterApproved() {
       <Headline label="FAQ"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
-      {/* <AccordionLayout>
+       {/* <AccordionLayout>
         <Accordion type="single" defaultValue="item-1" collapsible>
           {questions.map(({ question, answer }, index) => (
             <AccordionItem key={index} value={`item-${index + 1}`}>

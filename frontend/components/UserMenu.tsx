@@ -193,8 +193,8 @@ const LinkLayout = styled("a", {
 });
 
 const IconLayout = styled("div", {
-  width: "30px",
-  height: "30px",
+  width: "35px",
+  height: "35px",
 });
 
 const LinkContentLayout = styled("div", {
@@ -290,7 +290,7 @@ export const UserMenu = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <IconLayout>
-            <SvgIcon iconName="SvgUser" />
+            <SvgIcon iconName="SvgRoundUser" />
           </IconLayout>
         </DropdownMenuTrigger>
 
@@ -334,6 +334,68 @@ export const UserMenu = () => {
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTriggerItem>
+                  Language
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  <DropdownMenuRadioGroup
+                    value={theme}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="english">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      English
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="german">
+                      <DropdownMenuItemIndicator>
+                        <DotFilledIcon />
+                      </DropdownMenuItemIndicator>
+                      German
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem
+                  onClick={() => {
+                    router.push("/school/course");
+                  }}
+                >
+                  Courses
+                  <RightSlot>
+                    <ChevronRightIcon />
+                  </RightSlot>
+                </DropdownMenuTriggerItem>
+                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                  {schools.map((school) => (
+                    <DropdownMenuItem
+                      key={school.schoolUUID}
+                      onClick={() => {
+                      }}
+                    >
+                      {school.schoolName}
+                    </DropdownMenuItem>
+                  ))}
+                  {schools.length > 0 && <DropdownMenuSeparator />}
+                  <DropdownMenuItem
+                    onClick={() => {
+                      router.push("/school/course/create-course");
+                    }}
+                  >
+                    Create a course
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTriggerItem
+                  onClick={() => {
+                    router.push("/profile/school-selection");
+                  }}
+                >
                   Schools
                   <RightSlot>
                     <ChevronRightIcon />
@@ -372,30 +434,30 @@ export const UserMenu = () => {
                     Create new school
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    logout();
-                    router.push("/");
-                  }}
-                >
-                  Logout
-                </DropdownMenuItem>
               </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  logout();
+                  router.push("/");
+                }}
+              >
+                Logout
+              </DropdownMenuItem>
             </>
           )}
           {!userInfo && (
             <>
               <DropdownMenuItem
                 onClick={() => {
-                  router.push("/auth/register");
+                  router.push("/auth?tab=register");
                 }}
               >
                 Register
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  router.push("/auth/login");
+                  router.push("/auth?tab=login");
                 }}
               >
                 Login

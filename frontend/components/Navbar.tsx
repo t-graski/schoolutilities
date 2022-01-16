@@ -12,13 +12,12 @@ type Props = {};
 
 const NavbarLayout = styled("div", {
   display: "flex",
-  position: "fixed",
+  position: "absolute",
   top: 0,
   left: 0,
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
-  backgroundColor: "$backgroundPrimary",
   width: "100vw",
   padding: "0 45px",
   color: "$fontPrimary",
@@ -48,6 +47,11 @@ const StyledLink = styled("a", {
   cursor: "pointer",
   fontSize: "1.7rem",
   paddingBottom: "5px",
+  transition: "all 200ms ease-in-out",
+  "&:hover": {
+    color: "$specialPrimary",
+  },
+
   variants: {
     marked: {
       true: {

@@ -1,9 +1,9 @@
 export interface AddCourse {
   name: string;
   courseDescription?: string;
-  schoolId: number;
-  subjectId?: number;
-  classId?: number;
+  schoolUUID: string;
+  persons?: string[];
+  classes?: string[];
 }
 
 export interface AddUser {
@@ -12,14 +12,13 @@ export interface AddUser {
 }
 
 export interface RemoveCourse {
-  courseId: number;
+  courseUUID: string;
 }
 
 export interface UpdateCourse {
   courseId: number;
   name: string;
   courseDescription: string;
-  classId: number;
   subjectId: number;
 }
 

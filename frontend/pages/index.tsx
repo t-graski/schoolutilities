@@ -9,6 +9,8 @@ import Head from "next/head";
 import { logout } from "../misc/authHelper";
 import { StartPageBox } from "../components/StartPageBox";
 import { GeneralList } from "../components/GeneralList";
+import StartpageArtwork from "../components/svg/StartpageArtwork";
+import Image from "next/image";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -22,6 +24,15 @@ const FirstBoxLayout = styled("div", {
   width: "100vw",
   marginTop: "18vh",
   height: "82vh",
+});
+
+const ArtworkLayout = styled("div", {
+  display: "block",
+  width: "55vw",
+  height: "80vh",
+  position: "absolute",
+  top: "0",
+  right: "0",
 });
 
 export default function Home() {
@@ -43,6 +54,9 @@ export default function Home() {
           ></meta>
         </Head>
         <Navbar />
+        <ArtworkLayout>
+          <Image layout="fill" src="/images/artwork.png" />
+        </ArtworkLayout>
         <FirstBoxLayout>
           <StartPageBox
             title="LET’S MAKE"
@@ -53,7 +67,7 @@ export default function Home() {
             the right design, we make this possible."
             descriptionLine="This is SchoolUtilities."
             buttonText="REGISTER NOW"
-            buttonLink="/auth/register"
+            buttonLink="/auth?tab=register"
             linkText="LEARN MORE"
             linkUrl="/learn-more"
           ></StartPageBox>
@@ -77,12 +91,12 @@ export default function Home() {
               iconName: "SvgSchool",
             },
             {
-              title: "About Us",
+              title: "Premium",
               description:
-                "We think it’s cool to know who the people behind a service are. Learn more about us and our role in the team.",
-              href: "/about-us",
+                "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
+              href: "/premium",
               buttonText: "LEARN MORE",
-              iconName: "SvgInfo",
+              iconName: "SvgPremium",
             },
           ]}
         ></GeneralList>
