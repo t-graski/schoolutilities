@@ -11,6 +11,7 @@ export interface UpdateClass {
 
 export interface AddSchool {
   name: string;
+  description: string;
   languageId: number;
   timezone: string;
 }

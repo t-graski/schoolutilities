@@ -339,6 +339,22 @@ export class DatabaseService {
     }
   }
 
+  async getClassById(classId: number): Promise<any> {
+    const classData = await prisma.schoolClasses.findFirst({
+      where: {
+        classId: classId,
+      },
+      select: {
+        classId: true,
+        classUUID: true,
+        className: true,
+        departmentId: true,
+      },
+    });
+
+    return classData;
+  }
+
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
       this.connection.query(

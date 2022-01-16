@@ -8,14 +8,11 @@ import {
   Put,
   UseGuards,
   Param,
-} from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Role } from 'src/roles/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+} from '@nestjs/common';;
 import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 
-@Controller('api/schoolAdmin')
+@Controller('/api/schoolAdmin')
 @UseGuards(RolesGuard)
 export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) {}
@@ -142,7 +139,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Get('joinCode/:schoolUUID')
+  @Get('/joinCode/:schoolUUID')
   async getJoinCodes(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getAllJoinCodes(
       params.schoolUUID,
@@ -151,7 +148,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Post('joinSchool')
+  @Post('/joinSchool')
   async joinSchool(@Req() request, @Res() response) {
     const token = request.headers.authorization.split(' ')[1];
     const result = await this.schoolAdminService.joinSchool(
@@ -164,7 +161,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  @Post('leaveSchool')
+  @Post('/leaveSchool')
   async leaveSchool(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.leaveSchool(request.body);
     return response
@@ -182,7 +179,7 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Get('userPermissions')
+  @Get('/userPermissions')
   async getUserPermissions(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getUserPermissions(
       request.body,
@@ -192,15 +189,31 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
-  // @Get('/information/:schoolUUID')
-  // async getSchoolInformation(@Param() params, @Res() response, @Req() request) {
-  //   const token = request.headers.authorization.split(' ')[1];
-  //   const result = await this.schoolAdminService.getSchoolInformation(
-  //     params.schoolUUID,
-  //     token,
-  //   );
-  //   return response
-  //     .status(result.status)
-  //     .json(result?.data ? result.data : result.message);
-  // }
+  @Get('/information/:schoolUUID')
+  async getSchoolInformation(@Param() params, @Res() response, @Req() request) {
+    const token = request.headers.authorization.split(' ')[1];
+    const result = await this.schoolAdminService.getSchoolInformation(
+      params.schoolUUID,
+      token,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Get('/detailedInformation/:schoolUUID')
+  async getDetailedSchoolInformation(
+    @Param() params,
+    @Res() response,
+    @Req() request,
+  ) {
+    const token = request.headers.authorization.split(' ')[1];
+    const result = await this.schoolAdminService.getDetailedSchoolInformation(
+      params.schoolUUID,
+      token,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }

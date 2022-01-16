@@ -51,7 +51,7 @@ export class SchoolAdminService {
     body: AddSchool,
     token: string,
   ): Promise<ReturnMessage> {
-    const { name, languageId, timezone } = body;
+    const { name, languageId, timezone, description } = body;
     if (
       !validator.isLength(name, LENGTHS.CLASS_NAME)
       // !regex.timezone.test(timezone) ||
@@ -69,6 +69,8 @@ export class SchoolAdminService {
         data: {
           schoolUUID: `${ID_STARTERS.SCHOOL}${uuidv4()}`,
           name,
+          description,
+          personCreationId: Number(personId),
           languages: {
             connect: {
               languageId: Number(languageId),
@@ -917,28 +919,246 @@ export class SchoolAdminService {
     }
   }
 
-  // async getSchoolInformation(
-  //   schoolUUID: string,
-  //   token: string,
-  // ): Promise<ReturnMessage> {
-  //   if (!validator.isUUID(schoolUUID.slice(1), 4)) {
-  //     return RETURN_DATA.INVALID_INPUT;
-  //   }
+  async getSchoolInformation(
+    schoolUUID: string,
+    token: string,
+  ): Promise<ReturnMessage> {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
 
-  //   const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 
-  //   const school = await prisma.schools.findUnique({
-  //     where: {
-  //       schoolId: Number(schoolId),
-  //     },
-  //     select: {
-  //       schoolName: true,
-  //       schoolUUID: true,
-  //       schoolDescription: true,
-  //       schoolCreationDate: true,
-  //     },
-  //   });
-  // }
+    const school = await prisma.schools.findUnique({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        name: true,
+        schoolUUID: true,
+        description: true,
+        creationDate: true,
+        timezone: true,
+        personCreationId: true,
+      },
+    });
+
+    if (!school) return RETURN_DATA.NOT_FOUND;
+
+    const creator = await this.databaseService.getPersonById(
+      school.personCreationId,
+    );
+
+    const schoolDataItem = {
+      schoolName: school.name,
+      schoolUUID: school.schoolUUID,
+      description: school.description,
+      timezone: school.timezone,
+      creationDate: school.creationDate,
+      creator: {
+        personUUID: creator.personUUID,
+        firstName: creator.firstName,
+        lastName: creator.lastName,
+      },
+    };
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: schoolDataItem,
+    };
+  }
+
+  async getDetailedSchoolInformation(
+    schoolUUID: string,
+    token: string,
+  ): Promise<ReturnMessage> {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    const school = await prisma.schools.findUnique({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        name: true,
+        schoolUUID: true,
+        description: true,
+        creationDate: true,
+        timezone: true,
+        personCreationId: true,
+      },
+    });
+
+    if (!school) return RETURN_DATA.NOT_FOUND;
+
+    const creator = await this.databaseService.getPersonById(
+      school.personCreationId,
+    );
+
+    const schoolData = {};
+
+    const schoolDataItem = {
+      schoolName: school.name,
+      schoolUUID: school.schoolUUID,
+      description: school.description,
+      timezone: school.timezone,
+      creationDate: school.creationDate,
+      creator: {
+        personUUID: creator.personUUID,
+        firstName: creator.firstName,
+        lastName: creator.lastName,
+      },
+    };
+
+    schoolData[schoolUUID] = schoolDataItem;
+
+    const persons = await prisma.schoolPersons.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        personId: true,
+      },
+    });
+
+    const personsData = [];
+    for (const person of persons) {
+      const personData = await this.databaseService.getPersonById(
+        person.personId,
+      );
+
+      const personRole = await this.databaseService.getPersonRolesByPersonUUID(
+        personData.personUUID,
+      );
+
+      personsData.push({
+        personUUID: personData.personUUID,
+        firstName: personData.firstName,
+        lastName: personData.lastName,
+        roleName: personRole[0].roleName,
+        roleUUID: personRole[0].roleUUID,
+      });
+    }
+
+    schoolData[schoolUUID].persons = personsData;
+
+    const departmentData = [];
+
+    const departments = await prisma.departments.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        departmentId: true,
+        departmentUUID: true,
+        name: true,
+      },
+    });
+
+    for (const department of departments) {
+      const departmentDataItem = {
+        departmentUUID: department.departmentUUID,
+        name: department.name,
+        classes: [],
+      };
+
+      const classes = await prisma.schoolClasses.findMany({
+        where: {
+          departmentId: Number(department.departmentId),
+        },
+        select: {
+          classId: true,
+          classUUID: true,
+          className: true,
+        },
+      });
+
+      if (!classes) departmentData.push(departmentDataItem);
+
+      for (const classItem of classes) {
+        const classDataItem = {
+          classUUID: classItem.classUUID,
+          className: classItem.className,
+        };
+
+        departmentDataItem.classes.push(classDataItem);
+        departmentData.push(departmentDataItem);
+      }
+    }
+
+    //add department data to school data
+    schoolData[schoolUUID].departments = departmentData;
+
+    const coursesData = [];
+
+    const courses = await prisma.courses.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        courseId: true,
+        courseUUID: true,
+        name: true,
+        courseDescription: true,
+        creationDate: true,
+        personCreationId: true,
+      },
+    });
+
+    for (const course of courses) {
+      const creator = await this.databaseService.getPersonById(
+        course.personCreationId,
+      );
+
+      const courseDataItem = {
+        courseName: course.name,
+        courseUUID: course.courseUUID,
+        description: course.courseDescription,
+        creationDate: course.creationDate,
+        creator: {
+          personUUID: creator.personUUID,
+          firstName: creator.firstName,
+          lastName: creator.lastName,
+        },
+        persons: [],
+      };
+
+      const coursePersons = await prisma.coursePersons.findMany({
+        where: {
+          courseId: Number(course.courseId),
+        },
+        select: {
+          personId: true,
+        },
+      });
+
+      for (const coursePerson of coursePersons) {
+        const coursePersonData = await this.databaseService.getPersonById(
+          coursePerson.personId,
+        );
+
+        const coursePersonItem = {
+          personUUID: coursePersonData.personUUID,
+          firstName: coursePersonData.firstName,
+          lastName: coursePersonData.lastName,
+        };
+
+        courseDataItem.persons.push(coursePersonItem);
+      }
+      coursesData.push(courseDataItem);
+    }
+
+    //add courses data to school data
+    schoolData[schoolUUID].courses = coursesData;
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: schoolData,
+    };
+  }
 
   toBoolean(value): boolean {
     return value === '1';

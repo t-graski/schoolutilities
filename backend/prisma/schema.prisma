@@ -125,15 +125,18 @@ model schoolClasses {
 }
 
 model schools {
-  schoolId    Int           @id @default(autoincrement()) @map("school_id")
-  schoolUUID  String        @map("school_uuid") @db.VarChar(255)
-  name        String        @db.VarChar(255)
-  languageId  Int           @map("language_id")
-  timezone    String        @db.VarChar(255)
-  languages   languages     @relation(fields: [languageId], references: [languageId], onUpdate: Restrict, map: "fkSchoollanguage")
-  personRoles personRoles[]
-  courses     courses[]
-  departments departments[]
+  schoolId         Int           @id @default(autoincrement()) @map("school_id")
+  schoolUUID       String        @map("school_uuid") @db.VarChar(255)
+  name             String        @db.VarChar(255)
+  description      String        @db.VarChar(3000)
+  languageId       Int           @map("language_id")
+  timezone         String        @db.VarChar(255)
+  creationDate     DateTime      @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId Int           @map("person_creation_id")
+  languages        languages     @relation(fields: [languageId], references: [languageId], onUpdate: Restrict, map: "fkSchoollanguage")
+  personRoles      personRoles[]
+  courses          courses[]
+  departments      departments[]
 
   schoolJoinCodes schoolJoinCodes[]
   schoolPersons   schoolPersons[]
