@@ -22,7 +22,7 @@ const SchoolInputLayout = styled("div", {
   width: "100%",
   marginTop: "20px",
   marginBottom: "20px",
-  padding: "20px 40px",
+  padding: "0 40px",
   borderRadius: "25px",
 });
 
@@ -33,7 +33,8 @@ const StyledContentLayout = styled("div", {
   justifyContent: "center",
   width: "fit-content",
   gap: "20px",
-  padding: "30px 50px",
+  padding: "0 50px",
+  paddingBottom: "60px",
   borderRadius: "25px",
   backgroundColor: "transparent",
   transition: "all 100ms ease-in-out",

@@ -125,19 +125,17 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
 
   async function saveInputs() {
     let accessToken = await getAccessToken();
-    const schoolDetails = JSON.parse(localStorage.getItem("schoolDetails"));
-    console.log({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    });
+    console.log(inputData);
     const schoolResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/addschoolconfig`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/addCourse`,
       {
         method: "POST",
         body: JSON.stringify({
-          name: schoolDetails.schoolName,
-          languageId: 2,
-          timezone: schoolDetails.schoolTimezone,
+          name: inputData.courseName,
+          schoolUUID: cookie.get("schoolUUID"),
+          courseDescription: inputData.courseDescription,
+          classes: inputData.classes.map(schoolClass => schoolClass.value),
+          persons: inputData.members.map(person => person.value),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -190,7 +188,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusDescription}
               </SuccessDescription>
               {statusInfo && statusInfo.linkVisibility && (
-                <Link href="/school/admin/settings">
+                <Link href="/school/course">
                   <StyledLink>Manage course now</StyledLink>
                 </Link>
               )}

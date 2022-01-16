@@ -109,6 +109,11 @@ export default class Document extends NextDocument {
 * {
   font-family: 'Poppins', sans-serif;
 }
+
+#__next{
+  min-height: 100vh;
+  position: relative;
+}
 `,
             }}
           />

@@ -29,7 +29,7 @@ const FirstBoxLayout = styled("div", {
 const ArtworkLayout = styled("div", {
   display: "block",
   width: "55vw",
-  height: "80vh",
+  height: "calc(55vw/731*526)",
   position: "absolute",
   top: "0",
   right: "0",

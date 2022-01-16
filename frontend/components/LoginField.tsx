@@ -45,6 +45,8 @@ export const LoginField: React.FC<Props> = ({}) => {
   const [isDisabled, setDisabled] = React.useState(true);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [signUpInfo, setSignUpInfo] = React.useState("");
+  const [loginSuccess, setLoginSuccess] = React.useState(false);
+  const router = useRouter();
 
   checkInputData();
 
@@ -52,6 +54,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (cookie.get("refreshToken") || cookie.get("accessToken")) {
       setSignUpInfo("You are already logged in!");
       setLoggedIn(true);
+      setLoginSuccess(true);
     }
   }, []);
 
@@ -83,9 +86,18 @@ export const LoginField: React.FC<Props> = ({}) => {
           if (response.status == 200) {
             setSignUpInfo("You are logged in");
             setLoggedIn(true);
+            setLoginSuccess(true);
+            let redirectRoute: string = Array.isArray(router.query.redirect)
+              ? router.query.redirect[0]
+              : router.query.redirect;
+            if (router.query && router.query.redirect) {
+              router.push(decodeURIComponent(redirectRoute));
+            }
             return response.json();
           } else {
-            setSignUpInfo("You are not logged in");
+            setSignUpInfo(
+              "Something went wrong, while trying to log in. It can be that you have entered wrong credentials or that you are not registered yet."
+            );
           }
         })
         .then((data) => {
@@ -161,6 +173,18 @@ export const LoginField: React.FC<Props> = ({}) => {
                 logout();
                 setSignUpInfo("");
                 setLoggedIn(false);
+              }}
+            ></Button>
+          </ButtonLayout>
+        )}
+        {!loginSuccess && signUpInfo && (
+          <ButtonLayout>
+            <Button
+              backgroundColor="secondary"
+              color="primary"
+              label="Try again"
+              onClick={() => {
+                setSignUpInfo("");
               }}
             ></Button>
           </ButtonLayout>
