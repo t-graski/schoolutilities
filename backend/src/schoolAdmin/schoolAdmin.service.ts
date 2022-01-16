@@ -1089,7 +1089,6 @@ export class SchoolAdminService {
       }
     }
 
-    //add department data to school data
     schoolData[schoolUUID].departments = departmentData;
 
     const coursesData = [];
@@ -1151,7 +1150,6 @@ export class SchoolAdminService {
       coursesData.push(courseDataItem);
     }
 
-    //add courses data to school data
     schoolData[schoolUUID].courses = coursesData;
 
     return {
