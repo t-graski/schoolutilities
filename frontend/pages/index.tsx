@@ -55,7 +55,7 @@ export default function Home() {
         </Head>
         <Navbar />
         <ArtworkLayout>
-          <Image layout="fill" src="/images/artwork.png" />
+          <Image layout="fill" src="/images/startpage_artwork.svg" />
         </ArtworkLayout>
         <FirstBoxLayout>
           <StartPageBox
