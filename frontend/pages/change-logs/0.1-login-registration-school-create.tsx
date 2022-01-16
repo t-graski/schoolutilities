@@ -16,7 +16,7 @@ export default function Article() {
   const articleDetails = {
     title: "0.1 - Login, Registration, School Create and more!",
     author: "Tobias Graski",
-    date: "12/20/2022",
+    date: "12/20/2021",
     readingTime: "2 min read",
   };
 

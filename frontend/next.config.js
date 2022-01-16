@@ -2,6 +2,9 @@ module.exports = {
   images: {
     domains: ["cdn.discordapp.com"],
   },
+  env: {
+    BASE_URL: process.env.BASE_URL,
+  },
 
   async redirects() {
     return [
