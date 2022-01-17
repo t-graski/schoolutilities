@@ -60,7 +60,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
     let accessToken = await getAccessToken();
     const schoolUUID = cookie.get("schoolUUID");
     const classResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
+      `https://backend.schoolutilities.net/api/schooladmin/classes/${schoolUUID}`,
       {
         method: "GET",
         headers: {
@@ -79,7 +79,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
       );
     }
     const memberResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
+      `https://backend.schoolutilities.net/api/schooladmin/getPersons/${schoolUUID}`,
       {
         method: "GET",
         headers: {

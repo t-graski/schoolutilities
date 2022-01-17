@@ -55,10 +55,12 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
     if (!accessToken) {
       router.push("/auth?tab=login&redirect=/school/course");
     } else if (!cookie.get("schoolUUID")) {
-      router.push("/profile/school-selection?redirect=/school/course")
+      router.push("/profile/school-selection?redirect=/school/course");
     } else {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${cookie.get("schoolUUID")}`,
+        `https://backend.schoolutilities.net/api/course/getCourses/${cookie.get(
+          "schoolUUID"
+        )}`,
         {
           method: "GET",
           headers: {
@@ -75,16 +77,17 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
   return (
     <>
       <CourseList>
-        {Array.isArray(courses) && courses.map((course) => (
-          <CourseLayout
-            key={course.courseUUID}
-            onClick={() => {
+        {Array.isArray(courses) &&
+          courses.map((course) => (
+            <CourseLayout
+              key={course.courseUUID}
+              onClick={() => {
                 router.push(`/school/course/${course.courseUUID}`);
-            }}
-          >
-            <CourseName>{course.courseName}</CourseName>
-          </CourseLayout>
-        ))}
+              }}
+            >
+              <CourseName>{course.courseName}</CourseName>
+            </CourseLayout>
+          ))}
       </CourseList>
     </>
   );

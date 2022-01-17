@@ -244,7 +244,7 @@ export const UserMenu = () => {
     let accessToken = await getAccessToken();
     if (accessToken) {
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+        `https://backend.schoolutilities.net/api/user/getSchools`,
         {
           method: "GET",
           headers: {
@@ -256,7 +256,9 @@ export const UserMenu = () => {
       setSchools(fetchedSchools);
       if (cookie.get("schoolUUID")) {
         response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${cookie.get("schoolUUID")}`,
+          `https://backend.schoolutilities.net/api/course/getCourses/${cookie.get(
+            "schoolUUID"
+          )}`,
           {
             method: "GET",
             headers: {
@@ -282,7 +284,7 @@ export const UserMenu = () => {
     const token = await getAccessToken();
     if (token) {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
+        `https://backend.schoolutilities.net/api/user/profile`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -330,16 +332,17 @@ export const UserMenu = () => {
                   </RightSlot>
                 </DropdownMenuTriggerItem>
                 <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-                  {Array.isArray(courses) && courses.map((course) => (
-                    <DropdownMenuItem
-                      key={course.courseUUID}
-                      onClick={() => {
-                        router.push(`/school/course/${course.courseUUID}`);
-                      }}
-                    >
-                      {course.courseName}
-                    </DropdownMenuItem>
-                  ))}
+                  {Array.isArray(courses) &&
+                    courses.map((course) => (
+                      <DropdownMenuItem
+                        key={course.courseUUID}
+                        onClick={() => {
+                          router.push(`/school/course/${course.courseUUID}`);
+                        }}
+                      >
+                        {course.courseName}
+                      </DropdownMenuItem>
+                    ))}
                   {courses.length > 0 && <DropdownMenuSeparator />}
                   <DropdownMenuItem
                     onClick={() => {
