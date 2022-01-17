@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "export NODE_OPTIONS=--openssl-legacy-provider; next start",
+    "start": "next start",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
