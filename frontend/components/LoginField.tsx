@@ -5,7 +5,6 @@ import type * as Stitches from "@stitches/react";
 import { InputField } from "./InputField";
 import { Button } from "./Button";
 import Link from "next/link";
-import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { logout } from "../misc/authHelper";
