@@ -39,7 +39,10 @@ const ProfileImageLayout = styled("div", {
 });
 
 const ProfileName = styled("div", {
+  marginBottom: "10px",
   width: "100%",
+  fontWeight: 700,
+  fontSize: "1.5rem",
   textAlign: "center",
   color: "$fontPrimary",
 });
@@ -65,7 +68,7 @@ const LinkContentLayout = styled("div", {
 });
 
 const SpecialLinkLayout = styled("div", {
-  padding: "20px",
+  padding: "15px 20px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -331,7 +334,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   color={router.query.tab == "schools" ? "special" : "primary"}
                 >
                   <IconLayout>
-                    <SvgIcon iconName="SvgUser" />
+                    <SvgIcon iconName="SvgSchool" />
                   </IconLayout>
                   <LinkContentLayout>
                     <LinkLabel color="special">Schools</LinkLabel>
