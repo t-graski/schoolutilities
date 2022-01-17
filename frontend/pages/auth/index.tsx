@@ -160,7 +160,7 @@ export default function Auth() {
   useEffect(() => {
   if (router.query.tab && router.query.tab === "register" && showLogin) {
     setShowLogin(false);
-  } else {
+  } else if (router.query.tab && router.query.tab === "login" && !showLogin){
     setShowLogin(true);
   }
   }, [router.query.tab, showLogin]);
