@@ -2,10 +2,7 @@ module.exports = {
   images: {
     domains: ["cdn.discordapp.com"],
   },
-  env: {
-    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
-  },
-
+  
   async redirects() {
     return [
       {
