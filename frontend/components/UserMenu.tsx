@@ -11,7 +11,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getAccessToken, logout } from "../misc/authHelper";
+import { getAccessToken, getUserData, logout } from "../misc/authHelper";
 import { useTheme } from "next-themes";
 
 const slideUpAndFade = keyframes({
@@ -121,7 +121,7 @@ const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
 const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
   fill: "$fontPrimary",
   position: "relative",
-  right: -10,
+  right: 40,
 });
 
 // Exports
@@ -193,8 +193,23 @@ const LinkLayout = styled("a", {
 });
 
 const IconLayout = styled("div", {
-  width: "35px",
-  height: "35px",
+  width: "30px",
+  height: "30px",
+  padding: "5px",
+  backgroundColor: "$backgroundTertiary",
+  borderRadius: "100%",
+});
+
+const UserMenuLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  padding: "8px",
+  gap: "10px",
+  borderRadius: "200px",
+  backgroundColor: "#A2A8C3",
+  cursor: "pointer",
+  justifyContent: "center",
+  alignItems: "center",
 });
 
 const LinkContentLayout = styled("div", {
@@ -232,6 +247,24 @@ const StyledLink = styled(Link, {
   },
 });
 
+const ArrowLayout = styled("div", {
+  transition: "all 0.2s ease-in-out",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+
+  variants: {
+    open: {
+      true: {
+        transform: "rotate(90deg)",
+      },
+      false: {}
+    }
+  }
+});
+
+const StyledUserName = styled("p", {});
+
 export const UserMenu = () => {
   const router = useRouter();
   const [schools, setSchools] = useState([]);
@@ -239,8 +272,9 @@ export const UserMenu = () => {
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
   const { theme, setTheme } = useTheme();
+  const [open, setOpen] = useState(false);
 
-  async function updateSchoolsFromDatabase() {
+  async function updateFromDatabase() {
     let accessToken = await getAccessToken();
     if (accessToken) {
       let response = await fetch(
@@ -270,43 +304,32 @@ export const UserMenu = () => {
         setCourses(fetchedCourses);
       }
     }
+    const userInfo = await getUserData();
+    setUserInfo(userInfo);
   }
 
   useEffect(() => {
     if (isFirstTime) {
-      getUserInfo();
-      updateSchoolsFromDatabase();
+      updateFromDatabase();
       setIsFirstTime(false);
     }
   });
 
-  async function getUserInfo() {
-    const token = await getAccessToken();
-    if (token) {
-      const response = await fetch(
-        `https://backend.schoolutilities.net/api/user/profile`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status !== 200) {
-      } else {
-        const data = await response.json();
-        setUserInfo(data);
-      }
-    }
-  }
-
   return (
     <Box>
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <IconLayout>
-            <SvgIcon iconName="SvgRoundUser" />
-          </IconLayout>
+          <UserMenuLayout>
+            <IconLayout>
+              <SvgIcon iconName="SvgRoundUser" />
+            </IconLayout>
+            <StyledUserName>
+              {userInfo ? userInfo.firstName : ""}
+            </StyledUserName>
+            <ArrowLayout open={open}>
+              <ChevronRightIcon />
+            </ArrowLayout>
+          </UserMenuLayout>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent sideOffset={5} alignOffset={0}>

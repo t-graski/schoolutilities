@@ -197,6 +197,13 @@ const NoSchoolsText = styled("p", {
   color: "$fontPrimary",
 });
 
+const ActionButtonLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "30px",
+  marginTop: "20px",
+});
+
 export const ProfileSettings: React.FC<Props> = ({}) => {
   const router = useRouter();
   const [statusInfo, setStatusInfo] = useState("");
@@ -369,7 +376,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
-              <ButtonLayout>
+              <ActionButtonLayout>
                 <Button
                   backgroundColor={"primary"}
                   color={"primary"}
@@ -385,7 +392,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     getUserInfo();
                   }}
                 ></Button> */}
-              </ButtonLayout>
+              </ActionButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
             <ProfileDataColumn>
@@ -454,35 +461,36 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   <NoSchoolsText>You have no schools yet.</NoSchoolsText>
                 )}
               </SchoolList>
-            </ProfileDataColumn>
-            <ProfileDataColumn>
-              <Link href="/profile/school-join">
-                <a>
-                  <Button
-                    backgroundColor={"primary"}
-                    color={"primary"}
-                    label="JOIN A SCHOOL"
-                    onClick={() => {
-                      setStatusInfo("");
-                      getUserInfo();
-                    }}
-                  ></Button>
-                </a>
-              </Link>
               <Spacer size="verySmall"></Spacer>
-              <Link href="/school/admin/create-school">
-                <a>
-                  <Button
-                    backgroundColor={"secondary"}
-                    color={"primary"}
-                    label="CREATE A SCHOOL"
-                    onClick={() => {
-                      setStatusInfo("");
-                      getUserInfo();
-                    }}
-                  ></Button>
-                </a>
-              </Link>
+              <ButtonLayout>
+                <Link href="/profile/school-join">
+                  <a>
+                    <Button
+                      backgroundColor={"primary"}
+                      color={"primary"}
+                      label="JOIN A SCHOOL"
+                      onClick={() => {
+                        setStatusInfo("");
+                        getUserInfo();
+                      }}
+                    ></Button>
+                  </a>
+                </Link>
+                <Spacer size="verySmall"></Spacer>
+                <Link href="/school/admin/create-school">
+                  <a>
+                    <Button
+                      backgroundColor={"secondary"}
+                      color={"primary"}
+                      label="CREATE A SCHOOL"
+                      onClick={() => {
+                        setStatusInfo("");
+                        getUserInfo();
+                      }}
+                    ></Button>
+                  </a>
+                </Link>
+              </ButtonLayout>
             </ProfileDataColumn>
           </>
         )}

@@ -109,23 +109,23 @@ const AccordionLayout = styled("div", {
 
 export const Accordion = StyledAccordion;
 export const AccordionItem = StyledItem;
-// export const AccordionTrigger = React.forwardRef(
-//   ({ children, ...props }, forwardedRef) => (
-//     <StyledHeader>
-//       <StyledTrigger {...props} ref={forwardedRef}>
-//         {children}
-//         <StyledChevron aria-hidden />
-//       </StyledTrigger>
-//     </StyledHeader>
-//   )
-// );
-// export const AccordionContent = React.forwardRef(
-//   ({ children, ...props }, forwardedRef) => (
-//     <StyledContent {...props} ref={forwardedRef}>
-//       <StyledContentText>{children}</StyledContentText>
-//     </StyledContent>
-//   )
-// );
+export const AccordionTrigger = React.forwardRef(
+  ({ children, ...props }, forwardedRef) => (
+    <StyledHeader>
+      <StyledTrigger {...props} ref={forwardedRef}>
+        {children}
+        <StyledChevron aria-hidden />
+      </StyledTrigger>
+    </StyledHeader>
+  )
+);
+export const AccordionContent = React.forwardRef(
+  ({ children, ...props }, forwardedRef) => (
+    <StyledContent {...props} ref={forwardedRef}>
+      <StyledContentText>{children}</StyledContentText>
+    </StyledContent>
+  )
+);
 
 export default function RegisterApproved() {
   const questions = [
@@ -214,7 +214,7 @@ export default function RegisterApproved() {
       <Headline label="FAQ"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
-       {/* <AccordionLayout>
+       <AccordionLayout>
         <Accordion type="single" defaultValue="item-1" collapsible>
           {questions.map(({ question, answer }, index) => (
             <AccordionItem key={index} value={`item-${index + 1}`}>
@@ -223,7 +223,7 @@ export default function RegisterApproved() {
             </AccordionItem>
           ))}
         </Accordion>
-      </AccordionLayout> */}
+      </AccordionLayout>
       <Spacer size="small"></Spacer>
       <Footer></Footer>
     </>
