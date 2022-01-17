@@ -22,6 +22,11 @@ module.exports = {
         source: "/create-school",
         destination: "/school/admin/create-school",
         permanent: true,
+      },
+      {
+        source: "/profile",
+        destination: "/profile/settings",
+        permanent: true,
       }
     ];
   },
