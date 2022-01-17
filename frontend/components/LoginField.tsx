@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { styled } from "../stitches.config";
-import Image from "next/image";
-import type * as Stitches from "@stitches/react";
 import { InputField } from "./InputField";
 import { Button } from "./Button";
 import Link from "next/link";
