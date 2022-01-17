@@ -23,7 +23,7 @@ export default function Features() {
     let accessToken = await getAccessToken();
     if (courseUUID && accessToken && courseName == "") {
       const courseResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
+        `https://backend.schoolutilities.net/api/course/getCourseInfo/${courseUUID}`,
         {
           method: "GET",
           headers: {

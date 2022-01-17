@@ -214,7 +214,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
     let response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+      `https://backend.schoolutilities.net/api/user/getSchools`,
       {
         method: "GET",
         headers: {
@@ -241,7 +241,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     }
     setIsLoading(true);
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
+      `https://backend.schoolutilities.net/api/user/profile`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -267,7 +267,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     }
     setIsLoading(true);
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/changeEmail`,
+      `https://backend.schoolutilities.net/api/user/changeEmail`,
       {
         method: "POST",
         headers: {

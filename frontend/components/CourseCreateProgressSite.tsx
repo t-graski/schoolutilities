@@ -127,15 +127,15 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
     let accessToken = await getAccessToken();
     console.log(inputData);
     const schoolResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/addCourse`,
+      `https://backend.schoolutilities.net/api/course/addCourse`,
       {
         method: "POST",
         body: JSON.stringify({
           name: inputData.courseName,
           schoolUUID: cookie.get("schoolUUID"),
           courseDescription: inputData.courseDescription,
-          classes: inputData.classes.map(schoolClass => schoolClass.value),
-          persons: inputData.members.map(person => person.value),
+          classes: inputData.classes.map((schoolClass) => schoolClass.value),
+          persons: inputData.members.map((person) => person.value),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -171,7 +171,12 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
         {steps.map((step, index) => {
           if (index == activeStep) {
             return (
-              <step.component key={index} setDisabled={setIsButtonDisabled} inputData={inputData} setInputData={setInputData} />
+              <step.component
+                key={index}
+                setDisabled={setIsButtonDisabled}
+                inputData={inputData}
+                setInputData={setInputData}
+              />
             );
           }
         })}

@@ -124,7 +124,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
       Authorization: `Bearer ${accessToken}`,
     });
     const schoolResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/addschoolconfig`,
+      `https://backend.schoolutilities.net/api/schooladmin/addschoolconfig`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -146,7 +146,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
           const storage = JSON.parse(localStorage.getItem("departments"));
           await storage.departments.forEach(async (department) => {
             await fetch(
-              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
+              `https://backend.schoolutilities.net/api/schooladmin/department`,
               {
                 method: "POST",
                 body: JSON.stringify({
