@@ -33,8 +33,7 @@ jobs:
           with:
             script: |
                      cd ../home/REMOTE_USER/
-                     docker build -t schoolutilities-frontend . 
-                     docker stop schoolutilities-frontend || true && docker rm schoolutilities-frontend || true
+                     docker image rm schoolutilities-frontend --force || true && docker build -t schoolutilities-frontend . 
                      docker run --name schoolutilities-frontend -d -p 3000:3000 schoolutilities-frontend 
             host: ${{ secrets.REMOTE_HOST }}
             username: ${{ secrets.REMOTE_USER }}
