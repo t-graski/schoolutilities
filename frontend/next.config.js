@@ -3,7 +3,7 @@ module.exports = {
     domains: ["cdn.discordapp.com"],
   },
   env: {
-    BASE_URL: process.env.BASE_URL,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   },
 
   async redirects() {
