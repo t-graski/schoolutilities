@@ -16,6 +16,8 @@ import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
 import { LoadingAnimation } from "./LoadingAnimation";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -107,7 +109,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     if (accessToken && schoolUUID && isFirstTime) {
       setIsLoading(true);
       const response = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/departments/${schoolUUID}`,
+        `https://backend.schoolutilities.net/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -141,7 +143,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     };
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
+      `https://backend.schoolutilities.net/api/schooladmin/department`,
       {
         method: "POST",
         headers: {
@@ -177,7 +179,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     };
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
+      `https://backend.schoolutilities.net/api/schooladmin/department`,
       {
         method: "PUT",
         headers: {
@@ -208,7 +210,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   async function deleteSettingsEntry(id) {
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/department`,
+      `https://backend.schoolutilities.net/api/schooladmin/department`,
       {
         method: "DELETE",
         headers: {
@@ -261,7 +263,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                   setDepartmentName(event);
                 }}
                 iconName=""
-                regex={regex.name}
+                validatorFunction={validator.isLength}
+                validatorParams={[LENGTHS.NAME]}
                 setValidInput={setDepartmentNameValid}
                 min="2"
                 max="30"

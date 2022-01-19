@@ -1,14 +1,13 @@
 import React, { useEffect } from "react";
 import { styled } from "../stitches.config";
-import Image from "next/image";
-import type * as Stitches from "@stitches/react";
 import { InputField } from "./InputField";
 import { Button } from "./Button";
 import Link from "next/link";
-import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { logout } from "../misc/authHelper";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -43,6 +42,8 @@ export const LoginField: React.FC<Props> = ({}) => {
   const [isDisabled, setDisabled] = React.useState(true);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [signUpInfo, setSignUpInfo] = React.useState("");
+  const [loginSuccess, setLoginSuccess] = React.useState(false);
+  const router = useRouter();
 
   checkInputData();
 
@@ -50,6 +51,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (cookie.get("refreshToken") || cookie.get("accessToken")) {
       setSignUpInfo("You are already logged in!");
       setLoggedIn(true);
+      setLoginSuccess(true);
     }
   }, []);
 
@@ -67,29 +69,46 @@ export const LoginField: React.FC<Props> = ({}) => {
     if (event) {
       event.preventDefault();
     }
-    fetch(`https://backend.schoolutilities.net:3333/api/auth/login`, {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => {
-        if (response.status == 200) {
-          setSignUpInfo("You are logged in");
-          setLoggedIn(true);
-          return response.json();
-        } else {
-          setSignUpInfo("You are not logged in");
-        }
+    try {
+      fetch(`https://backend.schoolutilities.net/api/auth/login`, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: { "Content-Type": "application/json" },
       })
-      .then((data) => {
-        if (data) {
-          cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
-          cookie.set("refreshToken", data.refresh_token, { expires: 7 });
-        }
-      });
+        .then((response) => {
+          console.log(response);
+          if (response.status == 200) {
+            setSignUpInfo("You are logged in");
+            setLoggedIn(true);
+            setLoginSuccess(true);
+            let redirectRoute: string = Array.isArray(router.query.redirect)
+              ? router.query.redirect[0]
+              : router.query.redirect;
+            if (router.query && router.query.redirect) {
+              router.push(decodeURIComponent(redirectRoute));
+            }
+            return response.json();
+          } else {
+            setSignUpInfo(
+              "Something went wrong, while trying to log in. It can be that you have entered wrong credentials or that you are not registered yet."
+            );
+          }
+        })
+        .then((data) => {
+          if (data) {
+            cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
+            cookie.set("refreshToken", data.refresh_token, { expires: 7 });
+          }
+        });
+    } catch (err) {
+      setSignUpInfo(
+        "Ihre Eingaben konnten nicht verarbeitet werden, versuchen Sie es später erneut"
+      );
+      console.log(err);
+    }
   }
 
   return (
@@ -101,9 +120,10 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconName="SvgUser"
+            iconName="SvgEmail"
             required={true}
-            regex={regex.email}
+            validatorFunction={validator.isEmail}
+            validatorParams={[LENGTHS.EMAIL]}
             setValidInput={setEmailValid}
           ></InputField>
           <InputField
@@ -111,9 +131,10 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="password"
             value={password}
             onChange={setPassword}
-            iconName="SvgUser"
+            iconName="SvgPassword"
             required={true}
-            regex={regex.password}
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[PASSWORD]}
             setValidInput={setPasswordValid}
           ></InputField>
           <Button
@@ -149,6 +170,18 @@ export const LoginField: React.FC<Props> = ({}) => {
                 logout();
                 setSignUpInfo("");
                 setLoggedIn(false);
+              }}
+            ></Button>
+          </ButtonLayout>
+        )}
+        {!loginSuccess && signUpInfo && (
+          <ButtonLayout>
+            <Button
+              backgroundColor="secondary"
+              color="primary"
+              label="Try again"
+              onClick={() => {
+                setSignUpInfo("");
               }}
             ></Button>
           </ButtonLayout>

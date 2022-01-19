@@ -9,6 +9,9 @@ import { regex } from "../misc/regex";
 import { useRouter } from "next/router";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
+import { Spacer } from "./Spacer";
 
 type Props = {
   setDisabled: Function;
@@ -74,20 +77,24 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
   return (
     <>
       <SchoolDetailLayout>
-        <Headline
-          label="School Setup"
-          alignment="left"
-          fontWeight="bold"
-        ></Headline>
-        <Separator width="small" alignment="left"></Separator>
+        <div>
+          <Headline
+            label="School Setup"
+            alignment="left"
+            fontWeight="bold"
+          ></Headline>
+          <Separator width="small" alignment="left"></Separator>
+        </div>
+        <Spacer size="verySmall"></Spacer>
         <InputField
           label="School name"
           inputType="text"
           value={schoolName}
           onChange={setSchoolName}
-          iconName="SvgUser"
+          iconName="SvgSchool"
           required={true}
-          regex={regex.name}
+          validatorFunction={validator.isLength}
+          validatorParams={[LENGTHS.NAME]}
           setValidInput={setSchoolNameValid}
           errorMessage="Your school needs a name, doesn't it?"
         ></InputField>
@@ -96,11 +103,11 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           inputType="select"
           value={schoolLanguage}
           onChange={setSchoolLanguage}
-          iconName="SvgUser"
+          iconName="SvgLanguage"
           required={true}
           errorMessage="Tell us the language you speak in your school"
           selectOptions={[
-            { value: "", label: "Language" },
+            { value: "german", label: "German" },
             { value: "english", label: "English" },
           ]}
           selectValue={schoolLanguage}
@@ -110,7 +117,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           inputType="select"
           value={schoolTimezone}
           onChange={setSchoolTimezone}
-          iconName="SvgUser"
+          iconName="SvgTimezone"
           required={true}
           errorMessage="Try to select a timezone in the drop-down menu"
           selectOptions={[

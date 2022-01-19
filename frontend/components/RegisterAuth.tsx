@@ -33,7 +33,7 @@ export const RegisterAuth = () => {
       token: token,
     });
     console.log(requestBody);
-    fetch(`https://backend.schoolutilities.net:3333/api/user/activateAccount`, {
+    fetch(`https://backend.schoolutilities.net/api/user/activateAccount`, {
       method: "POST",
       body: requestBody,
       headers: { "Content-Type": "application/json" },

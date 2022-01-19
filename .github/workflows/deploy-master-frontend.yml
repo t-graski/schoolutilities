@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths: 
+      - 'frontend/**'  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,14 +27,14 @@ jobs:
             EXCLUDE: "node_modules"
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
-            TARGET: ${{ secrets.REMOTE_TARGET }} 
+            TARGET: ${{ secrets.TARGET }} 
         - name: Connect to remote server via SSH
           uses: appleboy/ssh-action@v0.1.4
           with:
             script: |
                      cd ../home/REMOTE_USER/
-                     docker build -t schoolutilities-frontend . 
                      docker stop schoolutilities-frontend || true && docker rm schoolutilities-frontend || true
+                     docker image rm schoolutilities-frontend || true && docker build -t schoolutilities-frontend . 
                      docker run --name schoolutilities-frontend -d -p 3000:3000 schoolutilities-frontend 
             host: ${{ secrets.REMOTE_HOST }}
             username: ${{ secrets.REMOTE_USER }}

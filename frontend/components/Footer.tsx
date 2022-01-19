@@ -11,10 +11,14 @@ const FooterLayout = styled("footer", {
   flexDirection: "column",
   alignItems: "center",
   width: "100vw",
+  position: "absolute",
+  bottom: "0",
+  left: "0",
   gap: "40px",
   padding: "4vh 5vw",
   backgroundColor: "$backgroundQuaternary",
   color: "$fontPrimary",
+  // align footer always at bottom of page if content is smaller than viewport
 });
 
 const FooterContentLayout = styled("div", {
@@ -79,10 +83,16 @@ const ImprintLayout = styled("div", {
   gap: "30px",
 });
 
+const FooterSpace = styled("div", {
+  opacity: "0",
+  padding: "10vh 5vw",
+  gap: "40px",
+});
+
 export const Footer: React.FC<Props> = ({}) => {
   return (
     <>
-      <FooterLayout>
+      <FooterSpace>
         <FooterContentLayout>
           <Link href="/">
             <a>
@@ -98,8 +108,20 @@ export const Footer: React.FC<Props> = ({}) => {
           </Link>
           <LinkLayout>
             <LinkHeadline>Company</LinkHeadline>
-            <Link href="/imprint">
+            <Link href="/contact-us">
               <StyledLink>Contact Us</StyledLink>
+            </Link>
+            <Link href="/about-us">
+              <StyledLink>About Us</StyledLink>
+            </Link>
+          </LinkLayout>
+          <LinkLayout>
+            <LinkHeadline>Help</LinkHeadline>
+            <Link href="/help/help-center">
+              <StyledLink>Help Center</StyledLink>
+            </Link>
+            <Link href="/help/faq">
+              <StyledLink>FAQ</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
@@ -147,13 +169,102 @@ export const Footer: React.FC<Props> = ({}) => {
         <FooterSpacer />
         <FooterContentLayout>
           <StyledRightText>
-            © 2021, SchoolUtilities - All Rights Reserved
+            © 2022, SchoolUtilities - All Rights Reserved
           </StyledRightText>
           <ImprintLayout>
             <Link href="/data-policy">
               <StyledLink>Data-Policy</StyledLink>
             </Link>
-            <Link href="/imprint">
+            <Link href="/contact-us">
+              <StyledLink>Imprint</StyledLink>
+            </Link>
+          </ImprintLayout>
+        </FooterContentLayout>
+      </FooterSpace>
+      <FooterLayout>
+        <FooterContentLayout>
+          <Link href="/">
+            <a>
+              <LogoLayout>
+                <Image
+                  src="/images/Schoolutilities_Logo_Closed.png"
+                  alt="SchoolUtilities Logo"
+                  width="150"
+                  height="98"
+                />
+              </LogoLayout>
+            </a>
+          </Link>
+          <LinkLayout>
+            <LinkHeadline>Company</LinkHeadline>
+            <Link href="/contact-us">
+              <StyledLink>Contact Us</StyledLink>
+            </Link>
+            <Link href="/about-us">
+              <StyledLink>About Us</StyledLink>
+            </Link>
+          </LinkLayout>
+          <LinkLayout>
+            <LinkHeadline>Help</LinkHeadline>
+            <Link href="/help/help-center">
+              <StyledLink>Help Center</StyledLink>
+            </Link>
+            <Link href="/help/faq">
+              <StyledLink>FAQ</StyledLink>
+            </Link>
+          </LinkLayout>
+          <LinkLayout>
+            <LinkHeadline>Language</LinkHeadline>
+            <Link href="/">
+              <StyledLink>
+                <Image
+                  src="/images/English.png"
+                  alt="English"
+                  width="30"
+                  height="30"
+                />
+                English
+              </StyledLink>
+            </Link>
+            <Link href="/">
+              <StyledLink>
+                <Image
+                  src="/images/German.png"
+                  alt="German"
+                  width="30"
+                  height="30"
+                />
+                German
+              </StyledLink>
+            </Link>
+          </LinkLayout>
+          <LinkLayout>
+            <LinkHeadline>Support Us</LinkHeadline>
+
+            <StyledLink
+              href="https://www.patreon.com/schoolutilities"
+              target="_blank"
+            >
+              <Image
+                src="/images/Patreon.png"
+                alt="Patreon"
+                width="30"
+                height="30"
+              />
+              Patreon
+            </StyledLink>
+          </LinkLayout>
+        </FooterContentLayout>
+        <FooterSpacer />
+        <FooterContentLayout>
+          <StyledRightText>
+            © 2022, SchoolUtilities - All Rights Reserved
+          </StyledRightText>
+          <ImprintLayout>
+            <Link href="/data-policy">
+              <StyledLink>Data-Policy</StyledLink>
+            </Link>
+            <Link href="/contact-us">
               <StyledLink>Imprint</StyledLink>
             </Link>
           </ImprintLayout>

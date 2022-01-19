@@ -6,7 +6,10 @@ import {
   UseGuards,
   Delete,
   Put,
+  Get,
+  Param,
 } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CourseService } from './course.service';
 
@@ -17,8 +20,11 @@ export class CourseController {
   // @UseGuards(JwtAuthGuard)
   @Post('/addCourse')
   async addCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.addCourse(request.body);
-    return response.status(result.status).json(result?.message);
+    const token = request.headers.authorization.split(' ')[1];
+    const result = await this.courseService.addCourse(request.body, token);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -49,5 +55,29 @@ export class CourseController {
   async removeUser(@Req() request, @Res() response) {
     const result = await this.courseService.removeUser(request.body);
     return response.status(result.status).json(result?.message);
+  }
+
+  @Get('/getCourses/:schoolUUID')
+  async getCourses(@Param() params, @Req() request, @Res() response) {
+    const token = request.headers.authorization.split(' ')[1];
+    const result = await this.courseService.getAllCourses(
+      params.schoolUUID,
+      token,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Get('/getCourseInfo/:courseUUID')
+  async getCourseInfo(@Param() params, @Req() request, @Res() response) {
+    const token = request.headers.authorization.split(' ')[1];
+    const result = await this.courseService.getCourseInfo(
+      params.courseUUID,
+      token,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 }

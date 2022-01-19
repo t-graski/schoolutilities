@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { styled } from "../stitches.config";
 import SvgAlert from "./svg/SvgAlert";
 import SvgAttendance from "./svg/SvgAttendance";
+import SvgBirthDate from "./svg/SvgBirthDate";
 import SvgCalculator from "./svg/SvgCalculator";
 import SvgChecklist from "./svg/SvgChecklist";
 import SvgClass from "./svg/SvgClass";
@@ -10,14 +11,22 @@ import SvgDelete from "./svg/SvgDelete";
 import SvgDepartment from "./svg/SvgDepartment";
 import SvgDiscordLogo from "./svg/SvgDiscordLogo";
 import SvgEdit from "./svg/SvgEdit";
+import SvgEmail from "./svg/SvgEmail";
 import SvgHome from "./svg/SvgHome";
 import SvgInfo from "./svg/SvgInfo";
+import SvgPassword from "./svg/SvgKey";
+import SvgLanguage from "./svg/SvgLanguage";
+import SvgName from "./svg/SvgName";
 import SvgOpenLogo from "./svg/SvgOpenLogo";
+import SvgPremium from "./svg/SvgPremium";
 import SvgQuality from "./svg/SvgQuality";
 import SvgRightArrow from "./svg/SvgRightArrow";
+import SvgRoundUser from "./svg/SvgRoundUser";
+import SvgSchool from "./svg/SvgSchool";
 import SvgStudent from "./svg/SvgStudent";
 import SvgTeacher from "./svg/SvgTeacher";
 import SvgTimetable from "./svg/SvgTimetable";
+import SvgTimezone from "./svg/SvgTimezone";
 import SvgUser from "./svg/SvgUser";
 import SvgWarning from "./svg/SvgWarning";
 
@@ -67,6 +76,24 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgHome alt="Home Icon" />;
     case "SvgRightArrow":
       return <SvgRightArrow alt="Right Arrow Icon" />;
+    case "SvgSchool":
+      return <SvgSchool alt="School Icon" />;
+    case "SvgBirthDate":
+      return <SvgBirthDate alt="Birth Date Icon" />;
+    case "SvgName":
+      return <SvgName alt="Name Icon" />;
+    case "SvgEmail":
+      return <SvgEmail alt="Email Icon" />;
+    case "SvgPassword":
+      return <SvgPassword alt="Password Icon" />;
+    case "SvgRoundUser":
+      return <SvgRoundUser alt="User Icon" />;
+    case "SvgPremium":
+      return <SvgPremium alt="Premium Icon" />;
+    case "SvgTimezone":
+      return <SvgTimezone alt="Timezone Icon" />;
+    case "SvgLanguage":
+      return <SvgLanguage alt="Language Icon" />;
     default:
       return <SvgClass />;
   }

@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import { InputField } from "./InputField";
 import { regex } from "../misc/regex";
 import { Button } from "./Button";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 export type SideDashboardProps = {};
 
@@ -20,7 +22,7 @@ const SchoolInputLayout = styled("div", {
   width: "100%",
   marginTop: "20px",
   marginBottom: "20px",
-  padding: "20px 40px",
+  padding: "0 40px",
   borderRadius: "25px",
 });
 
@@ -31,7 +33,8 @@ const StyledContentLayout = styled("div", {
   justifyContent: "center",
   width: "fit-content",
   gap: "20px",
-  padding: "30px 50px",
+  padding: "0 50px",
+  paddingBottom: "60px",
   borderRadius: "25px",
   backgroundColor: "transparent",
   transition: "all 100ms ease-in-out",
@@ -51,7 +54,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
     const token = await getAccessToken();
     if (joinCodeValid && token) {
       const res = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/joinSchool`,
+        `https://backend.schoolutilities.net/api/schooladmin/joinSchool`,
         {
           method: "POST",
           headers: {
@@ -65,7 +68,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
       );
       if (res.ok) {
         cookie.set("schoolUUID", joinCode, { expires: 1 });
-        router.push("/school/dashboard");
+        router.push("/school/admin/settings");
       } else {
         console.log("Error: ", res.status);
       }
@@ -82,7 +85,8 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
             inputType={"text"}
             onChange={setJoinCode}
             iconName={""}
-            regex={regex.name}
+            validatorFunction={validator.isStrongPassword}
+            validatorParams={[LENGTHS.JOIN_CODE_NAME]}
             setValidInput={setJoinCodeValid}
             errorMessage="Please enter a valid join code"
             label="Join Code"

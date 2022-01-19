@@ -24,19 +24,18 @@ export default function Features() {
   return (
     <>
       <Head>
-        <title>Imprint - SchoolUtilities</title>
+        <title>Contact Us - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="Imprint"></Headline>
+      <Headline label="Contact Us"></Headline>
       <Separator width="small" alignment="center" />
       <ImprintLayout>
-        <h2>SchoolUtilities</h2>
         <Spacer size="small"></Spacer>
         <MainContentText>
           E-Mail:{" "}
-          <a href="mailto:contact@schoolutilities.com">
-            contact@schoolutilities.com
+          <a href="mailto:contact@schoolutilities.net">
+            contact@schoolutilities.net
           </a>
           <br />
           Chief Executive Officer: Tobias Graski

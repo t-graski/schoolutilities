@@ -34,16 +34,18 @@ export default function CreateSchool() {
   ]);
 
   return (
-    <SiteLayout>
-      <Head>
-        <title>School Setup - SchoolUtilities</title>
-      </Head>
-      <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
-      <CreateSchoolLayout>
-        <SetupProgressSite steps={progressSteps}></SetupProgressSite>
-      </CreateSchoolLayout>
+    <>
+      <SiteLayout>
+        <Head>
+          <title>School Setup - SchoolUtilities</title>
+        </Head>
+        <Navbar></Navbar>
+        <Spacer size="small"></Spacer>
+        <CreateSchoolLayout>
+          <SetupProgressSite steps={progressSteps}></SetupProgressSite>
+        </CreateSchoolLayout>
+      </SiteLayout>
       <Footer></Footer>
-    </SiteLayout>
+    </>
   );
 }

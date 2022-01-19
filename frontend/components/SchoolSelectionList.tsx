@@ -26,12 +26,11 @@ const SchoolLayout = styled("div", {
   marginTop: "20px",
   marginBottom: "20px",
   padding: "20px 40px",
-  borderRadius: "25px",
+  borderRadius: "5px",
   backgroundColor: "$backgroundTertiary",
-  transition: "all 100ms ease-in-out",
-  boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
+  transition: "all 200ms ease-in-out",
   "&:hover": {
-    boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.3)",
+    backgroundColor: "$backgroundSecondary",
   },
   cursor: "pointer",
 });
@@ -53,21 +52,25 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
 
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
-    let response = await fetch(
-      `https://backend.schoolutilities.net:3333/api/user/getSchools`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    if (!accessToken) {
+      router.push("/auth?tab=login");
+    } else {
+      let response = await fetch(
+        `https://backend.schoolutilities.net/api/user/getSchools`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      let fetchedSchools = await response.json();
+      console.log(fetchedSchools);
+      if (fetchedSchools.length == 0) {
+        router.push("/profile/school-join");
       }
-    );
-    let fetchedSchools = await response.json();
-    console.log(fetchedSchools);
-    if (fetchedSchools.length == 0) {
-      router.push("/profile/school-join");
+      setSchools(fetchedSchools);
     }
-    setSchools(fetchedSchools);
   }
 
   return (
@@ -78,7 +81,15 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
             key={school.schoolUUID}
             onClick={() => {
               cookie.set("schoolUUID", school.schoolUUID);
-              router.push("/school/admin/settings");
+              let redirectRoute: string = Array.isArray(router.query.redirect)
+                ? router.query.redirect[0]
+                : router.query.redirect;
+              if (router.query && redirectRoute) {
+                // router.push to the redirect url with decoded url
+                router.push(decodeURIComponent(redirectRoute));
+              } else {
+                router.push("/school/admin/settings");
+              }
             }}
           >
             <SchoolName>{school.schoolName}</SchoolName>

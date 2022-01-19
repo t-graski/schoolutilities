@@ -1,54 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import { getCssText } from "../stitches.config";
+import { getCssText, lightTheme } from "../stitches.config";
 
 export default class Document extends NextDocument {
   render() {
     return (
       <Html lang="en">
         <Head>
-          <link
-            rel="preload"
-            href="/fonts/poppins-v15-latin-100.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/poppins-v15-latin-300.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/poppins-v15-latin-regular.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/poppins-v15-latin-500.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/poppins-v15-latin-700.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/poppins-v15-latin-900.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
@@ -151,8 +109,17 @@ export default class Document extends NextDocument {
 * {
   font-family: 'Poppins', sans-serif;
 }
+
+#__next{
+  min-height: 100vh;
+  position: relative;
+}
 `,
             }}
+          />
+          <style
+            id="stitches"
+            dangerouslySetInnerHTML={{ __html: getCssText() }}
           />
         </Head>
         <body>

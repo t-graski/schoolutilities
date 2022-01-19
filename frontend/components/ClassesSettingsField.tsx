@@ -15,6 +15,8 @@ import { SettingsHeader } from "./SettingsHeader";
 import { SettingsEntry } from "./SettingsEntry";
 import { SettingsPopUp } from "./SettingsPopUp";
 import cookie from "js-cookie";
+import validator from "validator";
+import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -98,7 +100,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/classes/${schoolUUID}`,
+        `https://backend.schoolutilities.net/api/schooladmin/classes/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -111,7 +113,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       setClasses(json);
 
       returnValue = await fetch(
-        `https://backend.schoolutilities.net:3333/api/schooladmin/departments/${schoolUUID}`,
+        `https://backend.schoolutilities.net/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -140,7 +142,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
+      `https://backend.schoolutilities.net/api/schooladmin/class`,
       {
         method: "POST",
         headers: {
@@ -174,7 +176,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
+      `https://backend.schoolutilities.net/api/schooladmin/class`,
       {
         method: "PUT",
         headers: {
@@ -206,7 +208,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net:3333/api/schooladmin/class`,
+      `https://backend.schoolutilities.net/api/schooladmin/class`,
       {
         method: "DELETE",
         headers: {
@@ -263,7 +265,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                   }
                 }}
                 iconName=""
-                regex={regex.name}
+                validatorFunction={validator.isLength}
+                validatorParams={[LENGTHS.NAME]}
                 setValidInput={setSchoolClassNameValid}
                 min="2"
                 max="30"

@@ -44,6 +44,7 @@ export class RefreshTokenService {
         'insert into `login_tokens` set person_id=?, refresh_token=?',
         [personId, refreshToken],
         function (error, results, fields) {
+          
           resolve(results);
         },
       );

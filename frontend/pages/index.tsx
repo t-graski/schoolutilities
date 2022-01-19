@@ -9,6 +9,8 @@ import Head from "next/head";
 import { logout } from "../misc/authHelper";
 import { StartPageBox } from "../components/StartPageBox";
 import { GeneralList } from "../components/GeneralList";
+import StartpageArtwork from "../components/svg/StartpageArtwork";
+import Image from "next/image";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -22,6 +24,15 @@ const FirstBoxLayout = styled("div", {
   width: "100vw",
   marginTop: "18vh",
   height: "82vh",
+});
+
+const ArtworkLayout = styled("div", {
+  display: "block",
+  width: "55vw",
+  height: "calc(55vw/731*526)",
+  position: "absolute",
+  top: "0",
+  right: "0",
 });
 
 export default function Home() {
@@ -43,6 +54,9 @@ export default function Home() {
           ></meta>
         </Head>
         <Navbar />
+        <ArtworkLayout>
+          <Image layout="fill" src="/images/startpage_artwork.svg" />
+        </ArtworkLayout>
         <FirstBoxLayout>
           <StartPageBox
             title="LET’S MAKE"
@@ -52,10 +66,10 @@ export default function Home() {
             and teachers. With incredible features and
             the right design, we make this possible."
             descriptionLine="This is SchoolUtilities."
-            buttonText="JOIN US"
-            buttonLink="/auth/register"
+            buttonText="REGISTER NOW"
+            buttonLink="/auth?tab=register"
             linkText="LEARN MORE"
-            linkUrl="/features"
+            linkUrl="/learn-more"
           ></StartPageBox>
         </FirstBoxLayout>
         <GeneralList
@@ -64,25 +78,25 @@ export default function Home() {
               title: "Discord-Bot",
               description:
                 "Take a look at our Discord-Bot, which reminds you on upcoming Events and simplifies your life.",
-              href: "https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot",
-              buttonText: "INVITE",
+              href: "/bot",
+              buttonText: "LET'S GET STARTED",
               iconName: "SvgDiscordLogo",
             },
             {
-              title: "Features",
+              title: "Create School",
               description:
-                "Learn more about all the features, our service has available for you. Don’t worry, we’ve got you covered.",
-              href: "/features",
+                "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
+              href: "/school/admin/create-school",
               buttonText: "GET ME THERE",
-              iconName: "SvgChecklist",
+              iconName: "SvgSchool",
             },
             {
-              title: "About Us",
+              title: "Premium",
               description:
-                "We think it’s cool to know who the people behind a service are. Learn more about us and our role in the team.",
-              href: "/about-us",
-              buttonText: "OK, LET’S GO",
-              iconName: "SvgInfo",
+                "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
+              href: "/premium",
+              buttonText: "LEARN MORE",
+              iconName: "SvgPremium",
             },
           ]}
         ></GeneralList>

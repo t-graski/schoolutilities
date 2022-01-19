@@ -19,7 +19,7 @@ export default function RegisterApproved() {
       <Spacer size="medium"></Spacer>
       <Headline label="Join a school"></Headline>
       <Separator width="small" alignment="center" />
-      <Spacer size="small"></Spacer>
+      <Spacer size="verySmall"></Spacer>
       <SchoolJoin></SchoolJoin>
       <Footer></Footer>
     </>

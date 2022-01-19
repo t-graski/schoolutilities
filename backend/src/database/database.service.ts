@@ -254,6 +254,29 @@ export class DatabaseService {
     });
     return classId.classId;
   }
+  async getCourseUUIDById(courseUUID: string): Promise<any> {
+    const course = await prisma.courses.findFirst({
+      where: {
+        courseUUID: courseUUID,
+      },
+      select: {
+        courseId: true,
+      },
+    });
+    return course.courseId;
+  }
+
+  async getCourseIdByUUID(courseUUID: string): Promise<any> {
+    const course = await prisma.courses.findFirst({
+      where: {
+        courseUUID: courseUUID,
+      },
+      select: {
+        courseId: true,
+      },
+    });
+    return course.courseId;
+  }
 
   async getPersonRolesByPersonUUID(personUUID: string): Promise<any> {
     const personId = await this.getPersonIdByUUID(personUUID);
@@ -314,6 +337,22 @@ export class DatabaseService {
     } catch (err) {
       return RETURN_DATA.DATABASE_ERROR;
     }
+  }
+
+  async getClassById(classId: number): Promise<any> {
+    const classData = await prisma.schoolClasses.findFirst({
+      where: {
+        classId: classId,
+      },
+      select: {
+        classId: true,
+        classUUID: true,
+        className: true,
+        departmentId: true,
+      },
+    });
+
+    return classData;
   }
 
   async insertToken(userId: number, token: string): Promise<DatabaseUpdate> {
