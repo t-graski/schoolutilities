@@ -20,7 +20,8 @@ import { SchoolAdminService } from './schoolAdmin.service';
 export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Verified)
   @Post('/addSchoolConfig')
   async addSchoolConfig(@Req() request, @Res() response) {
     const jwt = request.headers.authorization.split(' ')[1];
@@ -34,8 +35,8 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Post('/department')
-  // @Roles(Role.Admin)
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
     return response
@@ -44,6 +45,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Post('/departments')
   async addDepartments(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartments(request.body);
@@ -51,6 +53,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Delete('/department')
   async removeDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeDepartment(request.body);
@@ -61,6 +64,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Put('/department')
   async updateDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateDepartment(request.body);
@@ -68,8 +72,8 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Get('/departments/:schoolUUID')
-  // @Roles(Role.Student)
   async getDepartments(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getDepartments(
       params.schoolUUID,
@@ -80,6 +84,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Post('/class')
   async addClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addClass(request.body);
@@ -89,6 +94,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Delete('/class')
   async removeClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeClass(
@@ -100,6 +106,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Put('/class')
   async updateClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateClass(request.body);
@@ -109,6 +116,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Get('/classes/:schoolUUID')
   async getClasses(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getClasses(params.schoolUUID);
@@ -118,6 +126,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Post('/joinCode')
   async addJoinCode(@Req() request, @Res() response) {
     const jwt = request.headers.authorization.split(' ')[1];
@@ -128,6 +137,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Delete('/joinCode')
   async removeJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeJoinCode(request.body);
@@ -135,6 +145,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Put('/joinCode')
   async updateJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateJoinCode(request.body);
@@ -142,6 +153,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Get('joinCode/:schoolUUID')
   async getJoinCodes(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getAllJoinCodes(
@@ -151,6 +163,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Verified)
   @Post('joinSchool')
   async joinSchool(@Req() request, @Res() response) {
     const token = request.headers.authorization.split(' ')[1];
@@ -164,6 +177,7 @@ export class SchoolAdminController {
   }
 
   // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Student)
   @Post('leaveSchool')
   async leaveSchool(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.leaveSchool(request.body);
@@ -172,6 +186,7 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Roles(Role.Admin)
   @Get('/getPersons/:schoolUUID')
   async getPersonsOfSchool(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getPersonsOfSchool(
@@ -182,6 +197,7 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Roles(Role.Admin)
   @Get('userPermissions')
   async getUserPermissions(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getUserPermissions(

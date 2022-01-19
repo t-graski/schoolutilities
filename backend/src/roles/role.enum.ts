@@ -4,6 +4,7 @@ export enum Role {
   Admin = 'Admin',
   Teacher = 'Teacher',
   Student = 'Student',
+  Verified = 'Verified',
 }
 
 export const RoleOrder = {
@@ -12,4 +13,5 @@ export const RoleOrder = {
   Admin: 1,
   Teacher: 2,
   Student: 3,
+  Verified: 4,
 };

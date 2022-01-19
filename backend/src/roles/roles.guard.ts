@@ -34,6 +34,11 @@ export class RolesGuard implements CanActivate {
     const jwtArray = Object.keys(jwt).map((key) => jwt[key]);
     const personUUID = jwtArray[0];
 
+    if (requiredRoles.includes(Role.Verified)) {
+      const isVerified = await this.authService.personIsVerified(personUUID);
+      return isVerified;
+    }
+
     if (requiredRoles.includes(Role.Supervisor)) {
       if (personUUID.startsWith(ID_STARTERS.INTERNAL)) return true;
       return false;
