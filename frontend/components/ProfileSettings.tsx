@@ -20,6 +20,9 @@ import { LoadingAnimation } from "./LoadingAnimation";
 
 type Props = {};
 
+// result for ln(n+1)/ln(n)
+
+
 const ProfileLayout = styled("div", {
   display: "grid",
   justifyContent: "center",
