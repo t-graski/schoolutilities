@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
-import { Footer } from "../../../components/Footer";
-import { LoginField } from "../../../components/LoginField";
-import { Navbar } from "../../../components/Navbar";
-import { Progressbar } from "../../../components/Progressbar";
-import { SchoolDetailField } from "../../../components/SchoolDetailField";
-import { SetupProgressSite } from "../../../components/SetupProgressSite";
-import { Spacer } from "../../../components/Spacer";
-import { styled } from "../../../stitches.config";
+import { DepartmentsDetailField } from "../../components/DepartmentsDetailField";
+import { Footer } from "../../components/Footer";
+import { LoginField } from "../../components/LoginField";
+import { Navbar } from "../../components/Navbar";
+import { Progressbar } from "../../components/Progressbar";
+import { SchoolDetailField } from "../../components/SchoolDetailField";
+import { SetupProgressSite } from "../../components/SetupProgressSite";
+import { Spacer } from "../../components/Spacer";
+import { styled } from "../../stitches.config";
 import Head from "next/head";
-import { SiteLayout } from "../../../components/SiteLayout";
+import { SiteLayout } from "../../components/SiteLayout";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",

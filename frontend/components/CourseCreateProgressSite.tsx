@@ -104,6 +104,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [activeStep, setActiveStep] = useState(-1);
   const [statusInfo, setStatusInfo] = useState(null);
+  const router = useRouter();
 
   const [inputData, setInputData] = useState({
     courseName: "",
@@ -127,12 +128,12 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
     let accessToken = await getAccessToken();
     console.log(inputData);
     const schoolResponse = await fetch(
-      `https://backend.schoolutilities.net/api/course/addCourse`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/addCourse`,
       {
         method: "POST",
         body: JSON.stringify({
           name: inputData.courseName,
-          schoolUUID: cookie.get("schoolUUID"),
+          schoolUUID: router.query.schoolUUID as string,
           courseDescription: inputData.courseDescription,
           classes: inputData.classes.map((schoolClass) => schoolClass.value),
           persons: inputData.members.map((person) => person.value),

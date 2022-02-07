@@ -91,8 +91,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   const [departmentId, setDepartmentId] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   useEffect(() => {
     updateSettingsEntriesFromDatabase();
@@ -104,12 +104,12 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       router.push("/auth/login");
     }
     if (!schoolUUID && accessToken) {
-      router.push("/profile/school-selection");
+      router.push("/school/select");
     }
     if (accessToken && schoolUUID && isFirstTime) {
       setIsLoading(true);
       const response = await fetch(
-        `https://backend.schoolutilities.net/api/schooladmin/departments/${schoolUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -143,7 +143,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     };
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/department`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
       {
         method: "POST",
         headers: {
@@ -179,7 +179,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     };
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/department`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
       {
         method: "PUT",
         headers: {
@@ -210,7 +210,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   async function deleteSettingsEntry(id) {
     setIsLoading(true);
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/department`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
       {
         method: "DELETE",
         headers: {
@@ -327,7 +327,9 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                   }
                 >
                   <Link
-                    href={`/school/admin/settings?tab=classes&departmentUUID=${entry.departmentUUID}`}
+                    href={`/school/${
+                      router.query.schoolUUID as string
+                    }/edit?tab=classes&departmentUUID=${entry.departmentUUID}`}
                   >
                     <SettingsEntryLink>
                       <SettingsEntryName>

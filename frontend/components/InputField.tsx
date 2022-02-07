@@ -6,6 +6,7 @@ import { SvgIcon } from "./SvgIcon";
 import Select from "react-select";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { Input } from "@nextui-org/react";
 
 type Props = {
   inputType:

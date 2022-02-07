@@ -157,10 +157,8 @@ export const Navbar: React.FC<Props> = ({}) => {
           <Link href="/">
             <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>
           </Link>
-          <Link href="/profile/school-selection">
-            <StyledLink
-              marked={router.pathname === "/profile/school-selection"}
-            >
+          <Link href="/school/select">
+            <StyledLink marked={router.pathname === "/school/select"}>
               MY SCHOOLS
             </StyledLink>
           </Link>

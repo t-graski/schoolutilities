@@ -29,9 +29,9 @@ export default function CreateCourse() {
   useEffect(() => {
     if (!getAccessToken()) {
       router.push("/auth?tab=login");
-    } else if (!cookie.get("schoolUUID")) {
+    } else if (!router.query.schoolUUID) {
       router.push(
-        "/profile/school-selection?redirect=/school/course/create-course"
+        "/school/select?redirect=/school/course/create-course"
       );
     }
   }, []);
