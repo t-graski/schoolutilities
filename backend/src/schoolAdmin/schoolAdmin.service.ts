@@ -16,12 +16,8 @@ import {
   AddJoinCode,
   RemoveJoinCode,
   UpdateJoinCode,
-  GetAllJoinCodes,
-  GetDepartment,
   JoinSchool,
   UserPermissions,
-  GetClasses,
-  GetDepartments,
 } from 'src/types/SchoolAdmin';
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
@@ -38,13 +34,6 @@ export class SchoolAdminService {
     private readonly databaseService: DatabaseService,
     private readonly authService: AuthService,
   ) {
-    this.connection = mysql.createConnection({
-      host: process.env.DATABASE_HOST,
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-    });
-    this.connection.connect();
   }
 
   async addSchoolConfig(
@@ -534,8 +523,6 @@ export class SchoolAdminService {
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
 
-    console.log(personId);
-
     try {
       await prisma.schoolPersons.create({
         data: {
@@ -575,11 +562,16 @@ export class SchoolAdminService {
       if (err.code === 'P2002') {
         return RETURN_DATA.ALREADY_EXISTS;
       }
-      console.log(err);
+
       return RETURN_DATA.DATABASE_ERROR;
     }
 
-    return RETURN_DATA.SUCCESS;
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: {
+        schoolUUID: schoolUUID,
+      },
+    };
   }
 
   async leaveSchool(body: JoinSchool): Promise<ReturnMessage> {
@@ -613,8 +605,6 @@ export class SchoolAdminService {
 
     const roleEntry = role.find((entry) => entry.schoolId === schoolId);
     if (roleEntry.roleId === 1) {
-      console.log('test');
-
       return RETURN_DATA.LAST_USER;
     }
 
@@ -627,8 +617,6 @@ export class SchoolAdminService {
     });
 
     const isOnlyUserArray = isOnlyUser.map((entry) => entry.schoolId);
-
-    console.log(isOnlyUserArray.length);
 
     if (isOnlyUserArray.length == 1) return RETURN_DATA.LAST_USER;
 
@@ -914,8 +902,6 @@ export class SchoolAdminService {
         data: personsData,
       };
     } catch (err) {
-      console.log(err);
-
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

@@ -16,7 +16,7 @@ export interface RemoveCourse {
 }
 
 export interface UpdateCourse {
-  courseId: number;
+  courseUUID: string;
   name: string;
   courseDescription: string;
   subjectId: number;

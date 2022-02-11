@@ -12,6 +12,7 @@ import { TimezoneModule } from './timezone/timezone.module';
 import { UserModule } from './user/user.module';
 import { AssetsModule } from './assets/assets.module';
 import { StatusModule } from './status/status.module';
+import { HelperModule } from './helper/helper.module';
 
 @Module({
   imports: [
@@ -26,8 +27,9 @@ import { StatusModule } from './status/status.module';
     UserModule,
     AssetsModule,
     StatusModule,
+    HelperModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

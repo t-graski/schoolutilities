@@ -13,6 +13,7 @@ import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
+import { HelperService } from 'src/helper/helper.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -26,20 +27,30 @@ export class CourseService {
   constructor(
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
-  ) {}
-  async addCourse(body: AddCourse, token: string): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } = body;
-
-    const jwt = await this.authService.decodeJWT(token);
-    const personUUID = jwt.personUUID;
+    private readonly helper: HelperService,
+  ) { }
+  async addCourse(request): Promise<ReturnMessage> {
+    const { name, courseDescription, schoolUUID, persons, classes } = request.body;
 
     if (
+      !name || !courseDescription || !schoolUUID || !persons || !classes ||
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
       !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
     ) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
+    let personUUID;
+
+    try {
+      const token = await this.helper.extractJWTToken(request)
+      personUUID = await this.helper.getPersonUUIDfromJWT(token);
+    } catch (err) {
+      return {
+        status: HttpStatus.NOT_ACCEPTABLE,
+        message: err.message,
+      }
+    }
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await (
       await this.authService.getPersonIdByUUID(personUUID)
@@ -171,8 +182,9 @@ export class CourseService {
   }
 
   async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
-    const { courseId, name, courseDescription, subjectId } = body;
+    const { courseUUID, name, courseDescription, subjectId = 0 } = body;
     if (
+      !validator.isUUID(courseUUID.slice(1), 4) ||
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
       !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
     ) {
@@ -181,6 +193,8 @@ export class CourseService {
         message: 'Invalid input',
       };
     }
+
+    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
 
     const course: object | null = await prisma.courses.findUnique({
       where: {
@@ -203,10 +217,32 @@ export class CourseService {
         subjectId: Number(subjectId),
       },
     });
+
+    delete patchCourse.courseId;
+
+    const schoolUUID = await this.helper.getSchoolUUIDById(
+      patchCourse.schoolId,
+    );
+
+    const personCreationUUID = await this.helper.getUserUUIDById(
+      patchCourse.personCreationId,
+    );
+
+
+
+
+
     if (patchCourse) {
       return {
         status: HttpStatus.OK,
-        message: 'Course updated successfully',
+        data: {
+          courseUUID: patchCourse.courseUUID,
+          name: patchCourse.name,
+          courseDescription: patchCourse.courseDescription,
+          schoolUUID: schoolUUID,
+          creationDate: patchCourse.creationDate,
+          personCreationUUID: personCreationUUID,
+        }
       };
     } else {
       return {
@@ -483,7 +519,6 @@ export class CourseService {
         classes: classesData,
       };
 
-      //add coursedata item to coursedata object
       courseData[courseDataItem.courseUUID] = courseDataItem;
 
       return {

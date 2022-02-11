@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 export class StatisticsService {
   constructor() {}
 
-  // @Cron('15 * * * * *')
+  // @Cron('20 * * * * *')
   async getStatistics() {
     // console.log('Schools: ' + (await this.getSchoolAmount()));
     // console.log('Users: ' + (await this.getUserAmount()));
@@ -37,7 +37,7 @@ export class StatisticsService {
       lines += currentFile;
     });
 
-    //do the same for frontend but ending with .tsx
+    //sql: transform unix time to date time
 
     const componentFiles = files.sync('../frontend/components/*.tsx');
     let componentLines = 0;
