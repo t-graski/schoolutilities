@@ -33,7 +33,7 @@ export const EmailChangeAuth = () => {
       token: token,
     });
     console.log(requestBody);
-    fetch(`https://backend.schoolutilities.net/api/user/activateNewEmail`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/activateNewEmail`, {
       method: "POST",
       body: requestBody,
       headers: { "Content-Type": "application/json" },

@@ -80,8 +80,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const [departmentUUID, setDepartmentUUId] = React.useState("");
   const [schoolClassId, setSchoolClassId] = React.useState("");
   const [error, setError] = React.useState("");
-  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   useEffect(() => {
     if (isFirstTime) {
@@ -96,11 +96,11 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       router.push("/auth/login");
     }
     if (!schoolUUID) {
-      router.push("/profile/school-selection");
+      router.push("/school/select");
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
-        `https://backend.schoolutilities.net/api/schooladmin/classes/${schoolUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -113,7 +113,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       setClasses(json);
 
       returnValue = await fetch(
-        `https://backend.schoolutilities.net/api/schooladmin/departments/${schoolUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -142,7 +142,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/class`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
       {
         method: "POST",
         headers: {
@@ -176,7 +176,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       className: schoolClassName,
     };
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/class`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
       {
         method: "PUT",
         headers: {
@@ -208,7 +208,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/class`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
       {
         method: "DELETE",
         headers: {
@@ -348,7 +348,9 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                 <>
                   <SettingsEntryName>{entry.className}</SettingsEntryName>
                   <Link
-                    href={`/school/admin/settings?departmentUUID=${entry.departmentUUID}`}
+                    href={`/school/${
+                      router.query.schoolUUID as string
+                    }/edit?departmentUUID=${entry.departmentUUID}`}
                   >
                     <SettingsEntryLink>
                       <DepartmentName>{entry.departmentName}</DepartmentName>

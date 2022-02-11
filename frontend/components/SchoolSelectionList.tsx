@@ -56,7 +56,7 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
       router.push("/auth?tab=login");
     } else {
       let response = await fetch(
-        `https://backend.schoolutilities.net/api/user/getSchools`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
         {
           method: "GET",
           headers: {
@@ -67,7 +67,7 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
       let fetchedSchools = await response.json();
       console.log(fetchedSchools);
       if (fetchedSchools.length == 0) {
-        router.push("/profile/school-join");
+        router.push("/school/join");
       }
       setSchools(fetchedSchools);
     }
@@ -80,15 +80,18 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
           <SchoolLayout
             key={school.schoolUUID}
             onClick={() => {
-              cookie.set("schoolUUID", school.schoolUUID);
               let redirectRoute: string = Array.isArray(router.query.redirect)
                 ? router.query.redirect[0]
                 : router.query.redirect;
               if (router.query && redirectRoute) {
                 // router.push to the redirect url with decoded url
-                router.push(decodeURIComponent(redirectRoute));
+                router.push(
+                  "/school/" +
+                    school.schoolUUID +
+                    decodeURIComponent(redirectRoute)
+                );
               } else {
-                router.push("/school/admin/settings");
+                router.push(`/school/${school.schoolUUID}/edit`);
               }
             }}
           >

@@ -54,13 +54,13 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
     let accessToken = await getAccessToken();
     if (!accessToken) {
       router.push("/auth?tab=login&redirect=/school/course");
-    } else if (!cookie.get("schoolUUID")) {
-      router.push("/profile/school-selection?redirect=/school/course");
+    } else if (!router.query.schoolUUID) {
+      router.push("/school/select?redirect=/course");
     } else {
       let response = await fetch(
-        `https://backend.schoolutilities.net/api/course/getCourses/${cookie.get(
-          "schoolUUID"
-        )}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${
+          router.query.schoolUUID as string
+        }`,
         {
           method: "GET",
           headers: {

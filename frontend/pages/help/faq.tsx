@@ -135,7 +135,7 @@ export default function RegisterApproved() {
         <>
           <p>
             You can create a new school by clicking{" "}
-            <Link href="/school/admin/create-school">
+            <Link href="/school/create">
               <a>here</a>
             </Link>
             . If you need any further assistance creating your school, you can
@@ -214,7 +214,7 @@ export default function RegisterApproved() {
       <Headline label="FAQ"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
-       <AccordionLayout>
+      <AccordionLayout>
         <Accordion type="single" defaultValue="item-1" collapsible>
           {questions.map(({ question, answer }, index) => (
             <AccordionItem key={index} value={`item-${index + 1}`}>

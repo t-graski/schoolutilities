@@ -104,6 +104,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [activeStep, setActiveStep] = useState(-1);
   const [statusInfo, setStatusInfo] = useState(null);
+  const [schoolUUID, setSchoolUUID] = useState("");
 
   if (cookie.get("activeStep")) {
     if (activeStep == -1) {
@@ -124,7 +125,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
       Authorization: `Bearer ${accessToken}`,
     });
     const schoolResponse = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/addschoolconfig`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/addschoolconfig`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -141,12 +142,13 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
     if (schoolResponse) {
       if (schoolResponse.status == 200) {
         let data = await schoolResponse.json();
+        setSchoolUUID(data.schoolUUID);
         if (data && data.schoolUUID) {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
           await storage.departments.forEach(async (department) => {
             await fetch(
-              `https://backend.schoolutilities.net/api/schooladmin/department`,
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
               {
                 method: "POST",
                 body: JSON.stringify({
@@ -220,7 +222,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusDescription}
               </SuccessDescription>
               {statusInfo && statusInfo.linkVisibility && (
-                <Link href="/school/admin/settings">
+                <Link href={`/school/${schoolUUID}/edit`}>
                   <StyledLink>Manage School now</StyledLink>
                 </Link>
               )}

@@ -82,7 +82,7 @@ export default function Article() {
           ></Headline>
           <p>
             It is also possible to create your own school by clicking{" "}
-            <Link href="/school/admin/create-school">
+            <Link href="/school/create">
               <StyledLink>here</StyledLink>
             </Link>
             .<br />

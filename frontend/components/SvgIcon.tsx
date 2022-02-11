@@ -5,6 +5,7 @@ import SvgAttendance from "./svg/SvgAttendance";
 import SvgBirthDate from "./svg/SvgBirthDate";
 import SvgCalculator from "./svg/SvgCalculator";
 import SvgChecklist from "./svg/SvgChecklist";
+import SvgCheckMark from "./svg/SvgCheckMark";
 import SvgClass from "./svg/SvgClass";
 import SvgClosedLogo from "./svg/SvgClosedLogo";
 import SvgDelete from "./svg/SvgDelete";
@@ -12,6 +13,8 @@ import SvgDepartment from "./svg/SvgDepartment";
 import SvgDiscordLogo from "./svg/SvgDiscordLogo";
 import SvgEdit from "./svg/SvgEdit";
 import SvgEmail from "./svg/SvgEmail";
+import SvgFile from "./svg/SvgFile";
+import SvgHamburger from "./svg/SvgHamburger";
 import SvgHome from "./svg/SvgHome";
 import SvgInfo from "./svg/SvgInfo";
 import SvgPassword from "./svg/SvgKey";
@@ -94,6 +97,12 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgTimezone alt="Timezone Icon" />;
     case "SvgLanguage":
       return <SvgLanguage alt="Language Icon" />;
+    case "SvgHamburger":
+      return <SvgHamburger alt="Hamburger Icon" />;
+    case "SvgFile":
+      return <SvgFile alt="File Icon" />;
+    case "SvgCheckMark":
+      return <SvgCheckMark alt="Check Mark Icon" />;
     default:
       return <SvgClass />;
   }

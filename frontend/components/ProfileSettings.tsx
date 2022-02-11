@@ -22,7 +22,6 @@ type Props = {};
 
 // result for ln(n+1)/ln(n)
 
-
 const ProfileLayout = styled("div", {
   display: "grid",
   justifyContent: "center",
@@ -227,7 +226,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
   async function updateSchoolsFromDatabase() {
     let accessToken = await getAccessToken();
     let response = await fetch(
-      `https://backend.schoolutilities.net/api/user/getSchools`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
       {
         method: "GET",
         headers: {
@@ -254,7 +253,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     }
     setIsLoading(true);
     const response = await fetch(
-      `https://backend.schoolutilities.net/api/user/profile`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -280,7 +279,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     }
     setIsLoading(true);
     const response = await fetch(
-      `https://backend.schoolutilities.net/api/user/changeEmail`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/changeEmail`,
       {
         method: "POST",
         headers: {
@@ -442,10 +441,6 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 editable={false}
               />
             </ProfileDataColumn>
-
-            <ProfileDataColumn>
-              {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
-            </ProfileDataColumn>
           </>
         ) : (
           <>
@@ -457,7 +452,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     key={school.schoolUUID}
                     onClick={() => {
                       cookie.set("schoolUUID", school.schoolUUID);
-                      router.push("/school/admin/settings");
+                      router.push(`/school/${school.schoolUUID}/edit`);
                     }}
                   >
                     <SchoolName>{school.schoolName}</SchoolName>
@@ -469,7 +464,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
               </SchoolList>
               <Spacer size="verySmall"></Spacer>
               <ButtonLayout>
-                <Link href="/profile/school-join">
+                <Link href="/school/join">
                   <a>
                     <Button
                       backgroundColor={"primary"}
@@ -483,7 +478,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   </a>
                 </Link>
                 <Spacer size="verySmall"></Spacer>
-                <Link href="/school/admin/create-school">
+                <Link href="/school/create">
                   <a>
                     <Button
                       backgroundColor={"secondary"}

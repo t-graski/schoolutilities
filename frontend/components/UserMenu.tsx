@@ -258,9 +258,9 @@ const ArrowLayout = styled("div", {
       true: {
         transform: "rotate(90deg)",
       },
-      false: {}
-    }
-  }
+      false: {},
+    },
+  },
 });
 
 const StyledUserName = styled("p", {});
@@ -278,7 +278,7 @@ export const UserMenu = () => {
     let accessToken = await getAccessToken();
     if (accessToken) {
       let response = await fetch(
-        `https://backend.schoolutilities.net/api/user/getSchools`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
         {
           method: "GET",
           headers: {
@@ -288,11 +288,11 @@ export const UserMenu = () => {
       );
       let fetchedSchools = await response.json();
       setSchools(fetchedSchools);
-      if (cookie.get("schoolUUID")) {
+      if (router.query.schoolUUID) {
         response = await fetch(
-          `https://backend.schoolutilities.net/api/course/getCourses/${cookie.get(
-            "schoolUUID"
-          )}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${
+            router.query.schoolUUID as string
+          }`,
           {
             method: "GET",
             headers: {
@@ -314,7 +314,7 @@ export const UserMenu = () => {
       setIsFirstTime(false);
     }
   });
-
+  console.log(router.query.schoolUUID);
   return (
     <Box>
       <DropdownMenu onOpenChange={setOpen}>
@@ -324,7 +324,7 @@ export const UserMenu = () => {
               <SvgIcon iconName="SvgRoundUser" />
             </IconLayout>
             <StyledUserName>
-              {userInfo ? userInfo.firstName : ""}
+              {userInfo && userInfo.firstName ? userInfo.firstName : "Profile"}
             </StyledUserName>
             <ArrowLayout open={open}>
               <ChevronRightIcon />
@@ -333,7 +333,7 @@ export const UserMenu = () => {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent sideOffset={5} alignOffset={0}>
-          {userInfo && (
+          {userInfo && userInfo.firstName && (
             <>
               <DropdownMenuItem
                 onClick={() => {
@@ -360,26 +360,43 @@ export const UserMenu = () => {
                       <DropdownMenuItem
                         key={course.courseUUID}
                         onClick={() => {
-                          router.push(`/school/course/${course.courseUUID}`);
+                          router.push(
+                            `/school/${
+                              router.query.schoolUUID as string
+                            }/course/${course.courseUUID}`
+                          );
                         }}
                       >
                         {course.courseName}
                       </DropdownMenuItem>
                     ))}
-                  {courses.length > 0 && <DropdownMenuSeparator />}
-                  <DropdownMenuItem
-                    onClick={() => {
-                      router.push("/school/course/create-course");
-                    }}
-                  >
-                    Create a course
-                  </DropdownMenuItem>
+                  {courses.length == 0 && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push("/school/select");
+                      }}
+                    >
+                      Select a school to see courses
+                    </DropdownMenuItem>
+                  )}
+                  {courses.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => {
+                          router.push("/school/course/create-course");
+                        }}
+                      >
+                        Create a course
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTriggerItem
                   onClick={() => {
-                    router.push("/profile/school-selection");
+                    router.push("/school/select");
                   }}
                 >
                   Schools
@@ -392,11 +409,8 @@ export const UserMenu = () => {
                     <DropdownMenuItem
                       key={school.schoolUUID}
                       onClick={() => {
-                        cookie.set("schoolUUID", school.schoolUUID);
-                        router.push("/school/admin/settings");
-                        if (
-                          router.pathname.includes("/school/admin/settings")
-                        ) {
+                        router.push(`/school/${school.schoolUUID}/edit`);
+                        if (router.pathname.includes("/edit")) {
                           router.reload();
                         }
                       }}
@@ -407,14 +421,14 @@ export const UserMenu = () => {
                   {schools.length > 0 && <DropdownMenuSeparator />}
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push("/profile/school-join");
+                      router.push("school/join");
                     }}
                   >
                     Join a school
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push("/school/admin/create-school");
+                      router.push("/school/create");
                     }}
                   >
                     Create new school
@@ -486,7 +500,7 @@ export const UserMenu = () => {
               </DropdownMenuItem>
             </>
           )}
-          {!userInfo && (
+          {(!userInfo || !userInfo.firstName) && (
             <>
               <DropdownMenuItem
                 onClick={() => {
