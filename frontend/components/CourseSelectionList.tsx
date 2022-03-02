@@ -82,7 +82,11 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
             <CourseLayout
               key={course.courseUUID}
               onClick={() => {
-                router.push(`/school/course/${course.courseUUID}`);
+                router.push(
+                  `/school/${router.query.schoolUUID as string}/course/${
+                    course.courseUUID
+                  }`
+                );
               }}
             >
               <CourseName>{course.courseName}</CourseName>

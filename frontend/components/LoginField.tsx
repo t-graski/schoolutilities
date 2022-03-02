@@ -81,6 +81,8 @@ export const LoginField: React.FC<Props> = ({}) => {
         .then((response) => {
           console.log(response);
           if (response.status == 200) {
+            let audio = new Audio("/sounds/406371__stormbat__mission-success.wav");
+            audio.play();
             setSignUpInfo("You are logged in");
             setLoggedIn(true);
             setLoginSuccess(true);
@@ -92,6 +94,10 @@ export const LoginField: React.FC<Props> = ({}) => {
             }
             return response.json();
           } else {
+            // let audio1 = new Audio("/sounds/336280__fuelstream__css-looser.wav");
+            // audio1.play();
+            // let audio2 = new Audio("/sounds/58655__suonho__zajo-loop33-looser.wav");
+            // audio2.play();
             setSignUpInfo(
               "Something went wrong, while trying to log in. It can be that you have entered wrong credentials or that you are not registered yet."
             );

@@ -314,7 +314,7 @@ export const UserMenu = () => {
       setIsFirstTime(false);
     }
   });
-  console.log(router.query.schoolUUID);
+
   return (
     <Box>
       <DropdownMenu onOpenChange={setOpen}>
@@ -346,7 +346,9 @@ export const UserMenu = () => {
               <DropdownMenu>
                 <DropdownMenuTriggerItem
                   onClick={() => {
-                    router.push("/school/course");
+                    router.push(
+                      `/school/${router.query.schoolUUID as string}/course`
+                    );
                   }}
                 >
                   Courses
@@ -384,7 +386,11 @@ export const UserMenu = () => {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => {
-                          router.push("/school/course/create-course");
+                          router.push(
+                            `/school/${
+                              router.query.schoolUUID as string
+                            }/course/create-course`
+                          );
                         }}
                       >
                         Create a course
@@ -409,10 +415,7 @@ export const UserMenu = () => {
                     <DropdownMenuItem
                       key={school.schoolUUID}
                       onClick={() => {
-                        router.push(`/school/${school.schoolUUID}/edit`);
-                        if (router.pathname.includes("/edit")) {
-                          router.reload();
-                        }
+                        router.push(`/school/${school.schoolUUID}`);
                       }}
                     >
                       {school.schoolName}

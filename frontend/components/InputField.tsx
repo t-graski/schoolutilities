@@ -16,12 +16,13 @@ type Props = {
     | "email"
     | "checkbox"
     | "select"
-    | "search-select";
+    | "search-select"
+    | "textfield";
   selectOptions?: {
     value: string;
     label: string;
   }[];
-  selectValue?: string | string[];
+  selectValue?: any;
   selectMultiValues?: boolean;
   value?: string;
   onChange: Function;
@@ -29,6 +30,7 @@ type Props = {
   editable?: boolean;
   required?: boolean;
   label?: string;
+  size?: Stitches.VariantProps<typeof StyledInputField>["size"];
   validatorFunction?: Function;
   validatorParams?: [any?];
   setValidInput?: Function;
@@ -74,6 +76,19 @@ const StyledInputField = styled("input", {
         },
       },
     },
+    size: {
+      big: {
+        fontSize: "1.5rem",
+      },
+      normal: {
+        fontSize: "1.2rem",
+      },
+      small: {
+        fontSize: "1rem",
+        padding: "0",
+        lineHeight: "1.2rem",
+      },
+    },
   },
 });
 
@@ -82,9 +97,9 @@ const InputFieldLayout = styled("div", {
   alignItems: "center",
   background: "$backgroundTertiary",
   width: "100%",
-  borderRadius: "20px",
+  borderRadius: "15px",
   border: "none",
-  padding: "15px 20px",
+  padding: "10.3px 20px",
   gap: "20px",
 
   variants: {
@@ -250,6 +265,7 @@ const selectStyled = {
   input: (provided, state) => ({
     ...provided,
     color: "#acadae",
+    padding: "10px 0",
   }),
 
   placeholder: (provided, state) => ({
@@ -315,6 +331,25 @@ const Label = styled("label", {
   userSelect: "none",
 });
 
+const StyledTextArea = styled("textarea", {
+  width: "100%",
+  color: "$fontPrimary",
+  background: "transparent",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+  border: "none",
+  outline: "none",
+  padding: "0.5rem 0",
+  minHeight: "50px",
+  maxHeight: "50vh",
+  borderBottom: "solid 1px transparent",
+  fontWeight: "bold",
+  resize: "vertical",
+  ["&:focus"]: {
+    borderBottom: "solid 1px $colors$fontPrimary",
+  },
+});
+
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
@@ -327,6 +362,7 @@ export const InputField: React.FC<Props> = ({
   editable = true,
   required = false,
   label = "",
+  size = "normal",
   validatorFunction,
   validatorParams,
   setValidInput,
@@ -353,7 +389,6 @@ export const InputField: React.FC<Props> = ({
       </>
     );
   } else if (inputType === "search-select") {
-    console.log(selectValue);
     return (
       <>
         <InputFieldLayout>
@@ -402,6 +437,24 @@ export const InputField: React.FC<Props> = ({
         </InputFieldLayout>
       </>
     );
+  } else if (inputType === "textfield") {
+    return (
+      <>
+        <InputFieldLayout>
+          {iconName && (
+            <ImageLayout>
+              <SvgIcon iconName={iconName} />
+            </ImageLayout>
+          )}
+          <StyledTextArea
+            placeholder={label}
+            onChange={(e) => onChange(e.target.value)}
+            {...(required && { required: true })}
+            value={selectValue}
+          ></StyledTextArea>
+        </InputFieldLayout>
+      </>
+    );
   } else {
     const [isInputValid, setIsInputValid] = React.useState(null);
     return (
@@ -420,6 +473,7 @@ export const InputField: React.FC<Props> = ({
               placeholder={label}
               editable={editable}
               readOnly={!editable}
+              size={size}
               onChange={(e) => {
                 let inputValueValid =
                   validatorFunction &&

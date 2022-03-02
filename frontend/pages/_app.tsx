@@ -20,6 +20,18 @@ const globalStyles = globalCss({
     backgroundColor: "$backgroundPrimary",
     minHeight: "100vh",
   },
+  ".nestable-item.is-dragging:before": {
+    content: "''",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "transparent !important",
+    border: "1px dashed $fontPrimary !important",
+    borderRadius: "15px !important",
+    zIndex: 1,
+  },
 });
 
 function App({ Component, pageProps }: AppProps) {

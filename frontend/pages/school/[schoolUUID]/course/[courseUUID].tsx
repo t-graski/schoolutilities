@@ -10,6 +10,7 @@ import { Footer } from "../../../../components/Footer";
 import { getAccessToken } from "../../../../misc/authHelper";
 import { SvgIcon } from "../../../../components/SvgIcon";
 import CourseMenu from "../../../../components/CourseMenu";
+import CourseContent from "../../../../components/CourseContent";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -71,6 +72,8 @@ export default function Features() {
       router.push("/auth?tab=login");
     }
   }
+  const [items, setItems] = useState([]);
+  const [itemsCounter, setItemsCounter] = useState(0);
 
   return (
     <>
@@ -86,9 +89,27 @@ export default function Features() {
             label={courseName}
             alignment="left"
           ></Headline>
-          <CourseMenu courseId={courseUUID}></CourseMenu>
+          <CourseMenu
+            courseId={courseUUID}
+            addNewEntry={(choosenElement, config) => {
+              setItems([
+                ...items,
+                {
+                  id: itemsCounter,
+                  config: { ...config, choosenElement },
+                },
+              ]);
+              setItemsCounter(itemsCounter + 1);
+            }}
+          ></CourseMenu>
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
+        <Spacer size="verySmall"></Spacer>
+        <CourseContent
+          courseId={courseUUID}
+          items={items}
+          setItems={setItems}
+        ></CourseContent>
       </ContentLayout>
 
       <Footer></Footer>
