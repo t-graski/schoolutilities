@@ -28,12 +28,17 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(request): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } = request.body;
+    const { name, courseDescription, schoolUUID, persons, classes } =
+      request.body;
 
     if (
-      !name || !courseDescription || !schoolUUID || !persons || !classes ||
+      !name ||
+      !courseDescription ||
+      !schoolUUID ||
+      !persons ||
+      !classes ||
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
       !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
     ) {
@@ -43,13 +48,13 @@ export class CourseService {
     let personUUID;
 
     try {
-      const token = await this.helper.extractJWTToken(request)
+      const token = await this.helper.extractJWTToken(request);
       personUUID = await this.helper.getPersonUUIDfromJWT(token);
     } catch (err) {
       return {
         status: HttpStatus.NOT_ACCEPTABLE,
         message: err.message,
-      }
+      };
     }
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await (
@@ -182,10 +187,10 @@ export class CourseService {
   }
 
   async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
-    const { courseUUID, name, courseDescription, subjectId = 0 } = body;
+    const { courseUUID, courseName, courseDescription, subjectId = 0 } = body;
     if (
       !validator.isUUID(courseUUID.slice(1), 4) ||
-      !validator.isLength(name, LENGTHS.COURSE_NAME) ||
+      !validator.isLength(courseName, LENGTHS.COURSE_NAME) ||
       !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
     ) {
       return {
@@ -212,7 +217,7 @@ export class CourseService {
     const patchCourse = await prisma.courses.update({
       where: { courseId: Number(courseId) },
       data: {
-        name: name,
+        name: courseName,
         courseDescription: courseDescription,
         subjectId: Number(subjectId),
       },
@@ -228,10 +233,6 @@ export class CourseService {
       patchCourse.personCreationId,
     );
 
-
-
-
-
     if (patchCourse) {
       return {
         status: HttpStatus.OK,
@@ -242,7 +243,7 @@ export class CourseService {
           schoolUUID: schoolUUID,
           creationDate: patchCourse.creationDate,
           personCreationUUID: personCreationUUID,
-        }
+        },
       };
     } else {
       return {

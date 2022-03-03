@@ -1,16 +1,16 @@
-import { styled } from "../../../../stitches.config";
+import { styled } from "../../../../../stitches.config";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Navbar } from "../../../../components/Navbar";
-import { Spacer } from "../../../../components/Spacer";
-import { Headline } from "../../../../components/Headline";
-import { Separator } from "../../../../components/Separator";
-import { Footer } from "../../../../components/Footer";
-import { getAccessToken } from "../../../../misc/authHelper";
-import { SvgIcon } from "../../../../components/SvgIcon";
-import CourseMenu from "../../../../components/CourseMenu";
-import CourseContent from "../../../../components/CourseContent";
+import { Navbar } from "../../../../../components/Navbar";
+import { Spacer } from "../../../../../components/Spacer";
+import { Headline } from "../../../../../components/Headline";
+import { Separator } from "../../../../../components/Separator";
+import { Footer } from "../../../../../components/Footer";
+import { getAccessToken } from "../../../../../misc/authHelper";
+import { SvgIcon } from "../../../../../components/SvgIcon";
+import CourseMenu from "../../../../../components/CourseMenu";
+import CourseContent from "../../../../../components/CourseContent";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -78,7 +78,7 @@ export default function Features() {
   return (
     <>
       <Head>
-        <title>Features - SchoolUtilities</title>
+        <title>{courseName ? courseName : "Course"} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
@@ -111,7 +111,6 @@ export default function Features() {
           setItems={setItems}
         ></CourseContent>
       </ContentLayout>
-
       <Footer></Footer>
     </>
   );

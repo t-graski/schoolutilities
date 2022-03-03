@@ -210,7 +210,6 @@ export const CourseEditActionButtons: React.FC<Props> = ({
   safeEntry,
   deleteEntry,
 }) => {
-  console.log(item);
   const { choosenElement, ...additionalProps } = item.config;
   const Component = choosenElement.detailViewComponent;
   const [elementConfig, setElementConfig] = useState();
@@ -239,7 +238,6 @@ export const CourseEditActionButtons: React.FC<Props> = ({
                     <AddButton
                       aria-label="Close"
                       onClick={() => {
-                        console.log(elementConfig, choosenElement);
                         safeEntry(choosenElement, elementConfig);
                       }}
                       disabled={buttonDisabled}

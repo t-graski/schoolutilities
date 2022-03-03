@@ -8,8 +8,6 @@ import { Headline } from "../../../../../components/Headline";
 import { Separator } from "../../../../../components/Separator";
 import { Footer } from "../../../../../components/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
-import { SvgIcon } from "../../../../../components/SvgIcon";
-import CourseMenu from "../../../../../components/CourseMenu";
 import { InputField } from "../../../../../components/InputField";
 import validator from "validator";
 import { LENGTHS, PASSWORD } from "../../../../../misc/parameterConstants";
@@ -61,7 +59,7 @@ export default function Features() {
   const [persons, setPersons] = useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const schoolUUID = router.query.schoolUUID as string;
-    const courseUUID = router.query.courseUUID as string;
+  const courseUUID = router.query.courseUUID as string;
 
   useEffect(() => {
     requestDataFromDatabase();
@@ -150,10 +148,15 @@ export default function Features() {
     }
   }
 
+  console.log(inputData);
+
   return (
     <>
       <Head>
-        <title>Features - SchoolUtilities</title>
+        <title>
+          {!isFirstTime ? inputData.courseName : "Course description"} -
+          SchoolUtilities
+        </title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
@@ -251,8 +254,20 @@ export default function Features() {
             onClick={async () => {
               let accessToken = await getAccessToken();
               if (courseUUID && accessToken) {
+                console.log(
+                  JSON.stringify({
+                    courseName: inputData.courseName,
+                    courseDescription: inputData.courseDescription,
+                    persons: inputData.persons.map(
+                      (dataInfo) => dataInfo.value
+                    ),
+                    classes: inputData.classes.map(
+                      (dataInfo) => dataInfo.value
+                    ),
+                  })
+                );
                 const response = await fetch(
-                  `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/updateCourse/${courseUUID}`,
+                  `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/updateCourse`,
                   {
                     method: "PUT",
                     headers: {
@@ -260,15 +275,21 @@ export default function Features() {
                       Authorization: `Bearer ${accessToken}`,
                     },
                     body: JSON.stringify({
+                      courseUUID: courseUUID,
                       courseName: inputData.courseName,
                       courseDescription: inputData.courseDescription,
-                      persons: inputData.persons,
-                      classes: inputData.classes,
+                      persons: inputData.persons.map(
+                        (dataInfo) => dataInfo.value
+                      ),
+                      classes: inputData.classes.map(
+                        (dataInfo) => dataInfo.value
+                      ),
                     }),
                   }
                 );
+                console.log(response);
                 if (response.status == 200) {
-                  router.push(`/schooladmin/school/${schoolUUID}`);
+                  router.push(`/school/${schoolUUID}/course/${courseUUID}`);
                 } else {
                   setCourseDataValid(false);
                 }

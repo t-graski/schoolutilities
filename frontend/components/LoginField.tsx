@@ -81,8 +81,6 @@ export const LoginField: React.FC<Props> = ({}) => {
         .then((response) => {
           console.log(response);
           if (response.status == 200) {
-            let audio = new Audio("/sounds/406371__stormbat__mission-success.wav");
-            audio.play();
             setSignUpInfo("You are logged in");
             setLoggedIn(true);
             setLoginSuccess(true);
@@ -99,7 +97,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             // let audio2 = new Audio("/sounds/58655__suonho__zajo-loop33-looser.wav");
             // audio2.play();
             setSignUpInfo(
-              "Something went wrong, while trying to log in. It can be that you have entered wrong credentials or that you are not registered yet."
+              "Something went wrong, while trying to log in. You might have entered wrong credentials or you're not registered yet."
             );
           }
         })
@@ -139,8 +137,43 @@ export const LoginField: React.FC<Props> = ({}) => {
             onChange={setPassword}
             iconName="SvgPassword"
             required={true}
-            validatorFunction={validator.isStrongPassword}
-            validatorParams={[PASSWORD]}
+            validationOptions={[
+              {
+                regex: /[a-z]/,
+                errorMessage:
+                  "Your password must contain at least one lowercase letter",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /[A-Z]/,
+                errorMessage:
+                  "Your password must contain at least one uppercase letter",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /[0-9]/,
+                errorMessage: "Your password must contain at least one number",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+                errorMessage:
+                  "Your password must contain at least one special character",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /.{8,}/,
+                errorMessage:
+                  "Your password must be at least 8 characters long",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+            ]}
+            isHoverCardVisible={false}
             setValidInput={setPasswordValid}
           ></InputField>
           <Button

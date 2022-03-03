@@ -48,6 +48,8 @@ export const CourseContent: React.FC<Props> = ({
           <CourseEditActionButtons
             item={item}
             safeEntry={(choosenElement, config) => {
+              console.log(items);
+              console.log(config);
               setItems((items) => {
                 const newItems = items.map((currentItem) => {
                   if (currentItem.id === item.id) {
@@ -56,15 +58,18 @@ export const CourseContent: React.FC<Props> = ({
                       config: { ...config, choosenElement },
                     };
                   }
-                  return item;
+                  return currentItem;
                 });
+                console.log(newItems);
                 return newItems;
               });
               console.log(choosenElement);
             }}
             deleteEntry={() => {
               setItems((items) => {
-                const newItems = items.filter((currentItem) => currentItem.id !== item.id);
+                const newItems = items.filter(
+                  (currentItem) => currentItem.id !== item.id
+                );
                 return newItems;
               });
             }}
@@ -73,13 +78,12 @@ export const CourseContent: React.FC<Props> = ({
       </>
     );
   };
-  console.log(items);
   return (
     <>
       <Nestable
         items={items}
         renderItem={renderItem}
-        maxDepth={3}
+        maxDepth={2}
         renderCollapseIcon={() => <SvgIcon iconName="SvgAlert" />}
         onChange={(changeEvent) => {
           setItems(changeEvent.items);

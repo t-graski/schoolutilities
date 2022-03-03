@@ -51,6 +51,11 @@ export const styles = {
       normal: "25px",
     },
   },
+  media: {
+    laptopAndDown: "(max-width: 1199px)",
+    tabletAndDown: "(max-width: 899px)",
+    mobileOnly: "(max-width: 599px)",
+  },
   utils: {
     marginX: (value) => ({
       marginLeft: value,
@@ -84,7 +89,6 @@ export const {
   styled,
   theme,
 } = createStitches(styles);
-
 
 export const lightTheme = createTheme({
   colors: {

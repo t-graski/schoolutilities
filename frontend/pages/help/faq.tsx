@@ -253,7 +253,6 @@ export default function RegisterApproved() {
 
     const StyledElement = styled("div", {
       transition,
-      transform
     });
 
     return (
@@ -282,15 +281,9 @@ export default function RegisterApproved() {
           ))}
         </Accordion> */}
 
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext items={items} strategy={verticalListSortingStrategy}>
-            {items.map((id) => (
-              <SortableItem key={id} id={id} />
-            ))}
+        <DndContext>
+          <SortableContext items={["A", "B", "C"]}>
+            <SortableContext items={["1", "2", "3"]} children={""}></SortableContext>
           </SortableContext>
         </DndContext>
       </AccordionLayout>

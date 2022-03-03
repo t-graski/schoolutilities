@@ -392,12 +392,6 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
             side="right"
             align="center"
           >
-            <DropdownMenuItem onClick={() => {}}>
-              <DropdownMenuItemSvgLayout>
-                <SvgIcon iconName="SvgFile"></SvgIcon>
-              </DropdownMenuItemSvgLayout>
-              Upload file
-            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 setOpen(true);

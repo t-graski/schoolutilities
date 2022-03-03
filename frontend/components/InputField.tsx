@@ -7,6 +7,7 @@ import Select from "react-select";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Input } from "@nextui-org/react";
+import { InfoHoverCard } from "./InfoHoverCard";
 
 type Props = {
   inputType:
@@ -35,6 +36,13 @@ type Props = {
   validatorParams?: [any?];
   setValidInput?: Function;
   errorMessage?: string;
+  validationOptions?: {
+    regex: RegExp;
+    errorMessage: string;
+    validIconName: string;
+    invalidIconName: string;
+  }[];
+  isHoverCardVisible?: boolean;
   min?: string;
   max?: string;
 };
@@ -350,6 +358,41 @@ const StyledTextArea = styled("textarea", {
   },
 });
 
+const InfoHoverCardLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  height: "100%",
+  gap: "20px",
+});
+
+const InfoHoverCardItem = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "25px",
+  alignItems: "center",
+});
+
+const InfoHoverCardIcon = styled("div", {
+  width: "30px",
+  height: "30px",
+
+  variants: {
+    isValid: {
+      true: {
+        color: "green",
+      },
+      false: {
+        color: "red",
+      },
+    },
+  },
+});
+
+const InfoHoverCardText = styled("div", {});
+
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
@@ -367,9 +410,66 @@ export const InputField: React.FC<Props> = ({
   validatorParams,
   setValidInput,
   errorMessage = "",
+  validationOptions,
+  isHoverCardVisible = true,
   min,
   max,
 }) => {
+  const [isInputValid, setIsInputValid] = React.useState(null);
+  const [currentValidationResults, setCurrentValidationResults] =
+    React.useState([]);
+
+  if (validationOptions && currentValidationResults.length === 0) {
+    setCurrentValidationResults(
+      validationOptions.map((option) => {
+        return { ...option, valid: false };
+      })
+    );
+  }
+
+  function updateValidation(event) {
+    if (validatorFunction) {
+      let inputValueValid =
+        validatorFunction &&
+        validatorFunction(event.target.value, ...validatorParams);
+      if (setValidInput) {
+        setValidInput(inputValueValid);
+      }
+      if (isInputValid == null && !inputValueValid) {
+        if (
+          validatorFunction &&
+          validatorFunction(event.target.value, ...validatorParams)
+        ) {
+          setIsInputValid(false);
+        }
+      } else {
+        setIsInputValid(inputValueValid);
+      }
+    } else if (validationOptions) {
+      const validationResults = [];
+
+      let isValid = true;
+
+      validationOptions.forEach((validationOption) => {
+        let validationResult = validationOption.regex.test(event.target.value);
+        validationResults.push({
+          ...validationOption,
+          valid: validationResult,
+        });
+        if (!validationResult) {
+          isValid = false;
+        }
+      });
+      if (setValidInput) {
+        setValidInput(isValid);
+      }
+      setIsInputValid(isValid);
+
+      setCurrentValidationResults(validationResults);
+    }
+    onChange(event.target.value);
+  }
+
   if (inputType === "checkbox") {
     return (
       <>
@@ -450,13 +550,12 @@ export const InputField: React.FC<Props> = ({
             placeholder={label}
             onChange={(e) => onChange(e.target.value)}
             {...(required && { required: true })}
-            value={selectValue}
+            value={value}
           ></StyledTextArea>
         </InputFieldLayout>
       </>
     );
   } else {
-    const [isInputValid, setIsInputValid] = React.useState(null);
     return (
       <>
         <InputFieldLayout editable={editable}>
@@ -474,31 +573,39 @@ export const InputField: React.FC<Props> = ({
               editable={editable}
               readOnly={!editable}
               size={size}
-              onChange={(e) => {
-                let inputValueValid =
-                  validatorFunction &&
-                  validatorFunction(e.target.value, ...validatorParams);
-                if (setValidInput) {
-                  setValidInput(inputValueValid);
-                }
-                if (isInputValid == null && !inputValueValid) {
-                  if (
-                    validatorFunction &&
-                    validatorFunction(e.target.value, ...validatorParams)
-                  ) {
-                    setIsInputValid(false);
-                  }
-                } else {
-                  setIsInputValid(inputValueValid);
-                }
-                onChange(e.target.value);
-              }}
+              onChange={updateValidation}
               inputType={inputType}
               {...(required && { required: true })}
               {...(min && { min })}
               {...(max && { max })}
             />
           </StyledLabel>
+          {iconName && validationOptions && isHoverCardVisible && (
+            <InfoHoverCard>
+              <InfoHoverCardLayout>
+                {currentValidationResults.map((validationResult) => (
+                  <InfoHoverCardItem key={validationResult.errorMessage}>
+                    <InfoHoverCardIcon
+                      isValid={
+                        validationResult.valid ? validationResult.valid : false
+                      }
+                    >
+                      <SvgIcon
+                        iconName={
+                          validationResult.valid
+                            ? validationResult.validIconName
+                            : validationResult.invalidIconName
+                        }
+                      />
+                    </InfoHoverCardIcon>
+                    <InfoHoverCardText>
+                      {validationResult.errorMessage}
+                    </InfoHoverCardText>
+                  </InfoHoverCardItem>
+                ))}
+              </InfoHoverCardLayout>
+            </InfoHoverCard>
+          )}
         </InputFieldLayout>
         {errorMessage && isInputValid === false && (
           <ErrorMessage>{errorMessage}</ErrorMessage>
