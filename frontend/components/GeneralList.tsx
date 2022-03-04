@@ -24,6 +24,12 @@ const GeneralListLayout = styled("div", {
   width: "100vw",
   color: "$fontPrimary",
   padding: "10vh 10vw",
+
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    gap: "20px",
+    padding: "10vh 5vw",
+  },
 });
 
 const Divider = styled("div", {
@@ -41,6 +47,10 @@ const Divider = styled("div", {
         opacity: 0,
       },
     },
+  },
+
+  "@mobileOnly": {
+    display: "none",
   },
 });
 

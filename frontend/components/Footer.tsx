@@ -18,7 +18,6 @@ const FooterLayout = styled("footer", {
   padding: "4vh 5vw",
   backgroundColor: "$backgroundQuaternary",
   color: "$fontPrimary",
-  // align footer always at bottom of page if content is smaller than viewport
 });
 
 const FooterContentLayout = styled("div", {
@@ -28,6 +27,11 @@ const FooterContentLayout = styled("div", {
   width: "100%",
   maxWidth: "1200px",
   margin: "0 auto",
+
+  "@mobileOnly": {
+    flexDirection: "column",
+    gap: "50px",
+  },
 });
 
 const LogoLayout = styled("div", {
@@ -40,6 +44,10 @@ const LinkLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   gap: "1.5vh",
+
+  "@mobileOnly": {
+    gap: "8px",
+  },
 });
 
 const LinkHeadline = styled("div", {

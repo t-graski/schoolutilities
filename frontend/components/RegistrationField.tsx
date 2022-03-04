@@ -216,36 +216,20 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             required={true}
             validationOptions={[
               {
-                regex: /[a-z]/,
-                errorMessage:
-                  "Your password must contain at least one lowercase letter",
+                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                errorMessage: "one uppercase and lowercase letter",
                 validIconName: "SvgCheckMark",
                 invalidIconName: "SvgExclamination",
               },
               {
-                regex: /[A-Z]/,
-                errorMessage:
-                  "Your password must contain at least one uppercase letter",
+                regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                errorMessage: "one number and special character",
                 validIconName: "SvgCheckMark",
                 invalidIconName: "SvgExclamination",
               },
               {
-                regex: /[0-9]/,
-                errorMessage: "Your password must contain at least one number",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
-                errorMessage:
-                  "Your password must contain at least one special character",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /.{8,}/,
-                errorMessage:
-                  "Your password must be at least 8 characters long",
+                regex: /(?=.{8,}$)/,
+                errorMessage: "8 letters",
                 validIconName: "SvgCheckMark",
                 invalidIconName: "SvgExclamination",
               },
@@ -262,36 +246,20 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             required={true}
             validationOptions={[
               {
-                regex: /[a-z]/,
-                errorMessage:
-                  "Your password must contain at least one lowercase letter",
+                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                errorMessage: "At least one uppercase and lowercase letter",
                 validIconName: "SvgCheckMark",
                 invalidIconName: "SvgExclamination",
               },
               {
-                regex: /[A-Z]/,
-                errorMessage:
-                  "Your password must contain at least one uppercase letter",
+                regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                errorMessage: "At least one number and special character",
                 validIconName: "SvgCheckMark",
                 invalidIconName: "SvgExclamination",
               },
               {
-                regex: /[0-9]/,
-                errorMessage: "Your password must contain at least one number",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
-                errorMessage:
-                  "Your password must contain at least one special character",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /.{8,}/,
-                errorMessage:
-                  "Your password must be at least 8 characters long",
+                regex: /(?=.{8,}$)/,
+                errorMessage: "8 or more letters",
                 validIconName: "SvgCheckMark",
                 invalidIconName: "SvgExclamination",
               },

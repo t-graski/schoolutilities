@@ -8,6 +8,49 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Input } from "@nextui-org/react";
 import { InfoHoverCard } from "./InfoHoverCard";
+import { calculatePasswordStrengthIndex } from "../misc/authHelper";
+import { blackA } from "@radix-ui/colors";
+import * as ProgressPrimitive from "@radix-ui/react-progress";
+
+const StyledProgress = styled(ProgressPrimitive.Root, {
+  position: "relative",
+  overflow: "hidden",
+  background: blackA.blackA9,
+  borderRadius: "99999px",
+  width: "100%",
+  height: 15,
+});
+
+const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {
+  backgroundColor: "$specialSecondary",
+  height: "100%",
+  transition: "width 660ms cubic-bezier(0.65, 0, 0.35, 1)",
+
+  variants: {
+    color: {
+      "weak": {
+        backgroundColor: "red",
+      },
+      "good": {
+        backgroundColor: "orange",
+      },
+      "strong": {
+        backgroundColor: "lightgreen",
+      },
+      "very-strong": {
+        backgroundColor: "green",
+      },
+      "overkill": {
+        // add background color with linear gradient in rainbows
+        background: "linear-gradient(to right, #ff0080, #ff8c00, #ffe100, #00ff80, #0080ff, #8c00ff, #ff0080)",
+      },
+    }
+  }
+});
+
+// Exports
+export const Progress = StyledProgress;
+export const ProgressIndicator = StyledProgressIndicator;
 
 type Props = {
   inputType:
@@ -361,7 +404,6 @@ const StyledTextArea = styled("textarea", {
 const InfoHoverCardLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
   justifyContent: "center",
   width: "100%",
   height: "100%",
@@ -427,6 +469,23 @@ export const InputField: React.FC<Props> = ({
     );
   }
 
+  let passwordIndex = calculatePasswordStrengthIndex(value);
+  let passwordIndexWords;
+  // insert a suitable word to passwordIndexWords based on passwordIndex for a range to 100
+  if (passwordIndex < 0) {
+    passwordIndexWords = "";
+  } else if (passwordIndex < 20) {
+    passwordIndexWords = "weak";
+  } else if (passwordIndex < 40) {
+    passwordIndexWords = "good";
+  } else if (passwordIndex < 60) {
+    passwordIndexWords = "strong";
+  } else if (passwordIndex < 80) {
+    passwordIndexWords = "very-strong";
+  } else {
+    passwordIndexWords = "overkill";
+  }
+
   function updateValidation(event) {
     if (validatorFunction) {
       let inputValueValid =
@@ -460,6 +519,7 @@ export const InputField: React.FC<Props> = ({
           isValid = false;
         }
       });
+      console.log(validationResults);
       if (setValidInput) {
         setValidInput(isValid);
       }
@@ -583,6 +643,7 @@ export const InputField: React.FC<Props> = ({
           {iconName && validationOptions && isHoverCardVisible && (
             <InfoHoverCard>
               <InfoHoverCardLayout>
+                <p>The password must include:</p>
                 {currentValidationResults.map((validationResult) => (
                   <InfoHoverCardItem key={validationResult.errorMessage}>
                     <InfoHoverCardIcon
@@ -603,6 +664,16 @@ export const InputField: React.FC<Props> = ({
                     </InfoHoverCardText>
                   </InfoHoverCardItem>
                 ))}
+
+                <p>Your password is {passwordIndexWords}</p>
+                <Progress value={100}>
+                  <ProgressIndicator
+                    style={{
+                      width: `${calculatePasswordStrengthIndex(value)}%`,
+                    }}
+                    color={passwordIndexWords}
+                  />
+                </Progress>
               </InfoHoverCardLayout>
             </InfoHoverCard>
           )}

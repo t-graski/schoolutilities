@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { getUserData } from "../misc/authHelper";
 import UserMenu from "./UserMenu";
+import NavbarPopOver from "./NavbarPopOver";
 
 type Props = {};
 
@@ -145,6 +146,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
   return (
     <>
+      <NavbarPopOver visible={false}></NavbarPopOver>
       <NavbarLayout>
         <Link href="/">
           <a>
