@@ -69,6 +69,25 @@ export default function Features() {
           setCourseName("Database error");
         }
       }
+      const elementsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements/${courseUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (elementsResponse) {
+        if (elementsResponse.status == 200) {
+          const courseData = await elementsResponse.json();
+          console.log(courseData);
+          setItems(courseData);
+        } else {
+          setCourseName("Database error");
+        }
+      }
     } else if (!accessToken) {
       router.push("/auth?tab=login");
     }

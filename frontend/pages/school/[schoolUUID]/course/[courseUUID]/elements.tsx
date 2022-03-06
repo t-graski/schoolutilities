@@ -11,6 +11,7 @@ import { getAccessToken } from "../../../../../misc/authHelper";
 import { SvgIcon } from "../../../../../components/SvgIcon";
 import CourseMenu from "../../../../../components/CourseMenu";
 import CourseEditContent from "../../../../../components/CourseEditContent";
+import { Button } from "../../../../../components/Button";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -22,13 +23,20 @@ const ContentLayout = styled("div", {
 const HeadlineLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
-  gap: "40px",
-  justifyContent: "flex-start",
+  justifyContent: "space-between",
   alignItems: "center",
 });
 
 const IconLayout = styled("div", {
   width: "40px",
+});
+
+const CourseHeaderLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "40px",
+  justifyContent: "flex-start",
+  alignItems: "center",
 });
 
 export default function Features() {
@@ -42,9 +50,9 @@ export default function Features() {
   });
 
   async function requestDataFromDatabase() {
-    const { courseUUID } = router.query;
-    if (!Array.isArray(courseUUID)) {
-      setCourseUUID(courseUUID);
+    const currentCourseUUID = router.query.courseUUID;
+    if (!Array.isArray(currentCourseUUID)) {
+      setCourseUUID(currentCourseUUID);
     }
     let accessToken = await getAccessToken();
     if (courseUUID && accessToken && courseName == "") {
@@ -75,6 +83,8 @@ export default function Features() {
   const [items, setItems] = useState([]);
   const [itemsCounter, setItemsCounter] = useState(0);
 
+  const [responseBody, setResponseBody] = useState({});
+
   return (
     <>
       <Head>
@@ -84,25 +94,68 @@ export default function Features() {
       <Spacer size="medium"></Spacer>
       <ContentLayout>
         <HeadlineLayout>
-          <Headline
-            width="content"
-            label={courseName}
-            alignment="left"
-          ></Headline>
-          <CourseMenu
-            courseId={courseUUID}
-            addNewEntry={(choosenElement, config) => {
-              setItems([
-                ...items,
-                {
-                  id: itemsCounter,
-                  config: { ...config, choosenElement },
-                  children: [],
-                },
-              ]);
-              setItemsCounter(itemsCounter + 1);
-            }}
-          ></CourseMenu>
+          <CourseHeaderLayout>
+            <Headline
+              width="content"
+              label={courseName}
+              alignment="left"
+            ></Headline>
+            <CourseMenu
+              courseId={courseUUID}
+              addNewEntry={(choosenElement, config) => {
+                setItems([
+                  ...items,
+                  {
+                    id: itemsCounter,
+                    config: { ...config, choosenElement },
+                    children: [],
+                  },
+                ]);
+                setItemsCounter(itemsCounter + 1);
+              }}
+            ></CourseMenu>
+          </CourseHeaderLayout>
+          <CourseHeaderLayout>
+            <Button
+              backgroundColor={"secondary"}
+              color={"primary"}
+              label={"Cancel"}
+              onClick={() => {
+                router.push(
+                  `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
+                );
+              }}
+            ></Button>
+            <Button
+              backgroundColor={"primary"}
+              color={"primary"}
+              label={"Save"}
+              onClick={async () => {
+                let accessToken = await getAccessToken();
+                const saveResponse = await fetch(
+                  `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements`,
+                  {
+                    method: "PUT",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify(responseBody),
+                  }
+                );
+                console.log(responseBody);
+                if (saveResponse) {
+                  if (saveResponse.status == 200) {
+                    // router.push(
+                    //   `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
+                    // );
+                  } else {
+                    alert("Error while saving");
+                  }
+                }
+              }}
+            ></Button>
+          </CourseHeaderLayout>
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
@@ -110,6 +163,7 @@ export default function Features() {
           courseId={courseUUID}
           items={items}
           setItems={setItems}
+          setResponseBody={setResponseBody}
         ></CourseEditContent>
       </ContentLayout>
       <Footer></Footer>

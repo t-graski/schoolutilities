@@ -49,45 +49,15 @@ const ParentContainer = styled("div", {
   padding: "10px 20px",
 });
 
-export const CourseContent: React.FC<Props> = ({ courseId }) => {
-  const elements = [
-    {
-      elementUUID: "",
-      options: {
-        type: "1",
-        visible: true,
-        label: "asdfasdf d",
-      },
-      tag: "",
-      children: [
-        {
-          elementUUID: "",
-          options: {
-            type: "2",
-            visible: true,
-            text: "wer342 d",
-          },
-          tag: "",
-          children: [],
-        },
-      ],
-    },
-    {
-      elementUUID: "",
-      options: {
-        type: "2",
-        visible: true,
-        text: "234sdfsfgff",
-      },
-      tag: "",
-      children: [],
-    },
-  ];
-
+export const CourseContent: React.FC<Props> = ({
+  courseId,
+  items,
+  setItems,
+}) => {
   return (
     <>
       <ElementsLayout>
-        {elements.map((element) => {
+        {items.map((element) => {
           return <Content item={mapElementOptions(element)}></Content>;
         })}
       </ElementsLayout>
@@ -109,9 +79,11 @@ function mapElementOptions(element) {
     },
     children: [],
   };
-  element.children.forEach((child) => {
-    mappedElement.children.push(mapElementOptions(child));
-  });
+  if (element.children) {
+    element.children.forEach((child) => {
+      mappedElement.children.push(mapElementOptions(child));
+    });
+  }
   return mappedElement;
 }
 
