@@ -158,7 +158,7 @@ export default CourseEditContent;
 function mapElementOptions(element) {
   const { choosenElement, ...elementConfig } = element.config;
   const mappedElement = {
-    elementUUID: Number.isNaN(element.id) ? element.id : "",
+    elementUUID: typeof element.id == "string" ? element.id : "",
     options: {
       type: choosenElement.id,
       visible: true,
@@ -190,20 +190,22 @@ function addDeletedTag(children) {
 }
 
 function mapElementOptionsToFrontend(element) {
+  console.log(element);
   const { type, visible, ...elementConfig } = element.options;
   console.log(element);
+  let choosenElement = elementsToChoose.find((e) => e.id === type);
   const mappedElement = {
     id: element.elementUUID,
     config: {
       ...elementConfig,
-      choosenElement: elementsToChoose.find((e) => e.id === type),
+      choosenElement,
     },
     children: [],
   };
   if (element.children) {
     element.children.forEach((child) => {
       console.log(child);
-      mappedElement.children.push(mapElementOptions(child));
+      mappedElement.children.push(mapElementOptionsToFrontend(child));
     });
   }
   console.log(mappedElement);

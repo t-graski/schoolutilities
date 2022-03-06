@@ -200,6 +200,14 @@ const ImageLayout = styled("div", {
   width: "30px",
   height: "30px",
   color: "$fontPrimary",
+
+  variants: {
+    cursor: {
+      pointer: {
+        cursor: "pointer",
+      },
+    },
+  },
 });
 
 const StyledOption = styled("option", {});
@@ -628,7 +636,13 @@ export const InputField: React.FC<Props> = ({
           )}
           <StyledLabel>
             <StyledInputField
-              type={inputType}
+              type={
+                inputType != "password"
+                  ? inputType
+                  : showPassword
+                  ? "text"
+                  : "password"
+              }
               value={value}
               name={label}
               placeholder={label}
@@ -643,11 +657,31 @@ export const InputField: React.FC<Props> = ({
             />
           </StyledLabel>
 
+          {iconName &&
+            validationOptions &&
+            isHoverCardVisible &&
+            !showPassword && (
+              <ImageLayout
+                cursor="pointer"
+                onClick={() => {
+                  setShowPassword(true);
+                }}
+              >
+                <SvgIcon iconName="SvgEyeRestricted" />
+              </ImageLayout>
+            )}
+          {iconName && validationOptions && isHoverCardVisible && showPassword && (
+            <ImageLayout
+              cursor="pointer"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              <SvgIcon iconName="SvgEye" />
+            </ImageLayout>
+          )}
           {iconName && validationOptions && isHoverCardVisible && (
             <>
-              <ImageLayout>
-                <SvgIcon iconName="SvgEye" />
-              </ImageLayout>
               <InfoHoverCard>
                 <InfoHoverCardLayout>
                   <p>The password must include:</p>

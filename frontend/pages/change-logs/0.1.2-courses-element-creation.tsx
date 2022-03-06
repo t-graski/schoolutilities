@@ -67,19 +67,19 @@ export default function Article() {
           ></Headline>
           <ArticleList>
             <li>Added new artwork to registration and login pages</li>
-            <li>Added new navbar naviation and hover effects</li>
+            <li>Added new navbar navigation and hover effects</li>
             <li>Added lots of fancy new icons</li>
             <li>
               Added an indicator on how strong your password is next to password
               fields
             </li>
+            <li>Added the ability to show the password</li>
             <li>Added loading animations to many pages</li>
             <li>Changed school & course selection pages to a better design</li>
             <li>Changed main-page to be responsive</li>
-            <li>Changed PopUp dialogues in school settings</li>
-            <li>Changed Pop-up dialogues</li>
-            <li>Changed url structure for schools and courses</li>
-            <li>Changed many many lines of css</li>
+            <li>Changed Pop-up dialogues in school settings</li>
+            <li>Changed URL structure for schools and courses</li>
+            <li>Changed many many lines of CSS</li>
             <li>Changed some spellings of error messages</li>
             <li>Changed user menu in navbar</li>
             <li>Improved security of some backend endpoints</li>

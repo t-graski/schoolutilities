@@ -63,7 +63,7 @@ export const Changelog: React.FC<Props> = ({ }) => {
       name: "0.1.2-courses-element-creation",
       date: "March 6, 2022",
       headline: "Version 0.1.2",
-      text: "Yet another release. In this release we add the ability to create elements in courses.\n\nClick the box to read more!",
+      text: "In this release we add the ability to create elements in courses.\n\nClick the box to read more!",
     },
     {
       name: "0.1.1-courses-bug-fixes",

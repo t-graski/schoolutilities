@@ -146,9 +146,9 @@ export default function Features() {
                 console.log(responseBody);
                 if (saveResponse) {
                   if (saveResponse.status == 200) {
-                    // router.push(
-                    //   `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
-                    // );
+                    router.push(
+                      `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
+                    );
                   } else {
                     alert("Error while saving");
                   }

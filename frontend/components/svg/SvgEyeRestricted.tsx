@@ -1,6 +1,6 @@
 import * as React from "react"
 
-const SvgComponent = (props) => (
+const SvgEyeRestricted = (props) => (
   <svg
     viewBox="0 0 512 442"
     fill="none"
@@ -19,4 +19,4 @@ const SvgComponent = (props) => (
   </svg>
 )
 
-export default SvgComponent
+export default SvgEyeRestricted

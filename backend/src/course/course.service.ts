@@ -613,7 +613,8 @@ export class CourseService {
             }
           }
         }
-        if (element.tag === 'deleted') {
+        if (element.tag === 'deleted' && element.elementUUID != '') {
+          console.log(element);
           await this.helper.deleteElement(
             await this.helper.getElementIdByUUID(element.elementUUID),
             element.options.type,
@@ -963,28 +964,21 @@ export class CourseService {
           (e) => e.elementUUID === element.parentUUID,
         );
         if (parent) {
-          if (parent.children) {
-            chilrenCount += 1;
-            parent.children.push(element);
+          if (!parent.children) {
+            parent.children = [];
+            childrenCount += 1;
           }
-          parent.children = [];
+          parent.children.push(element);
+          element.children = [];
         }
         delete element.parentUUID;
       }
     }
 
-    /
-
-    // for (const element of elementsWithOptions) {
-    //   if (element.parentUUID) {
-    //     //delete current element
-    //     elementsWithOptions.splice(
-    //       elementsWithOptions.findIndex(
-    //         (e) => e.elementUUID === element.elementUUID,
-    //       ),
-    //     );
-    //   }
-    // }
+    elementsWithOptions.splice(
+      elementsWithOptions.length - childrenCount,
+      childrenCount,
+    );
 
     return {
       status: RETURN_DATA.SUCCESS.status,
