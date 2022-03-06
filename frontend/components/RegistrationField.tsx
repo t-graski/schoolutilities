@@ -214,8 +214,26 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             onChange={setPassword}
             iconName="SvgPassword"
             required={true}
-            validatorFunction={validator.isStrongPassword}
-            validatorParams={[PASSWORD]}
+            validationOptions={[
+              {
+                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                errorMessage: "one uppercase and lowercase letter",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                errorMessage: "one number and special character",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /(?=.{8,}$)/,
+                errorMessage: "8 letters",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+            ]}
             setValidInput={setPasswordValid}
             errorMessage="Please enter a valid password"
           ></InputField>
@@ -226,8 +244,26 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             onChange={setPasswordConfirmation}
             iconName="SvgPassword"
             required={true}
-            validatorFunction={validator.isStrongPassword}
-            validatorParams={[PASSWORD]}
+            validationOptions={[
+              {
+                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                errorMessage: "At least one uppercase and lowercase letter",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                errorMessage: "At least one number and special character",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /(?=.{8,}$)/,
+                errorMessage: "8 or more letters",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+            ]}
             setValidInput={setPasswordConfirmationValid}
             errorMessage="Please enter a valid password"
           ></InputField>
@@ -258,7 +294,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
               <Button
                 backgroundColor="secondary"
                 color="primary"
-                label="Login instead"
+                label="Log in instead"
                 onClick={() => {
                   handleSubmit();
                 }}

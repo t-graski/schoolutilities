@@ -114,6 +114,7 @@ export default class Document extends NextDocument {
   min-height: 100vh;
   position: relative;
 }
+}
 `,
             }}
           />

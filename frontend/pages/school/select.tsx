@@ -16,10 +16,11 @@ export default function RegisterApproved() {
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="School selection"></Headline>
+      <Headline label="My Schools"></Headline>
       <Separator width="small" alignment="center" />
-      <Spacer size="small"></Spacer>
+      <Spacer size="verySmall"></Spacer>
       <SchoolSelectionList></SchoolSelectionList>
+      <Spacer size="medium"></Spacer>
       <Footer></Footer>
     </>
   );

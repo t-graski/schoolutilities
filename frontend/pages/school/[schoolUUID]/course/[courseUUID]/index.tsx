@@ -1,15 +1,17 @@
-import { styled } from "../../../../stitches.config";
+import { styled } from "../../../../../stitches.config";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Navbar } from "../../../../components/Navbar";
-import { Spacer } from "../../../../components/Spacer";
-import { Headline } from "../../../../components/Headline";
-import { Separator } from "../../../../components/Separator";
-import { Footer } from "../../../../components/Footer";
-import { getAccessToken } from "../../../../misc/authHelper";
-import { SvgIcon } from "../../../../components/SvgIcon";
-import CourseMenu from "../../../../components/CourseMenu";
+import { Navbar } from "../../../../../components/Navbar";
+import { Spacer } from "../../../../../components/Spacer";
+import { Headline } from "../../../../../components/Headline";
+import { Separator } from "../../../../../components/Separator";
+import { Footer } from "../../../../../components/Footer";
+import { getAccessToken } from "../../../../../misc/authHelper";
+import { SvgIcon } from "../../../../../components/SvgIcon";
+import CourseMenu from "../../../../../components/CourseMenu";
+import CourseEditContent from "../../../../../components/CourseEditContent";
+import CourseContent from "../../../../../components/CourseContent";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -71,11 +73,13 @@ export default function Features() {
       router.push("/auth?tab=login");
     }
   }
+  const [items, setItems] = useState([]);
+  const [itemsCounter, setItemsCounter] = useState(0);
 
   return (
     <>
       <Head>
-        <title>Features - SchoolUtilities</title>
+        <title>{courseName ? courseName : "Course"} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
@@ -89,8 +93,13 @@ export default function Features() {
           <CourseMenu courseId={courseUUID}></CourseMenu>
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
+        <Spacer size="verySmall"></Spacer>
+        <CourseContent
+          courseId={courseUUID}
+          items={items}
+          setItems={setItems}
+        ></CourseContent>
       </ContentLayout>
-
       <Footer></Footer>
     </>
   );

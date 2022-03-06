@@ -13,6 +13,7 @@ import SvgDepartment from "./svg/SvgDepartment";
 import SvgDiscordLogo from "./svg/SvgDiscordLogo";
 import SvgEdit from "./svg/SvgEdit";
 import SvgEmail from "./svg/SvgEmail";
+import SvgExclamination from "./svg/SvgExclamination";
 import SvgFile from "./svg/SvgFile";
 import SvgHamburger from "./svg/SvgHamburger";
 import SvgHome from "./svg/SvgHome";
@@ -26,6 +27,7 @@ import SvgQuality from "./svg/SvgQuality";
 import SvgRightArrow from "./svg/SvgRightArrow";
 import SvgRoundUser from "./svg/SvgRoundUser";
 import SvgSchool from "./svg/SvgSchool";
+import SvgStartpageArtwork from "./svg/SvgStartpageArtwork";
 import SvgStudent from "./svg/SvgStudent";
 import SvgTeacher from "./svg/SvgTeacher";
 import SvgTimetable from "./svg/SvgTimetable";
@@ -103,6 +105,10 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgFile alt="File Icon" />;
     case "SvgCheckMark":
       return <SvgCheckMark alt="Check Mark Icon" />;
+    case "SvgStartpageArtwork":
+      return <SvgStartpageArtwork alt="Startpage Artwork Icon" />;
+    case "SvgExclamination":
+      return <SvgExclamination alt="Exclamation Icon" />;
     default:
       return <SvgClass />;
   }

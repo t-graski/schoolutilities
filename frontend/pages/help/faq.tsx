@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import { Navbar } from "../../components/Navbar";
 import { Spacer } from "../../components/Spacer";
@@ -10,6 +10,23 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { keyframes, styled } from "@stitches/react";
 import { Footer } from "../../components/Footer";
 import Link from "next/link";
+import { CSS } from "@dnd-kit/utilities";
+
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -204,6 +221,46 @@ export default function RegisterApproved() {
       ),
     },
   ];
+
+  const [items, setItems] = useState(["1", "2", "3"]);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setItems((items) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  }
+
+  function SortableItem(props) {
+    const { attributes, listeners, setNodeRef, transform, transition } =
+      useSortable({ id: props.id });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    const StyledElement = styled("div", {
+      transition,
+    });
+
+    return (
+      <StyledElement ref={setNodeRef} {...attributes} {...listeners}>
+        {/* ... */}
+      </StyledElement>
+    );
+  }
   return (
     <>
       <Head>
@@ -215,14 +272,20 @@ export default function RegisterApproved() {
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
       <AccordionLayout>
-        <Accordion type="single" defaultValue="item-1" collapsible>
+        {/* <Accordion type="single" defaultValue="item-1" collapsible>
           {questions.map(({ question, answer }, index) => (
             <AccordionItem key={index} value={`item-${index + 1}`}>
               <AccordionTrigger>{question}</AccordionTrigger>
               <AccordionContent>{answer}</AccordionContent>
             </AccordionItem>
           ))}
-        </Accordion>
+        </Accordion> */}
+
+        <DndContext>
+          <SortableContext items={["A", "B", "C"]}>
+            <SortableContext items={["1", "2", "3"]} children={""}></SortableContext>
+          </SortableContext>
+        </DndContext>
       </AccordionLayout>
       <Spacer size="small"></Spacer>
       <Footer></Footer>

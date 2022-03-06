@@ -5,10 +5,16 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getAccessToken, getUserData, logout } from "../misc/authHelper";
-import { useTheme } from "next-themes";
+import { Cross2Icon } from "@radix-ui/react-icons";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { InputField } from "./InputField";
+import {
+  elementsToChoose,
+  HeadlineDetailView,
+  TextDetailView,
+} from "./CourseComponentDetailViews";
 
-type Props = {courseId: string};
+type Props = { courseId: string; addNewEntry?: Function };
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -140,6 +146,48 @@ export const DropdownMenuLabel = StyledLabel;
 export const DropdownMenuSeparator = StyledSeparator;
 export const DropdownMenuArrow = StyledArrow;
 
+const Button = styled("button", {
+  all: "unset",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: 4,
+  padding: "0 15px",
+  fontSize: 15,
+  lineHeight: 1,
+  fontWeight: 500,
+  height: 35,
+  cursor: "pointer",
+
+  variants: {
+    variant: {
+      violet: {
+        backgroundColor: "white",
+        color: "$specialPrimary",
+        boxShadow: `0 2px 10px $specialPrimary`,
+        "&:hover": { backgroundColor: "$specialPrimary" },
+        "&:focus": { boxShadow: `0 0 0 2px black` },
+      },
+      blue: {
+        backgroundColor: "$specialSecondary",
+        color: "$fontPrimary",
+        "&:hover": { backgroundColor: "$specialPrimary" },
+        "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+      },
+      mauve: {
+        backgroundColor: "$specialPrimary",
+        color: "$specialPrimary",
+        "&:hover": { backgroundColor: "$specialPrimary" },
+        "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+      },
+    },
+  },
+
+  defaultVariants: {
+    variant: "violet",
+  },
+});
+
 const Box = styled("div", {});
 
 const IconLayout = styled("div", {
@@ -151,50 +199,299 @@ const DropdownMenuItemSvgLayout = styled("div", {
   width: "20px",
 });
 
-export const CourseMenu: React.FC<Props> = ({
-  courseId,
-}) => {
+const overlayShow = keyframes({
+  "0%": { opacity: 0 },
+  "100%": { opacity: 0.8 },
+});
+
+const contentShow = keyframes({
+  "0%": { opacity: 0, transform: "translate(-50%, -48%) scale(0.96)" },
+  "100%": { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
+});
+
+const StyledOverlay = styled(DialogPrimitive.Overlay, {
+  backgroundColor: "$backgroundSecondary",
+  position: "fixed",
+  opacity: 0.8,
+  inset: 0,
+  "@media (prefers-reduced-motion: no-preference)": {
+    animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  },
+});
+
+const StyledDialogContent = styled(DialogPrimitive.Content, {
+  backgroundColor: "$backgroundPrimary",
+  borderRadius: 6,
+  boxShadow:
+    "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
+  position: "fixed",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "90vw",
+  maxWidth: "600px",
+  maxHeight: "85vh",
+  padding: 25,
+  "@media (prefers-reduced-motion: no-preference)": {
+    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  },
+  "&:focus": { outline: "none" },
+});
+
+function Content({ children, ...props }) {
+  return (
+    <DialogPrimitive.Portal>
+      <StyledOverlay />
+      <StyledDialogContent {...props}>{children}</StyledDialogContent>
+    </DialogPrimitive.Portal>
+  );
+}
+
+const StyledTitle = styled(DialogPrimitive.Title, {
+  margin: 0,
+  fontWeight: 500,
+  color: "$fontPrimary",
+  fontSize: 17,
+});
+
+const StyledDescription = styled(DialogPrimitive.Description, {
+  margin: "10px 0 20px",
+  color: "$fontPrimary",
+  fontSize: 15,
+  lineHeight: 1.5,
+});
+
+// Exports
+const Dialog = DialogPrimitive.Root;
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogContent = Content;
+const DialogTitle = StyledTitle;
+const DialogDescription = StyledDescription;
+const DialogClose = DialogPrimitive.Close;
+
+// Your app...
+const Flex = styled("div", { display: "flex" });
+
+const IconButton = styled("button", {
+  all: "unset",
+  fontFamily: "inherit",
+  borderRadius: "100%",
+  height: 30,
+  width: 30,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "$fontPrimary",
+  position: "absolute",
+  top: 10,
+  right: 10,
+  cursor: "pointer",
+  transition: "all 0.2s ease-in-out",
+
+  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+});
+
+const ElementSelectionLayout = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr 2fr",
+  gridGap: "40px",
+  marginBottom: 20,
+  width: "100%",
+});
+
+const SelectionLayout = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gridGap: "10px",
+  width: "100%",
+  height: "fit-content",
+});
+
+const Element = styled("div", {
+  fontSize: "1rem",
+  padding: "10px 20px",
+  cursor: "pointer",
+  border: "1px solid $fontPrimary",
+  borderRadius: 15,
+  transition: "all 0.2s",
+
+  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+
+  variants: {
+    highlighted: {
+      true: {
+        backgroundColor: "$fontPrimary",
+        color: "$backgroundPrimary",
+      },
+    },
+  },
+});
+
+const SelectedLayout = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gridGap: "10px",
+  height: "fit-content",
+});
+
+const AddButton = styled("button", {
+  border: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  justifySelf: "end",
+  borderRadius: 15,
+  padding: "10px 20px",
+  fontSize: "1rem",
+  fontWeight: 500,
+  cursor: "pointer",
+  width: "fit-content",
+  transition: "all 0.2s",
+
+  backgroundColor: "$specialSecondary",
+  color: "$fontPrimary",
+  boxShadow: `0 2px 10px $specialPrimary`,
+  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:focus": { boxShadow: `0 0 0 2px black` },
+  "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
+  "&:disabled:hover": {
+    backgroundColor: "$specialSecondary",
+    color: "$fontPrimary",
+  },
+});
+
+export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
+  const [open, setOpen] = useState(false);
+  const [choosenElementId, setChoosenElementId] = useState("");
+  const [detailsConfig, setDetailsConfig] = useState({});
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const router = useRouter();
 
-  return (
-    <Box>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <IconLayout>
-            <SvgIcon iconName="SvgHamburger"></SvgIcon>
-          </IconLayout>
-        </DropdownMenuTrigger>
+  const choosenElement = elementsToChoose.find(
+    (element) => element.id === choosenElementId
+  );
+  const ChoosenElementDetailView: React.FC<{
+    setDetailsConfig: Function;
+    setButtonDisabled: Function;
+  }> = choosenElement?.detailViewComponent;
 
-        <DropdownMenuContent
-          sideOffset={5}
-          alignOffset={30}
-          side="right"
-          align="center"
-        >
-          <DropdownMenuItem onClick={() => {}}>
-            <DropdownMenuItemSvgLayout>
-              <SvgIcon iconName="SvgFile"></SvgIcon>
-            </DropdownMenuItemSvgLayout>
-            Upload file
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => {}}>
-            <DropdownMenuItemSvgLayout>
-              <SvgIcon iconName="SvgCheckMark"></SvgIcon>
-            </DropdownMenuItemSvgLayout>
-            Create Submission
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => {
-            router.push(`/school/course/${courseId}/edit`)
-          }}>
-            <DropdownMenuItemSvgLayout>
-              <SvgIcon iconName="SvgEdit"></SvgIcon>
-            </DropdownMenuItemSvgLayout>
-            Edit course
-          </DropdownMenuItem>
-          <DropdownMenuArrow />
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </Box>
+  return (
+    <>
+      <Box>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <IconLayout>
+              <SvgIcon iconName="SvgHamburger"></SvgIcon>
+            </IconLayout>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent
+            sideOffset={5}
+            alignOffset={30}
+            side="right"
+            align="center"
+          >
+            {addNewEntry && (
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                <DropdownMenuItemSvgLayout>
+                  <SvgIcon iconName="SvgCheckMark"></SvgIcon>
+                </DropdownMenuItemSvgLayout>
+                Add new entry
+              </DropdownMenuItem>
+            )}
+            {!addNewEntry && (
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push(
+                    `/school/${
+                      router.query.schoolUUID as string
+                    }/course/${courseId}/elements`
+                  );
+                }}
+              >
+                <DropdownMenuItemSvgLayout>
+                  <SvgIcon iconName="SvgEdit"></SvgIcon>
+                </DropdownMenuItemSvgLayout>
+                Edit elements
+              </DropdownMenuItem>
+            )}
+
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(
+                  `/school/${
+                    router.query.schoolUUID as string
+                  }/course/${courseId}/edit`
+                );
+              }}
+            >
+              <DropdownMenuItemSvgLayout>
+                <SvgIcon iconName="SvgEdit"></SvgIcon>
+              </DropdownMenuItemSvgLayout>
+              Edit course
+            </DropdownMenuItem>
+            <DropdownMenuArrow />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </Box>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild></DialogTrigger>
+        <DialogContent>
+          <DialogTitle>Choose element to add</DialogTitle>
+          <DialogDescription>
+            Click on the element at the right side and then enter the details
+            for the element
+          </DialogDescription>
+          <ElementSelectionLayout>
+            <SelectionLayout>
+              {elementsToChoose.map((element) => (
+                <Element
+                  key={element.id}
+                  highlighted={element.id === choosenElementId}
+                  onClick={() => {
+                    setChoosenElementId(element.id);
+                    setDetailsConfig({});
+                  }}
+                >
+                  {element.name}
+                </Element>
+              ))}
+            </SelectionLayout>
+            <SelectedLayout>
+              {ChoosenElementDetailView && (
+                <>
+                  <ChoosenElementDetailView
+                    setDetailsConfig={setDetailsConfig}
+                    setButtonDisabled={setButtonDisabled}
+                  ></ChoosenElementDetailView>
+                  <DialogClose asChild>
+                    <AddButton
+                      aria-label="Close"
+                      onClick={() => {
+                        addNewEntry(choosenElement, detailsConfig);
+                      }}
+                      disabled={buttonDisabled}
+                    >
+                      Add element
+                    </AddButton>
+                  </DialogClose>
+                </>
+              )}
+            </SelectedLayout>
+          </ElementSelectionLayout>
+          <DialogClose asChild>
+            <IconButton>
+              <Cross2Icon />
+            </IconButton>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

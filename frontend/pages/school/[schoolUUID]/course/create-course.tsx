@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
-import { Footer } from "../../../components/Footer";
-import { LoginField } from "../../../components/LoginField";
-import { Navbar } from "../../../components/Navbar";
-import { Progressbar } from "../../../components/Progressbar";
-import { SchoolDetailField } from "../../../components/SchoolDetailField";
-import { SetupProgressSite } from "../../../components/SetupProgressSite";
-import { Spacer } from "../../../components/Spacer";
-import { styled } from "../../../stitches.config";
+import { DepartmentsDetailField } from "../../../../components/DepartmentsDetailField";
+import { Footer } from "../../../../components/Footer";
+import { LoginField } from "../../../../components/LoginField";
+import { Navbar } from "../../../../components/Navbar";
+import { Progressbar } from "../../../../components/Progressbar";
+import { SchoolDetailField } from "../../../../components/SchoolDetailField";
+import { SetupProgressSite } from "../../../../components/SetupProgressSite";
+import { Spacer } from "../../../../components/Spacer";
+import { styled } from "../../../../stitches.config";
 import Head from "next/head";
-import { SiteLayout } from "../../../components/SiteLayout";
-import { CourseCreateProgressSite } from "../../../components/CourseCreateProgressSite";
-import { CourseCreateDetailField } from "../../../components/CourseCreateDetailField";
-import { CourseCreateMembersField } from "../../../components/CourseCreateMembersField";
+import { SiteLayout } from "../../../../components/SiteLayout";
+import { CourseCreateProgressSite } from "../../../../components/CourseCreateProgressSite";
+import { CourseCreateDetailField } from "../../../../components/CourseCreateDetailField";
+import { CourseCreateMembersField } from "../../../../components/CourseCreateMembersField";
 import cookie from "js-cookie";
 import { useRouter } from "next/router";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../../misc/authHelper";
 
 const CreateCourseLayout = styled("div", {
   display: "flex",
@@ -30,9 +30,7 @@ export default function CreateCourse() {
     if (!getAccessToken()) {
       router.push("/auth?tab=login");
     } else if (!router.query.schoolUUID) {
-      router.push(
-        "/school/select?redirect=/school/course/create-course"
-      );
+      router.push("/school/select?redirect=/school/course/create-course");
     }
   }, []);
 
