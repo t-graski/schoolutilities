@@ -126,23 +126,23 @@ const AccordionLayout = styled("div", {
 
 export const Accordion = StyledAccordion;
 export const AccordionItem = StyledItem;
-export const AccordionTrigger = React.forwardRef(
-  ({ children, ...props }, forwardedRef) => (
-    <StyledHeader>
-      <StyledTrigger {...props} ref={forwardedRef}>
-        {children}
-        <StyledChevron aria-hidden />
-      </StyledTrigger>
-    </StyledHeader>
-  )
-);
-export const AccordionContent = React.forwardRef(
-  ({ children, ...props }, forwardedRef) => (
-    <StyledContent {...props} ref={forwardedRef}>
-      <StyledContentText>{children}</StyledContentText>
-    </StyledContent>
-  )
-);
+// export const AccordionTrigger = React.forwardRef(
+//   ({ children, ...props }, forwardedRef) => (
+//     <StyledHeader>
+//       <StyledTrigger {...props} ref={forwardedRef}>
+//         {children}
+//         <StyledChevron aria-hidden />
+//       </StyledTrigger>
+//     </StyledHeader>
+//   )
+// );
+// export const AccordionContent = React.forwardRef(
+//   ({ children, ...props }, forwardedRef) => (
+//     <StyledContent {...props} ref={forwardedRef}>
+//       <StyledContentText>{children}</StyledContentText>
+//     </StyledContent>
+//   )
+// );
 
 export default function RegisterApproved() {
   const questions = [
