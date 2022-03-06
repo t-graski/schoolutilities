@@ -128,7 +128,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
     let accessToken = await getAccessToken();
     console.log(inputData);
     const schoolResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/addCourse`,
+      `https://backend.schoolutilities.net/api/course/addCourse`,
       {
         method: "POST",
         body: JSON.stringify({

@@ -94,7 +94,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
+        `https://backend.schoolutilities.net/api/schooladmin/getPersons/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -110,7 +110,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/leaveSchool`,
+      `https://backend.schoolutilities.net/api/schooladmin/leaveSchool`,
       {
         method: "POST",
         headers: {

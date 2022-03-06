@@ -69,7 +69,7 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
     } else {
       setIsLoading(true);
       let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+        `https://backend.schoolutilities.net/api/user/getSchools`,
         {
           method: "GET",
           headers: {

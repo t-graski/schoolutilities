@@ -70,7 +70,7 @@ export const LoginField: React.FC<Props> = ({}) => {
       event.preventDefault();
     }
     try {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
+      fetch(`https://backend.schoolutilities.net/api/auth/login`, {
         method: "POST",
         body: JSON.stringify({
           email,
