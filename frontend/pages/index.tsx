@@ -9,7 +9,7 @@ import Head from "next/head";
 import { logout } from "../misc/authHelper";
 import { StartPageBox } from "../components/StartPageBox";
 import { GeneralList } from "../components/GeneralList";
-import StartpageArtwork from "../components/svg/StartpageArtwork";
+import StartpageArtwork from "../components/svg/SvgStartpageArtwork";
 import Image from "next/image";
 
 const Maincontent = styled("div", {
@@ -86,7 +86,7 @@ export default function Home() {
               title: "Create School",
               description:
                 "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
-              href: "/school/admin/create-school",
+              href: "/school/create",
               buttonText: "GET ME THERE",
               iconName: "SvgSchool",
             },

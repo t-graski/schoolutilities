@@ -104,6 +104,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [activeStep, setActiveStep] = useState(-1);
   const [statusInfo, setStatusInfo] = useState(null);
+  const [schoolUUID, setSchoolUUID] = useState("");
 
   if (cookie.get("activeStep")) {
     if (activeStep == -1) {
@@ -141,6 +142,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
     if (schoolResponse) {
       if (schoolResponse.status == 200) {
         let data = await schoolResponse.json();
+        setSchoolUUID(data.schoolUUID);
         if (data && data.schoolUUID) {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
@@ -220,7 +222,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusDescription}
               </SuccessDescription>
               {statusInfo && statusInfo.linkVisibility && (
-                <Link href="/school/admin/settings">
+                <Link href={`/school/${schoolUUID}/edit`}>
                   <StyledLink>Manage School now</StyledLink>
                 </Link>
               )}

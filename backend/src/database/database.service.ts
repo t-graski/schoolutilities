@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { GetDepartments, UserPermissions } from 'src/types/SchoolAdmin';
 import { Role } from 'src/roles/role.enum';
-import { log } from 'console';
 
 const prisma = new PrismaClient();
 require('dotenv').config();
@@ -22,16 +21,7 @@ require('dotenv').config();
 @Injectable()
 export class DatabaseService {
   connection: any;
-  constructor() {
-    this.connection = mysql.createConnection({
-      host: process.env.DATABASE_HOST,
-      user: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-    });
-
-    this.connection.connect();
-  }
+  constructor() { }
 
   async registerUser(body: RegisterUserData): Promise<ReturnMessage> {
     const { email, password, firstName, lastName, birthDate } = body;

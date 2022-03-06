@@ -67,8 +67,8 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
         }
       );
       if (res.ok) {
-        cookie.set("schoolUUID", joinCode, { expires: 1 });
-        router.push("/school/admin/settings");
+        let responseJson = await res.json();
+        router.push(`/school/${responseJson.schoolUUID}`);
       } else {
         console.log("Error: ", res.status);
       }

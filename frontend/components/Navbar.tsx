@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { getUserData } from "../misc/authHelper";
 import UserMenu from "./UserMenu";
+import NavbarPopOver from "./NavbarPopOver";
 
 type Props = {};
 
@@ -39,6 +40,10 @@ const NavLinksLayout = styled("div", {
   alignItems: "center",
   width: "fit-content",
   gap: "30px",
+
+  "@mobileOnly": {
+    display: "none",
+  },
 });
 
 const StyledLink = styled("a", {
@@ -145,6 +150,7 @@ export const Navbar: React.FC<Props> = ({}) => {
   }
   return (
     <>
+      <NavbarPopOver visible={false}></NavbarPopOver>
       <NavbarLayout>
         <Link href="/">
           <a>
@@ -157,10 +163,8 @@ export const Navbar: React.FC<Props> = ({}) => {
           <Link href="/">
             <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>
           </Link>
-          <Link href="/profile/school-selection">
-            <StyledLink
-              marked={router.pathname === "/profile/school-selection"}
-            >
+          <Link href="/school/select">
+            <StyledLink marked={router.pathname === "/school/select"}>
               MY SCHOOLS
             </StyledLink>
           </Link>

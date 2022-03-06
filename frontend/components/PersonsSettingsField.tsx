@@ -74,8 +74,8 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
   const [personName, setPersonName] = React.useState("");
   const [personId, setPersonId] = React.useState("");
   const [error, setError] = React.useState("");
-  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   useEffect(() => {
     if (isFirstTime) {
@@ -90,7 +90,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
       router.push("/auth/login");
     }
     if (!schoolUUID) {
-      router.push("/profile/school-selection");
+      router.push("/school/select");
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
@@ -186,7 +186,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
                     {entry.firstName} {entry.lastName}
                   </SettingsEntryName>
                   {/* <Link
-                    href={`/school/admin/settings?personUUID=${entry.personUUID}`}
+                    href={`/school/${router.query.schoolUUID as string}/edit?personUUID=${entry.personUUID}`}
                   >
                     <SettingsEntryLink>
                       <DepartmentName>{entry.departmentName}</DepartmentName>

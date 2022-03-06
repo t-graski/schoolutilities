@@ -5,6 +5,7 @@ import SvgAttendance from "./svg/SvgAttendance";
 import SvgBirthDate from "./svg/SvgBirthDate";
 import SvgCalculator from "./svg/SvgCalculator";
 import SvgChecklist from "./svg/SvgChecklist";
+import SvgCheckMark from "./svg/SvgCheckMark";
 import SvgClass from "./svg/SvgClass";
 import SvgClosedLogo from "./svg/SvgClosedLogo";
 import SvgDelete from "./svg/SvgDelete";
@@ -12,6 +13,11 @@ import SvgDepartment from "./svg/SvgDepartment";
 import SvgDiscordLogo from "./svg/SvgDiscordLogo";
 import SvgEdit from "./svg/SvgEdit";
 import SvgEmail from "./svg/SvgEmail";
+import SvgExclamination from "./svg/SvgExclamination";
+import SvgEye from "./svg/SvgEye";
+import SvgEyeRestricted from "./svg/SvgEyeRestricted";
+import SvgFile from "./svg/SvgFile";
+import SvgHamburger from "./svg/SvgHamburger";
 import SvgHome from "./svg/SvgHome";
 import SvgInfo from "./svg/SvgInfo";
 import SvgPassword from "./svg/SvgKey";
@@ -23,6 +29,7 @@ import SvgQuality from "./svg/SvgQuality";
 import SvgRightArrow from "./svg/SvgRightArrow";
 import SvgRoundUser from "./svg/SvgRoundUser";
 import SvgSchool from "./svg/SvgSchool";
+import SvgStartpageArtwork from "./svg/SvgStartpageArtwork";
 import SvgStudent from "./svg/SvgStudent";
 import SvgTeacher from "./svg/SvgTeacher";
 import SvgTimetable from "./svg/SvgTimetable";
@@ -94,6 +101,20 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgTimezone alt="Timezone Icon" />;
     case "SvgLanguage":
       return <SvgLanguage alt="Language Icon" />;
+    case "SvgHamburger":
+      return <SvgHamburger alt="Hamburger Icon" />;
+    case "SvgFile":
+      return <SvgFile alt="File Icon" />;
+    case "SvgCheckMark":
+      return <SvgCheckMark alt="Check Mark Icon" />;
+    case "SvgStartpageArtwork":
+      return <SvgStartpageArtwork alt="Startpage Artwork Icon" />;
+    case "SvgExclamination":
+      return <SvgExclamination alt="Exclamation Icon" />;
+    case "SvgEye":
+      return <SvgEye alt="Eye Icon" />;
+    case "SvgEyeRestricted":
+      return <SvgEyeRestricted alt="Eye Restricted Icon" />;
     default:
       return <SvgClass />;
   }

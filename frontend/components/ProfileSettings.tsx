@@ -20,6 +20,8 @@ import { LoadingAnimation } from "./LoadingAnimation";
 
 type Props = {};
 
+// result for ln(n+1)/ln(n)
+
 const ProfileLayout = styled("div", {
   display: "grid",
   justifyContent: "center",
@@ -39,7 +41,10 @@ const ProfileImageLayout = styled("div", {
 });
 
 const ProfileName = styled("div", {
+  marginBottom: "10px",
   width: "100%",
+  fontWeight: 700,
+  fontSize: "1.5rem",
   textAlign: "center",
   color: "$fontPrimary",
 });
@@ -65,7 +70,7 @@ const LinkContentLayout = styled("div", {
 });
 
 const SpecialLinkLayout = styled("div", {
-  padding: "20px",
+  padding: "15px 20px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -195,6 +200,13 @@ const NoSchoolsText = styled("p", {
   marginBottom: "10px",
   margin: 0,
   color: "$fontPrimary",
+});
+
+const ActionButtonLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "30px",
+  marginTop: "20px",
 });
 
 export const ProfileSettings: React.FC<Props> = ({}) => {
@@ -331,7 +343,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   color={router.query.tab == "schools" ? "special" : "primary"}
                 >
                   <IconLayout>
-                    <SvgIcon iconName="SvgUser" />
+                    <SvgIcon iconName="SvgSchool" />
                   </IconLayout>
                   <LinkContentLayout>
                     <LinkLabel color="special">Schools</LinkLabel>
@@ -369,7 +381,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
-              <ButtonLayout>
+              <ActionButtonLayout>
                 <Button
                   backgroundColor={"primary"}
                   color={"primary"}
@@ -385,7 +397,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     getUserInfo();
                   }}
                 ></Button> */}
-              </ButtonLayout>
+              </ActionButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
             <ProfileDataColumn>
@@ -429,10 +441,6 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 editable={false}
               />
             </ProfileDataColumn>
-
-            <ProfileDataColumn>
-              {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
-            </ProfileDataColumn>
           </>
         ) : (
           <>
@@ -444,7 +452,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     key={school.schoolUUID}
                     onClick={() => {
                       cookie.set("schoolUUID", school.schoolUUID);
-                      router.push("/school/admin/settings");
+                      router.push(`/school/${school.schoolUUID}/edit`);
                     }}
                   >
                     <SchoolName>{school.schoolName}</SchoolName>
@@ -454,35 +462,36 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   <NoSchoolsText>You have no schools yet.</NoSchoolsText>
                 )}
               </SchoolList>
-            </ProfileDataColumn>
-            <ProfileDataColumn>
-              <Link href="/profile/school-join">
-                <a>
-                  <Button
-                    backgroundColor={"primary"}
-                    color={"primary"}
-                    label="JOIN A SCHOOL"
-                    onClick={() => {
-                      setStatusInfo("");
-                      getUserInfo();
-                    }}
-                  ></Button>
-                </a>
-              </Link>
               <Spacer size="verySmall"></Spacer>
-              <Link href="/school/admin/create-school">
-                <a>
-                  <Button
-                    backgroundColor={"secondary"}
-                    color={"primary"}
-                    label="CREATE A SCHOOL"
-                    onClick={() => {
-                      setStatusInfo("");
-                      getUserInfo();
-                    }}
-                  ></Button>
-                </a>
-              </Link>
+              <ButtonLayout>
+                <Link href="/school/join">
+                  <a>
+                    <Button
+                      backgroundColor={"primary"}
+                      color={"primary"}
+                      label="JOIN A SCHOOL"
+                      onClick={() => {
+                        setStatusInfo("");
+                        getUserInfo();
+                      }}
+                    ></Button>
+                  </a>
+                </Link>
+                <Spacer size="verySmall"></Spacer>
+                <Link href="/school/create">
+                  <a>
+                    <Button
+                      backgroundColor={"secondary"}
+                      color={"primary"}
+                      label="CREATE A SCHOOL"
+                      onClick={() => {
+                        setStatusInfo("");
+                        getUserInfo();
+                      }}
+                    ></Button>
+                  </a>
+                </Link>
+              </ButtonLayout>
             </ProfileDataColumn>
           </>
         )}

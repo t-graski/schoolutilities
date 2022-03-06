@@ -115,7 +115,7 @@ export default function Article() {
         </ArticleLayout>
       </GeneralLayout>
       <Spacer size="verySmall"></Spacer>
-      <Footer></Footer>
+      {/* <Footer></Footer> */}
     </>
   );
 }

@@ -16,10 +16,12 @@ export interface RemoveCourse {
 }
 
 export interface UpdateCourse {
-  courseId: number;
-  name: string;
+  courseUUID: string;
+  courseName: string;
   courseDescription: string;
   subjectId: number;
+  classes: string[];
+  persons: string[];
 }
 
 export interface CourseTable {

@@ -11,7 +11,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getAccessToken, logout } from "../misc/authHelper";
+import { getAccessToken, getUserData, logout } from "../misc/authHelper";
 import { useTheme } from "next-themes";
 
 const slideUpAndFade = keyframes({
@@ -121,7 +121,7 @@ const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
 const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
   fill: "$fontPrimary",
   position: "relative",
-  right: -10,
+  right: 40,
 });
 
 // Exports
@@ -193,8 +193,23 @@ const LinkLayout = styled("a", {
 });
 
 const IconLayout = styled("div", {
-  width: "35px",
-  height: "35px",
+  width: "30px",
+  height: "30px",
+  padding: "5px",
+  backgroundColor: "$backgroundTertiary",
+  borderRadius: "100%",
+});
+
+const UserMenuLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  padding: "8px",
+  gap: "10px",
+  borderRadius: "200px",
+  backgroundColor: "#A2A8C3",
+  cursor: "pointer",
+  justifyContent: "center",
+  alignItems: "center",
 });
 
 const LinkContentLayout = styled("div", {
@@ -232,6 +247,24 @@ const StyledLink = styled(Link, {
   },
 });
 
+const ArrowLayout = styled("div", {
+  transition: "all 0.2s ease-in-out",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+
+  variants: {
+    open: {
+      true: {
+        transform: "rotate(90deg)",
+      },
+      false: {},
+    },
+  },
+});
+
+const StyledUserName = styled("p", {});
+
 export const UserMenu = () => {
   const router = useRouter();
   const [schools, setSchools] = useState([]);
@@ -239,8 +272,9 @@ export const UserMenu = () => {
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
   const { theme, setTheme } = useTheme();
+  const [open, setOpen] = useState(false);
 
-  async function updateSchoolsFromDatabase() {
+  async function updateFromDatabase() {
     let accessToken = await getAccessToken();
     if (accessToken) {
       let response = await fetch(
@@ -254,11 +288,11 @@ export const UserMenu = () => {
       );
       let fetchedSchools = await response.json();
       setSchools(fetchedSchools);
-      if (cookie.get("schoolUUID")) {
+      if (router.query.schoolUUID) {
         response = await fetch(
-          `https://backend.schoolutilities.net/api/course/getCourses/${cookie.get(
-            "schoolUUID"
-          )}`,
+          `https://backend.schoolutilities.net/api/course/getCourses/${
+            router.query.schoolUUID as string
+          }`,
           {
             method: "GET",
             headers: {
@@ -270,47 +304,36 @@ export const UserMenu = () => {
         setCourses(fetchedCourses);
       }
     }
+    const userInfo = await getUserData();
+    setUserInfo(userInfo);
   }
 
   useEffect(() => {
     if (isFirstTime) {
-      getUserInfo();
-      updateSchoolsFromDatabase();
+      updateFromDatabase();
       setIsFirstTime(false);
     }
   });
 
-  async function getUserInfo() {
-    const token = await getAccessToken();
-    if (token) {
-      const response = await fetch(
-        `https://backend.schoolutilities.net/api/user/profile`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status !== 200) {
-      } else {
-        const data = await response.json();
-        setUserInfo(data);
-      }
-    }
-  }
-
   return (
     <Box>
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <IconLayout>
-            <SvgIcon iconName="SvgRoundUser" />
-          </IconLayout>
+          <UserMenuLayout>
+            <IconLayout>
+              <SvgIcon iconName="SvgRoundUser" />
+            </IconLayout>
+            <StyledUserName>
+              {userInfo && userInfo.firstName ? userInfo.firstName : "Profile"}
+            </StyledUserName>
+            <ArrowLayout open={open}>
+              <ChevronRightIcon />
+            </ArrowLayout>
+          </UserMenuLayout>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent sideOffset={5} alignOffset={0}>
-          {userInfo && (
+          {userInfo && userInfo.firstName && (
             <>
               <DropdownMenuItem
                 onClick={() => {
@@ -323,7 +346,9 @@ export const UserMenu = () => {
               <DropdownMenu>
                 <DropdownMenuTriggerItem
                   onClick={() => {
-                    router.push("/school/course");
+                    router.push(
+                      `/school/${router.query.schoolUUID as string}/course`
+                    );
                   }}
                 >
                   Courses
@@ -337,26 +362,47 @@ export const UserMenu = () => {
                       <DropdownMenuItem
                         key={course.courseUUID}
                         onClick={() => {
-                          router.push(`/school/course/${course.courseUUID}`);
+                          router.push(
+                            `/school/${
+                              router.query.schoolUUID as string
+                            }/course/${course.courseUUID}`
+                          );
                         }}
                       >
                         {course.courseName}
                       </DropdownMenuItem>
                     ))}
-                  {courses.length > 0 && <DropdownMenuSeparator />}
-                  <DropdownMenuItem
-                    onClick={() => {
-                      router.push("/school/course/create-course");
-                    }}
-                  >
-                    Create a course
-                  </DropdownMenuItem>
+                  {courses.length == 0 && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        router.push("/school/select");
+                      }}
+                    >
+                      Select a school to see courses
+                    </DropdownMenuItem>
+                  )}
+                  {courses.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() => {
+                          router.push(
+                            `/school/${
+                              router.query.schoolUUID as string
+                            }/course/create-course`
+                          );
+                        }}
+                      >
+                        Create a course
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTriggerItem
                   onClick={() => {
-                    router.push("/profile/school-selection");
+                    router.push("/school/select");
                   }}
                 >
                   Schools
@@ -369,13 +415,7 @@ export const UserMenu = () => {
                     <DropdownMenuItem
                       key={school.schoolUUID}
                       onClick={() => {
-                        cookie.set("schoolUUID", school.schoolUUID);
-                        router.push("/school/admin/settings");
-                        if (
-                          router.pathname.includes("/school/admin/settings")
-                        ) {
-                          router.reload();
-                        }
+                        router.push(`/school/${school.schoolUUID}`);
                       }}
                     >
                       {school.schoolName}
@@ -384,14 +424,14 @@ export const UserMenu = () => {
                   {schools.length > 0 && <DropdownMenuSeparator />}
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push("/profile/school-join");
+                      router.push("school/join");
                     }}
                   >
                     Join a school
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push("/school/admin/create-school");
+                      router.push("/school/create");
                     }}
                   >
                     Create new school
@@ -463,7 +503,7 @@ export const UserMenu = () => {
               </DropdownMenuItem>
             </>
           )}
-          {!userInfo && (
+          {(!userInfo || !userInfo.firstName) && (
             <>
               <DropdownMenuItem
                 onClick={() => {

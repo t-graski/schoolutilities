@@ -91,8 +91,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   const [departmentId, setDepartmentId] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState("");
-  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   useEffect(() => {
     updateSettingsEntriesFromDatabase();
@@ -104,7 +104,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       router.push("/auth/login");
     }
     if (!schoolUUID && accessToken) {
-      router.push("/profile/school-selection");
+      router.push("/school/select");
     }
     if (accessToken && schoolUUID && isFirstTime) {
       setIsLoading(true);
@@ -195,7 +195,6 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       setError("");
       const newEntries = departments.map((department, index) => {
         if (department.departmentUUID == departmentId) {
-          console.log(department.departmentName);
           department.departmentName = departmentName;
           return department;
         } else {
@@ -244,7 +243,9 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
       <SchoolDetailLayout>
         {editPopUpIsVisible && (
           <SettingsPopUp
-            headline={departmentId == "" ? "Add new entry" : "Edit entry"}
+            headline={
+              departmentId == "" ? "Add new department" : "Edit department"
+            }
             inputValid={departmentNameValid}
             saveLabel={departmentId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
@@ -256,7 +257,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
           >
             <StyledInputField>
               <InputField
-                label="Departmentname"
+                label="Name"
                 inputType="text"
                 value={departmentName}
                 onChange={(event) => {
@@ -288,8 +289,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
             }}
           >
             <StyledDeleteText>
-              This action cannot be undone. This will permanently delete this
-              department.
+              This action can't be undone and will permanently remove the
+              department {""} {departmentName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}
@@ -327,7 +328,9 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                   }
                 >
                   <Link
-                    href={`/school/admin/settings?tab=classes&departmentUUID=${entry.departmentUUID}`}
+                    href={`/school/${
+                      router.query.schoolUUID as string
+                    }/edit?tab=classes&departmentUUID=${entry.departmentUUID}`}
                   >
                     <SettingsEntryLink>
                       <SettingsEntryName>

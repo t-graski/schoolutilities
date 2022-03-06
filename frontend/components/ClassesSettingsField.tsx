@@ -80,8 +80,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const [departmentUUID, setDepartmentUUId] = React.useState("");
   const [schoolClassId, setSchoolClassId] = React.useState("");
   const [error, setError] = React.useState("");
-  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   useEffect(() => {
     if (isFirstTime) {
@@ -96,7 +96,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       router.push("/auth/login");
     }
     if (!schoolUUID) {
-      router.push("/profile/school-selection");
+      router.push("/school/select");
     }
     if (accessToken && schoolUUID && isFirstTime) {
       let returnValue = await fetch(
@@ -241,7 +241,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       <SchoolDetailLayout>
         {editPopUpIsVisible && (
           <SettingsPopUp
-            headline={schoolClassId == "" ? "Add new entry" : "Edit entry"}
+            headline={schoolClassId == "" ? "Add new class" : "Edit class"}
             inputValid={schoolClassNameValid}
             saveLabel={schoolClassId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
@@ -253,7 +253,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
           >
             <StyledInputField>
               <InputField
-                label="Classname"
+                label="Name"
                 inputType="text"
                 value={schoolClassName}
                 onChange={(event) => {
@@ -305,8 +305,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
             }}
           >
             <StyledDeleteText>
-              This action cannot be undone. This will permanently delete this
-              class.
+              This action can't be undone and will permanently remove the class{" "}
+              {schoolClassName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}
@@ -348,7 +348,9 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                 <>
                   <SettingsEntryName>{entry.className}</SettingsEntryName>
                   <Link
-                    href={`/school/admin/settings?departmentUUID=${entry.departmentUUID}`}
+                    href={`/school/${
+                      router.query.schoolUUID as string
+                    }/edit?departmentUUID=${entry.departmentUUID}`}
                   >
                     <SettingsEntryLink>
                       <DepartmentName>{entry.departmentName}</DepartmentName>

@@ -31,8 +31,8 @@ const SettingsLayout = styled("div", {
 export default function CreateSchool() {
   const [isOpen, setIsOpen] = React.useState(true);
   const [userData, setUserData] = useState(null);
-  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   useEffect(() => {
     fetchData();
@@ -44,7 +44,7 @@ export default function CreateSchool() {
       router.push("/auth/login");
     }
     if (!schoolUUID && accessToken) {
-      router.push("/profile/school-selection");
+      router.push("/school/select");
     }
     const fetchedData = await getUserData();
     setUserData(fetchedData);
@@ -81,7 +81,7 @@ export default function CreateSchool() {
             {
               iconName: "SvgDepartment",
               label: "Departments",
-              href: "/school/admin/settings?tab=departments",
+              href: `/school/${schoolUUID}/edit?tab=departments`,
               highlighted:
                 urlParam != "persons" &&
                 urlParam != "classes" &&
@@ -92,19 +92,19 @@ export default function CreateSchool() {
             {
               iconName: "SvgClass",
               label: "Classes",
-              href: "/school/admin/settings?tab=classes",
+              href: `/school/${schoolUUID}/edit?tab=classes`,
               highlighted: urlParam == "classes" ? true : false,
             },
             {
               iconName: "SvgStudent",
               label: "Persons",
-              href: "/school/admin/settings?tab=persons",
+              href: `/school/${schoolUUID}/edit?tab=persons`,
               highlighted: urlParam == "persons" ? true : false,
             },
             {
               iconName: "SvgTeacher",
               label: "Invite Codes",
-              href: "/school/admin/settings?tab=join-codes",
+              href: `/school/${schoolUUID}/edit?tab=join-codes`,
               highlighted: urlParam == "join-codes" ? true : false,
             },
           ]}

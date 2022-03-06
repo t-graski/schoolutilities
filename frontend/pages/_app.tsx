@@ -5,6 +5,7 @@ import { globalCss, lightTheme } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
 import { ThemeProvider } from "next-themes";
+import { NextUIProvider } from "@nextui-org/react";
 
 const globalStyles = globalCss({
   "*": {
@@ -18,6 +19,18 @@ const globalStyles = globalCss({
     overflowX: "hidden",
     backgroundColor: "$backgroundPrimary",
     minHeight: "100vh",
+  },
+  ".nestable-item.is-dragging:before": {
+    content: "''",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "transparent !important",
+    border: "1px dashed $fontPrimary !important",
+    borderRadius: "15px !important",
+    zIndex: 1,
   },
 });
 
@@ -35,10 +48,12 @@ function App({ Component, pageProps }: AppProps) {
     <ThemeProvider
       disableTransitionOnChange
       attribute="class"
-      value={{light: lightTheme.className, dark: "dark-theme"}}
+      value={{ light: lightTheme.className, dark: "dark-theme" }}
       defaultTheme="system"
     >
-      <Component {...pageProps} router={router} />
+      {/* <NextUIProvider> */}
+        <Component {...pageProps} router={router} />
+      {/* </NextUIProvider> */}
     </ThemeProvider>
   );
 }

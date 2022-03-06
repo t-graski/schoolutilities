@@ -92,8 +92,12 @@ export const LoginField: React.FC<Props> = ({}) => {
             }
             return response.json();
           } else {
+            // let audio1 = new Audio("/sounds/336280__fuelstream__css-looser.wav");
+            // audio1.play();
+            // let audio2 = new Audio("/sounds/58655__suonho__zajo-loop33-looser.wav");
+            // audio2.play();
             setSignUpInfo(
-              "Something went wrong, while trying to log in. It can be that you have entered wrong credentials or that you are not registered yet."
+              "Something went wrong, while trying to log in. You might have entered wrong credentials or you're not registered yet."
             );
           }
         })
@@ -133,8 +137,34 @@ export const LoginField: React.FC<Props> = ({}) => {
             onChange={setPassword}
             iconName="SvgPassword"
             required={true}
-            validatorFunction={validator.isStrongPassword}
-            validatorParams={[PASSWORD]}
+            validationOptions={[
+              {
+                regex: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
+                errorMessage: "At least one lowercase and uppercase letter",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /.*[0-9].*/,
+                errorMessage: "At least one number",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+                errorMessage:
+                  "At least one special character (e.g. !@#$%^&*()_+-=[]{};':'|,.<>/)",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /.{8,}/,
+                errorMessage: "8 or more letters",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+            ]}
+            isHoverCardVisible={false}
             setValidInput={setPasswordValid}
           ></InputField>
           <Button

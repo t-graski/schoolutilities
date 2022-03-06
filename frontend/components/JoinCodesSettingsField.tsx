@@ -90,8 +90,8 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
   const [joinCodeNameValid, setJoinCodeNameValid] = React.useState(false);
   const [joinCodeId, setJoinCodeId] = React.useState("");
   const [error, setError] = React.useState("");
-  const schoolUUID = cookie.get("schoolUUID");
   const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   useEffect(() => {
     updateSettingsEntriesFromDatabase();
@@ -104,7 +104,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
       router.push("/auth/login");
     }
     if (!schoolUUID) {
-      router.push("/profile/school-selection");
+      router.push("/school/select");
     }
     if (accessToken && schoolUUID && isFirstTime) {
       const response = await fetch(
@@ -152,7 +152,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
     );
     console.log(returnValue);
     if (returnValue.status !== 200) {
-      setError("Fehler beim hinzufügen");
+      setError("Error while adding");
     } else {
       const body = await returnValue.json();
       setError("");
@@ -236,7 +236,9 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
       <SchoolDetailLayout>
         {editPopUpIsVisible && (
           <SettingsPopUp
-            headline={joinCodeId == "" ? "Add new entry" : "Edit entry"}
+            headline={
+              joinCodeId == "" ? "Add new invite code" : "Edit invite code"
+            }
             inputValid={joinCodeNameValid}
             saveLabel={joinCodeId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
@@ -248,7 +250,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
           >
             <StyledInputField>
               <InputField
-                label="Invitecode name"
+                label="Name"
                 inputType="text"
                 value={joinCodeName}
                 onChange={(event) => {
@@ -280,8 +282,8 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
             }}
           >
             <StyledDeleteText>
-              This action cannot be undone. This will permanently delete this
-              class.
+              This action can't be undone and will permanently remove the invite
+              code {joinCodeName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}

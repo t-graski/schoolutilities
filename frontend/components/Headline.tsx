@@ -5,6 +5,7 @@ import type * as Stitches from "@stitches/react";
 
 type Props = {
   label: string;
+  width?: Stitches.VariantProps<typeof Header>["width"];
   alignment?: Stitches.VariantProps<typeof Header>["alignment"];
   fontWeight?: Stitches.VariantProps<typeof Header>["fontWeight"];
   fontSize?: Stitches.VariantProps<typeof Header>["size"];
@@ -52,18 +53,30 @@ const Header = styled("h1", {
         fontSize: "4.5rem",
       },
     },
+    width: {
+      full: {
+        width: "100%",
+      },
+      half: {
+        width: "50%",
+      },
+      content: {
+        width: "fit-content",
+      },
+    },
   },
 });
 
 export const Headline: React.FC<Props> = ({
   label,
+  width = "full",
   alignment = "center",
   fontWeight = "bold",
   fontSize = "large",
 }) => {
   return (
     <>
-      <Header alignment={alignment} fontWeight={fontWeight} size={fontSize}>
+      <Header width={width} alignment={alignment} fontWeight={fontWeight} size={fontSize}>
         {label}
       </Header>
     </>

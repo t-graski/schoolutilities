@@ -121,6 +121,19 @@ export class AuthService {
     });
   }
 
+  async personIsVerified(personUUID: string): Promise<boolean> {
+    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+    const person = await prisma.persons.findFirst({
+      where: {
+        personId: Number(personId),
+      },
+      select: {
+        emailVerified: true,
+      },
+    });
+    return person.emailVerified;
+  }
+
   async login(user: any) {
     const payload = user;
     const personUUID = await this.databaseService.getUserUUIDByEmail(

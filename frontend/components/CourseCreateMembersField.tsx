@@ -46,6 +46,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
   const [classes, setClasses] = useState([]);
   const [members, setMembers] = useState([]);
   const [isFirstTime, setIsFirstTime] = useState(true);
+  const router = useRouter();
 
   setDisabled(false);
 
@@ -58,7 +59,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
 
   async function fetchSelectData() {
     let accessToken = await getAccessToken();
-    const schoolUUID = cookie.get("schoolUUID");
+    const schoolUUID = router.query.schoolUUID as string;
     const classResponse = await fetch(
       `https://backend.schoolutilities.net/api/schooladmin/classes/${schoolUUID}`,
       {

@@ -104,6 +104,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [activeStep, setActiveStep] = useState(-1);
   const [statusInfo, setStatusInfo] = useState(null);
+  const router = useRouter();
 
   const [inputData, setInputData] = useState({
     courseName: "",
@@ -132,7 +133,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
         method: "POST",
         body: JSON.stringify({
           name: inputData.courseName,
-          schoolUUID: cookie.get("schoolUUID"),
+          schoolUUID: router.query.schoolUUID as string,
           courseDescription: inputData.courseDescription,
           classes: inputData.classes.map((schoolClass) => schoolClass.value),
           persons: inputData.members.map((person) => person.value),
