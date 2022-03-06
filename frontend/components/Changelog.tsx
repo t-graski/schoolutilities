@@ -57,19 +57,25 @@ const BoxLayout = styled("div", {
   justifyContent: "center",
 });
 
-export const Changelog: React.FC<Props> = ({}) => {
+export const Changelog: React.FC<Props> = ({ }) => {
   const entries = [
     {
-      name: "0.1-login-registration-school-create",
-      date: "December 20, 2021",
-      headline: "Version 0.1",
-      text: "This is our very first release. In this release we present login, registration, school creation and much more.\n\nClick the box to read more!",
+      name: "0.1.2-courses-element-creation",
+      date: "March 6, 2022",
+      headline: "Version 0.1.2",
+      text: "Yet another release. In this release we add the ability to create elements in courses.\n\nClick the box to read more!",
     },
     {
       name: "0.1.1-courses-bug-fixes",
       date: "January 16, 2022",
       headline: "Version 0.1.1",
       text: "This is our second release. In this release we fix bugs and add more features.\n\nClick the box to read more!",
+    },
+    {
+      name: "0.1-login-registration-school-create",
+      date: "December 20, 2021",
+      headline: "Version 0.1",
+      text: "This is our very first release. In this release we present login, registration, school creation and much more.\n\nClick the box to read more!",
     },
   ];
 
