@@ -667,7 +667,8 @@ export class CourseService {
       }
     }
 
-    for (let element of elements) {
+    elements.forEach(async element => {
+      let parentId = 0;
       if (element.elementUUID) {
         if (await this.helper.elementExists(element.elementUUID)) {
           let currentElement = {
@@ -721,8 +722,9 @@ export class CourseService {
                 Number(currentElement.elementOptions.type),
               );
             }
+
             if (element.children) {
-              for (let child of element.children) {
+              element.children.forEach(async child => {
                 if (child.elementUUID) {
                   if (await this.helper.elementExists(child.elementUUID)) {
                     let currentChild = {
@@ -800,11 +802,12 @@ export class CourseService {
                   );
                   return RETURN_DATA.SUCCESS;
                 }
-              }
+              });
             }
           }
         }
       } else {
+        let parentId = 0;
         let courseElement = {
           elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
           courseId: Number(courseId),
@@ -821,14 +824,69 @@ export class CourseService {
           data: courseElement,
         });
 
-        await this.helper.createElementOptions(
-          element.options,
-          createdElement.elementId,
-          Number(element.options.type),
-        );
+        parentId = createdElement.elementId;
+
+        await this.helper.createElementOptions(element.options, createdElement.elementId, Number(element.options.type));
+
+        if (element.children) {
+
+          element.children.forEach(async child => {
+            if (child.elementUUID) {
+              if (await this.helper.elementExists(child.elementUUID)) {
+                let currentChild = {
+                  elementUUID: child.elementUUID,
+                  elementId: await this.helper.getElementIdByUUID(child.elementUUID),
+                  parentId: createdElement.elementId,
+                  elementOrder: child.elementOrder,
+                  elementOptions: child.options,
+                }
+
+                let childWithOptions = elementsWithOptions.find(e => e.elementUUID === child.elementUUID);
+                let updateNeeded = false;
+
+                if (childWithOptions.parentId !== currentChild.parentId || childWithOptions.elementOrder !== currentChild.elementOrder) {
+                  updateNeeded = true;
+                }
+
+                for (let option in childWithOptions.elementOptions) {
+                  if (childWithOptions.elementOptions[option] !== currentChild.elementOptions[option]) {
+                    updateNeeded = true;
+                  }
+                }
+
+                if (updateNeeded) {
+                  await prisma.courseElements.update({
+                    where: {
+                      elementId: Number(currentChild.elementId),
+                    },
+                    data: currentChild,
+                  });
+                }
+
+                await this.helper.updateElementOptions(currentChild.elementOptions, currentChild.elementId, Number(currentChild.elementOptions.type));
+              }
+            } else {
+              let courseElement = {
+                elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+                courseId: Number(courseId),
+                typeId: Number(child.options.type),
+                parentId: parentId,
+                visible: Boolean(child.options.visible),
+                elementOrder: child.elementOrder,
+                personCreationId: Number(userId),
+              }
+
+              let createdElement = await prisma.courseElements.create({
+                data: courseElement,
+              });
+
+              await this.helper.createElementOptions(child.options, createdElement.elementId, Number(child.options.type));
+            }
+          });
+        }
         return RETURN_DATA.SUCCESS;
       }
-    }
+    });
     return RETURN_DATA.SUCCESS;
   }
 
