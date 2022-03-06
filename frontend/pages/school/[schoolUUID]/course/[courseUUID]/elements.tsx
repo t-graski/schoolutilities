@@ -11,7 +11,6 @@ import { getAccessToken } from "../../../../../misc/authHelper";
 import { SvgIcon } from "../../../../../components/SvgIcon";
 import CourseMenu from "../../../../../components/CourseMenu";
 import CourseEditContent from "../../../../../components/CourseEditContent";
-import CourseContent from "../../../../../components/CourseContent";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -90,15 +89,28 @@ export default function Features() {
             label={courseName}
             alignment="left"
           ></Headline>
-          <CourseMenu courseId={courseUUID}></CourseMenu>
+          <CourseMenu
+            courseId={courseUUID}
+            addNewEntry={(choosenElement, config) => {
+              setItems([
+                ...items,
+                {
+                  id: itemsCounter,
+                  config: { ...config, choosenElement },
+                  children: [],
+                },
+              ]);
+              setItemsCounter(itemsCounter + 1);
+            }}
+          ></CourseMenu>
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
-        <CourseContent
+        <CourseEditContent
           courseId={courseUUID}
           items={items}
           setItems={setItems}
-        ></CourseContent>
+        ></CourseEditContent>
       </ContentLayout>
       <Footer></Footer>
     </>

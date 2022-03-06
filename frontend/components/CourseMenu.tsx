@@ -14,7 +14,7 @@ import {
   TextDetailView,
 } from "./CourseComponentDetailViews";
 
-type Props = { courseId: string; addNewEntry: Function };
+type Props = { courseId: string; addNewEntry?: Function };
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -392,16 +392,34 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
             side="right"
             align="center"
           >
-            <DropdownMenuItem
-              onClick={() => {
-                setOpen(true);
-              }}
-            >
-              <DropdownMenuItemSvgLayout>
-                <SvgIcon iconName="SvgCheckMark"></SvgIcon>
-              </DropdownMenuItemSvgLayout>
-              Add new entry
-            </DropdownMenuItem>
+            {addNewEntry && (
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                <DropdownMenuItemSvgLayout>
+                  <SvgIcon iconName="SvgCheckMark"></SvgIcon>
+                </DropdownMenuItemSvgLayout>
+                Add new entry
+              </DropdownMenuItem>
+            )}
+            {!addNewEntry && (
+              <DropdownMenuItem
+                onClick={() => {
+                  router.push(
+                    `/school/${
+                      router.query.schoolUUID as string
+                    }/course/${courseId}/elements`
+                  );
+                }}
+              >
+                <DropdownMenuItemSvgLayout>
+                  <SvgIcon iconName="SvgEdit"></SvgIcon>
+                </DropdownMenuItemSvgLayout>
+                Edit elements
+              </DropdownMenuItem>
+            )}
 
             <DropdownMenuItem
               onClick={() => {
