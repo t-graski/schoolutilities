@@ -29,12 +29,17 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(request): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } = request.body;
+    const { name, courseDescription, schoolUUID, persons, classes } =
+      request.body;
 
     if (
-      !name || !courseDescription || !schoolUUID || !persons || !classes ||
+      !name ||
+      !courseDescription ||
+      !schoolUUID ||
+      !persons ||
+      !classes ||
       !validator.isLength(name, LENGTHS.COURSE_NAME) ||
       !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
     ) {
@@ -50,7 +55,7 @@ export class CourseService {
       return {
         status: HttpStatus.NOT_ACCEPTABLE,
         message: err.message,
-      }
+      };
     }
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await (
@@ -285,7 +290,7 @@ export class CourseService {
           schoolUUID: schoolUUID,
           creationDate: patchCourse.creationDate,
           personCreationUUID: personCreationUUID,
-        }
+        },
       };
     } else {
       return {

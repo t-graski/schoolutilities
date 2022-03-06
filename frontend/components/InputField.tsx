@@ -7,6 +7,50 @@ import Select from "react-select";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { Input } from "@nextui-org/react";
+import { InfoHoverCard } from "./InfoHoverCard";
+import { calculatePasswordStrengthIndex } from "../misc/authHelper";
+import { blackA } from "@radix-ui/colors";
+import * as ProgressPrimitive from "@radix-ui/react-progress";
+
+const StyledProgress = styled(ProgressPrimitive.Root, {
+  position: "relative",
+  overflow: "hidden",
+  background: blackA.blackA9,
+  borderRadius: "99999px",
+  width: "100%",
+  height: 15,
+});
+
+const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {
+  backgroundColor: "$specialSecondary",
+  height: "100%",
+  transition: "width 660ms cubic-bezier(0.65, 0, 0.35, 1)",
+
+  variants: {
+    color: {
+      "weak": {
+        backgroundColor: "red",
+      },
+      "good": {
+        backgroundColor: "orange",
+      },
+      "strong": {
+        backgroundColor: "lightgreen",
+      },
+      "very-strong": {
+        backgroundColor: "green",
+      },
+      "overkill": {
+        // add background color with linear gradient in rainbows
+        background: "linear-gradient(to right, #ff0080, #ff8c00, #ffe100, #00ff80, #0080ff, #8c00ff, #ff0080)",
+      },
+    }
+  }
+});
+
+// Exports
+export const Progress = StyledProgress;
+export const ProgressIndicator = StyledProgressIndicator;
 
 type Props = {
   inputType:
@@ -16,12 +60,13 @@ type Props = {
     | "email"
     | "checkbox"
     | "select"
-    | "search-select";
+    | "search-select"
+    | "textfield";
   selectOptions?: {
     value: string;
     label: string;
   }[];
-  selectValue?: string | string[];
+  selectValue?: any;
   selectMultiValues?: boolean;
   value?: string;
   onChange: Function;
@@ -29,10 +74,18 @@ type Props = {
   editable?: boolean;
   required?: boolean;
   label?: string;
+  size?: Stitches.VariantProps<typeof StyledInputField>["size"];
   validatorFunction?: Function;
   validatorParams?: [any?];
   setValidInput?: Function;
   errorMessage?: string;
+  validationOptions?: {
+    regex: RegExp;
+    errorMessage: string;
+    validIconName: string;
+    invalidIconName: string;
+  }[];
+  isHoverCardVisible?: boolean;
   min?: string;
   max?: string;
 };
@@ -74,6 +127,19 @@ const StyledInputField = styled("input", {
         },
       },
     },
+    size: {
+      big: {
+        fontSize: "1.5rem",
+      },
+      normal: {
+        fontSize: "1.2rem",
+      },
+      small: {
+        fontSize: "1rem",
+        padding: "0",
+        lineHeight: "1.2rem",
+      },
+    },
   },
 });
 
@@ -82,9 +148,9 @@ const InputFieldLayout = styled("div", {
   alignItems: "center",
   background: "$backgroundTertiary",
   width: "100%",
-  borderRadius: "20px",
+  borderRadius: "15px",
   border: "none",
-  padding: "15px 20px",
+  padding: "10.3px 20px",
   gap: "20px",
 
   variants: {
@@ -250,6 +316,7 @@ const selectStyled = {
   input: (provided, state) => ({
     ...provided,
     color: "#acadae",
+    padding: "10px 0",
   }),
 
   placeholder: (provided, state) => ({
@@ -315,6 +382,59 @@ const Label = styled("label", {
   userSelect: "none",
 });
 
+const StyledTextArea = styled("textarea", {
+  width: "100%",
+  color: "$fontPrimary",
+  background: "transparent",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+  border: "none",
+  outline: "none",
+  padding: "0.5rem 0",
+  minHeight: "50px",
+  maxHeight: "50vh",
+  borderBottom: "solid 1px transparent",
+  fontWeight: "bold",
+  resize: "vertical",
+  ["&:focus"]: {
+    borderBottom: "solid 1px $colors$fontPrimary",
+  },
+});
+
+const InfoHoverCardLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  width: "100%",
+  height: "100%",
+  gap: "20px",
+});
+
+const InfoHoverCardItem = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "25px",
+  alignItems: "center",
+});
+
+const InfoHoverCardIcon = styled("div", {
+  width: "30px",
+  height: "30px",
+
+  variants: {
+    isValid: {
+      true: {
+        color: "green",
+      },
+      false: {
+        color: "red",
+      },
+    },
+  },
+});
+
+const InfoHoverCardText = styled("div", {});
+
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
@@ -327,13 +447,89 @@ export const InputField: React.FC<Props> = ({
   editable = true,
   required = false,
   label = "",
+  size = "normal",
   validatorFunction,
   validatorParams,
   setValidInput,
   errorMessage = "",
+  validationOptions,
+  isHoverCardVisible = true,
   min,
   max,
 }) => {
+  const [isInputValid, setIsInputValid] = React.useState(null);
+  const [currentValidationResults, setCurrentValidationResults] =
+    React.useState([]);
+
+  if (validationOptions && currentValidationResults.length === 0) {
+    setCurrentValidationResults(
+      validationOptions.map((option) => {
+        return { ...option, valid: false };
+      })
+    );
+  }
+
+  let passwordIndex = calculatePasswordStrengthIndex(value);
+  let passwordIndexWords;
+  // insert a suitable word to passwordIndexWords based on passwordIndex for a range to 100
+  if (passwordIndex < 0) {
+    passwordIndexWords = "";
+  } else if (passwordIndex < 20) {
+    passwordIndexWords = "weak";
+  } else if (passwordIndex < 40) {
+    passwordIndexWords = "good";
+  } else if (passwordIndex < 60) {
+    passwordIndexWords = "strong";
+  } else if (passwordIndex < 80) {
+    passwordIndexWords = "very-strong";
+  } else {
+    passwordIndexWords = "overkill";
+  }
+
+  function updateValidation(event) {
+    if (validatorFunction) {
+      let inputValueValid =
+        validatorFunction &&
+        validatorFunction(event.target.value, ...validatorParams);
+      if (setValidInput) {
+        setValidInput(inputValueValid);
+      }
+      if (isInputValid == null && !inputValueValid) {
+        if (
+          validatorFunction &&
+          validatorFunction(event.target.value, ...validatorParams)
+        ) {
+          setIsInputValid(false);
+        }
+      } else {
+        setIsInputValid(inputValueValid);
+      }
+    } else if (validationOptions) {
+      const validationResults = [];
+
+      let isValid = true;
+
+      validationOptions.forEach((validationOption) => {
+        let validationResult = validationOption.regex.test(event.target.value);
+        validationResults.push({
+          ...validationOption,
+          valid: validationResult,
+        });
+        if (!validationResult) {
+          isValid = false;
+        }
+      });
+      console.log(validationResults);
+      if (setValidInput) {
+        setValidInput(isValid);
+      }
+      setIsInputValid(isValid);
+
+      setCurrentValidationResults(validationResults);
+    }
+    onChange(event.target.value);
+  }
+
   if (inputType === "checkbox") {
     return (
       <>
@@ -353,7 +549,6 @@ export const InputField: React.FC<Props> = ({
       </>
     );
   } else if (inputType === "search-select") {
-    console.log(selectValue);
     return (
       <>
         <InputFieldLayout>
@@ -402,8 +597,25 @@ export const InputField: React.FC<Props> = ({
         </InputFieldLayout>
       </>
     );
+  } else if (inputType === "textfield") {
+    return (
+      <>
+        <InputFieldLayout>
+          {iconName && (
+            <ImageLayout>
+              <SvgIcon iconName={iconName} />
+            </ImageLayout>
+          )}
+          <StyledTextArea
+            placeholder={label}
+            onChange={(e) => onChange(e.target.value)}
+            {...(required && { required: true })}
+            value={value}
+          ></StyledTextArea>
+        </InputFieldLayout>
+      </>
+    );
   } else {
-    const [isInputValid, setIsInputValid] = React.useState(null);
     return (
       <>
         <InputFieldLayout editable={editable}>
@@ -420,31 +632,51 @@ export const InputField: React.FC<Props> = ({
               placeholder={label}
               editable={editable}
               readOnly={!editable}
-              onChange={(e) => {
-                let inputValueValid =
-                  validatorFunction &&
-                  validatorFunction(e.target.value, ...validatorParams);
-                if (setValidInput) {
-                  setValidInput(inputValueValid);
-                }
-                if (isInputValid == null && !inputValueValid) {
-                  if (
-                    validatorFunction &&
-                    validatorFunction(e.target.value, ...validatorParams)
-                  ) {
-                    setIsInputValid(false);
-                  }
-                } else {
-                  setIsInputValid(inputValueValid);
-                }
-                onChange(e.target.value);
-              }}
+              size={size}
+              onChange={updateValidation}
               inputType={inputType}
               {...(required && { required: true })}
               {...(min && { min })}
               {...(max && { max })}
             />
           </StyledLabel>
+          {iconName && validationOptions && isHoverCardVisible && (
+            <InfoHoverCard>
+              <InfoHoverCardLayout>
+                <p>The password must include:</p>
+                {currentValidationResults.map((validationResult) => (
+                  <InfoHoverCardItem key={validationResult.errorMessage}>
+                    <InfoHoverCardIcon
+                      isValid={
+                        validationResult.valid ? validationResult.valid : false
+                      }
+                    >
+                      <SvgIcon
+                        iconName={
+                          validationResult.valid
+                            ? validationResult.validIconName
+                            : validationResult.invalidIconName
+                        }
+                      />
+                    </InfoHoverCardIcon>
+                    <InfoHoverCardText>
+                      {validationResult.errorMessage}
+                    </InfoHoverCardText>
+                  </InfoHoverCardItem>
+                ))}
+
+                <p>Your password is {passwordIndexWords}</p>
+                <Progress value={100}>
+                  <ProgressIndicator
+                    style={{
+                      width: `${calculatePasswordStrengthIndex(value)}%`,
+                    }}
+                    color={passwordIndexWords}
+                  />
+                </Progress>
+              </InfoHoverCardLayout>
+            </InfoHoverCard>
+          )}
         </InputFieldLayout>
         {errorMessage && isInputValid === false && (
           <ErrorMessage>{errorMessage}</ErrorMessage>

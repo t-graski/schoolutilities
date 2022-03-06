@@ -9,7 +9,7 @@ import Head from "next/head";
 import { logout } from "../misc/authHelper";
 import { StartPageBox } from "../components/StartPageBox";
 import { GeneralList } from "../components/GeneralList";
-import StartpageArtwork from "../components/svg/StartpageArtwork";
+import StartpageArtwork from "../components/svg/SvgStartpageArtwork";
 import Image from "next/image";
 
 const Maincontent = styled("div", {

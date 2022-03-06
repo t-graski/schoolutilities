@@ -1,0 +1,148 @@
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Nestable, { Item } from "react-nestable";
+
+// this usually goes once
+// to the entry point of the whole app
+// (e.g. src/index.js)
+import "react-nestable/dist/styles/index.css";
+import "./CourseContent.module.css";
+import { SvgIcon } from "./SvgIcon";
+import { Headline } from "./Headline";
+import { styled } from "@stitches/react";
+import CourseEditActionButtons from "./CourseEditActionButtons";
+import { elementsToChoose } from "./CourseComponentDetailViews";
+
+type Props = {
+  courseId: string;
+  items: Item[];
+  setItems: Function;
+};
+
+const ComponentLayout = styled("div", {
+  padding: "10px 20px",
+  display: "flex",
+  width: "100%",
+  justifyContent: "space-between",
+  flexDirection: "row",
+});
+
+const ElementsLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  gap: "30px",
+});
+
+const ChildElement = styled("div", {
+  display: "flex",
+  width: "100%",
+  paddingLeft: "50px",
+});
+
+const ParentContainer = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  border: "solid 1px $fontPrimary",
+  borderRadius: "15px",
+  padding: "10px 20px",
+});
+
+export const CourseContent: React.FC<Props> = ({ courseId }) => {
+  const elements = [
+    {
+      elementUUID: "",
+      options: {
+        type: "1",
+        visible: true,
+        label: "asdfasdf d",
+      },
+      tag: "",
+      children: [
+        {
+          elementUUID: "",
+          options: {
+            type: "2",
+            visible: true,
+            text: "wer342 d",
+          },
+          tag: "",
+          children: [],
+        },
+      ],
+    },
+    {
+      elementUUID: "",
+      options: {
+        type: "2",
+        visible: true,
+        text: "234sdfsfgff",
+      },
+      tag: "",
+      children: [],
+    },
+  ];
+
+  return (
+    <>
+      <ElementsLayout>
+        {elements.map((element) => {
+          return <Content item={mapElementOptions(element)}></Content>;
+        })}
+      </ElementsLayout>
+    </>
+  );
+};
+
+export default CourseContent;
+
+function mapElementOptions(element) {
+  const { type, visible, ...elementConfig } = element.options;
+  const mappedElement = {
+    id: element.elementUUID,
+    config: {
+      ...elementConfig,
+      choosenElement: elementsToChoose.find(
+        (e) => e.id === element.options.type
+      ),
+    },
+    children: [],
+  };
+  element.children.forEach((child) => {
+    mappedElement.children.push(mapElementOptions(child));
+  });
+  return mappedElement;
+}
+
+function Content({ item }) {
+  const { choosenElement, ...additionalProps } = item.config;
+  const Component = choosenElement.component;
+  if (item.children.length > 0) {
+    return (
+      <>
+        <ParentContainer>
+          <ComponentLayout>
+            <Component
+              {...additionalProps}
+              {...choosenElement.props}
+            ></Component>
+          </ComponentLayout>
+          <ChildElement>
+            {item.children.map((child) => (
+              <Content item={child}></Content>
+            ))}
+          </ChildElement>
+        </ParentContainer>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <ComponentLayout>
+          <Component {...additionalProps} {...choosenElement.props}></Component>
+        </ComponentLayout>
+      </>
+    );
+  }
+}
