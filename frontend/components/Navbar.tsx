@@ -40,6 +40,10 @@ const NavLinksLayout = styled("div", {
   alignItems: "center",
   width: "fit-content",
   gap: "30px",
+
+  "@mobileOnly": {
+    display: "none",
+  },
 });
 
 const StyledLink = styled("a", {

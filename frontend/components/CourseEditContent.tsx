@@ -11,11 +11,14 @@ import { SvgIcon } from "./SvgIcon";
 import { Headline } from "./Headline";
 import { styled } from "@stitches/react";
 import CourseEditActionButtons from "./CourseEditActionButtons";
+import { elementsToChoose } from "./CourseComponentDetailViews";
+import { getAccessToken } from "../misc/authHelper";
 
 type Props = {
   courseId: string;
   items: Item[];
   setItems: Function;
+  setResponseBody: Function;
 };
 
 const ComponentLayout = styled("div", {
@@ -34,22 +37,62 @@ export const CourseEditContent: React.FC<Props> = ({
   courseId,
   items,
   setItems,
+  setResponseBody,
 }) => {
+  console.log(courseId);
   const router = useRouter();
 
   console.log(items);
-
-  const requestBody = {
-    courseUUID: courseId,
-    elements: [],
-  };
   const [deletedItems, setDeletedItems] = useState([]);
-  items.forEach((item) => {
-    requestBody.elements.push(mapElementOptions(item));
-  });
-  console.log(deletedItems);
-  requestBody.elements.push(...addDeletedTag(deletedItems));
-  console.log(requestBody);
+  const [isFirstTime, setIsFirstTime] = useState(true);
+
+  if (isFirstTime && courseId) {
+    updateElements();
+    setIsFirstTime(false);
+  }
+
+  async function updateElements() {
+    console.log(courseId);
+    let accessToken = await getAccessToken();
+    const elementsResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements/${courseId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    console.log(elementsResponse);
+    if (elementsResponse) {
+      if (elementsResponse.status == 200) {
+        const courseData = await elementsResponse.json();
+        const newElements = [];
+        courseData.forEach((element) => {
+          newElements.push(mapElementOptionsToFrontend(element));
+        });
+        setItems(newElements);
+      } else {
+      }
+    }
+  }
+
+  useEffect(() => {
+    updateResponseBody();
+  }, [items]);
+
+  function updateResponseBody() {
+    const requestBody = {
+      courseUUID: courseId,
+      elements: [],
+    };
+    items.forEach((item) => {
+      requestBody.elements.push(mapElementOptions(item));
+    });
+    requestBody.elements.push(...addDeletedTag(deletedItems));
+    setResponseBody(requestBody);
+  }
 
   const renderItem = ({ item }) => {
     const { choosenElement, ...additionalProps } = item.config;
@@ -83,7 +126,7 @@ export const CourseEditContent: React.FC<Props> = ({
                   if (currentItem.id === item.id) {
                     setDeletedItems((deletedItems) => [
                       ...deletedItems,
-                      currentItem,
+                      mapElementOptions(currentItem),
                     ]);
                   }
                   return currentItem.id !== item.id;
@@ -144,4 +187,24 @@ function addDeletedTag(children) {
       tag: "deleted",
     };
   });
+}
+
+function mapElementOptionsToFrontend(element) {
+  const { type, visible, ...elementConfig } = element.options;
+  const mappedElement = {
+    id: element.elementUUID,
+    config: {
+      ...elementConfig,
+      choosenElement: elementsToChoose.find(
+        (e) => e.id === element.options.type
+      ),
+    },
+    children: [],
+  };
+  if (element.children) {
+    element.children.forEach((child) => {
+      mappedElement.children.push(mapElementOptions(child));
+    });
+  }
+  return mappedElement;
 }

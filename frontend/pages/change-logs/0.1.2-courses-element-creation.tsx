@@ -17,7 +17,7 @@ export default function Article() {
     title: "0.1.2 - Course Elements & Bug Fixes",
     author: "Tobias Graski",
     date: "3/6/2022",
-    readingTime: "2 min read",
+    readingTime: "3 min read",
   };
 
   return (
@@ -90,7 +90,7 @@ export default function Article() {
         </ArticleLayout>
       </GeneralLayout>
       <Spacer size="verySmall"></Spacer>
-      {/* <Footer></Footer> */}
+      <Footer></Footer>
     </>
   );
 }

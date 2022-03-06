@@ -30,7 +30,7 @@ export default function CreateCourse() {
     if (!getAccessToken()) {
       router.push("/auth?tab=login");
     } else if (!router.query.schoolUUID) {
-      router.push("/school/select?redirect=/school/course/create-course");
+      router.push("/school/select?redirect=/course/create-course");
     }
   }, []);
 
