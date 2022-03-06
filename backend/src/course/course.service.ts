@@ -590,7 +590,7 @@ export class CourseService {
   async courseElements(request): Promise<ReturnMessage> {
     //try {
     const token = await this.helper.extractJWTToken(request);
-    const { courseUUID, elements } = request.body;
+    let { courseUUID, elements } = request.body;
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
     const userId = await this.helper.getUserIdfromJWT(token);
 
@@ -667,7 +667,7 @@ export class CourseService {
       }
     }
 
-    elements.forEach(async element => {
+    elements.forEach(async (element) => {
       let parentId = 0;
       if (element.elementUUID) {
         if (await this.helper.elementExists(element.elementUUID)) {
@@ -724,7 +724,7 @@ export class CourseService {
             }
 
             if (element.children) {
-              element.children.forEach(async child => {
+              element.children.forEach(async (child) => {
                 if (child.elementUUID) {
                   if (await this.helper.elementExists(child.elementUUID)) {
                     let currentChild = {
@@ -826,30 +826,43 @@ export class CourseService {
 
         parentId = createdElement.elementId;
 
-        await this.helper.createElementOptions(element.options, createdElement.elementId, Number(element.options.type));
+        await this.helper.createElementOptions(
+          element.options,
+          createdElement.elementId,
+          Number(element.options.type),
+        );
 
         if (element.children) {
-
-          element.children.forEach(async child => {
+          element.children.forEach(async (child) => {
             if (child.elementUUID) {
               if (await this.helper.elementExists(child.elementUUID)) {
                 let currentChild = {
                   elementUUID: child.elementUUID,
-                  elementId: await this.helper.getElementIdByUUID(child.elementUUID),
+                  elementId: await this.helper.getElementIdByUUID(
+                    child.elementUUID,
+                  ),
                   parentId: createdElement.elementId,
                   elementOrder: child.elementOrder,
                   elementOptions: child.options,
-                }
+                };
 
-                let childWithOptions = elementsWithOptions.find(e => e.elementUUID === child.elementUUID);
+                let childWithOptions = elementsWithOptions.find(
+                  (e) => e.elementUUID === child.elementUUID,
+                );
                 let updateNeeded = false;
 
-                if (childWithOptions.parentId !== currentChild.parentId || childWithOptions.elementOrder !== currentChild.elementOrder) {
+                if (
+                  childWithOptions.parentId !== currentChild.parentId ||
+                  childWithOptions.elementOrder !== currentChild.elementOrder
+                ) {
                   updateNeeded = true;
                 }
 
                 for (let option in childWithOptions.elementOptions) {
-                  if (childWithOptions.elementOptions[option] !== currentChild.elementOptions[option]) {
+                  if (
+                    childWithOptions.elementOptions[option] !==
+                    currentChild.elementOptions[option]
+                  ) {
                     updateNeeded = true;
                   }
                 }
@@ -863,7 +876,11 @@ export class CourseService {
                   });
                 }
 
-                await this.helper.updateElementOptions(currentChild.elementOptions, currentChild.elementId, Number(currentChild.elementOptions.type));
+                await this.helper.updateElementOptions(
+                  currentChild.elementOptions,
+                  currentChild.elementId,
+                  Number(currentChild.elementOptions.type),
+                );
               }
             } else {
               let courseElement = {
@@ -874,13 +891,17 @@ export class CourseService {
                 visible: Boolean(child.options.visible),
                 elementOrder: child.elementOrder,
                 personCreationId: Number(userId),
-              }
+              };
 
               let createdElement = await prisma.courseElements.create({
                 data: courseElement,
               });
 
-              await this.helper.createElementOptions(child.options, createdElement.elementId, Number(child.options.type));
+              await this.helper.createElementOptions(
+                child.options,
+                createdElement.elementId,
+                Number(child.options.type),
+              );
             }
           });
         }
@@ -910,12 +931,13 @@ export class CourseService {
 
     const elementsWithOptions = [];
 
-    for (let element of currentElements) {
+    for (const element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
           element.elementId.toString(),
           element.typeId,
         );
+
         let parentUUID = '0';
         if (element.parentId != 0) {
           parentUUID = await this.helper.getElementUUIDById(element.parentId);
@@ -933,21 +955,36 @@ export class CourseService {
       }
     }
 
-    for (let element of elementsWithOptions) {
+    let childrenCount = 0;
+
+    for (const element of elementsWithOptions) {
       if (element.parentUUID) {
         let parent = elementsWithOptions.find(
           (e) => e.elementUUID === element.parentUUID,
         );
         if (parent) {
-          if (!parent.children) {
-            parent.children = [];
+          if (parent.children) {
+            chilrenCount += 1;
+            parent.children.push(element);
           }
-          parent.children.push(element);
-          elementsWithOptions.splice(elementsWithOptions.indexOf(element), 1);
+          parent.children = [];
         }
+        delete element.parentUUID;
       }
-      delete element.parentUUID;
     }
+
+    /
+
+    // for (const element of elementsWithOptions) {
+    //   if (element.parentUUID) {
+    //     //delete current element
+    //     elementsWithOptions.splice(
+    //       elementsWithOptions.findIndex(
+    //         (e) => e.elementUUID === element.elementUUID,
+    //       ),
+    //     );
+    //   }
+    // }
 
     return {
       status: RETURN_DATA.SUCCESS.status,

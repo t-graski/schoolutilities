@@ -28,24 +28,25 @@ const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {
 
   variants: {
     color: {
-      "weak": {
+      weak: {
         backgroundColor: "red",
       },
-      "good": {
+      good: {
         backgroundColor: "orange",
       },
-      "strong": {
+      strong: {
         backgroundColor: "lightgreen",
       },
       "very-strong": {
         backgroundColor: "green",
       },
-      "overkill": {
+      overkill: {
         // add background color with linear gradient in rainbows
-        background: "linear-gradient(to right, #ff0080, #ff8c00, #ffe100, #00ff80, #0080ff, #8c00ff, #ff0080)",
+        background:
+          "linear-gradient(to right, #ff0080, #ff8c00, #ffe100, #00ff80, #0080ff, #8c00ff, #ff0080)",
       },
-    }
-  }
+    },
+  },
 });
 
 // Exports
@@ -458,6 +459,7 @@ export const InputField: React.FC<Props> = ({
   max,
 }) => {
   const [isInputValid, setIsInputValid] = React.useState(null);
+  const [showPassword, setShowPassword] = React.useState(false);
   const [currentValidationResults, setCurrentValidationResults] =
     React.useState([]);
 
@@ -480,7 +482,7 @@ export const InputField: React.FC<Props> = ({
     passwordIndexWords = "good";
   } else if (passwordIndex < 60) {
     passwordIndexWords = "strong";
-  } else if (passwordIndex < 80) {
+  } else if (passwordIndex < 100) {
     passwordIndexWords = "very-strong";
   } else {
     passwordIndexWords = "overkill";
@@ -640,42 +642,50 @@ export const InputField: React.FC<Props> = ({
               {...(max && { max })}
             />
           </StyledLabel>
-          {iconName && validationOptions && isHoverCardVisible && (
-            <InfoHoverCard>
-              <InfoHoverCardLayout>
-                <p>The password must include:</p>
-                {currentValidationResults.map((validationResult) => (
-                  <InfoHoverCardItem key={validationResult.errorMessage}>
-                    <InfoHoverCardIcon
-                      isValid={
-                        validationResult.valid ? validationResult.valid : false
-                      }
-                    >
-                      <SvgIcon
-                        iconName={
-                          validationResult.valid
-                            ? validationResult.validIconName
-                            : validationResult.invalidIconName
-                        }
-                      />
-                    </InfoHoverCardIcon>
-                    <InfoHoverCardText>
-                      {validationResult.errorMessage}
-                    </InfoHoverCardText>
-                  </InfoHoverCardItem>
-                ))}
 
-                <p>Your password is {passwordIndexWords}</p>
-                <Progress value={100}>
-                  <ProgressIndicator
-                    style={{
-                      width: `${calculatePasswordStrengthIndex(value)}%`,
-                    }}
-                    color={passwordIndexWords}
-                  />
-                </Progress>
-              </InfoHoverCardLayout>
-            </InfoHoverCard>
+          {iconName && validationOptions && isHoverCardVisible && (
+            <>
+              <ImageLayout>
+                <SvgIcon iconName="SvgEye" />
+              </ImageLayout>
+              <InfoHoverCard>
+                <InfoHoverCardLayout>
+                  <p>The password must include:</p>
+                  {currentValidationResults.map((validationResult) => (
+                    <InfoHoverCardItem key={validationResult.errorMessage}>
+                      <InfoHoverCardIcon
+                        isValid={
+                          validationResult.valid
+                            ? validationResult.valid
+                            : false
+                        }
+                      >
+                        <SvgIcon
+                          iconName={
+                            validationResult.valid
+                              ? validationResult.validIconName
+                              : validationResult.invalidIconName
+                          }
+                        />
+                      </InfoHoverCardIcon>
+                      <InfoHoverCardText>
+                        {validationResult.errorMessage}
+                      </InfoHoverCardText>
+                    </InfoHoverCardItem>
+                  ))}
+
+                  <p>Your password is {passwordIndexWords}</p>
+                  <Progress value={100}>
+                    <ProgressIndicator
+                      style={{
+                        width: `${calculatePasswordStrengthIndex(value)}%`,
+                      }}
+                      color={passwordIndexWords}
+                    />
+                  </Progress>
+                </InfoHoverCardLayout>
+              </InfoHoverCard>
+            </>
           )}
         </InputFieldLayout>
         {errorMessage && isInputValid === false && (

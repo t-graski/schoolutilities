@@ -117,10 +117,10 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
               }}
             >
               <CourseName>{course.courseName}</CourseName>
-              <TeacherName>{"Elisabeth Rumetshofer"}</TeacherName>
-              <CourseDescription>
-                {"lorem ipsum dolor ate male itum akar erum etor"}
-              </CourseDescription>
+              <TeacherName>
+                {course.creator.firstName + " " + course.creator.lastName}{" "}
+              </TeacherName>
+              <CourseDescription>{course.courseDescription}</CourseDescription>
             </CourseLayout>
           ))}
       </CourseList>

@@ -64,10 +64,10 @@ export const CourseEditContent: React.FC<Props> = ({
         },
       }
     );
-    console.log(elementsResponse);
     if (elementsResponse) {
       if (elementsResponse.status == 200) {
         const courseData = await elementsResponse.json();
+        console.log(courseData);
         const newElements = [];
         courseData.forEach((element) => {
           newElements.push(mapElementOptionsToFrontend(element));
@@ -191,20 +191,21 @@ function addDeletedTag(children) {
 
 function mapElementOptionsToFrontend(element) {
   const { type, visible, ...elementConfig } = element.options;
+  console.log(element);
   const mappedElement = {
     id: element.elementUUID,
     config: {
       ...elementConfig,
-      choosenElement: elementsToChoose.find(
-        (e) => e.id === element.options.type
-      ),
+      choosenElement: elementsToChoose.find((e) => e.id === type),
     },
     children: [],
   };
   if (element.children) {
     element.children.forEach((child) => {
+      console.log(child);
       mappedElement.children.push(mapElementOptions(child));
     });
   }
+  console.log(mappedElement);
   return mappedElement;
 }
