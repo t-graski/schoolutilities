@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
-import { ERROR_CODES } from 'src/misc/parameterConstants';
+import { ERROR_CODES, ID_STARTERS } from 'src/misc/parameterConstants';
 import validator from 'validator';
+import { v4 as uuidv4 } from 'uuid';
+//import parameter constants
+
 const prisma = new PrismaClient();
 
 @Injectable()
@@ -176,6 +179,11 @@ export class HelperService {
         }
     }
 
+    /**
+     * @brief Extracts the JWT token
+     * @param request Request object
+     * @returns JWT token or error message
+     */
 
     async extractJWTToken(request): Promise<string> {
         try {
@@ -186,12 +194,28 @@ export class HelperService {
 
     }
 
-    async getPersonUUIDfromJWT(token: string): Promise<string> {
+    async getUserUUIDfromJWT(token: string): Promise<string> {
         if (!token) throw new Error(ERROR_CODES.NO_JWT_TOKEN_PROVIDED);
         const payload = this.jwtService.verify(token);
         return payload.personUUID;
-
     }
+
+    /**
+     * 
+     * @param token JWT token
+     * @returns User ID
+     */
+    async getUserIdfromJWT(token: string): Promise<number> {
+        if (!token) throw new Error(ERROR_CODES.NO_JWT_TOKEN_PROVIDED);
+        const personUUID = await this.getUserUUIDfromJWT(token);
+        const userId = await this.getUserIdByUUID(personUUID);
+        return userId;
+    }
+
+    /**
+     * @param courseUUID Course UUID
+     * @returns Course Id 
+     */
 
     async getCourseIdByUUID(courseUUID: string): Promise<number> {
         if (courseUUID && validator.isUUID(courseUUID.slice(1), 4)) {
@@ -207,6 +231,303 @@ export class HelperService {
             }
         } else {
             throw new Error(ERROR_CODES.USER_UUID_NULL_OR_INVALID);
+        }
+    }
+
+    /**
+     * 
+     * @param elementId Element Id
+     * @param typeId Type Id
+     * Type 0: Headline
+     * Type 1: Text
+     * @returns Options of the given element
+     */
+    async getElementOptions(elementId: string, typeId): Promise<any> {
+        try {
+            // if (typeId || elementId
+            //     && validator.isNumeric(elementId)
+            // ) throw new Error(ERROR_CODES.ELEMENT_ID_OR_TYPE_ID_NULL_OR_INVALID);
+
+            let options = {};
+
+            switch (typeId) {
+                //HEADLINE
+                case 1:
+                    let headlineOptions = await prisma.headlineSettings.findFirst({
+                        where: {
+                            courseElementId: Number(elementId),
+                        },
+                    });
+                    options = {
+                        label: headlineOptions.label,
+                    };
+                    break;
+                //TEXT
+                case 2:
+                    let textOptions = await prisma.textSettings.findFirst({
+                        where: {
+                            courseElementId: Number(elementId),
+                        },
+                    });
+                    options = {
+                        text: textOptions.text,
+                    };
+                    break;
+            }
+
+            return options;
+        } catch (err) {
+            throw new Error(ERROR_CODES.DATABASE_ERROR);
+        }
+    }
+
+    async getElementIdByUUID(elementUUID: string): Promise<number> {
+        if (elementUUID) {
+            try {
+                const element = await prisma.courseElements.findFirst({
+                    where: {
+                        elementUUID: elementUUID,
+                    },
+                });
+                return element.elementId;
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_UUID_NULL_OR_INVALID);
+        }
+    }
+
+    async getElementUUIDById(elementId: number): Promise<string> {
+        if (elementId) {
+            try {
+                const element = await prisma.courseElements.findFirst({
+                    where: {
+                        elementId: elementId,
+                    },
+                });
+                return element.elementUUID;
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_UUID_NULL_OR_INVALID);
+        }
+    }
+
+    /**
+     * 
+     * @param elementUUID Element UUID
+     * @returns true if found, false if not found
+     */
+    async elementExists(elementUUID: string): Promise<boolean> {
+        if (elementUUID) {
+            try {
+                const element = await prisma.courseElements.findFirst({
+                    where: {
+                        elementUUID: elementUUID,
+                    },
+                });
+                return element !== null;
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_UUID_NULL_OR_INVALID);
+        }
+    }
+
+    async createElement(element): Promise<any> {
+        if (element) {
+            try {
+                const elementId = await prisma.courseElements.create({
+                    data: {
+                        elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+                        typeId: element.typeId,
+                        parentId: element.parentId,
+                        visible: element.visible,
+                        elementOrder: element.elementOrder,
+                        personCreationId: element.personCreationId,
+                        courseId: element.courseId,
+                    }
+                });
+                this.createOptions(element.options, elementId.elementId, element.typeId);
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_NULL);
+        }
+    }
+
+    async createOptions(options, elementId: number, typeId: number): Promise<any> {
+        if (options) {
+            try {
+                switch (typeId) {
+                    //HEADLINE
+                    case 1:
+                        await prisma.headlineSettings.create({
+                            data: {
+                                label: options.label,
+                                courseElementId: elementId,
+                            },
+                        });
+                        break;
+                    //TEXT
+                    case 2:
+                        await prisma.textSettings.create({
+                            data: {
+                                text: options.text,
+                                courseElementId: elementId,
+                            },
+                        });
+                        break;
+
+                }
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_OPTIONS_NULL);
+        }
+    }
+
+    async updateElementOptions(options, elementId: number, typeId: number): Promise<any> {
+        if (options) {
+            try {
+                switch (typeId) {
+                    //HEADLINE
+                    case 1:
+                        await prisma.headlineSettings.update({
+                            where: {
+                                courseElementId: elementId,
+                            },
+                            data: {
+                                label: options.label,
+                            },
+                        });
+                        break;
+                    //TEXT
+                    case 2:
+                        await prisma.textSettings.update({
+                            where: {
+                                courseElementId: elementId,
+                            },
+                            data: {
+                                text: options.text,
+                            },
+                        });
+
+                        break;
+                }
+            } catch (err) {
+                console.log(err);
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_OPTIONS_NULL);
+        }
+    }
+    /**
+     * 
+     * @param options Options of the element 
+     * @param elementId Element Id
+     * @param typeId Type Id 
+     */
+    async createElementOptions(options, elementId: number, typeId: number): Promise<any> {
+        if (options) {
+            try {
+                switch (typeId) {
+                    //HEADLINE
+                    case 1:
+                        await prisma.headlineSettings.create({
+                            data: {
+                                label: options.label,
+                                courseElementId: elementId,
+                            },
+                        });
+                        break;
+                    //TEXT
+                    case 2:
+                        await prisma.textSettings.create({
+                            data: {
+                                text: options.text,
+                                courseElementId: elementId,
+                            },
+                        });
+                        break;
+
+                }
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_OPTIONS_NULL);
+        }
+    }
+
+    async deleteElement(elementId: number, typeId: number): Promise<any> {
+        if (elementId) {
+            try {
+                await prisma.courseElements.delete({
+                    where: {
+                        elementId: elementId,
+                    },
+                });
+                await this.deleteElementOptions(elementId, Number(typeId));
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_ID_NULL_OR_INVALID);
+        }
+    }
+
+    async deleteElementOptions(elementId: number, typeId: number): Promise<any> {
+        if (elementId) {
+            try {
+                switch (typeId) {
+                    //HEADLINE
+                    case 1:
+                        await prisma.headlineSettings.delete({
+                            where: {
+                                courseElementId: elementId,
+                            },
+                        });
+                        break;
+                    //TEXT
+                    case 2:
+                        await prisma.textSettings.delete({
+                            where: {
+                                courseElementId: elementId,
+                            },
+                        });
+                        break;
+                }
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+        } else {
+            throw new Error(ERROR_CODES.ELEMENT_ID_NULL_OR_INVALID);
+        }
+    }
+
+    async getClassIdByUUID(classUUID: string): Promise<any> {
+        if (classUUID) {
+            try {
+                const classId = await prisma.schoolClasses.findFirst({
+                    where: {
+                        classUUID: classUUID,
+                    },
+                });
+                return classId.classId;
+            } catch (err) {
+                throw new Error(ERROR_CODES.DATABASE_ERROR);
+            }
+
+        } else {
+            throw new Error(ERROR_CODES.CLASS_UUID_NULL_OR_INVALID);
         }
     }
 }

@@ -20,6 +20,8 @@ export interface UpdateCourse {
   courseName: string;
   courseDescription: string;
   subjectId: number;
+  classes: string[];
+  persons: string[];
 }
 
 export interface CourseTable {

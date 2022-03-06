@@ -4,7 +4,7 @@ generator client {
 
 generator erd {
   provider = "prisma-erd-generator"
-  output = "./ERD.pdf"
+  output   = "./ERD.pdf"
 }
 
 datasource db {
@@ -243,4 +243,41 @@ model emailChangeToken {
 
   @@index([personId], map: "fkEmailChangePersonId")
   @@map("email_change_token")
+}
+
+model courseElements {
+  elementId        Int      @id @default(autoincrement()) @map("element_id")
+  elementUUID      String   @map("element_uuid") @db.VarChar(255)
+  typeId           Int      @map("type_id")
+  parentId         Int      @map("parent_id")
+  visible          Boolean  @map("visible")
+  elementOrder     Int      @map("element_order")
+  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId Int      @map("person_creation_id")
+  courseId         Int      @map("course_id")
+
+  @@index([courseId], map: "fkCourseElementCourseId")
+  @@index([parentId], map: "fkCourseElementParentId")
+  @@index([typeId], map: "fkCourseElementTypeId")
+  @@index([personCreationId], map: "fkCourseElementPersonCreationId")
+  @@map("course_elements")
+}
+
+model headlineSettings {
+  headlineId      Int    @id @default(autoincrement()) @map("headline_id")
+  courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
+  label           String @map("label") @db.VarChar(255)
+
+  @@index([courseElementId], map: "fkHeadlineCourseElementId")
+  @@map("headline_settings")
+}
+
+model textSettings {
+  textId          Int    @id @default(autoincrement()) @map("text_id")
+  courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
+  text            String @map("text") @db.VarChar(255)
+
+
+  @@index([courseElementId], map: "fkTextCourseElementId")
+  @@map("text_settings")
 }

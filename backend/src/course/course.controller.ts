@@ -82,4 +82,22 @@ export class CourseController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  @Put('/courseElements')
+  async courseElements(@Req() request, @Res() response) {
+    const result = await this.courseService.courseElements(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Get('/courseElements/:courseUUID')
+  async getCourseElements(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getCourseElements(
+      params.courseUUID,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }
