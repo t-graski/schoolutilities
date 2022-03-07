@@ -23,6 +23,10 @@ const StartPageBoxLayout = styled("div", {
   width: "40vw",
   color: "$fontPrimary",
   paddingLeft: "8vw",
+
+  "@mobileOnly": {
+    width: "90vw",
+  },
 });
 
 const StartPageBoxTitle = styled("h1", {
@@ -53,8 +57,17 @@ const StyledLink = styled("a", {
   marginBottom: "20px",
   color: "$fontPrimary",
   textDecoration: "none",
-  marginLeft: "50px",
   cursor: "pointer",
+});
+
+const ButtonLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "20px",
+
+  "@mobileOnly": {
+    flexDirection: "column",
+  },
 });
 
 export const StartPageBox: React.FC<Props> = ({
@@ -76,7 +89,7 @@ export const StartPageBox: React.FC<Props> = ({
         <StartPageBoxDescriptionLine>
           {descriptionLine}
         </StartPageBoxDescriptionLine>
-        <div>
+        <ButtonLayout>
           <Button
             backgroundColor={"tertiary"}
             color={"primary"}
@@ -88,7 +101,7 @@ export const StartPageBox: React.FC<Props> = ({
           <Link href={linkUrl}>
             <StyledLink>{linkText}</StyledLink>
           </Link>
-        </div>
+        </ButtonLayout>
       </StartPageBoxLayout>
     </>
   );
