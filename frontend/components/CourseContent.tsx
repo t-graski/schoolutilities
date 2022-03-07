@@ -35,7 +35,6 @@ const ElementsLayout = styled("div", {
 });
 
 const ChildElement = styled("div", {
-  display: "flex",
   width: "100%",
   paddingLeft: "50px",
 });
@@ -54,6 +53,7 @@ export const CourseContent: React.FC<Props> = ({
   items,
   setItems,
 }) => {
+  console.log(items);
   return (
     <>
       <ElementsLayout>

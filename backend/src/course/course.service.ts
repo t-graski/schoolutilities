@@ -955,34 +955,33 @@ export class CourseService {
         });
       }
     }
+    let returnElements = elementsWithOptions.filter(
+      (element) => !element.parentUUID || element.parentUUID === '0',
+    );
 
-    let childrenCount = 0;
+    console.log(returnElements);
 
     for (const element of elementsWithOptions) {
-      if (element.parentUUID) {
-        let parent = elementsWithOptions.find(
-          (e) => e.elementUUID === element.parentUUID,
-        );
-        if (parent) {
-          if (!parent.children) {
-            parent.children = [];
-            childrenCount += 1;
+      if (element.parentUUID && element.parentUUID !== '0') {
+        returnElements = returnElements.map((currentElement) => {
+          if (currentElement.elementUUID === element.parentUUID) {
+            if (!currentElement.children) {
+              currentElement.children = [];
+            }
+            currentElement.children.push(element);
           }
-          parent.children.push(element);
-          element.children = [];
-        }
+
+          return currentElement;
+        });
         delete element.parentUUID;
       }
     }
 
-    elementsWithOptions.splice(
-      elementsWithOptions.length - childrenCount,
-      childrenCount,
-    );
+    console.log(returnElements);
 
     return {
       status: RETURN_DATA.SUCCESS.status,
-      data: elementsWithOptions,
+      data: returnElements,
     };
   }
 }

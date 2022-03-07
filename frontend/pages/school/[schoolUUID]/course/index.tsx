@@ -6,8 +6,14 @@ import Head from "next/head";
 import { CourseSelectionList } from "../../../../components/CourseSelectionList";
 import { Headline } from "../../../../components/Headline";
 import { Separator } from "../../../../components/Separator";
+import { useRouter } from "next/router";
 
 export default function CreateCourse() {
+  const router = useRouter();
+  if (!router.query || !router.query.schoolUUID) {
+    router.push("/school/select?redirect=/course");
+  }
+
   return (
     <>
       <Head>
@@ -17,7 +23,9 @@ export default function CreateCourse() {
       <Spacer size="medium"></Spacer>
       <Headline label="My Courses"></Headline>
       <Separator width="small" alignment="center" />
-      <CourseSelectionList></CourseSelectionList>
+      <CourseSelectionList
+        schoolUUID={router.query.schoolUUID as string}
+      ></CourseSelectionList>
       <Spacer size="medium" />
       <Footer></Footer>
     </>
