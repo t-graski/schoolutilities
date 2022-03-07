@@ -68,7 +68,7 @@ export default function Features() {
     let accessToken = await getAccessToken();
     if (courseUUID && accessToken && isFirstTime) {
       const courseResponse = await fetch(
-        `https://backend.schoolutilities.net/api/course/getCourseInfo/${courseUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
         {
           method: "GET",
           headers: {
@@ -104,7 +104,7 @@ export default function Features() {
         setIsFirstTime(false);
       }
       const classResponse = await fetch(
-        `https://backend.schoolutilities.net/api/schooladmin/classes/${schoolUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -125,7 +125,7 @@ export default function Features() {
         );
       }
       const personResponse = await fetch(
-        `https://backend.schoolutilities.net/api/schooladmin/getPersons/${schoolUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
         {
           method: "GET",
           headers: {
@@ -267,7 +267,7 @@ export default function Features() {
                   })
                 );
                 const response = await fetch(
-                  `https://backend.schoolutilities.net/api/course/updateCourse`,
+                  `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/updateCourse`,
                   {
                     method: "PUT",
                     headers: {

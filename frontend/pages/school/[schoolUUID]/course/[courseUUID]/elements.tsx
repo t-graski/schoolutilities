@@ -57,7 +57,7 @@ export default function Features() {
     let accessToken = await getAccessToken();
     if (courseUUID && accessToken && courseName == "") {
       const courseResponse = await fetch(
-        `https://backend.schoolutilities.net/api/course/getCourseInfo/${courseUUID}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
         {
           method: "GET",
           headers: {
@@ -133,7 +133,7 @@ export default function Features() {
               onClick={async () => {
                 let accessToken = await getAccessToken();
                 const saveResponse = await fetch(
-                  `https://backend.schoolutilities.net/api/course/courseElements`,
+                  `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements`,
                   {
                     method: "PUT",
                     headers: {

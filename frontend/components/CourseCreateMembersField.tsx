@@ -61,7 +61,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
     let accessToken = await getAccessToken();
     const schoolUUID = router.query.schoolUUID as string;
     const classResponse = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/classes/${schoolUUID}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
       {
         method: "GET",
         headers: {
@@ -80,7 +80,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
       );
     }
     const memberResponse = await fetch(
-      `https://backend.schoolutilities.net/api/schooladmin/getPersons/${schoolUUID}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
       {
         method: "GET",
         headers: {

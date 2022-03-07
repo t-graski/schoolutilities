@@ -278,7 +278,7 @@ export const UserMenu = () => {
     let accessToken = await getAccessToken();
     if (accessToken) {
       let response = await fetch(
-        `https://backend.schoolutilities.net/api/user/getSchools`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
         {
           method: "GET",
           headers: {
@@ -290,7 +290,7 @@ export const UserMenu = () => {
       setSchools(fetchedSchools);
       if (router.query.schoolUUID) {
         response = await fetch(
-          `https://backend.schoolutilities.net/api/course/getCourses/${
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${
             router.query.schoolUUID as string
           }`,
           {
