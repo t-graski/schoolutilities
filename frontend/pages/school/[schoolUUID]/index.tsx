@@ -10,7 +10,17 @@ import { Separator } from "../../../components/Separator";
 import { CourseSelectionList } from "../../../components/CourseSelectionList";
 import { Footer } from "../../../components/Footer";
 
-export default function CreateCourse() {
+export default function ShowCourses() {
+  const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
+
+  useEffect(() => {
+    console.log(schoolUUID);
+    if (!schoolUUID) {
+      // router.push("/school/select?redirect=/course");
+    }
+  }, [schoolUUID]);
+
   return (
     <SiteLayout>
       <Head>
@@ -20,7 +30,9 @@ export default function CreateCourse() {
       <Spacer size="medium"></Spacer>
       <Headline label="Course selection"></Headline>
       <Separator width="small" alignment="center" />
-      <CourseSelectionList></CourseSelectionList>
+      <CourseSelectionList
+        schoolUUID={schoolUUID}
+      ></CourseSelectionList>
       <Footer></Footer>
     </SiteLayout>
   );

@@ -109,11 +109,28 @@ export const CourseEditContent: React.FC<Props> = ({
               console.log(config);
               setItems((items) => {
                 return items.map((currentItem) => {
+                  const childElement = currentItem.children.find(
+                    (child) => child.id === item.id
+                  );
                   if (currentItem.id === item.id) {
                     return {
                       id: item.id,
                       config: { ...config, choosenElement },
                       children: currentItem.children,
+                    };
+                  } else if (childElement) {
+                    return {
+                      ...currentItem,
+                      children: currentItem.children.map((child) => {
+                        if (child.id === item.id) {
+                          return {
+                            ...child,
+                            config: { ...config, choosenElement },
+                          };
+                        } else {
+                          return child;
+                        }
+                      }),
                     };
                   }
                   return currentItem;

@@ -8,7 +8,9 @@ import { LoadingAnimation } from "./LoadingAnimation";
 import cookie from "js-cookie";
 import { useRouter } from "next/router";
 
-export type SideDashboardProps = {};
+export type SideDashboardProps = {
+  schoolUUID: string;
+};
 
 const CourseList = styled("div", {
   display: "grid",
@@ -66,37 +68,37 @@ const CourseDescription = styled("p", {
   color: "$fontPrimary",
 });
 
-export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
+export const CourseSelectionList: React.FC<SideDashboardProps> = ({
+  schoolUUID,
+}) => {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   useEffect(() => {
     updateCoursesFromDatabase();
-  }, []);
+  }, [schoolUUID]);
   const router = useRouter();
 
   async function updateCoursesFromDatabase() {
     let accessToken = await getAccessToken();
     if (!accessToken) {
       router.push("/auth?tab=login&redirect=/school/course");
-    } else if (!router.query.schoolUUID) {
-      router.push("/school/select?redirect=/course");
     } else {
-      setIsLoading(true);
-      let response = await fetch(
-        `https://backend.schoolutilities.net/api/course/getCourses/${
-          router.query.schoolUUID as string
-        }`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      let fetchedCourses = await response.json();
-      setIsLoading(false);
-      console.log(response);
-      setCourses(fetchedCourses);
+      if (schoolUUID) {
+        setIsLoading(true);
+        let response = await fetch(
+          `https://backend.schoolutilities.net/api/course/getCourses/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let fetchedCourses = await response.json();
+        setIsLoading(false);
+        console.log(response);
+        setCourses(fetchedCourses);
+      }
     }
   }
 
@@ -110,9 +112,7 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
               key={course.courseUUID}
               onClick={() => {
                 router.push(
-                  `/school/${router.query.schoolUUID as string}/course/${
-                    course.courseUUID
-                  }`
+                  `/school/${schoolUUID}/course/${course.courseUUID}`
                 );
               }}
             >

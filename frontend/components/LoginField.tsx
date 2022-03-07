@@ -51,7 +51,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     checkLogin();
   }, []);
 
-  async function checkLogin(){
+  async function checkLogin() {
     const accessToken = await getAccessToken();
 
     if (accessToken) {
