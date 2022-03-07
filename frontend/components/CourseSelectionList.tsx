@@ -8,9 +8,7 @@ import { LoadingAnimation } from "./LoadingAnimation";
 import cookie from "js-cookie";
 import { useRouter } from "next/router";
 
-export type SideDashboardProps = {
-  schoolUUID: string;
-};
+export type SideDashboardProps = {};
 
 const CourseList = styled("div", {
   display: "grid",
@@ -68,15 +66,14 @@ const CourseDescription = styled("p", {
   color: "$fontPrimary",
 });
 
-export const CourseSelectionList: React.FC<SideDashboardProps> = ({
-  schoolUUID,
-}) => {
+export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
+  const router = useRouter();
+  const schoolUUID = router.query.schoolUUID;
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   useEffect(() => {
     updateCoursesFromDatabase();
   }, [schoolUUID]);
-  const router = useRouter();
 
   async function updateCoursesFromDatabase() {
     let accessToken = await getAccessToken();
