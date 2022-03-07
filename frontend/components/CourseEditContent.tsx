@@ -55,7 +55,7 @@ export const CourseEditContent: React.FC<Props> = ({
     console.log(courseId);
     let accessToken = await getAccessToken();
     const elementsResponse = await fetch(
-      `https://backend.schoolutilities.net/api/course/courseElements/${courseId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements/${courseId}`,
       {
         method: "GET",
         headers: {
