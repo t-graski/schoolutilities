@@ -11,16 +11,6 @@ import { CourseSelectionList } from "../../../components/CourseSelectionList";
 import { Footer } from "../../../components/Footer";
 
 export default function ShowCourses() {
-  const router = useRouter();
-  const schoolUUID = router.query.schoolUUID as string;
-
-  useEffect(() => {
-    console.log(schoolUUID);
-    if (!schoolUUID) {
-      // router.push("/school/select?redirect=/course");
-    }
-  }, [schoolUUID]);
-
   return (
     <SiteLayout>
       <Head>
@@ -30,9 +20,7 @@ export default function ShowCourses() {
       <Spacer size="medium"></Spacer>
       <Headline label="Course selection"></Headline>
       <Separator width="small" alignment="center" />
-      <CourseSelectionList
-        schoolUUID={schoolUUID}
-      ></CourseSelectionList>
+      <CourseSelectionList></CourseSelectionList>
       <Footer></Footer>
     </SiteLayout>
   );

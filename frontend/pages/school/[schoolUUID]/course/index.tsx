@@ -9,11 +9,6 @@ import { Separator } from "../../../../components/Separator";
 import { useRouter } from "next/router";
 
 export default function CreateCourse() {
-  const router = useRouter();
-  if (!router.query || !router.query.schoolUUID) {
-    router.push("/school/select?redirect=/course");
-  }
-
   return (
     <>
       <Head>
@@ -23,9 +18,7 @@ export default function CreateCourse() {
       <Spacer size="medium"></Spacer>
       <Headline label="My Courses"></Headline>
       <Separator width="small" alignment="center" />
-      <CourseSelectionList
-        schoolUUID={router.query.schoolUUID as string}
-      ></CourseSelectionList>
+      <CourseSelectionList></CourseSelectionList>
       <Spacer size="medium" />
       <Footer></Footer>
     </>
