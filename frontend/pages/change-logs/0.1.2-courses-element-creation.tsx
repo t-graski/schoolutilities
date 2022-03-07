@@ -67,7 +67,7 @@ export default function Article() {
           ></Headline>
           <ArticleList>
             <li>Added new artwork to registration and login pages</li>
-            <li>Added new navbar navigation and hover effects</li>
+            {/* <li>Added new navbar navigation and hover effects</li> */}
             <li>Added lots of fancy new icons</li>
             <li>
               Added an indicator on how strong your password is next to password
@@ -81,7 +81,7 @@ export default function Article() {
             <li>Changed URL structure for schools and courses</li>
             <li>Changed many many lines of CSS</li>
             <li>Changed some spellings of error messages</li>
-            <li>Changed user menu in navbar</li>
+            {/* <li>Changed user menu in navbar</li> */}
             <li>Improved security of some backend endpoints</li>
           </ArticleList>
           <br />

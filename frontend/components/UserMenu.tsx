@@ -424,7 +424,7 @@ export const UserMenu = () => {
                   {schools.length > 0 && <DropdownMenuSeparator />}
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push("school/join");
+                      router.push("/school/join");
                     }}
                   >
                     Join a school
