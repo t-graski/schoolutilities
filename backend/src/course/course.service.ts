@@ -977,8 +977,6 @@ export class CourseService {
       }
     }
 
-    console.log(returnElements);
-
     return {
       status: RETURN_DATA.SUCCESS.status,
       data: returnElements,
