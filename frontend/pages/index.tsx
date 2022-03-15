@@ -11,6 +11,7 @@ import { StartPageBox } from "../components/StartPageBox";
 import { GeneralList } from "../components/GeneralList";
 import StartpageArtwork from "../components/svg/SvgStartpageArtwork";
 import Image from "next/image";
+import { FileUpload } from "../components/FileUpload";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -55,7 +56,11 @@ export default function Home() {
         </Head>
         <Navbar />
         <ArtworkLayout>
-          <Image layout="fill" src="/images/startpage_artwork.svg" />
+          <Image
+            layout="fill"
+            alt="Main Artwork"
+            src="/images/startpage_artwork.svg"
+          />
         </ArtworkLayout>
         <FirstBoxLayout>
           <StartPageBox
@@ -100,6 +105,7 @@ export default function Home() {
             },
           ]}
         ></GeneralList>
+        <FileUpload></FileUpload>
         <Footer />
       </Maincontent>
     </>

@@ -1,22 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Nestable, { Item } from "react-nestable";
+import React from "react";
+import { Item } from "react-nestable";
 
 // this usually goes once
 // to the entry point of the whole app
 // (e.g. src/index.js)
 import "react-nestable/dist/styles/index.css";
 import "./CourseContent.module.css";
-import { SvgIcon } from "./SvgIcon";
-import { Headline } from "./Headline";
 import { styled } from "@stitches/react";
-import CourseEditActionButtons from "./CourseEditActionButtons";
 import { elementsToChoose } from "./CourseComponentDetailViews";
 
 type Props = {
-  courseId: string;
   items: Item[];
-  setItems: Function;
 };
 
 const ComponentLayout = styled("div", {
@@ -49,11 +43,8 @@ const ParentContainer = styled("div", {
 });
 
 export const CourseContent: React.FC<Props> = ({
-  courseId,
   items,
-  setItems,
 }) => {
-  console.log(items);
   return (
     <>
       <ElementsLayout>

@@ -1,18 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "../stitches.config";
-import Image from "next/image";
 import { Spacer } from "./Spacer";
 import { useRouter } from "next/router";
-import { Navbar } from "./OldNavbar";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
-import { Footer } from "./OldFooter";
-import fetch from "node-fetch";
-
-if (!globalThis.fetch) {
-  //@ts-ignore
-  globalThis.fetch = fetch;
-}
 
 const RegisterAuthLayout = styled("div", {
   width: "100%",

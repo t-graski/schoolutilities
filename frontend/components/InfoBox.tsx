@@ -1,16 +1,7 @@
 import React from "react";
 import { styled } from "../stitches.config";
 import Image from "next/image";
-import type * as Stitches from "@stitches/react";
-import fetch from "node-fetch";
-import { InputField } from "./InputField";
 import { Headline } from "./Headline";
-import { Spacer } from "./Spacer";
-
-if (!globalThis.fetch) {
-  //@ts-ignore
-  globalThis.fetch = fetch;
-}
 
 type Props = {
   headline: string;
@@ -70,6 +61,3 @@ export const InfoBox: React.FC<Props> = ({
     </>
   );
 };
-
-// create reges for a course description
-let regex = /(?<=\s|^)([A-Z]{4}[0-9]{4})(?=\s|$)/g;

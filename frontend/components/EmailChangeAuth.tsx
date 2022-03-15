@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../stitches.config";
-import Image from "next/image";
 import { Spacer } from "./Spacer";
 import { useRouter } from "next/router";
-import { Navbar } from "./OldNavbar";
 import { Headline } from "./Headline";
 import { Separator } from "./Separator";
-import { Footer } from "./OldFooter";
-import fetch from "node-fetch";
-
-if (!globalThis.fetch) {
-  //@ts-ignore
-  globalThis.fetch = fetch;
-}
 
 const RegisterAuthLayout = styled("div", {
   width: "100%",
@@ -27,27 +18,32 @@ export const EmailChangeAuth = () => {
   );
   const router = useRouter();
   const { token } = router.query;
-  if (token && !isSent) {
-    isSent = true;
-    let requestBody = JSON.stringify({
-      token: token,
-    });
-    console.log(requestBody);
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/activateNewEmail`, {
-      method: "POST",
-      body: requestBody,
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => response.status)
-      .then((statusCode) => {
-        console.log(statusCode);
-        if (statusCode == 200) {
-          setAuthStateInfo("Ihre Email wurde erfolgreich geändert");
-        } else {
-          setAuthStateInfo("Ihre Email konnte nicht geändert werden");
-        }
+  useEffect(() => {
+    if (token && !isSent) {
+      isSent = true;
+      let requestBody = JSON.stringify({
+        token: token,
       });
-  }
+      console.log(requestBody);
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/activateNewEmail`,
+        {
+          method: "POST",
+          body: requestBody,
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+        .then((response) => response.status)
+        .then((statusCode) => {
+          console.log(statusCode);
+          if (statusCode == 200) {
+            setAuthStateInfo("Ihre Email wurde erfolgreich geändert");
+          } else {
+            setAuthStateInfo("Ihre Email konnte nicht geändert werden");
+          }
+        });
+    }
+  }, [token]);
   return (
     <>
       <Spacer size="medium"></Spacer>

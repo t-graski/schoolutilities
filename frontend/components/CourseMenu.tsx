@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { styled, keyframes } from "@stitches/react";
-import cookie from "js-cookie";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "./SvgIcon";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { InputField } from "./InputField";
 import {
   elementsToChoose,
-  HeadlineDetailView,
-  TextDetailView,
 } from "./CourseComponentDetailViews";
 
 type Props = { courseId: string; addNewEntry?: Function };

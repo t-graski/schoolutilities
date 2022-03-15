@@ -8,9 +8,7 @@ import { Headline } from "../../../../../components/Headline";
 import { Separator } from "../../../../../components/Separator";
 import { Footer } from "../../../../../components/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
-import { SvgIcon } from "../../../../../components/SvgIcon";
 import CourseMenu from "../../../../../components/CourseMenu";
-import CourseEditContent from "../../../../../components/CourseEditContent";
 import CourseContent from "../../../../../components/CourseContent";
 
 const ContentLayout = styled("div", {
@@ -26,10 +24,6 @@ const HeadlineLayout = styled("div", {
   gap: "40px",
   justifyContent: "flex-start",
   alignItems: "center",
-});
-
-const IconLayout = styled("div", {
-  width: "40px",
 });
 
 export default function Features() {
@@ -93,7 +87,6 @@ export default function Features() {
     }
   }
   const [items, setItems] = useState([]);
-  const [itemsCounter, setItemsCounter] = useState(0);
 
   return (
     <>
@@ -113,11 +106,7 @@ export default function Features() {
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
-        <CourseContent
-          courseId={courseUUID}
-          items={items}
-          setItems={setItems}
-        ></CourseContent>
+        <CourseContent items={items}></CourseContent>
       </ContentLayout>
       <Footer></Footer>
     </>

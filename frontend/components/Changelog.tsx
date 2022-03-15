@@ -23,6 +23,11 @@ const ChangeLogsLayout = styled("div", {
   maxWidth: "1000px",
   padding: "6vh 7vw",
   gap: "60px",
+
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    gap: "30px",
+  },
 });
 
 const ChangeLogLayout = styled("div", {

@@ -7,6 +7,7 @@ import SvgCalculator from "./svg/SvgCalculator";
 import SvgChecklist from "./svg/SvgChecklist";
 import SvgCheckMark from "./svg/SvgCheckMark";
 import SvgClass from "./svg/SvgClass";
+import SvgClose from "./svg/SvgClose";
 import SvgClosedLogo from "./svg/SvgClosedLogo";
 import SvgDelete from "./svg/SvgDelete";
 import SvgDepartment from "./svg/SvgDepartment";
@@ -115,6 +116,8 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgEye alt="Eye Icon" />;
     case "SvgEyeRestricted":
       return <SvgEyeRestricted alt="Eye Restricted Icon" />;
+    case "SvgClose":
+      return <SvgClose alt="Close Icon" />;
     default:
       return <SvgClass />;
   }

@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "../stitches.config";
-import Image from "next/image";
-import cookie from "js-cookie";
 import { SvgIcon } from "./SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getUserData } from "../misc/authHelper";
 import UserMenu from "./UserMenu";
 import NavbarPopOver from "./NavbarPopOver";
 
@@ -77,80 +74,30 @@ const SpecialLinkLayout = styled("div", {
   color: "$fontPrimary",
 });
 
-const LinkLayout = styled("a", {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "flex-start",
-  alignItems: "center",
-  gap: "20px",
-  padding: "15px 20px",
-  borderRadius: "20px",
-  backgroundColor: "$backgroundTertiary",
-  cursor: "pointer",
-  "&[data-size='small']": {
-    justifyContent: "center",
-    width: "fit-content",
-  },
-  variants: {
-    color: {
-      primary: {},
-      secondary: {
-        backgroundColor: "$fontPrimary",
-      },
-      special: {
-        backgroundColor: "$specialPrimary",
-      },
-    },
-  },
-});
+const StyledOpenButton = styled("button", {
+  width: "45px",
+  height: "45px",
+  backgroundColor: "transparent",
+  border: "none",
+  outline: "none",
+  display: "none",
 
-const IconLayout = styled("div", {
-  width: "30px",
-  height: "30px",
-});
-
-const LinkContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "70%",
-});
-
-const LinkLabel = styled("p", {
-  fontWeight: "bold",
-  variants: {
-    color: {
-      primary: {
-        color: "$fontPrimary",
-      },
-      secondary: {
-        color: "$backgroundTertiary",
-      },
-      special: {
-        fontWeight: "normal",
-      },
-    },
+  "@mobileOnly": {
+    display: "flex",
   },
 });
 
 export const Navbar: React.FC<Props> = ({}) => {
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-  });
   const router = useRouter();
-  useEffect(() => {
-    fetchData();
-  }, []);
 
-  async function fetchData() {
-    const fetchedData = await getUserData();
-    setUserData(fetchedData);
-  }
+  const [mobileVisible, setMobileVisible] = useState(false);
+
   return (
     <>
-      <NavbarPopOver visible={false}></NavbarPopOver>
+      <NavbarPopOver
+        visible={mobileVisible}
+        setVisibility={setMobileVisible}
+      ></NavbarPopOver>
       <NavbarLayout>
         <Link href="/">
           <a>
@@ -179,6 +126,9 @@ export const Navbar: React.FC<Props> = ({}) => {
             </Link>
           </SpecialLinkLayout>
         </NavLinksLayout>
+        <StyledOpenButton onClick={() => setMobileVisible(true)}>
+          <SvgIcon iconName="SvgHamburger" />
+        </StyledOpenButton>
       </NavbarLayout>
     </>
   );

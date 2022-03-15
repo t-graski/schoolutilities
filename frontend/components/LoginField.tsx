@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { getAccessToken, logout } from "../misc/authHelper";
 import validator from "validator";
-import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
+import { LENGTHS } from "../misc/parameterConstants";
 
 type Props = {};
 
@@ -98,10 +98,6 @@ export const LoginField: React.FC<Props> = ({}) => {
             }
             return response.json();
           } else {
-            // let audio1 = new Audio("/sounds/336280__fuelstream__css-looser.wav");
-            // audio1.play();
-            // let audio2 = new Audio("/sounds/58655__suonho__zajo-loop33-looser.wav");
-            // audio2.play();
             setSignUpInfo(
               "Something went wrong, while trying to log in. You might have entered wrong credentials or you're not registered yet."
             );

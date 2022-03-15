@@ -27,7 +27,7 @@ export default function Article() {
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="SchoolUtilities Version 0.1.2"></Headline>
+      <Headline fontSize="medium" label="SchoolUtilities Version 0.1.2"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
       <ArticleDetails {...articleDetails}></ArticleDetails>

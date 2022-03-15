@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import {
-  HamburgerMenuIcon,
   DotFilledIcon,
-  CheckIcon,
   ChevronRightIcon,
 } from "@radix-ui/react-icons";
-import cookie from "js-cookie";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "./SvgIcon";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { getAccessToken, getUserData, logout } from "../misc/authHelper";
 import { useTheme } from "next-themes";
@@ -149,49 +145,6 @@ const RightSlot = styled("div", {
   "[data-disabled] &": { color: "$fontPrimary" },
 });
 
-const IconButton = styled("button", {
-  all: "unset",
-  fontFamily: "inherit",
-  borderRadius: "100%",
-  height: 35,
-  width: 35,
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "$fontPrimary",
-  backgroundColor: "$fontPrimary",
-  boxShadow: `0 2px 10px $fontPrimary`,
-  "&:hover": { backgroundColor: "$fontPrimary" },
-  "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
-});
-
-const LinkLayout = styled("a", {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "flex-start",
-  alignItems: "center",
-  gap: "20px",
-  padding: "15px 20px",
-  borderRadius: "20px",
-  backgroundColor: "$backgroundSecondary",
-  cursor: "pointer",
-  "&[data-size='small']": {
-    justifyContent: "center",
-    width: "fit-content",
-  },
-  variants: {
-    color: {
-      primary: {},
-      secondary: {
-        backgroundColor: "$fontPrimary",
-      },
-      special: {
-        backgroundColor: "$specialPrimary",
-      },
-    },
-  },
-});
-
 const IconLayout = styled("div", {
   width: "30px",
   height: "30px",
@@ -210,41 +163,6 @@ const UserMenuLayout = styled("div", {
   cursor: "pointer",
   justifyContent: "center",
   alignItems: "center",
-});
-
-const LinkContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  width: "70%",
-});
-
-const LinkLabel = styled("p", {
-  fontWeight: "bold",
-  variants: {
-    color: {
-      primary: {
-        color: "$fontPrimary",
-      },
-      secondary: {
-        color: "$backgroundTertiary",
-      },
-      special: {
-        fontWeight: "normal",
-      },
-    },
-  },
-});
-
-const StyledLink = styled(Link, {
-  "& a": {
-    color: "fontPrimary",
-    textDecoration: "none",
-  },
-  "& a:hover": {
-    textDecoration: "underline",
-  },
 });
 
 const ArrowLayout = styled("div", {

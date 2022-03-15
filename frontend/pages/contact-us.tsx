@@ -28,7 +28,7 @@ export default function Features() {
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="Contact Us"></Headline>
+      <Headline label="Contact Us" fontSize="medium"></Headline>
       <Separator width="small" alignment="center" />
       <ImprintLayout>
         <Spacer size="small"></Spacer>
