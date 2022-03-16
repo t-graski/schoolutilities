@@ -1,7 +1,7 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/OldNavbar";
-import { Footer } from "../components/OldFooter";
-import { StartPageNav } from "../components/StartPageNav";
+import { Navbar } from "../components/organisms/OldNavbar";
+import { Footer } from "../components/organisms/OldFooter";
+import { StartPageNav } from "../components/molecules/StartPageNav";
 import React, { useEffect, useState } from "react";
 import cookie from "js-cookie";
 import { useRouter } from "next/router";

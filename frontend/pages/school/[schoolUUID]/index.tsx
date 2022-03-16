@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
-import cookie from "js-cookie";
-import { useRouter } from "next/router";
-import { Navbar } from "../../../components/Navbar";
-import { SiteLayout } from "../../../components/SiteLayout";
-import { Spacer } from "../../../components/Spacer";
-import { Headline } from "../../../components/Headline";
-import { Separator } from "../../../components/Separator";
-import { CourseSelectionList } from "../../../components/CourseSelectionList";
-import { Footer } from "../../../components/Footer";
+import { Navbar } from "../../../components/organisms/Navbar";
+import { SiteLayout } from "../../../components/atoms/SiteLayout";
+import { Spacer } from "../../../components/atoms/Spacer";
+import { Headline } from "../../../components/atoms/Headline";
+import { Separator } from "../../../components/atoms/Separator";
+import { CourseSelectionList } from "../../../components/organisms/course/CourseSelectionList";
+import { Footer } from "../../../components/organisms/Footer";
 
 export default function ShowCourses() {
   return (

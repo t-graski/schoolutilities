@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { DepartmentsDetailField } from "../../../components/DepartmentsDetailField";
-import { Footer } from "../../../components/OldFooter";
-import { LoginField } from "../../../components/LoginField";
-import { Navbar } from "../../../components/Navbar";
-import { Progressbar } from "../../../components/Progressbar";
-import { SchoolDetailField } from "../../../components/SchoolDetailField";
-import { SetupProgressSite } from "../../../components/SetupProgressSite";
-import { Spacer } from "../../../components/Spacer";
+import { DepartmentsDetailField } from "../../../components/organisms/schoolAdmin/DepartmentsDetailField";
+import { Footer } from "../../../components/organisms/OldFooter";
+import { LoginField } from "../../../components/molecules/auth/LoginField";
+import { Navbar } from "../../../components/organisms/Navbar";
+import { Progressbar } from "../../../components/molecules/Progressbar";
+import { SchoolDetailField } from "../../../components/molecules/school/SchoolDetailField";
+import { SetupProgressSite } from "../../../components/organisms/SetupProgressSite";
+import { Spacer } from "../../../components/atoms/Spacer";
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
-import { SideDashboard } from "../../../components/SideDashboard";
-import { DepartmentsSettingsField } from "../../../components/DepartmentsSettingsField";
+import { SideDashboard } from "../../../components/molecules/schoolAdmin/SideDashboard";
+import { DepartmentsSettingsField } from "../../../components/organisms/schoolAdmin/DepartmentsSettingsField";
 import { useRouter } from "next/router";
-import SvgDepartment from "../../../components/svg/SvgDepartment";
+import SvgDepartment from "../../../components/atoms/svg/SvgDepartment";
 import cookie from "js-cookie";
-import { ClassesSettingsField } from "../../../components/ClassesSettingsField";
-import { PersonsSettingsField } from "../../../components/PersonsSettingsField";
-import { JoinCodesSettingsField } from "../../../components/JoinCodesSettingsField";
+import { ClassesSettingsField } from "../../../components/organisms/schoolAdmin/ClassesSettingsField";
+import { PersonsSettingsField } from "../../../components/organisms/schoolAdmin/PersonsSettingsField";
+import { JoinCodesSettingsField } from "../../../components/organisms/schoolAdmin/JoinCodesSettingsField";
 import { getAccessToken, getUserData, logout } from "../../../misc/authHelper";
 
 const SettingsLayout = styled("div", {

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import { Navbar } from "../../components/Navbar";
-import { Spacer } from "../../components/Spacer";
-import { Headline } from "../../components/Headline";
-import { Separator } from "../../components/Separator";
-import { SchoolSelectionList } from "../../components/SchoolSelectionList";
+import { Navbar } from "../../components/organisms/Navbar";
+import { Spacer } from "../../components/atoms/Spacer";
+import { Headline } from "../../components/atoms/Headline";
+import { Separator } from "../../components/atoms/Separator";
+import { SchoolSelectionList } from "../../components/organisms/school/SchoolSelectionList";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { keyframes, styled } from "@stitches/react";
-import { Footer } from "../../components/Footer";
+import { Footer } from "../../components/organisms/Footer";
 import Link from "next/link";
 import { CSS } from "@dnd-kit/utilities";
 

@@ -1,10 +1,10 @@
 import React from "react";
 import Head from "next/head";
-import { Navbar } from "../../../components/Navbar";
-import { Spacer } from "../../../components/Spacer";
-import { Headline } from "../../../components/Headline";
-import { Separator } from "../../../components/Separator";
-import { Footer } from "../../../components/Footer";
+import { Navbar } from "../../../components/organisms/Navbar";
+import { Spacer } from "../../../components/atoms/Spacer";
+import { Headline } from "../../../components/atoms/Headline";
+import { Separator } from "../../../components/atoms/Separator";
+import { Footer } from "../../../components/organisms/Footer";
 import Link from "next/link";
 import { ArticleLayout } from "../../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../../components/article/GeneralLayout";
