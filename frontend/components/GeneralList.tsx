@@ -1,10 +1,7 @@
 import React from "react";
 import { styled } from "../stitches.config";
-import type * as Stitches from "@stitches/react";
-import { Button } from "./Button";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { GeneralListItem } from "./GeneralListItem";
+import { Separator } from "./Separator";
 
 type Props = {
   items: {
@@ -54,8 +51,6 @@ const Divider = styled("div", {
   },
 });
 
-const GeneralListItemLayout = styled("div", {});
-
 export const GeneralList: React.FC<Props> = ({ items }) => {
   return (
     <>
@@ -70,7 +65,13 @@ export const GeneralList: React.FC<Props> = ({ items }) => {
               description={item.description}
               iconName={item.iconName}
             />
-            <Divider key={index+items.length} visible={index !== items.length - 1} />
+            <Separator
+              key={index + items.length}
+              visible={index !== items.length - 1}
+              width={"small"}
+              alignment={"left"}
+              orientation={"vertical"}
+            />
           </>
         ))}
       </GeneralListLayout>

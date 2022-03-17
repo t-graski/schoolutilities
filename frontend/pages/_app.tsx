@@ -5,7 +5,6 @@ import { globalCss, lightTheme } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
 import { ThemeProvider } from "next-themes";
-import { NextUIProvider } from "@nextui-org/react";
 
 const globalStyles = globalCss({
   "*": {
@@ -41,8 +40,6 @@ function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   globalStyles();
-
-  const isDocs = router.pathname.includes("/docs");
 
   return (
     <ThemeProvider
