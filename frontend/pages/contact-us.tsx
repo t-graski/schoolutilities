@@ -1,10 +1,10 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
-import { Headline } from "../components/Headline";
+import { Navbar } from "../components/organisms/Navbar";
+import { Footer } from "../components/organisms/Footer";
+import { Headline } from "../components/atoms/Headline";
 import React from "react";
-import { Spacer } from "../components/Spacer";
-import { Separator } from "../components/Separator";
+import { Spacer } from "../components/atoms/Spacer";
+import { Separator } from "../components/atoms/Separator";
 import Head from "next/head";
 
 const ImprintLayout = styled("div", {
@@ -28,7 +28,7 @@ export default function Features() {
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="Contact Us"></Headline>
+      <Headline label="Contact Us" fontSize="medium"></Headline>
       <Separator width="small" alignment="center" />
       <ImprintLayout>
         <Spacer size="small"></Spacer>

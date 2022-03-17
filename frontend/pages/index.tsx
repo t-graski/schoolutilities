@@ -1,16 +1,17 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
-import { StartPageNav } from "../components/StartPageNav";
+import { Navbar } from "../components/organisms/Navbar";
+import { Footer } from "../components/organisms/Footer";
+import { StartPageNav } from "../components/molecules/StartPageNav";
 import React, { useEffect, useState } from "react";
 import cookie from "js-cookie";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { logout } from "../misc/authHelper";
-import { StartPageBox } from "../components/StartPageBox";
-import { GeneralList } from "../components/GeneralList";
-import StartpageArtwork from "../components/svg/SvgStartpageArtwork";
+import { StartPageBox } from "../components/molecules/StartPageBox";
+import { GeneralList } from "../components/organisms/GeneralList";
+import StartpageArtwork from "../components/atoms/svg/SvgStartpageArtwork";
 import Image from "next/image";
+import { FileUpload } from "../components/molecules/FileUpload";
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -55,7 +56,11 @@ export default function Home() {
         </Head>
         <Navbar />
         <ArtworkLayout>
-          <Image layout="fill" src="/images/startpage_artwork.svg" />
+          <Image
+            layout="fill"
+            alt="Main Artwork"
+            src="/images/startpage_artwork.svg"
+          />
         </ArtworkLayout>
         <FirstBoxLayout>
           <StartPageBox

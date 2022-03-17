@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Footer } from "../../../../components/Footer";
-import { Navbar } from "../../../../components/Navbar";
-import { Spacer } from "../../../../components/Spacer";
+import { Footer } from "../../../../components/organisms/Footer";
+import { Navbar } from "../../../../components/organisms/Navbar";
+import { Spacer } from "../../../../components/atoms/Spacer";
 import Head from "next/head";
-import { CourseSelectionList } from "../../../../components/CourseSelectionList";
-import { Headline } from "../../../../components/Headline";
-import { Separator } from "../../../../components/Separator";
+import { CourseSelectionList } from "../../../../components/organisms/course/CourseSelectionList";
+import { Headline } from "../../../../components/atoms/Headline";
+import { Separator } from "../../../../components/atoms/Separator";
 import { useRouter } from "next/router";
 
 export default function CreateCourse() {

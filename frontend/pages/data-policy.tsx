@@ -1,9 +1,9 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
+import { Navbar } from "../components/organisms/Navbar";
+import { Footer } from "../components/organisms/Footer";
 import React from "react";
 import Head from "next/head";
-import { Spacer } from "../components/Spacer";
+import { Spacer } from "../components/atoms/Spacer";
 
 const StyledDiv = styled("div", {
   padding: "0 15vw",
