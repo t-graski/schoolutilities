@@ -31,6 +31,12 @@ const ComponentLayout = styled("div", {
   gap: "30px",
   borderRadius: "1000px",
   width: "fit-content",
+
+  "@mobileOnly": {
+    fontSize: "1rem",
+    padding: "20px",
+    gap: "10px",
+  },
 });
 
 const DetailItem = styled("span", {});
