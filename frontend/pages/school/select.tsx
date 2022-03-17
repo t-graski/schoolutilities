@@ -1,5 +1,3 @@
-import React from "react";
-import { RegisterAuth } from "../../components/molecules/auth/RegisterAuth";
 import Head from "next/head";
 import { Navbar } from "../../components/organisms/Navbar";
 import { Spacer } from "../../components/atoms/Spacer";

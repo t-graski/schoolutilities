@@ -9,9 +9,8 @@ import { Separator } from "../../../../../components/atoms/Separator";
 import { Footer } from "../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
 import { InputField } from "../../../../../components/atoms/InputField";
-import validator from "validator";
-import { LENGTHS, PASSWORD } from "../../../../../misc/parameterConstants";
 import { Button } from "../../../../../components/atoms/Button";
+import { regex } from "../../../../../misc/regex";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -53,7 +52,6 @@ export default function Features() {
   const [courseNameValid, setCourseNameValid] = React.useState(false);
   const [courseDescriptionValid, setCourseDescriptionValid] =
     React.useState(true);
-  const [isDisabled, setIsDisabled] = React.useState(true);
   const [courseDataValid, setCourseDataValid] = React.useState(true);
   const [classes, setClasses] = useState([]);
   const [persons, setPersons] = useState([]);
@@ -178,8 +176,7 @@ export default function Features() {
           }}
           iconName="SvgSchool"
           required={true}
-          validatorFunction={validator.isLength}
-          validatorParams={[LENGTHS.NAME]}
+          regex={regex.schoolName}
           setValidInput={setCourseNameValid}
           errorMessage="Your course needs a name, doesn't it?"
         ></InputField>
@@ -192,8 +189,6 @@ export default function Features() {
           }}
           iconName="SvgSchool"
           required={false}
-          validatorFunction={validator.isLength}
-          validatorParams={[LENGTHS.COURSE_DESCRIPTION]}
           setValidInput={setCourseDescriptionValid}
           errorMessage="Your course needs a description, doesn't it?"
         ></InputField>

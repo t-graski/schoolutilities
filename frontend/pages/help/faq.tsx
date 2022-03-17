@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import { Navbar } from "../../components/organisms/Navbar";
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
-import { SchoolSelectionList } from "../../components/organisms/school/SchoolSelectionList";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { keyframes, styled } from "@stitches/react";
@@ -12,21 +11,8 @@ import { Footer } from "../../components/organisms/Footer";
 import Link from "next/link";
 import { CSS } from "@dnd-kit/utilities";
 
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
 
 const slideDown = keyframes({
   from: { height: 0 },

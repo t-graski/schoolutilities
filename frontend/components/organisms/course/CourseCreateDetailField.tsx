@@ -3,9 +3,8 @@ import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/InputField";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
-import validator from "validator";
-import { LENGTHS } from "../../../misc/parameterConstants";
 import { Spacer } from "../../atoms/Spacer";
+import { regex } from "../../../misc/regex";
 
 type Props = {
   setDisabled: Function;
@@ -70,8 +69,7 @@ export const CourseCreateDetailField: React.FC<Props> = ({
           }}
           iconName="SvgSchool"
           required={true}
-          validatorFunction={validator.isLength}
-          validatorParams={[LENGTHS.NAME]}
+          regex={regex.schoolName}
           setValidInput={setCourseNameValid}
           errorMessage="Your course needs a name, doesn't it?"
         ></InputField>
@@ -84,8 +82,6 @@ export const CourseCreateDetailField: React.FC<Props> = ({
           }}
           iconName="SvgSchool"
           required={false}
-          validatorFunction={validator.isLength}
-          validatorParams={[LENGTHS.COURSE_DESCRIPTION]}
           setValidInput={setCourseDescriptionValid}
           errorMessage="Your course needs a description, doesn't it?"
         ></InputField>

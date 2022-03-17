@@ -4,8 +4,7 @@ import { getAccessToken } from "../../../misc/authHelper";
 import { useRouter } from "next/router";
 import { InputField } from "../../atoms/InputField";
 import { Button } from "../../atoms/Button";
-import validator from "validator";
-import { LENGTHS } from "../../../misc/parameterConstants";
+import { regex } from "../../../misc/regex";
 
 export type SideDashboardProps = {};
 
@@ -80,8 +79,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
             inputType={"text"}
             onChange={setJoinCode}
             iconName={""}
-            validatorFunction={validator.isStrongPassword}
-            validatorParams={[LENGTHS.JOIN_CODE_NAME]}
+            regex={regex.name}
             setValidInput={setJoinCodeValid}
             errorMessage="Please enter a valid join code"
             label="Join Code"

@@ -75,8 +75,7 @@ type Props = {
   required?: boolean;
   label?: string;
   size?: Stitches.VariantProps<typeof StyledInputField>["size"];
-  validatorFunction?: Function;
-  validatorParams?: [any?];
+  regex?: RegExp;
   setValidInput?: Function;
   errorMessage?: string;
   validationOptions?: {
@@ -456,8 +455,7 @@ export const InputField: React.FC<Props> = ({
   required = false,
   label = "",
   size = "normal",
-  validatorFunction,
-  validatorParams,
+  regex,
   setValidInput,
   errorMessage = "",
   validationOptions,
@@ -496,18 +494,13 @@ export const InputField: React.FC<Props> = ({
   }
 
   function updateValidation(event) {
-    if (validatorFunction) {
-      let inputValueValid =
-        validatorFunction &&
-        validatorFunction(event.target.value, ...validatorParams);
+    if (regex) {
+      let inputValueValid = regex && regex.test(event.target.value);
       if (setValidInput) {
         setValidInput(inputValueValid);
       }
       if (isInputValid == null && !inputValueValid) {
-        if (
-          validatorFunction &&
-          validatorFunction(event.target.value, ...validatorParams)
-        ) {
+        if (regex && regex.test(event.target.value)) {
           setIsInputValid(false);
         }
       } else {

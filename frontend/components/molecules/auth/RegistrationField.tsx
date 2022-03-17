@@ -3,9 +3,8 @@ import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/InputField";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";
-import validator from "validator";
-import { LENGTHS} from "../../../misc/parameterConstants";
 import { SvgIcon } from "../../atoms/SvgIcon";
+import { regex } from "../../../misc/regex";
 
 type Props = {};
 
@@ -158,8 +157,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             onChange={setFirstName}
             iconName="SvgName"
             required={true}
-            validatorFunction={validator.isLength}
-            validatorParams={[LENGTHS.PERSON_NAME]}
+            regex={regex.name}
             setValidInput={setFirstNameValid}
             errorMessage="Please enter a valid firstname"
           ></InputField>
@@ -170,8 +168,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             onChange={setLastName}
             iconName="SvgName"
             required={true}
-            validatorFunction={validator.isLength}
-            validatorParams={[LENGTHS.PERSON_NAME]}
+            regex={regex.name}
             setValidInput={setLastNameValid}
             errorMessage="Please enter a valid lastname"
           ></InputField>
@@ -192,8 +189,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             onChange={setEmail}
             iconName="SvgEmail"
             required={true}
-            validatorFunction={validator.isEmail}
-            validatorParams={[]}
+            regex={regex.email}
             setValidInput={setEmailValid}
             errorMessage="Please enter a valid email"
           ></InputField>

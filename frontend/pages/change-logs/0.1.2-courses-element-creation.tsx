@@ -8,7 +8,6 @@ import { Footer } from "../../components/organisms/Footer";
 import Link from "next/link";
 import { ArticleLayout } from "../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../components/article/GeneralLayout";
-import { StyledLink } from "../../components/article/Link";
 import { ArticleDetails } from "../../components/article/ArticleDetails";
 import { ArticleList } from "../../components/article/ArticleList";
 
