@@ -105,7 +105,6 @@ export default function Home() {
             },
           ]}
         ></GeneralList>
-        <FileUpload></FileUpload>
         <Footer />
       </Maincontent>
     </>
