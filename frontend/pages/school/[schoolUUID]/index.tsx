@@ -10,7 +10,7 @@ import { Separator } from "../../../components/Separator";
 import { CourseSelectionList } from "../../../components/CourseSelectionList";
 import { Footer } from "../../../components/Footer";
 
-export default function CreateCourse() {
+export default function ShowCourses() {
   return (
     <SiteLayout>
       <Head>

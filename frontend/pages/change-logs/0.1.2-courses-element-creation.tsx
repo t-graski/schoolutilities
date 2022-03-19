@@ -37,8 +37,10 @@ export default function Article() {
           <p>
             Hey,
             <br />
-            In the last couple weeks we have patched many bugs as well as added a brand new feature to our courses.
-            We are really excited to release this new version of SchoolUtilities and show you everything we have done lately.
+            In the last couple weeks we have patched many bugs as well as added
+            a brand new feature to our courses. We are really excited to release
+            this new version of SchoolUtilities and show you everything we have
+            done lately.
           </p>
           <br />
           <Headline
@@ -52,8 +54,10 @@ export default function Article() {
               <li>Headline</li>
               <li>Text</li>
             </ArticleList>
-            You can create those elements by opening the menu next to the course title and clicking the "Create Element" button.
-            Now you find yourself in the "Course-Editing-Mode", in which you can create, delete and modify elements as well as drag them around as you wish.
+            You can create those elements by opening the menu next to the course
+            title and clicking the "Create Element" button. Now you find
+            yourself in the "Course-Editing-Mode", in which you can create,
+            delete and modify elements as well as drag them around as you wish.
           </p>
           <br />
           <Headline
@@ -63,16 +67,21 @@ export default function Article() {
           ></Headline>
           <ArticleList>
             <li>Added new artwork to registration and login pages</li>
-            <li>Added new navbar naviation and hover effects</li>
+            {/* <li>Added new navbar navigation and hover effects</li> */}
             <li>Added lots of fancy new icons</li>
-            <li>Added an indicator on how strong your password is next to password fields</li>
+            <li>
+              Added an indicator on how strong your password is next to password
+              fields
+            </li>
+            <li>Added the ability to show the password</li>
             <li>Added loading animations to many pages</li>
             <li>Changed school & course selection pages to a better design</li>
             <li>Changed main-page to be responsive</li>
-            <li>Changed url structure for schools and courses</li>
-            <li>Changed many many lines of css</li>
+            <li>Changed Pop-up dialogues in school settings</li>
+            <li>Changed URL structure for schools and courses</li>
+            <li>Changed many many lines of CSS</li>
             <li>Changed some spellings of error messages</li>
-            <li>Changed user menu in navbar</li>
+            {/* <li>Changed user menu in navbar</li> */}
             <li>Improved security of some backend endpoints</li>
           </ArticleList>
           <br />
@@ -83,7 +92,6 @@ export default function Article() {
           ></Headline>
           <ArticleList>
             <li>Fixed a bug, which logged user out after 15 minutes</li>
-
           </ArticleList>
           <br />
           <p>Thanks for reading and see you soon!</p>

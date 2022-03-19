@@ -146,6 +146,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
         if (data && data.schoolUUID) {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
+          const accessToken = await getAccessToken();
           await storage.departments.forEach(async (department) => {
             await fetch(
               `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
@@ -159,7 +160,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 }),
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Bearer ${cookie.get("accessToken")}`,
+                  Authorization: `Bearer ${accessToken}`,
                 },
               }
             ).then((response) => {

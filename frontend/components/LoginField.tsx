@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
-import { logout } from "../misc/authHelper";
+import { getAccessToken, logout } from "../misc/authHelper";
 import validator from "validator";
 import { LENGTHS, PASSWORD } from "../misc/parameterConstants";
 
@@ -48,12 +48,18 @@ export const LoginField: React.FC<Props> = ({}) => {
   checkInputData();
 
   useEffect(() => {
-    if (cookie.get("refreshToken") || cookie.get("accessToken")) {
+    checkLogin();
+  }, []);
+
+  async function checkLogin() {
+    const accessToken = await getAccessToken();
+
+    if (accessToken) {
       setSignUpInfo("You are already logged in!");
       setLoggedIn(true);
       setLoginSuccess(true);
     }
-  }, []);
+  }
 
   function checkInputData() {
     if (emailValid && passwordValid) {

@@ -95,7 +95,7 @@ export function calculatePasswordStrengthIndex(password) {
   }
   score += (variationCount - 1) * 10;
 
-  if(score > 100){
+  if (score > 100) {
     score = 100;
   }
 

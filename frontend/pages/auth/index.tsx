@@ -176,7 +176,7 @@ export default function Auth() {
         <InfoBox
           headline={showLogin ? "Login" : "Register"}
           info={showLogin ? "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!" : "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!"}
-          imageSrc="/images/auth/Sign-Up-Mockup.png"
+          imageSrc="/images/Registration-Login-Artwork.svg"
           imageAlt={showLogin ? "Login Mockup" : "Registration Mockup"}
         ></InfoBox>
         <Box>

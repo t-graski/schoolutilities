@@ -67,36 +67,35 @@ const CourseDescription = styled("p", {
 });
 
 export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
+  const router = useRouter();
+  const schoolUUID = router.query.schoolUUID;
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   useEffect(() => {
     updateCoursesFromDatabase();
-  }, []);
-  const router = useRouter();
+  }, [schoolUUID]);
 
   async function updateCoursesFromDatabase() {
     let accessToken = await getAccessToken();
     if (!accessToken) {
       router.push("/auth?tab=login&redirect=/school/course");
-    } else if (!router.query.schoolUUID) {
-      router.push("/school/select?redirect=/course");
     } else {
-      setIsLoading(true);
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${
-          router.query.schoolUUID as string
-        }`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      let fetchedCourses = await response.json();
-      setIsLoading(false);
-      console.log(response);
-      setCourses(fetchedCourses);
+      if (schoolUUID) {
+        setIsLoading(true);
+        let response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let fetchedCourses = await response.json();
+        setIsLoading(false);
+        console.log(response);
+        setCourses(fetchedCourses);
+      }
     }
   }
 
@@ -110,17 +109,15 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
               key={course.courseUUID}
               onClick={() => {
                 router.push(
-                  `/school/${router.query.schoolUUID as string}/course/${
-                    course.courseUUID
-                  }`
+                  `/school/${schoolUUID}/course/${course.courseUUID}`
                 );
               }}
             >
               <CourseName>{course.courseName}</CourseName>
-              <TeacherName>{"Elisabeth Rumetshofer"}</TeacherName>
-              <CourseDescription>
-                {"lorem ipsum dolor ate male itum akar erum etor"}
-              </CourseDescription>
+              <TeacherName>
+                {course.creator.firstName + " " + course.creator.lastName}{" "}
+              </TeacherName>
+              <CourseDescription>{course.courseDescription}</CourseDescription>
             </CourseLayout>
           ))}
       </CourseList>

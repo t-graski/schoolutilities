@@ -14,6 +14,8 @@ import SvgDiscordLogo from "./svg/SvgDiscordLogo";
 import SvgEdit from "./svg/SvgEdit";
 import SvgEmail from "./svg/SvgEmail";
 import SvgExclamination from "./svg/SvgExclamination";
+import SvgEye from "./svg/SvgEye";
+import SvgEyeRestricted from "./svg/SvgEyeRestricted";
 import SvgFile from "./svg/SvgFile";
 import SvgHamburger from "./svg/SvgHamburger";
 import SvgHome from "./svg/SvgHome";
@@ -109,6 +111,10 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgStartpageArtwork alt="Startpage Artwork Icon" />;
     case "SvgExclamination":
       return <SvgExclamination alt="Exclamation Icon" />;
+    case "SvgEye":
+      return <SvgEye alt="Eye Icon" />;
+    case "SvgEyeRestricted":
+      return <SvgEyeRestricted alt="Eye Restricted Icon" />;
     default:
       return <SvgClass />;
   }

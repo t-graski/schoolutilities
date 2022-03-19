@@ -64,10 +64,10 @@ export const CourseEditContent: React.FC<Props> = ({
         },
       }
     );
-    console.log(elementsResponse);
     if (elementsResponse) {
       if (elementsResponse.status == 200) {
         const courseData = await elementsResponse.json();
+        console.log(courseData);
         const newElements = [];
         courseData.forEach((element) => {
           newElements.push(mapElementOptionsToFrontend(element));
@@ -109,11 +109,28 @@ export const CourseEditContent: React.FC<Props> = ({
               console.log(config);
               setItems((items) => {
                 return items.map((currentItem) => {
+                  const childElement = currentItem.children.find(
+                    (child) => child.id === item.id
+                  );
                   if (currentItem.id === item.id) {
                     return {
                       id: item.id,
                       config: { ...config, choosenElement },
                       children: currentItem.children,
+                    };
+                  } else if (childElement) {
+                    return {
+                      ...currentItem,
+                      children: currentItem.children.map((child) => {
+                        if (child.id === item.id) {
+                          return {
+                            ...child,
+                            config: { ...config, choosenElement },
+                          };
+                        } else {
+                          return child;
+                        }
+                      }),
                     };
                   }
                   return currentItem;
@@ -158,7 +175,7 @@ export default CourseEditContent;
 function mapElementOptions(element) {
   const { choosenElement, ...elementConfig } = element.config;
   const mappedElement = {
-    elementUUID: Number.isNaN(element.id) ? element.id : "",
+    elementUUID: typeof element.id == "string" ? element.id : "",
     options: {
       type: choosenElement.id,
       visible: true,
@@ -190,21 +207,24 @@ function addDeletedTag(children) {
 }
 
 function mapElementOptionsToFrontend(element) {
+  console.log(element);
   const { type, visible, ...elementConfig } = element.options;
+  console.log(element);
+  let choosenElement = elementsToChoose.find((e) => e.id === type);
   const mappedElement = {
     id: element.elementUUID,
     config: {
       ...elementConfig,
-      choosenElement: elementsToChoose.find(
-        (e) => e.id === element.options.type
-      ),
+      choosenElement,
     },
     children: [],
   };
   if (element.children) {
     element.children.forEach((child) => {
-      mappedElement.children.push(mapElementOptions(child));
+      console.log(child);
+      mappedElement.children.push(mapElementOptionsToFrontend(child));
     });
   }
+  console.log(mappedElement);
   return mappedElement;
 }

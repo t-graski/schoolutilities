@@ -241,7 +241,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
       <SchoolDetailLayout>
         {editPopUpIsVisible && (
           <SettingsPopUp
-            headline={schoolClassId == "" ? "Add new entry" : "Edit entry"}
+            headline={schoolClassId == "" ? "Add new class" : "Edit class"}
             inputValid={schoolClassNameValid}
             saveLabel={schoolClassId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
@@ -253,7 +253,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
           >
             <StyledInputField>
               <InputField
-                label="Classname"
+                label="Name"
                 inputType="text"
                 value={schoolClassName}
                 onChange={(event) => {
@@ -305,8 +305,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
             }}
           >
             <StyledDeleteText>
-              This action cannot be undone. This will permanently delete this
-              class.
+              This action can't be undone and will permanently remove the class{" "}
+              {schoolClassName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}

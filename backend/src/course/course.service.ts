@@ -613,7 +613,8 @@ export class CourseService {
             }
           }
         }
-        if (element.tag === 'deleted') {
+        if (element.tag === 'deleted' && element.elementUUID != '') {
+          console.log(element);
           await this.helper.deleteElement(
             await this.helper.getElementIdByUUID(element.elementUUID),
             element.options.type,
@@ -667,7 +668,8 @@ export class CourseService {
       }
     }
 
-    for (let element of elements) {
+    elements.forEach(async (element) => {
+      let parentId = 0;
       if (element.elementUUID) {
         if (await this.helper.elementExists(element.elementUUID)) {
           let currentElement = {
@@ -721,8 +723,9 @@ export class CourseService {
                 Number(currentElement.elementOptions.type),
               );
             }
+
             if (element.children) {
-              for (let child of element.children) {
+              element.children.forEach(async (child) => {
                 if (child.elementUUID) {
                   if (await this.helper.elementExists(child.elementUUID)) {
                     let currentChild = {
@@ -800,11 +803,12 @@ export class CourseService {
                   );
                   return RETURN_DATA.SUCCESS;
                 }
-              }
+              });
             }
           }
         }
       } else {
+        let parentId = 0;
         let courseElement = {
           elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
           courseId: Number(courseId),
@@ -821,14 +825,90 @@ export class CourseService {
           data: courseElement,
         });
 
+        parentId = createdElement.elementId;
+
         await this.helper.createElementOptions(
           element.options,
           createdElement.elementId,
           Number(element.options.type),
         );
+
+        if (element.children) {
+          element.children.forEach(async (child) => {
+            if (child.elementUUID) {
+              if (await this.helper.elementExists(child.elementUUID)) {
+                let currentChild = {
+                  elementUUID: child.elementUUID,
+                  elementId: await this.helper.getElementIdByUUID(
+                    child.elementUUID,
+                  ),
+                  parentId: createdElement.elementId,
+                  elementOrder: child.elementOrder,
+                  elementOptions: child.options,
+                };
+
+                let childWithOptions = elementsWithOptions.find(
+                  (e) => e.elementUUID === child.elementUUID,
+                );
+                let updateNeeded = false;
+
+                if (
+                  childWithOptions.parentId !== currentChild.parentId ||
+                  childWithOptions.elementOrder !== currentChild.elementOrder
+                ) {
+                  updateNeeded = true;
+                }
+
+                for (let option in childWithOptions.elementOptions) {
+                  if (
+                    childWithOptions.elementOptions[option] !==
+                    currentChild.elementOptions[option]
+                  ) {
+                    updateNeeded = true;
+                  }
+                }
+
+                if (updateNeeded) {
+                  await prisma.courseElements.update({
+                    where: {
+                      elementId: Number(currentChild.elementId),
+                    },
+                    data: currentChild,
+                  });
+                }
+
+                await this.helper.updateElementOptions(
+                  currentChild.elementOptions,
+                  currentChild.elementId,
+                  Number(currentChild.elementOptions.type),
+                );
+              }
+            } else {
+              let courseElement = {
+                elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+                courseId: Number(courseId),
+                typeId: Number(child.options.type),
+                parentId: parentId,
+                visible: Boolean(child.options.visible),
+                elementOrder: child.elementOrder,
+                personCreationId: Number(userId),
+              };
+
+              let createdElement = await prisma.courseElements.create({
+                data: courseElement,
+              });
+
+              await this.helper.createElementOptions(
+                child.options,
+                createdElement.elementId,
+                Number(child.options.type),
+              );
+            }
+          });
+        }
         return RETURN_DATA.SUCCESS;
       }
-    }
+    });
     return RETURN_DATA.SUCCESS;
   }
 
@@ -852,12 +932,13 @@ export class CourseService {
 
     const elementsWithOptions = [];
 
-    for (let element of currentElements) {
+    for (const element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
           element.elementId.toString(),
           element.typeId,
         );
+
         let parentUUID = '0';
         if (element.parentId != 0) {
           parentUUID = await this.helper.getElementUUIDById(element.parentId);
@@ -874,26 +955,31 @@ export class CourseService {
         });
       }
     }
+    let returnElements = elementsWithOptions.filter(
+      (element) => !element.parentUUID || element.parentUUID === '0',
+    );
 
-    for (let element of elementsWithOptions) {
-      if (element.parentUUID) {
-        let parent = elementsWithOptions.find(
-          (e) => e.elementUUID === element.parentUUID,
-        );
-        if (parent) {
-          if (!parent.children) {
-            parent.children = [];
+    console.log(returnElements);
+
+    for (const element of elementsWithOptions) {
+      if (element.parentUUID && element.parentUUID !== '0') {
+        returnElements = returnElements.map((currentElement) => {
+          if (currentElement.elementUUID === element.parentUUID) {
+            if (!currentElement.children) {
+              currentElement.children = [];
+            }
+            currentElement.children.push(element);
           }
-          parent.children.push(element);
-          elementsWithOptions.splice(elementsWithOptions.indexOf(element), 1);
-        }
+
+          return currentElement;
+        });
+        delete element.parentUUID;
       }
-      delete element.parentUUID;
     }
 
     return {
       status: RETURN_DATA.SUCCESS.status,
-      data: elementsWithOptions,
+      data: returnElements,
     };
   }
 }

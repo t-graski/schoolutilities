@@ -6,6 +6,7 @@ import Head from "next/head";
 import { CourseSelectionList } from "../../../../components/CourseSelectionList";
 import { Headline } from "../../../../components/Headline";
 import { Separator } from "../../../../components/Separator";
+import { useRouter } from "next/router";
 
 export default function CreateCourse() {
   return (
