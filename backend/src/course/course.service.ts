@@ -29,7 +29,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -590,7 +590,7 @@ export class CourseService {
   async courseElements(request): Promise<ReturnMessage> {
     //try {
     const token = await this.helper.extractJWTToken(request);
-    const { courseUUID, elements } = request.body;
+    let { courseUUID, elements } = request.body;
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
     const userId = await this.helper.getUserIdfromJWT(token);
 
@@ -743,7 +743,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
