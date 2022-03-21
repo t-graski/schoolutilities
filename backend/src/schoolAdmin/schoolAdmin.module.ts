@@ -11,4 +11,5 @@ import { AuthService } from 'src/auth/auth.service';
   providers: [SchoolAdminService],
   exports: [SchoolAdminService],
 })
+
 export class SchoolAdminModule {}
