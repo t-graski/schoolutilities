@@ -12,13 +12,19 @@ import {
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { HelperService } from 'src/helper/helper.service';
+import { Role } from 'src/roles/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { CourseService } from './course.service';
 
 @Controller('api/course')
 export class CourseController {
-  constructor(private readonly courseService: CourseService, private readonly helper: HelperService) { }
+  constructor(
+    private readonly courseService: CourseService,
+    private readonly helper: HelperService,
+  ) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Teacher)
   @Post('/addCourse')
   async addCourse(@Req() request, @Res() response) {
     const result = await this.courseService.addCourse(request);
@@ -28,6 +34,7 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.Teacher)
   @Delete('/removeCourse')
   async removeCourse(@Req() request, @Res() response) {
     const result = await this.courseService.removeCourse(
@@ -37,6 +44,7 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.Teacher)
   @Put('/updateCourse')
   async updateCourse(@Req() request, @Res() response) {
     const result = await this.courseService.updateCourse(request.body);
@@ -60,6 +68,7 @@ export class CourseController {
   }
 
   @Get('/getCourses/:schoolUUID')
+  @Roles(Role.Student)
   async getCourses(@Param() params, @Req() request, @Res() response) {
     const token = request.headers.authorization.split(' ')[1];
     const result = await this.courseService.getAllCourses(
@@ -72,6 +81,7 @@ export class CourseController {
   }
 
   @Get('/getCourseInfo/:courseUUID')
+  @Roles(Role.Student)
   async getCourseInfo(@Param() params, @Req() request, @Res() response) {
     const token = request.headers.authorization.split(' ')[1];
     const result = await this.courseService.getCourseInfo(
