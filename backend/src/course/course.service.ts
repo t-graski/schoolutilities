@@ -29,7 +29,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -730,7 +730,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -960,8 +960,6 @@ export class CourseService {
         delete element.parentUUID;
       }
     }
-
-    console.log(returnElements);
 
     return {
       status: RETURN_DATA.SUCCESS.status,
