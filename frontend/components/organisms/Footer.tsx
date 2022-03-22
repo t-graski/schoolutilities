@@ -26,7 +26,7 @@ const FooterContentLayout = styled("div", {
   width: "100%",
   maxWidth: "1200px",
   margin: "0 auto",
-  
+
   "@mobileOnly": {
     flexDirection: "column",
     gap: "50px",
@@ -96,12 +96,12 @@ const FooterSpace = styled("div", {
   gap: "40px",
 });
 
-export const Footer: React.FC<Props> = ({}) => {
+const Footer: React.FC<Props> = ({}) => {
   return (
     <>
       <FooterSpace>
         <FooterContentLayout>
-          <Link href="/">
+          <Link href="/" passHref>
             <a>
               <LogoLayout>
                 <Image
@@ -115,25 +115,28 @@ export const Footer: React.FC<Props> = ({}) => {
           </Link>
           <LinkLayout>
             <LinkHeadline>Company</LinkHeadline>
-            <Link href="/contact-us">
+            <Link href="/contact-us" passHref>
               <StyledLink>Contact Us</StyledLink>
             </Link>
-            <Link href="/about-us">
+            <Link href="/about-us" passHref>
               <StyledLink>About Us</StyledLink>
+            </Link>
+            <Link href="https://schoolutilities.statuspage.io/">
+              <StyledLink>Status Info</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Help</LinkHeadline>
-            <Link href="/help/help-center">
+            <Link href="/help/help-center" passHref>
               <StyledLink>Help Center</StyledLink>
             </Link>
-            <Link href="/help/faq">
+            <Link href="/help/faq" passHref>
               <StyledLink>FAQ</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Language</LinkHeadline>
-            <Link href="/">
+            <Link href="/" passHref>
               <StyledLink>
                 <Image
                   src="/images/English.png"
@@ -144,7 +147,7 @@ export const Footer: React.FC<Props> = ({}) => {
                 English
               </StyledLink>
             </Link>
-            <Link href="/">
+            <Link href="/" passHref>
               <StyledLink>
                 <Image
                   src="/images/German.png"
@@ -179,10 +182,10 @@ export const Footer: React.FC<Props> = ({}) => {
             © 2022, SchoolUtilities - All Rights Reserved
           </StyledRightText>
           <ImprintLayout>
-            <Link href="/data-policy">
+            <Link href="/data-policy" passHref>
               <StyledLink>Data-Policy</StyledLink>
             </Link>
-            <Link href="/contact-us">
+            <Link href="/contact-us" passHref>
               <StyledLink>Imprint</StyledLink>
             </Link>
           </ImprintLayout>
@@ -190,7 +193,7 @@ export const Footer: React.FC<Props> = ({}) => {
       </FooterSpace>
       <FooterLayout>
         <FooterContentLayout>
-          <Link href="/">
+          <Link href="/" passHref>
             <a>
               <LogoLayout>
                 <Image
@@ -204,25 +207,28 @@ export const Footer: React.FC<Props> = ({}) => {
           </Link>
           <LinkLayout>
             <LinkHeadline>Company</LinkHeadline>
-            <Link href="/contact-us">
+            <Link href="/contact-us" passHref>
               <StyledLink>Contact Us</StyledLink>
             </Link>
-            <Link href="/about-us">
+            <Link href="/about-us" passHref>
               <StyledLink>About Us</StyledLink>
+            </Link>
+            <Link href="https://schoolutilities.statuspage.io/" passHref>
+              <StyledLink>Status Info</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Help</LinkHeadline>
-            <Link href="/help/help-center">
+            <Link href="/help/help-center" passHref>
               <StyledLink>Help Center</StyledLink>
             </Link>
-            <Link href="/help/faq">
+            <Link href="/help/faq" passHref>
               <StyledLink>FAQ</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Language</LinkHeadline>
-            <Link href="/">
+            <Link href="/" passHref>
               <StyledLink>
                 <Image
                   src="/images/English.png"
@@ -233,7 +239,7 @@ export const Footer: React.FC<Props> = ({}) => {
                 English
               </StyledLink>
             </Link>
-            <Link href="/">
+            <Link href="/" passHref>
               <StyledLink>
                 <Image
                   src="/images/German.png"
@@ -268,10 +274,10 @@ export const Footer: React.FC<Props> = ({}) => {
             © 2022, SchoolUtilities - All Rights Reserved
           </StyledRightText>
           <ImprintLayout>
-            <Link href="/data-policy">
+            <Link href="/data-policy" passHref>
               <StyledLink>Data-Policy</StyledLink>
             </Link>
-            <Link href="/contact-us">
+            <Link href="/contact-us" passHref>
               <StyledLink>Imprint</StyledLink>
             </Link>
           </ImprintLayout>
@@ -280,3 +286,7 @@ export const Footer: React.FC<Props> = ({}) => {
     </>
   );
 };
+
+Footer.defaultProps = {};
+
+export default Footer;

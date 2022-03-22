@@ -6,8 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { getAccessToken, logout } from "../../../misc/authHelper";
-import validator from "validator";
-import { LENGTHS } from "../../../misc/parameterConstants";
+import { regex } from "../../../misc/regex";
 
 type Props = {};
 
@@ -128,8 +127,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             onChange={setEmail}
             iconName="SvgEmail"
             required={true}
-            validatorFunction={validator.isEmail}
-            validatorParams={[LENGTHS.EMAIL]}
+            regex={regex.email}
             setValidInput={setEmailValid}
           ></InputField>
           <InputField

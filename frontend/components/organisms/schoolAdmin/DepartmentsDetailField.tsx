@@ -6,8 +6,6 @@ import { regex } from "../../../misc/regex";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { SvgIcon } from "../../atoms/SvgIcon";
-import validator from "validator";
-import { LENGTHS } from "../../../misc/parameterConstants";
 
 type Props = {
   setDisabled: Function;
@@ -243,8 +241,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     }
                   }}
                   iconName=""
-                  validatorFunction={validator.isLength}
-                  validatorParams={[LENGTHS.NAME]}
+                  regex={regex.schoolName}
                   setValidInput={setDepartmentNameValid}
                   min="2"
                   max="30"

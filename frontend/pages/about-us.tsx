@@ -1,14 +1,9 @@
 import Head from "next/head";
-import { styled } from "../stitches.config";
-import StitchesLogo from "../components/atoms/StitchesLogo";
 import { Navbar } from "../components/organisms/Navbar";
-import { Footer } from "../components/organisms/Footer";
+import Footer from "../components/organisms/Footer";
 import { Headline } from "../components/atoms/Headline";
-import React from "react";
 import { Spacer } from "../components/atoms/Spacer";
 import { Separator } from "../components/atoms/Separator";
-import { FeatureOverview } from "../components/molecules/FeatureOverview";
-import { FeatureOverviewList } from "../components/organisms/FeatureOverviewList";
 import { AboutUsItem } from "../components/molecules/AboutUsItem";
 
 export default function AboutUs() {

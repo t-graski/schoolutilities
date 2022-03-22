@@ -50,10 +50,11 @@ const StartPageBoxDescriptionLine = styled("p", {
 });
 
 const StyledLink = styled("a", {
+  height: "fit-content",
+  lineHeight: "1.5rem",
   fontSize: "1.5rem",
   fontWeight: "700",
   margin: "0",
-  marginBottom: "20px",
   color: "$fontPrimary",
   textDecoration: "none",
   cursor: "pointer",
@@ -63,9 +64,11 @@ const ButtonLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
   gap: "20px",
+  alignItems: "center",
 
   "@mobileOnly": {
     flexDirection: "column",
+    alignItems: "flex-start",
   },
 });
 
@@ -83,7 +86,11 @@ export const StartPageBox: React.FC<Props> = ({
   return (
     <>
       <StartPageBoxLayout>
-        <StartPageBoxTitle>{title}<br/>{title2}</StartPageBoxTitle>
+        <StartPageBoxTitle>
+          {title}
+          <br />
+          {title2}
+        </StartPageBoxTitle>
         <StartPageBoxDescription>{description}</StartPageBoxDescription>
         <StartPageBoxDescriptionLine>
           {descriptionLine}

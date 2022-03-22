@@ -79,7 +79,7 @@ export const Changelog: React.FC<Props> = ({ }) => {
       <BoxLayout>
         <ChangeLogsLayout>
           {entries.map((entry) => (
-            <Link href={`/change-logs/${entry.name}`}>
+            <Link href={`/change-logs/${entry.name}`} passHref>
               <StyledLink>
                 <ChangeLogLayout>
                   <StyledDate>{entry.date}</StyledDate>

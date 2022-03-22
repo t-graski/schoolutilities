@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { DepartmentsDetailField } from "../../components/organisms/schoolAdmin/DepartmentsDetailField";
-import { Footer } from "../../components/organisms/Footer";
-import { LoginField } from "../../components/molecules/auth/LoginField";
+import Footer from "../../components/organisms/Footer";
 import { Navbar } from "../../components/organisms/Navbar";
-import { Progressbar } from "../../components/molecules/Progressbar";
 import { SchoolDetailField } from "../../components/molecules/school/SchoolDetailField";
 import { SetupProgressSite } from "../../components/organisms/SetupProgressSite";
 import { Spacer } from "../../components/atoms/Spacer";

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import { getCssText, lightTheme } from "../stitches.config";
+import Script from "next/script";
+import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
   render() {
@@ -22,6 +22,10 @@ export default class Document extends NextDocument {
                 });`,
             }}
           ></script>
+          <Script
+            src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+            strategy="lazyOnload"
+          ></Script>
           <style
             dangerouslySetInnerHTML={{
               __html: `

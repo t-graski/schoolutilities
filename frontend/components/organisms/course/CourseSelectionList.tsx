@@ -26,13 +26,15 @@ const CourseLayout = styled("div", {
   height: "100%",
   padding: "10px 35px",
   borderRadius: "35px",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$specialQuaternary",
   transition: "all 200ms ease-in-out",
   "&:hover": {
-    backgroundColor: "$backgroundSecondary",
+    backgroundColor: "$specialQuinary",
+    color: "$fontSecondary",
   },
   cursor: "pointer",
   placeSelf: "center",
+  color: "$fontPrimary",
 });
 
 const CourseName = styled("p", {
@@ -42,7 +44,6 @@ const CourseName = styled("p", {
   textAlign: "left",
   lineHeight: "2.2rem",
   margin: 0,
-  color: "$fontPrimary",
 });
 
 const TeacherName = styled("p", {
@@ -52,14 +53,12 @@ const TeacherName = styled("p", {
   width: "100%",
   textAlign: "left",
   marginBottom: "10px",
-  color: "$fontPrimary",
 });
 
 const CourseDescription = styled("p", {
   fontSize: "0.8rem",
   textAlign: "left",
   margin: 0,
-  color: "$fontPrimary",
 });
 
 export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {

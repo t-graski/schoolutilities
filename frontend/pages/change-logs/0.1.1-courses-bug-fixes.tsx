@@ -4,7 +4,7 @@ import { Navbar } from "../../components/organisms/Navbar";
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 import Link from "next/link";
 import { ArticleLayout } from "../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../components/article/GeneralLayout";

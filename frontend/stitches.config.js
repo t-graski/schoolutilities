@@ -13,6 +13,8 @@ export const styles = {
       specialPrimary: "#eda33f",
       specialSecondary: "#738adb",
       specialTertiary: "#D23737",
+      specialQuaternary: "#E0E2EB",
+      specialQuinary: "#B1B6CD",
     },
     shadows: {
       accountButton: "0px 0px 5px 0px #eda33f",

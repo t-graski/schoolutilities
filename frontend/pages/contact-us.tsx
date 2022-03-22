@@ -1,8 +1,7 @@
 import { styled } from "../stitches.config";
 import { Navbar } from "../components/organisms/Navbar";
-import { Footer } from "../components/organisms/Footer";
+import Footer from "../components/organisms/Footer";
 import { Headline } from "../components/atoms/Headline";
-import React from "react";
 import { Spacer } from "../components/atoms/Spacer";
 import { Separator } from "../components/atoms/Separator";
 import Head from "next/head";

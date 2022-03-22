@@ -4,11 +4,10 @@ import { Navbar } from "../../components/organisms/Navbar";
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 import Link from "next/link";
 import { ArticleLayout } from "../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../components/article/GeneralLayout";
-import { StyledLink } from "../../components/article/Link";
 import { ArticleDetails } from "../../components/article/ArticleDetails";
 import { ArticleList } from "../../components/article/ArticleList";
 
@@ -27,7 +26,10 @@ export default function Article() {
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline fontSize="medium" label="SchoolUtilities Version 0.1.2"></Headline>
+      <Headline
+        fontSize="medium"
+        label="SchoolUtilities Version 0.1.2"
+      ></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
       <ArticleDetails {...articleDetails}></ArticleDetails>
