@@ -1,6 +1,6 @@
 import { styled } from "../../stitches.config";
 import { Navbar } from "../../components/organisms/Navbar";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 import Head from "next/head";
 import { Headline } from "../../components/atoms/Headline";
 import { ProfileSettings } from "../../components/organisms/ProfileSettings";
@@ -14,7 +14,7 @@ const Maincontent = styled("div", {
 
 const FirstBoxLayout = styled("div", {
   display: "flex",
-    flexDirection: "column",
+  flexDirection: "column",
   width: "100vw",
   marginTop: "18vh",
 });
@@ -39,8 +39,8 @@ export default function Home() {
         </Head>
         <Navbar />
         <FirstBoxLayout>
-            <Headline label="YOUR PROFILE"></Headline>
-            <ProfileSettings />
+          <Headline label="YOUR PROFILE"></Headline>
+          <ProfileSettings />
         </FirstBoxLayout>
         <Footer />
       </Maincontent>

@@ -29,29 +29,7 @@ const GeneralListLayout = styled("div", {
   },
 });
 
-const Divider = styled("div", {
-  height: "100%",
-  width: "3px",
-  borderRadius: "10px",
-  backgroundColor: "$fontPrimary",
-  margin: "0 auto",
-  variants: {
-    visible: {
-      true: {
-        opacity: 1,
-      },
-      false: {
-        opacity: 0,
-      },
-    },
-  },
-
-  "@mobileOnly": {
-    display: "none",
-  },
-});
-
-export const GeneralList: React.FC<Props> = ({ items }) => {
+const GeneralList: React.FC<Props> = ({ items }) => {
   return (
     <>
       <GeneralListLayout>
@@ -68,7 +46,7 @@ export const GeneralList: React.FC<Props> = ({ items }) => {
             <Separator
               key={index + items.length}
               visible={index !== items.length - 1}
-              width={"small"}
+              width={"big"}
               alignment={"left"}
               orientation={"vertical"}
             />
@@ -78,3 +56,9 @@ export const GeneralList: React.FC<Props> = ({ items }) => {
     </>
   );
 };
+
+GeneralList.defaultProps = {
+  items: [],
+};
+
+export default GeneralList;

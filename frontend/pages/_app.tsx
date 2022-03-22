@@ -4,6 +4,7 @@ import { globalCss, lightTheme } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
 import { ThemeProvider } from "next-themes";
+import AOS from "aos";
 
 const globalStyles = globalCss({
   "*": {
@@ -32,9 +33,12 @@ const globalStyles = globalCss({
   },
 });
 
+import "aos/dist/aos.css";
+
 function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     hotjar.initialize(2700632, 6);
+    AOS.init({});
   }, []);
   const router = useRouter();
 
@@ -48,7 +52,7 @@ function App({ Component, pageProps }: AppProps) {
       defaultTheme="system"
     >
       {/* <NextUIProvider> */}
-        <Component {...pageProps} router={router} />
+      <Component {...pageProps} router={router} />
       {/* </NextUIProvider> */}
     </ThemeProvider>
   );

@@ -7,12 +7,23 @@ import { Separator } from "../../components/atoms/Separator";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { keyframes, styled } from "@stitches/react";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 import Link from "next/link";
 import { CSS } from "@dnd-kit/utilities";
 
-import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from "@dnd-kit/sortable";
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -269,7 +280,10 @@ export default function RegisterApproved() {
 
         <DndContext>
           <SortableContext items={["A", "B", "C"]}>
-            <SortableContext items={["1", "2", "3"]} children={""}></SortableContext>
+            <SortableContext
+              items={["1", "2", "3"]}
+              children={""}
+            ></SortableContext>
           </SortableContext>
         </DndContext>
       </AccordionLayout>

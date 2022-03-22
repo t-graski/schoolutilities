@@ -3,7 +3,7 @@ import { Navbar } from "../../components/organisms/Navbar";
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 import { Changelog } from "../../components/organisms/Changelog";
 
 export default function RegisterApproved() {

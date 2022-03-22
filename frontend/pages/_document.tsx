@@ -1,4 +1,5 @@
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
@@ -21,7 +22,10 @@ export default class Document extends NextDocument {
                 });`,
             }}
           ></script>
-          <script src="https://r1l6px23b4sc.statuspage.io/embed/script.js"></script>
+          <Script
+            src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+            strategy="lazyOnload"
+          ></Script>
           <style
             dangerouslySetInnerHTML={{
               __html: `

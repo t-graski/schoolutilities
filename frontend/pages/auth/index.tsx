@@ -1,7 +1,7 @@
 import { styled } from "../../stitches.config";
 import React, { useEffect, useState } from "react";
 import { Navbar } from "../../components/organisms/Navbar";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 import { Spacer } from "../../components/atoms/Spacer";
 import { InfoBox } from "../../components/molecules/InfoBox";
 import { LoginField } from "../../components/molecules/auth/LoginField";
@@ -92,11 +92,11 @@ export default function Auth() {
   const router = useRouter();
 
   useEffect(() => {
-  if (router.query.tab && router.query.tab === "register" && showLogin) {
-    setShowLogin(false);
-  } else if (router.query.tab && router.query.tab === "login" && !showLogin){
-    setShowLogin(true);
-  }
+    if (router.query.tab && router.query.tab === "register" && showLogin) {
+      setShowLogin(false);
+    } else if (router.query.tab && router.query.tab === "login" && !showLogin) {
+      setShowLogin(true);
+    }
   }, [router.query.tab, showLogin]);
 
   return (
@@ -109,7 +109,11 @@ export default function Auth() {
       <LoginAuthLayout>
         <InfoBox
           headline={showLogin ? "Login" : "Register"}
-          info={showLogin ? "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!" : "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!"}
+          info={
+            showLogin
+              ? "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!"
+              : "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!"
+          }
           imageSrc="/images/Registration-Login-Artwork.svg"
           imageAlt={showLogin ? "Login Mockup" : "Registration Mockup"}
         ></InfoBox>

@@ -4,7 +4,7 @@ import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
 import { SchoolSelectionList } from "../../components/organisms/school/SchoolSelectionList";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 
 export default function RegisterApproved() {
   return (

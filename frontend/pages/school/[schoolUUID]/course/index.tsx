@@ -1,4 +1,4 @@
-import { Footer } from "../../../../components/organisms/Footer";
+import Footer from "../../../../components/organisms/Footer";
 import { Navbar } from "../../../../components/organisms/Navbar";
 import { Spacer } from "../../../../components/atoms/Spacer";
 import Head from "next/head";

@@ -10,6 +10,7 @@
   "dependencies": {
     "@dnd-kit/core": "^5.0.1",
     "@dnd-kit/sortable": "^6.0.0",
+    "@loadable/component": "^5.15.2",
     "@nextui-org/react": "^1.0.2-beta.3",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-accordion": "^0.1.1",
@@ -26,6 +27,7 @@
     "@stitches/react": "^1.2.1",
     "@svgr/cli": "^6.0.0",
     "@types/react": "^17.0.26",
+    "aos": "^2.3.4",
     "axios": "^0.21.4",
     "fetch-blob": "^3.1.2",
     "js-cookie": "^3.0.1",

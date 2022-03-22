@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DepartmentsDetailField } from "../../components/organisms/schoolAdmin/DepartmentsDetailField";
-import { Footer } from "../../components/organisms/Footer";
+import Footer from "../../components/organisms/Footer";
 import { Navbar } from "../../components/organisms/Navbar";
 import { SchoolDetailField } from "../../components/molecules/school/SchoolDetailField";
 import { SetupProgressSite } from "../../components/organisms/SetupProgressSite";

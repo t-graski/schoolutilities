@@ -68,6 +68,7 @@ const ButtonLayout = styled("div", {
 
   "@mobileOnly": {
     flexDirection: "column",
+    alignItems: "flex-start",
   },
 });
 

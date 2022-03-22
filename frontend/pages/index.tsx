@@ -1,10 +1,14 @@
 import { styled } from "../stitches.config";
 import { Navbar } from "../components/organisms/Navbar";
-import { Footer } from "../components/organisms/Footer";
 import Head from "next/head";
 import { StartPageBox } from "../components/molecules/StartPageBox";
-import { GeneralList } from "../components/organisms/GeneralList";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const Footer = dynamic(() => import("../components/organisms/Footer"));
+const GeneralList = dynamic(
+  () => import("../components/organisms/GeneralList")
+);
 
 const Maincontent = styled("div", {
   position: "absolute",
@@ -70,34 +74,36 @@ export default function Home() {
             linkUrl="/learn-more"
           ></StartPageBox>
         </FirstBoxLayout>
-        <GeneralList
-          items={[
-            {
-              title: "Discord-Bot",
-              description:
-                "Take a look at our Discord-Bot, which reminds you on upcoming Events and simplifies your life.",
-              href: "/bot",
-              buttonText: "LET'S GET STARTED",
-              iconName: "SvgDiscordLogo",
-            },
-            {
-              title: "Create School",
-              description:
-                "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
-              href: "/school/create",
-              buttonText: "GET ME THERE",
-              iconName: "SvgSchool",
-            },
-            {
-              title: "Premium",
-              description:
-                "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
-              href: "/premium",
-              buttonText: "LEARN MORE",
-              iconName: "SvgPremium",
-            },
-          ]}
-        ></GeneralList>
+        <div data-aos="fade-up">
+          <GeneralList
+            items={[
+              {
+                title: "Discord-Bot",
+                description:
+                  "Take a look at our Discord-Bot, which reminds you on upcoming Events and simplifies your life.",
+                href: "/bot",
+                buttonText: "LET'S GET STARTED",
+                iconName: "SvgDiscordLogo",
+              },
+              {
+                title: "Create School",
+                description:
+                  "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
+                href: "/school/create",
+                buttonText: "GET ME THERE",
+                iconName: "SvgSchool",
+              },
+              {
+                title: "Premium",
+                description:
+                  "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
+                href: "/premium",
+                buttonText: "LEARN MORE",
+                iconName: "SvgPremium",
+              },
+            ]}
+          ></GeneralList>
+        </div>
         <Footer />
       </Maincontent>
     </>
