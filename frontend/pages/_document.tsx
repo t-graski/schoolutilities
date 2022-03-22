@@ -7,11 +7,11 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
-          <script
+          <Script
             async
             src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-          ></script>
-          <script
+          ></Script>
+          <Script
             dangerouslySetInnerHTML={{
               __html: `
                 window.dataLayer = window.dataLayer || [];
@@ -21,7 +21,7 @@ export default class Document extends NextDocument {
                   page_path: window.location.pathname,
                 });`,
             }}
-          ></script>
+          ></Script>
           <Script
             src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
             strategy="lazyOnload"
