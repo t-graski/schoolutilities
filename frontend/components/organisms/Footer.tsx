@@ -121,6 +121,9 @@ export const Footer: React.FC<Props> = ({}) => {
             <Link href="/about-us">
               <StyledLink>About Us</StyledLink>
             </Link>
+            <Link href="https://schoolutilities.statuspage.io/">
+              <StyledLink>Status Info</StyledLink>
+            </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Help</LinkHeadline>
@@ -209,6 +212,9 @@ export const Footer: React.FC<Props> = ({}) => {
             </Link>
             <Link href="/about-us">
               <StyledLink>About Us</StyledLink>
+            </Link>
+            <Link href="https://schoolutilities.statuspage.io/" passHref>
+              <StyledLink>Status Info</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>

@@ -21,6 +21,7 @@ export default class Document extends NextDocument {
                 });`,
             }}
           ></script>
+          <script src="https://r1l6px23b4sc.statuspage.io/embed/script.js"></script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
