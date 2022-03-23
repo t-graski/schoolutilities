@@ -9,12 +9,14 @@ import { AuthService } from 'src/auth/auth.service';
 import { Role, RoleOrder } from './role.enum';
 import { ROLES_KEY } from './roles.decorator';
 import { ID_STARTERS } from '../misc/parameterConstants';
+import { HelperService } from 'src/helper/helper.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private readonly authService: AuthService,
+    private readonly helper: HelperService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -46,7 +48,9 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    const schoolId = request.body.schoolId;
+    const schoolUUID = request.body.schoolUUID;
+    const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
+
     const userRoleName = await this.authService.getUserRoleName(
       personUUID,
       schoolId,

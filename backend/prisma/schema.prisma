@@ -2,11 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "./ERD.pdf"
-}
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -17,6 +12,7 @@ model coursePersons {
   personId Int     @map("person_id")
   courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
   persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
+
 
 
   @@unique([courseId, personId], name: "coursePersonId")
