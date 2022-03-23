@@ -11,7 +11,7 @@ const FooterLayout = styled("footer", {
   alignItems: "center",
   width: "100vw",
   position: "absolute",
-  bottom: "0",
+  top: "100%",
   left: "0",
   gap: "40px",
   padding: "4vh 5vw",
@@ -99,7 +99,7 @@ const FooterSpace = styled("div", {
 const Footer: React.FC<Props> = ({}) => {
   return (
     <>
-      <FooterSpace>
+      {/* <FooterSpace>
         <FooterContentLayout>
           <Link href="/" passHref>
             <a>
@@ -190,7 +190,7 @@ const Footer: React.FC<Props> = ({}) => {
             </Link>
           </ImprintLayout>
         </FooterContentLayout>
-      </FooterSpace>
+      </FooterSpace> */}
       <FooterLayout>
         <FooterContentLayout>
           <Link href="/" passHref>

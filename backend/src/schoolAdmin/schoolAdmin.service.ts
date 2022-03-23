@@ -29,12 +29,10 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class SchoolAdminService {
-  connection: any;
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly authService: AuthService,
-  ) {
-  }
+  ) {}
 
   async addSchoolConfig(
     body: AddSchool,

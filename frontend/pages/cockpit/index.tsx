@@ -35,7 +35,7 @@ export default function Home() {
     <>
       <MainContent>
         <Head>
-          <title>Admin - SchoolUtilities</title>
+          <title>Cockpit - SchoolUtilities</title>
           <meta property="og:type" content="SchoolUtilities"></meta>
           <meta property="og:url" content="https://schoolutilities.net/"></meta>
           <meta property="og:title" content="SchoolUtilities"></meta>
@@ -62,7 +62,7 @@ export default function Home() {
           items={[
             {
               title: "Spread out new information",
-              href: "/admin/news",
+              href: "/cockpit/articles",
               description:
                 "Increase the feeling of genius updates and new features.",
               iconName: "SvgAlert",
@@ -71,7 +71,7 @@ export default function Home() {
               title: "Help penurious guys",
               href: "/admin/news",
               description:
-                "Grab your aid bag, run to someone and help them with gorgeous articles.",
+                "Grab your first aid bag, run to someone and help them with gorgeous articles.",
               iconName: "SvgFirstAidKit",
             },
             {

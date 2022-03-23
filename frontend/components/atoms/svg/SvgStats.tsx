@@ -2,7 +2,7 @@ import * as React from "react";
 
 const SvgStats = (props) => (
   <svg
-    viewBox="0 -52 512 512"
+    viewBox="0 -52 512 511"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}

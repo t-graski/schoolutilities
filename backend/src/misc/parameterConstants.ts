@@ -137,6 +137,7 @@ export const ID_STARTERS = {
   TIMEZONES: 7,
   EMAIL: 8,
   COURSE_ELEMENT: 9,
+  ARTICLE: 'A',
 };
 
 export const ERROR_CODES = {
@@ -156,4 +157,4 @@ export const ERROR_CODES = {
   ELEMENT_NULL: 'ERROR_504',
   NO_JWT_TOKEN_PROVIDED: 'ERROR_600',
   CLASS_UUID_NULL_OR_INVALID: 'ERROR_700',
-}
+};

@@ -13,6 +13,9 @@ import { UserModule } from './user/user.module';
 import { AssetsModule } from './assets/assets.module';
 import { StatusModule } from './status/status.module';
 import { HelperModule } from './helper/helper.module';
+import { ArticleService } from './article/article.service';
+import { ArticleController } from './article/article.controller';
+import { ArticleModule } from './article/article.module';
 
 @Module({
   imports: [
@@ -28,8 +31,9 @@ import { HelperModule } from './helper/helper.module';
     AssetsModule,
     StatusModule,
     HelperModule,
+    ArticleModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ArticleController],
+  providers: [AppService, ArticleService],
 })
-export class AppModule { }
+export class AppModule {}
