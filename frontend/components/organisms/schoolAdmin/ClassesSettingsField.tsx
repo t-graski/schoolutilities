@@ -9,6 +9,7 @@ import { getAccessToken } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {};
 
@@ -61,7 +62,7 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const ClassesSettingsField: React.FC<Props> = ({}) => {
+export const ClassesSettingsField: React.FC<Props> = ({ }) => {
   const [departments, setDepartments] = React.useState([]);
   const [classes, setClasses] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
@@ -312,7 +313,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {classes.map((entry, index) => (
+          {classes.length > 0 ? classes.map((entry, index) => (
             <SettingsEntryLayout
               key={entry.classUUID}
               data-key={entry.classUUID}
@@ -339,9 +340,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                 <>
                   <SettingsEntryName>{entry.className}</SettingsEntryName>
                   <Link
-                    href={`/school/${
-                      router.query.schoolUUID as string
-                    }/edit?departmentUUID=${entry.departmentUUID}`}
+                    href={`/school/${router.query.schoolUUID as string
+                      }/edit?departmentUUID=${entry.departmentUUID}`}
                   >
                     <SettingsEntryLink>
                       <DepartmentName>{entry.departmentName}</DepartmentName>
@@ -350,7 +350,13 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                 </>
               </SettingsEntry>
             </SettingsEntryLayout>
-          ))}
+          )) : (
+            <>
+              <Skeleton width="100%" height={100}></Skeleton>
+              <Skeleton width="100%" height={100}></Skeleton>
+              <Skeleton width="100%" height={100}></Skeleton>
+            </>
+          )}
         </SettingsEntriesLayout>
       </SchoolDetailLayout>
     </>

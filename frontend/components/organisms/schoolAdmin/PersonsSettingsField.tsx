@@ -5,6 +5,7 @@ import { getAccessToken } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {};
 
@@ -42,7 +43,7 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const PersonsSettingsField: React.FC<Props> = ({}) => {
+export const PersonsSettingsField: React.FC<Props> = ({ }) => {
   const [persons, setPersons] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
@@ -54,7 +55,9 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     if (isFirstTime) {
-      updateSettingsEntriesFromDatabase();
+      setTimeout(() => {
+        updateSettingsEntriesFromDatabase();
+      }, 5000)
       setIsFirstTime(false);
     }
   });
@@ -139,7 +142,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
         <SettingsHeader headline="Persons"></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {persons.map((entry, index) => (
+          {persons.length > 0 ? persons.map((entry, index) => (
             <SettingsEntryLayout
               key={entry.personUUID}
               data-key={entry.personUUID}
@@ -170,7 +173,14 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
                 </>
               </SettingsEntry>
             </SettingsEntryLayout>
-          ))}
+          )) : (
+            <>
+              <Skeleton width="100%" height={80}></Skeleton>
+              <Skeleton width="100%" height={60}></Skeleton>
+              <Skeleton width="100%" height={80}></Skeleton>
+              <Skeleton width="100%" height={80}></Skeleton>
+            </>
+          )}
         </SettingsEntriesLayout>
       </SchoolDetailLayout>
     </>

@@ -7,6 +7,7 @@ import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import { regex } from "../../../misc/regex";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {};
 
@@ -66,7 +67,7 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
+export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
   const [joinCodes, setJoinCodes] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
@@ -281,7 +282,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
         ></SettingsHeader>
         {error && <StyledError>{error}</StyledError>}
         <SettingsEntriesLayout>
-          {joinCodes.map((entry, index) => (
+          {joinCodes.length > 0 ? joinCodes.map((entry, index) => (
             <SettingsEntryLayout key={entry.joinCode} data-key={entry.joinCode}>
               <SettingsEntry
                 editFunction={() => {
@@ -303,7 +304,14 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
                 <DepartmentName>{entry.joinCodeName}</DepartmentName>
               </SettingsEntry>
             </SettingsEntryLayout>
-          ))}
+          )) : (
+            <>
+              <Skeleton width="100%" height={100}></Skeleton>
+              <Skeleton width="100%" height={100}></Skeleton>
+              <Skeleton width="100%" height={80}></Skeleton>
+              <Skeleton width="100%" height={100}></Skeleton>
+            </>
+          )}
         </SettingsEntriesLayout>
       </SchoolDetailLayout>
     </>

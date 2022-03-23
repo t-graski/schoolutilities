@@ -15,6 +15,8 @@ export const styles = {
       specialTertiary: "#D23737",
       specialQuaternary: "#E0E2EB",
       specialQuinary: "#B1B6CD",
+      skeletonPrimary: "#f4f4f4",
+      skeletonSecondary: "#38393a",
     },
     shadows: {
       accountButton: "0px 0px 5px 0px #eda33f",
@@ -100,5 +102,7 @@ export const lightTheme = createTheme({
     specialPrimary: "#eda33f",
     specialSecondary: "#738adb",
     specialTertiary: "#D23737",
+    skeletonPrimary: "#f4f4f4",
+    skeletonSecondary: "#f4f4f4",
   },
 });
