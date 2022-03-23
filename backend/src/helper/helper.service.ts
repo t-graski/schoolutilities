@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -541,4 +541,51 @@ export class HelperService {
       throw new Error(ERROR_CODES.CLASS_UUID_NULL_OR_INVALID);
     }
   }
+
+  /**
+   * 
+   * @param articleUUID Article UUID
+   * @returns Article Id
+   */
+  async getArticleIdByUUID(articleUUID: string): Promise<any> {
+    if (articleUUID && validator.isUUID(articleUUID.slice(1))) {
+      try {
+        const article = await prisma.articles.findFirst({
+          where: {
+            articleUUID,
+          },
+        });
+        return article.articleId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.ARTICLE_UUID_NULL_OR_INVALID);
+    }
+  }
+
+  /**
+   * 
+   * @param type Type of the element
+   * @returns Type Id
+   */
+  async translateArticleType(type: number): Promise<any> {
+    switch (type) {
+      case 1:
+        return 'Change Log';
+    }
+  }
+
+  /**
+   * @brief Returns 1 if reading time is less than 1 minute
+   * @param content Content of the article
+   * @returns Reading time in minutes 
+   */
+  async computeReadingTime(content: string): Promise<any> {
+    const words = content.split(' ').length;
+    const minutes = Math.round(words / 200);
+    return minutes == 0 ? 1 : minutes;
+  }
 }
+
+

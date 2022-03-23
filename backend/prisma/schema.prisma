@@ -284,11 +284,11 @@ model textSettings {
 
 model articles {
   articleId        Int      @id @default(autoincrement()) @map("article_id")
-  articleUUID      String   @map("article_uuid") @db.VarChar(255)
+  articleUUID      String   @unique(map: "article_uuid") @map("article_uuid") @db.VarChar(255)
   headline         String   @map("headline") @db.Text
   catchPhrase      String   @map("catch_phrase") @db.Text
   content          String   @map("content") @db.Text
-  typeId           Int      @map("type_id")
+  type             Int      @map("type")
   isPublic         Boolean  @map("is_public")
   publishDate      DateTime @map("publish_date") @db.Timestamp(0)
   creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)

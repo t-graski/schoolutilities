@@ -10,10 +10,10 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly helper: HelperService) {}
+  constructor(private readonly helper: HelperService) { }
 
   async createArticle(request): Promise<ReturnMessage> {
-    const { headline, catchPhrase = '', content, type, isPublic } = request;
+    const { headline, catchPhrase = '', content, type, isPublic } = request.body;
 
     const userUUID = await this.helper.getUserUUIDfromJWT(
       await this.helper.extractJWTToken(request),
@@ -21,7 +21,7 @@ export class ArticleService {
     const userId = await this.helper.getUserIdByUUID(userUUID);
 
     try {
-      await prisma.articles.create({
+      const article = await prisma.articles.create({
         data: {
           articleUUID: `${ID_STARTERS.ARTICLE}${uuidv4()}`,
           headline,
@@ -29,23 +29,27 @@ export class ArticleService {
           content,
           type,
           isPublic,
-          publishDate: isPublic ? Date.now() : null,
-          creator: userId,
+          publishDate: isPublic ? new Date() : new Date(946684800),
+          personCreationId: userId,
         },
       });
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: article,
+      };
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
     }
-    return RETURN_DATA.SUCCESS;
   }
 
   async deleteArticle(request): Promise<ReturnMessage> {
-    const { articleUUID } = request;
+    const { articleUUID } = request.body;
+    const articleId = await this.helper.getArticleIdByUUID(articleUUID);
 
     try {
       await prisma.articles.delete({
         where: {
-          articleUUID,
+          articleId,
         },
       });
     } catch (error) {
@@ -56,7 +60,7 @@ export class ArticleService {
 
   async editArticle(request): Promise<ReturnMessage> {
     const { articleUUID, headline, catchPhrase, content, type, isPublic } =
-      request;
+      request.body;
 
     try {
       await prisma.articles.update({
@@ -69,10 +73,11 @@ export class ArticleService {
           content,
           type,
           isPublic,
-          publishDate: isPublic ? Date.now() : null,
+          publishDate: isPublic ? new Date() : new Date(946684800),
         },
       });
     } catch (error) {
+
       return RETURN_DATA.DATABASE_ERROR;
     }
     return RETURN_DATA.SUCCESS;
@@ -88,7 +93,7 @@ export class ArticleService {
         },
         data: {
           isPublic: true,
-          publishDate: Date.now(),
+          publishDate: new Date(),
         },
       });
     } catch (error) {
@@ -97,18 +102,39 @@ export class ArticleService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getArticle(request): Promise<ReturnMessage> {
-    const { articleUUID } = request;
+  async getArticle(request, articleUUID): Promise<ReturnMessage> {
 
     try {
-      const article = await prisma.articles.findOne({
+      const article = await prisma.articles.findFirst({
         where: {
           articleUUID,
         },
       });
+
+      const creator = await this.helper.getUserById(article.personCreationId);
+
+      const articleItem = {
+        articleUUID: article.articleUUID,
+        headline: article.headline,
+        catchPhrase: article.catchPhrase,
+        content: article.content,
+        type: {
+          articleTypeId: article.type,
+          articleTypeName: await this.helper.translateArticleType(article.type),
+        },
+        isPublic: article.isPublic,
+        publishDate: article.publishDate,
+        creationDate: article.creationDate,
+        creator: {
+          firstName: creator.firstName,
+          lastName: creator.lastName,
+        },
+        readingTime: await this.helper.computeReadingTime(article.content),
+      }
+
       return {
         status: RETURN_DATA.SUCCESS.status,
-        data: article,
+        data: articleItem,
       };
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
@@ -116,24 +142,29 @@ export class ArticleService {
   }
 
   async getAllArticles(request): Promise<ReturnMessage> {
-    await prisma.articles.findMany({
+    const articles = await prisma.articles.findMany({
       where: {
         creationDate: {
-          gt: Date.now() - 1000 * 60 * 60 * 24 * 30,
-        },
-        orderBy: {
-          creationDate: 'desc',
+          gt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
         },
       },
     });
-    return RETURN_DATA.SUCCESS;
+
+    articles.sort((a, b) => {
+      return b.creationDate.getTime() - a.creationDate.getTime();
+    });
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: articles,
+    };
   }
 
   async getArticleAvailability(request): Promise<ReturnMessage> {
     const { isPublic } = request;
 
     try {
-      const article = await prisma.articles.findOne({
+      const article = await prisma.articles.findFirst({
         where: {
           isPublic,
         },
