@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
-  AddCourse,
   UpdateCourse,
   RemoveCourse,
   AddUser,
@@ -14,7 +13,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
-import e from 'express';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mysql = require('mysql2');
 // eslint-disable-next-line @typescript-eslint/no-var-requires

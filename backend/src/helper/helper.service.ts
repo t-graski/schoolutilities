@@ -273,6 +273,14 @@ export class HelperService {
                         text: textOptions.text,
                     };
                     break;
+                //FILE SUBMISSION
+                case 3:
+                    let fileOptions = await prisma.fileSubmissionSettings.findFirst({
+                        where: {
+                            courseElementId: Number(elementId),
+                        },
+                    });
+
             }
 
             return options;
@@ -351,45 +359,12 @@ export class HelperService {
                         courseId: element.courseId,
                     }
                 });
-                this.createOptions(element.options, elementId.elementId, element.typeId);
+                this.createElementOptions(element.options, elementId.elementId, element.typeId);
             } catch (err) {
                 throw new Error(ERROR_CODES.DATABASE_ERROR);
             }
         } else {
             throw new Error(ERROR_CODES.ELEMENT_NULL);
-        }
-    }
-
-    async createOptions(options, elementId: number, typeId: number): Promise<any> {
-        if (options) {
-            try {
-                switch (typeId) {
-                    //HEADLINE
-                    case 1:
-                        await prisma.headlineSettings.create({
-                            data: {
-                                label: options.label,
-                                courseElementId: elementId,
-                            },
-                        });
-                        break;
-                    //TEXT
-                    case 2:
-                        await prisma.textSettings.create({
-                            data: {
-                                text: options.text,
-                                courseElementId: elementId,
-                            },
-                        });
-                        break;
-
-                }
-            } catch (err) {
-                throw new Error(ERROR_CODES.DATABASE_ERROR);
-            }
-
-        } else {
-            throw new Error(ERROR_CODES.ELEMENT_OPTIONS_NULL);
         }
     }
 
@@ -418,7 +393,23 @@ export class HelperService {
                                 text: options.text,
                             },
                         });
+                        break;
+                    // FILE SUBMISSION
+                    case 3:
+                        await prisma.fileSubmissionSettings.update({
+                            where: {
+                                courseElementId: elementId,
+                            },
+                            data: {
+                                description: options.description,
+                                dueTime: options.dueTime,
+                                submitLater: options.submitLater,
+                                submitLaterTime: options.submitLaterTime,
+                                maxFileSize: options.maxFileSize,
+                                allowedFileTypes: options.allowedFileTypes,
 
+                            }
+                        });
                         break;
                 }
             } catch (err) {
@@ -457,7 +448,19 @@ export class HelperService {
                             },
                         });
                         break;
-
+                    // FILE SUBMISSION
+                    case 3:
+                        await prisma.fileSubmissionSettings.create({
+                            data: {
+                                courseElementId: elementId,
+                                description: options.description,
+                                dueTime: options.dueTime,
+                                submitLater: options.submitLater,
+                                submitLaterTime: options.submitLaterTime,
+                                maxFileSize: options.maxFileSize,
+                                allowedFileTypes: options.allowedFileTypes,
+                            }
+                        });
                 }
             } catch (err) {
                 throw new Error(ERROR_CODES.DATABASE_ERROR);
@@ -504,6 +507,13 @@ export class HelperService {
                             },
                         });
                         break;
+                    // FILE SUBMISSION
+                    case 3:
+                        await prisma.fileSubmissionSettings.delete({
+                            where: {
+                                courseElementId: elementId,
+                            },
+                        });
                 }
             } catch (err) {
                 throw new Error(ERROR_CODES.DATABASE_ERROR);
