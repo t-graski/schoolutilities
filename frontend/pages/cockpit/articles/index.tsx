@@ -5,19 +5,13 @@ import Footer from "../../../components/organisms/Footer";
 import { Spacer } from "../../../components/atoms/Spacer";
 import { EditableList } from "../../../components/organisms/EditableList";
 import { CockpitSideDashboardBar } from "../../../components/organisms/cockpit/CockpitSideDashboardBar";
+import { MainContent } from "../../index";
 
-const MainContent = styled("div", {
-  position: "absolute",
-  top: "0",
-  left: "0",
-  width: "100vw",
-});
-
-const ContentLayout = styled("div", {
+export const ContentLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
-  gap: "20px",
-})
+  gap: "40px",
+});
 
 export default function Home() {
   return (
@@ -37,7 +31,6 @@ export default function Home() {
             content="https://i.imgur.com/KJ63K3r.png"
           ></meta>
         </Head>
-        <Spacer size="small"></Spacer>
         <Navbar />
         <ContentLayout>
           <CockpitSideDashboardBar active="Articles"></CockpitSideDashboardBar>

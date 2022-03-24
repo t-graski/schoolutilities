@@ -1,4 +1,13 @@
-import { Controller, Get, Delete, Put, Req, Res, UseGuards, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Delete,
+  Put,
+  Req,
+  Res,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
@@ -8,11 +17,11 @@ import { ArticleService } from './article.service';
 @UseGuards(RolesGuard)
 @Controller('api/articles')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) { }
+  constructor(private readonly articleService: ArticleService) {}
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
-  @Get('/create')
+  @Post('/create')
   async createArticle(@Req() request, @Res() response) {
     const result = await this.articleService.createArticle(request);
     return response
@@ -44,7 +53,10 @@ export class ArticleController {
   @UseGuards(JwtAuthGuard)
   @Get('/article/:articleUUID')
   async getArticle(@Param() params, @Req() request, @Res() response) {
-    const result = await this.articleService.getArticle(request, params.articleUUID);
+    const result = await this.articleService.getArticle(
+      request,
+      params.articleUUID,
+    );
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

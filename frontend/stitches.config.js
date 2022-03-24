@@ -94,7 +94,7 @@ export const lightTheme = createTheme({
   colors: {
     backgroundPrimary: "#F0F1F5",
     backgroundSecondary: "#D9D9D9",
-    backgroundTertiary: "#4b4c4e",
+    backgroundTertiary: "#eaecf0",
     backgroundQuaternary: "#E0E2EB",
     fontPrimary: "#242424",
     fontSecondary: "#ffffff",

@@ -10,11 +10,12 @@ const GeneralList = dynamic(
   () => import("../components/organisms/GeneralList")
 );
 
-const Maincontent = styled("div", {
+export const MainContent = styled("div", {
   position: "absolute",
   top: "0",
   left: "0",
   width: "100vw",
+  paddingTop: "98px",
 });
 
 const FirstBoxLayout = styled("div", {
@@ -36,7 +37,7 @@ const ArtworkLayout = styled("div", {
 export default function Home() {
   return (
     <>
-      <Maincontent>
+      <MainContent>
         <Head>
           <title>SchoolUtilities</title>
           <meta property="og:type" content="SchoolUtilities"></meta>
@@ -105,7 +106,7 @@ export default function Home() {
           ></GeneralList>
         </div>
         <Footer />
-      </Maincontent>
+      </MainContent>
     </>
   );
 }

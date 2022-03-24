@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { ThemeProvider } from "next-themes";
 import AOS from "aos";
 import '../misc/skeleton.css';
+import "../misc/sunEditor.css";
 
 const globalStyles = globalCss({
   "*": {

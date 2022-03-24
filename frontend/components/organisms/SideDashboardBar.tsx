@@ -21,7 +21,6 @@ const SideDashboardBarLayout = styled("div", {
   maxWidth: "400px",
   padding: "20px",
   overflowY: "scroll",
-  marginTop: "12vh",
   height: "auto",
   position: "sticky",
   top: "0",

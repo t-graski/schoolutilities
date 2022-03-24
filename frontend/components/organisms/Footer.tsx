@@ -213,17 +213,20 @@ const Footer: React.FC<Props> = ({}) => {
             <Link href="/about-us" passHref>
               <StyledLink>About Us</StyledLink>
             </Link>
-            <Link href="https://schoolutilities.statuspage.io/" passHref>
-              <StyledLink>Status Info</StyledLink>
+            <Link href="/news" passHref>
+              <StyledLink>News</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
-            <LinkHeadline>Help</LinkHeadline>
+            <LinkHeadline>Support</LinkHeadline>
             <Link href="/help/help-center" passHref>
               <StyledLink>Help Center</StyledLink>
             </Link>
             <Link href="/help/faq" passHref>
               <StyledLink>FAQ</StyledLink>
+            </Link>
+            <Link href="https://schoolutilities.statuspage.io/" passHref>
+              <StyledLink>Status</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
