@@ -1,14 +1,11 @@
 import { styled } from "@stitches/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAccessToken } from "../../../misc/authHelper";
 import { Button } from "../../atoms/Button";
-import { Headline } from "../../atoms/Headline";
-import { InputField } from "../../atoms/InputField";
 import { Separator } from "../../atoms/Separator";
-import { Spacer } from "../../atoms/Spacer";
-import { SideDashboardBar } from "../SideDashboardBar";
-import { MarkdownEditor } from "./MarkdownEditor";
+import { InputField } from "../../atoms/InputField";
+import { MarkdownEditor } from "../cockpit/MarkdownEditor";
 
 type Props = {};
 
@@ -29,24 +26,50 @@ const ButtonLayout = styled("div", {
   gap: "20px",
 });
 
-export const ArticleAddField: React.FC<Props> = ({}) => {
+export const ArticleEdit: React.FC<Props> = ({}) => {
   const [title, setTitle] = useState("");
   const [catchPhrase, setCatchPhrase] = useState("");
   const [content, setContent] = useState("");
   const router = useRouter();
+  const articleUUID = router.query.articleUUID;
+
+  useEffect(() => {
+    getContent();
+  }, [articleUUID]);
+
+  const getContent = async () => {
+    let accessToken = await getAccessToken();
+    if (accessToken && articleUUID) {
+      const getRequest = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const getResponse = await getRequest.json();
+      setTitle(getResponse.headline);
+      setCatchPhrase(getResponse.catchPhrase);
+      setContent(getResponse.content);
+    }
+  };
 
   const saveContent = async () => {
     let accessToken = await getAccessToken();
     if (accessToken) {
       const saveRequest = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/create`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/edit`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
+            articleUUID,
             headline: title,
             catchPhrase,
             content,
@@ -56,7 +79,6 @@ export const ArticleAddField: React.FC<Props> = ({}) => {
         }
       );
       const saveResponse = await saveRequest.json();
-      console.log(saveResponse);
       if (saveResponse) {
         router.push("/cockpit/articles");
       }
@@ -74,14 +96,16 @@ export const ArticleAddField: React.FC<Props> = ({}) => {
         onChange={setTitle}
         iconName={""}
         label={"Title"}
+        value={title}
       ></InputField>
       <InputField
         inputType={"textfield"}
         onChange={setCatchPhrase}
         iconName={""}
         label={"Beschreibung"}
+        value={catchPhrase}
       ></InputField>
-      <MarkdownEditor saveContent={setContent} value=""></MarkdownEditor>
+      <MarkdownEditor saveContent={setContent} value={content}></MarkdownEditor>
       <ButtonLayout>
         <Button
           backgroundColor={"primary"}

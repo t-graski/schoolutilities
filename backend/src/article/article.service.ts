@@ -10,10 +10,16 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly helper: HelperService) { }
+  constructor(private readonly helper: HelperService) {}
 
   async createArticle(request): Promise<ReturnMessage> {
-    const { headline, catchPhrase = '', content, type, isPublic } = request.body;
+    const {
+      headline,
+      catchPhrase = '',
+      content,
+      type,
+      isPublic,
+    } = request.body;
 
     const userUUID = await this.helper.getUserUUIDfromJWT(
       await this.helper.extractJWTToken(request),
@@ -77,7 +83,6 @@ export class ArticleService {
         },
       });
     } catch (error) {
-
       return RETURN_DATA.DATABASE_ERROR;
     }
     return RETURN_DATA.SUCCESS;
@@ -103,7 +108,6 @@ export class ArticleService {
   }
 
   async getArticle(request, articleUUID): Promise<ReturnMessage> {
-
     try {
       const article = await prisma.articles.findFirst({
         where: {
@@ -130,7 +134,7 @@ export class ArticleService {
           lastName: creator.lastName,
         },
         readingTime: await this.helper.computeReadingTime(article.content),
-      }
+      };
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -150,13 +154,40 @@ export class ArticleService {
       },
     });
 
-    articles.sort((a, b) => {
+    const articleItems = [];
+
+    for (const article of articles) {
+      const creator = await this.helper.getUserById(article.personCreationId);
+
+      const articleItem = {
+        articleUUID: article.articleUUID,
+        headline: article.headline,
+        catchPhrase: article.catchPhrase,
+        content: article.content,
+        type: {
+          articleTypeId: article.type,
+          articleTypeName: await this.helper.translateArticleType(article.type),
+        },
+        isPublic: article.isPublic,
+        publishDate: article.publishDate,
+        creationDate: article.creationDate,
+        creator: {
+          firstName: creator.firstName,
+          lastName: creator.lastName,
+        },
+        readingTime: await this.helper.computeReadingTime(article.content),
+      };
+
+      articleItems.push(articleItem);
+    }
+
+    articleItems.sort((a, b) => {
       return b.creationDate.getTime() - a.creationDate.getTime();
     });
 
     return {
       status: RETURN_DATA.SUCCESS.status,
-      data: articles,
+      data: articleItems,
     };
   }
 

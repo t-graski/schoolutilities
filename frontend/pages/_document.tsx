@@ -1,5 +1,4 @@
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import Script from "next/script";
 import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
@@ -7,25 +6,6 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
-          <Script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-          ></Script>
-          <Script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-879Y3BTW0K', {
-                  page_path: window.location.pathname,
-                });`,
-            }}
-          ></Script>
-          <Script
-            src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
-            strategy="lazyOnload"
-          ></Script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
