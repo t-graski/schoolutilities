@@ -19,4 +19,3 @@ export class MailController {
     return response.status(result?.status).send(result?.data);
   }
 }
-
