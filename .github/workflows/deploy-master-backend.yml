@@ -39,7 +39,7 @@ jobs:
                      docker run --name schoolutilities-backend -d -p 8888:8888 schoolutilities-backend 
             host: ${{ secrets.BACKEND_REMOTE_HOST }}
             username: ${{ secrets.BACKEND_REMOTE_USER }}
-            password: ""
+            password: $({{ secrets.BACKEND_REMOTE_PASSWORD }})
             key: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}  
 
 
