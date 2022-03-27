@@ -15,11 +15,6 @@ jobs:
         - uses: actions/setup-node@v2
           with:
             node-version: "12"
-        - name: Build nestjs app 
-          working-directory: ./backend 
-          run: |
-               npm install
-               npm run build
         - uses: easingthemes/ssh-deploy@v2.2.11
           env:
             SSH_PRIVATE_KEY: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}
@@ -33,7 +28,6 @@ jobs:
           with:
             script: |
                      cd ../home/REMOTE_USER/
-                     npx prisma generate
                      docker build -t schoolutilities-backend . 
                      docker stop schoolutilities-backend || true && docker rm schoolutilities-backend || true
                      docker run --name schoolutilities-backend -d -p 8888:8888 schoolutilities-backend 
