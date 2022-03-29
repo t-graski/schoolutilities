@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const mysql = require('mysql2');
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseUpdate, ReturnMessage } from 'src/types/Database';
 import { LoginUserData, RegisterUserData, UserData } from 'src/types/User';
@@ -21,7 +19,7 @@ require('dotenv').config();
 @Injectable()
 export class DatabaseService {
   connection: any;
-  constructor() { }
+  constructor() {}
 
   async registerUser(body: RegisterUserData): Promise<ReturnMessage> {
     const { email, password, firstName, lastName, birthDate } = body;
