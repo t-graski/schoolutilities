@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Cron } from '@nestjs/schedule';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const mysql = require('mysql2');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
 
