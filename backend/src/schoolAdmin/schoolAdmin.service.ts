@@ -22,8 +22,6 @@ import {
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const mysql = require('mysql2');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
 
