@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from 'src/database/database.service';
 import { DatabaseUpdate } from 'src/types/Database';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const mysql = require('mysql2');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 @Injectable()
@@ -11,7 +13,15 @@ export class RefreshTokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly databaseService: DatabaseService,
-  ) {}
+  ) {
+    this.connection = mysql.createConnection({
+      host: process.env.DATABASE_HOST,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+    });
+    this.connection.connect();
+  }
 
   async getTokenData(refreshToken: string, personId): Promise<DatabaseUpdate> {
     return new Promise((resolve, reject) => {
