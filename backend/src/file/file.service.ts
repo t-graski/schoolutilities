@@ -12,7 +12,6 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class FileUploadService {
-  connection: any;
   constructor() {}
 
   async uploadFile(file, request) {
