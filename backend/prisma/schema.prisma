@@ -57,6 +57,7 @@ model loginTokens {
   personId     Int      @map("person_id")
   refreshToken String   @map("refresh_token") @db.VarChar(255)
   creationTime DateTime @default(now()) @map("creation_time") @db.Timestamp(0)
+  expireDate   DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
   persons      persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkLogintokenperson")
 
   @@index([personId], map: "fkLogintokenperson")
