@@ -36,6 +36,7 @@ export class AssetsController {
         .sendFile(`${filename}`, { root: process.env.FILE_PATH }),
     );
   }
+  
 
   // @Roles(Role.Supervisor)
   @Get('/list/logo')
