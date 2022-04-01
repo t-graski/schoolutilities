@@ -37,7 +37,6 @@
     "moment": "^2.29.1",
     "mysql2": "^2.3.3",
     "nanoid": "^3.1.31",
-    "node-fetch": "^2.6.7",
     "nodemailer": "^6.6.5",
     "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",

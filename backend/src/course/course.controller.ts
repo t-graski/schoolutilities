@@ -16,7 +16,10 @@ import { CourseService } from './course.service';
 
 @Controller('api/course')
 export class CourseController {
-  constructor(private readonly courseService: CourseService, private readonly helper: HelperService) { }
+  constructor(
+    private readonly courseService: CourseService,
+    private readonly helper: HelperService,
+  ) {}
 
   // @UseGuards(JwtAuthGuard)
   @Post('/addCourse')

@@ -27,7 +27,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -612,7 +612,6 @@ export class CourseService {
           }
         }
         if (element.tag === 'deleted' && element.elementUUID != '') {
-          console.log(element);
           await this.helper.deleteElement(
             await this.helper.getElementIdByUUID(element.elementUUID),
             element.options.type,
@@ -744,7 +743,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -956,8 +955,6 @@ export class CourseService {
     let returnElements = elementsWithOptions.filter(
       (element) => !element.parentUUID || element.parentUUID === '0',
     );
-
-    console.log(returnElements);
 
     for (const element of elementsWithOptions) {
       if (element.parentUUID && element.parentUUID !== '0') {
