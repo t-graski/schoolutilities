@@ -28,7 +28,7 @@ export class AuthService {
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
     private readonly refreshTokenService: RefreshTokenService,
-  ) {}
+  ) { }
 
   async getUserDataByEmailAndPassword(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
@@ -144,9 +144,9 @@ export class AuthService {
       { expiresIn: jwtConstants.refreshTokenExpiryTime },
     );
 
-    const insertReturnValue = await this.refreshTokenService.insertRefreshToken(
+    await this.refreshTokenService.insertRefreshToken(
       refreshToken,
-      payload.person_id,
+      await this.databaseService.getPersonIdByUUID(personUUID),
     );
 
     return {
