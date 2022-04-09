@@ -114,7 +114,7 @@ export class HelperService {
   }
 
   async getSchoolsOfUser(userId: number, userUUID: string): Promise<any> {
-    if (!userId && !userUUID) {
+    if (!userId || !userUUID) {
       throw new Error(ERROR_CODES.USER_ID_OR_UUID_NULL_OR_INVALID);
     }
 
