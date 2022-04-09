@@ -281,6 +281,7 @@ model textSettings {
 model fileSubmissionSettings {
   fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
   courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
+  name             String   @map("name") @db.VarChar(255)
   description      String   @map("description") @db.Text
   dueTime          DateTime @map("due_time") @db.Timestamp(0)
   submitLater      Boolean  @map("submit_later")

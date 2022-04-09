@@ -417,6 +417,7 @@ export class HelperService {
                 courseElementId: elementId,
               },
               data: {
+                name: options.name,
                 description: options.description,
                 dueTime: options.dueTime,
                 submitLater: options.submitLater,
