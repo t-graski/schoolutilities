@@ -1,16 +1,18 @@
-import { Injectable, Param } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import { ERROR_CODES, ID_STARTERS } from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
-//import parameter constants
+import { use } from 'passport';
+import * as moment from 'moment-timezone'
+import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -538,6 +540,163 @@ export class HelperService {
       }
     } else {
       throw new Error(ERROR_CODES.CLASS_UUID_NULL_OR_INVALID);
+    }
+  }
+
+  /**
+   * Creates or resets all user settings
+   * @param personId Id of a user
+   */
+  async createOrResestDefaultSettings(personId: number): Promise<any> {
+    if (personId) {
+      let defaultSettings = {
+        language: 'en',
+        timeZone: 'Europe/London',
+        dateTimeFormat: 'en-US',
+        receiveUpdateEmails: false,
+        avatarUUID: '',
+        phoneNumber: '',
+        themeMode: 0,
+        theme: -1,
+      }
+
+      try {
+        let personSettings = await prisma.personSettings.findFirst({
+          where: {
+            personId,
+          },
+        });
+
+        if (personSettings) {
+          await prisma.personSettings.update({
+            where: {
+              personId,
+            },
+            data: defaultSettings,
+          });
+        } else {
+          await prisma.personSettings.create({
+            data: {
+              personId,
+              ...defaultSettings,
+            },
+          });
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async addUserToUpdateEmailList(personId: number): Promise<any> {
+    if (personId) {
+      try {
+        let user = await this.getUserById(personId);
+        await prisma.updateEmailReceivers.create({
+          data: {
+            personId,
+            email: user.email,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async removeUserFromUpdateEmailList(personId: number): Promise<any> {
+    if (personId) {
+      try {
+        await prisma.updateEmailReceivers.delete({
+          where: {
+            personId,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+    }
+  }
+  /**
+   * 
+   * @param timeZone timezone string e.g. "europe/Vienna"
+   * @returns true or false 
+   */
+  isValidTimeZoneString(timeZone: string) {
+    return moment.tz.zone(timeZone) != null;
+  }
+
+  /**
+   * 
+   * @param language language string e.g. "en-US"
+   * @returns true of false
+   */
+  isValidLanguageString(language: string) {
+    return Object.keys(RFC5646_LANGUAGE_TAGS).includes(language);
+  }
+
+  /**
+   * 
+   * @param language language string e.g. "German"
+   * @returns true or false
+   */
+  isValidLongLanguageString(language: string) {
+    return Object.values(RFC5646_LANGUAGE_TAGS).includes(language);
+  }
+
+  /**
+   * 
+   * @param dateTimeFormat dateTimeFormat string 'en-US', 'en-GB" or 'de-DE'
+   * @returns true or false
+   */
+  isValidDateTimeFormatString(dateTimeFormat: string) {
+    const dateTimeFormats = {
+      'en-US': 'MM/DD/YYYY hh:mm A',
+      'en-GB': 'DD/MM/YYYY hh:mm A',
+      'de-DE': 'DD.MM.YYYY hh:mm A',
+    }
+
+    return Object.keys(dateTimeFormats).includes(dateTimeFormat);
+  }
+
+  async createDefaultPublicProfileSettings(userId: number): Promise<any> {
+    if (userId) {
+      try {
+        await prisma.publicProfileSettings.create({
+          data: {
+            personId: userId,
+            displayName: await this.getUserUUIDById(userId),
+            publicEmail: '',
+            biography: '',
+            location: '',
+            preferredLanguage: '',
+            showAge: false,
+            showJoinDate: true,
+            showBadges: true,
+          }
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+    }
+  }
+
+
+  calculateAge(birthday: Date): number {
+    if (birthday) {
+      let ageDifMs = Date.now() - new Date(birthday).getTime();
+      let ageDate = new Date(ageDifMs);
+      return Math.abs(ageDate.getUTCFullYear() - 1970);
+    } else {
+      return 0;
     }
   }
 }
