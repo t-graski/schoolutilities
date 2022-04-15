@@ -5,11 +5,13 @@ import { HelperService } from './helper.service';
 
 @Global()
 @Module({
-    imports: [JwtModule.register({
-        secret: jwtConstants.secret,
-        signOptions: { expiresIn: '900s' },
-    }),],
-    providers: [HelperService],
-    exports: [HelperService],
+  imports: [
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '900s' },
+    }),
+  ],
+  providers: [HelperService],
+  exports: [HelperService],
 })
-export class HelperModule { }
+export class HelperModule {}

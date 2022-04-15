@@ -4,6 +4,6 @@ import { TimezoneController } from './timezone.controller';
 
 @Module({
   providers: [TimezoneService],
-  controllers: [TimezoneController]
+  controllers: [TimezoneController],
 })
 export class TimezoneModule {}

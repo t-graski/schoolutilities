@@ -37,7 +37,6 @@
     "moment": "^2.29.2",
     "mysql2": "^2.3.0",
     "nanoid": "^3.1.31",
-    "node-fetch": "^2.6.7",
     "nodemailer": "^6.6.5",
     "passport": "^0.5.0",
     "passport-jwt": "^4.0.0",
@@ -51,7 +50,7 @@
     "validator": "^13.6.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.0.0",
+    "@nestjs/cli": "^8.2.4",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/cron": "^1.7.3",

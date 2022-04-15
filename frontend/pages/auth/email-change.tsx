@@ -1,9 +1,8 @@
 import React from "react";
-import { RegisterAuth } from "../../components/RegisterAuth";
 import Head from "next/head";
-import { Navbar } from "../../components/Navbar";
-import { Footer } from "../../components/Footer";
-import { EmailChangeAuth } from "../../components/EmailChangeAuth";
+import { Navbar } from "../../components/organisms/Navbar";
+import Footer from "../../components/organisms/Footer";
+import { EmailChangeAuth } from "../../components/molecules/auth/EmailChangeAuth";
 
 export default function RegisterApproved() {
   return (

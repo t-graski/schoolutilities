@@ -1,4 +1,4 @@
-import { Timestamp } from "rxjs";
+import { Timestamp } from 'rxjs';
 
 export interface Server {
   guildId: string;
@@ -11,17 +11,17 @@ export interface Server {
   autocheck: boolean;
   notifications: boolean;
   classTimeTable?: {
-      classId: number;
-      startTime: {
-          hours: number;
-          minutes: number;
-      };
-      endTime: {
-          hours: number;
-          minutes: number;
-      };
-      subject: string;
-      channel: string;
+    classId: number;
+    startTime: {
+      hours: number;
+      minutes: number;
+    };
+    endTime: {
+      hours: number;
+      minutes: number;
+    };
+    subject: string;
+    channel: string;
   }[][];
 }
 
@@ -69,20 +69,20 @@ export interface UserServerInfo {
 }
 
 export interface UserServerInfoList {
-    sharedAdminServer: UserServerInfo[],
-    sharedServer: UserServerInfo[],
-    adminServer: UserServerInfo[],
+  sharedAdminServer: UserServerInfo[];
+  sharedServer: UserServerInfo[];
+  adminServer: UserServerInfo[];
 }
 
 export interface User {
-  person_id: number,
-  firstname: string,
-  lastname: string,
-  birthdate: Date,
-  school_id: number,
-  class_id: number,
-  email: string, 
-  password: string,
-  email_verified: number,
-  creation_date: Date
+  person_id: number;
+  firstname: string;
+  lastname: string;
+  birthdate: Date;
+  school_id: number;
+  class_id: number;
+  email: string;
+  password: string;
+  email_verified: number;
+  creation_date: Date;
 }

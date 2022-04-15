@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import { getCssText, lightTheme } from "../stitches.config";
+import Script from "next/script";
+import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
   render() {
@@ -22,6 +22,15 @@ export default class Document extends NextDocument {
                 });`,
             }}
           ></script>
+          <script type="text/javascript" src="https://cdn.cookielaw.org/consent/7d50b473-ca67-4ccc-9509-8fc4008d70b7/OtAutoBlock.js" ></script>
+          <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"  type="text/javascript" charSet="UTF-8" data-domain-script="7d50b473-ca67-4ccc-9509-8fc4008d70b7" ></script>
+          <script type="text/javascript">
+          function OptanonWrapper() { }
+          </script>
+          <Script
+            src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+            strategy="lazyOnload"
+          ></Script>
           <style
             dangerouslySetInnerHTML={{
               __html: `

@@ -1,17 +1,16 @@
 import { styled } from "../../../../../stitches.config";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Navbar } from "../../../../../components/Navbar";
-import { Spacer } from "../../../../../components/Spacer";
-import { Headline } from "../../../../../components/Headline";
-import { Separator } from "../../../../../components/Separator";
-import { Footer } from "../../../../../components/Footer";
+import { Navbar } from "../../../../../components/organisms/Navbar";
+import { Spacer } from "../../../../../components/atoms/Spacer";
+import { Headline } from "../../../../../components/atoms/Headline";
+import { Separator } from "../../../../../components/atoms/Separator";
+import Footer from "../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
-import { SvgIcon } from "../../../../../components/SvgIcon";
-import CourseMenu from "../../../../../components/CourseMenu";
-import CourseEditContent from "../../../../../components/CourseEditContent";
-import { Button } from "../../../../../components/Button";
+import CourseMenu from "../../../../../components/atoms/CourseMenu";
+import CourseEditContent from "../../../../../components/molecules/course/CourseEditContent";
+import { Button } from "../../../../../components/atoms/Button";
 
 const ContentLayout = styled("div", {
   display: "flex",

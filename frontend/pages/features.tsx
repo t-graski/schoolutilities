@@ -1,11 +1,9 @@
-import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
-import { Headline } from "../components/Headline";
-import React from "react";
-import { Spacer } from "../components/Spacer";
-import { Separator } from "../components/Separator";
-import { FeatureOverviewList } from "../components/FeatureOverviewList";
+import { Navbar } from "../components/organisms/Navbar";
+import Footer from "../components/organisms/Footer";
+import { Headline } from "../components/atoms/Headline";
+import { Spacer } from "../components/atoms/Spacer";
+import { Separator } from "../components/atoms/Separator";
+import { FeatureOverviewList } from "../components/organisms/FeatureOverviewList";
 import Head from "next/head";
 
 export default function Features() {

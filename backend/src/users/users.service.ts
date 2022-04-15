@@ -7,7 +7,7 @@ const CryptoJS = require('crypto-js');
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService) { }
   async registerUser(userData: RegisterUserData) {
     const userOfEmail = await this.databaseService.getUserData(userData);
     // if (userOfEmail && userOfEmail.length > 0) {
@@ -43,7 +43,6 @@ async function generateRegisterToken(
   if (!insertTokenStatus || (insertTokenStatus && !insertTokenStatus.insertId))
     throw new Error('Error while generating token');
   const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register-approved?token=${generatedToken}`;
-  console.log(email);
   const message = {
     from: 'noreply@schoolutilities.net',
     to: email,
@@ -57,15 +56,6 @@ async function generateRegisterToken(
 
 async function verifyAccount(token: string, databaseService: DatabaseService) {
   const activateAccountStatus = await databaseService.activateAccount(token);
-
-  if (activateAccountStatus && activateAccountStatus.affectedRows > 0) {
-    const deleteTokenStatus = await databaseService.deleteRegisterToken(token);
-    if (deleteTokenStatus && deleteTokenStatus.affectedRows > 0) {
-      return HttpStatus.OK;
-    } else {
-      return HttpStatus.BAD_REQUEST;
-    }
-  } else {
-    return HttpStatus.NOT_FOUND;
-  }
+  const deleteTokenStatus = await databaseService.deleteRegisterToken(token);
+  return HttpStatus.OK;
 }
