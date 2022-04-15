@@ -470,6 +470,7 @@ export class HelperService {
             await prisma.fileSubmissionSettings.create({
               data: {
                 courseElementId: elementId,
+                name: options.name,
                 description: options.description,
                 dueTime: options.dueTime,
                 submitLater: options.submitLater,
@@ -574,5 +575,9 @@ export class HelperService {
     } else {
       throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
+  }
+
+  async getMaxFileSize() {
+
   }
 }

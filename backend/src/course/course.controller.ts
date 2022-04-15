@@ -1,27 +1,33 @@
 import {
   Controller,
-  Req,
-  Res,
   Post,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+  Req,
+  Get,
   UseGuards,
   Delete,
   Put,
-  Get,
   Param,
 } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { HelperService } from 'src/helper/helper.service';
-import { Role } from 'src/roles/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { diskStorage } from 'multer';
+import { editFileName, imageFileFilter } from 'src/misc/fileUpload';
+import { LENGTHS } from 'src/misc/parameterConstants';
 import { CourseService } from './course.service';
+import { HelperService } from 'src/helper/helper.service';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/role.enum';
+
 
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -109,5 +115,20 @@ export class CourseController {
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
+  }
+
+  @Post('/submitExercise')
+  @UseInterceptors(
+    FileInterceptor('files', {
+      storage: diskStorage({
+        destination: '../files/',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+      limits: { fileSize:  },
+    }),
+  )
+  async submitExercise(@Req() request, @Res() response) {
+
   }
 }

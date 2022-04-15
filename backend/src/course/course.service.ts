@@ -941,8 +941,6 @@ export class CourseService {
       (element) => !element.parentUUID || element.parentUUID === '0',
     );
 
-    console.log(returnElements);
-
     for (const element of elementsWithOptions) {
       if (element.parentUUID && element.parentUUID !== '0') {
         returnElements = returnElements.map((currentElement) => {
