@@ -14,6 +14,7 @@ model coursePersons {
   persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
 
 
+
   @@unique([courseId, personId], name: "coursePersonId")
   @@index([personId], map: "fkCoursepersonspersonid")
   @@index([courseId], map: "fkCoursepersonscourseid")
@@ -276,4 +277,19 @@ model textSettings {
 
   @@index([courseElementId], map: "fkTextCourseElementId")
   @@map("text_settings")
+}
+
+model fileSubmissionSettings {
+  fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
+  courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
+  name             String   @map("name") @db.VarChar(255)
+  description      String   @map("description") @db.Text
+  dueTime          DateTime @map("due_time") @db.Timestamp(0)
+  submitLater      Boolean  @map("submit_later")
+  submitLaterTime  DateTime @map("submit_later_time") @db.Timestamp(0)
+  maxFileSize      Int      @map("max_file_size")
+  allowedFileTypes String   @map("allowed_file_types") @db.VarChar(255)
+
+  @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
+  @@map("file_submission_settings")
 }

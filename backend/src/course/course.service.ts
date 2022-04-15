@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
-  AddCourse,
   UpdateCourse,
   RemoveCourse,
   AddUser,
@@ -14,7 +13,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
-import e from 'express';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -396,17 +394,6 @@ export class CourseService {
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 
-    const personInSchool = await prisma.schoolPersons.findUnique({
-      where: {
-        schoolPersonId: {
-          schoolId: Number(schoolId),
-          personId: Number(personId),
-        },
-      },
-    });
-
-    if (!personInSchool) return RETURN_DATA.FORBIDDEN;
-
     const courseData = [];
     try {
       const courses = await prisma.courses.findMany({
@@ -414,6 +401,7 @@ export class CourseService {
           schoolId: Number(schoolId),
         },
         select: {
+          courseId: true,
           courseUUID: true,
           name: true,
           courseDescription: true,
@@ -446,7 +434,9 @@ export class CourseService {
             lastName: creator.lastName,
           },
         };
-        courseData.push(courseDataItem);
+        if (await this.helper.userIsInCourse(personId, course.courseId)) {
+          courseData.push(courseDataItem);
+        }
       }
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -471,17 +461,6 @@ export class CourseService {
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
     const courseId = await this.databaseService.getCourseUUIDById(courseUUID);
 
-    const personInCourse = await prisma.coursePersons.findUnique({
-      where: {
-        coursePersonId: {
-          courseId: Number(courseId),
-          personId: Number(personId),
-        },
-      },
-    });
-
-    if (!personInCourse) return RETURN_DATA.FORBIDDEN;
-
     const courseData = {};
     try {
       const course = await prisma.courses.findUnique({
@@ -497,6 +476,9 @@ export class CourseService {
           personCreationId: true,
         },
       });
+
+      if (!(await this.helper.userIsInCourse(personId, courseId)))
+        return RETURN_DATA.FORBIDDEN;
 
       const creator = await prisma.persons.findUnique({
         where: {
