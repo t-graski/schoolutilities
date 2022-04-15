@@ -1,13 +1,13 @@
 import { styled } from "../../stitches.config";
 import React, { useEffect, useState } from "react";
-import { Navbar } from "../../components/Navbar";
-import { Footer } from "../../components/Footer";
-import { Spacer } from "../../components/Spacer";
-import { InfoBox } from "../../components/InfoBox";
-import { LoginField } from "../../components/LoginField";
+import { Navbar } from "../../components/organisms/Navbar";
+import Footer from "../../components/organisms/Footer";
+import { Spacer } from "../../components/atoms/Spacer";
+import { InfoBox } from "../../components/molecules/InfoBox";
+import { LoginField } from "../../components/molecules/auth/LoginField";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import Head from "next/head";
-import { RegistrationField } from "../../components/RegistrationField";
+import { RegistrationField } from "../../components/molecules/auth/RegistrationField";
 import { useRouter } from "next/router";
 
 const LoginAuthLayout = styled("div", {
@@ -17,6 +17,12 @@ const LoginAuthLayout = styled("div", {
   gap: "10vw",
   padding: "7vh 15vw",
   minHeight: "80vh",
+
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    gap: "10vw",
+    padding: "7vh 5vw",
+  },
 });
 
 const StyledTabs = styled(TabsPrimitive.Root, {
@@ -79,78 +85,6 @@ export const TabsContent = StyledContent;
 
 // Your app...
 const Box = styled("div", {});
-const Flex = styled("div", { display: "flex" });
-
-const Text = styled("div", {
-  marginBottom: 20,
-  color: "$fontPrimary",
-  fontSize: 15,
-  lineHeight: 1.5,
-});
-
-const Button = styled("button", {
-  all: "unset",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: 4,
-  padding: "0 15px",
-  fontSize: 15,
-  lineHeight: 1,
-  fontWeight: 500,
-  height: 35,
-
-  variants: {
-    variant: {
-      violet: {
-        backgroundColor: "$backgroundPrimary",
-        color: "$fontPrimary",
-        boxShadow: `0 2px 10px $fontPrimary`,
-        "&:hover": { backgroundColor: "$fontPrimary" },
-        "&:focus": { boxShadow: `0 0 0 2px black` },
-      },
-      green: {
-        backgroundColor: "$backgroundPrimary",
-        color: "$fontPrimary",
-        "&:hover": { backgroundColor: "$fontPrimary" },
-        "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
-      },
-    },
-  },
-
-  defaultVariants: {
-    variant: "violet",
-  },
-});
-const Fieldset = styled("fieldset", {
-  all: "unset",
-  marginBottom: 15,
-  width: "100%",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "flex-start",
-});
-
-const Label = styled("label", {
-  fontSize: 13,
-  lineHeight: 1,
-  marginBottom: 10,
-  color: "$fontPrimary",
-  display: "block",
-});
-
-const Input = styled("input", {
-  all: "unset",
-  flex: "1 0 auto",
-  borderRadius: 4,
-  padding: "0 10px",
-  fontSize: 15,
-  lineHeight: 1,
-  color: "$fontPrimary",
-  boxShadow: `0 0 0 1px $specialPrimary`,
-  height: 35,
-  "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
-});
 
 export default function Auth() {
   const [showLogin, setShowLogin] = useState(true);
@@ -158,11 +92,11 @@ export default function Auth() {
   const router = useRouter();
 
   useEffect(() => {
-  if (router.query.tab && router.query.tab === "register" && showLogin) {
-    setShowLogin(false);
-  } else if (router.query.tab && router.query.tab === "login" && !showLogin){
-    setShowLogin(true);
-  }
+    if (router.query.tab && router.query.tab === "register" && showLogin) {
+      setShowLogin(false);
+    } else if (router.query.tab && router.query.tab === "login" && !showLogin) {
+      setShowLogin(true);
+    }
   }, [router.query.tab, showLogin]);
 
   return (
@@ -175,7 +109,11 @@ export default function Auth() {
       <LoginAuthLayout>
         <InfoBox
           headline={showLogin ? "Login" : "Register"}
-          info={showLogin ? "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!" : "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!"}
+          info={
+            showLogin
+              ? "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!"
+              : "Join the world's most advanced community and manage all of your school-activities in the easiest possible way - let’s get a comfortable routine into our daily lives!"
+          }
           imageSrc="/images/Registration-Login-Artwork.svg"
           imageAlt={showLogin ? "Login Mockup" : "Registration Mockup"}
         ></InfoBox>

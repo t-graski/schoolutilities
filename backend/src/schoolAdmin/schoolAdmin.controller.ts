@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
   Param,
-} from '@nestjs/common';;
+} from '@nestjs/common';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 

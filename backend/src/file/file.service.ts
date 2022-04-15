@@ -7,14 +7,11 @@ import { GetFile } from 'src/types/File';
 import * as fs from 'fs';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const mysql = require('mysql2');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
 
 @Injectable()
 export class FileUploadService {
-  connection: any;
   constructor() {}
 
   async uploadFile(file, request) {

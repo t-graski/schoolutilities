@@ -14,8 +14,6 @@ import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const mysql = require('mysql2');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 const prisma = new PrismaClient();
@@ -596,7 +594,6 @@ export class CourseService {
           }
         }
         if (element.tag === 'deleted' && element.elementUUID != '') {
-          console.log(element);
           await this.helper.deleteElement(
             await this.helper.getElementIdByUUID(element.elementUUID),
             element.options.type,
