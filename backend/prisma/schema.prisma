@@ -292,3 +292,20 @@ model fileSubmissionSettings {
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@map("file_submission_settings")
 }
+
+model fileSubmissions {
+  fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
+  courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
+  fileName         String   @map("file_name") @db.VarChar(255)
+  fileSize         Int      @map("file_size")
+  fileType         String   @map("file_type") @db.VarChar(255)
+  submissionTime   DateTime @default(now()) @map("submission_time") @db.Timestamp(0)
+  personId         Int      @map("person_id")
+  submitedLate     Boolean  @map("submited_late")
+  notes            String   @map("notes") @db.Text
+  grade            String   @map("grade")
+
+  @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
+  @@index([personId], map: "fkFileSubmissionPersonId")
+  @@map("file_submissions")
+}

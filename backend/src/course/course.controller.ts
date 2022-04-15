@@ -10,12 +10,12 @@ import {
   Delete,
   Put,
   Param,
+  UploadedFiles,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
-import { editFileName, imageFileFilter } from 'src/misc/fileUpload';
-import { LENGTHS } from 'src/misc/parameterConstants';
+import { editFileName, fileFilter } from 'src/misc/fileUpload';
 import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
@@ -119,16 +119,21 @@ export class CourseController {
 
   @Post('/submitExercise')
   @UseInterceptors(
-    FileInterceptor('files', {
+    FilesInterceptor('files', 20, {
       storage: diskStorage({
         destination: '../files/',
         filename: editFileName,
       }),
-      fileFilter: imageFileFilter,
-      limits: { fileSize:  },
+      fileFilter: fileFilter,
     }),
   )
-  async submitExercise(@Req() request, @Res() response) {
-
+  async submitExercise(@Req() request, @Res() response, @UploadedFile() file) {
+    if (file) {
+      const result = await this.courseService.submitExercise(request, file);
+      return response
+        .status(result.status)
+        .json(result?.data ? result.data : result.message);
+    }
+    return response.status(400).json({ message: 'Invalid file' });
   }
 }
