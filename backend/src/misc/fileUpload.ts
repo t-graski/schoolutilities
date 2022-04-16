@@ -28,7 +28,6 @@ export const fileFilter = async (req, file, callback) => {
 export const editFileName = (req, file, callback) => {
   const uuid = uuidv4();
   const fileExtName = extname(file.originalname);
-  console.log(fileExtName);
 
   callback(
     null,

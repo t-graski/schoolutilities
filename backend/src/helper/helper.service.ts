@@ -325,8 +325,7 @@ export class HelperService {
       }
 
       return options;
-    } catch (err) {
-      console.log(err);
+    } catch {
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
@@ -340,8 +339,7 @@ export class HelperService {
           },
         });
         return element.elementId;
-      } catch (err) {
-        console.log(err);
+      } catch {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -447,7 +445,6 @@ export class HelperService {
             break;
           // FILE SUBMISSION
           case 3:
-            console.log(options);
             await prisma.fileSubmissionSettings.update({
               where: {
                 courseElementId: elementId,
@@ -483,7 +480,6 @@ export class HelperService {
     elementId: number,
     typeId: number,
   ): Promise<any> {
-    console.log('asdfa');
     if (options) {
       try {
         switch (typeId) {
@@ -507,7 +503,6 @@ export class HelperService {
             break;
           // FILE SUBMISSION
           case 3:
-            console.log(options);
             await prisma.fileSubmissionSettings.create({
               data: {
                 courseElementId: elementId,
@@ -521,8 +516,7 @@ export class HelperService {
               },
             });
         }
-      } catch (err) {
-        console.log(err);
+      } catch {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
