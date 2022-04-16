@@ -61,7 +61,9 @@ type Props = {
     | "checkbox"
     | "select"
     | "search-select"
-    | "textfield";
+    | "textfield"
+    | "number"
+    | "datetime-local";
   selectOptions?: {
     value: string;
     label: string;
@@ -602,6 +604,12 @@ export const InputField: React.FC<Props> = ({
   } else if (inputType === "textfield") {
     return (
       <>
+        {label ?? (
+          <>
+            <InputFieldLabel>{label}</InputFieldLabel>
+            {required && <Required>*</Required>}
+          </>
+        )}
         <InputFieldLayout>
           {iconName && (
             <ImageLayout>
@@ -620,6 +628,12 @@ export const InputField: React.FC<Props> = ({
   } else {
     return (
       <>
+        {label ?? (
+          <>
+            <InputFieldLabel>{label}</InputFieldLabel>
+            {required && <Required>*</Required>}
+          </>
+        )}
         <InputFieldLayout editable={editable}>
           {iconName && (
             <ImageLayout>

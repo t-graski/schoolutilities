@@ -119,7 +119,7 @@ export class CourseController {
 
   @Post('/submitExercise')
   @UseInterceptors(
-    FilesInterceptor('files', 20, {
+    FileInterceptor('files', {
       storage: diskStorage({
         destination: '../files/',
         filename: editFileName,
@@ -128,6 +128,8 @@ export class CourseController {
     }),
   )
   async submitExercise(@Req() request, @Res() response, @UploadedFile() file) {
+    console.log(file);
+
     if (file) {
       const result = await this.courseService.submitExercise(request, file);
       return response
