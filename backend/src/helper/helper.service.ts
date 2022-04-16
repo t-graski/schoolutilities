@@ -1,7 +1,7 @@
 import { Injectable, Param } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
-import { ERROR_CODES, ID_STARTERS } from 'src/misc/parameterConstants';
+import { ERROR_CODES, ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
 //import parameter constants
@@ -618,5 +618,32 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() {}
+  async getMaxFileSize(request: any): Promise<number> {
+    const elementId = await this.getElementIdByUUID(request.body.elementUUID);
+    const maxFileSize = await prisma.fileSubmissionSettings.findFirst({
+      where: {
+        courseElementId: elementId,
+      },
+      select: {
+        maxFileSize: true,
+      },
+    });
+    return maxFileSize.maxFileSize;
+  }
+
+  async getElementDueDate(elementId: number): Promise<any> {
+    const element = await prisma.courseElements.findFirst({
+      where: {
+        elementId: elementId,
+      },
+    });
+    if (element.typeId == 3) {
+      const fileSubmissionSettings = await prisma.fileSubmissionSettings.findFirst({
+        where: {
+          courseElementId: elementId,
+        },
+      });
+      return fileSubmissionSettings.dueTime;
+    }
+  }
 }

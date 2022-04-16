@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
+import * as moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -1001,6 +1002,33 @@ export class CourseService {
     return {
       status: RETURN_DATA.SUCCESS.status,
       data: elementItem,
+    };
+  }
+  
+  async submitExercise(request, file): Promise<ReturnMessage> {
+    const elementUUID = request.body.elementUUID;
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const dueDate = await this.helper.getElementDueDate(elementId);
+
+    const isSubmittedInTime = moment(new Date(Date.now())).isAfter(dueDate);
+    try {
+      await prisma.fileSubmissions.create({
+        data: {
+          courseElementId: Number(elementId),
+          fileName: file.filename,
+          fileSize: file.size,
+          fileType: file.mimetype,
+          personId: Number(userId),
+          submitedLate: !isSubmittedInTime,
+          notes: '',
+          grade: '',
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 }
