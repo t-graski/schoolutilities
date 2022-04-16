@@ -15,7 +15,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/misc/fileUpload';
-import { LENGTHS } from 'src/misc/parameterConstants';
 import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
@@ -131,4 +130,13 @@ export class CourseController {
   async submitExercise(@Req() request, @Res() response) {
 
   }
+
+  @Get('/element/:elementUUID')
+  async getElement(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getElement(request, params.elementUUID);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
 }

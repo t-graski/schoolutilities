@@ -250,6 +250,23 @@ export class HelperService {
     }
   }
 
+  async getCourseUUIDById(courseId: number): Promise<string> {
+    if (courseId) {
+      try {
+        const course = await prisma.courses.findFirst({
+          where: {
+            courseId: courseId,
+          },
+        });
+        return course.courseUUID;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.SCHOOL_ID_NULL_OR_INVALID);
+    }
+  }
+
   /**
    * 
    * @param elementId Element Id
@@ -258,7 +275,7 @@ export class HelperService {
    * Type 1: Text
    * @returns Options of the given element
    */
-  async getElementOptions(elementId: string, typeId): Promise<any> {
+  async getElementOptions(elementId: number, typeId): Promise<any> {
     try {
       // if (typeId || elementId
       //     && validator.isNumeric(elementId)
@@ -296,11 +313,22 @@ export class HelperService {
               courseElementId: Number(elementId),
             },
           });
+          options = {
+            name: fileOptions.name,
+            description: fileOptions.description,
+            dueDate: fileOptions.dueTime,
+            submitLater: fileOptions.submitLater,
+            submitLaterDate: fileOptions.submitLaterTime,
+            maxFileSize: fileOptions.maxFileSize,
+            allowedFileTypes: fileOptions.allowedFileTypes,
+          }
 
       }
 
       return options;
     } catch (err) {
+      console.log(err);
+
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
