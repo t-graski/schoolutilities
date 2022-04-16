@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -322,8 +322,8 @@ export class HelperService {
             maxFileSize: fileOptions.maxFileSize,
             allowedFileTypes: fileOptions.allowedFileTypes,
           };
+          break;
       }
-
       return options;
     } catch {
       throw new Error(ERROR_CODES.DATABASE_ERROR);
