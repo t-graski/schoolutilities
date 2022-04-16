@@ -627,7 +627,7 @@ export class CourseService {
     for (let element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId.toString(),
+          element.elementId,
           element.typeId,
         );
 
@@ -914,7 +914,7 @@ export class CourseService {
     for (const element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId.toString(),
+          element.elementId,
           element.typeId,
         );
 
@@ -958,5 +958,49 @@ export class CourseService {
       status: RETURN_DATA.SUCCESS.status,
       data: returnElements,
     };
+  }
+
+  async getElement(request, elementUUID): Promise<ReturnMessage> {
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+
+    const element = await prisma.courseElements.findFirst({
+      where: {
+        elementId: Number(elementId),
+      },
+    });
+
+    const elementOptions = await this.helper.getElementOptions(
+      element.elementId,
+      element.typeId,
+    );
+
+    const creator = await this.helper.getUserById(element.personCreationId);
+
+    const elementItem = {
+      elementUUID: element.elementUUID,
+      courseUUID: await this.helper.getCourseUUIDById(element.courseId),
+      visible: Boolean(element.visible),
+      creationDate: element.creationDate,
+      creator: {
+        userUUID: creator.personUUID,
+        firstName: creator.firstName,
+        lastName: creator.lastName,
+        fullName: creator.firstName + ' ' + creator.lastName,
+      },
+      options: {
+        name: elementOptions.name,
+        description: elementOptions.description,
+        dueDate: elementOptions.dueDate,
+        submitLater: Boolean(elementOptions.submitLater),
+        submitLaterDate: elementOptions.submitLaterDate,
+        maxFileSize: elementOptions.maxFileSize,
+        allowedFileTypes: elementOptions.allowedFileTypes.replace(/\s/g, ''),
+      }
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: elementItem,
+    }
   }
 }

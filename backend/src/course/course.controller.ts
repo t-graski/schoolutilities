@@ -131,4 +131,12 @@ export class CourseController {
   async submitExercise(@Req() request, @Res() response) {
 
   }
+
+  @Get('/element/:elementUUID')
+  async getElement(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getElement(request, params.elementUUID);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }

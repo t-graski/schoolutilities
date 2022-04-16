@@ -11,10 +11,8 @@ export const imageFileFilter = async (req, file, callback) => {
   const elementId = await getElementIdByUUID(elementUUID);
   const fileExtensions = await getAllowedExtensions(elementId);
   const fileExtensionsArray = fileExtensions.split(',');
-  //transform extension string list with commas seperated into regex]
-  const allowedExtensions = fileExtensionsArray.map(ext => `\.(${ext})$`).join('|');
 
-  console.log(allowedExtensions);
+  const allowedExtensions = fileExtensionsArray.map(ext => `\.(${ext})$`).join('|');
 
   if (!file.originalname.match(allowedExtensions)) {
     return callback(
