@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -251,7 +251,7 @@ export class HelperService {
   }
 
   /**
-   * 
+   *
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline
@@ -296,11 +296,20 @@ export class HelperService {
               courseElementId: Number(elementId),
             },
           });
-
+          options = {
+            name: fileOptions.name,
+            description: fileOptions.description,
+            dueTime: fileOptions.dueTime,
+            submitLater: fileOptions.submitLater,
+            submitLaterTime: fileOptions.submitLaterTime,
+            maxFileSize: fileOptions.maxFileSize,
+            fileTypes: fileOptions.allowedFileTypes,
+          };
       }
 
       return options;
     } catch (err) {
+      console.log(err);
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
@@ -315,6 +324,7 @@ export class HelperService {
         });
         return element.elementId;
       } catch (err) {
+        console.log(err);
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -373,9 +383,13 @@ export class HelperService {
             elementOrder: element.elementOrder,
             personCreationId: element.personCreationId,
             courseId: element.courseId,
-          }
+          },
         });
-        this.createElementOptions(element.options, elementId.elementId, element.typeId);
+        this.createElementOptions(
+          element.options,
+          elementId.elementId,
+          element.typeId,
+        );
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -384,7 +398,11 @@ export class HelperService {
     }
   }
 
-  async updateElementOptions(options, elementId: number, typeId: number): Promise<any> {
+  async updateElementOptions(
+    options,
+    elementId: number,
+    typeId: number,
+  ): Promise<any> {
     if (options) {
       try {
         switch (typeId) {
@@ -412,6 +430,7 @@ export class HelperService {
             break;
           // FILE SUBMISSION
           case 3:
+            console.log(options);
             await prisma.fileSubmissionSettings.update({
               where: {
                 courseElementId: elementId,
@@ -424,8 +443,7 @@ export class HelperService {
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
                 allowedFileTypes: options.allowedFileTypes,
-
-              }
+              },
             });
             break;
         }
@@ -438,12 +456,17 @@ export class HelperService {
   }
 
   /**
-   * 
-   * @param options Options of the element 
+   *
+   * @param options Options of the element
    * @param elementId Element Id
-   * @param typeId Type Id 
+   * @param typeId Type Id
    */
-  async createElementOptions(options, elementId: number, typeId: number): Promise<any> {
+  async createElementOptions(
+    options,
+    elementId: number,
+    typeId: number,
+  ): Promise<any> {
+    console.log('asdfa');
     if (options) {
       try {
         switch (typeId) {
@@ -467,6 +490,7 @@ export class HelperService {
             break;
           // FILE SUBMISSION
           case 3:
+            console.log(options);
             await prisma.fileSubmissionSettings.create({
               data: {
                 courseElementId: elementId,
@@ -477,10 +501,11 @@ export class HelperService {
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
                 allowedFileTypes: options.allowedFileTypes,
-              }
+              },
             });
         }
       } catch (err) {
+        console.log(err);
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -541,7 +566,6 @@ export class HelperService {
     }
   }
 
-
   async getClassIdByUUID(classUUID: string): Promise<any> {
     if (classUUID) {
       try {
@@ -577,7 +601,5 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() {
-
-  }
+  async getMaxFileSize() {}
 }

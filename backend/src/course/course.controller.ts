@@ -125,7 +125,6 @@ export class CourseController {
         filename: editFileName,
       }),
       fileFilter: imageFileFilter,
-      limits: { fileSize:  },
     }),
   )
   async submitExercise(@Req() request, @Res() response) {
