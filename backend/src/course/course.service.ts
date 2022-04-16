@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
+import * as moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -627,7 +628,7 @@ export class CourseService {
     for (let element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId.toString(),
+          element.elementId,
           element.typeId,
         );
 
@@ -914,7 +915,7 @@ export class CourseService {
     for (const element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId.toString(),
+          element.elementId,
           element.typeId,
         );
 
@@ -958,5 +959,76 @@ export class CourseService {
       status: RETURN_DATA.SUCCESS.status,
       data: returnElements,
     };
+  }
+
+  async getElement(request, elementUUID): Promise<ReturnMessage> {
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+
+    const element = await prisma.courseElements.findFirst({
+      where: {
+        elementId: Number(elementId),
+      },
+    });
+
+    const elementOptions = await this.helper.getElementOptions(
+      element.elementId,
+      element.typeId,
+    );
+
+    const creator = await this.helper.getUserById(element.personCreationId);
+
+    const elementItem = {
+      elementUUID: element.elementUUID,
+      courseUUID: await this.helper.getCourseUUIDById(element.courseId),
+      visible: Boolean(element.visible),
+      creationDate: element.creationDate,
+      creator: {
+        userUUID: creator.personUUID,
+        firstName: creator.firstName,
+        lastName: creator.lastName,
+        fullName: creator.firstName + ' ' + creator.lastName,
+      },
+      options: {
+        name: elementOptions.name,
+        description: elementOptions.description,
+        dueDate: elementOptions.dueDate,
+        submitLater: Boolean(elementOptions.submitLater),
+        submitLaterDate: elementOptions.submitLaterDate,
+        maxFileSize: elementOptions.maxFileSize,
+        allowedFileTypes: elementOptions.allowedFileTypes.replace(/\s/g, ''),
+      }
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: elementItem,
+    };
+  }
+  
+  async submitExercise(request, file): Promise<ReturnMessage> {
+    const elementUUID = request.body.elementUUID;
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const dueDate = await this.helper.getElementDueDate(elementId);
+
+    const isSubmittedInTime = moment(new Date(Date.now())).isAfter(dueDate);
+    try {
+      await prisma.fileSubmissions.create({
+        data: {
+          courseElementId: Number(elementId),
+          fileName: file.filename,
+          fileSize: file.size,
+          fileType: file.mimetype,
+          personId: Number(userId),
+          submitedLate: !isSubmittedInTime,
+          notes: '',
+          grade: '',
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
   }
 }

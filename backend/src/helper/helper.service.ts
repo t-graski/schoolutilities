@@ -1,7 +1,7 @@
 import { Injectable, Param } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
-import { ERROR_CODES, ID_STARTERS } from 'src/misc/parameterConstants';
+import { ERROR_CODES, ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
 //import parameter constants
@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -250,15 +250,32 @@ export class HelperService {
     }
   }
 
+  async getCourseUUIDById(courseId: number): Promise<string> {
+    if (courseId) {
+      try {
+        const course = await prisma.courses.findFirst({
+          where: {
+            courseId: courseId,
+          },
+        });
+        return course.courseUUID;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.SCHOOL_ID_NULL_OR_INVALID);
+    }
+  }
+
   /**
-   * 
+   *
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline
    * Type 1: Text
    * @returns Options of the given element
    */
-  async getElementOptions(elementId: string, typeId): Promise<any> {
+  async getElementOptions(elementId: number, typeId): Promise<any> {
     try {
       // if (typeId || elementId
       //     && validator.isNumeric(elementId)
@@ -296,11 +313,19 @@ export class HelperService {
               courseElementId: Number(elementId),
             },
           });
-
+          options = {
+            name: fileOptions.name,
+            description: fileOptions.description,
+            dueTime: fileOptions.dueTime,
+            submitLater: fileOptions.submitLater,
+            submitLaterTime: fileOptions.submitLaterTime,
+            maxFileSize: fileOptions.maxFileSize,
+            allowedFileTypes: fileOptions.allowedFileTypes,
+          };
       }
 
       return options;
-    } catch (err) {
+    } catch {
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
@@ -314,7 +339,7 @@ export class HelperService {
           },
         });
         return element.elementId;
-      } catch (err) {
+      } catch {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -373,9 +398,13 @@ export class HelperService {
             elementOrder: element.elementOrder,
             personCreationId: element.personCreationId,
             courseId: element.courseId,
-          }
+          },
         });
-        this.createElementOptions(element.options, elementId.elementId, element.typeId);
+        this.createElementOptions(
+          element.options,
+          elementId.elementId,
+          element.typeId,
+        );
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -384,7 +413,11 @@ export class HelperService {
     }
   }
 
-  async updateElementOptions(options, elementId: number, typeId: number): Promise<any> {
+  async updateElementOptions(
+    options,
+    elementId: number,
+    typeId: number,
+  ): Promise<any> {
     if (options) {
       try {
         switch (typeId) {
@@ -424,8 +457,7 @@ export class HelperService {
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
                 allowedFileTypes: options.allowedFileTypes,
-
-              }
+              },
             });
             break;
         }
@@ -438,12 +470,16 @@ export class HelperService {
   }
 
   /**
-   * 
-   * @param options Options of the element 
+   *
+   * @param options Options of the element
    * @param elementId Element Id
-   * @param typeId Type Id 
+   * @param typeId Type Id
    */
-  async createElementOptions(options, elementId: number, typeId: number): Promise<any> {
+  async createElementOptions(
+    options,
+    elementId: number,
+    typeId: number,
+  ): Promise<any> {
     if (options) {
       try {
         switch (typeId) {
@@ -477,10 +513,10 @@ export class HelperService {
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
                 allowedFileTypes: options.allowedFileTypes,
-              }
+              },
             });
         }
-      } catch (err) {
+      } catch {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -541,7 +577,6 @@ export class HelperService {
     }
   }
 
-
   async getClassIdByUUID(classUUID: string): Promise<any> {
     if (classUUID) {
       try {
@@ -577,7 +612,32 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() {
+  async getMaxFileSize(request: any): Promise<number> {
+    const elementId = await this.getElementIdByUUID(request.body.elementUUID);
+    const maxFileSize = await prisma.fileSubmissionSettings.findFirst({
+      where: {
+        courseElementId: elementId,
+      },
+      select: {
+        maxFileSize: true,
+      },
+    });
+    return maxFileSize.maxFileSize;
+  }
 
+  async getElementDueDate(elementId: number): Promise<any> {
+    const element = await prisma.courseElements.findFirst({
+      where: {
+        elementId: elementId,
+      },
+    });
+    if (element.typeId == 3) {
+      const fileSubmissionSettings = await prisma.fileSubmissionSettings.findFirst({
+        where: {
+          courseElementId: elementId,
+        },
+      });
+      return fileSubmissionSettings.dueTime;
+    }
   }
 }

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import CourseText from "./CourseText";
+import CourseFile from "./CourseFile";
 import { Headline } from "./Headline";
 import { InputField } from "./InputField";
+import * as moment from "moment";
 
 export function HeadlineDetailView({
   children,
@@ -69,6 +71,87 @@ export function TextDetailView({
   );
 }
 
+export function ExerciseDetailView({
+  children,
+  setDetailsConfig,
+  setButtonDisabled,
+  config = {
+    name: "",
+    description: "",
+    dueTime: "",
+    submitLater: false,
+    submitLaterTime: new Date(500).toISOString(),
+    maxFileSize: 1000,
+    allowedFileTypes: ".jpg,.png",
+  },
+  ...props
+}) {
+  const [currentDetailsConfig, setCurrentDetailsConfig] = useState(config);
+
+  const isoDateTime = "2012-12-12T11:01:00.000Z";
+  const dateTime = moment(isoDateTime).format("YYYY-MM-DDTHH:mm");
+  console.log(dateTime);
+
+  return (
+    <>
+      <InputField
+        label="Name"
+        value={currentDetailsConfig.name}
+        inputType={"text"}
+        onChange={(value) => {
+          setCurrentDetailsConfig({
+            ...currentDetailsConfig,
+            name: value,
+          });
+          setDetailsConfig({
+            ...currentDetailsConfig,
+            name: value,
+          });
+          setButtonDisabled(value.length === 0);
+        }}
+        iconName={""}
+        size="small"
+      ></InputField>
+      <InputField
+        label="Description"
+        value={currentDetailsConfig.description}
+        inputType={"textfield"}
+        onChange={(value) => {
+          setCurrentDetailsConfig({
+            ...currentDetailsConfig,
+            description: value,
+          });
+          setDetailsConfig({
+            ...currentDetailsConfig,
+            description: value,
+          });
+        }}
+        iconName={""}
+        size="small"
+      ></InputField>
+      <InputField
+        label="Due date"
+        value={moment(currentDetailsConfig.dueTime).format("YYYY-MM-DDTHH:mm")}
+        inputType={"datetime-local"}
+        onChange={(value) => {
+          setCurrentDetailsConfig({
+            ...currentDetailsConfig,
+            dueTime: new Date(Date.parse(value)).toISOString(),
+          });
+          console.log(value);
+          console.log(new Date(Date.parse(value)).toISOString());
+          setDetailsConfig({
+            ...currentDetailsConfig,
+            dueTime: new Date(Date.parse(value)).toISOString(),
+          });
+        }}
+        iconName={""}
+        size="small"
+      ></InputField>
+    </>
+  );
+}
+
 export const elementsToChoose: {
   id: string;
   name: string;
@@ -88,6 +171,13 @@ export const elementsToChoose: {
     name: "Text",
     detailViewComponent: TextDetailView,
     component: CourseText,
+    props: {},
+  },
+  {
+    id: "3",
+    name: "Exercise",
+    detailViewComponent: ExerciseDetailView,
+    component: CourseFile,
     props: {},
   },
 ];
