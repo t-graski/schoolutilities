@@ -998,7 +998,6 @@ export class CourseService {
       }
     }
 
-
     return {
       status: RETURN_DATA.SUCCESS.status,
       data: elementItem,

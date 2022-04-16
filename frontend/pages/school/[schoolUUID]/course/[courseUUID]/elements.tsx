@@ -143,6 +143,7 @@ export default function Features() {
                   }
                 );
                 console.log(responseBody);
+                console.log(saveResponse);
                 if (saveResponse) {
                   if (saveResponse.status == 200) {
                     router.push(
