@@ -145,4 +145,5 @@ export class CourseController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+  
 }
