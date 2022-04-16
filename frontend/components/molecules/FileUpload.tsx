@@ -2,6 +2,8 @@ import React, { useCallback, useState } from "react";
 import { styled } from "../../stitches.config";
 import { useDropzone } from "react-dropzone";
 import { SvgIcon } from "../atoms/SvgIcon";
+import { useRouter } from "next/router";
+import { getAccessToken } from "../../misc/authHelper";
 
 export type Props = {};
 
@@ -60,14 +62,25 @@ export const FileUpload: React.FC<Props> = ({}) => {
     onDrop,
   });
 
+  const router = useRouter();
+
   async function uploadFile(file) {
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("files", file);
+    formData.append("elementUUID", router.query.submissionUUID as string);
 
-    let request = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/courseFile`, {
-      method: "POST",
-      body: formData,
-    });
+    console.log(router.query.submissionUUID as string);
+
+    let request = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/submitExercise`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${await getAccessToken()}`,
+        },
+        body: formData,
+      }
+    );
 
     let response = await request.json();
 
@@ -103,7 +116,7 @@ export const FileUpload: React.FC<Props> = ({}) => {
     <section className="container">
       <StyledDropzone {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>Drag 'n drop some files here, or click to select files</p>
       </StyledDropzone>
       <aside>
         <StyledHeadline>Files</StyledHeadline>

@@ -1028,6 +1028,7 @@ export class CourseService {
       });
       return RETURN_DATA.SUCCESS;
     } catch (error) {
+      console.log(error);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

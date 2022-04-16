@@ -63,6 +63,7 @@ function mapElementOptions(element) {
     id: element.elementUUID,
     config: {
       ...elementConfig,
+      elementUUID: element.elementUUID,
       choosenElement: elementsToChoose.find(
         (e) => e.id === element.options.type
       ),
