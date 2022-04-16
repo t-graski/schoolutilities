@@ -10,7 +10,11 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
+<<<<<<< HEAD
   constructor(private readonly jwtService: JwtService) { }
+=======
+  constructor(private readonly jwtService: JwtService) {}
+>>>>>>> parent of 636a947 (merge)
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -250,6 +254,7 @@ export class HelperService {
     }
   }
 
+<<<<<<< HEAD
   async getCourseUUIDById(courseId: number): Promise<string> {
     if (courseId) {
       try {
@@ -269,13 +274,21 @@ export class HelperService {
 
   /**
    * 
+=======
+  /**
+   *
+>>>>>>> parent of 636a947 (merge)
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline
    * Type 1: Text
    * @returns Options of the given element
    */
+<<<<<<< HEAD
   async getElementOptions(elementId: number, typeId): Promise<any> {
+=======
+  async getElementOptions(elementId: string, typeId): Promise<any> {
+>>>>>>> parent of 636a947 (merge)
     try {
       // if (typeId || elementId
       //     && validator.isNumeric(elementId)
@@ -316,6 +329,7 @@ export class HelperService {
           options = {
             name: fileOptions.name,
             description: fileOptions.description,
+<<<<<<< HEAD
             dueDate: fileOptions.dueTime,
             submitLater: fileOptions.submitLater,
             submitLaterDate: fileOptions.submitLaterTime,
@@ -323,12 +337,23 @@ export class HelperService {
             allowedFileTypes: fileOptions.allowedFileTypes,
           }
 
+=======
+            dueTime: fileOptions.dueTime,
+            submitLater: fileOptions.submitLater,
+            submitLaterTime: fileOptions.submitLaterTime,
+            maxFileSize: fileOptions.maxFileSize,
+            fileTypes: fileOptions.allowedFileTypes,
+          };
+>>>>>>> parent of 636a947 (merge)
       }
 
       return options;
     } catch (err) {
       console.log(err);
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 636a947 (merge)
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
@@ -343,6 +368,10 @@ export class HelperService {
         });
         return element.elementId;
       } catch (err) {
+<<<<<<< HEAD
+=======
+        console.log(err);
+>>>>>>> parent of 636a947 (merge)
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -401,9 +430,19 @@ export class HelperService {
             elementOrder: element.elementOrder,
             personCreationId: element.personCreationId,
             courseId: element.courseId,
+<<<<<<< HEAD
           }
         });
         this.createElementOptions(element.options, elementId.elementId, element.typeId);
+=======
+          },
+        });
+        this.createElementOptions(
+          element.options,
+          elementId.elementId,
+          element.typeId,
+        );
+>>>>>>> parent of 636a947 (merge)
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -412,7 +451,15 @@ export class HelperService {
     }
   }
 
+<<<<<<< HEAD
   async updateElementOptions(options, elementId: number, typeId: number): Promise<any> {
+=======
+  async updateElementOptions(
+    options,
+    elementId: number,
+    typeId: number,
+  ): Promise<any> {
+>>>>>>> parent of 636a947 (merge)
     if (options) {
       try {
         switch (typeId) {
@@ -440,6 +487,10 @@ export class HelperService {
             break;
           // FILE SUBMISSION
           case 3:
+<<<<<<< HEAD
+=======
+            console.log(options);
+>>>>>>> parent of 636a947 (merge)
             await prisma.fileSubmissionSettings.update({
               where: {
                 courseElementId: elementId,
@@ -452,8 +503,12 @@ export class HelperService {
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
                 allowedFileTypes: options.allowedFileTypes,
+<<<<<<< HEAD
 
               }
+=======
+              },
+>>>>>>> parent of 636a947 (merge)
             });
             break;
         }
@@ -466,12 +521,26 @@ export class HelperService {
   }
 
   /**
+<<<<<<< HEAD
    * 
    * @param options Options of the element 
    * @param elementId Element Id
    * @param typeId Type Id 
    */
   async createElementOptions(options, elementId: number, typeId: number): Promise<any> {
+=======
+   *
+   * @param options Options of the element
+   * @param elementId Element Id
+   * @param typeId Type Id
+   */
+  async createElementOptions(
+    options,
+    elementId: number,
+    typeId: number,
+  ): Promise<any> {
+    console.log('asdfa');
+>>>>>>> parent of 636a947 (merge)
     if (options) {
       try {
         switch (typeId) {
@@ -495,6 +564,10 @@ export class HelperService {
             break;
           // FILE SUBMISSION
           case 3:
+<<<<<<< HEAD
+=======
+            console.log(options);
+>>>>>>> parent of 636a947 (merge)
             await prisma.fileSubmissionSettings.create({
               data: {
                 courseElementId: elementId,
@@ -505,10 +578,18 @@ export class HelperService {
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
                 allowedFileTypes: options.allowedFileTypes,
+<<<<<<< HEAD
               }
             });
         }
       } catch (err) {
+=======
+              },
+            });
+        }
+      } catch (err) {
+        console.log(err);
+>>>>>>> parent of 636a947 (merge)
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -569,7 +650,10 @@ export class HelperService {
     }
   }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 636a947 (merge)
   async getClassIdByUUID(classUUID: string): Promise<any> {
     if (classUUID) {
       try {
@@ -605,7 +689,11 @@ export class HelperService {
     }
   }
 
+<<<<<<< HEAD
   async getMaxFileSize() {
 
   }
+=======
+  async getMaxFileSize() {}
+>>>>>>> parent of 636a947 (merge)
 }

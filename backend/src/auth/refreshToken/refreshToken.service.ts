@@ -26,23 +26,13 @@ export class RefreshTokenService {
   //   });
   // }
 
-  async getTokenData(refreshToken: string, personUUID: string) {
-
+  async getTokenData(refreshToken: string, personId: number) {
     return await prisma.loginTokens.findFirst({
       where: {
         refreshToken,
-        personId: await this.getPersonId(personUUID),
+        personId,
       },
     });
-  }
-
-  async getPersonId(personUUID: string): Promise<number> {
-    const person = await prisma.persons.findFirst({
-      where: {
-        personUUID,
-      },
-    });
-    return person.personId;
   }
 
   // async insertRefreshToken(

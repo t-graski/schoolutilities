@@ -627,7 +627,11 @@ export class CourseService {
     for (let element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
+<<<<<<< HEAD
           element.elementId,
+=======
+          element.elementId.toString(),
+>>>>>>> parent of 636a947 (merge)
           element.typeId,
         );
 
@@ -914,7 +918,11 @@ export class CourseService {
     for (const element of currentElements) {
       if (element.elementUUID) {
         const elementOptions = await this.helper.getElementOptions(
+<<<<<<< HEAD
           element.elementId,
+=======
+          element.elementId.toString(),
+>>>>>>> parent of 636a947 (merge)
           element.typeId,
         );
 
@@ -959,6 +967,7 @@ export class CourseService {
       data: returnElements,
     };
   }
+<<<<<<< HEAD
 
   async getElement(request, elementUUID): Promise<ReturnMessage> {
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
@@ -1003,4 +1012,6 @@ export class CourseService {
       data: elementItem,
     }
   }
+=======
+>>>>>>> parent of 636a947 (merge)
 }

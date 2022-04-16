@@ -96,7 +96,7 @@ const FooterSpace = styled("div", {
   gap: "40px",
 });
 
-const Footer: React.FC<Props> = ({ }) => {
+const Footer: React.FC<Props> = ({}) => {
   return (
     <>
       <FooterSpace>

@@ -362,6 +362,10 @@ export class DatabaseService {
     prisma.loginTokens.create({
       data: {
         personId: userId,
+<<<<<<< HEAD
+=======
+        expireDate: new Date(new Date().getTime() + 6 * 60 * 60 * 1000),
+>>>>>>> parent of 636a947 (merge)
         refreshToken: token,
       },
     });

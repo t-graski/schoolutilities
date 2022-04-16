@@ -15,6 +15,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/misc/fileUpload';
+<<<<<<< HEAD
+=======
+import { LENGTHS } from 'src/misc/parameterConstants';
+>>>>>>> parent of 636a947 (merge)
 import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
@@ -124,12 +128,16 @@ export class CourseController {
         filename: editFileName,
       }),
       fileFilter: imageFileFilter,
+<<<<<<< HEAD
       limits: { fileSize: 100 },
+=======
+>>>>>>> parent of 636a947 (merge)
     }),
   )
   async submitExercise(@Req() request, @Res() response) {
 
   }
+<<<<<<< HEAD
 
   @Get('/element/:elementUUID')
   async getElement(@Param() params, @Req() request, @Res() response) {
@@ -139,4 +147,6 @@ export class CourseController {
       .json(result?.data ? result.data : result.message);
   }
 
+=======
+>>>>>>> parent of 636a947 (merge)
 }
