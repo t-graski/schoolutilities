@@ -6,17 +6,16 @@ import { HelperService } from 'src/helper/helper.service';
 
 const prisma = new PrismaClient();
 
-export const imageFileFilter = async (req, file, callback) => {
+export const fileFilter = async (req, file, callback) => {
   const { elementUUID } = req.body;
   const elementId = await getElementIdByUUID(elementUUID);
-  const fileExtensions = await getAllowedExtensions(elementId);
+  let fileExtensions = await getAllowedExtensions(elementId);
+  fileExtensions = fileExtensions.replace(/\s/g, '');
   const fileExtensionsArray = fileExtensions.split(',');
-  //transform extension string list with commas seperated into regex]
-  const allowedExtensions = fileExtensionsArray.map(ext => `\.(${ext})$`).join('|');
+  const allowedExtensions = fileExtensionsArray.map(ext => `\(${ext})$`).join('|');
 
-  console.log(allowedExtensions);
-
-  if (!file.originalname.match(allowedExtensions)) {
+  if (!file.originalname.match(allowedExtensions)
+  ) {
     return callback(
       null,
       false,
@@ -29,13 +28,14 @@ export const imageFileFilter = async (req, file, callback) => {
 export const editFileName = (req, file, callback) => {
   const uuid = uuidv4();
   const fileExtName = extname(file.originalname);
+  console.log(fileExtName);
+
   callback(
     null,
     `${ID_STARTERS.FILES}${uuid}${fileExtName}`,
     (req.originalName = file.filename),
   );
 };
-
 
 async function getElementIdByUUID(uuid: string) {
   const element = await prisma.courseElements.findFirst({
@@ -57,3 +57,4 @@ async function getAllowedExtensions(elementId: number) {
   });
   return extensions.allowedFileTypes;
 }
+

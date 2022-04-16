@@ -8,15 +8,14 @@ import {
   Get,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { FileUploadService } from './file.service';
-import { editFileName, imageFileFilter } from 'src/misc/fileUpload';
+import { editFileName, fileFilter } from 'src/misc/fileUpload';
 import { LENGTHS } from 'src/misc/parameterConstants';
 
 @Controller('api/courseFile')
 export class FileUploadController {
-  constructor(private readonly fileUploadService: FileUploadService) {}
+  constructor(private readonly fileUploadService: FileUploadService) { }
 
   // @UseGuards(JwtAuthGuard)
   @Post('')
@@ -26,7 +25,7 @@ export class FileUploadController {
         destination: '../files',
         filename: editFileName,
       }),
-      fileFilter: imageFileFilter,
+      fileFilter: fileFilter,
       limits: { fileSize: LENGTHS.MAX_FILE_SIZE },
     }),
   )
