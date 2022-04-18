@@ -9,6 +9,7 @@ import { getAccessToken, logout } from "../../misc/authHelper";
 import cookie from "js-cookie";
 import { SvgIcon } from "../atoms/SvgIcon";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
+import { Separator } from "../atoms/Separator";
 
 type Props = {};
 
@@ -17,6 +18,11 @@ const ProfileLayout = styled("div", {
   justifyContent: "center",
   padding: "3vh 6vw 10vh",
   gridTemplateColumns: "4fr 1fr 6fr 6fr",
+  
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    padding: "3vh 6vw",
+  },
 });
 
 const GeneralProfileNavbarLayout = styled("div", {});
@@ -66,6 +72,10 @@ const SpecialLinkLayout = styled("div", {
   alignItems: "center",
   width: "100%",
   color: "$fontPrimary",
+
+  "@mobileOnly": {
+    padding: "15px 0",
+  },
 });
 
 const LinkLayout = styled("a", {
@@ -113,19 +123,15 @@ const LinkLabel = styled("p", {
   },
 });
 
-const SettingsSpacer = styled("div", {
-  height: "100%",
-  width: "3px",
-  backgroundColor: "$fontPrimary",
-  margin: "0 auto",
-  marginBottom: "20px",
-});
-
 const ProfileDataColumn = styled("div", {
   display: "flex",
   flexDirection: "column",
   marginRight: "40px",
   gap: "10px",
+
+  "@mobileOnly": {
+    marginRight: "0",
+  },
 });
 
 const InputLabel = styled("p", {
@@ -347,7 +353,12 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
             </SpecialLinkLayout>
           </ProfileNavigationLinks>
         </GeneralProfileNavbarLayout>
-        <SettingsSpacer></SettingsSpacer>
+        <Separator
+          width={"big"}
+          alignment={"left"}
+          orientation={"vertical"}
+          hideOnMobile={true}
+        />
         {router.query.tab !== "schools" ? (
           <>
             <ProfileDataColumn>

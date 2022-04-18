@@ -14,6 +14,12 @@ const SchoolList = styled("div", {
   width: "100%",
   padding: "5vh 20vw",
   gap: "50px",
+
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+    padding: "5vh 10vw",
+  },
 });
 
 const SchoolLayout = styled("div", {

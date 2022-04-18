@@ -73,6 +73,7 @@ model personRoles {
   roles    roles   @relation(fields: [roleId], references: [roleId], onUpdate: Restrict, map: "fkPersonrolerole")
   schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkPersonroleschool")
 
+  @@unique([personId, schoolId], name: "schoolPersonId")
   @@index([roleId], map: "fkPersonrolerole")
   @@map("person_roles")
 }

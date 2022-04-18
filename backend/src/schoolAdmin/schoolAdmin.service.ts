@@ -33,7 +33,7 @@ export class SchoolAdminService {
     private readonly databaseService: DatabaseService,
     private readonly authService: AuthService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   async addSchoolConfig(
     body: AddSchool,
@@ -864,6 +864,7 @@ export class SchoolAdminService {
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
+    console.log(schoolUUID);
 
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 
@@ -901,6 +902,7 @@ export class SchoolAdminService {
         data: personsData,
       };
     } catch (err) {
+      console.log(err);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
@@ -1152,15 +1154,18 @@ export class SchoolAdminService {
       const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
       await prisma.personRoles.update({
         where: {
-          personId,
-          schoolId
+          schoolPersonId: {
+            personId,
+            schoolId,
+          },
         },
         data: {
-          roleId,
+          roleId: Number(roleId),
         },
       });
       return RETURN_DATA.SUCCESS;
     } catch (error) {
+      console.log(error);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

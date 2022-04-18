@@ -81,7 +81,7 @@ export const SettingsPopUp: React.FC<Props> = ({
               backgroundColor={"primary"}
               color={"primary"}
               disabled={!inputValid}
-              type="submit"
+              type="button"
             />
           </PopUpButtonLayout>
         </PopUpContentLayout>

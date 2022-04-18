@@ -5,6 +5,8 @@ import { getAccessToken } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
+import { InputField } from "../../atoms/InputField";
+import { regex } from "../../../misc/regex";
 
 type Props = {};
 
@@ -42,12 +44,39 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
+export const RoleOrder = [
+  {
+    value: 1,
+    label: "Admin",
+  },
+  {
+    value: 2,
+    label: "Teacher",
+  },
+  {
+    value: 3,
+    label: "Student",
+  },
+];
+
+const StyledInputField = styled("div", {
+  marginTop: "15px",
+  marginBottom: "15px",
+});
+
+const PersonRoleName = styled("p", {
+  fontSize: "1rem",
+  color: "$fontPrimary",
+});
+
 export const PersonsSettingsField: React.FC<Props> = ({}) => {
   const [persons, setPersons] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
+  const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [personName, setPersonName] = React.useState("");
-  const [personId, setPersonId] = React.useState("");
+  const [roleId, setRoleId] = React.useState("");
+  const [personUUID, setPersonUUID] = React.useState("");
   const [error, setError] = React.useState("");
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
@@ -79,6 +108,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
         }
       );
       let json = await returnValue.json();
+      console.log(json);
       setPersons(json);
     }
   }
@@ -113,6 +143,43 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
     }
   }
 
+  async function savePopUpInput() {
+    const data = {
+      schoolUUID,
+      personUUID,
+      roleId,
+    };
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/role`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    console.log(returnValue);
+    if (returnValue.status !== 200) {
+      setError("Error trying to save");
+    } else {
+      setError("");
+      const newEntries = persons.map((person, index) => {
+        if (person.personUUID == personUUID) {
+          person.roleId = roleId;
+          person.roleId = RoleOrder.find(
+            (role) => role.value == Number(roleId)
+          );
+          return person;
+        } else {
+          return person;
+        }
+      });
+      setPersons(newEntries);
+    }
+    setEditPopUpIsVisible(false);
+  }
+
   return (
     <>
       <SchoolDetailLayout>
@@ -122,7 +189,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
             inputValid={true}
             saveLabel="Confirm"
             saveFunction={() => {
-              deleteSettingsEntry(personId);
+              deleteSettingsEntry(personUUID);
               setDeletePopUpIsVisible(false);
             }}
             closeFunction={() => {
@@ -136,6 +203,30 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
             </StyledDeleteText>
           </SettingsPopUp>
         )}
+        {editPopUpIsVisible && (
+          <SettingsPopUp
+            headline={"Edit person role"}
+            inputValid={true}
+            saveLabel={"Save"}
+            saveFunction={savePopUpInput}
+            closeFunction={() => {
+              setEditPopUpIsVisible(false);
+              setPersonName("");
+            }}
+          >
+            <StyledInputField>
+              <InputField
+                inputType="select"
+                selectValue={roleId}
+                selectOptions={RoleOrder}
+                onChange={(event) => {
+                  setRoleId(event);
+                }}
+                iconName=""
+              ></InputField>
+            </StyledInputField>
+          </SettingsPopUp>
+        )}
         <SettingsHeader headline="Persons"></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
@@ -146,9 +237,15 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
             >
               <SettingsEntry
                 deleteFunction={() => {
-                  setPersonId(entry.personUUID);
+                  setPersonUUID(entry.personUUID);
                   setPersonName(entry.firstName + " " + entry.lastName);
                   setDeletePopUpIsVisible(true);
+                }}
+                editFunction={() => {
+                  setPersonUUID(entry.personUUID);
+                  setRoleId(entry.roleId);
+                  setPersonName(entry.firstName + " " + entry.lastName);
+                  setEditPopUpIsVisible(true);
                 }}
                 highlighted={
                   router.query &&
@@ -160,13 +257,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
                   <SettingsEntryName>
                     {entry.firstName} {entry.lastName}
                   </SettingsEntryName>
-                  {/* <Link
-                    href={`/school/${router.query.schoolUUID as string}/edit?personUUID=${entry.personUUID}`}
-                  >
-                    <SettingsEntryLink>
-                      <DepartmentName>{entry.departmentName}</DepartmentName>
-                    </SettingsEntryLink>
-                  </Link> */}
+                  <PersonRoleName>{entry.roleName}</PersonRoleName>
                 </>
               </SettingsEntry>
             </SettingsEntryLayout>

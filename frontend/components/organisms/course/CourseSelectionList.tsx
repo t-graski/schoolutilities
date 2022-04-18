@@ -14,6 +14,12 @@ const CourseList = styled("div", {
   width: "100%",
   padding: "5vh 10vw",
   gap: "50px",
+
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    gap: "20px",
+    padding: "5vh 10vw",
+  },
 });
 
 const CourseLayout = styled("div", {
@@ -35,6 +41,11 @@ const CourseLayout = styled("div", {
   cursor: "pointer",
   placeSelf: "center",
   color: "$fontPrimary",
+
+  "@mobileOnly": {
+    padding: "10px 20px",
+    width: "100%",
+  },
 });
 
 const CourseName = styled("p", {

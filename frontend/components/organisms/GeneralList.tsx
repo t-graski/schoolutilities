@@ -49,6 +49,7 @@ const GeneralList: React.FC<Props> = ({ items }) => {
               width={"big"}
               alignment={"left"}
               orientation={"vertical"}
+              hideOnMobile={true}
             />
           </>
         ))}
