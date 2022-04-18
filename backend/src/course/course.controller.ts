@@ -125,9 +125,10 @@ export class CourseController {
         filename: editFileName,
       }),
       fileFilter: fileFilter,
-      limits: { fileSize: 10000000 },
+      limits: { fileSize: 10000 },
     }),
   )
+
   async submitExercise(@Req() request, @Res() response, @UploadedFile() file) {
     if (file) {
       const result = await this.courseService.submitExercise(request, file);
@@ -135,8 +136,10 @@ export class CourseController {
         .status(result.status)
         .json(result?.data ? result.data : result.message);
     }
+
     return response.status(400).json({ message: 'Invalid file' });
   }
+
 
   @Get('/element/:elementUUID')
   async getElement(@Param() params, @Req() request, @Res() response) {
@@ -145,5 +148,5 @@ export class CourseController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-  
+
 }

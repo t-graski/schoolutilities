@@ -15,7 +15,7 @@ import { SchoolAdminService } from './schoolAdmin.service';
 @Controller('/api/schoolAdmin')
 @UseGuards(RolesGuard)
 export class SchoolAdminController {
-  constructor(private readonly schoolAdminService: SchoolAdminService) {}
+  constructor(private readonly schoolAdminService: SchoolAdminService) { }
 
   // @UseGuards(JwtAuthGuard)
   @Post('/addSchoolConfig')
@@ -212,6 +212,14 @@ export class SchoolAdminController {
       params.schoolUUID,
       token,
     );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Put('/role')
+  async updateRole(@Req() request, @Res() response) {
+    const result = await this.schoolAdminService.updateRole(request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

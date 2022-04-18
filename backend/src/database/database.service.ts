@@ -292,10 +292,12 @@ export class DatabaseService {
       let schoolUUID = await this.getSchoolUUIDById(school.schoolId);
 
       let roleName = Object.keys(Role)[role.roleId];
+      let roleId = role.roleId;
 
       schoolRoles.push({
         schoolUUID,
         roleName,
+        roleId
       });
     }
 
