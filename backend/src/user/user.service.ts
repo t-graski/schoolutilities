@@ -2,19 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
-import { RETURN_DATA, PASSWORD, LENGTHS } from 'src/misc/parameterConstants';
+import { RETURN_DATA, PASSWORD } from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { nanoid } from 'nanoid';
 import { MailService } from 'src/mail/mail.service';
 import { ReturnMessage } from 'src/types/Database';
 import { HelperService } from 'src/helper/helper.service';
-import { BADGES } from 'src/misc/badges';
 import { Cron } from '@nestjs/schedule';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
+
 
 @Injectable()
 export class UserService {
@@ -359,9 +359,11 @@ export class UserService {
         },
       });
 
-      let badges = userBadges.map((badge) => {
-        return BADGES[badge.badgeId]
-      })
+      // let badges = userBadges.map((badge) => {
+      //   return BADGES[badge.badgeId]
+      // })
+
+      let badges;
 
       let userItem = {
         userUUID: user.personUUID,
@@ -385,6 +387,78 @@ export class UserService {
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
+
+  async requestPasswordReset(request): Promise<ReturnMessage> {
+    const { email } = request.body;
+
+    if (!validator.isEmail(email)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    if (!await this.helper.emailIsRegisteredAndVerified(email)) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    const token = this.helper.generatePasswordResetToken();
+    const userId = await this.helper.getUserIdByEmail(email);
+
+    await prisma.passwordResetTokens.create({
+      data: {
+        personId: userId,
+        token,
+        expireDate: new Date(Date.now() + (24 * 60 * 60 * 1000)),
+      },
+    });
+
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async passwordReset(request): Promise<ReturnMessage> {
+    const { token, password } = request.body;
+    const userId = await this.helper.getUserIdByPasswordResetToken(token);
+    const encryptedPassword = await bcrypt.hash(password, 10);
+
+    if (!validator.isStrongPassword(password, PASSWORD)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const tokenStatus = await this.helper.passwordResetTokenIsValidAndNotExpired(token);
+
+    if (tokenStatus?.reason == 'expired') {
+      await this.helper.deletePasswordResetToken(token);
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    if (tokenStatus?.reason == 'invalid') {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+    try {
+      await prisma.persons.update({
+        where: {
+          personId: userId,
+        },
+        data: {
+          password: encryptedPassword,
+        },
+      });
+      await this.helper.deletePasswordResetToken(token);
+      return RETURN_DATA.SUCCESS;
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  @Cron('0 0 * * *')
+  async deleteExpiredPasswordResetTokens() {
+    await prisma.passwordResetTokens.deleteMany({
+      where: {
+        expireDate: {
+          lt: new Date(),
+        },
+      },
+    });
+  }
+
   // @Cron('40 * * * * *')
   // ! TODO 
   async checkAndUpdateBadges() {
@@ -395,10 +469,7 @@ export class UserService {
         creationDate: true,
       },
     });
-
-    for (let user of allUsers) {
-
-    }
+    for (let user of allUsers) { }
   }
 
   parseLanguage(id: number) {

@@ -1,22 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import {
   ERROR_CODES,
+  PASSWORD,
   ID_STARTERS,
   RETURN_DATA,
 } from 'src/misc/parameterConstants';
+import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
-import { use } from 'passport';
 import * as moment from 'moment-timezone';
-import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
+//import parameter constants
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
+
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -48,6 +50,40 @@ export class HelperService {
       }
     } else {
       throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async getArticleIdByUUID(articleUUID: string): Promise<number> {
+    if (articleUUID && validator.isUUID(articleUUID.slice(1), 4)) {
+      try {
+        const article = await prisma.articles.findFirst({
+          where: {
+            articleUUID: articleUUID,
+          },
+        });
+        return article.articleId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.ARTICLE_UUID_NULL_OR_INVALID);
+    }
+  }
+
+  async getElementDueDate(elementId: number): Promise<any> {
+    const element = await prisma.courseElements.findFirst({
+      where: {
+        elementId: elementId,
+      },
+    });
+    if (element.typeId == 3) {
+      const fileSubmissionSettings =
+        await prisma.fileSubmissionSettings.findFirst({
+          where: {
+            courseElementId: elementId,
+          },
+        });
+      return fileSubmissionSettings.dueTime;
     }
   }
 
@@ -120,7 +156,7 @@ export class HelperService {
   }
 
   async getSchoolsOfUser(userId: number, userUUID: string): Promise<any> {
-    if (!userId && !userUUID) {
+    if (!userId || !userUUID) {
       throw new Error(ERROR_CODES.USER_ID_OR_UUID_NULL_OR_INVALID);
     }
 
@@ -167,23 +203,6 @@ export class HelperService {
     }
   }
 
-  async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
-    if (schoolUUID && validator.isUUID(schoolUUID.slice(1), 4)) {
-      try {
-        const school = await prisma.schools.findFirst({
-          where: {
-            schoolUUID: schoolUUID,
-          },
-        });
-        return school.schoolId;
-      } catch (err) {
-        throw new Error(ERROR_CODES.DATABASE_ERROR);
-      }
-    } else {
-      throw new Error(ERROR_CODES.SCHOOL_UUID_NULL_OR_INVALID);
-    }
-  }
-
   async getSchoolUUIDById(schoolId: number): Promise<string> {
     if (schoolId) {
       try {
@@ -202,20 +221,20 @@ export class HelperService {
     }
   }
 
-  async getElementDueDate(elementId: number): Promise<any> {
-    const element = await prisma.courseElements.findFirst({
-      where: {
-        elementId: elementId,
-      },
-    });
-    if (element.typeId == 3) {
-      const fileSubmissionSettings =
-        await prisma.fileSubmissionSettings.findFirst({
+  async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
+    if (schoolUUID && validator.isUUID(schoolUUID.slice(1), 4)) {
+      try {
+        const school = await prisma.schools.findFirst({
           where: {
-            courseElementId: elementId,
+            schoolUUID: schoolUUID,
           },
         });
-      return fileSubmissionSettings.dueTime;
+        return school.schoolId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.SCHOOL_UUID_NULL_OR_INVALID);
     }
   }
 
@@ -251,6 +270,28 @@ export class HelperService {
     return userId;
   }
 
+  /**
+   * @param courseUUID Course UUID
+   * @returns Course Id
+   */
+
+  async getCourseIdByUUID(courseUUID: string): Promise<number> {
+    if (courseUUID && validator.isUUID(courseUUID.slice(1), 4)) {
+      try {
+        const course = await prisma.courses.findFirst({
+          where: {
+            courseUUID: courseUUID,
+          },
+        });
+        return course.courseId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_UUID_NULL_OR_INVALID);
+    }
+  }
+
   async getCourseUUIDById(courseId: number): Promise<string> {
     if (courseId) {
       try {
@@ -269,28 +310,11 @@ export class HelperService {
   }
 
   /**
-   * @param courseUUID Course UUID
-   * @returns Course Id
-   */
-  async getCourseIdByUUID(courseUUID: string): Promise<number> {
-    if (courseUUID && validator.isUUID(courseUUID.slice(1), 4)) {
-      try {
-        const course = await prisma.courses.findFirst({
-          where: {
-            courseUUID: courseUUID,
-          },
-        });
-        return course.courseId;
-      } catch (err) {
-        throw new Error(ERROR_CODES.DATABASE_ERROR);
-      }
-    } else {
-      throw new Error(ERROR_CODES.USER_UUID_NULL_OR_INVALID);
-    }
-  }
-
+   * 
+=======
   /**
    *
+>>>>>>> parent of 636a947 (merge)
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline
@@ -308,7 +332,7 @@ export class HelperService {
       switch (typeId) {
         //HEADLINE
         case 1:
-          const headlineOptions = await prisma.headlineSettings.findFirst({
+          let headlineOptions = await prisma.headlineSettings.findFirst({
             where: {
               courseElementId: Number(elementId),
             },
@@ -319,7 +343,7 @@ export class HelperService {
           break;
         //TEXT
         case 2:
-          const textOptions = await prisma.textSettings.findFirst({
+          let textOptions = await prisma.textSettings.findFirst({
             where: {
               courseElementId: Number(elementId),
             },
@@ -328,29 +352,26 @@ export class HelperService {
             text: textOptions.text,
           };
           break;
+        //FILE SUBMISSION
+        case 3:
+          let fileOptions = await prisma.fileSubmissionSettings.findFirst({
+            where: {
+              courseElementId: Number(elementId),
+            },
+          });
+          options = {
+            name: fileOptions.name,
+            description: fileOptions.description,
+            dueDate: fileOptions.dueTime,
+            submitLater: fileOptions.submitLater,
+            submitLaterDate: fileOptions.submitLaterTime,
+            maxFileSize: fileOptions.maxFileSize,
+            allowedFileTypes: fileOptions.allowedFileTypes,
+          };
       }
-
       return options;
     } catch (err) {
       throw new Error(ERROR_CODES.DATABASE_ERROR);
-    }
-  }
-
-  async userIsInCourse(userId: number, courseId: number): Promise<any> {
-    if (userId && courseId) {
-      try {
-        const userInCourse = await prisma.coursePersons.findFirst({
-          where: {
-            personId: userId,
-            courseId: courseId,
-          },
-        });
-        return userInCourse !== null;
-      } catch (err) {
-        throw new Error(ERROR_CODES.DATABASE_ERROR);
-      }
-    } else {
-      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
 
@@ -422,9 +443,10 @@ export class HelperService {
             elementOrder: element.elementOrder,
             personCreationId: element.personCreationId,
             courseId: element.courseId,
-          },
+
+          }
         });
-        this.createOptions(
+        this.createElementOptions(
           element.options,
           elementId.elementId,
           element.typeId,
@@ -434,41 +456,6 @@ export class HelperService {
       }
     } else {
       throw new Error(ERROR_CODES.ELEMENT_NULL);
-    }
-  }
-
-  async createOptions(
-    options,
-    elementId: number,
-    typeId: number,
-  ): Promise<any> {
-    if (options) {
-      try {
-        switch (typeId) {
-          //HEADLINE
-          case 1:
-            await prisma.headlineSettings.create({
-              data: {
-                label: options.label,
-                courseElementId: elementId,
-              },
-            });
-            break;
-          //TEXT
-          case 2:
-            await prisma.textSettings.create({
-              data: {
-                text: options.text,
-                courseElementId: elementId,
-              },
-            });
-            break;
-        }
-      } catch (err) {
-        throw new Error(ERROR_CODES.DATABASE_ERROR);
-      }
-    } else {
-      throw new Error(ERROR_CODES.ELEMENT_OPTIONS_NULL);
     }
   }
 
@@ -501,28 +488,44 @@ export class HelperService {
                 text: options.text,
               },
             });
-
+            break;
+          // FILE SUBMISSION
+          case 3:
+            await prisma.fileSubmissionSettings.update({
+              where: {
+                courseElementId: elementId,
+              },
+              data: {
+                name: options.name,
+                description: options.description,
+                dueTime: options.dueTime,
+                submitLater: options.submitLater,
+                submitLaterTime: options.submitLaterTime,
+                maxFileSize: options.maxFileSize,
+              }
+            });
             break;
         }
       } catch (err) {
-        console.log(err);
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
       throw new Error(ERROR_CODES.ELEMENT_OPTIONS_NULL);
     }
   }
+
   /**
-   *
-   * @param options Options of the element
-   * @param elementId Element Id
-   * @param typeId Type Id
-   */
+ *
+ * @param options Options of the element
+ * @param elementId Element Id
+ * @param typeId Type Id
+ */
   async createElementOptions(
     options,
     elementId: number,
     typeId: number,
   ): Promise<any> {
+    console.log('asdfa');
     if (options) {
       try {
         switch (typeId) {
@@ -544,6 +547,20 @@ export class HelperService {
               },
             });
             break;
+          // FILE SUBMISSION
+          case 3:
+            await prisma.fileSubmissionSettings.create({
+              data: {
+                courseElementId: elementId,
+                name: options.name,
+                description: options.description,
+                dueTime: options.dueTime,
+                submitLater: options.submitLater,
+                submitLaterTime: options.submitLaterTime,
+                maxFileSize: options.maxFileSize,
+                allowedFileTypes: options.allowedFileTypes,
+              }
+            });
         }
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
@@ -590,6 +607,13 @@ export class HelperService {
               },
             });
             break;
+          // FILE SUBMISSION
+          case 3:
+            await prisma.fileSubmissionSettings.delete({
+              where: {
+                courseElementId: elementId,
+              },
+            });
         }
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
@@ -616,20 +640,16 @@ export class HelperService {
     }
   }
 
-  /**
-   *
-   * @param articleUUID Article UUID
-   * @returns Article Id
-   */
-  async getArticleIdByUUID(articleUUID: string): Promise<any> {
-    if (articleUUID && validator.isUUID(articleUUID.slice(1))) {
+  async userIsInCourse(userId: number, courseId: number): Promise<any> {
+    if (userId && courseId) {
       try {
-        const article = await prisma.articles.findFirst({
+        const userInCourse = await prisma.coursePersons.findFirst({
           where: {
-            articleUUID,
+            personId: userId,
+            courseId: courseId,
           },
         });
-        return article.articleId;
+        return userInCourse !== null;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -704,7 +724,7 @@ export class HelperService {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
-      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
 
@@ -722,10 +742,13 @@ export class HelperService {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
-      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
 
+  async getMaxFileSize() {
+
+  }
   async removeUserFromUpdateEmailList(personId: number): Promise<any> {
     if (personId) {
       try {
@@ -738,7 +761,7 @@ export class HelperService {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
-      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
   /**
@@ -803,7 +826,7 @@ export class HelperService {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
-      throw new Error(ERROR_CODES.PERSON_ID_NULL_OR_INVALID);
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
 
@@ -816,4 +839,98 @@ export class HelperService {
       return 0;
     }
   }
+
+  async emailIsRegisteredAndVerified(email: string): Promise<any> {
+    if (email) {
+      try {
+        const user = await prisma.persons.findUnique({
+          where: {
+            email,
+          },
+        });
+        if (Boolean(user.emailVerified)) {
+          return user;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.EMAIL_NULL_OR_INVALID);
+    }
+  }
+
+  async getUserIdByPasswordResetToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.passwordResetTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          return user.personId;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async passwordResetTokenIsValidAndNotExpired(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.passwordResetTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          const now = new Date();
+          const tokenExpireDate = new Date(user.expireDate);
+          if (now < tokenExpireDate) {
+            return true;
+          } else {
+            return {
+              reason: 'expired'
+            };
+          }
+        } else {
+          return {
+            reason: 'invalid'
+          };
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async deletePasswordResetToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        await prisma.passwordResetTokens.delete({
+          where: {
+            token,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  generatePasswordResetToken() {
+    return uuidv4();
+  }
 }
+
