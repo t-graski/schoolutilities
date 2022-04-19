@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
-import { RETURN_DATA, PASSWORD } from 'src/misc/parameterConstants';
+import { RETURN_DATA, PASSWORD, LENGTHS } from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { nanoid } from 'nanoid';
 import { MailService } from 'src/mail/mail.service';
 import { ReturnMessage } from 'src/types/Database';
+import { HelperService } from 'src/helper/helper.service';
+import { BADGES } from 'src/misc/badges';
+import { Cron } from '@nestjs/schedule';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
@@ -19,7 +22,8 @@ export class UserService {
     private readonly databaseService: DatabaseService,
     private readonly authService: AuthService,
     private readonly mailService: MailService,
-  ) {}
+    private readonly helper: HelperService,
+  ) { }
 
   async changePassword(body, token: string) {
     const { oldPassword, newPassword } = body;
@@ -161,23 +165,42 @@ export class UserService {
     }
 
     try {
-      const person = await prisma.persons.findFirst({
+      const user = await prisma.persons.findFirst({
         where: {
           personUUID,
         },
-        select: {
-          personUUID: true,
-          firstName: true,
-          lastName: true,
-          email: true,
-          creationDate: true,
-          birthDate: true,
+      });
+
+      const userSettings = await prisma.personSettings.findFirst({
+        where: {
+          personId: user.personId,
         },
       });
 
+      let userItem = {
+        userUUID: user.personUUID,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.firstName + ' ' + user.lastName,
+        birthday: new Date(user.birthDate).toISOString().split('T')[0],
+        email: user.email,
+        emailVerified: user.emailVerified,
+        creationDate: user.creationDate,
+        userSettings: {
+          language: userSettings.language,
+          timeZone: userSettings.timeZone,
+          dateTimeFormat: userSettings.dateTimeFormat,
+          receiveUpdateEmails: userSettings.receiveUpdateEmails,
+          avatarUUID: userSettings.avatarUUID,
+          phoneNumber: userSettings.phoneNumber,
+          themeMode: userSettings.themeMode,
+          theme: userSettings.theme,
+        },
+      }
+
       return {
         status: RETURN_DATA.SUCCESS.status,
-        data: person,
+        data: userItem,
       };
     } catch (err) {
       return RETURN_DATA.DATABASE_ERROR;
@@ -210,6 +233,171 @@ export class UserService {
       return RETURN_DATA.SUCCESS;
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async updateUserSettings(request): Promise<ReturnMessage> {
+    let { language, timeZone, dateTimeFormat, receiveUpdateEmails,
+      avatarUUID, phoneNumber, themeMode, theme } = request.body;
+
+    const token = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(token);
+
+    if (phoneNumber) {
+      if (!validator.isMobilePhone(phoneNumber, 'any')) {
+        return RETURN_DATA.INVALID_INPUT;
+      }
+    }
+
+    if (!this.helper.isValidTimeZoneString(timeZone)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    if (!this.helper.isValidLanguageString(language)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    if (!this.helper.isValidDateTimeFormatString(dateTimeFormat)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    let userSettings = await prisma.personSettings.findFirst({
+      where: {
+        personId: userId
+      },
+    });
+
+    if (!userSettings) {
+      await this.helper.createOrResestDefaultSettings(userId);
+    }
+
+    if (!userSettings.receiveUpdateEmails && receiveUpdateEmails) {
+      await this.helper.addUserToUpdateEmailList(userId);
+    }
+
+    if (userSettings.receiveUpdateEmails && !receiveUpdateEmails) {
+      await this.helper.removeUserFromUpdateEmailList(userId);
+    }
+
+    if (themeMode == 0) theme = -1;
+    if (theme != -1) themeMode = 0;
+
+    await prisma.personSettings.update({
+
+      where: {
+        personId: Number(userId),
+      },
+      data: {
+        language: language,
+        timeZone: timeZone,
+        dateTimeFormat: dateTimeFormat,
+        receiveUpdateEmails: receiveUpdateEmails,
+        avatarUUID: avatarUUID,
+        phoneNumber: phoneNumber,
+        themeMode: themeMode,
+        theme: theme,
+      },
+    });
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async updatePublicProfile(request): Promise<ReturnMessage> {
+    let { displayName, publicEmail, biography, location, preferredLanguage, showAge, showJoinDate, showBadges } = request.body;
+    const token = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(token);
+
+    const userSettings = await prisma.publicProfileSettings.findFirst({
+      where: {
+        personId: userId
+      }
+    });
+
+    if (!userSettings) {
+      await this.helper.createDefaultPublicProfileSettings(userId);
+    }
+
+    await prisma.publicProfileSettings.update({
+      where: {
+        personId: userId,
+      },
+      data: {
+        displayName: displayName,
+        publicEmail: publicEmail,
+        biography: biography,
+        location: location,
+        preferredLanguage: preferredLanguage,
+        showAge: showAge,
+        showJoinDate: showJoinDate,
+        showBadges: showBadges,
+      },
+    });
+
+
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async getPublicProfile(request): Promise<ReturnMessage> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+
+    try {
+      let user = await prisma.persons.findFirst({
+        where: {
+          personId: userId,
+        },
+      });
+
+      let userSettings = await prisma.publicProfileSettings.findFirst({
+        where: {
+          personId: userId,
+        },
+      });
+
+      let userBadges = await prisma.personBadges.findMany({
+        where: {
+          personId: userId,
+        },
+      });
+
+      let badges = userBadges.map((badge) => {
+        return BADGES[badge.badgeId]
+      })
+
+      let userItem = {
+        userUUID: user.personUUID,
+        displayName: userSettings.displayName,
+        birthday: userSettings.showAge ? new Date(user.birthDate).toISOString().split('T')[0] : "",
+        email: userSettings.publicEmail,
+        biography: userSettings.biography,
+        location: userSettings.location,
+        preferredLanguage: userSettings.preferredLanguage,
+        age: userSettings.showAge ? this.helper.calculateAge(user.birthDate) : "",
+        joinDate: userSettings.showJoinDate ? user.creationDate : 0,
+        badges: userSettings.showBadges ? badges : [],
+      }
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: userItem,
+      };
+
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+  // @Cron('40 * * * * *')
+  // ! TODO 
+  async checkAndUpdateBadges() {
+    let allUsers = await prisma.persons.findMany({
+      select: {
+        personId: true,
+        personUUID: true,
+        creationDate: true,
+      },
+    });
+
+    for (let user of allUsers) {
+
     }
   }
 
