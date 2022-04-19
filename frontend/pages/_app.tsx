@@ -5,6 +5,8 @@ import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
 import { ThemeProvider } from "next-themes";
 import AOS from "aos";
+import "../misc/skeleton.css";
+import "../misc/sunEditor.css";
 
 const globalStyles = globalCss({
   "*": {
@@ -34,6 +36,8 @@ const globalStyles = globalCss({
 });
 
 import "aos/dist/aos.css";
+import { SkeletonTheme } from "react-loading-skeleton";
+import Script from "next/script";
 
 function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -51,9 +55,34 @@ function App({ Component, pageProps }: AppProps) {
       value={{ light: lightTheme.className, dark: "dark-theme" }}
       defaultTheme="system"
     >
-      {/* <NextUIProvider> */}
-      <Component {...pageProps} router={router} />
-      {/* </NextUIProvider> */}
+      <SkeletonTheme
+        baseColor="var(--colors-backgroundSecondary)"
+        highlightColor="var(--colors-skeletonSecondary)"
+        duration={1.3}
+      >
+        {/* <NextUIProvider> */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+        ></Script>
+        <Script
+          dangerouslySetInnerHTML={{
+            __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-879Y3BTW0K', {
+                  page_path: window.location.pathname,
+                });`,
+          }}
+        ></Script>
+        <Script
+          src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+          strategy="lazyOnload"
+        ></Script>
+        <Component {...pageProps} router={router} />
+        {/* </NextUIProvider> */}
+      </SkeletonTheme>
     </ThemeProvider>
   );
 }

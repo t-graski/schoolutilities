@@ -18,7 +18,8 @@ require('dotenv').config();
 
 @Injectable()
 export class DatabaseService {
-  constructor() { }
+  connection: any;
+  constructor() {}
 
   async registerUser(body: RegisterUserData): Promise<ReturnMessage> {
     const { email, password, firstName, lastName, birthDate } = body;

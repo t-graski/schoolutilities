@@ -45,27 +45,18 @@ export class RefreshTokenService {
     return person.personId;
   }
 
-  // async insertRefreshToken(
-  //   refreshToken: string,
-  //   personId: string,
-  // ): Promise<DatabaseUpdate> {
-  //   return new Promise((resolve, reject) => {
-  //     this.connection.query(
-  //       'insert into `login_tokens` set person_id=?, refresh_token=?',
-  //       [personId, refreshToken],
-  //       function (error, results, fields) {
-  //         resolve(results);
-  //       },
-  //     );
-  //   });
-  // }
-
-  async insertRefreshToken(refreshToken: string, personId: number) {
-    return await prisma.loginTokens.create({
-      data: {
-        personId,
-        refreshToken,
-      },
+  async insertRefreshToken(
+    refreshToken: string,
+    personId: string,
+  ): Promise<DatabaseUpdate> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(
+        'insert into `login_tokens` set person_id=?, refresh_token=?',
+        [personId, refreshToken],
+        function (error, results, fields) {
+          resolve(results);
+        },
+      );
     });
   }
 
