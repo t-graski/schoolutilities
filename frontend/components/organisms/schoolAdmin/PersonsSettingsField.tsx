@@ -167,9 +167,9 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
       const newEntries = persons.map((person, index) => {
         if (person.personUUID == personUUID) {
           person.roleId = roleId;
-          person.roleId = RoleOrder.find(
+          person.roleName = RoleOrder.find(
             (role) => role.value == Number(roleId)
-          );
+          ).label;
           return person;
         } else {
           return person;
