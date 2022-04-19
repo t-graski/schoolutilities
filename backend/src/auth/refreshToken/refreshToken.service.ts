@@ -10,9 +10,7 @@ const prisma = new PrismaClient();
 @Injectable()
 export class RefreshTokenService {
   connection: any;
-  constructor(
-    private readonly jwtService: JwtService,
-  ) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   // async getTokenData1(refreshToken: string, personId): Promise<DatabaseUpdate> {
   //   return new Promise((resolve, reject) => {
@@ -27,7 +25,6 @@ export class RefreshTokenService {
   // }
 
   async getTokenData(refreshToken: string, personUUID: string) {
-
     return await prisma.loginTokens.findFirst({
       where: {
         refreshToken,
@@ -45,18 +42,27 @@ export class RefreshTokenService {
     return person.personId;
   }
 
-  async insertRefreshToken(
-    refreshToken: string,
-    personId: string,
-  ): Promise<DatabaseUpdate> {
-    return new Promise((resolve, reject) => {
-      this.connection.query(
-        'insert into `login_tokens` set person_id=?, refresh_token=?',
-        [personId, refreshToken],
-        function (error, results, fields) {
-          resolve(results);
-        },
-      );
+  // async insertRefreshToken(
+  //   refreshToken: string,
+  //   personId: string,
+  // ): Promise<DatabaseUpdate> {
+  //   return new Promise((resolve, reject) => {
+  //     this.connection.query(
+  //       'insert into `login_tokens` set person_id=?, refresh_token=?',
+  //       [personId, refreshToken],
+  //       function (error, results, fields) {
+  //         resolve(results);
+  //       },
+  //     );
+  //   });
+  // }
+
+  async insertRefreshToken(refreshToken: string, personId: number) {
+    return await prisma.loginTokens.create({
+      data: {
+        personId,
+        refreshToken,
+      },
     });
   }
 

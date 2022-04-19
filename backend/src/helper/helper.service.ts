@@ -249,11 +249,27 @@ export class HelperService {
     return userId;
   }
 
+  async getCourseUUIDById(courseId: number): Promise<string> {
+    if (courseId) {
+      try {
+        const course = await prisma.courses.findFirst({
+          where: {
+            courseId: courseId,
+          },
+        });
+        return course.courseUUID;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.SCHOOL_ID_NULL_OR_INVALID);
+    }
+  }
+
   /**
    * @param courseUUID Course UUID
    * @returns Course Id
    */
-
   async getCourseIdByUUID(courseUUID: string): Promise<number> {
     if (courseUUID && validator.isUUID(courseUUID.slice(1), 4)) {
       try {
@@ -279,7 +295,7 @@ export class HelperService {
    * Type 1: Text
    * @returns Options of the given element
    */
-  async getElementOptions(elementId: string, typeId): Promise<any> {
+  async getElementOptions(elementId: number, typeId): Promise<any> {
     try {
       // if (typeId || elementId
       //     && validator.isNumeric(elementId)
@@ -315,6 +331,24 @@ export class HelperService {
       return options;
     } catch (err) {
       throw new Error(ERROR_CODES.DATABASE_ERROR);
+    }
+  }
+
+  async userIsInCourse(userId: number, courseId: number): Promise<any> {
+    if (userId && courseId) {
+      try {
+        const userInCourse = await prisma.coursePersons.findFirst({
+          where: {
+            personId: userId,
+            courseId: courseId,
+          },
+        });
+        return userInCourse !== null;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
 
