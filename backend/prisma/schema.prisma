@@ -310,6 +310,8 @@ model fileSubmissions {
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@index([personId], map: "fkFileSubmissionPersonId")
   @@map("file_submissions")
+}
+
 model articles {
   articleId        Int      @id @default(autoincrement()) @map("article_id")
   articleUUID      String   @unique(map: "article_uuid") @map("article_uuid") @db.VarChar(255)

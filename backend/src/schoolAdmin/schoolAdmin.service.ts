@@ -863,7 +863,6 @@ export class SchoolAdminService {
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
-    console.log(schoolUUID);
 
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 

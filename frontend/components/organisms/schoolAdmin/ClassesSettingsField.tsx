@@ -184,7 +184,6 @@ export const ClassesSettingsField: React.FC<Props> = ({ }) => {
       setError("");
       const newEntries = classes.map((schoolClass, index) => {
         if (schoolClass.classUUID == schoolClassId) {
-          console.log(schoolClass.className);
           schoolClass.className = schoolClassName;
           schoolClass.departmentName = departments.find(
             (department) => department.departmentUUID === departmentUUID

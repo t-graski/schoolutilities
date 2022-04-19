@@ -8,7 +8,12 @@ import {
 } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
-import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
+import {
+  LENGTHS,
+  RETURN_DATA,
+  ID_STARTERS,
+  ERROR_CODES,
+} from 'src/misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
@@ -26,7 +31,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -83,7 +88,7 @@ export class CourseService {
       });
 
       if (persons) {
-        for (let person of persons) {
+        for (const person of persons) {
           if (!validator.isUUID(person.slice(1), 4)) {
             return RETURN_DATA.INVALID_INPUT;
           }
@@ -110,7 +115,7 @@ export class CourseService {
       }
 
       if (classes) {
-        for (let schoolClass of classes) {
+        for (const schoolClass of classes) {
           if (!validator.isUUID(schoolClass.slice(1), 4)) {
             return RETURN_DATA.INVALID_INPUT;
           }
@@ -252,7 +257,7 @@ export class CourseService {
     }
 
     if (classes) {
-      for (let schoolClass of classes) {
+      for (const schoolClass of classes) {
         if (!validator.isUUID(schoolClass.slice(1), 4)) {
           return RETURN_DATA.INVALID_INPUT;
         }
@@ -726,7 +731,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                        currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -996,15 +1001,32 @@ export class CourseService {
         submitLaterDate: elementOptions.submitLaterDate,
         maxFileSize: elementOptions.maxFileSize,
         allowedFileTypes: elementOptions.allowedFileTypes.replace(/\s/g, ''),
-      }
-    }
+      },
+    };
 
     return {
       status: RETURN_DATA.SUCCESS.status,
       data: elementItem,
     };
   }
-  
+
+  async getCourseUUIDById(courseId: number): Promise<string> {
+    if (courseId) {
+      try {
+        const course = await prisma.courses.findFirst({
+          where: {
+            courseId: courseId,
+          },
+        });
+        return course.courseUUID;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.SCHOOL_ID_NULL_OR_INVALID);
+    }
+  }
+
   async submitExercise(request, file): Promise<ReturnMessage> {
     const elementUUID = request.body.elementUUID;
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
@@ -1028,7 +1050,6 @@ export class CourseService {
       });
       return RETURN_DATA.SUCCESS;
     } catch (error) {
-      console.log(error);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

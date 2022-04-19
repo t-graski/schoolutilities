@@ -24,7 +24,6 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [isDisabled, setIsDisabled] = React.useState(false);
 
-  console.log(schoolTimezone);
   useEffect(() => {
     if (
       schoolNameValid &&

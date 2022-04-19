@@ -1,7 +1,11 @@
 import { Injectable, Param } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
-import { ERROR_CODES, ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
+import {
+  ERROR_CODES,
+  ID_STARTERS,
+  RETURN_DATA,
+} from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
 //import parameter constants
@@ -10,7 +14,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -161,6 +165,23 @@ export class HelperService {
     }
   }
 
+  async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
+    if (schoolUUID && validator.isUUID(schoolUUID.slice(1), 4)) {
+      try {
+        const school = await prisma.schools.findFirst({
+          where: {
+            schoolUUID: schoolUUID,
+          },
+        });
+        return school.schoolId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.SCHOOL_UUID_NULL_OR_INVALID);
+    }
+  }
+
   async getSchoolUUIDById(schoolId: number): Promise<string> {
     if (schoolId) {
       try {
@@ -176,6 +197,23 @@ export class HelperService {
       }
     } else {
       throw new Error(ERROR_CODES.SCHOOL_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async getElementDueDate(elementId: number): Promise<any> {
+    const element = await prisma.courseElements.findFirst({
+      where: {
+        elementId: elementId,
+      },
+    });
+    if (element.typeId == 3) {
+      const fileSubmissionSettings =
+        await prisma.fileSubmissionSettings.findFirst({
+          where: {
+            courseElementId: elementId,
+          },
+        });
+      return fileSubmissionSettings.dueTime;
     }
   }
 
@@ -543,7 +581,7 @@ export class HelperService {
   }
 
   /**
-   * 
+   *
    * @param articleUUID Article UUID
    * @returns Article Id
    */
@@ -565,7 +603,7 @@ export class HelperService {
   }
 
   /**
-   * 
+   *
    * @param type Type of the element
    * @returns Type Id
    */
@@ -579,7 +617,7 @@ export class HelperService {
   /**
    * @brief Returns 1 if reading time is less than 1 minute
    * @param content Content of the article
-   * @returns Reading time in minutes 
+   * @returns Reading time in minutes
    */
   async computeReadingTime(content: string): Promise<any> {
     const words = content.split(' ').length;
