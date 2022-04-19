@@ -28,15 +28,17 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
 
   async validate(request: Request, payload: any) {
     const refreshToken = request?.body?.token;
-    const userId = payload.id;
+    const personUUID = payload.id.personUUID;
     const refreshTokenData = await this.refreshTokenService.getTokenData(
       refreshToken,
-      userId,
+      personUUID,
     );
     if (!refreshTokenData) {
       throw new UnauthorizedException();
     }
-    const newToken = await this.refreshTokenService.getNewJwtToken(userId);
+    const newToken = await this.refreshTokenService.getNewJwtToken({
+      personUUID,
+    });
     return newToken;
   }
 }

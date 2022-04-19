@@ -1,5 +1,5 @@
-import React from "react";
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
@@ -7,48 +7,6 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
-          <link
-            rel="preload"
-            href="/fonts/montserrat-v18-latin-100.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/montserrat-v18-latin-300.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/montserrat-v18-latin-regular.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/montserrat-v18-latin-500.woff"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/montserrat-v18-latin-700.woff2"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/montserrat-v18-latin-900.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
@@ -64,59 +22,114 @@ export default class Document extends NextDocument {
                 });`,
             }}
           ></script>
+          <script type="text/javascript" src="https://cdn.cookielaw.org/consent/7d50b473-ca67-4ccc-9509-8fc4008d70b7/OtAutoBlock.js" ></script>
+          <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"  type="text/javascript" charSet="UTF-8" data-domain-script="7d50b473-ca67-4ccc-9509-8fc4008d70b7" ></script>
+          <script type="text/javascript">
+          function OptanonWrapper() { }
+          </script>
+          <Script
+            src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+            strategy="lazyOnload"
+          ></Script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
-              /* montserrat-100 - latin */
+              /* poppins-100 - latin */
 @font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 100;
-    src: local(''), url('/fonts/montserrat-v18-latin-100.woff2') format('woff2'),
-        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-100.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 100;
+  src: url('/fonts/poppins-v15-latin-100.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('/fonts/poppins-v15-latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/poppins-v15-latin-100.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/poppins-v15-latin-100.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/poppins-v15-latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/poppins-v15-latin-100.svg#Poppins') format('svg'); /* Legacy iOS */
 }
-/* montserrat-300 - latin */
+/* poppins-300 - latin */
 @font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 300;
-    src: local(''), url('/fonts/montserrat-v18-latin-300.woff2') format('woff2'),
-        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/fonts/poppins-v15-latin-300.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('/fonts/poppins-v15-latin-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/poppins-v15-latin-300.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/poppins-v15-latin-300.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/poppins-v15-latin-300.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/poppins-v15-latin-300.svg#Poppins') format('svg'); /* Legacy iOS */
 }
-/* montserrat-regular - latin */
+/* poppins-regular - latin */
 @font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 400;
-    src: local(''), url('/fonts/montserrat-v18-latin-regular.woff2') format('woff2'),
-        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/poppins-v15-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('/fonts/poppins-v15-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/poppins-v15-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/poppins-v15-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/poppins-v15-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/poppins-v15-latin-regular.svg#Poppins') format('svg'); /* Legacy iOS */
 }
-/* montserrat-500 - latin */
+/* poppins-500 - latin */
 @font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 500;
-    src: local(''), url('/fonts/montserrat-v18-latin-500.woff2') format('woff2'),
-        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/poppins-v15-latin-500.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('/fonts/poppins-v15-latin-500.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/poppins-v15-latin-500.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/poppins-v15-latin-500.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/poppins-v15-latin-500.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/poppins-v15-latin-500.svg#Poppins') format('svg'); /* Legacy iOS */
 }
-/* montserrat-700 - latin */
+/* poppins-700 - latin */
 @font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 700;
-    src: local(''), url('/fonts/montserrat-v18-latin-700.woff2') format('woff2'),
-        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/poppins-v15-latin-700.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('/fonts/poppins-v15-latin-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/poppins-v15-latin-700.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/poppins-v15-latin-700.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/poppins-v15-latin-700.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/poppins-v15-latin-700.svg#Poppins') format('svg'); /* Legacy iOS */
 }
-/* montserrat-900 - latin */
+/* poppins-900 - latin */
 @font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 900;
-    src: local(''), url('/fonts/montserrat-v18-latin-900.woff2') format('woff2'),
-        /* Chrome 26+, Opera 23+, Firefox 39+ */ url('./fonts/montserrat-v18-latin-900.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 900;
+  src: url('/fonts/poppins-v15-latin-900.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('/fonts/poppins-v15-latin-900.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/fonts/poppins-v15-latin-900.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/fonts/poppins-v15-latin-900.woff') format('woff'), /* Modern Browsers */
+       url('/fonts/poppins-v15-latin-900.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('/fonts/poppins-v15-latin-900.svg#Poppins') format('svg'); /* Legacy iOS */
+}
+#__next {
+  height: 100%;
+}
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+#__next{
+  min-height: 100vh;
+  position: relative;
+}
 }
 `,
             }}
+          />
+          <style
+            id="stitches"
+            dangerouslySetInnerHTML={{ __html: getCssText() }}
           />
         </Head>
         <body>

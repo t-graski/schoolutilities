@@ -1,0 +1,383 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model coursePersons {
+  courseId Int     @map("course_id")
+  personId Int     @map("person_id")
+  courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
+  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
+
+
+
+  @@unique([courseId, personId], name: "coursePersonId")
+  @@index([personId], map: "fkCoursepersonspersonid")
+  @@index([courseId], map: "fkCoursepersonscourseid")
+  @@map("course_persons")
+}
+
+model courseClasses {
+  courseId      Int           @map("course_id")
+  classId       Int           @map("class_id")
+  courses       courses       @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCourseclasscourse")
+  schoolClasses schoolClasses @relation(fields: [classId], references: [classId], onUpdate: Restrict, map: "fkCourseclassclass")
+
+  @@unique([courseId, classId], name: "courseClassId")
+  @@index([courseId], map: "fkCourseclasscourse")
+  @@index([classId], map: "fkCourseclassclass")
+  @@map("course_classes")
+}
+
+model departments {
+  departmentId   Int             @id @default(autoincrement()) @map("department_id")
+  departmentUUID String          @map("department_uuid") @db.VarChar(255)
+  name           String          @db.VarChar(255)
+  schoolId       Int             @map("school_id")
+  isVisible      Boolean         @default(true) @map("is_visible")
+  childsVisible  Boolean         @default(true) @map("childs_visible")
+  schools        schools         @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkDepartmentschool")
+  schoolClasses  schoolClasses[]
+
+  @@index([schoolId], map: "fkDepartmentschool")
+}
+
+model languages {
+  languageId   Int       @id @default(autoincrement()) @map("language_id")
+  languageName String    @map("language_name") @db.VarChar(255)
+  languageTag  String    @map("language_tag") @db.VarChar(255)
+  schools      schools[]
+}
+
+model loginTokens {
+  loginTokenId Int      @id @default(autoincrement()) @map("login_token_id")
+  personId     Int      @map("person_id")
+  refreshToken String   @map("refresh_token") @db.VarChar(255)
+  creationTime DateTime @default(now()) @map("creation_time") @db.Timestamp(0)
+  expireDate   DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  persons      persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkLogintokenperson")
+
+  @@index([personId], map: "fkLogintokenperson")
+  @@map("login_tokens")
+}
+
+model personRoles {
+  personId Int     @unique(map: "personId") @map("person_id")
+  roleId   Int     @map("role_id")
+  schoolId Int     @unique @map("school_id")
+  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonroleperson")
+  roles    roles   @relation(fields: [roleId], references: [roleId], onUpdate: Restrict, map: "fkPersonrolerole")
+  schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkPersonroleschool")
+
+  @@unique([personId, schoolId], name: "schoolPersonId")
+  @@index([roleId], map: "fkPersonrolerole")
+  @@map("person_roles")
+}
+
+model persons {
+  personId      Int      @id @default(autoincrement()) @map("person_id")
+  personUUID    String   @unique(map: "personUUID") @map("person_uuid") @db.VarChar(255)
+  firstName     String   @db.VarChar(255)
+  lastName      String   @db.VarChar(255)
+  birthDate     DateTime @db.Date
+  email         String   @unique(map: "email") @db.VarChar(255)
+  password      String   @db.VarChar(255)
+  emailVerified Boolean  @default(false) @map("email_verified")
+  creationDate  DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  lastLogin     DateTime @map("last_login") @db.Timestamp(0)
+
+  attendingCourses courses[]        @relation(references: [courseId])
+  loginTokens      loginTokens[]
+  personRoles      personRoles[]
+  registerTokens   registerTokens[]
+
+  coursePersons         coursePersons[]
+  schoolJoinCodes       schoolJoinCodes[]
+  schoolPersons         schoolPersons[]
+  emailChangeToken      emailChangeToken[]
+  publicProfileSettings publicProfileSettings[]
+  personSettings        personSettings[]
+  updateEmailReceivers  updateEmailReceivers[]
+  personBadges          personBadges[]
+}
+
+model personSettings {
+  personSettingsId    Int     @id @default(autoincrement()) @map("person_settings_id")
+  personId            Int     @unique(map: "personId") @map("person_id")
+  language            String  @map("language") @db.VarChar(255)
+  timeZone            String  @map("time_zone") @db.VarChar(255)
+  dateTimeFormat      String  @map("date_time_format") @db.VarChar(255)
+  receiveUpdateEmails Boolean @map("receive_update_emails")
+  avatarUUID          String  @map("avatar_uuid") @db.VarChar(255)
+  phoneNumber         String  @map("phone_number") @db.VarChar(255)
+  themeMode           Int     @map("theme_mode")
+  theme               Int     @map("theme")
+
+  persons persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonsettingsperson")
+  @@map("person_settings")
+}
+
+model publicProfileSettings {
+  publicProfileSettingsId Int     @id @default(autoincrement()) @map("public_profile_settings_id")
+  personId                Int     @unique(map: "personId") @map("person_id")
+  displayName             String  @map("display_name") @db.VarChar(255)
+  publicEmail             String  @map("public_email") @db.VarChar(255)
+  biography               String  @map("biography") @db.Text
+  location                String  @map("location") @db.VarChar(255)
+  preferredLanguage       String  @map("preferred_language") @db.VarChar(255)
+  showAge                 Boolean @map("show_age")
+  showJoinDate            Boolean @map("show_join_date")
+  showBadges              Boolean @map("show_badges")
+
+  person persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPublicprofilesettingsperson")
+  @@map("public_profile_settings")
+}
+
+model registerTokens {
+  registerLinkId Int     @id @default(autoincrement()) @map("register_link_id")
+  personId       Int     @map("person_id")
+  token          String  @db.VarChar(255)
+  persons        persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkRegistertokenperson")
+
+  @@index([personId], map: "fkRegistertokenperson")
+  @@map("register_tokens")
+}
+
+model updateEmailReceivers {
+  updateEmailReceiverId Int     @id @default(autoincrement()) @map("update_email_receiver_id")
+  personId              Int     @unique(map: "personId") @map("person_id")
+  email                 String  @map("email") @db.VarChar(255)
+  persons               persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkUpdateemailreceiverperson")
+
+  @@index([personId], map: "fkUpdateemailreceiverperson")
+  @@map("update_email_receivers")
+}
+
+model roles {
+  roleId      Int           @id @default(autoincrement()) @map("role_id")
+  roleName    String        @map("role_name") @db.VarChar(255)
+  personRoles personRoles[]
+}
+
+model schoolClasses {
+  classId      Int         @id @default(autoincrement()) @map("class_id")
+  classUUID    String      @map("class_uuid") @db.VarChar(255)
+  departmentId Int         @map("department_id")
+  className    String      @map("class_name") @db.VarChar(255)
+  departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
+
+  courseClasses courseClasses[]
+  @@index([departmentId], map: "fkSchoolclassdepartment")
+  @@map("school_classes")
+}
+
+model schools {
+  schoolId         Int           @id @default(autoincrement()) @map("school_id")
+  schoolUUID       String        @map("school_uuid") @db.VarChar(255)
+  name             String        @db.VarChar(255)
+  description      String        @db.VarChar(3000)
+  languageId       Int           @map("language_id")
+  timezone         String        @db.VarChar(255)
+  creationDate     DateTime      @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId Int           @map("person_creation_id")
+  languages        languages     @relation(fields: [languageId], references: [languageId], onUpdate: Restrict, map: "fkSchoollanguage")
+  personRoles      personRoles[]
+  courses          courses[]
+  departments      departments[]
+
+  schoolJoinCodes schoolJoinCodes[]
+  schoolPersons   schoolPersons[]
+  @@index([languageId], map: "languageId")
+}
+
+model subjects {
+  subjectId   Int       @id @default(autoincrement()) @map("subject_id")
+  subjectName String    @map("subject_name") @db.VarChar(255)
+  classId     Int       @map("class_id")
+  courses     courses[]
+}
+
+model personBadges {
+  personBadgeId Int     @id @default(autoincrement()) @map("person_badge_id")
+  personId      Int     @map("person_id")
+  badgeId       Int     @map("badge_id")
+  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonbadgeperson")
+
+  @@map("person_badges")
+}
+
+model courses {
+  courseId          Int      @id @default(autoincrement()) @map("course_id")
+  courseUUID        String   @map("course_uuid") @db.VarChar(255)
+  name              String   @db.VarChar(255)
+  courseDescription String   @map("course_description") @db.Text
+  schoolId          Int      @map("school_id")
+  subjectId         Int      @map("subject_id")
+  creationDate      DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId  Int      @map("person_creation_id")
+
+  schools  schools   @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkCourseschool")
+  subjects subjects  @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
+  members  persons[] @relation(references: [personId])
+
+  coursePersons coursePersons[]
+  courseClasses courseClasses[]
+  @@unique([name, schoolId], map: "uniqueCourseNameSchoolId")
+  @@index([schoolId], map: "fkCourseschool")
+  @@index([subjectId], map: "fkCoursesubject")
+}
+
+model schoolJoinCodes {
+  schoolJoinCodeId Int      @id @default(autoincrement()) @map("school_join_code_id")
+  schoolId         Int      @map("school_id")
+  joinCode         String   @unique(map: "joinCode") @map("join_code") @db.VarChar(255)
+  expireDate       DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  joinCodeName     String   @map("join_code_name") @db.VarChar(255)
+  personCreationId Int      @map("person_creation_id")
+  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  persons          persons  @relation(fields: [personCreationId], references: [personId], onUpdate: Restrict, map: "fkSchoolJoinCodePerson")
+  schools          schools  @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkSchoolJoinCodeSchool")
+
+  @@index([personCreationId], map: "fkSchoolJoinCodePerson")
+  @@index([schoolId], map: "fkSchoolJoinCodeSchool")
+  @@map("school_join_codes")
+}
+
+model courseFiles {
+  courseFileId   Int      @id @default(autoincrement()) @map("course_file_id")
+  courseFileUUID String   @map("course_file_uuid") @db.VarChar(255)
+  fileName       String   @map("file_name") @db.VarChar(255)
+  dateUploaded   DateTime @default(now()) @map("date_uploaded") @db.Timestamp(0)
+  fileSize       Int      @map("file_size")
+  fileType       String   @map("file_type") @db.VarChar(255)
+
+  @@map("course_files")
+}
+
+model timezones {
+  timezoneId   Int    @id @default(autoincrement()) @map("timezone_id")
+  timezoneUUID String @map("timezone_uuid") @db.VarChar(255)
+  timezoneName String @map("timezone_name") @db.VarChar(255)
+}
+
+model emailLog {
+  emailId       Int      @id @default(autoincrement()) @map("email_id")
+  emailUUID     String   @map("email_uuid") @db.VarChar(255)
+  personId      Int      @map("person_id")
+  emailDate     DateTime @default(now()) @map("email_date") @db.Timestamp(0)
+  emailSubject  String   @map("email_subject") @db.VarChar(255)
+  emailReceiver String   @map("email_receiver") @db.VarChar(255)
+
+  @@map("email_log")
+}
+
+model schoolPersons {
+  schoolId Int     @map("school_id")
+  personId Int     @map("person_id")
+  schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkSchoolPersonSchoolId")
+  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkSchoolPersonPersonId")
+
+
+  @@unique([schoolId, personId], name: "schoolPersonId")
+  @@index([schoolId], map: "fkSchoolPersonSchoolId")
+  @@index([personId], map: "fkSchoolPersonPersonId")
+  @@map("school_persons")
+}
+
+model emailChangeToken {
+  emailChangeId Int     @id @default(autoincrement()) @map("email_change_id")
+  personId      Int     @map("person_id")
+  token         String  @unique(map: "token") @map("token") @db.VarChar(255)
+  newEmail      String  @map("new_email") @db.VarChar(255)
+  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkEmailChangePersonId")
+
+
+  @@index([personId], map: "fkEmailChangePersonId")
+  @@map("email_change_token")
+}
+
+model courseElements {
+  elementId        Int      @id @default(autoincrement()) @map("element_id")
+  elementUUID      String   @map("element_uuid") @db.VarChar(255)
+  typeId           Int      @map("type_id")
+  parentId         Int      @map("parent_id")
+  visible          Boolean  @map("visible")
+  elementOrder     Int      @map("element_order")
+  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId Int      @map("person_creation_id")
+  courseId         Int      @map("course_id")
+
+  @@index([courseId], map: "fkCourseElementCourseId")
+  @@index([parentId], map: "fkCourseElementParentId")
+  @@index([typeId], map: "fkCourseElementTypeId")
+  @@index([personCreationId], map: "fkCourseElementPersonCreationId")
+  @@map("course_elements")
+}
+
+model headlineSettings {
+  headlineId      Int    @id @default(autoincrement()) @map("headline_id")
+  courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
+  label           String @map("label") @db.VarChar(255)
+
+  @@index([courseElementId], map: "fkHeadlineCourseElementId")
+  @@map("headline_settings")
+}
+
+model textSettings {
+  textId          Int    @id @default(autoincrement()) @map("text_id")
+  courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
+  text            String @map("text") @db.VarChar(255)
+
+
+  @@index([courseElementId], map: "fkTextCourseElementId")
+  @@map("text_settings")
+}
+
+model fileSubmissionSettings {
+  fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
+  courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
+  name             String   @map("name") @db.VarChar(255)
+  description      String   @map("description") @db.Text
+  dueTime          DateTime @map("due_time") @db.Timestamp(0)
+  submitLater      Boolean  @map("submit_later")
+  submitLaterTime  DateTime @map("submit_later_time") @db.Timestamp(0)
+  maxFileSize      Int      @map("max_file_size")
+  allowedFileTypes String   @map("allowed_file_types") @db.VarChar(255)
+
+  @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
+  @@map("file_submission_settings")
+}
+
+model fileSubmissions {
+  fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
+  courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
+  fileName         String   @map("file_name") @db.VarChar(255)
+  fileSize         Int      @map("file_size")
+  fileType         String   @map("file_type") @db.VarChar(255)
+  submissionTime   DateTime @default(now()) @map("submission_time") @db.Timestamp(0)
+  personId         Int      @map("person_id")
+  submitedLate     Boolean  @map("submited_late")
+  notes            String   @map("notes") @db.Text
+  grade            String   @map("grade")
+
+  @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
+  @@index([personId], map: "fkFileSubmissionPersonId")
+  @@map("file_submissions")
+}
+
+model articles {
+  articleId        Int      @id @default(autoincrement()) @map("article_id")
+  articleUUID      String   @unique(map: "article_uuid") @map("article_uuid") @db.VarChar(255)
+  headline         String   @map("headline") @db.Text
+  catchPhrase      String   @map("catch_phrase") @db.Text
+  content          String   @map("content") @db.Text
+  type             Int      @map("type")
+  isPublic         Boolean  @map("is_public")
+  publishDate      DateTime @map("publish_date") @db.Timestamp(0)
+  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId Int      @map("person_creation_id")
+}

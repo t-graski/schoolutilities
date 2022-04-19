@@ -1,41 +1,40 @@
-# name: Deploy backend
+name: Deploy backend
 
-# on:
-#   push:
-#     branches:
-#       - master
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#         - uses: actions/checkout@v2
-#         - uses: actions/setup-node@v2
-#           with:
-#             node-version: "12"
-#         - name: Build nextjs app 
-#           working-directory: ./backend
-#           run: |
-#                npm install
-#                npm run build
-#         - uses: easingthemes/ssh-deploy@v2.2.11
-#           env:
-#             SSH_PRIVATE_KEY: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}
-#             SOURCE: "backend/"
-#             EXCLUDE: "node_modules"
-#             REMOTE_HOST: ${{ secrets.BACKEND_REMOTE_HOST }}
-#             REMOTE_USER: ${{ secrets.BACKEND_REMOTE_USER }}
-#             TARGET: ${{ secrets.REMOTE_TARGET }} 
-#         - name: Connect to remote server via SSH
-#           uses: appleboy/ssh-action@v0.1.4
-#           with:
-#             script: |
-#                      cd ../home/REMOTE_USER/
-#                      docker build -t schoolutilities-backend . 
-#                      docker stop schoolutilities-backend || true && docker rm schoolutilities-backend || true
-#                      docker run --name schoolutilities-backend -d -p 8888:8888 schoolutilities-backend 
-#             host: ${{ secrets.BACKEND_REMOTE_HOST }}
-#             username: ${{ secrets.BACKEND_REMOTE_USER }}
-#             password: ""
-#             key: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}   
-            
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'backend/**'  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v2
+          with:
+            node-version: "12"
+        - uses: easingthemes/ssh-deploy@v2.2.11
+          env:
+            SSH_PRIVATE_KEY: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}
+            SOURCE: "backend/"
+            EXCLUDE: "node_modules"
+            REMOTE_HOST: ${{ secrets.BACKEND_REMOTE_HOST }}
+            REMOTE_USER: ${{ secrets.BACKEND_REMOTE_USER }}
+            TARGET: ${{ secrets.BACKEND_TARGET }} 
+        - name: Connect to remote server via SSH
+          uses: appleboy/ssh-action@v0.1.4
+          with:
+            script: |
+                     cd ../home/REMOTE_USER/
+                     docker build -t schoolutilities-backend . 
+                     docker stop schoolutilities-backend || true && docker rm schoolutilities-backend || true
+                     docker run --name schoolutilities-backend -d -p 8888:8888 schoolutilities-backend 
+            host: ${{ secrets.BACKEND_REMOTE_HOST }}
+            username: ${{ secrets.BACKEND_REMOTE_USER }}
+            password: ""
+            key: ${{ secrets.BACKEND_SSH_PRIVATE_KEY }}  
+
+
 

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths: 
+      - 'frontend/**'  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,11 +15,6 @@ jobs:
         - uses: actions/setup-node@v2
           with:
             node-version: "12"
-        - name: Build nextjs app 
-          working-directory: ./frontend  
-          run: |
-               npm install
-               npm run build
         - uses: easingthemes/ssh-deploy@v2.2.11
           env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -24,13 +22,13 @@ jobs:
             EXCLUDE: "node_modules"
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
-            TARGET: ${{ secrets.REMOTE_TARGET }} 
+            TARGET: ${{ secrets.TARGET }} 
         - name: Connect to remote server via SSH
           uses: appleboy/ssh-action@v0.1.4
           with:
             script: |
                      cd ../home/REMOTE_USER/
-                     docker build -t schoolutilities-frontend . 
+                     docker image rm schoolutilities-frontend || true && docker build -t schoolutilities-frontend . 
                      docker stop schoolutilities-frontend || true && docker rm schoolutilities-frontend || true
                      docker run --name schoolutilities-frontend -d -p 3000:3000 schoolutilities-frontend 
             host: ${{ secrets.REMOTE_HOST }}

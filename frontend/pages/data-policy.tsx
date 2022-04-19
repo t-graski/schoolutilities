@@ -1,9 +1,8 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
-import React from "react";
+import { Navbar } from "../components/organisms/Navbar";
+import Footer from "../components/organisms/Footer";
 import Head from "next/head";
-import { Spacer } from "../components/Spacer";
+import { Spacer } from "../components/atoms/Spacer";
 
 const StyledDiv = styled("div", {
   padding: "0 15vw",
@@ -16,18 +15,7 @@ export default function DataPolicy() {
       <Head>
         <title>Data Policy - SchoolUtilities</title>
       </Head>
-      <Navbar
-        links={[
-          {
-            href: "/",
-            label: "Home",
-          },
-          {
-            href: "/features",
-            label: "Features",
-          },
-        ]}
-      ></Navbar>
+      <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
       <StyledDiv>
         <div
@@ -63,6 +51,9 @@ export default function DataPolicy() {
       font-family: Arial !important;
       word-break: break-word !important;
               }
+              * {
+                color: #ffffff;
+              }
       </style>
       
             <div data-custom-class="body">
@@ -91,22 +82,7 @@ export default function DataPolicy() {
           }}
         ></div>
       </StyledDiv>
-      <Footer
-        links={[
-          {
-            href: "/data-policy",
-            label: "Data Policy",
-          },
-          {
-            href: "/imprint",
-            label: "Imprint",
-          },
-          {
-            href: "/?logout=true",
-            label: "Logout",
-          },
-        ]}
-      ></Footer>
+      <Footer></Footer>
     </>
   );
 }
