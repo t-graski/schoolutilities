@@ -21,6 +21,7 @@ import SvgFirstAidKit from "./svg/SvgFirstAidKit";
 import SvgHamburger from "./svg/SvgHamburger";
 import SvgHome from "./svg/SvgHome";
 import SvgInfo from "./svg/SvgInfo";
+import SvgInstagram from "./svg/SvgInstagram";
 import SvgPassword from "./svg/SvgKey";
 import SvgLanguage from "./svg/SvgLanguage";
 import SvgName from "./svg/SvgName";
