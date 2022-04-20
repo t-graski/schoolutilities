@@ -940,6 +940,8 @@ export class CourseService {
         });
       }
     }
+
+    console.log(elementsWithOptions);
     let returnElements = elementsWithOptions.filter(
       (element) => !element.parentUUID || element.parentUUID === '0',
     );

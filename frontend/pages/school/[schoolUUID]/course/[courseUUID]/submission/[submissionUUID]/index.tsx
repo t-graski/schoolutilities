@@ -8,9 +8,8 @@ import { Headline } from "../../../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../../../components/atoms/Separator";
 import Footer from "../../../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../../../misc/authHelper";
-import CourseMenu from "../../../../../../../components/atoms/CourseMenu";
-import CourseContent from "../../../../../../../components/molecules/course/CourseContent";
 import { FileUpload } from "../../../../../../../components/molecules/FileUpload";
+import { Button } from "../../../../../../../components/atoms/Button";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -46,9 +45,8 @@ export default function Features() {
   });
 
   async function requestDataFromDatabase() {
-    const { submissionUUID } = router.query;
     if (!Array.isArray(submissionUUID)) {
-      setSubmissionUUID(submissionUUID);
+      setSubmissionUUID(router.query.submissionUUID as string);
     }
     let accessToken = await getAccessToken();
     if (submissionUUID && accessToken && submissionContent.name == "") {
@@ -95,7 +93,19 @@ export default function Features() {
           ></Headline>
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
+        <Spacer size="verySmall"></Spacer>
         <FileUpload></FileUpload>
+        <Spacer size="verySmall"></Spacer>
+        <Button
+          backgroundColor={"secondary"}
+          color={"primary"}
+          label={"Back to course"}
+          onClick={() => {
+            router.push(
+              `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
+            );
+          }}
+        ></Button>
         <Spacer size="verySmall"></Spacer>
       </ContentLayout>
       <Footer></Footer>

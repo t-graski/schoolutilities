@@ -125,7 +125,7 @@ export class CourseController {
         filename: editFileName,
       }),
       fileFilter: fileFilter,
-      limits: { fileSize: 10000 },
+      limits: { fileSize: 1000000 },
     }),
   )
 

@@ -4,6 +4,8 @@ import { useDropzone } from "react-dropzone";
 import { SvgIcon } from "../atoms/SvgIcon";
 import { useRouter } from "next/router";
 import { getAccessToken } from "../../misc/authHelper";
+import { Spacer } from "../atoms/Spacer";
+import { Button } from "../atoms/Button";
 
 export type Props = {};
 
@@ -48,12 +50,11 @@ const StyledHeadline = styled("h4", {
 
 export const FileUpload: React.FC<Props> = ({}) => {
   const [files, setFiles] = useState([]);
+  const [filesSent, setFilesSent] = useState(false);
 
   const onDrop = useCallback(
     (acceptedFiles) => {
       setFiles([...files, ...acceptedFiles]);
-
-      uploadFile(acceptedFiles[0]);
     },
     [files]
   );
@@ -85,6 +86,7 @@ export const FileUpload: React.FC<Props> = ({}) => {
     let response = await request.json();
 
     console.log(response);
+    setFilesSent(true);
   }
 
   let fileHtml = files.map((file) => {
@@ -113,15 +115,30 @@ export const FileUpload: React.FC<Props> = ({}) => {
   }
 
   return (
-    <section className="container">
-      <StyledDropzone {...getRootProps({ className: "dropzone" })}>
-        <input {...getInputProps()} />
-        <p>Drag 'n drop some files here, or click to select files</p>
-      </StyledDropzone>
-      <aside>
-        <StyledHeadline>Files</StyledHeadline>
-        <ul>{fileHtml}</ul>
-      </aside>
-    </section>
+    <>
+      {filesSent ? (
+        <>Files successfully uploaded..</>
+      ) : (
+        <section className="container">
+          <StyledDropzone {...getRootProps({ className: "dropzone" })}>
+            <input {...getInputProps()} />
+            <p>Drag 'n drop some files here, or click to select files</p>
+          </StyledDropzone>
+          <aside>
+            <StyledHeadline>Files</StyledHeadline>
+            <ul>{fileHtml}</ul>
+            <Spacer size={"verySmall"}></Spacer>
+            <Button
+              backgroundColor={"primary"}
+              color={"primary"}
+              label={"Hand in"}
+              onClick={() => {
+                uploadFile(files[0]);
+              }}
+            ></Button>
+          </aside>
+        </section>
+      )}
+    </>
   );
 };

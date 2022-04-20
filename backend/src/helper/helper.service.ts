@@ -502,7 +502,7 @@ export class HelperService {
                 submitLater: options.submitLater,
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
-              }
+              },
             });
             break;
         }
@@ -559,7 +559,7 @@ export class HelperService {
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
                 allowedFileTypes: options.allowedFileTypes,
-              }
+              },
             });
         }
       } catch (err) {
