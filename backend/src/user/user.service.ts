@@ -410,6 +410,15 @@ export class UserService {
       },
     });
 
+    const mail = {
+      from: 'noreply@schoolutilities.net',
+      to: email,
+      subject: 'Password reset - Schoolutilities',
+      text: `A request has been received to reset your password. If you did not request this, please ignore this email. Otherwise, please click the following link to reset your password: https://schoolutilities.net/auth/reset-password?token=${token}`,
+    };
+
+    await this.mailService.sendMail(mail);
+
     return RETURN_DATA.SUCCESS;
   }
 
@@ -432,6 +441,7 @@ export class UserService {
     if (tokenStatus?.reason == 'invalid') {
       return RETURN_DATA.INVALID_INPUT;
     }
+
     try {
       await prisma.persons.update({
         where: {
@@ -441,7 +451,9 @@ export class UserService {
           password: encryptedPassword,
         },
       });
+
       await this.helper.deletePasswordResetToken(token);
+      
       return RETURN_DATA.SUCCESS;
     } catch {
       return RETURN_DATA.DATABASE_ERROR;

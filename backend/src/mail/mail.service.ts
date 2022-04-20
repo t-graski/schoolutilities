@@ -25,7 +25,7 @@ export class MailService {
     try {
       await transporter.sendMail(message);
       this.logMailSend(message);
-    } catch (error) {}
+    } catch {}
   }
 
   async logMailSend(message) {
