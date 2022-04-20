@@ -56,11 +56,10 @@ const StyledList = styled(NavigationMenuPrimitive.List, {
   all: "unset",
   display: "flex",
   justifyContent: "center",
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "transparent",
   padding: 4,
   borderRadius: 6,
   listStyle: "none",
-  boxShadow: `0 2px 10px ${blackA.blackA7}`,
 });
 
 const itemStyles = {
@@ -82,7 +81,9 @@ const StyledTrigger = styled(NavigationMenuPrimitive.Trigger, {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
+  fontSize: "1.5rem",
   gap: 2,
+  cursor: "pointer",
 });
 
 const StyledCaret = styled(CaretDownIcon, {
@@ -226,6 +227,7 @@ const LinkTitle = styled("div", {
   lineHeight: 1.2,
   marginBottom: 5,
   color: "$fontPrimary",
+  fontWeight: 700,
 });
 
 const LinkText = styled("p", {
@@ -323,9 +325,6 @@ export const NavigationMenuPart = () => {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuLink href="/">Home</NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
           <NavigationMenuTrigger>Dropdown</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
@@ -333,32 +332,26 @@ export const NavigationMenuPart = () => {
                 title="Course selection"
                 href="/school/select?redirect=/course"
               >
-                Build high-quality, accessible design systems and web apps. - CHANGE ME
+                Build high-quality, accessible design systems and web apps. -
+                CHANGE ME
               </ContentListItem>
               <ContentListItem
                 title="Dashboard"
                 href="/school/select?redirect=/dashboard"
               >
-                A quick tutorial to get you up and running with Radix
-                Primitives. - CHANGE ME
+                Maintain a clean and organized environment for managing
+                everything you can imagine.
               </ContentListItem>
-              <ContentListItem
-                title="Help"
-                href="/help"
-              >
+              <ContentListItem title="Help" href="/help">
                 Unstyled and compatible with any styling solution. - CHANGE ME
               </ContentListItem>
-              <ContentListItem
-                title="FAQ"
-                href="/help/faq"
-              >
-                Use CSS keyframes or any animation library of your choice. - CHANGE ME
+              <ContentListItem title="FAQ" href="/help/faq">
+                Use CSS keyframes or any animation library of your choice. -
+                CHANGE ME
               </ContentListItem>
-              <ContentListItem
-                title="Discord Bot"
-                href="/bot"
-              >
-                Tested in a range of browsers and assistive technologies. - CHANGE ME
+              <ContentListItem title="Discord Bot" href="/bot">
+                Tested in a range of browsers and assistive technologies. -
+                CHANGE ME
               </ContentListItem>
               {/* <ContentListItem
                 title="Releases"
@@ -369,16 +362,51 @@ export const NavigationMenuPart = () => {
             </ContentList>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Help</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ContentList layout="two">
+              <ContentListItem
+                title="Premium"
+                href="/school/select?redirect=/course"
+              >
+                With SchoolUtilities' premium features, your school can unleash
+                it's full potential.
+              </ContentListItem>
+              <ContentListItem
+                title="Tutorials"
+                href="/school/select?redirect=/dashboard"
+              >
+                Maintain a clean and organized environment for managing
+                everything you can imagine. - CHANGE ME
+              </ContentListItem>
+              <ContentListItem title="Patch Notes" href="/help">
+                Unstyled and compatible with any styling solution. - CHANGE ME
+              </ContentListItem>
+              <ContentListItem title="About" href="/help/faq">
+                Get acquainted with the whole story about SchoolUtilities.
+              </ContentListItem>
+              <ContentListItem title="Support" href="/bot">
+                Tested in a range of browsers and assistive technologies. -
+                CHANGE ME
+              </ContentListItem>
+              <ContentListItem
+                title="FAQ"
+                href="/docs/primitives/overview/releases"
+              >
+                Radix Primitives releases and their changelogs. - CHANGE ME
+              </ContentListItem>
+            </ContentList>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
 
         <NavigationMenuItem>
           <NavigationMenuTrigger>+</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
-              <ContentListItem
-                title="New school"
-                href="/school/create"
-              >
-                Build high-quality, accessible design systems and web apps. - CHANGE ME
+              <ContentListItem title="New school" href="/school/create">
+                Build high-quality, accessible design systems and web apps. -
+                CHANGE ME
               </ContentListItem>
               <ContentListItem
                 title="Getting started"

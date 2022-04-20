@@ -444,6 +444,10 @@ const InfoHoverCardIcon = styled("div", {
 
 const InfoHoverCardText = styled("div", {});
 
+const InputFieldLabel = styled("div", {});
+
+const Required = styled("div", {});
+
 export const InputField: React.FC<Props> = ({
   inputType,
   selectOptions,
