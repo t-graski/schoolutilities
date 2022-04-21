@@ -117,6 +117,11 @@ const StyledInputField = styled("input", {
         width: "fit-content",
         margin: "0 20px 0 0",
       },
+      select: {},
+      "search-select": {},
+      textfield: {},
+      number: {},
+      "datetime-local": {},
     },
     editable: {
       true: {},
@@ -443,6 +448,10 @@ const InfoHoverCardIcon = styled("div", {
 });
 
 const InfoHoverCardText = styled("div", {});
+
+const InputFieldLabel = styled("div", {});
+
+const Required = styled("div", {});
 
 export const InputField: React.FC<Props> = ({
   inputType,

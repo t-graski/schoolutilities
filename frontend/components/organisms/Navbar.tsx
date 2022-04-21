@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import UserMenu from "../molecules/UserMenu";
 import NavbarPopOver from "./NavbarPopOver";
+import { NavigationMenuPart } from "./NavigationMenuPart";
 
 type Props = {};
 
@@ -106,26 +107,12 @@ export const Navbar: React.FC<Props> = ({}) => {
             </LogoLayout>
           </a>
         </Link>
-        <NavLinksLayout>
-          <Link href="/" passHref>
-            <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>
+        <NavigationMenuPart></NavigationMenuPart>
+        <SpecialLinkLayout>
+          <Link href="/profile/settings" passHref>
+            <UserMenu></UserMenu>
           </Link>
-          <Link href="/school/select" passHref>
-            <StyledLink marked={router.pathname === "/school/select"}>
-              MY SCHOOLS
-            </StyledLink>
-          </Link>
-          <Link href="/change-logs" passHref>
-            <StyledLink marked={router.pathname === "/change-logs"}>
-              CHANGE-LOG
-            </StyledLink>
-          </Link>
-          <SpecialLinkLayout>
-            <Link href="/profile/settings" passHref>
-              <UserMenu></UserMenu>
-            </Link>
-          </SpecialLinkLayout>
-        </NavLinksLayout>
+        </SpecialLinkLayout>
         <StyledOpenButton onClick={() => setMobileVisible(true)}>
           <SvgIcon iconName="SvgHamburger" />
         </StyledOpenButton>
