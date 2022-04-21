@@ -17,7 +17,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
@@ -443,8 +443,7 @@ export class HelperService {
             elementOrder: element.elementOrder,
             personCreationId: element.personCreationId,
             courseId: element.courseId,
-
-          }
+          },
         });
         this.createElementOptions(
           element.options,
@@ -515,11 +514,11 @@ export class HelperService {
   }
 
   /**
- *
- * @param options Options of the element
- * @param elementId Element Id
- * @param typeId Type Id
- */
+   *
+   * @param options Options of the element
+   * @param elementId Element Id
+   * @param typeId Type Id
+   */
   async createElementOptions(
     options,
     elementId: number,
@@ -746,9 +745,7 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() {
-
-  }
+  async getMaxFileSize() {}
   async removeUserFromUpdateEmailList(personId: number): Promise<any> {
     if (personId) {
       try {
@@ -897,12 +894,12 @@ export class HelperService {
             return true;
           } else {
             return {
-              reason: 'expired'
+              reason: 'expired',
             };
           }
         } else {
           return {
-            reason: 'invalid'
+            reason: 'invalid',
           };
         }
       } catch {
@@ -929,8 +926,107 @@ export class HelperService {
     }
   }
 
+  async emailChangeTokenIsValidAndNotExpired(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.emailChangeTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          const now = new Date();
+          const tokenExpireDate = new Date(user.expireDate);
+          if (now < tokenExpireDate) {
+            return true;
+          } else {
+            return {
+              reason: 'expired',
+            };
+          }
+        } else {
+          return {
+            reason: 'invalid',
+          };
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async getUserIdByEmailChangeToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.emailChangeTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          return user.personId;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async getEmailByChangeToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.emailChangeTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          return user.email;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async deleteEmailChangeToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        await prisma.emailChangeTokens.delete({
+          where: {
+            token,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
   generatePasswordResetToken() {
     return uuidv4();
   }
-}
 
+  /**
+   * See [this](https://www.npmjs.com/package/uuid) for more information.
+   * ```js
+   * const emailChangeToken = generateEmailChangeToken();
+   * ```
+   * @returns A UUID v4 string (e.g. 'f0a0a0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a')
+   */
+  generateEmailChangeToken() {
+    return uuidv4();
+  }
+}

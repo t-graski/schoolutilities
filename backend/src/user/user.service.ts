@@ -15,7 +15,6 @@ const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
-
 @Injectable()
 export class UserService {
   constructor(
@@ -23,9 +22,10 @@ export class UserService {
     private readonly authService: AuthService,
     private readonly mailService: MailService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   async changePassword(body, token: string) {
+    console.log();
     const { oldPassword, newPassword } = body;
 
     if (
@@ -196,7 +196,7 @@ export class UserService {
           themeMode: userSettings.themeMode,
           theme: userSettings.theme,
         },
-      }
+      };
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -237,8 +237,16 @@ export class UserService {
   }
 
   async updateUserSettings(request): Promise<ReturnMessage> {
-    let { language, timeZone, dateTimeFormat, receiveUpdateEmails,
-      avatarUUID, phoneNumber, themeMode, theme } = request.body;
+    let {
+      language,
+      timeZone,
+      dateTimeFormat,
+      receiveUpdateEmails,
+      avatarUUID,
+      phoneNumber,
+      themeMode,
+      theme,
+    } = request.body;
 
     const token = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(token);
@@ -263,7 +271,7 @@ export class UserService {
 
     let userSettings = await prisma.personSettings.findFirst({
       where: {
-        personId: userId
+        personId: userId,
       },
     });
 
@@ -283,7 +291,6 @@ export class UserService {
     if (theme != -1) themeMode = 0;
 
     await prisma.personSettings.update({
-
       where: {
         personId: Number(userId),
       },
@@ -302,14 +309,23 @@ export class UserService {
   }
 
   async updatePublicProfile(request): Promise<ReturnMessage> {
-    let { displayName, publicEmail, biography, location, preferredLanguage, showAge, showJoinDate, showBadges } = request.body;
+    let {
+      displayName,
+      publicEmail,
+      biography,
+      location,
+      preferredLanguage,
+      showAge,
+      showJoinDate,
+      showBadges,
+    } = request.body;
     const token = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(token);
 
     const userSettings = await prisma.publicProfileSettings.findFirst({
       where: {
-        personId: userId
-      }
+        personId: userId,
+      },
     });
 
     if (!userSettings) {
@@ -331,7 +347,6 @@ export class UserService {
         showBadges: showBadges,
       },
     });
-
 
     return RETURN_DATA.SUCCESS;
   }
@@ -368,21 +383,24 @@ export class UserService {
       let userItem = {
         userUUID: user.personUUID,
         displayName: userSettings.displayName,
-        birthday: userSettings.showAge ? new Date(user.birthDate).toISOString().split('T')[0] : "",
+        birthday: userSettings.showAge
+          ? new Date(user.birthDate).toISOString().split('T')[0]
+          : '',
         email: userSettings.publicEmail,
         biography: userSettings.biography,
         location: userSettings.location,
         preferredLanguage: userSettings.preferredLanguage,
-        age: userSettings.showAge ? this.helper.calculateAge(user.birthDate) : "",
+        age: userSettings.showAge
+          ? this.helper.calculateAge(user.birthDate)
+          : '',
         joinDate: userSettings.showJoinDate ? user.creationDate : 0,
         badges: userSettings.showBadges ? badges : [],
-      }
+      };
 
       return {
         status: RETURN_DATA.SUCCESS.status,
         data: userItem,
       };
-
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
     }
@@ -395,7 +413,7 @@ export class UserService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    if (!await this.helper.emailIsRegisteredAndVerified(email)) {
+    if (!(await this.helper.emailIsRegisteredAndVerified(email))) {
       return RETURN_DATA.NOT_FOUND;
     }
 
@@ -406,7 +424,7 @@ export class UserService {
       data: {
         personId: userId,
         token,
-        expireDate: new Date(Date.now() + (24 * 60 * 60 * 1000)),
+        expireDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
       },
     });
 
@@ -431,7 +449,8 @@ export class UserService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const tokenStatus = await this.helper.passwordResetTokenIsValidAndNotExpired(token);
+    const tokenStatus =
+      await this.helper.passwordResetTokenIsValidAndNotExpired(token);
 
     if (tokenStatus?.reason == 'expired') {
       await this.helper.deletePasswordResetToken(token);
@@ -453,7 +472,7 @@ export class UserService {
       });
 
       await this.helper.deletePasswordResetToken(token);
-      
+
       return RETURN_DATA.SUCCESS;
     } catch {
       return RETURN_DATA.DATABASE_ERROR;
@@ -471,8 +490,100 @@ export class UserService {
     });
   }
 
+  async requestEmailChange(request): Promise<ReturnMessage> {
+    const { email } = request.body;
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const currentEmail = await this.helper.getUserById(userId);
+
+    if (currentEmail.email.toLowerCase() === email.toLowerCase()) {
+      return {
+        message: 'Email must not be the same as the current one',
+        status: RETURN_DATA.INVALID_INPUT.status,
+      };
+    }
+
+    if (!validator.isEmail(email)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    try {
+      const token = this.helper.generateEmailChangeToken();
+      await prisma.emailChangeTokens.create({
+        data: {
+          persons: {
+            connect: {
+              personId: userId,
+            },
+          },
+          email,
+          verified: false,
+          token,
+          expireDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        },
+      });
+
+      const mail = {
+        from: 'noreply@schoolutilities.net',
+        to: email,
+        subject: 'Email change - SchoolUtilities',
+        text: `A request has been received to change your email address. If you did not request this, please ignore this email. Otherwise, please click the following link to change your email address: https://schoolutilities.net/auth/email-change?token=${token}`,
+      };
+      await this.mailService.sendMail(mail);
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async verifyEmailChange(request): Promise<ReturnMessage> {
+    const { token } = request.body;
+
+    const tokenStatus = await this.helper.emailChangeTokenIsValidAndNotExpired(
+      token,
+    );
+
+    if (tokenStatus?.reason == 'expired') {
+      await this.helper.deleteEmailChangeToken(token);
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    if (tokenStatus?.reason == 'invalid') {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const userId = await this.helper.getUserIdByEmailChangeToken(token);
+    const email = await this.helper.getEmailByChangeToken(token);
+
+    try {
+      await prisma.persons.update({
+        where: {
+          personId: userId,
+        },
+        data: {
+          email,
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  @Cron('0 1 * * *')
+  async deleteExpiredEmailChangeTokens() {
+    await prisma.emailChangeTokens.deleteMany({
+      where: {
+        expireDate: {
+          lt: new Date(),
+        },
+      },
+    });
+  }
+
   // @Cron('40 * * * * *')
-  // ! TODO 
+  // ! TODO
   async checkAndUpdateBadges() {
     let allUsers = await prisma.persons.findMany({
       select: {
@@ -481,7 +592,8 @@ export class UserService {
         creationDate: true,
       },
     });
-    for (let user of allUsers) { }
+    for (let user of allUsers) {
+    }
   }
 
   parseLanguage(id: number) {
