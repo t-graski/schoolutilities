@@ -117,6 +117,11 @@ const StyledInputField = styled("input", {
         width: "fit-content",
         margin: "0 20px 0 0",
       },
+      select: {},
+      "search-select": {},
+      textfield: {},
+      number: {},
+      "datetime-local": {},
     },
     editable: {
       true: {},

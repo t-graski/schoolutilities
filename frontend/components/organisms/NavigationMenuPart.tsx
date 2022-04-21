@@ -96,7 +96,7 @@ const StyledCaret = styled(CaretDownIcon, {
   },
 });
 
-const StyledTriggerWithCaret = React.forwardRef(
+const StyledTriggerWithCaret = React.forwardRef<any>(
   ({ children, ...props }, forwardedRef) => (
     <StyledTrigger {...props} ref={forwardedRef}>
       {children}
@@ -155,11 +155,13 @@ const StyledArrow = styled("div", {
   borderTopLeftRadius: 2,
 });
 
-const StyledIndicatorWithArrow = React.forwardRef((props, forwardedRef) => (
-  <StyledIndicator {...props} ref={forwardedRef}>
-    <StyledArrow />
-  </StyledIndicator>
-));
+const StyledIndicatorWithArrow = React.forwardRef<any>(
+  (props, forwardedRef) => (
+    <StyledIndicator {...props} ref={forwardedRef}>
+      <StyledArrow />
+    </StyledIndicator>
+  )
+);
 
 const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   position: "relative",
@@ -223,11 +225,10 @@ const ContentList = styled("ul", {
 const ListItem = styled("li", {});
 
 const LinkTitle = styled("div", {
-  fontWeight: 500,
+  fontWeight: 700,
   lineHeight: 1.2,
   marginBottom: 5,
   color: "$fontPrimary",
-  fontWeight: 700,
 });
 
 const LinkText = styled("p", {
@@ -237,27 +238,29 @@ const LinkText = styled("p", {
   fontWeight: "initial",
 });
 
-const ContentListItem = React.forwardRef(
-  ({ children, title, ...props }, forwardedRef) => (
-    <ListItem>
-      <NavigationMenuLink
-        {...props}
-        ref={forwardedRef}
-        css={{
-          padding: 12,
-          borderRadius: 6,
-          transition: "background-color 150ms ease",
-          "&:hover": { backgroundColor: "$backgroundTertiary" },
-        }}
-      >
-        <LinkTitle>{title}</LinkTitle>
-        <LinkText>{children}</LinkText>
-      </NavigationMenuLink>
-    </ListItem>
-  )
+const ContentListItem = React.forwardRef<any, any>(
+  ({ children, title, ...props }, forwardedRef) => {
+    return (
+      <ListItem>
+        <NavigationMenuLink
+          {...props}
+          ref={forwardedRef}
+          css={{
+            padding: 12,
+            borderRadius: 6,
+            transition: "background-color 150ms ease",
+            "&:hover": { backgroundColor: "$backgroundTertiary" },
+          }}
+        >
+          <LinkTitle>{title}</LinkTitle>
+          <LinkText>{children}</LinkText>
+        </NavigationMenuLink>
+      </ListItem>
+    );
+  }
 );
 
-const ContentListItemCallout = React.forwardRef(
+const ContentListItemCallout = React.forwardRef<any>(
   ({ children, ...props }, forwardedRef) => (
     <ListItem css={{ gridRow: "span 3" }}>
       <NavigationMenuLink
@@ -325,6 +328,7 @@ export const NavigationMenuPart = () => {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
+          {/*@ts-ignore */}
           <NavigationMenuTrigger>Dropdown</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
@@ -363,6 +367,7 @@ export const NavigationMenuPart = () => {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
+          {/*@ts-ignore */}
           <NavigationMenuTrigger>Help</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
@@ -401,6 +406,7 @@ export const NavigationMenuPart = () => {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
+          {/*@ts-ignore */}
           <NavigationMenuTrigger>+</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
