@@ -85,7 +85,7 @@ export const EditableList: React.FC<Props> = ({
         {error && <StyledError>{error}</StyledError>}
         <SettingsEntriesLayout>
           {entries.map((entry, index) => (
-            <SettingsEntryLayout key={entry[entryProperties.id ?? index]}  key={entry[entryProperties.id ?? index]}>
+            <SettingsEntryLayout key={entry[entryProperties.id ?? index]}>
               <SettingsEntry
                 editFunction={() => {
                     editEntry(entry[entryProperties.id] ?? index);
