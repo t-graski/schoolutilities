@@ -106,9 +106,12 @@ export const Navbar: React.FC<Props> = ({}) => {
             </LogoLayout>
           </a>
         </Link>
-        <NavLinksLayout>
-          <NavigationMenuPart></NavigationMenuPart>
-        </NavLinksLayout>
+        <NavigationMenuPart></NavigationMenuPart>
+        <SpecialLinkLayout>
+          <Link href="/profile/settings" passHref>
+            <UserMenu></UserMenu>
+          </Link>
+        </SpecialLinkLayout>
         <StyledOpenButton onClick={() => setMobileVisible(true)}>
           <SvgIcon iconName="SvgHamburger" />
         </StyledOpenButton>
