@@ -2,6 +2,7 @@ module.exports = {
   images: {
     domains: ["cdn.discordapp.com"],
   },
+  "presets": ["next/babel"],
   
   async redirects() {
     return [
