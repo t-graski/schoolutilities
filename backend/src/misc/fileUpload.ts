@@ -2,18 +2,22 @@ import { extname } from 'path';
 import { RETURN_DATA, ID_STARTERS } from '../misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaClient } from '@prisma/client';
-import { HelperService } from 'src/helper/helper.service';
 
 const prisma = new PrismaClient();
 
 export const fileFilter = async (req, file, callback) => {
   const { elementUUID } = req.body;
+
+  console.log(elementUUID);
+
   const elementId = await getElementIdByUUID(elementUUID);
   let fileExtensions = await getAllowedExtensions(elementId);
   fileExtensions = fileExtensions.replace(/\s/g, '');
   const fileExtensionsArray = fileExtensions.split(',');
 
-  const allowedExtensions = fileExtensionsArray.map(ext => `\.(${ext})$`).join('|');
+  const allowedExtensions = fileExtensionsArray
+    .map((ext) => `\.(${ext.toLowerCase()})$`)
+    .join('|');
 
   if (!file.originalname.match(allowedExtensions)) {
     return callback(
@@ -22,6 +26,7 @@ export const fileFilter = async (req, file, callback) => {
       (req.fileValidationError = RETURN_DATA.INVALID_FILE),
     );
   }
+
   callback(null, true);
 };
 
@@ -52,8 +57,7 @@ async function getAllowedExtensions(elementId: number) {
     },
     select: {
       allowedFileTypes: true,
-    }
+    },
   });
   return extensions.allowedFileTypes;
 }
-

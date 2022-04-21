@@ -46,6 +46,18 @@ export const LENGTHS = {
     min: 0,
     max: 25,
   },
+  DISPLAY_NAME: {
+    min: 4,
+    max: 16,
+  },
+  BIOGRAPHY: {
+    min: 0,
+    max: 1000,
+  },
+  LOCATION: {
+    min: 0,
+    max: 100,
+  },
   MAX_JOIN_CODES: 10,
   MAX_FILE_SIZE: 100000000,
 };
@@ -137,6 +149,7 @@ export const ID_STARTERS = {
   TIMEZONES: 7,
   EMAIL: 8,
   COURSE_ELEMENT: 9,
+  ARTICLE: 'A',
 };
 
 export const ERROR_CODES = {
@@ -156,4 +169,7 @@ export const ERROR_CODES = {
   ELEMENT_NULL: 'ERROR_504',
   NO_JWT_TOKEN_PROVIDED: 'ERROR_600',
   CLASS_UUID_NULL_OR_INVALID: 'ERROR_700',
+  ARTICLE_UUID_NULL_OR_INVALID: 'ERROR_800',
+  EMAIL_NULL_OR_INVALID: 'ERROR_900',
+  TOKEN_NULL_OR_INVALID: 'ERROR_1000',
 };

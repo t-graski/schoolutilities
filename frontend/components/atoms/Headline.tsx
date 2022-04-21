@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "../../stitches.config";
 import type * as Stitches from "@stitches/react";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {
   label: string;
@@ -75,8 +76,13 @@ export const Headline: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <Header width={width} alignment={alignment} fontWeight={fontWeight} size={fontSize}>
-        {label}
+      <Header
+        width={width}
+        alignment={alignment}
+        fontWeight={fontWeight}
+        size={fontSize}
+      >
+        {label ? label : <Skeleton width={400}></Skeleton>}
       </Header>
     </>
   );

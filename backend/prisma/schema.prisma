@@ -73,29 +73,69 @@ model personRoles {
   roles    roles   @relation(fields: [roleId], references: [roleId], onUpdate: Restrict, map: "fkPersonrolerole")
   schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkPersonroleschool")
 
+  @@unique([personId, schoolId], name: "schoolPersonId")
   @@index([roleId], map: "fkPersonrolerole")
   @@map("person_roles")
 }
 
 model persons {
-  personId         Int              @id @default(autoincrement()) @map("person_id")
-  personUUID       String           @unique(map: "personUUID") @map("person_uuid") @db.VarChar(255)
-  firstName        String           @db.VarChar(255)
-  lastName         String           @db.VarChar(255)
-  birthDate        DateTime         @db.Date
-  email            String           @unique(map: "email") @db.VarChar(255)
-  password         String           @db.VarChar(255)
-  emailVerified    Boolean          @default(false) @map("email_verified")
-  creationDate     DateTime         @default(now()) @map("creation_date") @db.Timestamp(0)
+  personId      Int      @id @default(autoincrement()) @map("person_id")
+  personUUID    String   @unique(map: "personUUID") @map("person_uuid") @db.VarChar(255)
+  firstName     String   @db.VarChar(255)
+  lastName      String   @db.VarChar(255)
+  birthDate     DateTime @db.Date
+  email         String   @unique(map: "email") @db.VarChar(255)
+  password      String   @db.VarChar(255)
+  emailVerified Boolean  @default(false) @map("email_verified")
+  creationDate  DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  lastLogin     DateTime @map("last_login") @db.Timestamp(0)
+
   attendingCourses courses[]        @relation(references: [courseId])
   loginTokens      loginTokens[]
   personRoles      personRoles[]
   registerTokens   registerTokens[]
 
-  coursePersons    coursePersons[]
-  schoolJoinCodes  schoolJoinCodes[]
-  schoolPersons    schoolPersons[]
-  emailChangeToken emailChangeToken[]
+  coursePersons         coursePersons[]
+  schoolJoinCodes       schoolJoinCodes[]
+  schoolPersons         schoolPersons[]
+  publicProfileSettings publicProfileSettings[]
+  personSettings        personSettings[]
+  updateEmailReceivers  updateEmailReceivers[]
+  personBadges          personBadges[]
+  passwordResetTokens   passwordResetTokens[]
+  emailChangeTokens     emailChangeTokens[]
+}
+
+model personSettings {
+  personSettingsId    Int     @id @default(autoincrement()) @map("person_settings_id")
+  personId            Int     @unique(map: "personId") @map("person_id")
+  language            String  @map("language") @db.VarChar(255)
+  timeZone            String  @map("time_zone") @db.VarChar(255)
+  dateTimeFormat      String  @map("date_time_format") @db.VarChar(255)
+  receiveUpdateEmails Boolean @map("receive_update_emails")
+  avatarUUID          String  @map("avatar_uuid") @db.VarChar(255)
+  phoneNumber         String  @map("phone_number") @db.VarChar(255)
+  themeMode           Int     @map("theme_mode")
+  theme               Int     @map("theme")
+
+  persons persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonsettingsperson")
+  @@map("person_settings")
+}
+
+model publicProfileSettings {
+  publicProfileSettingsId Int     @id @default(autoincrement()) @map("public_profile_settings_id")
+  personId                Int     @unique(map: "personId") @map("person_id")
+  displayName             String  @map("display_name") @db.VarChar(255)
+  publicEmail             String  @map("public_email") @db.VarChar(255)
+  biography               String  @map("biography") @db.Text
+  location                String  @map("location") @db.VarChar(255)
+  preferredLanguage       String  @map("preferred_language") @db.VarChar(255)
+  showAge                 Boolean @map("show_age")
+  showJoinDate            Boolean @map("show_join_date")
+  showBadges              Boolean @map("show_badges")
+
+  person persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPublicprofilesettingsperson")
+  @@map("public_profile_settings")
 }
 
 model registerTokens {
@@ -106,6 +146,16 @@ model registerTokens {
 
   @@index([personId], map: "fkRegistertokenperson")
   @@map("register_tokens")
+}
+
+model updateEmailReceivers {
+  updateEmailReceiverId Int     @id @default(autoincrement()) @map("update_email_receiver_id")
+  personId              Int     @unique(map: "personId") @map("person_id")
+  email                 String  @map("email") @db.VarChar(255)
+  persons               persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkUpdateemailreceiverperson")
+
+  @@index([personId], map: "fkUpdateemailreceiverperson")
+  @@map("update_email_receivers")
 }
 
 model roles {
@@ -152,6 +202,15 @@ model subjects {
   courses     courses[]
 }
 
+model personBadges {
+  personBadgeId Int     @id @default(autoincrement()) @map("person_badge_id")
+  personId      Int     @map("person_id")
+  badgeId       Int     @map("badge_id")
+  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonbadgeperson")
+
+  @@map("person_badges")
+}
+
 model courses {
   courseId          Int      @id @default(autoincrement()) @map("course_id")
   courseUUID        String   @map("course_uuid") @db.VarChar(255)
@@ -187,6 +246,30 @@ model schoolJoinCodes {
   @@index([personCreationId], map: "fkSchoolJoinCodePerson")
   @@index([schoolId], map: "fkSchoolJoinCodeSchool")
   @@map("school_join_codes")
+}
+
+model passwordResetTokens {
+  passwordResetTokenId Int      @id @default(autoincrement()) @map("password_reset_token_id")
+  personId             Int      @map("person_id")
+  token                String   @unique(map: "token") @db.VarChar(255)
+  creationDate         DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  expireDate           DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  persons              persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPasswordResetTokenperson")
+
+  @@map("password_reset_tokens")
+}
+
+model emailChangeTokens {
+  emailChangeTokenId Int      @id @default(autoincrement()) @map("email_change_token_id")
+  personId           Int      @map("person_id")
+  token              String   @unique(map: "token") @db.VarChar(255)
+  email              String   @map("email") @db.VarChar(255)
+  verified           Boolean  @map("verified")
+  creationDate       DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  expireDate         DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  persons            persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkEmailChangeTokenperson")
+
+  @@map("email_change_tokens")
 }
 
 model courseFiles {
@@ -228,18 +311,6 @@ model schoolPersons {
   @@index([schoolId], map: "fkSchoolPersonSchoolId")
   @@index([personId], map: "fkSchoolPersonPersonId")
   @@map("school_persons")
-}
-
-model emailChangeToken {
-  emailChangeId Int     @id @default(autoincrement()) @map("email_change_id")
-  personId      Int     @map("person_id")
-  token         String  @unique(map: "token") @map("token") @db.VarChar(255)
-  newEmail      String  @map("new_email") @db.VarChar(255)
-  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkEmailChangePersonId")
-
-
-  @@index([personId], map: "fkEmailChangePersonId")
-  @@map("email_change_token")
 }
 
 model courseElements {
@@ -309,4 +380,17 @@ model fileSubmissions {
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@index([personId], map: "fkFileSubmissionPersonId")
   @@map("file_submissions")
+}
+
+model articles {
+  articleId        Int      @id @default(autoincrement()) @map("article_id")
+  articleUUID      String   @unique(map: "article_uuid") @map("article_uuid") @db.VarChar(255)
+  headline         String   @map("headline") @db.Text
+  catchPhrase      String   @map("catch_phrase") @db.Text
+  content          String   @map("content") @db.Text
+  type             Int      @map("type")
+  isPublic         Boolean  @map("is_public")
+  publishDate      DateTime @map("publish_date") @db.Timestamp(0)
+  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  personCreationId Int      @map("person_creation_id")
 }

@@ -10,9 +10,7 @@ const prisma = new PrismaClient();
 @Injectable()
 export class RefreshTokenService {
   connection: any;
-  constructor(
-    private readonly jwtService: JwtService,
-  ) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   // async getTokenData1(refreshToken: string, personId): Promise<DatabaseUpdate> {
   //   return new Promise((resolve, reject) => {
@@ -27,7 +25,6 @@ export class RefreshTokenService {
   // }
 
   async getTokenData(refreshToken: string, personUUID: string) {
-
     return await prisma.loginTokens.findFirst({
       where: {
         refreshToken,

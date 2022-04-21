@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
 import { getAccessToken } from "../../../misc/authHelper";
-import { LoadingAnimation } from "../../molecules/LoadingAnimation";
 import { useRouter } from "next/router";
+import Skeleton from "react-loading-skeleton";
 
 export type SideDashboardProps = {};
 
@@ -14,6 +14,12 @@ const CourseList = styled("div", {
   width: "100%",
   padding: "5vh 10vw",
   gap: "50px",
+
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    gap: "20px",
+    padding: "5vh 10vw",
+  },
 });
 
 const CourseLayout = styled("div", {
@@ -35,6 +41,11 @@ const CourseLayout = styled("div", {
   cursor: "pointer",
   placeSelf: "center",
   color: "$fontPrimary",
+
+  "@mobileOnly": {
+    padding: "10px 20px",
+    width: "100%",
+  },
 });
 
 const CourseName = styled("p", {
@@ -61,11 +72,10 @@ const CourseDescription = styled("p", {
   margin: 0,
 });
 
-export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
+export const CourseSelectionList: React.FC<SideDashboardProps> = ({ }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID;
   const [courses, setCourses] = useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
   useEffect(() => {
     updateCoursesFromDatabase();
   }, [schoolUUID]);
@@ -76,7 +86,6 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
       router.push("/auth?tab=login&redirect=/school/course");
     } else {
       if (schoolUUID) {
-        setIsLoading(true);
         let response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
           {
@@ -87,7 +96,6 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
           }
         );
         let fetchedCourses = await response.json();
-        setIsLoading(false);
         console.log(response);
         setCourses(fetchedCourses);
       }
@@ -96,25 +104,31 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
 
   return (
     <>
-      <LoadingAnimation isVisible={isLoading} />
       <CourseList>
-        {Array.isArray(courses) &&
-          courses.map((course) => (
-            <CourseLayout
-              key={course.courseUUID}
-              onClick={() => {
-                router.push(
-                  `/school/${schoolUUID}/course/${course.courseUUID}`
-                );
-              }}
-            >
-              <CourseName>{course.courseName}</CourseName>
-              <TeacherName>
-                {course.creator.firstName + " " + course.creator.lastName}{" "}
-              </TeacherName>
-              <CourseDescription>{course.courseDescription}</CourseDescription>
-            </CourseLayout>
-          ))}
+        {courses.length > 0 ? courses.map((course) => (
+          <CourseLayout
+            key={course.courseUUID}
+            onClick={() => {
+              router.push(
+                `/school/${schoolUUID}/course/${course.courseUUID}`
+              );
+            }}
+          >
+            <CourseName>{course.courseName}</CourseName>
+            <TeacherName>
+              {course.creator.firstName + " " + course.creator.lastName}{" "}
+            </TeacherName>
+            <CourseDescription>{course.courseDescription}</CourseDescription>
+          </CourseLayout>
+        )) : (
+          <>
+            <Skeleton width="100%" height={150}></Skeleton>
+            <Skeleton width="100%" height={150}></Skeleton>
+            <Skeleton width="100%" height={150}></Skeleton>
+            <Skeleton width="100%" height={150}></Skeleton>
+          </>
+        )
+        }
       </CourseList>
     </>
   );

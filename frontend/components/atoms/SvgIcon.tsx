@@ -17,9 +17,11 @@ import SvgExclamination from "./svg/SvgExclamination";
 import SvgEye from "./svg/SvgEye";
 import SvgEyeRestricted from "./svg/SvgEyeRestricted";
 import SvgFile from "./svg/SvgFile";
+import SvgFirstAidKit from "./svg/SvgFirstAidKit";
 import SvgHamburger from "./svg/SvgHamburger";
 import SvgHome from "./svg/SvgHome";
 import SvgInfo from "./svg/SvgInfo";
+import SvgInstagram from "./svg/SvgInstagram";
 import SvgPassword from "./svg/SvgKey";
 import SvgLanguage from "./svg/SvgLanguage";
 import SvgName from "./svg/SvgName";
@@ -30,7 +32,9 @@ import SvgRightArrow from "./svg/SvgRightArrow";
 import SvgRoundUser from "./svg/SvgRoundUser";
 import SvgSchool from "./svg/SvgSchool";
 import SvgStartpageArtwork from "./svg/SvgStartpageArtwork";
+import SvgStats from "./svg/SvgStats";
 import SvgStudent from "./svg/SvgStudent";
+import SvgSuperman from "./svg/SvgSuperman";
 import SvgTeacher from "./svg/SvgTeacher";
 import SvgTimetable from "./svg/SvgTimetable";
 import SvgTimezone from "./svg/SvgTimezone";
@@ -117,6 +121,12 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgEyeRestricted alt="Eye Restricted Icon" />;
     case "SvgClose":
       return <SvgClose alt="Close Icon" />;
+    case "SvgSuperman":
+      return <SvgSuperman alt="Superman Icon" />;
+    case "SvgFirstAidKit":
+      return <SvgFirstAidKit alt="First Aid Kit Icon" />;
+    case "SvgStats":
+      return <SvgStats alt="Stats Icon" />;
     default:
       return <SvgClass />;
   }

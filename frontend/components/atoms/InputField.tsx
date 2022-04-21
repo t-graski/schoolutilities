@@ -65,7 +65,7 @@ type Props = {
     | "number"
     | "datetime-local";
   selectOptions?: {
-    value: string;
+    value: string | number;
     label: string;
   }[];
   selectValue?: any;

@@ -3,7 +3,6 @@ const Discord = require('discord.js');
 const numeral = require('numeral');
 const { save } = require('./misc/utils.js');
 const fs = require('fs');
-const { serverConfiguration } = require('./misc/utils');
 
 // const client = new Discord.Client({
 //     partials: ['MESSAGE', 'CHANNEL','REACTION'],
@@ -16,8 +15,7 @@ const client = new Discord.Client();
 
 // Once bot is ready set an interval to check if auto precense check needs to be done
 client.on('ready', () => {
-    setInterval(checkPresence, 60000);
-    console.log('Successfully started.');
+    // setInterval(checkPresence, 60000);
     generateNewKey();
 });
 // Once bot joins a new guild, creates a bot-config channel
@@ -25,7 +23,7 @@ client.on('guildCreate', (guild) => {
     let configData;
     try {
         configData = require('./datastore/configs.json');
-    } catch (error) {}
+    } catch (error) { }
     console.log('Bot has joined the Guild ' + guild);
     configData.push({
         guildId: guild.id,
@@ -64,28 +62,7 @@ client.on('guildCreate', (guild) => {
 
 // Once someone writes a message in a channel, in which bot is in
 client.on('message', async (message) => {
-    let prefix = serverConfiguration(message.channel.guild.id);
-    if (prefix && prefix.prefix) {
-        prefix = prefix.prefix;
-    } else {
-        prefix = process.env.PREFIX;
-    }
-    let msg = message.content.toUpperCase();
-    let args = message.content.slice(prefix.length).trim().split(' ');
-    let cmd = args.shift().toLowerCase();
-    if (!msg.startsWith(prefix)) return;
-    if (message.author.bot) return;
-    if (msg[1] == prefix) return;
-    commandInputData.push(new Date().toISOString() + ';' + message.content);
-    save('./datastore/commandInputData.json', JSON.stringify(commandInputData, null, '\t'));
-    try {
-        let commandFile = require(`./commands/${cmd}.js`);
-        commandFile.run(client, message, args);
-    } catch (e) {
-        (await message.reply('This was a wrong command, please check the commands with .help')).delete({
-            timeout: 10000,
-        });
-    }
+    
 });
 // eslint-disable-next-line
 client.login(process.env.TOKEN);
@@ -119,7 +96,7 @@ function checkPresence() {
                         try {
                             let commandFile = require(`./misc/autocheck.js`);
                             commandFile.run(channel, serverConfig.guildId, guild);
-                        } catch (e) {}
+                        } catch (e) { }
                     }
                 } else {
                     console.log('There is no channel with this Id!');

@@ -1,16 +1,24 @@
 import { Injectable, Param } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
-import { ERROR_CODES, ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
+import {
+  ERROR_CODES,
+  PASSWORD,
+  ID_STARTERS,
+  RETURN_DATA,
+} from 'src/misc/parameterConstants';
+import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
+import * as moment from 'moment-timezone';
 //import parameter constants
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
+
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -42,6 +50,40 @@ export class HelperService {
       }
     } else {
       throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async getArticleIdByUUID(articleUUID: string): Promise<number> {
+    if (articleUUID && validator.isUUID(articleUUID.slice(1), 4)) {
+      try {
+        const article = await prisma.articles.findFirst({
+          where: {
+            articleUUID: articleUUID,
+          },
+        });
+        return article.articleId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.ARTICLE_UUID_NULL_OR_INVALID);
+    }
+  }
+
+  async getElementDueDate(elementId: number): Promise<any> {
+    const element = await prisma.courseElements.findFirst({
+      where: {
+        elementId: elementId,
+      },
+    });
+    if (element.typeId == 3) {
+      const fileSubmissionSettings =
+        await prisma.fileSubmissionSettings.findFirst({
+          where: {
+            courseElementId: elementId,
+          },
+        });
+      return fileSubmissionSettings.dueTime;
     }
   }
 
@@ -268,7 +310,11 @@ export class HelperService {
   }
 
   /**
+   * 
+=======
+  /**
    *
+>>>>>>> parent of 636a947 (merge)
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline
@@ -316,16 +362,15 @@ export class HelperService {
           options = {
             name: fileOptions.name,
             description: fileOptions.description,
-            dueTime: fileOptions.dueTime,
+            dueDate: fileOptions.dueTime,
             submitLater: fileOptions.submitLater,
-            submitLaterTime: fileOptions.submitLaterTime,
+            submitLaterDate: fileOptions.submitLaterTime,
             maxFileSize: fileOptions.maxFileSize,
             allowedFileTypes: fileOptions.allowedFileTypes,
           };
-          break;
       }
       return options;
-    } catch {
+    } catch (err) {
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
@@ -339,7 +384,7 @@ export class HelperService {
           },
         });
         return element.elementId;
-      } catch {
+      } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -456,7 +501,6 @@ export class HelperService {
                 submitLater: options.submitLater,
                 submitLaterTime: options.submitLaterTime,
                 maxFileSize: options.maxFileSize,
-                allowedFileTypes: options.allowedFileTypes,
               },
             });
             break;
@@ -480,6 +524,7 @@ export class HelperService {
     elementId: number,
     typeId: number,
   ): Promise<any> {
+    console.log('asdfa');
     if (options) {
       try {
         switch (typeId) {
@@ -516,7 +561,7 @@ export class HelperService {
               },
             });
         }
-      } catch {
+      } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -608,36 +653,380 @@ export class HelperService {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
+      throw new Error(ERROR_CODES.ARTICLE_UUID_NULL_OR_INVALID);
+    }
+  }
+
+  /**
+   *
+   * @param type Type of the element
+   * @returns Type Id
+   */
+  async translateArticleType(type: number): Promise<any> {
+    switch (type) {
+      case 1:
+        return 'Change Log';
+    }
+  }
+
+  /**
+   * @brief Returns 1 if reading time is less than 1 minute
+   * @param content Content of the article
+   * @returns Reading time in minutes
+   */
+  async computeReadingTime(content: string): Promise<any> {
+    const words = content.split(' ').length;
+    const minutes = Math.round(words / 200);
+    return minutes == 0 ? 1 : minutes;
+  }
+
+  /**
+   * Creates or resets all user settings
+   * @param personId Id of a user
+   */
+  async createOrResestDefaultSettings(personId: number): Promise<any> {
+    if (personId) {
+      const defaultSettings = {
+        language: 'en',
+        timeZone: 'Europe/London',
+        dateTimeFormat: 'en-US',
+        receiveUpdateEmails: false,
+        avatarUUID: '',
+        phoneNumber: '',
+        themeMode: 0,
+        theme: -1,
+      };
+
+      try {
+        const personSettings = await prisma.personSettings.findFirst({
+          where: {
+            personId,
+          },
+        });
+
+        if (personSettings) {
+          await prisma.personSettings.update({
+            where: {
+              personId,
+            },
+            data: defaultSettings,
+          });
+        } else {
+          await prisma.personSettings.create({
+            data: {
+              personId,
+              ...defaultSettings,
+            },
+          });
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
       throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
 
-  async getMaxFileSize(request: any): Promise<number> {
-    const elementId = await this.getElementIdByUUID(request.body.elementUUID);
-    const maxFileSize = await prisma.fileSubmissionSettings.findFirst({
-      where: {
-        courseElementId: elementId,
-      },
-      select: {
-        maxFileSize: true,
-      },
-    });
-    return maxFileSize.maxFileSize;
+  async addUserToUpdateEmailList(personId: number): Promise<any> {
+    if (personId) {
+      try {
+        const user = await this.getUserById(personId);
+        await prisma.updateEmailReceivers.create({
+          data: {
+            personId,
+            email: user.email,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
   }
 
-  async getElementDueDate(elementId: number): Promise<any> {
-    const element = await prisma.courseElements.findFirst({
-      where: {
-        elementId: elementId,
-      },
-    });
-    if (element.typeId == 3) {
-      const fileSubmissionSettings = await prisma.fileSubmissionSettings.findFirst({
-        where: {
-          courseElementId: elementId,
-        },
-      });
-      return fileSubmissionSettings.dueTime;
+  async getMaxFileSize() {}
+  async removeUserFromUpdateEmailList(personId: number): Promise<any> {
+    if (personId) {
+      try {
+        await prisma.updateEmailReceivers.delete({
+          where: {
+            personId,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
+  }
+  /**
+   *
+   * @param timeZone timezone string e.g. "europe/Vienna"
+   * @returns true or false
+   */
+  isValidTimeZoneString(timeZone: string) {
+    return moment.tz.zone(timeZone) != null;
+  }
+
+  /**
+   *
+   * @param language language string e.g. "en-US"
+   * @returns true of false
+   */
+  isValidLanguageString(language: string) {
+    return Object.keys(RFC5646_LANGUAGE_TAGS).includes(language);
+  }
+
+  /**
+   *
+   * @param language language string e.g. "German"
+   * @returns true or false
+   */
+  isValidLongLanguageString(language: string) {
+    return Object.values(RFC5646_LANGUAGE_TAGS).includes(language);
+  }
+
+  /**
+   *
+   * @param dateTimeFormat dateTimeFormat string 'en-US', 'en-GB" or 'de-DE'
+   * @returns true or false
+   */
+  isValidDateTimeFormatString(dateTimeFormat: string) {
+    const dateTimeFormats = {
+      'en-US': 'MM/DD/YYYY hh:mm A',
+      'en-GB': 'DD/MM/YYYY hh:mm A',
+      'de-DE': 'DD.MM.YYYY hh:mm A',
+    };
+
+    return Object.keys(dateTimeFormats).includes(dateTimeFormat);
+  }
+
+  async createDefaultPublicProfileSettings(userId: number): Promise<any> {
+    if (userId) {
+      try {
+        await prisma.publicProfileSettings.create({
+          data: {
+            personId: userId,
+            displayName: await this.getUserUUIDById(userId),
+            publicEmail: '',
+            biography: '',
+            location: '',
+            preferredLanguage: '',
+            showAge: false,
+            showJoinDate: true,
+            showBadges: true,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  calculateAge(birthday: Date): number {
+    if (birthday) {
+      const ageDifMs = Date.now() - new Date(birthday).getTime();
+      const ageDate = new Date(ageDifMs);
+      return Math.abs(ageDate.getUTCFullYear() - 1970);
+    } else {
+      return 0;
+    }
+  }
+
+  async emailIsRegisteredAndVerified(email: string): Promise<any> {
+    if (email) {
+      try {
+        const user = await prisma.persons.findUnique({
+          where: {
+            email,
+          },
+        });
+        if (Boolean(user.emailVerified)) {
+          return user;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.EMAIL_NULL_OR_INVALID);
+    }
+  }
+
+  async getUserIdByPasswordResetToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.passwordResetTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          return user.personId;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async passwordResetTokenIsValidAndNotExpired(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.passwordResetTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          const now = new Date();
+          const tokenExpireDate = new Date(user.expireDate);
+          if (now < tokenExpireDate) {
+            return true;
+          } else {
+            return {
+              reason: 'expired',
+            };
+          }
+        } else {
+          return {
+            reason: 'invalid',
+          };
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async deletePasswordResetToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        await prisma.passwordResetTokens.delete({
+          where: {
+            token,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async emailChangeTokenIsValidAndNotExpired(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.emailChangeTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          const now = new Date();
+          const tokenExpireDate = new Date(user.expireDate);
+          if (now < tokenExpireDate) {
+            return true;
+          } else {
+            return {
+              reason: 'expired',
+            };
+          }
+        } else {
+          return {
+            reason: 'invalid',
+          };
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async getUserIdByEmailChangeToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.emailChangeTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          return user.personId;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async getEmailByChangeToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        const user = await prisma.emailChangeTokens.findFirst({
+          where: {
+            token,
+          },
+        });
+        if (user) {
+          return user.email;
+        } else {
+          return false;
+        }
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  async deleteEmailChangeToken(token: string): Promise<any> {
+    if (token) {
+      try {
+        await prisma.emailChangeTokens.delete({
+          where: {
+            token,
+          },
+        });
+      } catch {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.TOKEN_NULL_OR_INVALID);
+    }
+  }
+
+  generatePasswordResetToken() {
+    return uuidv4();
+  }
+
+  /**
+   * See [this](https://www.npmjs.com/package/uuid) for more information.
+   * ```js
+   * const emailChangeToken = generateEmailChangeToken();
+   * ```
+   * @returns A UUID v4 string (e.g. 'f0a0a0a0-0a0a-0a0a-0a0a-0a0a0a0a0a0a')
+   */
+  generateEmailChangeToken() {
+    return uuidv4();
   }
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
-import { LoadingAnimation } from "../../molecules/LoadingAnimation";
 import { getAccessToken } from "../../../misc/authHelper";
 import { useRouter } from "next/router";
+import Skeleton from 'react-loading-skeleton';
 
 export type SideDashboardProps = {};
 
@@ -14,6 +14,12 @@ const SchoolList = styled("div", {
   width: "100%",
   padding: "5vh 20vw",
   gap: "50px",
+
+  "@mobileOnly": {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+    padding: "5vh 10vw",
+  },
 });
 
 const SchoolLayout = styled("div", {
@@ -50,9 +56,8 @@ const SchoolDescription = styled("p", {
   color: "$fontPrimary",
 });
 
-export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
+export const SchoolSelectionList: React.FC<SideDashboardProps> = ({ }) => {
   const [schools, setSchools] = useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
   useEffect(() => {
     updateSchoolsFromDatabase();
   }, []);
@@ -63,7 +68,6 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
     if (!accessToken) {
       router.push("/auth?tab=login");
     } else {
-      setIsLoading(true);
       let response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
         {
@@ -74,11 +78,10 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
         }
       );
       let fetchedSchools = await response.json();
-      setIsLoading(false);
       if (fetchedSchools.length == 0) {
         router.push("/school/join");
       } else if (fetchedSchools.length == 1) {
-        redirectRoute(router, fetchedSchools[0]);
+        // redirectRoute(router, fetchedSchools[0]);
       }
       setSchools(fetchedSchools);
     }
@@ -86,9 +89,8 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
 
   return (
     <>
-      <LoadingAnimation isVisible={isLoading} />
       <SchoolList>
-        {schools.map((school) => (
+        {schools.length > 0 ? schools.map((school) => (
           <SchoolLayout
             key={school.schoolUUID}
             onClick={() => {
@@ -102,7 +104,12 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
               }
             </SchoolDescription>
           </SchoolLayout>
-        ))}
+        )) : (
+          <>
+            <Skeleton width="100%" height={150}></Skeleton>
+            <Skeleton width="100%" height={150}></Skeleton>
+          </>
+        )}
       </SchoolList>
     </>
   );

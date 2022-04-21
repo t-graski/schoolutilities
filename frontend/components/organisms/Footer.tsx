@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { styled } from "../../stitches.config";
 import Image from "next/image";
+import { SvgIcon } from "../atoms/SvgIcon";
 
 type Props = {};
 
@@ -11,7 +12,7 @@ const FooterLayout = styled("footer", {
   alignItems: "center",
   width: "100vw",
   position: "absolute",
-  bottom: "0",
+  top: "100%",
   left: "0",
   gap: "40px",
   padding: "4vh 5vw",
@@ -96,10 +97,16 @@ const FooterSpace = styled("div", {
   gap: "40px",
 });
 
-const Footer: React.FC<Props> = ({ }) => {
+const SvgLayout = styled("div", {
+  display: "flex",
+  width: 30,
+  height: 30,
+});
+
+const Footer: React.FC<Props> = ({}) => {
   return (
     <>
-      <FooterSpace>
+      {/* <FooterSpace>
         <FooterContentLayout>
           <Link href="/" passHref>
             <a>
@@ -190,7 +197,7 @@ const Footer: React.FC<Props> = ({ }) => {
             </Link>
           </ImprintLayout>
         </FooterContentLayout>
-      </FooterSpace>
+      </FooterSpace> */}
       <FooterLayout>
         <FooterContentLayout>
           <Link href="/" passHref>
@@ -208,52 +215,42 @@ const Footer: React.FC<Props> = ({ }) => {
           <LinkLayout>
             <LinkHeadline>Company</LinkHeadline>
             <Link href="/contact-us" passHref>
-              <StyledLink>Contact Us</StyledLink>
+              <StyledLink>Contact</StyledLink>
             </Link>
             <Link href="/about-us" passHref>
-              <StyledLink>About Us</StyledLink>
+              <StyledLink>About</StyledLink>
             </Link>
-            <Link href="https://schoolutilities.statuspage.io/" passHref>
-              <StyledLink>Status Info</StyledLink>
-            </Link>
+            {/* <Link href="/news" passHref>
+              <StyledLink>News</StyledLink>
+            </Link> */}
           </LinkLayout>
           <LinkLayout>
-            <LinkHeadline>Help</LinkHeadline>
-            <Link href="/help/help-center" passHref>
+            <LinkHeadline>Support</LinkHeadline>
+            <Link href="/help" passHref>
               <StyledLink>Help Center</StyledLink>
             </Link>
             <Link href="/help/faq" passHref>
               <StyledLink>FAQ</StyledLink>
             </Link>
-          </LinkLayout>
-          <LinkLayout>
-            <LinkHeadline>Language</LinkHeadline>
-            <Link href="/" passHref>
-              <StyledLink>
-                <Image
-                  src="/images/English.png"
-                  alt="English"
-                  width="30"
-                  height="30"
-                />
-                English
-              </StyledLink>
-            </Link>
-            <Link href="/" passHref>
-              <StyledLink>
-                <Image
-                  src="/images/German.png"
-                  alt="German"
-                  width="30"
-                  height="30"
-                />
-                German
-              </StyledLink>
+            <Link href="https://schoolutilities.statuspage.io/" passHref>
+              <StyledLink>Status</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Support Us</LinkHeadline>
 
+            <StyledLink
+              href="https://www.instagram.com/schoolutilities/"
+              target="_blank"
+            >
+              <Image
+                src="/images/icons/instagram.png"
+                alt="Instagram"
+                width="30"
+                height="30"
+              />
+              Instagram
+            </StyledLink>
             <StyledLink
               href="https://www.patreon.com/schoolutilities"
               target="_blank"

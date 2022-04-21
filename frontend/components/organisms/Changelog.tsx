@@ -2,6 +2,7 @@ import React from "react";
 import { styled } from "../../stitches.config";
 import Link from "next/link";
 import { Separator } from "../atoms/Separator";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {};
 
@@ -78,7 +79,7 @@ export const Changelog: React.FC<Props> = ({ }) => {
     <>
       <BoxLayout>
         <ChangeLogsLayout>
-          {entries.map((entry) => (
+          {entries.length > 0 ? entries.map((entry) => (
             <Link href={`/change-logs/${entry.name}`} passHref>
               <StyledLink>
                 <ChangeLogLayout>
@@ -89,7 +90,14 @@ export const Changelog: React.FC<Props> = ({ }) => {
                 </ChangeLogLayout>
               </StyledLink>
             </Link>
-          ))}
+          )) : (
+            <>
+              <Skeleton width="100%" height={200}></Skeleton>
+              <Skeleton width="100%" height={200}></Skeleton>
+              <Skeleton width="100%" height={200}></Skeleton>
+              <Skeleton width="100%" height={200}></Skeleton>
+            </>
+          )}
         </ChangeLogsLayout>
       </BoxLayout>
     </>

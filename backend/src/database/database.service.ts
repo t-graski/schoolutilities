@@ -12,13 +12,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { GetDepartments, UserPermissions } from 'src/types/SchoolAdmin';
 import { Role } from 'src/roles/role.enum';
+import { HelperService } from 'src/helper/helper.service';
 
 const prisma = new PrismaClient();
 require('dotenv').config();
 
 @Injectable()
 export class DatabaseService {
-  constructor() { }
+  constructor(private readonly helper: HelperService) { }
 
   async registerUser(body: RegisterUserData): Promise<ReturnMessage> {
     const { email, password, firstName, lastName, birthDate } = body;
@@ -43,7 +44,7 @@ export class DatabaseService {
     }
 
     try {
-      await prisma.persons.create({
+      let person = await prisma.persons.create({
         data: {
           personUUID: `${ID_STARTERS.USER}${uuidv4()}`,
           firstName,
@@ -51,9 +52,16 @@ export class DatabaseService {
           birthDate: new Date(birthDate),
           email,
           password,
+          lastLogin: new Date(500),
         },
       });
+
+      await this.helper.createOrResestDefaultSettings(person.personId);
+      await this.helper.createDefaultPublicProfileSettings(person.personId);
+
     } catch (error) {
+      console.log(error);
+
       return RETURN_DATA.DATABASE_ERROR;
     }
     return RETURN_DATA.SUCCESS;
@@ -292,10 +300,12 @@ export class DatabaseService {
       let schoolUUID = await this.getSchoolUUIDById(school.schoolId);
 
       let roleName = Object.keys(Role)[role.roleId];
+      let roleId = role.roleId;
 
       schoolRoles.push({
         schoolUUID,
         roleName,
+        roleId
       });
     }
 

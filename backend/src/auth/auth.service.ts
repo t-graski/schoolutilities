@@ -149,6 +149,16 @@ export class AuthService {
       await this.databaseService.getPersonIdByUUID(personUUID),
     );
 
+    await prisma.persons.update({
+      where: {
+        personUUID,
+      },
+      data: {
+        lastLogin: new Date(Date.now()),
+      },
+    });
+
+
     return {
       access_token: this.jwtService.sign({ personUUID }),
       refresh_token: refreshToken,

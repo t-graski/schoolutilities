@@ -21,16 +21,17 @@ import {
 } from 'src/types/SchoolAdmin';
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
+import { HelperService } from 'src/helper/helper.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
 
 @Injectable()
 export class SchoolAdminService {
-  connection: any;
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly authService: AuthService,
+    private readonly helper: HelperService,
   ) {}
 
   async addSchoolConfig(
@@ -891,7 +892,7 @@ export class SchoolAdminService {
           firstName: personData.firstName,
           lastName: personData.lastName,
           roleName: personRole[0].roleName,
-          roleUUID: personRole[0].roleUUID,
+          roleId: personRole[0].roleId,
         });
       }
       return {
@@ -899,6 +900,7 @@ export class SchoolAdminService {
         data: personsData,
       };
     } catch (err) {
+      console.log(err);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
@@ -1140,6 +1142,30 @@ export class SchoolAdminService {
       status: RETURN_DATA.SUCCESS.status,
       data: schoolData,
     };
+  }
+
+  async updateRole(request): Promise<ReturnMessage> {
+    const { personUUID, schoolUUID, roleId } = request.body;
+
+    try {
+      const personId = await this.helper.getUserIdByUUID(personUUID);
+      const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
+      await prisma.personRoles.update({
+        where: {
+          schoolPersonId: {
+            personId,
+            schoolId,
+          },
+        },
+        data: {
+          roleId: Number(roleId),
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      console.log(error);
+      return RETURN_DATA.DATABASE_ERROR;
+    }
   }
 
   toBoolean(value): boolean {
