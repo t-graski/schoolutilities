@@ -98,11 +98,12 @@ model persons {
   coursePersons         coursePersons[]
   schoolJoinCodes       schoolJoinCodes[]
   schoolPersons         schoolPersons[]
-  emailChangeToken      emailChangeToken[]
   publicProfileSettings publicProfileSettings[]
   personSettings        personSettings[]
   updateEmailReceivers  updateEmailReceivers[]
   personBadges          personBadges[]
+  passwordResetTokens   passwordResetTokens[]
+  emailChangeTokens     emailChangeTokens[]
 }
 
 model personSettings {
@@ -247,6 +248,30 @@ model schoolJoinCodes {
   @@map("school_join_codes")
 }
 
+model passwordResetTokens {
+  passwordResetTokenId Int      @id @default(autoincrement()) @map("password_reset_token_id")
+  personId             Int      @map("person_id")
+  token                String   @unique(map: "token") @db.VarChar(255)
+  creationDate         DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  expireDate           DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  persons              persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPasswordResetTokenperson")
+
+  @@map("password_reset_tokens")
+}
+
+model emailChangeTokens {
+  emailChangeTokenId Int      @id @default(autoincrement()) @map("email_change_token_id")
+  personId           Int      @map("person_id")
+  token              String   @unique(map: "token") @db.VarChar(255)
+  email              String   @map("email") @db.VarChar(255)
+  verified           Boolean  @map("verified")
+  creationDate       DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  expireDate         DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
+  persons            persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkEmailChangeTokenperson")
+
+  @@map("email_change_tokens")
+}
+
 model courseFiles {
   courseFileId   Int      @id @default(autoincrement()) @map("course_file_id")
   courseFileUUID String   @map("course_file_uuid") @db.VarChar(255)
@@ -286,18 +311,6 @@ model schoolPersons {
   @@index([schoolId], map: "fkSchoolPersonSchoolId")
   @@index([personId], map: "fkSchoolPersonPersonId")
   @@map("school_persons")
-}
-
-model emailChangeToken {
-  emailChangeId Int     @id @default(autoincrement()) @map("email_change_id")
-  personId      Int     @map("person_id")
-  token         String  @unique(map: "token") @map("token") @db.VarChar(255)
-  newEmail      String  @map("new_email") @db.VarChar(255)
-  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkEmailChangePersonId")
-
-
-  @@index([personId], map: "fkEmailChangePersonId")
-  @@map("email_change_token")
 }
 
 model courseElements {

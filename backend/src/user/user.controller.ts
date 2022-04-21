@@ -1,11 +1,19 @@
-import { Controller, Get, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { UserService } from './user.service';
 
 @Controller('api/user')
 @UseGuards(RolesGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   // @UseGuards(RolesGuard)
   @Post('/changePassword')
@@ -13,6 +21,38 @@ export class UserController {
     const jwt = request.headers.authorization.split(' ')[1];
     const result = await this.userService.changePassword(request.body, jwt);
     return response.status(result.status).json(result?.message);
+  }
+
+  @Post('/requestPasswordReset')
+  async requestPasswordReset(@Req() request, @Res() response) {
+    const result = await this.userService.requestPasswordReset(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Post('/passwordReset')
+  async passwordReset(@Req() request, @Res() response) {
+    const result = await this.userService.passwordReset(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Post('/requestEmailChange')
+  async requestEmailChange(@Req() request, @Res() response) {
+    const result = await this.userService.requestEmailChange(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Post('/verifyEmailChange')
+  async verifyEmailChange(@Req() request, @Res() response) {
+    const result = await this.userService.verifyEmailChange(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
   }
 
   @Post('/changeEmail')
