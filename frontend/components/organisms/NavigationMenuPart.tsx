@@ -330,7 +330,7 @@ export const NavigationMenuPart = () => {
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem
-                title="Course selection"
+                title="Courses"
                 href="/school/select?redirect=/course"
               >
                 Build high-quality, accessible design systems and web apps. - CHANGE ME
@@ -360,6 +360,12 @@ export const NavigationMenuPart = () => {
               >
                 Tested in a range of browsers and assistive technologies. - CHANGE ME
               </ContentListItem>
+              <ContentListItem
+                title="Premium"
+                href="/premium"
+              >
+                Tested in a range of browsers and assistive technologies. - CHANGE ME
+              </ContentListItem>
               {/* <ContentListItem
                 title="Releases"
                 href="/docs/primitives/overview/releases"
@@ -375,41 +381,17 @@ export const NavigationMenuPart = () => {
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem
-                title="New school"
+                title="Create school"
                 href="/school/create"
               >
                 Build high-quality, accessible design systems and web apps. - CHANGE ME
               </ContentListItem>
               <ContentListItem
-                title="Getting started"
-                href="/docs/primitives/overview/getting-started"
+                title="Create courrse"
+                href="/school/select?redirect=/course/create"
               >
                 A quick tutorial to get you up and running with Radix
                 Primitives.
-              </ContentListItem>
-              <ContentListItem
-                title="Styling"
-                href="/docs/primitives/overview/styling"
-              >
-                Unstyled and compatible with any styling solution.
-              </ContentListItem>
-              <ContentListItem
-                title="Animation"
-                href="/docs/primitives/overview/animation"
-              >
-                Use CSS keyframes or any animation library of your choice.
-              </ContentListItem>
-              <ContentListItem
-                title="Accessibility"
-                href="/docs/primitives/overview/accessibility"
-              >
-                Tested in a range of browsers and assistive technologies.
-              </ContentListItem>
-              <ContentListItem
-                title="Releases"
-                href="/docs/primitives/overview/releases"
-              >
-                Radix Primitives releases and their changelogs.
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>

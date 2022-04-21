@@ -3,7 +3,6 @@ import { styled } from "../../stitches.config";
 import { SvgIcon } from "../atoms/SvgIcon";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import UserMenu from "../molecules/UserMenu";
 import NavbarPopOver from "./NavbarPopOver";
 import { NavigationMenuPart } from "./NavigationMenuPart";
 
