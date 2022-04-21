@@ -3,7 +3,7 @@ import CourseText from "./CourseText";
 import CourseFile from "./CourseFile";
 import { Headline } from "./Headline";
 import { InputField } from "./InputField";
-import * as moment from "moment";
+import moment from "moment";
 
 export function HeadlineDetailView({
   children,

@@ -24,6 +24,7 @@ import {
   sortableKeyboardCoordinates,
   useSortable,
 } from "@dnd-kit/sortable";
+import React from "react";
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -123,23 +124,24 @@ const AccordionLayout = styled("div", {
 
 export const Accordion = StyledAccordion;
 export const AccordionItem = StyledItem;
-// export const AccordionTrigger = React.forwardRef(
-//   ({ children, ...props }, forwardedRef) => (
-//     <StyledHeader>
-//       <StyledTrigger {...props} ref={forwardedRef}>
-//         {children}
-//         <StyledChevron aria-hidden />
-//       </StyledTrigger>
-//     </StyledHeader>
-//   )
-// );
-// export const AccordionContent = React.forwardRef(
-//   ({ children, ...props }, forwardedRef) => (
-//     <StyledContent {...props} ref={forwardedRef}>
-//       <StyledContentText>{children}</StyledContentText>
-//     </StyledContent>
-//   )
-// );
+export const AccordionTrigger = React.forwardRef<any>(
+  ({ children, ...props }, forwardedRef) => (
+    <StyledHeader>
+      <StyledTrigger {...props} ref={forwardedRef}>
+        {children}
+        <StyledChevron aria-hidden />
+      </StyledTrigger>
+    </StyledHeader>
+  )
+);
+
+export const AccordionContent = React.forwardRef<any>(
+  ({ children, ...props }, forwardedRef) => (
+    <StyledContent {...props} ref={forwardedRef}>
+      <StyledContentText>{children}</StyledContentText>
+    </StyledContent>
+  )
+);
 
 export default function RegisterApproved() {
   const questions = [
@@ -269,23 +271,16 @@ export default function RegisterApproved() {
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
       <AccordionLayout>
-        {/* <Accordion type="single" defaultValue="item-1" collapsible>
+        <Accordion type="single" defaultValue="item-1" collapsible>
           {questions.map(({ question, answer }, index) => (
             <AccordionItem key={index} value={`item-${index + 1}`}>
+              {/*@ts-ignore */}
               <AccordionTrigger>{question}</AccordionTrigger>
+              {/*@ts-ignore */}
               <AccordionContent>{answer}</AccordionContent>
             </AccordionItem>
           ))}
-        </Accordion> */}
-
-        <DndContext>
-          <SortableContext items={["A", "B", "C"]}>
-            <SortableContext
-              items={["1", "2", "3"]}
-              children={""}
-            ></SortableContext>
-          </SortableContext>
-        </DndContext>
+        </Accordion>
       </AccordionLayout>
       <Spacer size="small"></Spacer>
       <Footer></Footer>
