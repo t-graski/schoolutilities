@@ -113,35 +113,6 @@ export class UserService {
     }
   }
 
-  async activateNewEmail(token: string): Promise<ReturnMessage> {
-    const person = await prisma.emailChangeToken.findFirst({
-      where: {
-        token,
-      },
-      select: {
-        personId: true,
-        newEmail: true,
-      },
-    });
-
-    if (!person) {
-      return RETURN_DATA.NOT_FOUND;
-    }
-    try {
-      await prisma.persons.update({
-        where: {
-          personId: Number(person.personId),
-        },
-        data: {
-          email: person.newEmail,
-        },
-      });
-      return RETURN_DATA.SUCCESS;
-    } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
-    }
-  }
-
   async updateUserSettings(request): Promise<ReturnMessage> {
     let {
       language,
