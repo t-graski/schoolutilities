@@ -85,7 +85,6 @@ export const FileUpload: React.FC<Props> = ({}) => {
 
     let response = await request.json();
 
-    console.log(response);
     setFilesSent(true);
   }
 
