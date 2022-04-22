@@ -103,3 +103,4 @@ export const Changelog: React.FC<Props> = ({ }) => {
     </>
   );
 };
+
