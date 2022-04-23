@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { DatabaseUpdate, ReturnMessage } from 'src/types/Database';
+import { ReturnMessage } from 'src/types/Database';
 import { LoginUserData, RegisterUserData, UserData } from 'src/types/User';
 import {
   LENGTHS,

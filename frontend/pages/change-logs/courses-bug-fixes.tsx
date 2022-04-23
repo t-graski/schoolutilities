@@ -14,7 +14,7 @@ import { ArticleList } from "../../components/article/ArticleList";
 
 export default function Article() {
   const articleDetails = {
-    title: "0.1.1 - Courses and Bug Fixes",
+    title: "Courses and Bug Fixes",
     author: "Tobias Graski",
     date: "1/16/2022",
     readingTime: "2 min read",
@@ -23,11 +23,11 @@ export default function Article() {
   return (
     <>
       <Head>
-        <title>0.1.1 - SchoolUtilities</title>
+        <title>Patch Notes - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="SchoolUtilities Version 0.1.1"></Headline>
+      <Headline label="January 16, 2022 - Patch Notes"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
       <ArticleDetails {...articleDetails}></ArticleDetails>
@@ -115,7 +115,7 @@ export default function Article() {
         </ArticleLayout>
       </GeneralLayout>
       <Spacer size="verySmall"></Spacer>
-      {/* <Footer></Footer> */}
+      <Footer></Footer>
     </>
   );
 }
