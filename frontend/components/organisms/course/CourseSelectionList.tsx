@@ -32,10 +32,10 @@ const CourseLayout = styled("div", {
   height: "100%",
   padding: "10px 35px",
   borderRadius: "35px",
-  backgroundColor: "$specialQuaternary",
+  backgroundColor: "$backgroundTertiary",
   transition: "all 200ms ease-in-out",
   "&:hover": {
-    backgroundColor: "$specialQuinary",
+    backgroundColor: "$backgroundTertiary",
     color: "$fontSecondary",
   },
   cursor: "pointer",

@@ -48,7 +48,7 @@ const StyledMenu = styled(NavigationMenuPrimitive.Root, {
   position: "relative",
   display: "flex",
   justifyContent: "center",
-  width: "100vw",
+  width: "60vw",
   zIndex: 1,
 });
 

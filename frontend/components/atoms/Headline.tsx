@@ -51,6 +51,9 @@ const Header = styled("h1", {
       },
       large: {
         fontSize: "4.5rem",
+        "@mobileOnly": {
+          fontSize: "2.5rem",
+        },
       },
     },
     width: {
@@ -82,7 +85,7 @@ export const Headline: React.FC<Props> = ({
         fontWeight={fontWeight}
         size={fontSize}
       >
-        {label ? label : <Skeleton width={400}></Skeleton>}
+        {label ? label : <Skeleton width={250}></Skeleton>}
       </Header>
     </>
   );
