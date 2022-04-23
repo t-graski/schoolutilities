@@ -55,21 +55,27 @@ const BoxLayout = styled("div", {
 export const Changelog: React.FC<Props> = ({ }) => {
   const entries = [
     {
-      name: "0.1.2-courses-element-creation",
+      name: "new-course-elements-bug-fixes",
+      date: "April 23, 2022",
+      headline: "April 23, 2022 - Patch Notes",
+      text: "Today  we are releasing a new course element, bug fixes and many changes.\n\nClick the box to read more!",
+    },
+    {
+      name: "courses-element-creation",
       date: "March 6, 2022",
-      headline: "Version 0.1.2",
+      headline: "March 6, 2022 - Patch Notes",
       text: "In this release we add the ability to create elements in courses.\n\nClick the box to read more!",
     },
     {
-      name: "0.1.1-courses-bug-fixes",
+      name: "courses-bug-fixes",
       date: "January 16, 2022",
-      headline: "Version 0.1.1",
+      headline: "January 16, 2022 - Patch Notes",
       text: "This is our second release. In this release we fix bugs and add more features.\n\nClick the box to read more!",
     },
     {
-      name: "0.1-login-registration-school-create",
+      name: "login-registration-school-create",
       date: "December 20, 2021",
-      headline: "Version 0.1",
+      headline: "December 20, 2021 - Patch Notes",
       text: "This is our very first release. In this release we present login, registration, school creation and much more.\n\nClick the box to read more!",
     },
   ];
@@ -82,7 +88,7 @@ export const Changelog: React.FC<Props> = ({ }) => {
             <Link href={`/change-logs/${entry.name}`} passHref>
               <StyledLink>
                 <ChangeLogLayout>
-                  <StyledDate>{entry.date}</StyledDate>
+                  {/* <StyledDate>{entry.date}</StyledDate> */}
                   <StyledHeadline>{entry.headline}</StyledHeadline>
                   <Separator width="small" alignment="left"></Separator>
                   <StyledText>{entry.text}</StyledText>

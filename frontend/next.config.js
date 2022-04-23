@@ -30,6 +30,11 @@ module.exports = {
         destination: "/help/faq",
         permanent: true,
       },
+      {
+        source: "/status",
+        destination: "https://schoolutilities.statuspage.io/",
+        permanent: true,
+      }
     ];
   },
 };
