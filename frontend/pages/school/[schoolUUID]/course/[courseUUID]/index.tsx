@@ -8,8 +8,9 @@ import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
-import CourseMenu from "../../../../../components/atoms/CourseMenu";
+import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseContent from "../../../../../components/molecules/course/CourseContent";
+import { Button } from "../../../../../components/atoms/Button";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -31,15 +32,19 @@ export default function Features() {
 
   const [courseName, setCourseName] = useState("");
   const [courseUUID, setCourseUUID] = useState("");
+  const [schoolUUID, setSchoolUUID] = useState("");
+  const [canEditCourse, setCanEditCourse] = useState(false);
 
   useEffect(() => {
     requestDataFromDatabase();
   });
 
   async function requestDataFromDatabase() {
-    const { courseUUID } = router.query;
-    if (!Array.isArray(courseUUID)) {
-      setCourseUUID(courseUUID);
+    if (!Array.isArray(router.query.courseUUID)) {
+      setCourseUUID(router.query.courseUUID);
+    }
+    if (!Array.isArray(router.query.schoolUUID)) {
+      setSchoolUUID(router.query.schoolUUID);
     }
     let accessToken = await getAccessToken();
     if (courseUUID && accessToken && courseName == "") {
@@ -94,7 +99,7 @@ export default function Features() {
         <title>{courseName ? courseName : "Course"} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
+      <Spacer size="small"></Spacer>
       <ContentLayout>
         <HeadlineLayout>
           <Headline
@@ -107,6 +112,35 @@ export default function Features() {
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
         <CourseContent items={items}></CourseContent>
+        {items.length == 0 && canEditCourse && (
+          <>
+            <p>No elements in this course yet</p>
+            <Spacer size="verySmall"></Spacer>
+            <Button
+              label="Add elements"
+              onClick={() => {
+                router.push(`/school/${schoolUUID}/course/${courseUUID}/elements`);
+              }}
+              backgroundColor={"primary"}
+              color={"primary"}
+            ></Button>
+            <Spacer size="small"></Spacer>
+          </>
+        )}
+        {items.length == 0 && !canEditCourse && (
+          <>
+            <p>The administrator of this site hasn't added elements to this course yet</p>
+            <Spacer size="small"></Spacer>
+          </>
+        )}
+        <Button
+          backgroundColor={"primary"}
+          color={"primary"}
+          label={"Back to courses"}
+          onClick={() => {
+            router.push(`/school/${schoolUUID}/course`);
+          }}
+        ></Button>
       </ContentLayout>
       <Footer></Footer>
     </>

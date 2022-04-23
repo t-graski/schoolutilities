@@ -6,7 +6,7 @@ import { Item } from "react-nestable";
 // (e.g. src/index.js)
 import "react-nestable/dist/styles/index.css";
 import { styled } from "@stitches/react";
-import { elementsToChoose } from "../../atoms/CourseComponentDetailViews";
+import { elementsToChoose } from "../../atoms/course/CourseComponentDetailViews";
 
 type Props = {
   items: Item[];

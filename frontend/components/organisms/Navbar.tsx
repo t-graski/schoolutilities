@@ -32,13 +32,6 @@ const LogoLayout = styled("div", {
 });
 
 const NavLinksLayout = styled("div", {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-  width: "fit-content",
-  gap: "30px",
-
   "@mobileOnly": {
     display: "none",
   },
@@ -73,6 +66,10 @@ const SpecialLinkLayout = styled("div", {
   flexDirection: "column",
   alignItems: "center",
   color: "$fontPrimary",
+
+  "@mobileOnly": {
+    display: "none",
+  },
 });
 
 const StyledOpenButton = styled("button", {
@@ -107,7 +104,9 @@ export const Navbar: React.FC<Props> = ({}) => {
             </LogoLayout>
           </a>
         </Link>
-        <NavigationMenuPart></NavigationMenuPart>
+        <NavLinksLayout>
+          <NavigationMenuPart></NavigationMenuPart>
+        </NavLinksLayout>
         <SpecialLinkLayout>
           <Link href="/profile/settings" passHref>
             <UserMenu></UserMenu>

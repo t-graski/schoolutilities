@@ -5,6 +5,7 @@ import Head from "next/head";
 import { CourseSelectionList } from "../../../../components/organisms/course/CourseSelectionList";
 import { Headline } from "../../../../components/atoms/Headline";
 import { Separator } from "../../../../components/atoms/Separator";
+import { ContentLayout } from "./[courseUUID]/elements";
 
 export default function CreateCourse() {
   return (
@@ -13,11 +14,12 @@ export default function CreateCourse() {
         <title>Course Setup - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
-      <Headline label="My Courses"></Headline>
-      <Separator width="small" alignment="center" />
-      <CourseSelectionList></CourseSelectionList>
-      <Spacer size="medium" />
+      <Spacer size="small"></Spacer>
+      <ContentLayout>
+        <Headline label="My Courses"></Headline>
+        <Separator width="small" alignment="center" />
+        <CourseSelectionList></CourseSelectionList>
+      </ContentLayout>
       <Footer></Footer>
     </>
   );
