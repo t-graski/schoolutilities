@@ -2,7 +2,7 @@ import React from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import { violet, mauve, indigo, purple, blackA } from "@radix-ui/colors";
+import { violet, mauve, indigo, purple } from "@radix-ui/colors";
 
 const enterFromRight = keyframes({
   from: { transform: "translateX(200px)", opacity: 0 },
