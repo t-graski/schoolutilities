@@ -21,8 +21,8 @@ export const MainContent = styled("div", {
 const FirstBoxLayout = styled("div", {
   display: "flex",
   width: "100vw",
-  marginTop: "18vh",
-  height: "82vh",
+  marginTop: "10vh",
+  height: "80vh",
 });
 
 const ArtworkLayout = styled("div", {

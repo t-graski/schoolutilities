@@ -23,6 +23,15 @@ import SvgHome from "./svg/SvgHome";
 import SvgInfo from "./svg/SvgInfo";
 import SvgPassword from "./svg/SvgKey";
 import SvgLanguage from "./svg/SvgLanguage";
+import SvgLogoPencilCombinedCompact from "./svg/SvgLogoPencilCombinedCompact";
+import SvgLogoPencilCombinedCompactBlack from "./svg/SvgLogoPencilCombinedCompactBlack";
+import SvgLogoPencilCombinedCompactWhite from "./svg/SvgLogoPencilCombinedCompactWhite";
+import SvgLogoPencilLeft from "./svg/SvgLogoPencilLeft";
+import SvgLogoPencilLeftBlack from "./svg/SvgLogoPencilLeftBlack";
+import SvgLogoPencilLeftWhite from "./svg/SvgLogoPencilLeftWhite";
+import SvgLogoPencilOnly from "./svg/SvgLogoPencilOnly";
+import SvgLogoPencilOnlyBlack from "./svg/SvgLogoPencilOnlyBlack";
+import SvgLogoPencilOnlyWhite from "./svg/SvgLogoPencilOnlyWhite";
 import SvgName from "./svg/SvgName";
 import SvgOpenLogo from "./svg/SvgOpenLogo";
 import SvgPremium from "./svg/SvgPremium";
@@ -126,6 +135,30 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgFirstAidKit alt="First Aid Kit Icon" />;
     case "SvgStats":
       return <SvgStats alt="Stats Icon" />;
+    case "SvgLogoPencilCombinedCompact":
+      return (
+        <SvgLogoPencilCombinedCompact alt="Logo Pencil Combined Compact Icon" />
+      );
+    case "SvgLogoPencilCombinedCompactBlack":
+      return (
+        <SvgLogoPencilCombinedCompactBlack alt="Logo Pencil Combined Compact Black Icon" />
+      );
+    case "SvgLogoPencilCombinedCompactWhite":
+      return (
+        <SvgLogoPencilCombinedCompactWhite alt="Logo Pencil Combined Compact White Icon" />
+      );
+    case "SvgLogoPencilLeft":
+      return <SvgLogoPencilLeft alt="Logo Pencil Left Icon" />;
+    case "SvgLogoPencilLeftBlack":
+      return <SvgLogoPencilLeftBlack alt="Logo Pencil Left Black Icon" />;
+    case "SvgLogoPencilLeftWhite":
+      return <SvgLogoPencilLeftWhite alt="Logo Pencil Left White Icon" />;
+    case "SvgLogoPencilOnly":
+      return <SvgLogoPencilOnly alt="Logo Pencil Only Icon" />;
+    case "SvgLogoPencilOnlyBlack":
+      return <SvgLogoPencilOnlyBlack alt="Logo Pencil Only Icon" />;
+    case "SvgLogoPencilOnlyWhite":
+      return <SvgLogoPencilOnlyWhite alt="Logo Pencil Only Icon" />;
     default:
       return <SvgClass />;
   }
