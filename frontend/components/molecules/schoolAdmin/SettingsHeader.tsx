@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
+import { AddIcon } from "../../atoms/AddIcon";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 
@@ -47,11 +48,7 @@ export const SettingsHeader: React.FC<Props> = ({ headline, addFunction }) => {
           ></Headline>
           <Separator width="small" alignment="left"></Separator>
         </InformationLayout>
-        {addFunction && (
-          <AddIconLayout onClick={() => addFunction()}>
-            <AddIconPlus>+</AddIconPlus>
-          </AddIconLayout>
-        )}
+        {addFunction && <AddIcon addFunction={addFunction}></AddIcon>}
       </HeaderLayout>
     </>
   );

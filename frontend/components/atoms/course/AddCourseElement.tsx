@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { SvgIcon } from "./SvgIcon";
-import { useRouter } from "next/router";
+import { SvgIcon } from "../SvgIcon";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
   elementsToChoose,
 } from "./CourseComponentDetailViews";
+import { AddIcon } from "../AddIcon";
 
 type Props = { courseId: string; addNewEntry?: Function };
 
@@ -141,59 +141,6 @@ export const DropdownMenuLabel = StyledLabel;
 export const DropdownMenuSeparator = StyledSeparator;
 export const DropdownMenuArrow = StyledArrow;
 
-const Button = styled("button", {
-  all: "unset",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: 4,
-  padding: "0 15px",
-  fontSize: 15,
-  lineHeight: 1,
-  fontWeight: 500,
-  height: 35,
-  cursor: "pointer",
-
-  variants: {
-    variant: {
-      violet: {
-        backgroundColor: "white",
-        color: "$specialPrimary",
-        boxShadow: `0 2px 10px $specialPrimary`,
-        "&:hover": { backgroundColor: "$specialPrimary" },
-        "&:focus": { boxShadow: `0 0 0 2px black` },
-      },
-      blue: {
-        backgroundColor: "$specialSecondary",
-        color: "$fontPrimary",
-        "&:hover": { backgroundColor: "$specialPrimary" },
-        "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
-      },
-      mauve: {
-        backgroundColor: "$specialPrimary",
-        color: "$specialPrimary",
-        "&:hover": { backgroundColor: "$specialPrimary" },
-        "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
-      },
-    },
-  },
-
-  defaultVariants: {
-    variant: "violet",
-  },
-});
-
-const Box = styled("div", {});
-
-const IconLayout = styled("div", {
-  width: "35px",
-  cursor: "pointer",
-});
-
-const DropdownMenuItemSvgLayout = styled("div", {
-  width: "20px",
-});
-
 const overlayShow = keyframes({
   "0%": { opacity: 0 },
   "100%": { opacity: 0.8 },
@@ -263,9 +210,6 @@ const DialogContent = Content;
 const DialogTitle = StyledTitle;
 const DialogDescription = StyledDescription;
 const DialogClose = DialogPrimitive.Close;
-
-// Your app...
-const Flex = styled("div", { display: "flex" });
 
 const IconButton = styled("button", {
   all: "unset",
@@ -356,12 +300,11 @@ const AddButton = styled("button", {
   },
 });
 
-export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
+export const AddCourseElement: React.FC<Props> = ({ courseId, addNewEntry }) => {
   const [open, setOpen] = useState(false);
   const [choosenElementId, setChoosenElementId] = useState("");
   const [detailsConfig, setDetailsConfig] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  const router = useRouter();
 
   const choosenElement = elementsToChoose.find(
     (element) => element.id === choosenElementId
@@ -373,67 +316,9 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
 
   return (
     <>
-      <Box>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <IconLayout>
-              <SvgIcon iconName="SvgHamburger"></SvgIcon>
-            </IconLayout>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent
-            sideOffset={5}
-            alignOffset={30}
-            side="right"
-            align="center"
-          >
-            {addNewEntry && (
-              <DropdownMenuItem
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                <DropdownMenuItemSvgLayout>
-                  <SvgIcon iconName="SvgCheckMark"></SvgIcon>
-                </DropdownMenuItemSvgLayout>
-                Add new entry
-              </DropdownMenuItem>
-            )}
-            {!addNewEntry && (
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push(
-                    `/school/${
-                      router.query.schoolUUID as string
-                    }/course/${courseId}/elements`
-                  );
-                }}
-              >
-                <DropdownMenuItemSvgLayout>
-                  <SvgIcon iconName="SvgEdit"></SvgIcon>
-                </DropdownMenuItemSvgLayout>
-                Edit elements
-              </DropdownMenuItem>
-            )}
-
-            <DropdownMenuItem
-              onClick={() => {
-                router.push(
-                  `/school/${
-                    router.query.schoolUUID as string
-                  }/course/${courseId}/edit`
-                );
-              }}
-            >
-              <DropdownMenuItemSvgLayout>
-                <SvgIcon iconName="SvgEdit"></SvgIcon>
-              </DropdownMenuItemSvgLayout>
-              Edit course
-            </DropdownMenuItem>
-            <DropdownMenuArrow />
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </Box>
+      <AddIcon addFunction={() => {
+          setOpen(true);
+      }}></AddIcon>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent>
@@ -490,4 +375,4 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
   );
 };
 
-export default CourseMenu;
+export default AddCourseElement;

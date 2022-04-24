@@ -8,11 +8,12 @@ import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
-import CourseMenu from "../../../../../components/atoms/CourseMenu";
+import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseEditContent from "../../../../../components/molecules/course/CourseEditContent";
 import { Button } from "../../../../../components/atoms/Button";
+import AddCourseElement from "../../../../../components/atoms/course/AddCourseElement";
 
-const ContentLayout = styled("div", {
+export const ContentLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "100%",
@@ -24,18 +25,23 @@ const HeadlineLayout = styled("div", {
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
-});
 
-const IconLayout = styled("div", {
-  width: "40px",
+  "@mobileOnly": {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
 });
 
 const CourseHeaderLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
   gap: "40px",
-  justifyContent: "flex-start",
+  justifyContent: "left",
   alignItems: "center",
+
+  "@mobileOnly": {
+    gap: "20px",
+  },
 });
 
 export default function Features() {
@@ -99,7 +105,7 @@ export default function Features() {
               label={courseName}
               alignment="left"
             ></Headline>
-            <CourseMenu
+            <AddCourseElement
               courseId={courseUUID}
               addNewEntry={(choosenElement, config) => {
                 setItems([
@@ -112,7 +118,7 @@ export default function Features() {
                 ]);
                 setItemsCounter(itemsCounter + 1);
               }}
-            ></CourseMenu>
+            ></AddCourseElement>
           </CourseHeaderLayout>
           <CourseHeaderLayout>
             <Button
@@ -157,7 +163,6 @@ export default function Features() {
             ></Button>
           </CourseHeaderLayout>
         </HeadlineLayout>
-        <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
         <CourseEditContent
           courseId={courseUUID}

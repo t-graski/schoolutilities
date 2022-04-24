@@ -9,7 +9,7 @@ import "react-nestable/dist/styles/index.css";
 import { SvgIcon } from "../../atoms/SvgIcon";
 import { styled } from "@stitches/react";
 import CourseEditActionButtons from "./CourseEditActionButtons";
-import { elementsToChoose } from "../../atoms/CourseComponentDetailViews";
+import { elementsToChoose } from "../../atoms/course/CourseComponentDetailViews";
 import { getAccessToken } from "../../../misc/authHelper";
 
 type Props = {
