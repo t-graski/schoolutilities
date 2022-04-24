@@ -59,5 +59,6 @@ async function getAllowedExtensions(elementId: number) {
       allowedFileTypes: true,
     },
   });
+  console.log(elementId);
   return extensions.allowedFileTypes;
 }

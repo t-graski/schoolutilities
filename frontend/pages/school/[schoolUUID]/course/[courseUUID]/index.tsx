@@ -115,7 +115,7 @@ export default function Features() {
         {items.length == 0 && canEditCourse && (
           <>
             <p>No elements in this course yet</p>
-            <Spacer size="verySmall"></Spacer>
+            <Spacer size="small"></Spacer>
             <Button
               label="Add elements"
               onClick={() => {
@@ -133,6 +133,7 @@ export default function Features() {
             <Spacer size="small"></Spacer>
           </>
         )}
+        <Spacer size="small"></Spacer>
         <Button
           backgroundColor={"primary"}
           color={"primary"}

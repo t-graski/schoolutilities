@@ -67,8 +67,8 @@ export const FileUpload: React.FC<Props> = ({}) => {
 
   async function uploadFile(file) {
     const formData = new FormData();
-    formData.append("files", file);
     formData.append("elementUUID", router.query.submissionUUID as string);
+    formData.append("files", file);
 
     console.log(router.query.submissionUUID as string);
 

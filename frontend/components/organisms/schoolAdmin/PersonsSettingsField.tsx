@@ -84,9 +84,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     if (isFirstTime) {
-      setTimeout(() => {
-        updateSettingsEntriesFromDatabase();
-      }, 5000)
+      updateSettingsEntriesFromDatabase();
       setIsFirstTime(false);
     }
   });
@@ -233,38 +231,40 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
         <SettingsHeader headline="Persons"></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {persons.length > 0 ? persons.map((entry, index) => (
-            <SettingsEntryLayout
-              key={entry.personUUID}
-              data-key={entry.personUUID}
-            >
-              <SettingsEntry
-                deleteFunction={() => {
-                  setPersonUUID(entry.personUUID);
-                  setPersonName(entry.firstName + " " + entry.lastName);
-                  setDeletePopUpIsVisible(true);
-                }}
-                editFunction={() => {
-                  setPersonUUID(entry.personUUID);
-                  setRoleId(entry.roleId);
-                  setPersonName(entry.firstName + " " + entry.lastName);
-                  setEditPopUpIsVisible(true);
-                }}
-                highlighted={
-                  router.query &&
-                  router.query.personUUID &&
-                  entry.personUUID == router.query.personUUID
-                }
+          {persons.length > 0 ? (
+            persons.map((entry, index) => (
+              <SettingsEntryLayout
+                key={entry.personUUID}
+                data-key={entry.personUUID}
               >
-                <>
-                  <SettingsEntryName>
-                    {entry.firstName} {entry.lastName}
-                  </SettingsEntryName>
-                  <PersonRoleName>{entry.roleName}</PersonRoleName>
-                </>
-              </SettingsEntry>
-            </SettingsEntryLayout>
-          )) : (
+                <SettingsEntry
+                  deleteFunction={() => {
+                    setPersonUUID(entry.personUUID);
+                    setPersonName(entry.firstName + " " + entry.lastName);
+                    setDeletePopUpIsVisible(true);
+                  }}
+                  editFunction={() => {
+                    setPersonUUID(entry.personUUID);
+                    setRoleId(entry.roleId);
+                    setPersonName(entry.firstName + " " + entry.lastName);
+                    setEditPopUpIsVisible(true);
+                  }}
+                  highlighted={
+                    router.query &&
+                    router.query.personUUID &&
+                    entry.personUUID == router.query.personUUID
+                  }
+                >
+                  <>
+                    <SettingsEntryName>
+                      {entry.firstName} {entry.lastName}
+                    </SettingsEntryName>
+                    <PersonRoleName>{entry.roleName}</PersonRoleName>
+                  </>
+                </SettingsEntry>
+              </SettingsEntryLayout>
+            ))
+          ) : (
             <>
               <Skeleton width="100%" height={80}></Skeleton>
               <Skeleton width="100%" height={60}></Skeleton>
