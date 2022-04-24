@@ -11,13 +11,14 @@ import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment-timezone';
+import { Role } from 'src/roles/role.enum';
 //import parameter constants
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
@@ -392,6 +393,23 @@ export class HelperService {
     }
   }
 
+  async getCourseIdByElementId(elementId: number): Promise<any> {
+    if (elementId) {
+      try {
+        const element = await prisma.courseElements.findFirst({
+          where: {
+            elementId: elementId,
+          },
+        });
+        return element.courseId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.ELEMENT_ID_NULL_OR_INVALID);
+    }
+  }
+
   async getElementUUIDById(elementId: number): Promise<string> {
     if (elementId) {
       try {
@@ -745,7 +763,7 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() {}
+  async getMaxFileSize() { }
   async removeUserFromUpdateEmailList(personId: number): Promise<any> {
     if (personId) {
       try {
@@ -1028,5 +1046,95 @@ export class HelperService {
    */
   generateEmailChangeToken() {
     return uuidv4();
+  }
+  async getUserRoleBySchool(userId: number, schoolId: number): Promise<any> {
+    if (userId && schoolId) {
+      try {
+        const userRole = await prisma.personRoles.findFirst({
+          where: {
+            personId: userId,
+            schoolId: schoolId,
+          },
+        });
+        return userRole.roleId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async isTeacher(userId: number, schoolId: number): Promise<any> {
+    if (userId && schoolId) {
+      try {
+        const userRole = await prisma.personRoles.findUnique({
+          where: {
+            schoolPersonId: {
+              personId: userId,
+              schoolId: schoolId,
+            }
+          },
+        });
+        if (Object.keys(Role)[userRole.roleId] === 'Teacher') {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async isAdmin(userId: number, schoolId: number): Promise<any> {
+    if (userId && schoolId) {
+      try {
+        const userRole = await prisma.personRoles.findUnique({
+          where: {
+            schoolPersonId: {
+              personId: userId,
+              schoolId: schoolId,
+            }
+          },
+        });
+
+        if (Object.keys(Role)[userRole.roleId] === 'Admin') {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async userIdInSchool(userId: number, schoolId: number): Promise<any> {
+    if (userId && schoolId) {
+      try {
+        const user = await prisma.schoolPersons.findUnique({
+          where: {
+            schoolPersonId: {
+              personId: userId,
+              schoolId: schoolId,
+            }
+          },
+        });
+        if (user) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
   }
 }

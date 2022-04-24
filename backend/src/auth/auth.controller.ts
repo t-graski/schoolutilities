@@ -16,7 +16,7 @@ import { JwtRefreshTokenAuthGuard } from './refreshToken/jwt-refresh-token-auth.
 
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
   @Post('register')
   async registerUser(@Req() request, @Res() response) {
     const result = await this.authService.registerUser(request.body);
@@ -24,7 +24,7 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @Post('login')
+  @Post('/login')
   async loginUser(@Req() request, @Res() response) {
     return response
       .status(HttpStatus.OK)
@@ -32,20 +32,21 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get('/profile')
   getProfile(@Req() request, @Res() response) {
     return response.status(HttpStatus.OK).send(request.user);
   }
 
   @UseGuards(JwtRefreshTokenAuthGuard)
-  @Post('refresh')
+  @Post('/refresh')
   refreshToken(@Req() request, @Res() response) {
     return response.status(HttpStatus.OK).send({ token: request.user });
   }
 
-  @Get('roles')
+  @UseGuards(JwtAuthGuard)
+  @Get('/roles')
   async getRoles(@Req() request, @Res() response) {
-    const result = await this.authService.getRoles(request.body);
+    const result = await this.authService.getRoles(request);
     return response.status(HttpStatus.OK).send(result);
   }
 }

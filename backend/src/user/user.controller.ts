@@ -7,6 +7,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { UserService } from './user.service';
 
@@ -31,6 +32,7 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/requestEmailChange')
   async requestEmailChange(@Req() request, @Res() response) {
     const result = await this.userService.requestEmailChange(request);
@@ -47,7 +49,7 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Get('/getSchools')
   async getSchools(@Res() response, @Req() request) {
     const jwt = request.headers.authorization.split(' ')[1];
@@ -57,6 +59,7 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/profile')
   async getProfile(@Res() response, @Req() request) {
     const jwt = request.headers.authorization.split(' ')[1];
@@ -66,6 +69,7 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/publicProfile')
   async getPublicProfile(@Res() response, @Req() request) {
     const result = await this.userService.getPublicProfile(request);
@@ -74,6 +78,7 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/updateUserSettings')
   async updateUserSettings(@Req() request, @Res() response) {
     const result = await this.userService.updateUserSettings(request);
@@ -82,6 +87,7 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/updatePublicProfile')
   async updatePublicProfile(@Req() request, @Res() response) {
     const result = await this.userService.updatePublicProfile(request);

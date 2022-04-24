@@ -62,17 +62,18 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Post('/addUser')
   async addUser(@Req() request, @Res() response) {
-    const result = await this.courseService.addUser(request.body);
+    const result = await this.courseService.addUser(request);
     return response.status(result.status).json(result?.message);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('/removeUser')
   async removeUser(@Req() request, @Res() response) {
-    const result = await this.courseService.removeUser(request.body);
+    const result = await this.courseService.removeUser(request);
     return response.status(result.status).json(result?.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/getCourses/:schoolUUID')
   @Roles(Role.Student)
   async getCourses(@Param() params, @Req() request, @Res() response) {
@@ -86,6 +87,7 @@ export class CourseController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/getCourseInfo/:courseUUID')
   @Roles(Role.Student)
   async getCourseInfo(@Param() params, @Req() request, @Res() response) {
@@ -99,7 +101,9 @@ export class CourseController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/courseElements')
+  @Roles(Role.Teacher)
   async courseElements(@Req() request, @Res() response) {
     const result = await this.courseService.courseElements(request);
     return response
@@ -107,6 +111,7 @@ export class CourseController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/courseElements/:courseUUID')
   async getCourseElements(@Param() params, @Req() request, @Res() response) {
     const result = await this.courseService.getCourseElements(
@@ -117,6 +122,8 @@ export class CourseController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Student)
   @Post('/submitExercise')
   @UseInterceptors(
     FileInterceptor('files', {
@@ -128,7 +135,6 @@ export class CourseController {
       limits: { fileSize: 1000000 },
     }),
   )
-
   async submitExercise(@Req() request, @Res() response, @UploadedFile() file) {
     if (file) {
       const result = await this.courseService.submitExercise(request, file);
@@ -141,6 +147,8 @@ export class CourseController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Student)
   @Get('/element/:elementUUID')
   async getElement(@Param() params, @Req() request, @Res() response) {
     const result = await this.courseService.getElement(request, params.elementUUID);

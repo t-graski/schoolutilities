@@ -32,7 +32,7 @@ export class SchoolAdminService {
     private readonly databaseService: DatabaseService,
     private readonly authService: AuthService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   async addSchoolConfig(
     body: AddSchool,
@@ -546,7 +546,7 @@ export class SchoolAdminService {
           },
           roles: {
             connect: {
-              roleId: 2,
+              roleId: 3,
             },
           },
           schools: {
