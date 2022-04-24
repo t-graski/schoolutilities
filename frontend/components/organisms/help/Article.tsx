@@ -7,14 +7,9 @@ import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { ArticleDetails } from "../../article/ArticleDetails";
 import { Spacer } from "../../atoms/Spacer";
+import { ContentLayout } from "../../../pages/school/[schoolUUID]/course/[courseUUID]/elements";
 
 export type SideDashboardProps = {};
-
-const ContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  padding: "5vh 15vw",
-});
 
 export const Article: React.FC<SideDashboardProps> = ({}) => {
   const router = useRouter();
@@ -55,18 +50,16 @@ export const Article: React.FC<SideDashboardProps> = ({}) => {
 
   return (
     <>
-      <Headline label={content.headline}></Headline>
-      <Separator width="small" alignment="center" />
-      <Spacer size="verySmall" />
-      <ArticleDetails
-        title={content.headline}
-        author={content.creator.firstName + " " + content.creator.lastName}
-        date={new Date(content.creationDate).toLocaleDateString()}
-        readingTime={content.readingTime + " min read"}
-      ></ArticleDetails>
-      <ContentLayout>
+        <Headline label={content.headline}></Headline>
+        <Separator width="small" alignment="center" />
+        <Spacer size="verySmall" />
+        <ArticleDetails
+          title={content.headline}
+          author={content.creator.firstName + " " + content.creator.lastName}
+          date={new Date(content.creationDate).toLocaleDateString()}
+          readingTime={content.readingTime + " min read"}
+        ></ArticleDetails>
         <div dangerouslySetInnerHTML={{ __html: content.content }}></div>
-      </ContentLayout>
     </>
   );
 };

@@ -35,8 +35,7 @@ const CourseLayout = styled("div", {
   backgroundColor: "$backgroundTertiary",
   transition: "all 200ms ease-in-out",
   "&:hover": {
-    backgroundColor: "$backgroundTertiary",
-    color: "$fontTertiary",
+    opacity: "0.8",
   },
   cursor: "pointer",
   placeSelf: "center",

@@ -21,7 +21,7 @@ export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) { }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Student)
+  // @Roles(Role.Student)
   @Post('/addSchoolConfig')
   async addSchoolConfig(@Req() request, @Res() response) {
     const jwt = request.headers.authorization.split(' ')[1];
@@ -36,7 +36,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/department')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async addDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartment(request.body);
     return response
@@ -46,7 +46,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/departments')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async addDepartments(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addDepartments(request.body);
     return response.status(result.status).json(result?.message);
@@ -54,7 +54,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('/department')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async removeDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeDepartment(request.body);
     return response
@@ -65,7 +65,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/department')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async updateDepartment(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateDepartment(request.body);
     return response.status(result.status).json(result?.message);
@@ -73,7 +73,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/departments/:schoolUUID')
-  @Roles(Role.Student)
+  // @Roles(Role.Student)
   async getDepartments(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getDepartments(
       params.schoolUUID,
@@ -85,7 +85,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/class')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async addClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.addClass(request.body);
     return response
@@ -95,7 +95,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('/class')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async removeClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeClass(
       request.body.classUUID,
@@ -107,7 +107,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/class')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async updateClass(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateClass(request.body);
     return response
@@ -117,7 +117,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/classes/:schoolUUID')
-  @Roles(Role.Student)
+  // @Roles(Role.Student)
   async getClasses(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getClasses(params.schoolUUID);
     return response
@@ -127,7 +127,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/joinCode')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async addJoinCode(@Req() request, @Res() response) {
     const jwt = request.headers.authorization.split(' ')[1];
     const result = await this.schoolAdminService.addJoinCode(request.body, jwt);
@@ -138,7 +138,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('/joinCode')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async removeJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.removeJoinCode(request.body);
     return response.status(result.status).json(result?.message);
@@ -146,7 +146,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/joinCode')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async updateJoinCode(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateJoinCode(request.body);
     return response.status(result.status).json(result?.message);
@@ -154,7 +154,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/joinCode/:schoolUUID')
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   async getJoinCodes(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getAllJoinCodes(
       params.schoolUUID,
@@ -164,7 +164,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/joinSchool')
-  @Roles(Role.Verified)
+  // @Roles(Role.Verified)
   async joinSchool(@Req() request, @Res() response) {
     const token = request.headers.authorization.split(' ')[1];
     const result = await this.schoolAdminService.joinSchool(
@@ -178,7 +178,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/leaveSchool')
-  @Roles(Role.Student)
+  // @Roles(Role.Student)
   async leaveSchool(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.leaveSchool(request.body);
     return response
@@ -188,7 +188,7 @@ export class SchoolAdminController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/getPersons/:schoolUUID')
-  @Roles(Role.Student)
+  // @Roles(Role.Student)
   async getPersonsOfSchool(@Param() params, @Res() response) {
     const result = await this.schoolAdminService.getPersonsOfSchool(
       params.schoolUUID,
