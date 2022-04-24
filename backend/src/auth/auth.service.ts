@@ -16,6 +16,7 @@ import { PrismaClient } from '@prisma/client';
 import { RETURN_DATA } from 'src/misc/parameterConstants';
 import { Role } from 'src/roles/role.enum';
 import { DecodedJWT } from 'src/types/SchoolAdmin';
+import { HelperService } from 'src/helper/helper.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
@@ -28,6 +29,7 @@ export class AuthService {
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
     private readonly refreshTokenService: RefreshTokenService,
+    private readonly helper: HelperService
   ) { }
 
   async getUserDataByEmailAndPassword(userData: LoginUserData) {
@@ -35,23 +37,45 @@ export class AuthService {
     const { password, ...result } = userDbData;
 
     if (bcrypt.compareSync(userData.password, password)) {
-      result.roles = await this.getRoles(result.personId);
       return result;
     }
     return null;
   }
 
-  async getRoles(userId: number): Promise<UserRole[]> {
-    const roles = await prisma.personRoles.findMany({
-      where: {
-        personId: Number(userId),
-      },
-      select: {
-        schoolId: true,
-        roleId: true,
-      },
-    });
-    return roles;
+  async getRoles(request): Promise<any> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const requesterId = await this.helper.getUserIdfromJWT(jwt);
+    const { userUUID, schoolUUID } = request.body;
+    const userId = await this.helper.getUserIdByUUID(userUUID);
+    const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
+    const requesterRoles = await this.helper.getUserRoleBySchool(requesterId, schoolId);
+    const required = [1, 2];
+    if (required.includes(requesterRoles) || (requesterId == userId)) {
+      const roles = await prisma.personRoles.findUnique({
+        where: {
+          schoolPersonId: {
+            personId: Number(userId),
+            schoolId: Number(schoolId),
+          },
+        },
+        select: {
+          schoolId: true,
+          roleId: true,
+        },
+      });
+
+      const rolesItem = {
+        schoolUUID,
+        role: roles.roleId,
+        roleName: await this.getRoleNameById(roles.roleId.toString()),
+      }
+
+      return rolesItem;
+    }
+    return {
+      statusCode: HttpStatus.UNAUTHORIZED,
+      message: 'Unauthorized',
+    };
   }
 
   async isPermitted(
