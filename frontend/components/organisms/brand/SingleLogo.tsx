@@ -46,18 +46,55 @@ const LogoSizer = styled("div", {
   },
 });
 
+const DownloadSizer = styled("div", {
+  width: "20px",
+  height: "20px",
+});
+
+const DownloadButtonsLayout = styled("div", {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: "20px",
+  width: "100%",
+  gap: "30px",
+});
+
+const DownloadButton = styled("a", {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "10px",
+  color: "$fontPrimary",
+  textDecoration: "none",
+});
+
 export const SingleLogo: React.FC<Props> = ({
   logoName,
   imageBg,
   orientation = "horizontal",
 }) => {
   return (
-    <>
+    <div>
       <SingleLogoLayout imageBg={imageBg}>
         <LogoSizer orientation={orientation}>
-          <SvgIcon iconName={logoName} />
+          <SvgIcon iconName={`Svg${logoName}`} />
         </LogoSizer>
       </SingleLogoLayout>
-    </>
+      <DownloadButtonsLayout>
+        <DownloadButton href={`/images/downloads/${logoName}.svg`} download={`${logoName}.svg`}>
+          <DownloadSizer>
+            <SvgIcon iconName="SvgDownload"></SvgIcon>
+          </DownloadSizer>
+          SVG
+        </DownloadButton>
+        <DownloadButton href={`/images/downloads/${logoName}.png`} download={`${logoName}.png`}>
+          <DownloadSizer>
+            <SvgIcon iconName="SvgDownload"></SvgIcon>
+          </DownloadSizer>
+          PNG
+        </DownloadButton>
+      </DownloadButtonsLayout>
+    </div>
   );
 };

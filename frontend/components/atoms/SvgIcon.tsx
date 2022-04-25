@@ -11,6 +11,7 @@ import SvgClosedLogo from "./svg/SvgClosedLogo";
 import SvgDelete from "./svg/SvgDelete";
 import SvgDepartment from "./svg/SvgDepartment";
 import SvgDiscordLogo from "./svg/SvgDiscordLogo";
+import SvgDownload from "./svg/SvgDownload";
 import SvgEdit from "./svg/SvgEdit";
 import SvgEmail from "./svg/SvgEmail";
 import SvgExclamination from "./svg/SvgExclamination";
@@ -159,6 +160,8 @@ export const SvgIcon: React.FC<Props> = ({ iconName }) => {
       return <SvgLogoPencilOnlyBlack alt="Logo Pencil Only Icon" />;
     case "SvgLogoPencilOnlyWhite":
       return <SvgLogoPencilOnlyWhite alt="Logo Pencil Only Icon" />;
+    case "SvgDownload":
+      return <SvgDownload alt="Download Icon" />;
     default:
       return <SvgClass />;
   }

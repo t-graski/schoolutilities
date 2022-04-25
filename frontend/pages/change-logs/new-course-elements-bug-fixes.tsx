@@ -49,7 +49,7 @@ export default function Article() {
                     ></Headline>
                     <p>
                         It is now possible to create assignments in your course by clicking{" "}
-                        <Link href="/course/create-course">
+                        <Link href="/course/create-course" passHref>
                             <StyledLink>here</StyledLink>
                         </Link>
                         .
@@ -65,8 +65,8 @@ export default function Article() {
                     <p>
                         We are also very excited to announce our new Status Page.
                         From that page, you can always find the latest information about how our services are performing.
-                        If you are interested, you can find teh details{" "}
-                        <Link href="https://schoolutilities.statuspage.io/">
+                        If you are interested, you can find the details{" "}
+                        <Link href="https://schoolutilities.statuspage.io/" passHref>
                             <StyledLink>here</StyledLink>
                         </Link>
                         .
