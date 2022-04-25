@@ -150,12 +150,17 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
       personUUID,
       roleId,
     };
+    let accessToken = await getAccessToken();
+    if (!accessToken) {
+      router.push("/auth/login");
+    }
     const returnValue = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/role`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`,
         },
         body: JSON.stringify(data),
       }
