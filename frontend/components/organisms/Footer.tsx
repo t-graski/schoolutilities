@@ -229,6 +229,9 @@ const Footer: React.FC<Props> = ({}) => {
             <Link href="/help" passHref>
               <StyledLink>Help Center</StyledLink>
             </Link>
+            <Link href="/change-logs" passHref>
+              <StyledLink>Changelog</StyledLink>
+            </Link>
             <Link href="/help/faq" passHref>
               <StyledLink>FAQ</StyledLink>
             </Link>

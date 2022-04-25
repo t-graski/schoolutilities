@@ -79,9 +79,9 @@ export default function Home() {
             <LogoPresentationBox
               description="Our default logo with lettering is available in three different variants: Color, black - and white!"
               logos={[
-                { name: "SvgLogoPencilCombinedCompact", imageBg: "1" },
-                { name: "SvgLogoPencilCombinedCompactBlack", imageBg: "2" },
-                { name: "SvgLogoPencilCombinedCompactWhite", imageBg: "3" },
+                { name: "LogoPencilCombinedCompact", imageBg: "1" },
+                { name: "LogoPencilCombinedCompactBlack", imageBg: "2" },
+                { name: "LogoPencilCombinedCompactWhite", imageBg: "3" },
               ]}
             ></LogoPresentationBox>
             <Spacer size="small"></Spacer>
@@ -89,9 +89,9 @@ export default function Home() {
             <LogoPresentationBox
               description="Brand-lettering with icon"
               logos={[
-                { name: "SvgLogoPencilLeft", imageBg: "1" },
-                { name: "SvgLogoPencilLeftBlack", imageBg: "2" },
-                { name: "SvgLogoPencilLeftWhite", imageBg: "3" },
+                { name: "LogoPencilLeft", imageBg: "1" },
+                { name: "LogoPencilLeftBlack", imageBg: "2" },
+                { name: "LogoPencilLeftWhite", imageBg: "3" },
               ]}
             ></LogoPresentationBox>
             <Spacer size="small"></Spacer>
@@ -99,17 +99,17 @@ export default function Home() {
               description="Pencil icon only"
               logos={[
                 {
-                  name: "SvgLogoPencilOnly",
+                  name: "LogoPencilOnly",
                   imageBg: "1",
                   orientation: "vertical",
                 },
                 {
-                  name: "SvgLogoPencilOnlyBlack",
+                  name: "LogoPencilOnlyBlack",
                   imageBg: "2",
                   orientation: "vertical",
                 },
                 {
-                  name: "SvgLogoPencilOnlyWhite",
+                  name: "LogoPencilOnlyWhite",
                   imageBg: "3",
                   orientation: "vertical",
                 },

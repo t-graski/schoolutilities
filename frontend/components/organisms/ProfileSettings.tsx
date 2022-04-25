@@ -376,6 +376,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
               <InputField
                 inputType="text"
                 label="Date of Birth"
+                showLabel={false}
                 value={new Date(userInfo.birthDate).toLocaleDateString()}
                 onChange={(e) => {}}
                 iconName={""}
@@ -416,6 +417,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
               <InputField
                 inputType="email"
                 label="Email"
+                showLabel={false}
                 value={userInfo.email}
                 onChange={(e) => {
                   setUserInfo({ ...userInfo, email: e });
@@ -436,6 +438,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
               <InputField
                 inputType="text"
                 label="User Since"
+                showLabel={false}
                 value={longDateCreationDate}
                 onChange={(e) => {}}
                 iconName={""}
