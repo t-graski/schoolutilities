@@ -350,8 +350,8 @@ export const NavigationMenuPart = () => {
                 can add our discord bot to your personal server.
               </ContentListItem>
               <ContentListItem title="Premium" href="/premium">
-                Premium is a paid subscription that allows you to use even more of
-                our features.
+                With SchoolUtilities' premium features, your school can unleash
+                it's full potential.
               </ContentListItem>
               {/* <ContentListItem
                 title="Releases"
@@ -367,14 +367,11 @@ export const NavigationMenuPart = () => {
           <NavigationMenuTrigger>Help</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
-              <ContentListItem
-                title="Tutorials"
-                href="/help"
-              >
-                Learn how to deal with all the functions of SchoolUtilities.
+              <ContentListItem title="Tutorials" href="/help">
+                Learn how to deal with all of our features.
               </ContentListItem>
               <ContentListItem title="Patch Notes" href="/help">
-                See our new incredible innovations for each release.
+                See our incredible innovations for each release and also what we have messed up in earlier releases.
               </ContentListItem>
               <ContentListItem title="About" href="/help/faq">
                 Get acquainted with the whole story about SchoolUtilities.
@@ -395,7 +392,8 @@ export const NavigationMenuPart = () => {
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem title="New school" href="/school/create">
-                Add your school to SchoolUtilities and bring the education to the next level.
+                Add your school to SchoolUtilities and bring the education to
+                the next level.
               </ContentListItem>
               <ContentListItem
                 title="Create course"
