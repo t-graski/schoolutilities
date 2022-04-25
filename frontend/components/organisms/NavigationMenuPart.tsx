@@ -215,7 +215,7 @@ const ContentList = styled("ul", {
         "@media only screen and (min-width: 600px)": {
           width: 600,
           gridAutoFlow: "column",
-          gridTemplateRows: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(2, 1fr)",
         },
       },
     },
@@ -336,8 +336,7 @@ export const NavigationMenuPart = () => {
                 title="Courses"
                 href="/school/select?redirect=/course"
               >
-                Build high-quality, accessible design systems and web apps. -
-                CHANGE ME
+                This is where everything happens.
               </ContentListItem>
               <ContentListItem
                 title="Dashboard"
@@ -346,22 +345,13 @@ export const NavigationMenuPart = () => {
                 Maintain a clean and organized environment for managing
                 everything you can imagine.
               </ContentListItem>
-              <ContentListItem title="Help" href="/help">
-                Unstyled and compatible with any styling solution. - CHANGE ME
-              </ContentListItem>
-              <ContentListItem title="FAQ" href="/help/faq">
-                Use CSS keyframes or any animation library of your choice. -
-                CHANGE ME
-              </ContentListItem>
               <ContentListItem title="Discord Bot" href="/bot">
-                Tested in a range of browsers and assistive technologies. -
-                CHANGE ME
+                If you fell like you are not receiving enough notifications you
+                can add our discord bot to your personal server.
               </ContentListItem>
-              <ContentListItem
-                title="Premium"
-                href="/premium"
-              >
-                Tested in a range of browsers and assistive technologies. - CHANGE ME
+              <ContentListItem title="Premium" href="/premium">
+                Premium is a paid subscription that allows you to use even more of
+                our features.
               </ContentListItem>
               {/* <ContentListItem
                 title="Releases"
@@ -378,34 +368,22 @@ export const NavigationMenuPart = () => {
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem
-                title="Premium"
-                href="/school/select?redirect=/course"
-              >
-                With SchoolUtilities' premium features, your school can unleash
-                it's full potential.
-              </ContentListItem>
-              <ContentListItem
                 title="Tutorials"
-                href="/school/select?redirect=/dashboard"
+                href="/help"
               >
-                Maintain a clean and organized environment for managing
-                everything you can imagine. - CHANGE ME
+                Learn how to deal with all the functions of SchoolUtilities.
               </ContentListItem>
               <ContentListItem title="Patch Notes" href="/help">
-                Unstyled and compatible with any styling solution. - CHANGE ME
+                See our new incredible innovations for each release.
               </ContentListItem>
               <ContentListItem title="About" href="/help/faq">
                 Get acquainted with the whole story about SchoolUtilities.
-              </ContentListItem>
-              <ContentListItem title="Support" href="/bot">
-                Tested in a range of browsers and assistive technologies. -
-                CHANGE ME
               </ContentListItem>
               <ContentListItem
                 title="FAQ"
                 href="/docs/primitives/overview/releases"
               >
-                Radix Primitives releases and their changelogs. - CHANGE ME
+                If you have any questions, you'll probably find them here.
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>
@@ -417,15 +395,13 @@ export const NavigationMenuPart = () => {
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem title="New school" href="/school/create">
-                Build high-quality, accessible design systems and web apps. -
-                CHANGE ME
+                Add your school to SchoolUtilities and bring the education to the next level.
               </ContentListItem>
               <ContentListItem
-                title="Create courrse"
+                title="Create course"
                 href="/school/select?redirect=/course/create"
               >
-                A quick tutorial to get you up and running with Radix
-                Primitives.
+                Create a course and start teaching your students.
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>
