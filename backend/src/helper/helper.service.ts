@@ -372,6 +372,8 @@ export class HelperService {
       }
       return options;
     } catch (err) {
+      console.log(err);
+
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
@@ -542,7 +544,6 @@ export class HelperService {
     elementId: number,
     typeId: number,
   ): Promise<any> {
-    console.log('asdfa');
     if (options) {
       try {
         switch (typeId) {
@@ -580,6 +581,8 @@ export class HelperService {
             });
         }
       } catch (err) {
+        console.log(err);
+
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
