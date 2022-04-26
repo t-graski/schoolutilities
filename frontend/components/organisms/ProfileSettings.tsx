@@ -18,7 +18,7 @@ const ProfileLayout = styled("div", {
   justifyContent: "center",
   padding: "3vh 6vw 10vh",
   gridTemplateColumns: "4fr 1fr 6fr 6fr",
-  
+
   "@mobileOnly": {
     gridTemplateColumns: "1fr",
     padding: "3vh 6vw",
@@ -213,7 +213,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     lastName: "Lastname",
     email: "Email",
     creationDate: new Date().toISOString(),
-    birthDate: new Date().toISOString(),
+    birthday: new Date().toISOString(),
   });
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -261,6 +261,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
       setStatusInfo("Error: " + response.status);
     } else {
       const data = await response.json();
+
       setUserInfo(data);
       console.log(data);
     }
@@ -377,7 +378,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 inputType="text"
                 label="Date of Birth"
                 showLabel={false}
-                value={new Date(userInfo.birthDate).toLocaleDateString()}
+                value={new Date(userInfo.birthday).toLocaleDateString()}
                 onChange={(e) => {}}
                 iconName={""}
                 editable={false}

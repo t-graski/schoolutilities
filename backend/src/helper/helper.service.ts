@@ -863,7 +863,7 @@ export class HelperService {
             email,
           },
         });
-        if (Boolean(user.emailVerified)) {
+        if (user && Boolean(user.emailVerified)) {
           return user;
         } else {
           return false;

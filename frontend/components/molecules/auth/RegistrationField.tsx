@@ -305,6 +305,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             </SuccessDescription>
             <Link
               href={signUpWorking ? "/profile/settings" : "/auth?tab=register"}
+              passHref
             >
               <StyledLink
                 onClick={() => {

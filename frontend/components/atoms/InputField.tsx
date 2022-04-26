@@ -452,7 +452,9 @@ const InfoHoverCardText = styled("div", {});
 
 const InputFieldLabel = styled("div", {});
 
-const Required = styled("div", {});
+const Required = styled("div", {
+  display: "inline-block",
+});
 
 export const InputField: React.FC<Props> = ({
   inputType,
@@ -641,8 +643,8 @@ export const InputField: React.FC<Props> = ({
       <>
         {label && showLabel && (
           <>
-            <InputFieldLabel>{label}</InputFieldLabel>
-            {required && <Required>*</Required>}
+            <InputFieldLabel>{label}{" "}{required && <Required>*</Required>}</InputFieldLabel>
+            
           </>
         )}
         <InputFieldLayout editable={editable}>
