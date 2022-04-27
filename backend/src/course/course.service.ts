@@ -197,17 +197,6 @@ export class CourseService {
       classes,
       persons,
     } = body;
-    if (
-      !courseName ||
-      !courseDescription ||
-      !persons ||
-      !classes ||
-      !validator.isUUID(courseUUID.slice(1), 4) ||
-      !validator.isLength(courseName, LENGTHS.COURSE_NAME) ||
-      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
 
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
 
@@ -1034,6 +1023,7 @@ export class CourseService {
     const userId = await this.helper.getUserIdfromJWT(jwt);
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
     const courseId = await this.helper.getCourseIdByElementId(elementId);
+    const schoolId = await this.helper.getSchoolIdByCourseId(courseId);
 
     if (!await this.helper.userIsInCourse(userId, courseId)) {
       return {
@@ -1054,12 +1044,14 @@ export class CourseService {
     );
 
     const creator = await this.helper.getUserById(element.personCreationId);
+    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(userId, schoolId);
 
     const elementItem = {
       elementUUID: element.elementUUID,
       courseUUID: await this.helper.getCourseUUIDById(element.courseId),
       visible: Boolean(element.visible),
       creationDate: element.creationDate,
+      canEdit: isTeacherOrHigher,
       creator: {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
