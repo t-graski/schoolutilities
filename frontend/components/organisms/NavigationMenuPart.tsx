@@ -96,14 +96,17 @@ const StyledCaret = styled(CaretDownIcon, {
   },
 });
 
-const StyledTriggerWithCaret = React.forwardRef<any>(
-  ({ children, ...props }, forwardedRef) => (
+const StyledTriggerWithCaret = React.forwardRef<any>(function Content(
+  { children, ...props },
+  forwardedRef
+) {
+  return (
     <StyledTrigger {...props} ref={forwardedRef}>
       {children}
       <StyledCaret aria-hidden />
     </StyledTrigger>
-  )
-);
+  );
+});
 
 const StyledLink = styled(NavigationMenuPrimitive.Link, {
   ...itemStyles,
@@ -155,13 +158,16 @@ const StyledArrow = styled("div", {
   borderTopLeftRadius: 2,
 });
 
-const StyledIndicatorWithArrow = React.forwardRef<any>(
-  (props, forwardedRef) => (
+const StyledIndicatorWithArrow = React.forwardRef<any>(function Content(
+  props,
+  forwardedRef
+) {
+  return (
     <StyledIndicator {...props} ref={forwardedRef}>
       <StyledArrow />
     </StyledIndicator>
-  )
-);
+  );
+});
 
 const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   position: "relative",
@@ -238,30 +244,34 @@ const LinkText = styled("p", {
   fontWeight: "initial",
 });
 
-const ContentListItem = React.forwardRef<any, any>(
-  ({ children, title, ...props }, forwardedRef) => {
-    return (
-      <ListItem>
-        <NavigationMenuLink
-          {...props}
-          ref={forwardedRef}
-          css={{
-            padding: 12,
-            borderRadius: 6,
-            transition: "background-color 150ms ease",
-            "&:hover": { backgroundColor: "$backgroundTertiary" },
-          }}
-        >
-          <LinkTitle>{title}</LinkTitle>
-          <LinkText>{children}</LinkText>
-        </NavigationMenuLink>
-      </ListItem>
-    );
-  }
-);
+const ContentListItem = React.forwardRef<any, any>(function Content(
+  { children, title, ...props },
+  forwardedRef
+) {
+  return (
+    <ListItem>
+      <NavigationMenuLink
+        {...props}
+        ref={forwardedRef}
+        css={{
+          padding: 12,
+          borderRadius: 6,
+          transition: "background-color 150ms ease",
+          "&:hover": { backgroundColor: "$backgroundTertiary" },
+        }}
+      >
+        <LinkTitle>{title}</LinkTitle>
+        <LinkText>{children}</LinkText>
+      </NavigationMenuLink>
+    </ListItem>
+  );
+});
 
-const ContentListItemCallout = React.forwardRef<any>(
-  ({ children, ...props }, forwardedRef) => (
+const ContentListItemCallout = React.forwardRef<any>(function Content(
+  { children, ...props },
+  forwardedRef
+) {
+  return (
     <ListItem css={{ gridRow: "span 3" }}>
       <NavigationMenuLink
         {...props}
@@ -310,8 +320,8 @@ const ContentListItemCallout = React.forwardRef<any>(
         </LinkText>
       </NavigationMenuLink>
     </ListItem>
-  )
-);
+  );
+});
 
 const ViewportPosition = styled("div", {
   position: "absolute",
@@ -350,8 +360,8 @@ export const NavigationMenuPart = () => {
                 can add our discord bot to your personal server.
               </ContentListItem>
               <ContentListItem title="Premium" href="/premium">
-                With SchoolUtilities' premium features, your school can unleash
-                it's full potential.
+                With SchoolUtilities&apos; premium features, your school can unleash
+                it&apos;s full potential.
               </ContentListItem>
               {/* <ContentListItem
                 title="Releases"
@@ -371,7 +381,8 @@ export const NavigationMenuPart = () => {
                 Learn how to deal with all of our features.
               </ContentListItem>
               <ContentListItem title="Patch Notes" href="/help">
-                See our incredible innovations for each release and also what we have messed up in earlier releases.
+                See our incredible innovations for each release and also what we
+                have messed up in earlier releases.
               </ContentListItem>
               <ContentListItem title="About" href="/help/faq">
                 Get acquainted with the whole story about SchoolUtilities.
@@ -380,7 +391,7 @@ export const NavigationMenuPart = () => {
                 title="FAQ"
                 href="/docs/primitives/overview/releases"
               >
-                If you have any questions, you'll probably find them here.
+                If you have any questions, you&apos;ll probably find them here.
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>

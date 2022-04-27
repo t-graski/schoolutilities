@@ -51,7 +51,7 @@ export default function Home() {
         <Spacer size="medium"></Spacer>
         <Navbar />
         <StyledHeadline>
-          You've just received some superpowers
+          You&apos;ve just received some superpowers
           <SvgLayout>
             <SvgIcon iconName="SvgSuperman"></SvgIcon>
           </SvgLayout>

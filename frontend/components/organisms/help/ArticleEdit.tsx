@@ -35,27 +35,27 @@ export const ArticleEdit: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     getContent();
-  }, [articleUUID]);
 
-  const getContent = async () => {
-    let accessToken = await getAccessToken();
-    if (accessToken && articleUUID) {
-      const getRequest = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const getResponse = await getRequest.json();
-      setTitle(getResponse.headline);
-      setCatchPhrase(getResponse.catchPhrase);
-      setContent(getResponse.content);
+    async function getContent() {
+      let accessToken = await getAccessToken();
+      if (accessToken && articleUUID) {
+        const getRequest = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const getResponse = await getRequest.json();
+        setTitle(getResponse.headline);
+        setCatchPhrase(getResponse.catchPhrase);
+        setContent(getResponse.content);
+      }
     }
-  };
+  }, [articleUUID]);
 
   const saveContent = async () => {
     let accessToken = await getAccessToken();

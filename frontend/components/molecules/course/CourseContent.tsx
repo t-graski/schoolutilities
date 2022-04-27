@@ -47,8 +47,8 @@ export const CourseContent: React.FC<Props> = ({
   return (
     <>
       <ElementsLayout>
-        {items.map((element) => {
-          return <Content item={mapElementOptions(element)}></Content>;
+        {items.map((element, index) => {
+          return <Content item={mapElementOptions(element)} key={index}></Content>;
         })}
       </ElementsLayout>
     </>
@@ -92,8 +92,8 @@ function Content({ item }) {
             ></Component>
           </ComponentLayout>
           <ChildElement>
-            {item.children.map((child) => (
-              <Content item={child}></Content>
+            {item.children.map((child, index) => (
+              <Content item={child} key={index}></Content>
             ))}
           </ChildElement>
         </ParentContainer>

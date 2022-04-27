@@ -140,7 +140,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
         if (data && data.schoolUUID) {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
-          const accessToken = await getAccessToken();
+          accessToken = await getAccessToken();
           await storage.departments.forEach(async (department) => {
             await fetch(
               `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
@@ -217,7 +217,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusDescription}
               </SuccessDescription>
               {statusInfo && statusInfo.linkVisibility && (
-                <Link href={`/school/${schoolUUID}/edit`}>
+                <Link href={`/school/${schoolUUID}/edit`} passHref>
                   <StyledLink>Manage School now</StyledLink>
                 </Link>
               )}

@@ -1,5 +1,4 @@
 import NextDocument, { Html, Head, Main, NextScript } from "next/document";
-import Script from "next/script";
 import { getCssText } from "../stitches.config";
 
 export default class Document extends NextDocument {
@@ -7,10 +6,6 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
-          <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-          ></script>
           <script
             dangerouslySetInnerHTML={{
               __html: `
@@ -26,18 +21,16 @@ export default class Document extends NextDocument {
           <script
             type="text/javascript"
             src="https://cdn.cookielaw.org/consent/7d50b473-ca67-4ccc-9509-8fc4008d70b7-test/OtAutoBlock.js"
+            async
           ></script>
           <script
             src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
             type="text/javascript"
             data-domain-script="7d50b473-ca67-4ccc-9509-8fc4008d70b7-test"
+            async
           ></script>
           <script type="text/javascript">function OptanonWrapper() {}</script>
           <script type="text/javascript">function OptanonWrapper() {}</script>
-          <Script
-            src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
-            strategy="lazyOnload"
-          ></Script>
           <style
             dangerouslySetInnerHTML={{
               __html: `

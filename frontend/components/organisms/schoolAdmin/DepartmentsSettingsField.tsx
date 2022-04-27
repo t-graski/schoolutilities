@@ -110,8 +110,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({ }) => {
           },
         }
       );
-      const departments = await response.json();
-      setDepartments(departments);
+      const fetchedDepartments = await response.json();
+      setDepartments(fetchedDepartments);
       setIsFirstTime(false);
       setIsLoading(false);
     }
@@ -280,7 +280,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({ }) => {
             }}
           >
             <StyledDeleteText>
-              This action can't be undone and will permanently remove the
+              This action can&apos;t be undone and will permanently remove the
               department {""} {departmentName}.
             </StyledDeleteText>
           </SettingsPopUp>
@@ -321,6 +321,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({ }) => {
                   <Link
                     href={`/school/${router.query.schoolUUID as string
                       }/edit?tab=classes&departmentUUID=${entry.departmentUUID}`}
+                      passHref
                   >
                     <SettingsEntryLink>
                       <SettingsEntryName>

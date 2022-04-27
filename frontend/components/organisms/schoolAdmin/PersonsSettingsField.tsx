@@ -87,32 +87,32 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
       updateSettingsEntriesFromDatabase();
       setIsFirstTime(false);
     }
-  });
 
-  async function updateSettingsEntriesFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth/login");
+    async function updateSettingsEntriesFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth/login");
+      }
+      if (!schoolUUID) {
+        router.push("/school/select");
+      }
+      if (accessToken && schoolUUID && isFirstTime) {
+        let returnValue = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let json = await returnValue.json();
+        console.log(json);
+        setPersons(json);
+      }
     }
-    if (!schoolUUID) {
-      router.push("/school/select");
-    }
-    if (accessToken && schoolUUID && isFirstTime) {
-      let returnValue = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      let json = await returnValue.json();
-      console.log(json);
-      setPersons(json);
-    }
-  }
+  }, [isFirstTime, router, schoolUUID]);
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
@@ -160,7 +160,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(data),
       }
@@ -170,7 +170,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
       setError("Error trying to save");
     } else {
       setError("");
-      const newEntries = persons.map((person, index) => {
+      const newEntries = persons.map((person) => {
         if (person.personUUID == personUUID) {
           person.roleId = roleId;
           person.roleName = RoleOrder.find(

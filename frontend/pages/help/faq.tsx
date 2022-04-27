@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Head from "next/head";
 import { Navbar } from "../../components/organisms/Navbar";
 import { Spacer } from "../../components/atoms/Spacer";
@@ -9,21 +8,7 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { keyframes, styled } from "@stitches/react";
 import Footer from "../../components/organisms/Footer";
 import Link from "next/link";
-import { CSS } from "@dnd-kit/utilities";
 
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-} from "@dnd-kit/sortable";
 import React from "react";
 
 const slideDown = keyframes({
@@ -124,24 +109,30 @@ const AccordionLayout = styled("div", {
 
 export const Accordion = StyledAccordion;
 export const AccordionItem = StyledItem;
-export const AccordionTrigger = React.forwardRef<any>(
-  ({ children, ...props }, forwardedRef) => (
+export const AccordionTrigger = React.forwardRef<any>(function Content(
+  { children, ...props },
+  forwardedRef
+) {
+  return (
     <StyledHeader>
       <StyledTrigger {...props} ref={forwardedRef}>
         {children}
         <StyledChevron aria-hidden />
       </StyledTrigger>
     </StyledHeader>
-  )
-);
+  );
+});
 
-export const AccordionContent = React.forwardRef<any>(
-  ({ children, ...props }, forwardedRef) => (
+export const AccordionContent = React.forwardRef<any>(function Content(
+  { children, ...props },
+  forwardedRef
+) {
+  return (
     <StyledContent {...props} ref={forwardedRef}>
       <StyledContentText>{children}</StyledContentText>
     </StyledContent>
-  )
-);
+  );
+});
 
 export default function RegisterApproved() {
   const questions = [
@@ -189,7 +180,7 @@ export default function RegisterApproved() {
       answer: (
         <>
           <p>
-            No, you can join up to 5 schools at the same time. But don't worry
+            No, you can join up to 5 schools at the same time. But don&apos;t worry
             you can always leave schools.
           </p>
         </>
@@ -221,45 +212,6 @@ export default function RegisterApproved() {
     },
   ];
 
-  const [items, setItems] = useState(["1", "2", "3"]);
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-  function handleDragEnd(event) {
-    const { active, over } = event;
-
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  }
-
-  function SortableItem(props) {
-    const { attributes, listeners, setNodeRef, transform, transition } =
-      useSortable({ id: props.id });
-
-    const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-    };
-
-    const StyledElement = styled("div", {
-      transition,
-    });
-
-    return (
-      <StyledElement ref={setNodeRef} {...attributes} {...listeners}>
-        {/* ... */}
-      </StyledElement>
-    );
-  }
   return (
     <>
       <Head>

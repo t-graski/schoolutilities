@@ -64,7 +64,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
       }
       setIsFirstTime(false);
     }
-  });
+  }, [schoolNameValid, schoolLanguage, schoolTimezone, isDisabled, schoolName, setDisabled, isFirstTime]);
 
   return (
     <>

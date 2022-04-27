@@ -189,7 +189,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusDescription}
               </SuccessDescription>
               {statusInfo && statusInfo.linkVisibility && (
-                <Link href="/school/course">
+                <Link href="/school/course" passHref>
                   <StyledLink>Manage course now</StyledLink>
                 </Link>
               )}

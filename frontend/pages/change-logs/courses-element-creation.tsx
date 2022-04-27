@@ -57,8 +57,8 @@ export default function Article() {
               <li>Text</li>
             </ArticleList>
             You can create those elements by opening the menu next to the course
-            title and clicking the "Create Element" button. Now you find
-            yourself in the "Course-Editing-Mode", in which you can create,
+            title and clicking the &apos;Create Element&apos; button. Now you find
+            yourself in the &apos;Course-Editing-Mode&apos;, in which you can create,
             delete and modify elements as well as drag them around as you wish.
           </p>
           <br />

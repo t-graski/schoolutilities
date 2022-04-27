@@ -195,7 +195,7 @@ export const LoginField: React.FC<Props> = ({}) => {
               }}
               disabled={isDisabled}
             ></Button>
-            <Link href="/auth/password-reset">
+            <Link href="/auth/password-reset" passHref>
               <StyledLink>Reset Password</StyledLink>
             </Link>
           </LoginButtonLayout>

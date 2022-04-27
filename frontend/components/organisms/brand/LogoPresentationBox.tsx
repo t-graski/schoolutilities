@@ -38,6 +38,7 @@ export const LogoPresentationBox: React.FC<Props> = ({
             logoName={logo.name}
             imageBg={logo.imageBg}
             orientation={logo.orientation}
+            key={index}
           />
         ))}
       </LogoPresentationLayout>

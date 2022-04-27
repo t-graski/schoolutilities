@@ -47,6 +47,7 @@ export const CourseFile: React.FC<Props> = ({
             submissionUUID: elementUUID,
           },
         }}
+        passHref
       >
         <StyledLink>Abgabe: {name}</StyledLink>
       </Link>

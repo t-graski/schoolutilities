@@ -26,12 +26,13 @@ const HelpOverview: React.FC<Props> = ({ items }) => {
   return (
     <>
       <HelpOverviewLayout>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <HelpOverviewItem
             title={item.title}
             href={item.href}
             description={item.description}
             iconName={item.iconName}
+            key={index}
           />
         ))}
       </HelpOverviewLayout>

@@ -48,8 +48,8 @@ export const FontTags: React.FC<Props> = ({ fontStyles }) => {
   return (
     <>
       <TagsLayout>
-        {fontStyles.map((fontStyle) => (
-          <TagLayout fontStyle={fontStyle}>{fontStyle}</TagLayout>
+        {fontStyles.map((fontStyle, index) => (
+          <TagLayout fontStyle={fontStyle} key={index}>{fontStyle}</TagLayout>
         ))}
       </TagsLayout>
     </>

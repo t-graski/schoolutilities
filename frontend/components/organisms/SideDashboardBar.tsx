@@ -80,13 +80,11 @@ const SideDashboardBarItemName = styled("p", {
 });
 
 export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {
-  const [error, setError] = React.useState("");
-
   return (
     <>
       <SideDashboardBarLayout>
         {items.map((item) => (
-          <Link href={item.href} key={item.name}>
+          <Link href={item.href} key={item.name} passHref>
             <SideDashboardBarItemLink
               href={item.href}
               highlighted={active.toLowerCase() == item.name.toLowerCase()}
