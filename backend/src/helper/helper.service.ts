@@ -1200,9 +1200,9 @@ export class HelperService {
               personId: user.personId,
             },
           });
-          users.push(users);
+          users.push(userData);
         }
-        return courseUsers;
+        return users;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }

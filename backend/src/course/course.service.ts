@@ -30,7 +30,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -780,7 +780,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1140,23 +1140,28 @@ export class CourseService {
     const userSubmissions = [];
 
     for (const user of courseUsers) {
-      let userSubmissionItem;
-      userSubmissionItem.userUUID = user.personUUID;
-      userSubmissionItem.firstName = user.firstName;
-      userSubmissionItem.lastName = user.lastName;
-      userSubmissionItem.fullName = user.firstName + ' ' + user.lastName;
-      let submissionItem;
-      let submission = submissions.find((submission) => {
+      let userSubmissionItem = {
+        userUUID: user.personUUID,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.firstName + ' ' + user.lastName,
+        submission: {} as any,
+      }
+
+      let userSubmission = submissions.find((submission) => {
         return submission.personId === user.personId;
       });
-      if (submission) {
-        submissionItem.fileName = submission.fileName;
-        submissionItem.fileSize = submission.fileSize;
-        submissionItem.fileType = submission.fileType;
-        submissionItem.submittedLate = submission.submitedLate;
-        submissionItem.notes = submission.notes;
-        submissionItem.grade = submission.grade;
-        submissionItem.submissionDate = submission.submissionTime;
+
+      let submissionItem = {} as any;
+
+      if (userSubmission) {
+        submissionItem.fileName = userSubmission.fileName;
+        submissionItem.fileSize = userSubmission.fileSize;
+        submissionItem.fileType = userSubmission.fileType;
+        submissionItem.submittedLate = userSubmission.submitedLate;
+        submissionItem.notes = userSubmission.notes;
+        submissionItem.grade = userSubmission.grade;
+        submissionItem.submissionDate = userSubmission.submissionTime;
       } else {
         submissionItem = null;
       }
