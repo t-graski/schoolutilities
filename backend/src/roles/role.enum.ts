@@ -15,3 +15,10 @@ export const RoleOrder = {
   Student: 3,
   Verified: 4,
 };
+
+export enum CourseTypes {
+  // DO NOT CHANGE ORDER
+  Headline = 1,
+  Text = 2,
+  Assignment = 3,
+}

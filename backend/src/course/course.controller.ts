@@ -21,13 +21,12 @@ import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 
-
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -146,15 +145,26 @@ export class CourseController {
     return response.status(400).json({ message: 'Invalid file' });
   }
 
-
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Student)
-  @Get('/element/:elementUUID')
-  async getElement(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.getElement(request, params.elementUUID);
+  @Get('submissions/:elementUUID')
+  @Roles(Role.Teacher)
+  async getSubmissions(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getSubmissions(request, params.elementUUID);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Student)
+  @Get('/element/:elementUUID')
+  async getElement(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getElement(
+      request,
+      params.elementUUID,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }

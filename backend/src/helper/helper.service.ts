@@ -1140,4 +1140,21 @@ export class HelperService {
       throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
     }
   }
+
+  async getCourseUsers(courseId: number): Promise<any> {
+    if (courseId) {
+      try {
+        const courseUsers = await prisma.coursePersons.findMany({
+          where: {
+            courseId: courseId,
+          },
+        });
+        return courseUsers;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.COURSE_ID_NULL_OR_INVALID);
+    }
+  }
 }
