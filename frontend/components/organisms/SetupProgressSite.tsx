@@ -114,10 +114,6 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
   async function saveInputs() {
     let accessToken = await getAccessToken();
     const schoolDetails = JSON.parse(localStorage.getItem("schoolDetails"));
-    console.log({
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    });
     const schoolResponse = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/addschoolconfig`,
       {
