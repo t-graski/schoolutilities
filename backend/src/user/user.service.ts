@@ -41,7 +41,7 @@ export class UserService {
 
       const schools = [];
 
-      for (let school of userSchools) {
+      for (const school of userSchools) {
         const schoolData = await this.databaseService.getSchoolById(
           school.schoolId,
         );
