@@ -372,6 +372,8 @@ export class HelperService {
       }
       return options;
     } catch (err) {
+      console.log(err);
+
       throw new Error(ERROR_CODES.DATABASE_ERROR);
     }
   }
@@ -542,7 +544,6 @@ export class HelperService {
     elementId: number,
     typeId: number,
   ): Promise<any> {
-    console.log('asdfa');
     if (options) {
       try {
         switch (typeId) {
@@ -580,6 +581,8 @@ export class HelperService {
             });
         }
       } catch (err) {
+        console.log(err);
+
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -702,7 +705,7 @@ export class HelperService {
    * Creates or resets all user settings
    * @param personId Id of a user
    */
-  async createOrResestDefaultSettings(personId: number): Promise<any> {
+  async createOrResetDefaultSettings(personId: number): Promise<any> {
     if (personId) {
       const defaultSettings = {
         language: 'en',
@@ -1135,6 +1138,23 @@ export class HelperService {
       }
     } else {
       throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async getCourseUsers(courseId: number): Promise<any> {
+    if (courseId) {
+      try {
+        const courseUsers = await prisma.coursePersons.findMany({
+          where: {
+            courseId: courseId,
+          },
+        });
+        return courseUsers;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.COURSE_ID_NULL_OR_INVALID);
     }
   }
 }

@@ -8,8 +8,6 @@ const prisma = new PrismaClient();
 export const fileFilter = async (req, file, callback) => {
   const { elementUUID } = req.body;
 
-  console.log(elementUUID);
-
   const elementId = await getElementIdByUUID(elementUUID);
   let fileExtensions = await getAllowedExtensions(elementId);
   fileExtensions = fileExtensions.replace(/\s/g, '');

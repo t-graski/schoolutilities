@@ -252,7 +252,6 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
       {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }
@@ -260,6 +259,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     if (response.status !== 200) {
       setStatusInfo("Error: " + response.status);
     } else {
+      console.log(response);
       const data = await response.json();
 
       setUserInfo(data);

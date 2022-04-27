@@ -31,6 +31,14 @@ export class AuthController {
       .send(await this.authService.login(request.body));
   }
 
+  @UseGuards(LocalAuthGuard)
+  @Post('/mobile/login')
+  async loginMobileUser(@Req() request, @Res() response) {
+    return response
+      .status(HttpStatus.OK)
+      .send(await this.authService.mobileLogin(request.body));
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   getProfile(@Req() request, @Res() response) {
