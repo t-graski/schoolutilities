@@ -104,7 +104,7 @@ export const StartPageBox: React.FC<Props> = ({
               router.push(buttonLink);
             }}
           ></Button>
-          <Link href={linkUrl}>
+          <Link href={linkUrl} passHref>
             <StyledLink>{linkText}</StyledLink>
           </Link>
         </ButtonLayout>

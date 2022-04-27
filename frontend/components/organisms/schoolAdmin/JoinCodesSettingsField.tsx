@@ -267,7 +267,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
             }}
           >
             <StyledDeleteText>
-              This action can't be undone and will permanently remove the invite
+              This action can&apos;t be undone and will permanently remove the invite
               code {joinCodeName}.
             </StyledDeleteText>
           </SettingsPopUp>

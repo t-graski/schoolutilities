@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { styled } from "../../stitches.config";
 import { InputField } from "../atoms/InputField";
 import { Button } from "../atoms/Button";
@@ -219,30 +219,56 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [schools, setSchools] = useState([]);
 
-  async function updateSchoolsFromDatabase() {
-    let accessToken = await getAccessToken();
-    let response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    let fetchedSchools = await response.json();
-    setSchools(fetchedSchools);
-  }
-
   useEffect(() => {
     if (isFirstTime) {
       getUserInfo();
       updateSchoolsFromDatabase();
       setIsFirstTime(false);
     }
-  });
 
-  async function getUserInfo() {
+    async function updateSchoolsFromDatabase() {
+      let accessToken = await getAccessToken();
+      let response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      let fetchedSchools = await response.json();
+      setSchools(fetchedSchools);
+    }
+
+    async function getUserInfo() {
+      const token = await getAccessToken();
+      if (!token) {
+        router.push("/auth?tab=login");
+      }
+      setIsLoading(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status !== 200) {
+        setStatusInfo("Error: " + response.status);
+      } else {
+        console.log(response);
+        const data = await response.json();
+
+        setUserInfo(data);
+        console.log(data);
+      }
+      setIsLoading(false);
+    }
+  }, [isFirstTime, router]);
+
+  async function getUserInfo2() {
     const token = await getAccessToken();
     if (!token) {
       router.push("/auth?tab=login");
@@ -291,7 +317,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     if (response.status !== 200) {
       setStatusInfo("Error: " + response.status);
     } else {
-      getUserInfo();
+      getUserInfo2();
       setStatusInfo(
         "You now have to verify your new email address to complete the change."
       );
@@ -317,7 +343,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           </ProfileName>
           <ProfileNavigationLinks>
             <SpecialLinkLayout>
-              <Link href="/profile/settings">
+              <Link href="/profile/settings" passHref>
                 <LinkLayout
                   color={router.query.tab !== "schools" ? "special" : "primary"}
                 >
@@ -335,7 +361,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
               </Link>
             </SpecialLinkLayout>
             <SpecialLinkLayout>
-              <Link href="/profile/settings?tab=schools">
+              <Link href="/profile/settings?tab=schools" passHref>
                 <LinkLayout
                   color={router.query.tab == "schools" ? "special" : "primary"}
                 >
@@ -391,28 +417,10 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   label="SAVE CHANGES"
                   onClick={saveChanges}
                 ></Button>
-                {/* <Button
-                  backgroundColor={"secondary"}
-                  color={"primary"}
-                  label="RESET"
-                  onClick={() => {
-                    setStatusInfo("");
-                    getUserInfo();
-                  }}
-                ></Button> */}
               </ActionButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
             <ProfileDataColumn>
-              {/* <InputLabel>Lastname</InputLabel>
-              <InputField
-                inputType="text"
-                label="Lastname"
-                value={userInfo.lastName}
-                onChange={(e) => {}}
-                iconName={""}
-                editable={false}
-              /> */}
               <Spacer size="verySmall"></Spacer>
               <InputLabel>Email</InputLabel>
               <InputField
@@ -426,15 +434,6 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 iconName={""}
               />
               <Spacer size="verySmall"></Spacer>
-              {/* <Button
-                backgroundColor={"secondary"}
-                color={"primary"}
-                label="LOGOUT"
-                onClick={() => {
-                  logout();
-                  router.push("/auth?tab=login");
-                }}
-              ></Button> */}
               <InputLabel>User Since</InputLabel>
               <InputField
                 inputType="text"
@@ -477,7 +476,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                       label="JOIN A SCHOOL"
                       onClick={() => {
                         setStatusInfo("");
-                        getUserInfo();
+                        getUserInfo2();
                       }}
                     ></Button>
                   </a>
@@ -491,7 +490,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                       label="CREATE A SCHOOL"
                       onClick={() => {
                         setStatusInfo("");
-                        getUserInfo();
+                        getUserInfo2();
                       }}
                     ></Button>
                   </a>

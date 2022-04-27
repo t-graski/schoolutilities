@@ -83,7 +83,7 @@ export default function Article() {
                         <li>Add help center start page</li>
                         <li>Add new skeleton loading animations</li>
                         <li>Add cookie banner</li>
-                        <li>Add functionality to change students' roles</li>
+                        <li>Add functionality to change students&apos; roles</li>
                         <li>Add new navbar</li>
                         <li>Change footer</li>
                         <li>Improve loading times by reducing bundle size</li>

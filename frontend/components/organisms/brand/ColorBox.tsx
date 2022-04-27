@@ -39,7 +39,7 @@ export const ColorBox: React.FC<Props> = ({ title, colors }) => {
         <StyledH2>{title}</StyledH2>
         <ColorBoxLayout>
           {colors.map((logo, index) => (
-            <StyledColor name={logo.name} hexCode={logo.hexCode} />
+            <StyledColor name={logo.name} hexCode={logo.hexCode} key={index} />
           ))}
         </ColorBoxLayout>
       </StyledColorBoxBackground>

@@ -129,7 +129,7 @@ export default function Features() {
         )}
         {items.length == 0 && !canEditCourse && (
           <>
-            <p>The administrator of this site hasn't added elements to this course yet</p>
+            <p>The administrator of this site hasn&apos;t added elements to this course yet</p>
             <Spacer size="small"></Spacer>
           </>
         )}

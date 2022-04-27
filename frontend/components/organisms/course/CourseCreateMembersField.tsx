@@ -47,50 +47,53 @@ export const CourseCreateMembersField: React.FC<Props> = ({
       fetchSelectData();
       setIsFirstTime(false);
     }
-  });
 
-  async function fetchSelectData() {
-    let accessToken = await getAccessToken();
-    const schoolUUID = router.query.schoolUUID as string;
-    const classResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
+    async function fetchSelectData() {
+      let accessToken = await getAccessToken();
+      const schoolUUID = router.query.schoolUUID as string;
+      const classResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const classData = await classResponse.json();
+      console.log(classData);
+      if (classData.length > 0) {
+        setClasses(
+          classData.map((schoolClass) => {
+            return {
+              value: schoolClass.classUUID,
+              label: schoolClass.className,
+            };
+          })
+        );
       }
-    );
-    const classData = await classResponse.json();
-    console.log(classData);
-    if (classData.length > 0) {
-      setClasses(
-        classData.map((schoolClass) => {
-          return { value: schoolClass.classUUID, label: schoolClass.className };
+      const memberResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const memberData = await memberResponse.json();
+      setMembers(
+        memberData.map((member) => {
+          return {
+            value: member.personUUID,
+            label: `${member.lastName} ${member.firstName}`,
+          };
         })
       );
     }
-    const memberResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const memberData = await memberResponse.json();
-    setMembers(
-      memberData.map((member) => {
-        return {
-          value: member.personUUID,
-          label: `${member.lastName} ${member.firstName}`,
-        };
-      })
-    );
-  }
+  }, [isFirstTime, router.query.schoolUUID]);
 
   return (
     <>

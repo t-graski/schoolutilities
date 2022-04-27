@@ -46,7 +46,7 @@ export const CourseCreateDetailField: React.FC<Props> = ({
         setDisabled(true);
       }
     }
-  });
+  }, [courseNameValid, courseDescriptionValid, isDisabled, setDisabled]);
 
   return (
     <>

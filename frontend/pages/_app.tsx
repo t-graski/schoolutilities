@@ -75,10 +75,15 @@ function App({ Component, pageProps }: AppProps) {
                   page_path: window.location.pathname,
                 });`,
           }}
+          id="google-analytics-tag"
         ></Script>
         <Script
           src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
           strategy="lazyOnload"
+        ></Script>
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
         ></Script>
         <Component {...pageProps} router={router} />
         {/* </NextUIProvider> */}

@@ -71,63 +71,64 @@ const CourseDescription = styled("p", {
   margin: 0,
 });
 
-export const CourseSelectionList: React.FC<SideDashboardProps> = ({ }) => {
+export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID;
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     updateCoursesFromDatabase();
-  }, [schoolUUID]);
-
-  async function updateCoursesFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth?tab=login&redirect=/school/course");
-    } else {
-      if (schoolUUID) {
-        let response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        let fetchedCourses = await response.json();
-        console.log(response);
-        setCourses(fetchedCourses);
+    
+    async function updateCoursesFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth?tab=login&redirect=/school/course");
+      } else {
+        if (schoolUUID) {
+          let response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          let fetchedCourses = await response.json();
+          console.log(response);
+          setCourses(fetchedCourses);
+        }
       }
     }
-  }
+  }, [router, schoolUUID]);
 
   return (
     <>
       <CourseList>
-        {courses.length > 0 ? courses.map((course) => (
-          <CourseLayout
-            key={course.courseUUID}
-            onClick={() => {
-              router.push(
-                `/school/${schoolUUID}/course/${course.courseUUID}`
-              );
-            }}
-          >
-            <CourseName>{course.courseName}</CourseName>
-            <TeacherName>
-              {course.creator.firstName + " " + course.creator.lastName}{" "}
-            </TeacherName>
-            <CourseDescription>{course.courseDescription}</CourseDescription>
-          </CourseLayout>
-        )) : (
+        {courses.length > 0 ? (
+          courses.map((course) => (
+            <CourseLayout
+              key={course.courseUUID}
+              onClick={() => {
+                router.push(
+                  `/school/${schoolUUID}/course/${course.courseUUID}`
+                );
+              }}
+            >
+              <CourseName>{course.courseName}</CourseName>
+              <TeacherName>
+                {course.creator.firstName + " " + course.creator.lastName}{" "}
+              </TeacherName>
+              <CourseDescription>{course.courseDescription}</CourseDescription>
+            </CourseLayout>
+          ))
+        ) : (
           <>
             <Skeleton width="100%" height={150}></Skeleton>
             <Skeleton width="100%" height={150}></Skeleton>
             <Skeleton width="100%" height={150}></Skeleton>
             <Skeleton width="100%" height={150}></Skeleton>
           </>
-        )
-        }
+        )}
       </CourseList>
     </>
   );

@@ -17,6 +17,24 @@ export const Article: React.FC<SideDashboardProps> = ({}) => {
 
   useEffect(() => {
     getContent();
+
+    async function getContent() {
+      let accessToken = await getAccessToken();
+      if (accessToken && articleUUID) {
+        const getRequest = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const getResponse = await getRequest.json();
+        setContent(getResponse);
+      }
+    };
   }, [articleUUID]);
 
   const [content, setContent] = useState({
@@ -30,36 +48,18 @@ export const Article: React.FC<SideDashboardProps> = ({}) => {
     readingTime: 0,
   });
 
-  const getContent = async () => {
-    let accessToken = await getAccessToken();
-    if (accessToken && articleUUID) {
-      const getRequest = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const getResponse = await getRequest.json();
-      setContent(getResponse);
-    }
-  };
-
   return (
     <>
-        <Headline label={content.headline}></Headline>
-        <Separator width="small" alignment="center" />
-        <Spacer size="verySmall" />
-        <ArticleDetails
-          title={content.headline}
-          author={content.creator.firstName + " " + content.creator.lastName}
-          date={new Date(content.creationDate).toLocaleDateString()}
-          readingTime={content.readingTime + " min read"}
-        ></ArticleDetails>
-        <div dangerouslySetInnerHTML={{ __html: content.content }}></div>
+      <Headline label={content.headline}></Headline>
+      <Separator width="small" alignment="center" />
+      <Spacer size="verySmall" />
+      <ArticleDetails
+        title={content.headline}
+        author={content.creator.firstName + " " + content.creator.lastName}
+        date={new Date(content.creationDate).toLocaleDateString()}
+        readingTime={content.readingTime + " min read"}
+      ></ArticleDetails>
+      <div dangerouslySetInnerHTML={{ __html: content.content }}></div>
     </>
   );
 };

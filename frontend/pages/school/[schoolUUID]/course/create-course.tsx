@@ -26,7 +26,7 @@ export default function CreateCourse() {
     } else if (!router.query.schoolUUID) {
       router.push("/school/select?redirect=/course/create-course");
     }
-  }, []);
+  }, [router]);
 
   const [progressSteps, setProgressSteps] = useState([
     {

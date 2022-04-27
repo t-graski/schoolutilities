@@ -192,25 +192,17 @@ export const UserMenu = () => {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
 
-  async function updateFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (accessToken) {
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      let fetchedSchools = await response.json();
-      setSchools(fetchedSchools);
-      if (router.query.schoolUUID) {
-        response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${
-            router.query.schoolUUID as string
-          }`,
+  useEffect(() => {
+    if (isFirstTime) {
+      updateFromDatabase();
+      setIsFirstTime(false);
+    }
+
+    async function updateFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (accessToken) {
+        let response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
           {
             method: "GET",
             headers: {
@@ -218,20 +210,28 @@ export const UserMenu = () => {
             },
           }
         );
-        let fetchedCourses = await response.json();
-        setCourses(fetchedCourses);
+        let fetchedSchools = await response.json();
+        setSchools(fetchedSchools);
+        if (router.query.schoolUUID) {
+          response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${
+              router.query.schoolUUID as string
+            }`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          let fetchedCourses = await response.json();
+          setCourses(fetchedCourses);
+        }
       }
+      const userInfo = await getUserData();
+      setUserInfo(userInfo);
     }
-    const userInfo = await getUserData();
-    setUserInfo(userInfo);
-  }
-
-  useEffect(() => {
-    if (isFirstTime) {
-      updateFromDatabase();
-      setIsFirstTime(false);
-    }
-  });
+  }, [isFirstTime, router.query.schoolUUID]);
 
   return (
     <Box>
