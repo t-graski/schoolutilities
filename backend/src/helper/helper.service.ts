@@ -1191,6 +1191,17 @@ export class HelperService {
             courseId: courseId,
           },
         });
+
+        const users = [];
+
+        for (const user of courseUsers) {
+          const userData = await prisma.persons.findUnique({
+            where: {
+              personId: user.personId,
+            },
+          });
+          users.push(users);
+        }
         return courseUsers;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
