@@ -44,8 +44,8 @@ export default function Article() {
           ></Headline>
           <p>
             SchoolUtilities is a web application that allows you to manage your
-            school's students, teachers, and other{" "}
-            <Link href="/features">
+            school&apos;s students, teachers, and other{" "}
+            <Link href="/features" passHref>
               <StyledLink>school-related</StyledLink>
             </Link>{" "}
             information.

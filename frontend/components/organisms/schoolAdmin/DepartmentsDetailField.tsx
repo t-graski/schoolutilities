@@ -189,7 +189,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
         })
       );
     }
-  });
+  }, [isFirstTime, departments, isDisabled, setDisabled]);
 
   function savePopUpInput() {
     if (departmentId == -1) {

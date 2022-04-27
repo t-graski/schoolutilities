@@ -204,7 +204,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
                 link.highlighted = false;
               }
               return (
-                <Link href={link.href} key={index}>
+                <Link href={link.href} key={index} passHref>
                   <LinkLayout
                     color={link.highlighted ? "secondary" : "primary"}
                     data-size={isOpen ? "normal" : "small"}
@@ -230,7 +230,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
         {specialButton && (
           <SpecialLinkLayout data-size={isOpen ? "normal" : "small"}>
             <SecondButtonLayout>
-              <Link href={specialButton.href}>
+              <Link href={specialButton.href} passHref>
                 <LinkLayout
                   color="special"
                   data-size={isOpen ? "normal" : "small"}

@@ -10,17 +10,20 @@ import { useEffect, useState } from "react";
 import { getAccessToken } from "../../../../misc/authHelper";
 import { useRouter } from "next/router";
 import { Article } from "../../../../components/organisms/help/Article";
+import { ContentLayout } from "../../../school/[schoolUUID]/course/[courseUUID]/elements";
 
 export default function ArticleOverview() {
-
   return (
     <SiteLayout>
       <Head>
         <title>Headline</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
-      <Article></Article>
+      <ContentLayout>
+        <Spacer size="medium"></Spacer>
+        <Article></Article>
+        <Spacer size="small"></Spacer>
+      </ContentLayout>
       <Footer></Footer>
     </SiteLayout>
   );

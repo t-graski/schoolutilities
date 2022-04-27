@@ -220,14 +220,17 @@ const Footer: React.FC<Props> = ({}) => {
             <Link href="/about-us" passHref>
               <StyledLink>About</StyledLink>
             </Link>
-            {/* <Link href="/news" passHref>
-              <StyledLink>News</StyledLink>
-            </Link> */}
+            <Link href="/branding" passHref>
+              <StyledLink>Branding</StyledLink>
+            </Link>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Support</LinkHeadline>
             <Link href="/help" passHref>
               <StyledLink>Help Center</StyledLink>
+            </Link>
+            <Link href="/change-logs" passHref>
+              <StyledLink>Changelog</StyledLink>
             </Link>
             <Link href="/help/faq" passHref>
               <StyledLink>FAQ</StyledLink>

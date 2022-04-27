@@ -62,7 +62,7 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const ClassesSettingsField: React.FC<Props> = ({ }) => {
+export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const [departments, setDepartments] = React.useState([]);
   const [classes, setClasses] = React.useState([]);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
@@ -81,44 +81,44 @@ export const ClassesSettingsField: React.FC<Props> = ({ }) => {
       updateSettingsEntriesFromDatabase();
       setIsFirstTime(false);
     }
-  });
 
-  async function updateSettingsEntriesFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth/login");
-    }
-    if (!schoolUUID) {
-      router.push("/school/select");
-    }
-    if (accessToken && schoolUUID && isFirstTime) {
-      let returnValue = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      let json = await returnValue.json();
-      setClasses(json);
+    async function updateSettingsEntriesFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth/login");
+      }
+      if (!schoolUUID) {
+        router.push("/school/select");
+      }
+      if (accessToken && schoolUUID && isFirstTime) {
+        let returnValue = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let json = await returnValue.json();
+        setClasses(json);
 
-      returnValue = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      json = await returnValue.json();
-      setDepartments(json);
+        returnValue = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        json = await returnValue.json();
+        setDepartments(json);
+      }
     }
-  }
+  }, [isFirstTime, schoolUUID, router]);
 
   function savePopUpInput() {
     if (schoolClassId == "") {
@@ -296,8 +296,8 @@ export const ClassesSettingsField: React.FC<Props> = ({ }) => {
             }}
           >
             <StyledDeleteText>
-              This action can't be undone and will permanently remove the class{" "}
-              {schoolClassName}.
+              This action can&apos;t be undone and will permanently remove the
+              class {schoolClassName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}
@@ -312,44 +312,48 @@ export const ClassesSettingsField: React.FC<Props> = ({ }) => {
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {classes.length > 0 ? classes.map((entry, index) => (
-            <SettingsEntryLayout
-              key={entry.classUUID}
-              data-key={entry.classUUID}
-            >
-              <SettingsEntry
-                editFunction={() => {
-                  setSchoolClassName(entry.className);
-                  setSchoolClassId(entry.classUUID);
-                  setDepartmentUUId(entry.departmentUUID);
-                  setEditPopUpIsVisible(true);
-                  setSchoolClassNameValid(true);
-                }}
-                deleteFunction={() => {
-                  setSchoolClassId(entry.classUUID);
-                  setSchoolClassName(entry.className);
-                  setDeletePopUpIsVisible(true);
-                }}
-                highlighted={
-                  router.query &&
-                  router.query.departmentUUID &&
-                  entry.departmentUUID == router.query.departmentUUID
-                }
+          {classes.length > 0 ? (
+            classes.map((entry) => (
+              <SettingsEntryLayout
+                key={entry.classUUID}
+                data-key={entry.classUUID}
               >
-                <>
-                  <SettingsEntryName>{entry.className}</SettingsEntryName>
-                  <Link
-                    href={`/school/${router.query.schoolUUID as string
+                <SettingsEntry
+                  editFunction={() => {
+                    setSchoolClassName(entry.className);
+                    setSchoolClassId(entry.classUUID);
+                    setDepartmentUUId(entry.departmentUUID);
+                    setEditPopUpIsVisible(true);
+                    setSchoolClassNameValid(true);
+                  }}
+                  deleteFunction={() => {
+                    setSchoolClassId(entry.classUUID);
+                    setSchoolClassName(entry.className);
+                    setDeletePopUpIsVisible(true);
+                  }}
+                  highlighted={
+                    router.query &&
+                    router.query.departmentUUID &&
+                    entry.departmentUUID == router.query.departmentUUID
+                  }
+                >
+                  <>
+                    <SettingsEntryName>{entry.className}</SettingsEntryName>
+                    <Link
+                      href={`/school/${
+                        router.query.schoolUUID as string
                       }/edit?departmentUUID=${entry.departmentUUID}`}
-                  >
-                    <SettingsEntryLink>
-                      <DepartmentName>{entry.departmentName}</DepartmentName>
-                    </SettingsEntryLink>
-                  </Link>
-                </>
-              </SettingsEntry>
-            </SettingsEntryLayout>
-          )) : (
+                      passHref
+                    >
+                      <SettingsEntryLink>
+                        <DepartmentName>{entry.departmentName}</DepartmentName>
+                      </SettingsEntryLink>
+                    </Link>
+                  </>
+                </SettingsEntry>
+              </SettingsEntryLayout>
+            ))
+          ) : (
             <>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>

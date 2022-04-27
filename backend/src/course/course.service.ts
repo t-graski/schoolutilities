@@ -30,7 +30,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -306,23 +306,23 @@ export class CourseService {
     const userId = await this.helper.getUserIdByUUID(userUUID);
     const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
 
-    if (!await this.helper.userIdInSchool(requesterId, schoolId)) {
+    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
       return {
         status: HttpStatus.UNAUTHORIZED,
         message: 'You are not part of this school',
-      }
+      };
     }
 
-    if (!await this.helper.userIdInSchool(userId, schoolId)) {
+    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
       return {
         status: HttpStatus.UNAUTHORIZED,
         message: 'User is not part of this school',
-      }
+      };
     }
 
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
     const isTeacher = await this.helper.isTeacher(requesterId, schoolId);
-    const isAdmin = await this.helper.isAdmin(requesterId, schoolId)
+    const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
 
     if (isTeacher || isAdmin) {
       const courseUser = await prisma.coursePersons.findUnique({
@@ -363,7 +363,7 @@ export class CourseService {
     return {
       status: HttpStatus.UNAUTHORIZED,
       message: 'Unauthorized',
-    }
+    };
   }
 
   async removeUser(request): Promise<ReturnMessage> {
@@ -373,26 +373,25 @@ export class CourseService {
     const userId = await this.helper.getUserIdByUUID(userUUID);
     const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
 
-    if (!await this.helper.userIdInSchool(requesterId, schoolId)) {
+    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
       return {
         status: HttpStatus.UNAUTHORIZED,
         message: 'You are not part of this school',
-      }
+      };
     }
 
-    if (!await this.helper.userIdInSchool(userId, schoolId)) {
+    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
       return {
         status: HttpStatus.UNAUTHORIZED,
         message: 'User is not part of this school',
-      }
+      };
     }
 
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
     const isTeacher = await this.helper.isTeacher(requesterId, schoolId);
-    const isAdmin = await this.helper.isAdmin(requesterId, schoolId)
+    const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
 
     if (isTeacher || isAdmin) {
-
       const courseUser = await prisma.coursePersons.findUnique({
         where: {
           coursePersonId: {
@@ -433,7 +432,7 @@ export class CourseService {
     return {
       status: HttpStatus.UNAUTHORIZED,
       message: 'Unauthorized',
-    }
+    };
   }
 
   async getAllCourses(
@@ -781,7 +780,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                        currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -991,7 +990,6 @@ export class CourseService {
       }
     }
 
-    console.log(elementsWithOptions);
     let returnElements = elementsWithOptions.filter(
       (element) => !element.parentUUID || element.parentUUID === '0',
     );
@@ -1025,7 +1023,7 @@ export class CourseService {
     const courseId = await this.helper.getCourseIdByElementId(elementId);
     const schoolId = await this.helper.getSchoolIdByCourseId(courseId);
 
-    if (!await this.helper.userIsInCourse(userId, courseId)) {
+    if (!(await this.helper.userIsInCourse(userId, courseId))) {
       return {
         status: HttpStatus.FORBIDDEN,
         message: 'You are not in this course',
@@ -1117,5 +1115,58 @@ export class CourseService {
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
     }
+  }
+
+  async getSubmissions(request, elementUUID): Promise<ReturnMessage> {
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const courseId = await this.helper.getCourseIdByElementId(elementId);
+
+    if (!(await this.helper.userIsInCourse(userId, courseId))) {
+      return {
+        status: HttpStatus.FORBIDDEN,
+        message: 'You are not in this course',
+      };
+    }
+
+    const submissions = await prisma.fileSubmissions.findMany({
+      where: {
+        courseElementId: Number(elementId),
+      },
+    });
+
+    const courseUsers = await this.helper.getCourseUsers(courseId);
+    const userSubmissions = [];
+
+    for (const user of courseUsers) {
+      let userSubmissionItem;
+      userSubmissionItem.userUUID = user.personUUID;
+      userSubmissionItem.firstName = user.firstName;
+      userSubmissionItem.lastName = user.lastName;
+      userSubmissionItem.fullName = user.firstName + ' ' + user.lastName;
+      let submissionItem;
+      let submission = submissions.find((submission) => {
+        return submission.personId === user.personId;
+      });
+      if (submission) {
+        submissionItem.fileName = submission.fileName;
+        submissionItem.fileSize = submission.fileSize;
+        submissionItem.fileType = submission.fileType;
+        submissionItem.submittedLate = submission.submitedLate;
+        submissionItem.notes = submission.notes;
+        submissionItem.grade = submission.grade;
+        submissionItem.submissionDate = submission.submissionTime;
+      } else {
+        submissionItem = null;
+      }
+      userSubmissionItem.submission = submissionItem;
+      userSubmissions.push(userSubmissionItem);
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: userSubmissions,
+    };
   }
 }

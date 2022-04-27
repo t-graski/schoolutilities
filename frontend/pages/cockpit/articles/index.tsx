@@ -120,7 +120,7 @@ export default function Home() {
               }}
             >
               <StyledDeleteText>
-                This action can't be undone and will permanently remove the
+                This action can&apos;t be undone and will permanently remove the
                 class {articleName}.
               </StyledDeleteText>
             </SettingsPopUp>

@@ -14,7 +14,7 @@ import { ArticleList } from "../../components/article/ArticleList";
 
 export default function Article() {
   const articleDetails = {
-    title: "0.1.1 - Courses and Bug Fixes",
+    title: "Courses and Bug Fixes",
     author: "Tobias Graski",
     date: "1/16/2022",
     readingTime: "2 min read",
@@ -23,11 +23,11 @@ export default function Article() {
   return (
     <>
       <Head>
-        <title>0.1.1 - SchoolUtilities</title>
+        <title>Patch Notes - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
-      <Headline label="SchoolUtilities Version 0.1.1"></Headline>
+      <Headline label="January 16, 2022 - Patch Notes"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
       <ArticleDetails {...articleDetails}></ArticleDetails>
@@ -49,7 +49,7 @@ export default function Article() {
           ></Headline>
           <p>
             It is now possible to create courses in your school by clicking{" "}
-            <Link href="/course/create-course">
+            <Link href="/course/create-course" passHref>
               <StyledLink>here</StyledLink>
             </Link>
             . You can give it a name, a description, add singular users or a
@@ -64,18 +64,18 @@ export default function Article() {
           <ArticleList>
             <li>
               Added new questions to our{" "}
-              <Link href="/help/faq">
+              <Link href="/help/faq" passHref>
                 <StyledLink>FAQ</StyledLink>
               </Link>{" "}
               page.
             </li>
             <li>Added a new user menu to the navigation bar.</li>
             <li>
-              Added a button in the user menu to change the website's theme.
+              Added a button in the user menu to change the website&apos;s theme.
             </li>
             <li>
               Added{" "}
-              <Link href="/contact-us">
+              <Link href="/contact-us" passHref>
                 <StyledLink>Contact Us</StyledLink>
               </Link>{" "}
               page.
@@ -99,7 +99,7 @@ export default function Article() {
           ></Headline>
           <ArticleList>
             <li>
-              Fixed bug in password validation causing "_" to be not allowed.
+              Fixed bug in password validation causing &apos;_&apos; to be not allowed.
             </li>
             <li>Fixed many hyperlinks not working properly</li>
             <li>Fixed favicon not working.</li>
@@ -115,7 +115,7 @@ export default function Article() {
         </ArticleLayout>
       </GeneralLayout>
       <Spacer size="verySmall"></Spacer>
-      {/* <Footer></Footer> */}
+      <Footer></Footer>
     </>
   );
 }

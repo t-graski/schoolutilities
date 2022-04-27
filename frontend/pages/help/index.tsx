@@ -15,7 +15,7 @@ export default function RegisterApproved() {
       getContent();
       setIsFirstTime(false);
     }
-  });
+  }, [isFirstTime]);
 
   const [items, setItems] = useState([]);
 

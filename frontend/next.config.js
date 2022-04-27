@@ -2,7 +2,7 @@ module.exports = {
   images: {
     domains: ["cdn.discordapp.com"],
   },
-  
+
   async redirects() {
     return [
       {
@@ -23,6 +23,16 @@ module.exports = {
       {
         source: "/profile",
         destination: "/profile/settings",
+        permanent: true,
+      },
+      {
+        source: "/faq",
+        destination: "/help/faq",
+        permanent: true,
+      },
+      {
+        source: "/status",
+        destination: "https://schoolutilities.statuspage.io/",
         permanent: true,
       }
     ];

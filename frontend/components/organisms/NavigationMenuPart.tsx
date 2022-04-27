@@ -96,14 +96,17 @@ const StyledCaret = styled(CaretDownIcon, {
   },
 });
 
-const StyledTriggerWithCaret = React.forwardRef<any>(
-  ({ children, ...props }, forwardedRef) => (
+const StyledTriggerWithCaret = React.forwardRef<any>(function Content(
+  { children, ...props },
+  forwardedRef
+) {
+  return (
     <StyledTrigger {...props} ref={forwardedRef}>
       {children}
       <StyledCaret aria-hidden />
     </StyledTrigger>
-  )
-);
+  );
+});
 
 const StyledLink = styled(NavigationMenuPrimitive.Link, {
   ...itemStyles,
@@ -155,13 +158,16 @@ const StyledArrow = styled("div", {
   borderTopLeftRadius: 2,
 });
 
-const StyledIndicatorWithArrow = React.forwardRef<any>(
-  (props, forwardedRef) => (
+const StyledIndicatorWithArrow = React.forwardRef<any>(function Content(
+  props,
+  forwardedRef
+) {
+  return (
     <StyledIndicator {...props} ref={forwardedRef}>
       <StyledArrow />
     </StyledIndicator>
-  )
-);
+  );
+});
 
 const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   position: "relative",
@@ -215,7 +221,7 @@ const ContentList = styled("ul", {
         "@media only screen and (min-width: 600px)": {
           width: 600,
           gridAutoFlow: "column",
-          gridTemplateRows: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(2, 1fr)",
         },
       },
     },
@@ -238,30 +244,34 @@ const LinkText = styled("p", {
   fontWeight: "initial",
 });
 
-const ContentListItem = React.forwardRef<any, any>(
-  ({ children, title, ...props }, forwardedRef) => {
-    return (
-      <ListItem>
-        <NavigationMenuLink
-          {...props}
-          ref={forwardedRef}
-          css={{
-            padding: 12,
-            borderRadius: 6,
-            transition: "background-color 150ms ease",
-            "&:hover": { backgroundColor: "$backgroundTertiary" },
-          }}
-        >
-          <LinkTitle>{title}</LinkTitle>
-          <LinkText>{children}</LinkText>
-        </NavigationMenuLink>
-      </ListItem>
-    );
-  }
-);
+const ContentListItem = React.forwardRef<any, any>(function Content(
+  { children, title, ...props },
+  forwardedRef
+) {
+  return (
+    <ListItem>
+      <NavigationMenuLink
+        {...props}
+        ref={forwardedRef}
+        css={{
+          padding: 12,
+          borderRadius: 6,
+          transition: "background-color 150ms ease",
+          "&:hover": { backgroundColor: "$backgroundTertiary" },
+        }}
+      >
+        <LinkTitle>{title}</LinkTitle>
+        <LinkText>{children}</LinkText>
+      </NavigationMenuLink>
+    </ListItem>
+  );
+});
 
-const ContentListItemCallout = React.forwardRef<any>(
-  ({ children, ...props }, forwardedRef) => (
+const ContentListItemCallout = React.forwardRef<any>(function Content(
+  { children, ...props },
+  forwardedRef
+) {
+  return (
     <ListItem css={{ gridRow: "span 3" }}>
       <NavigationMenuLink
         {...props}
@@ -310,8 +320,8 @@ const ContentListItemCallout = React.forwardRef<any>(
         </LinkText>
       </NavigationMenuLink>
     </ListItem>
-  )
-);
+  );
+});
 
 const ViewportPosition = styled("div", {
   position: "absolute",
@@ -333,11 +343,10 @@ export const NavigationMenuPart = () => {
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem
-                title="Course selection"
+                title="Courses"
                 href="/school/select?redirect=/course"
               >
-                Build high-quality, accessible design systems and web apps. -
-                CHANGE ME
+                This is where everything happens.
               </ContentListItem>
               <ContentListItem
                 title="Dashboard"
@@ -346,16 +355,13 @@ export const NavigationMenuPart = () => {
                 Maintain a clean and organized environment for managing
                 everything you can imagine.
               </ContentListItem>
-              <ContentListItem title="Help" href="/help">
-                Unstyled and compatible with any styling solution. - CHANGE ME
-              </ContentListItem>
-              <ContentListItem title="FAQ" href="/help/faq">
-                Use CSS keyframes or any animation library of your choice. -
-                CHANGE ME
-              </ContentListItem>
               <ContentListItem title="Discord Bot" href="/bot">
-                Tested in a range of browsers and assistive technologies. -
-                CHANGE ME
+                If you fell like you are not receiving enough notifications you
+                can add our discord bot to your personal server.
+              </ContentListItem>
+              <ContentListItem title="Premium" href="/premium">
+                With SchoolUtilities&apos; premium features, your school can unleash
+                it&apos;s full potential.
               </ContentListItem>
               {/* <ContentListItem
                 title="Releases"
@@ -371,35 +377,21 @@ export const NavigationMenuPart = () => {
           <NavigationMenuTrigger>Help</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
-              <ContentListItem
-                title="Premium"
-                href="/school/select?redirect=/course"
-              >
-                With SchoolUtilities' premium features, your school can unleash
-                it's full potential.
-              </ContentListItem>
-              <ContentListItem
-                title="Tutorials"
-                href="/school/select?redirect=/dashboard"
-              >
-                Maintain a clean and organized environment for managing
-                everything you can imagine. - CHANGE ME
+              <ContentListItem title="Tutorials" href="/help">
+                Learn how to deal with all of our features.
               </ContentListItem>
               <ContentListItem title="Patch Notes" href="/help">
-                Unstyled and compatible with any styling solution. - CHANGE ME
+                See our incredible innovations for each release and also what we
+                have messed up in earlier releases.
               </ContentListItem>
               <ContentListItem title="About" href="/help/faq">
                 Get acquainted with the whole story about SchoolUtilities.
-              </ContentListItem>
-              <ContentListItem title="Support" href="/bot">
-                Tested in a range of browsers and assistive technologies. -
-                CHANGE ME
               </ContentListItem>
               <ContentListItem
                 title="FAQ"
                 href="/docs/primitives/overview/releases"
               >
-                Radix Primitives releases and their changelogs. - CHANGE ME
+                If you have any questions, you&apos;ll probably find them here.
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>
@@ -411,39 +403,14 @@ export const NavigationMenuPart = () => {
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem title="New school" href="/school/create">
-                Build high-quality, accessible design systems and web apps. -
-                CHANGE ME
+                Add your school to SchoolUtilities and bring the education to
+                the next level.
               </ContentListItem>
               <ContentListItem
-                title="Getting started"
-                href="/docs/primitives/overview/getting-started"
+                title="Create course"
+                href="/school/select?redirect=/course/create"
               >
-                A quick tutorial to get you up and running with Radix
-                Primitives.
-              </ContentListItem>
-              <ContentListItem
-                title="Styling"
-                href="/docs/primitives/overview/styling"
-              >
-                Unstyled and compatible with any styling solution.
-              </ContentListItem>
-              <ContentListItem
-                title="Animation"
-                href="/docs/primitives/overview/animation"
-              >
-                Use CSS keyframes or any animation library of your choice.
-              </ContentListItem>
-              <ContentListItem
-                title="Accessibility"
-                href="/docs/primitives/overview/accessibility"
-              >
-                Tested in a range of browsers and assistive technologies.
-              </ContentListItem>
-              <ContentListItem
-                title="Releases"
-                href="/docs/primitives/overview/releases"
-              >
-                Radix Primitives releases and their changelogs.
+                Create a course and start teaching your students.
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>

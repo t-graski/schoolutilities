@@ -168,20 +168,18 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
   const [userData, setUserData] = useState(null);
   if (cookie.get("accessToken")) {
     let token = cookie.get("accessToken");
-    useEffect(() => {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/profile`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((jsonResponse) => {
-          setUserData(jsonResponse);
-          console.log(userData);
-        });
-    }, []);
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((jsonResponse) => {
+        setUserData(jsonResponse);
+        console.log(userData);
+      });
   }
 
   return (

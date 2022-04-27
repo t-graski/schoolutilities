@@ -67,8 +67,8 @@ export const FileUpload: React.FC<Props> = ({}) => {
 
   async function uploadFile(file) {
     const formData = new FormData();
-    formData.append("files", file);
     formData.append("elementUUID", router.query.submissionUUID as string);
+    formData.append("files", file);
 
     console.log(router.query.submissionUUID as string);
 
@@ -121,7 +121,7 @@ export const FileUpload: React.FC<Props> = ({}) => {
         <section className="container">
           <StyledDropzone {...getRootProps({ className: "dropzone" })}>
             <input {...getInputProps()} />
-            <p>Drag 'n drop some files here, or click to select files</p>
+            <p>Drag &apos;n drop some files here, or click to select files</p>
           </StyledDropzone>
           <aside>
             <StyledHeadline>Files</StyledHeadline>

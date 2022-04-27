@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import Nestable, { Item } from "react-nestable";
 
 // this usually goes once
@@ -37,10 +36,6 @@ export const CourseEditContent: React.FC<Props> = ({
   setItems,
   setResponseBody,
 }) => {
-  console.log(courseId);
-  const router = useRouter();
-
-  console.log(items);
   const [deletedItems, setDeletedItems] = useState([]);
   const [isFirstTime, setIsFirstTime] = useState(true);
 
@@ -71,26 +66,25 @@ export const CourseEditContent: React.FC<Props> = ({
           newElements.push(mapElementOptionsToFrontend(element));
         });
         setItems(newElements);
-      } else {
       }
     }
   }
 
   useEffect(() => {
     updateResponseBody();
-  }, [items]);
-
-  function updateResponseBody() {
-    const requestBody = {
-      courseUUID: courseId,
-      elements: [],
-    };
-    items.forEach((item) => {
-      requestBody.elements.push(mapElementOptions(item));
-    });
-    requestBody.elements.push(...addDeletedTag(deletedItems));
-    setResponseBody(requestBody);
-  }
+    
+    function updateResponseBody() {
+      const requestBody = {
+        courseUUID: courseId,
+        elements: [],
+      };
+      items.forEach((item) => {
+        requestBody.elements.push(mapElementOptions(item));
+      });
+      requestBody.elements.push(...addDeletedTag(deletedItems));
+      setResponseBody(requestBody);
+    }
+  }, [courseId, deletedItems, items, setResponseBody]);
 
   const renderItem = ({ item }) => {
     const { choosenElement, ...additionalProps } = item.config;
@@ -102,10 +96,8 @@ export const CourseEditContent: React.FC<Props> = ({
           <Component {...additionalProps} {...choosenElement.props}></Component>
           <CourseEditActionButtons
             item={item}
-            safeEntry={(choosenElement, config) => {
-              console.log(items);
-              console.log(config);
-              setItems((items) => {
+            safeEntry={(currentChoosenElement, config) => {
+              setItems(() => {
                 return items.map((currentItem) => {
                   const childElement = currentItem.children.find(
                     (child) => child.id === item.id
@@ -113,7 +105,7 @@ export const CourseEditContent: React.FC<Props> = ({
                   if (currentItem.id === item.id) {
                     return {
                       id: item.id,
-                      config: { ...config, choosenElement },
+                      config: { ...config, currentChoosenElement },
                       children: currentItem.children,
                     };
                   } else if (childElement) {
@@ -123,7 +115,7 @@ export const CourseEditContent: React.FC<Props> = ({
                         if (child.id === item.id) {
                           return {
                             ...child,
-                            config: { ...config, choosenElement },
+                            config: { ...config, currentChoosenElement },
                           };
                         } else {
                           return child;
@@ -136,10 +128,10 @@ export const CourseEditContent: React.FC<Props> = ({
               });
             }}
             deleteEntry={() => {
-              setItems((items) => {
+              setItems(() => {
                 return items.filter((currentItem) => {
                   if (currentItem.id === item.id) {
-                    setDeletedItems((deletedItems) => [
+                    setDeletedItems(() => [
                       ...deletedItems,
                       mapElementOptions(currentItem),
                     ]);

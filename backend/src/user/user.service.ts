@@ -22,7 +22,7 @@ export class UserService {
     private readonly authService: AuthService,
     private readonly mailService: MailService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   async getSchools(token: string): Promise<ReturnMessage> {
     const jwt = await this.authService.decodeJWT(token);
@@ -41,7 +41,7 @@ export class UserService {
 
       const schools = [];
 
-      for (let school of userSchools) {
+      for (const school of userSchools) {
         const schoolData = await this.databaseService.getSchoolById(
           school.schoolId,
         );
@@ -83,7 +83,11 @@ export class UserService {
         },
       });
 
-      let userItem = {
+      if (!userSettings) {
+        await this.helper.createOrResetDefaultSettings(user.personId);
+      }
+
+      const userItem = {
         userUUID: user.personUUID,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -109,6 +113,7 @@ export class UserService {
         data: userItem,
       };
     } catch (err) {
+      console.log(err);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
@@ -153,7 +158,7 @@ export class UserService {
     });
 
     if (!userSettings) {
-      await this.helper.createOrResestDefaultSettings(userId);
+      await this.helper.createOrResetDefaultSettings(userId);
     }
 
     if (!userSettings.receiveUpdateEmails && receiveUpdateEmails) {

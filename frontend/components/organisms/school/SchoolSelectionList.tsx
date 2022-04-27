@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
 import { getAccessToken } from "../../../misc/authHelper";
 import { useRouter } from "next/router";
-import Skeleton from 'react-loading-skeleton';
+import Skeleton from "react-loading-skeleton";
 
 export type SideDashboardProps = {};
 
@@ -56,55 +56,57 @@ const SchoolDescription = styled("p", {
   color: "$fontPrimary",
 });
 
-export const SchoolSelectionList: React.FC<SideDashboardProps> = ({ }) => {
+export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
   const [schools, setSchools] = useState([]);
+  const router = useRouter();
   useEffect(() => {
     updateSchoolsFromDatabase();
-  }, []);
-  const router = useRouter();
 
-  async function updateSchoolsFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth?tab=login");
-    } else {
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+    async function updateSchoolsFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth?tab=login");
+      } else {
+        let response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let fetchedSchools = await response.json();
+        if (fetchedSchools.length == 0) {
+          router.push("/school/join");
+        } else if (fetchedSchools.length == 1) {
+          // redirectRoute(router, fetchedSchools[0]);
         }
-      );
-      let fetchedSchools = await response.json();
-      if (fetchedSchools.length == 0) {
-        router.push("/school/join");
-      } else if (fetchedSchools.length == 1) {
-        // redirectRoute(router, fetchedSchools[0]);
+        setSchools(fetchedSchools);
       }
-      setSchools(fetchedSchools);
     }
-  }
+  }, [router]);
 
   return (
     <>
       <SchoolList>
-        {schools.length > 0 ? schools.map((school) => (
-          <SchoolLayout
-            key={school.schoolUUID}
-            onClick={() => {
-              redirectRoute(router, school);
-            }}
-          >
-            <SchoolName>{school.schoolName}</SchoolName>
-            <SchoolDescription>
-              {
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia"
-              }
-            </SchoolDescription>
-          </SchoolLayout>
-        )) : (
+        {schools.length > 0 ? (
+          schools.map((school) => (
+            <SchoolLayout
+              key={school.schoolUUID}
+              onClick={() => {
+                redirectRoute(router, school);
+              }}
+            >
+              <SchoolName>{school.schoolName}</SchoolName>
+              <SchoolDescription>
+                {
+                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia"
+                }
+              </SchoolDescription>
+            </SchoolLayout>
+          ))
+        ) : (
           <>
             <Skeleton width="100%" height={150}></Skeleton>
             <Skeleton width="100%" height={150}></Skeleton>
@@ -116,13 +118,13 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({ }) => {
 };
 
 function redirectRoute(router, school) {
-  let redirectRoute: string = Array.isArray(router.query.redirect)
+  let redirectPath: string = Array.isArray(router.query.redirect)
     ? router.query.redirect[0]
     : router.query.redirect;
-  if (router.query && redirectRoute) {
+  if (router.query && redirectPath) {
     // router.push to the redirect url with decoded url
     router.push(
-      "/school/" + school.schoolUUID + decodeURIComponent(redirectRoute)
+      "/school/" + school.schoolUUID + decodeURIComponent(redirectPath)
     );
   } else {
     router.push(`/school/${school.schoolUUID}/course`);

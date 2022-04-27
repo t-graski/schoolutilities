@@ -76,6 +76,7 @@ type Props = {
   editable?: boolean;
   required?: boolean;
   label?: string;
+  showLabel?: boolean;
   size?: Stitches.VariantProps<typeof StyledInputField>["size"];
   regex?: RegExp;
   setValidInput?: Function;
@@ -451,7 +452,9 @@ const InfoHoverCardText = styled("div", {});
 
 const InputFieldLabel = styled("div", {});
 
-const Required = styled("div", {});
+const Required = styled("div", {
+  display: "inline-block",
+});
 
 export const InputField: React.FC<Props> = ({
   inputType,
@@ -465,6 +468,7 @@ export const InputField: React.FC<Props> = ({
   editable = true,
   required = false,
   label = "",
+  showLabel = true,
   size = "normal",
   regex,
   setValidInput,
@@ -613,7 +617,7 @@ export const InputField: React.FC<Props> = ({
   } else if (inputType === "textfield") {
     return (
       <>
-        {label ?? (
+        {label && showLabel && (
           <>
             <InputFieldLabel>{label}</InputFieldLabel>
             {required && <Required>*</Required>}
@@ -637,10 +641,10 @@ export const InputField: React.FC<Props> = ({
   } else {
     return (
       <>
-        {label ?? (
+        {label && showLabel && (
           <>
-            <InputFieldLabel>{label}</InputFieldLabel>
-            {required && <Required>*</Required>}
+            <InputFieldLabel>{label}{" "}{required && <Required>*</Required>}</InputFieldLabel>
+            
           </>
         )}
         <InputFieldLayout editable={editable}>

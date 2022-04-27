@@ -1,3 +1,4 @@
+import { styled } from "@stitches/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -17,6 +18,10 @@ type Props = {
   maxFileSize: number;
   allowedFileTypes: string;
 };
+
+const StyledLink = styled("picture", {
+  cursor: "pointer",
+});
 
 export const CourseFile: React.FC<Props> = ({
   name,
@@ -42,8 +47,9 @@ export const CourseFile: React.FC<Props> = ({
             submissionUUID: elementUUID,
           },
         }}
+        passHref
       >
-        <p>Abgabe: {name}</p>
+        <StyledLink>Abgabe: {name}</StyledLink>
       </Link>
     </>
   );

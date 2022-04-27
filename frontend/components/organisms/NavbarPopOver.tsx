@@ -121,21 +121,21 @@ export const NavbarPopOver: React.FC<Props> = ({ visible, setVisibility }) => {
           </a>
         </Link>
         <NavLinksLayout>
-          <Link href="/">
+          <Link href="/" passHref>
             <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>
           </Link>
-          <Link href="/school/select">
+          <Link href="/school/select" passHref>
             <StyledLink marked={router.pathname === "/school/select"}>
               MY SCHOOLS
             </StyledLink>
           </Link>
-          <Link href="/change-logs">
+          <Link href="/change-logs" passHref>
             <StyledLink marked={router.pathname === "/change-logs"}>
               CHANGE-LOG
             </StyledLink>
           </Link>
           <SpecialLinkLayout>
-            <Link href="/profile/settings">
+            <Link href="/profile/settings" passHref>
               <UserMenu></UserMenu>
             </Link>
           </SpecialLinkLayout>

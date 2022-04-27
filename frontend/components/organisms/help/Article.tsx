@@ -7,14 +7,9 @@ import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { ArticleDetails } from "../../article/ArticleDetails";
 import { Spacer } from "../../atoms/Spacer";
+import { ContentLayout } from "../../../pages/school/[schoolUUID]/course/[courseUUID]/elements";
 
 export type SideDashboardProps = {};
-
-const ContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  padding: "5vh 15vw",
-});
 
 export const Article: React.FC<SideDashboardProps> = ({}) => {
   const router = useRouter();
@@ -22,6 +17,24 @@ export const Article: React.FC<SideDashboardProps> = ({}) => {
 
   useEffect(() => {
     getContent();
+
+    async function getContent() {
+      let accessToken = await getAccessToken();
+      if (accessToken && articleUUID) {
+        const getRequest = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const getResponse = await getRequest.json();
+        setContent(getResponse);
+      }
+    };
   }, [articleUUID]);
 
   const [content, setContent] = useState({
@@ -35,24 +48,6 @@ export const Article: React.FC<SideDashboardProps> = ({}) => {
     readingTime: 0,
   });
 
-  const getContent = async () => {
-    let accessToken = await getAccessToken();
-    if (accessToken && articleUUID) {
-      const getRequest = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const getResponse = await getRequest.json();
-      setContent(getResponse);
-    }
-  };
-
   return (
     <>
       <Headline label={content.headline}></Headline>
@@ -64,9 +59,7 @@ export const Article: React.FC<SideDashboardProps> = ({}) => {
         date={new Date(content.creationDate).toLocaleDateString()}
         readingTime={content.readingTime + " min read"}
       ></ArticleDetails>
-      <ContentLayout>
-        <div dangerouslySetInnerHTML={{ __html: content.content }}></div>
-      </ContentLayout>
+      <div dangerouslySetInnerHTML={{ __html: content.content }}></div>
     </>
   );
 };

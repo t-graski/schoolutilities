@@ -84,37 +84,35 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     if (isFirstTime) {
-      setTimeout(() => {
-        updateSettingsEntriesFromDatabase();
-      }, 5000)
+      updateSettingsEntriesFromDatabase();
       setIsFirstTime(false);
     }
-  });
 
-  async function updateSettingsEntriesFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth/login");
+    async function updateSettingsEntriesFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth/login");
+      }
+      if (!schoolUUID) {
+        router.push("/school/select");
+      }
+      if (accessToken && schoolUUID && isFirstTime) {
+        let returnValue = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let json = await returnValue.json();
+        console.log(json);
+        setPersons(json);
+      }
     }
-    if (!schoolUUID) {
-      router.push("/school/select");
-    }
-    if (accessToken && schoolUUID && isFirstTime) {
-      let returnValue = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      let json = await returnValue.json();
-      console.log(json);
-      setPersons(json);
-    }
-  }
+  }, [isFirstTime, router, schoolUUID]);
 
   async function deleteSettingsEntry(id) {
     const returnValue = await fetch(
@@ -152,12 +150,17 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
       personUUID,
       roleId,
     };
+    let accessToken = await getAccessToken();
+    if (!accessToken) {
+      router.push("/auth/login");
+    }
     const returnValue = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/role`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(data),
       }
@@ -167,7 +170,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
       setError("Error trying to save");
     } else {
       setError("");
-      const newEntries = persons.map((person, index) => {
+      const newEntries = persons.map((person) => {
         if (person.personUUID == personUUID) {
           person.roleId = roleId;
           person.roleName = RoleOrder.find(
@@ -233,38 +236,40 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
         <SettingsHeader headline="Persons"></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {persons.length > 0 ? persons.map((entry, index) => (
-            <SettingsEntryLayout
-              key={entry.personUUID}
-              data-key={entry.personUUID}
-            >
-              <SettingsEntry
-                deleteFunction={() => {
-                  setPersonUUID(entry.personUUID);
-                  setPersonName(entry.firstName + " " + entry.lastName);
-                  setDeletePopUpIsVisible(true);
-                }}
-                editFunction={() => {
-                  setPersonUUID(entry.personUUID);
-                  setRoleId(entry.roleId);
-                  setPersonName(entry.firstName + " " + entry.lastName);
-                  setEditPopUpIsVisible(true);
-                }}
-                highlighted={
-                  router.query &&
-                  router.query.personUUID &&
-                  entry.personUUID == router.query.personUUID
-                }
+          {persons.length > 0 ? (
+            persons.map((entry, index) => (
+              <SettingsEntryLayout
+                key={entry.personUUID}
+                data-key={entry.personUUID}
               >
-                <>
-                  <SettingsEntryName>
-                    {entry.firstName} {entry.lastName}
-                  </SettingsEntryName>
-                  <PersonRoleName>{entry.roleName}</PersonRoleName>
-                </>
-              </SettingsEntry>
-            </SettingsEntryLayout>
-          )) : (
+                <SettingsEntry
+                  deleteFunction={() => {
+                    setPersonUUID(entry.personUUID);
+                    setPersonName(entry.firstName + " " + entry.lastName);
+                    setDeletePopUpIsVisible(true);
+                  }}
+                  editFunction={() => {
+                    setPersonUUID(entry.personUUID);
+                    setRoleId(entry.roleId);
+                    setPersonName(entry.firstName + " " + entry.lastName);
+                    setEditPopUpIsVisible(true);
+                  }}
+                  highlighted={
+                    router.query &&
+                    router.query.personUUID &&
+                    entry.personUUID == router.query.personUUID
+                  }
+                >
+                  <>
+                    <SettingsEntryName>
+                      {entry.firstName} {entry.lastName}
+                    </SettingsEntryName>
+                    <PersonRoleName>{entry.roleName}</PersonRoleName>
+                  </>
+                </SettingsEntry>
+              </SettingsEntryLayout>
+            ))
+          ) : (
             <>
               <Skeleton width="100%" height={80}></Skeleton>
               <Skeleton width="100%" height={60}></Skeleton>

@@ -31,6 +31,7 @@ jobs:
             docker image rm schoolutilities-frontend || true && docker build -t schoolutilities-frontend . 
             docker stop schoolutilities-frontend || true && docker rm schoolutilities-frontend || true
             docker run --name schoolutilities-frontend -d -p 3000:3000 schoolutilities-frontend
+            docker image prune -f
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           password: ""

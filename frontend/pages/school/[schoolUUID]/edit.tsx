@@ -27,19 +27,18 @@ export default function CreateSchool() {
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  async function fetchData() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth/login");
+    async function fetchData() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth/login");
+      }
+      if (!schoolUUID && accessToken) {
+        router.push("/school/select");
+      }
+      const fetchedData = await getUserData();
+      setUserData(fetchedData);
     }
-    if (!schoolUUID && accessToken) {
-      router.push("/school/select");
-    }
-    const fetchedData = await getUserData();
-    setUserData(fetchedData);
-  }
+  }, [router, schoolUUID]);
 
   let urlParam;
   if (router.query && router.query.tab) {

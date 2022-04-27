@@ -182,10 +182,40 @@ export class AuthService {
       },
     });
 
-
     return {
       access_token: this.jwtService.sign({ personUUID }),
       refresh_token: refreshToken,
+    };
+  }
+
+  async mobileLogin(user: any) {
+    const payload = user;
+    const personUUID = await this.databaseService.getUserUUIDByEmail(
+      payload.email,
+    );
+
+    const refresToken = this.jwtService.sign(
+      { id: { personUUID } },
+      { expiresIn: jwtConstants.refreshTokenExpiryTime },
+    );
+
+    await this.refreshTokenService.insertRefreshToken(
+      refresToken,
+      await this.databaseService.getPersonIdByUUID(personUUID),
+    );
+
+    await prisma.persons.update({
+      where: {
+        personUUID,
+      },
+      data: {
+        lastLogin: new Date(Date.now()),
+      },
+    });
+
+    return {
+      access_token: this.jwtService.sign({ personUUID }, { expiresIn: '90d' }),
+      refresh_token: refresToken,
     };
   }
 

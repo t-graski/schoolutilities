@@ -33,6 +33,24 @@ const ButtonLayout = styled("div", {
   gap: "20px",
 });
 
+const LoginButtonLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  gap: "20px",
+  alignItems: "center",
+});
+
+const StyledLink = styled("a", {
+  color: "$fontPrimary",
+  textDecoration: "none",
+  transition: "all 0.2s",
+  cursor: "pointer",
+
+  "&:hover": {
+    textDecoration: "underline",
+  },
+});
+
 export const LoginField: React.FC<Props> = ({}) => {
   const [email, setEmail] = React.useState("");
   const [emailValid, setEmailValid] = React.useState(false);
@@ -167,15 +185,20 @@ export const LoginField: React.FC<Props> = ({}) => {
             isHoverCardVisible={false}
             setValidInput={setPasswordValid}
           ></InputField>
-          <Button
-            backgroundColor="primary"
-            color="primary"
-            label="Sign in"
-            onClick={() => {
-              handleSubmit();
-            }}
-            disabled={isDisabled}
-          ></Button>
+          <LoginButtonLayout>
+            <Button
+              backgroundColor="primary"
+              color="primary"
+              label="Sign in"
+              onClick={() => {
+                handleSubmit();
+              }}
+              disabled={isDisabled}
+            ></Button>
+            <Link href="/auth/password-reset" passHref>
+              <StyledLink>Reset Password</StyledLink>
+            </Link>
+          </LoginButtonLayout>
         </LoginLayout>
       )}
       <StyledInfo>
