@@ -705,7 +705,7 @@ export class HelperService {
    * Creates or resets all user settings
    * @param personId Id of a user
    */
-  async createOrResestDefaultSettings(personId: number): Promise<any> {
+  async createOrResetDefaultSettings(personId: number): Promise<any> {
     if (personId) {
       const defaultSettings = {
         language: 'en',
@@ -866,7 +866,7 @@ export class HelperService {
             email,
           },
         });
-        if (Boolean(user.emailVerified)) {
+        if (user && Boolean(user.emailVerified)) {
           return user;
         } else {
           return false;
