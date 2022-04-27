@@ -56,7 +56,7 @@ export class DatabaseService {
         },
       });
 
-      await this.helper.createOrResestDefaultSettings(person.personId);
+      await this.helper.createOrResetDefaultSettings(person.personId);
       await this.helper.createDefaultPublicProfileSettings(person.personId);
 
     } catch (error) {
