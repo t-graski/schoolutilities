@@ -41,6 +41,8 @@ export class AssetsController {
   async getSubmission(@Param('fileUUID') fileUUID, @Res() response) {
     return of(
       response
+        .set('Content-Type', 'application/octet-stream')
+        .set('Content-Disposition', `attachment; filename="${fileUUID}.png"`)
         .status(HttpStatus.OK)
         .sendFile(`${fileUUID}`, { root: process.env.FILE_PATH }),
     );

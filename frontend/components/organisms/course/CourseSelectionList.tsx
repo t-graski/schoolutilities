@@ -94,7 +94,7 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
             }
           );
           let fetchedCourses = await response.json();
-          console.log(response);
+          console.log(fetchedCourses);
           setCourses(fetchedCourses);
         }
       }

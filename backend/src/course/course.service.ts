@@ -1181,7 +1181,7 @@ export class CourseService {
     const userSubmissions = [];
 
     for (const user of courseUsers) {
-      let userSubmissionItem = {
+      const userSubmissionItem = {
         userUUID: user.personUUID,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -1189,7 +1189,7 @@ export class CourseService {
         submission: {} as any,
       };
 
-      let userSubmission = submissions.find((submission) => {
+      const userSubmission = submissions.find((submission) => {
         return submission.personId === user.personId;
       });
 
@@ -1203,9 +1203,7 @@ export class CourseService {
         submissionItem.notes = userSubmission.notes;
         submissionItem.grade = userSubmission.grade;
         submissionItem.submissionDate = userSubmission.submissionTime;
-        submissionItem.download = `https://backend.schoolutilities.net/api/assets/submissions${
-          userSubmission.fileName
-        }.${userSubmission.fileType.split('/')[1]}`;
+        submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.fileName}`;
       } else {
         submissionItem = null;
       }

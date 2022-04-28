@@ -127,7 +127,7 @@ export class CourseController {
   @UseInterceptors(
     FileInterceptor('files', {
       storage: diskStorage({
-        destination: '../files/',
+        destination: process.env.FILE_PATH,
         filename: editFileName,
       }),
       fileFilter: fileFilter,
@@ -149,7 +149,10 @@ export class CourseController {
   @Get('submissions/:elementUUID')
   @Roles(Role.Teacher)
   async getSubmissions(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.getSubmissions(request, params.elementUUID);
+    const result = await this.courseService.getSubmissions(
+      request,
+      params.elementUUID,
+    );
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
