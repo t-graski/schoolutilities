@@ -220,6 +220,10 @@ export class CourseService {
     });
 
     if (persons) {
+      const courseUsers = await this.helper.getCourseUsers(courseId);
+      const courseUsersIds = courseUsers.map(
+        (courseUser) => courseUser.personId,
+      );
       for (let user of persons) {
         if (!validator.isUUID(user.slice(1), 4)) {
           return RETURN_DATA.INVALID_INPUT;
@@ -227,20 +231,33 @@ export class CourseService {
 
         const userId = await this.helper.getUserIdByUUID(user);
 
-        await prisma.coursePersons.create({
-          data: {
-            courses: {
-              connect: {
-                courseId: Number(courseId),
+        if (!courseUsersIds.includes(userId)) {
+          await prisma.coursePersons.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseId),
+                },
+              },
+              persons: {
+                connect: {
+                  personId: Number(userId),
+                },
               },
             },
-            persons: {
-              connect: {
+          });
+        }
+
+        if (courseUsersIds.includes(userId) && !persons.includes(user)) {
+          await prisma.coursePersons.delete({
+            where: {
+              coursePersonId: {
+                courseId: Number(courseId),
                 personId: Number(userId),
               },
             },
-          },
-        });
+          });
+        }
       }
     }
 
