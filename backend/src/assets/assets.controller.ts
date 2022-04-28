@@ -17,7 +17,7 @@ import { Roles } from 'src/roles/roles.decorator';
 @UseGuards(RolesGuard)
 @Controller('/api/assets')
 export class AssetsController {
-  constructor(private readonly assetsService: AssetsService) { }
+  constructor(private readonly assetsService: AssetsService) {}
 
   @Get('/logos/:logoname')
   async getLogo(@Param('logoname') logoname, @Res() response) {
@@ -37,6 +37,14 @@ export class AssetsController {
     );
   }
 
+  @Get('/submissions/:fileUUID')
+  async getSubmission(@Param('fileUUID') fileUUID, @Res() response) {
+    return of(
+      response
+        .status(HttpStatus.OK)
+        .sendFile(`${fileUUID}`, { root: process.env.FILE_PATH }),
+    );
+  }
 
   // @Roles(Role.Supervisor)
   @Get('/list/logo')

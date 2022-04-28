@@ -30,7 +30,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -780,7 +780,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                        currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1042,7 +1042,10 @@ export class CourseService {
     );
 
     const creator = await this.helper.getUserById(element.personCreationId);
-    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(userId, schoolId);
+    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
+      userId,
+      schoolId,
+    );
 
     const elementItem = {
       elementUUID: element.elementUUID,
@@ -1146,7 +1149,7 @@ export class CourseService {
         lastName: user.lastName,
         fullName: user.firstName + ' ' + user.lastName,
         submission: {} as any,
-      }
+      };
 
       let userSubmission = submissions.find((submission) => {
         return submission.personId === user.personId;
@@ -1162,6 +1165,9 @@ export class CourseService {
         submissionItem.notes = userSubmission.notes;
         submissionItem.grade = userSubmission.grade;
         submissionItem.submissionDate = userSubmission.submissionTime;
+        submissionItem.download = `https://backend.schoolutilities.net/api/assets/submissions${
+          userSubmission.fileName
+        }.${userSubmission.fileType.split('/')[1]}`;
       } else {
         submissionItem = null;
       }
