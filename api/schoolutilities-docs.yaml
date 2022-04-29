@@ -1,0 +1,135 @@
+swagger: "2.0"
+info:
+  title: SchoolUtilities API
+  description: |
+    # SchoolUtilities API documentation
+    ## h2 
+  version: 0.0.1
+tags:
+  - name: admins
+    description: User api requests
+  - name: developers
+    description: Operations available to regular developers
+  - name: users
+    description: User api requests
+paths:
+  "/auth/login":
+    post:
+      tags:
+        - users
+      summary: Login to user
+      operationId: login
+      description: |
+        By passing in the email and password, users can login
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: email
+          description: The user to create.
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                description: The email of the user
+              password:
+                type: string
+                description: The password of the user
+      responses:
+        200:
+          description: Successful login
+          schema:
+            $ref: "#/definitions/Login"
+  /inventory:
+    get:
+      tags:
+        - developers
+      summary: searches inventory
+      operationId: searchInventory
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: searchString
+          description: pass an optional search string for looking up inventory
+          required: false
+          type: string
+        - in: query
+          name: skip
+          description: number of records to skip for pagination
+          type: integer
+          format: int32
+          minimum: 0
+        - in: query
+          name: limit
+          description: maximum number of records to return
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 50
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/InventoryItem"
+        400:
+          description: bad input parameter
+    post:
+      tags:
+        - admins
+      summary: adds an inventory item
+      operationId: addInventory
+      description: Adds an item to the system
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: inventoryItem
+          description: Inventory item to add
+          schema:
+            $ref: "#/definitions/InventoryItem"
+      responses:
+        201:
+          description: item created
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+definitions:
+  User:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        format: email
+        example: tobias.graski@schoolutilities.net
+      password:
+        type: string
+        example: StrongPassword123!
+  Login:
+    type: object
+    properties:
+      accessToken:
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+      refreshToken:
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
