@@ -10,6 +10,7 @@ import Footer from "../../../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../../../misc/authHelper";
 import { FileUpload } from "../../../../../../../components/molecules/FileUpload";
 import { Button } from "../../../../../../../components/atoms/Button";
+import { SubmissionsOverview } from "../../../../../../../components/organisms/course/SubmissionsOverview";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -37,6 +38,7 @@ export default function Features() {
     submitLaterTime: new Date(500).toISOString(),
     maxFileSize: 1000,
     allowedFileTypes: ".jpg,.png",
+    canEdit: false,
   });
   const [submissionUUID, setSubmissionUUID] = useState("");
 
@@ -63,16 +65,15 @@ export default function Features() {
       if (submissionResponse) {
         if (submissionResponse.status == 200) {
           const submissionData = await submissionResponse.json();
-          console.log(submissionData);
+          submissionData.options.canEdit = submissionData.canEdit;
           setSubmissionContent(submissionData.options);
-        } else {
         }
       }
     } else if (!accessToken) {
       router.push("/auth?tab=login");
     }
   }
-  const [items, setItems] = useState([]);
+
 
   return (
     <>
@@ -94,7 +95,10 @@ export default function Features() {
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
-        <FileUpload></FileUpload>
+        {!submissionContent.canEdit && <FileUpload></FileUpload>}
+        {submissionContent.canEdit && (
+          <SubmissionsOverview submissionUUID={submissionUUID}></SubmissionsOverview>
+        )}
         <Spacer size="verySmall"></Spacer>
         <Button
           backgroundColor={"secondary"}

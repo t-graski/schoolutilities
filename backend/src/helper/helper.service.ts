@@ -18,7 +18,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
@@ -766,7 +766,7 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() { }
+  async getMaxFileSize() {}
   async removeUserFromUpdateEmailList(personId: number): Promise<any> {
     if (personId) {
       try {
@@ -1076,7 +1076,7 @@ export class HelperService {
             schoolPersonId: {
               personId: userId,
               schoolId: schoolId,
-            }
+            },
           },
         });
         if (Object.keys(Role)[userRole.roleId] === 'Teacher') {
@@ -1100,11 +1100,39 @@ export class HelperService {
             schoolPersonId: {
               personId: userId,
               schoolId: schoolId,
-            }
+            },
           },
         });
 
         if (Object.keys(Role)[userRole.roleId] === 'Admin') {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async isTeacherOrHigher(userId: number, schoolId: number): Promise<any> {
+    if (userId && schoolId) {
+      try {
+        const userRole = await prisma.personRoles.findUnique({
+          where: {
+            schoolPersonId: {
+              personId: userId,
+              schoolId: schoolId,
+            },
+          },
+        });
+
+        if (
+          Object.keys(Role)[userRole.roleId] === 'Teacher' ||
+          Object.keys(Role)[userRole.roleId] === 'Admin'
+        ) {
           return true;
         } else {
           return false;
@@ -1125,7 +1153,7 @@ export class HelperService {
             schoolPersonId: {
               personId: userId,
               schoolId: schoolId,
-            }
+            },
           },
         });
         if (user) {
@@ -1141,6 +1169,22 @@ export class HelperService {
     }
   }
 
+  async getSchoolIdByCourseId(courseId: number): Promise<any> {
+    if (courseId) {
+      try {
+        const course = await prisma.courses.findUnique({
+          where: {
+            courseId,
+          },
+        });
+        return course.schoolId;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.COURSE_ID_NULL_OR_INVALID);
+    }
+  }
   async getCourseUsers(courseId: number): Promise<any> {
     if (courseId) {
       try {
@@ -1149,7 +1193,36 @@ export class HelperService {
             courseId: courseId,
           },
         });
-        return courseUsers;
+
+        const users = [];
+
+        for (const user of courseUsers) {
+          const userData = await prisma.persons.findUnique({
+            where: {
+              personId: user.personId,
+            },
+          });
+          users.push(userData);
+        }
+        return users;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.COURSE_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async getCourseClasses(courseId: number): Promise<any> {
+    if (courseId) {
+      try {
+        const courseClasses = await prisma.courseClasses.findMany({
+          where: {
+            courseId: courseId,
+          },
+        });
+
+        return courseClasses;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }

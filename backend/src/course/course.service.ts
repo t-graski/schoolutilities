@@ -197,17 +197,6 @@ export class CourseService {
       classes,
       persons,
     } = body;
-    if (
-      !courseName ||
-      !courseDescription ||
-      !persons ||
-      !classes ||
-      !validator.isUUID(courseUUID.slice(1), 4) ||
-      !validator.isLength(courseName, LENGTHS.COURSE_NAME) ||
-      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
 
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
 
@@ -231,6 +220,10 @@ export class CourseService {
     });
 
     if (persons) {
+      const courseUsers = await this.helper.getCourseUsers(courseId);
+      const courseUsersIds = courseUsers.map(
+        (courseUser) => courseUser.personId,
+      );
       for (let user of persons) {
         if (!validator.isUUID(user.slice(1), 4)) {
           return RETURN_DATA.INVALID_INPUT;
@@ -238,24 +231,42 @@ export class CourseService {
 
         const userId = await this.helper.getUserIdByUUID(user);
 
-        await prisma.coursePersons.create({
-          data: {
-            courses: {
-              connect: {
-                courseId: Number(courseId),
+        if (!courseUsersIds.includes(userId)) {
+          await prisma.coursePersons.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseId),
+                },
+              },
+              persons: {
+                connect: {
+                  personId: Number(userId),
+                },
               },
             },
-            persons: {
-              connect: {
+          });
+        }
+
+        if (courseUsersIds.includes(userId) && !persons.includes(user)) {
+          await prisma.coursePersons.delete({
+            where: {
+              coursePersonId: {
+                courseId: Number(courseId),
                 personId: Number(userId),
               },
             },
-          },
-        });
+          });
+        }
       }
     }
 
     if (classes) {
+      const courseClasses = await this.helper.getCourseClasses(courseId);
+      const courseClassesIds = courseClasses.map(
+        (courseClass) => courseClass.classId,
+      );
+
       for (const schoolClass of classes) {
         if (!validator.isUUID(schoolClass.slice(1), 4)) {
           return RETURN_DATA.INVALID_INPUT;
@@ -263,20 +274,36 @@ export class CourseService {
 
         const classId = await this.helper.getClassIdByUUID(schoolClass);
 
-        await prisma.courseClasses.create({
-          data: {
-            courses: {
-              connect: {
-                courseId: Number(courseId),
+        if (!courseClassesIds.includes(classId)) {
+          await prisma.courseClasses.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseId),
+                },
+              },
+              schoolClasses: {
+                connect: {
+                  classId: Number(classId),
+                },
               },
             },
-            schoolClasses: {
-              connect: {
+          });
+        }
+
+        if (
+          courseClassesIds.includes(classId) &&
+          !classes.includes(schoolClass)
+        ) {
+          await prisma.courseClasses.delete({
+            where: {
+              courseClassId: {
+                courseId: Number(courseId),
                 classId: Number(classId),
               },
             },
-          },
-        });
+          });
+        }
       }
     }
 
@@ -1032,6 +1059,7 @@ export class CourseService {
     const userId = await this.helper.getUserIdfromJWT(jwt);
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
     const courseId = await this.helper.getCourseIdByElementId(elementId);
+    const schoolId = await this.helper.getSchoolIdByCourseId(courseId);
 
     if (!(await this.helper.userIsInCourse(userId, courseId))) {
       return {
@@ -1052,12 +1080,17 @@ export class CourseService {
     );
 
     const creator = await this.helper.getUserById(element.personCreationId);
+    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
+      userId,
+      schoolId,
+    );
 
     const elementItem = {
       elementUUID: element.elementUUID,
       courseUUID: await this.helper.getCourseUUIDById(element.courseId),
       visible: Boolean(element.visible),
       creationDate: element.creationDate,
+      canEdit: isTeacherOrHigher,
       creator: {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
@@ -1148,23 +1181,29 @@ export class CourseService {
     const userSubmissions = [];
 
     for (const user of courseUsers) {
-      let userSubmissionItem;
-      userSubmissionItem.userUUID = user.personUUID;
-      userSubmissionItem.firstName = user.firstName;
-      userSubmissionItem.lastName = user.lastName;
-      userSubmissionItem.fullName = user.firstName + ' ' + user.lastName;
-      let submissionItem;
-      let submission = submissions.find((submission) => {
+      const userSubmissionItem = {
+        userUUID: user.personUUID,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.firstName + ' ' + user.lastName,
+        submission: {} as any,
+      };
+
+      const userSubmission = submissions.find((submission) => {
         return submission.personId === user.personId;
       });
-      if (submission) {
-        submissionItem.fileName = submission.fileName;
-        submissionItem.fileSize = submission.fileSize;
-        submissionItem.fileType = submission.fileType;
-        submissionItem.submittedLate = submission.submitedLate;
-        submissionItem.notes = submission.notes;
-        submissionItem.grade = submission.grade;
-        submissionItem.submissionDate = submission.submissionTime;
+
+      let submissionItem = {} as any;
+
+      if (userSubmission) {
+        submissionItem.fileName = userSubmission.fileName;
+        submissionItem.fileSize = userSubmission.fileSize;
+        submissionItem.fileType = userSubmission.fileType;
+        submissionItem.submittedLate = userSubmission.submitedLate;
+        submissionItem.notes = userSubmission.notes;
+        submissionItem.grade = userSubmission.grade;
+        submissionItem.submissionDate = userSubmission.submissionTime;
+        submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.fileName}`;
       } else {
         submissionItem = null;
       }
