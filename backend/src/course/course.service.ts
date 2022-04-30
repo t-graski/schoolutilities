@@ -1085,12 +1085,20 @@ export class CourseService {
       schoolId,
     );
 
+    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+      where: {
+        courseElementId: Number(elementId),
+        personId: Number(userId),
+      },
+    });
+
     const elementItem = {
       elementUUID: element.elementUUID,
       courseUUID: await this.helper.getCourseUUIDById(element.courseId),
       visible: Boolean(element.visible),
       creationDate: element.creationDate,
       canEdit: isTeacherOrHigher,
+      hasSubmitted: hasSubmitted ? true : false,
       creator: {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
