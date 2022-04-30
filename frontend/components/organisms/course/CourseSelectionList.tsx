@@ -74,7 +74,7 @@ const CourseDescription = styled("p", {
 export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID;
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState(null);
   useEffect(() => {
     updateCoursesFromDatabase();
     
@@ -94,7 +94,6 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
             }
           );
           let fetchedCourses = await response.json();
-          console.log(fetchedCourses);
           setCourses(fetchedCourses);
         }
       }
@@ -104,7 +103,7 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
   return (
     <>
       <CourseList>
-        {courses.length > 0 ? (
+        {courses && courses.length > 0 && (
           courses.map((course) => (
             <CourseLayout
               key={course.courseUUID}
@@ -121,7 +120,13 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
               <CourseDescription>{course.courseDescription}</CourseDescription>
             </CourseLayout>
           ))
-        ) : (
+        )}
+        { courses && courses.length == 0 && (
+          <>
+            You haven&apos;t been added to any course yet.
+          </>
+        )}
+        { !courses && (
           <>
             <Skeleton width="100%" height={150}></Skeleton>
             <Skeleton width="100%" height={150}></Skeleton>
