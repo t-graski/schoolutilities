@@ -30,7 +30,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -553,8 +553,17 @@ export class CourseService {
 
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
     const courseId = await this.databaseService.getCourseUUIDById(courseUUID);
+    const schoolId = await this.helper.getSchoolIdByCourseId(courseId);
 
-    const courseData = {};
+    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
+      personId,
+      schoolId,
+    );
+
+    const courseData = {} as any;
+
+    courseData.canEdit = isTeacherOrHigher;
+
     try {
       const course = await prisma.courses.findUnique({
         where: {
@@ -768,7 +777,7 @@ export class CourseService {
               updateNeeded = true;
             }
 
-            for (let option in elementWithOptions.elementOptions) {
+            for (const option in elementWithOptions.elementOptions) {
               if (
                 elementWithOptions.elementOptions[option] !==
                 currentElement.elementOptions[option]
@@ -778,7 +787,7 @@ export class CourseService {
             }
 
             if (updateNeeded) {
-              let elementUpdate = await prisma.courseElements.update({
+              const elementUpdate = await prisma.courseElements.update({
                 where: {
                   elementId: Number(currentElement.elementId),
                 },
@@ -800,7 +809,7 @@ export class CourseService {
               element.children.forEach(async (child) => {
                 if (child.elementUUID) {
                   if (await this.helper.elementExists(child.elementUUID)) {
-                    let currentChild = {
+                    const currentChild = {
                       elementUUID: child.elementUUID,
                       elementId: await this.helper.getElementIdByUUID(
                         child.elementUUID,
@@ -810,7 +819,7 @@ export class CourseService {
                       elementOptions: child.options,
                     };
 
-                    let childWithOptions = elementsWithOptions.find(
+                    const childWithOptions = elementsWithOptions.find(
                       (e) => e.elementUUID === child.elementUUID,
                     );
                     let updateNeeded = false;
@@ -818,7 +827,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                        currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }

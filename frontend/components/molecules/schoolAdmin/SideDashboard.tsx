@@ -152,6 +152,8 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
     borderRadius: "$normal",
     backgroundColor: "$backgroundTertiary",
     cursor: "pointer",
+    color: "$fontPrimary",
+    textDecoration: "none",
     "&[data-size='small']": {
       justifyContent: "center",
       width: "fit-content",
