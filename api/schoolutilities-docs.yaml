@@ -1,26 +1,29 @@
 swagger: "2.0"
+host: backend.schoolutilities.net
+basePath: /api
+schemes:
+  - https
 info:
   title: SchoolUtilities API
-  description: |
-    # SchoolUtilities API documentation
-    ## h2 
   version: 0.0.1
+  description: |
+    # Introduction
+    You've discovered the SchoolUtilities API documentation. All pages here are dedicated to describing all the ways our API works.
 tags:
-  - name: admins
-    description: User api requests
-  - name: developers
-    description: Operations available to regular developers
-  - name: users
+  - name: Users
     description: User api requests
 paths:
   "/auth/login":
     post:
       tags:
-        - users
+        - Users
       summary: Login to user
       operationId: login
       description: |
-        By passing in the email and password, users can login
+        This request is used to log a user in. The user must provide a valid email and password. <br />
+        More information about email and password can be found [here](/schemas/UserLogin). <br />
+        In return the user will receive a refreshToken and accessToken. 
+        Those tokens are used to authenticate every request the requires the user to be logged in.
       consumes:
         - application/json
       produces:
@@ -30,88 +33,18 @@ paths:
           name: email
           description: The user to create.
           schema:
-            type: object
-            required:
-              - email
-              - password
-            properties:
-              email:
-                type: string
-                description: The email of the user
-              password:
-                type: string
-                description: The password of the user
+            $ref: "#/definitions/UserLogin"
       responses:
         200:
-          description: Successful login
+          description: Successfully logged in
           schema:
-            $ref: "#/definitions/Login"
-  /inventory:
-    get:
-      tags:
-        - developers
-      summary: searches inventory
-      operationId: searchInventory
-      description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: query
-          name: searchString
-          description: pass an optional search string for looking up inventory
-          required: false
-          type: string
-        - in: query
-          name: skip
-          description: number of records to skip for pagination
-          type: integer
-          format: int32
-          minimum: 0
-        - in: query
-          name: limit
-          description: maximum number of records to return
-          type: integer
-          format: int32
-          minimum: 0
-          maximum: 50
-      responses:
-        200:
-          description: search results matching criteria
+            $ref: "#/definitions/LoginTokens"
+        401:
+          description: Invalid credentials
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/InventoryItem"
-        400:
-          description: bad input parameter
-    post:
-      tags:
-        - admins
-      summary: adds an inventory item
-      operationId: addInventory
-      description: Adds an item to the system
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: inventoryItem
-          description: Inventory item to add
-          schema:
-            $ref: "#/definitions/InventoryItem"
-      responses:
-        201:
-          description: item created
-        400:
-          description: invalid input, object invalid
-        409:
-          description: an existing item already exists
+            $ref: "#/definitions/LoginError"
 definitions:
-  User:
+  UserLogin:
     type: object
     required:
       - email
@@ -121,15 +54,47 @@ definitions:
         type: string
         format: email
         example: tobias.graski@schoolutilities.net
+        description: |
+          E-mail address of the user.<br />
+          For more information about valid email addresses, see [RFC 3696](https://datatracker.ietf.org/doc/html/rfc3696).
       password:
         type: string
         example: StrongPassword123!
-  Login:
+        description: |
+          Password of the user.<br />
+          A strong password needs to fulfill following requirements:
+          - 8 or more characters
+          - At least 1 uppercase letter
+          - At least 1 lowercase letter
+          - At least 1 number
+          - At least 1 special character
+          - No whitespace
+  LoginTokens:
     type: object
     properties:
       accessToken:
         type: string
+        description: |
+          This token is used to authorize every action that requires the user to be logged in. <br />
+          For more information about JSON Web Token (JWT), see [RFC 7519](https://tools.ietf.org/html/rfc7519). <br />
+          After 15 minutes, the token will expire and the user will need to request a new token by using the refresh token.
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
       refreshToken:
         type: string
+        description: |
+          This token is used to request a new access token. <br />
+          For more information about JSON Web Token (JWT), see [RFC 7519](https://tools.ietf.org/html/rfc7519). <br />
+          After 168 hours (7 days), the token will expire and the user will need to login again.
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+  LoginError:
+    type: object
+    properties:
+      statusCode:
+        type: integer
+        description: |
+          Status code of the error. For more information click [here](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes).
+        format: int32
+        example: 401
+      message:
+        type: string
+        example: Unauthorized

@@ -30,7 +30,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } =
       request.body;
@@ -818,7 +818,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1137,8 +1137,22 @@ export class CourseService {
     const jwt = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(jwt);
     const dueDate = await this.helper.getElementDueDate(elementId);
-
     const isSubmittedInTime = moment(new Date(Date.now())).isAfter(dueDate);
+
+    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+      where: {
+        personId: Number(userId),
+        courseElementId: Number(elementId),
+      },
+    });
+
+    if (hasSubmitted) {
+      return {
+        status: HttpStatus.FORBIDDEN,
+        message: 'You have already submitted this exercise',
+      };
+    }
+
     try {
       await prisma.fileSubmissions.create({
         data: {
