@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { SvgIcon } from "../SvgIcon";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import {
-  elementsToChoose,
-} from "./CourseComponentDetailViews";
+import { elementsToChoose } from "./CourseComponentDetailViews";
 import { AddIcon } from "../AddIcon";
 
-type Props = { courseId: string; addNewEntry?: Function };
+type Props = { addNewEntry?: Function };
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -300,7 +297,7 @@ const AddButton = styled("button", {
   },
 });
 
-export const AddCourseElement: React.FC<Props> = ({ courseId, addNewEntry }) => {
+export const AddCourseElement: React.FC<Props> = ({ addNewEntry }) => {
   const [open, setOpen] = useState(false);
   const [choosenElementId, setChoosenElementId] = useState("");
   const [detailsConfig, setDetailsConfig] = useState({});
@@ -316,9 +313,11 @@ export const AddCourseElement: React.FC<Props> = ({ courseId, addNewEntry }) => 
 
   return (
     <>
-      <AddIcon addFunction={() => {
+      <AddIcon
+        addFunction={() => {
           setOpen(true);
-      }}></AddIcon>
+        }}
+      ></AddIcon>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent>

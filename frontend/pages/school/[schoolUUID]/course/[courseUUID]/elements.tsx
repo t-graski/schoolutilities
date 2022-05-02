@@ -5,10 +5,8 @@ import { useRouter } from "next/router";
 import { Navbar } from "../../../../../components/organisms/Navbar";
 import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
-import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
-import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseEditContent from "../../../../../components/molecules/course/CourseEditContent";
 import { Button } from "../../../../../components/atoms/Button";
 import AddCourseElement from "../../../../../components/atoms/course/AddCourseElement";
@@ -106,7 +104,6 @@ export default function Features() {
               alignment="left"
             ></Headline>
             <AddCourseElement
-              courseId={courseUUID}
               addNewEntry={(choosenElement, config) => {
                 setItems([
                   ...items,

@@ -1,10 +1,11 @@
 import React from "react";
-import { styled } from "../../stitches.config";
+import { styled } from "../../../stitches.config";
 import type * as Stitches from "@stitches/react";
-import { SvgIcon } from "./SvgIcon";
+import { SvgIcon } from "../SvgIcon";
+import { InputFieldCore } from "./InputFieldCore";
+import { PasswordStrengthPopOver } from "./PasswordStrengthPopOver";
 
 type Props = {
-  inputType: "text" | "date" | "email" | "number" | "datetime-local";
   value?: string;
   onChange: Function;
   iconName: string;
@@ -13,9 +14,14 @@ type Props = {
   label?: string;
   showLabel?: boolean;
   size?: Stitches.VariantProps<typeof StyledInputField>["size"];
-  regex?: RegExp;
   setValidInput?: Function;
   errorMessage?: string;
+  validationOptions?: {
+    regex: RegExp;
+    errorMessage: string;
+    validIconName: string;
+    invalidIconName: string;
+  }[];
   min?: string;
   max?: string;
 };
@@ -37,6 +43,21 @@ const StyledInputField = styled("input", {
     borderBottom: "solid 1px $colors$fontPrimary",
   },
   variants: {
+    inputType: {
+      text: {},
+      password: {},
+      date: {},
+      email: {},
+      checkbox: {
+        width: "fit-content",
+        margin: "0 20px 0 0",
+      },
+      select: {},
+      "search-select": {},
+      textfield: {},
+      number: {},
+      "datetime-local": {},
+    },
     editable: {
       true: {},
       false: {
@@ -58,27 +79,6 @@ const StyledInputField = styled("input", {
         fontSize: "1rem",
         padding: "0",
         lineHeight: "1.2rem",
-      },
-    },
-  },
-});
-
-const InputFieldLayout = styled("div", {
-  display: "flex",
-  alignItems: "center",
-  background: "$backgroundTertiary",
-  width: "100%",
-  borderRadius: "15px",
-  border: "none",
-  padding: "10.3px 20px",
-  gap: "20px",
-
-  variants: {
-    editable: {
-      true: {},
-      false: {
-        background: "transparent",
-        border: "none",
       },
     },
   },
@@ -109,76 +109,83 @@ const ImageLayout = styled("div", {
   },
 });
 
-const InputFieldLabel = styled("div", {});
-
-const Required = styled("div", {
-  display: "inline-block",
-});
-
 export const InputField: React.FC<Props> = ({
-  inputType,
   value,
+  onChange,
   iconName,
   editable = true,
   required = false,
   label = "",
   showLabel = true,
   size = "normal",
-  regex,
   setValidInput,
   errorMessage = "",
+  validationOptions,
   min,
   max,
 }) => {
   const [isInputValid, setIsInputValid] = React.useState(null);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [currentValidationResults, setCurrentValidationResults] =
+    React.useState([]);
 
-  function updateValidation(event) {
-    if (regex) {
-      let inputValueValid = regex.test(event.target.value);
-      if (setValidInput) {
-        setValidInput(inputValueValid);
-      }
-      if (isInputValid == null && !inputValueValid) {
-        if (regex.test(event.target.value)) {
-          setIsInputValid(false);
-        }
-      } else {
-        setIsInputValid(inputValueValid);
-      }
-    }
+  if (validationOptions && currentValidationResults.length === 0) {
+    setCurrentValidationResults(
+      validationOptions.map((option) => {
+        return { ...option, valid: false };
+      })
+    );
   }
 
   return (
     <>
-      {label && showLabel && (
-        <>
-          <InputFieldLabel>
-            {label} {required && <Required>*</Required>}
-          </InputFieldLabel>
-        </>
-      )}
-      <InputFieldLayout editable={editable}>
-        {iconName && (
-          <ImageLayout>
-            <SvgIcon iconName={iconName} />
-          </ImageLayout>
-        )}
+      <InputFieldCore
+        iconName={iconName}
+        required={required}
+        label={label}
+        showLabel={showLabel}
+      >
         <StyledLabel>
           <StyledInputField
-            type={inputType}
+            type={"password"}
             value={value}
             name={label}
             placeholder={label}
             editable={editable}
             readOnly={!editable}
             size={size}
-            onChange={updateValidation}
+            onChange={onChange}
+            inputType={"password"}
             {...(required && { required: true })}
             {...(min && { min })}
             {...(max && { max })}
           />
         </StyledLabel>
-      </InputFieldLayout>
+
+        {!showPassword && (
+          <ImageLayout
+            cursor="pointer"
+            onClick={() => {
+              setShowPassword(true);
+            }}
+          >
+            <SvgIcon iconName="SvgEyeRestricted" />
+          </ImageLayout>
+        )}
+        {showPassword && (
+          <ImageLayout
+            cursor="pointer"
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
+          >
+            <SvgIcon iconName="SvgEye" />
+          </ImageLayout>
+        )}
+        {validationOptions && (
+          <PasswordStrengthPopOver password={value} setValidInput={setValidInput} validationOptions={validationOptions}></PasswordStrengthPopOver>
+        )}
+      </InputFieldCore>
       {errorMessage && isInputValid === false && (
         <ErrorMessage>{errorMessage}</ErrorMessage>
       )}

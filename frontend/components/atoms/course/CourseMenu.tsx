@@ -264,9 +264,6 @@ const DialogTitle = StyledTitle;
 const DialogDescription = StyledDescription;
 const DialogClose = DialogPrimitive.Close;
 
-// Your app...
-const Flex = styled("div", { display: "flex" });
-
 const IconButton = styled("button", {
   all: "unset",
   fontFamily: "inherit",
