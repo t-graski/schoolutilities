@@ -240,6 +240,7 @@ export class SchoolAdminController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
   @Put('/role')
   async updateRole(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.updateRole(request);

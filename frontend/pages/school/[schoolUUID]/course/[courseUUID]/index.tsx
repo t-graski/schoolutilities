@@ -63,6 +63,7 @@ export default function Features() {
           const courseData = await courseResponse.json();
           for (let key in courseData) {
             setCourseName(courseData[key].courseName);
+            setCanEditCourse(courseData[key].canEdit);
           }
         } else {
           setCourseName("Database error");
@@ -107,7 +108,7 @@ export default function Features() {
             label={courseName}
             alignment="left"
           ></Headline>
-          <CourseMenu courseId={courseUUID}></CourseMenu>
+          {canEditCourse && <CourseMenu courseId={courseUUID}></CourseMenu>}
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
@@ -119,7 +120,9 @@ export default function Features() {
             <Button
               label="Add elements"
               onClick={() => {
-                router.push(`/school/${schoolUUID}/course/${courseUUID}/elements`);
+                router.push(
+                  `/school/${schoolUUID}/course/${courseUUID}/elements`
+                );
               }}
               backgroundColor={"primary"}
               color={"primary"}
@@ -129,7 +132,10 @@ export default function Features() {
         )}
         {items.length == 0 && !canEditCourse && (
           <>
-            <p>The administrator of this site hasn&apos;t added elements to this course yet</p>
+            <p>
+              The administrator of this site hasn&apos;t added elements to this
+              course yet
+            </p>
             <Spacer size="small"></Spacer>
           </>
         )}

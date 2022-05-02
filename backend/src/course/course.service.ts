@@ -553,8 +553,15 @@ export class CourseService {
 
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
     const courseId = await this.databaseService.getCourseUUIDById(courseUUID);
+    const schoolId = await this.helper.getSchoolIdByCourseId(courseId);
 
-    const courseData = {};
+    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
+      personId,
+      schoolId,
+    );
+
+    const courseData = {} as any;
+
     try {
       const course = await prisma.courses.findUnique({
         where: {
@@ -647,6 +654,7 @@ export class CourseService {
         },
         persons: personsData,
         classes: classesData,
+        canEdit: isTeacherOrHigher,
       };
 
       courseData[courseDataItem.courseUUID] = courseDataItem;
@@ -768,7 +776,7 @@ export class CourseService {
               updateNeeded = true;
             }
 
-            for (let option in elementWithOptions.elementOptions) {
+            for (const option in elementWithOptions.elementOptions) {
               if (
                 elementWithOptions.elementOptions[option] !==
                 currentElement.elementOptions[option]
@@ -778,7 +786,7 @@ export class CourseService {
             }
 
             if (updateNeeded) {
-              let elementUpdate = await prisma.courseElements.update({
+              const elementUpdate = await prisma.courseElements.update({
                 where: {
                   elementId: Number(currentElement.elementId),
                 },
@@ -800,7 +808,7 @@ export class CourseService {
               element.children.forEach(async (child) => {
                 if (child.elementUUID) {
                   if (await this.helper.elementExists(child.elementUUID)) {
-                    let currentChild = {
+                    const currentChild = {
                       elementUUID: child.elementUUID,
                       elementId: await this.helper.getElementIdByUUID(
                         child.elementUUID,
@@ -810,7 +818,7 @@ export class CourseService {
                       elementOptions: child.options,
                     };
 
-                    let childWithOptions = elementsWithOptions.find(
+                    const childWithOptions = elementsWithOptions.find(
                       (e) => e.elementUUID === child.elementUUID,
                     );
                     let updateNeeded = false;
@@ -1085,12 +1093,20 @@ export class CourseService {
       schoolId,
     );
 
+    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+      where: {
+        courseElementId: Number(elementId),
+        personId: Number(userId),
+      },
+    });
+
     const elementItem = {
       elementUUID: element.elementUUID,
       courseUUID: await this.helper.getCourseUUIDById(element.courseId),
       visible: Boolean(element.visible),
       creationDate: element.creationDate,
       canEdit: isTeacherOrHigher,
+      hasSubmitted: hasSubmitted ? true : false,
       creator: {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
@@ -1137,8 +1153,22 @@ export class CourseService {
     const jwt = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(jwt);
     const dueDate = await this.helper.getElementDueDate(elementId);
-
     const isSubmittedInTime = moment(new Date(Date.now())).isAfter(dueDate);
+
+    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+      where: {
+        personId: Number(userId),
+        courseElementId: Number(elementId),
+      },
+    });
+
+    if (hasSubmitted) {
+      return {
+        status: HttpStatus.FORBIDDEN,
+        message: 'You have already submitted this exercise',
+      };
+    }
+
     try {
       await prisma.fileSubmissions.create({
         data: {

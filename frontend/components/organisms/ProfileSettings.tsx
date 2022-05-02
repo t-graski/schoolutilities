@@ -89,6 +89,8 @@ const LinkLayout = styled("a", {
   borderRadius: "$normal",
   backgroundColor: "$backgroundTertiary",
   cursor: "pointer",
+  color: "$fontPrimary",
+  textDecoration: "none",
   "&[data-size='small']": {
     justifyContent: "center",
     width: "fit-content",

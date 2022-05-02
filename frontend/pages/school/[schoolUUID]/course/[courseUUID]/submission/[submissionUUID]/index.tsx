@@ -37,6 +37,7 @@ export default function Features() {
     submitLater: false,
     submitLaterTime: new Date(500).toISOString(),
     maxFileSize: 1000,
+    hasSubmitted: false,
     allowedFileTypes: ".jpg,.png",
     canEdit: false,
   });
@@ -66,6 +67,7 @@ export default function Features() {
         if (submissionResponse.status == 200) {
           const submissionData = await submissionResponse.json();
           submissionData.options.canEdit = submissionData.canEdit;
+          submissionData.options.hasSubmitted = submissionData.hasSubmitted;
           setSubmissionContent(submissionData.options);
         }
       }
@@ -74,6 +76,7 @@ export default function Features() {
     }
   }
 
+  console.log(submissionContent);
 
   return (
     <>
@@ -95,7 +98,8 @@ export default function Features() {
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
-        {!submissionContent.canEdit && <FileUpload></FileUpload>}
+        {!submissionContent.canEdit && !submissionContent.hasSubmitted && <FileUpload></FileUpload>}
+        {!submissionContent.canEdit && submissionContent.hasSubmitted && (<>You already submitted a file</>)}
         {submissionContent.canEdit && (
           <SubmissionsOverview submissionUUID={submissionUUID}></SubmissionsOverview>
         )}

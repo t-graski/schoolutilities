@@ -50,7 +50,7 @@ const StyledHeadline = styled("h4", {
 
 export const FileUpload: React.FC<Props> = ({}) => {
   const [files, setFiles] = useState([]);
-  const [filesSent, setFilesSent] = useState(false);
+  const [filesSent, setFilesSent] = useState("");
 
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -70,8 +70,6 @@ export const FileUpload: React.FC<Props> = ({}) => {
     formData.append("elementUUID", router.query.submissionUUID as string);
     formData.append("files", file);
 
-    console.log(router.query.submissionUUID as string);
-
     let request = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/submitExercise`,
       {
@@ -85,7 +83,11 @@ export const FileUpload: React.FC<Props> = ({}) => {
 
     let response = await request.json();
 
-    setFilesSent(true);
+    if (request.status == 200) {
+      setFilesSent("Files successfully uploaded..");
+    } else {
+      setFilesSent("Something went wrong..");
+    }
   }
 
   let fileHtml = files.map((file) => {
@@ -116,7 +118,7 @@ export const FileUpload: React.FC<Props> = ({}) => {
   return (
     <>
       {filesSent ? (
-        <>Files successfully uploaded..</>
+        <>{filesSent}</>
       ) : (
         <section className="container">
           <StyledDropzone {...getRootProps({ className: "dropzone" })}>

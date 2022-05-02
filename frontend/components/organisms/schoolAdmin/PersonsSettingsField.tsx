@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { useRouter } from "next/router";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken, getUserData } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
@@ -108,7 +108,7 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
           }
         );
         let json = await returnValue.json();
-        console.log(json);
+        
         setPersons(json);
       }
     }

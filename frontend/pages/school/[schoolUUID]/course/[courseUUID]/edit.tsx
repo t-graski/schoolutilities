@@ -77,7 +77,7 @@ export default function Features() {
       );
       if (courseResponse) {
         if (courseResponse.status == 200) {
-          const courseData = await courseResponse.json();
+          let courseData = await courseResponse.json();
           setInputData(courseData);
           for (let key in courseData) {
             courseData[key].persons = courseData[key].persons.map((person) => {
@@ -145,8 +145,6 @@ export default function Features() {
       router.push("/auth?tab=login");
     }
   }
-
-  console.log(inputData);
 
   return (
     <>
