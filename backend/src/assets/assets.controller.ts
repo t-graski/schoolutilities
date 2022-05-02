@@ -42,7 +42,7 @@ export class AssetsController {
     return of(
       response
         .set('Content-Type', 'application/octet-stream')
-        .set('Content-Disposition', `attachment; filename="${fileUUID}.png"`)
+        .set('Content-Disposition', `attachment; filename="${fileUUID}"`)
         .status(HttpStatus.OK)
         .sendFile(`${fileUUID}`, { root: process.env.FILE_PATH }),
     );
