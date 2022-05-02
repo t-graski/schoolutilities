@@ -1,8 +1,8 @@
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
   Length,
 } from 'class-validator';
 import { IsCustomUUID } from 'src/decorators/IsCustomUUID';
@@ -12,9 +12,7 @@ export class AddCourseDto {
   @IsNotEmpty()
   @IsString()
   @Length(2, 100)
-  @IsNameAvailable({
-    message: 'Course with name $value already exists in this school.',
-  })
+  @IsNameAvailable()
   name: string;
 
   @IsOptional()
@@ -23,20 +21,17 @@ export class AddCourseDto {
   courseDescription: string;
 
   @IsNotEmpty()
-  @IsCustomUUID({
-    message: '$value is not a valid UUID',
-  })
+  @IsCustomUUID()
   schoolUUID: string;
 
   @IsOptional()
   @IsCustomUUID({
-    message: '$value is not a valid UUID',
     each: true,
   })
   persons: string[];
 
   @IsOptional()
-  @IsString({
+  @IsCustomUUID({
     each: true,
   })
   classes: string[];

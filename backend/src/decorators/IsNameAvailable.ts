@@ -5,11 +5,18 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
+import { findOneByName } from '../course/course.service'
 
 @ValidatorConstraint({ async: true })
 export class IsNameAvailableConstraint implements ValidatorConstraintInterface {
-  validate(name: any, args: ValidationArguments) {
-    return true;
+  async validate(name: string, args: ValidationArguments) {
+    const schoolUUID = args.object["schoolUUID"];
+    const course = await findOneByName(name, schoolUUID);
+    return !course;
+  }
+
+  public defaultMessage(args: ValidationArguments) {
+    return `there is already a course with the name: $value`;
   }
 }
 

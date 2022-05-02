@@ -18,7 +18,9 @@ import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 import * as moment from 'moment';
-import { AddCourseDto } from 'src/DTOs/addCourse';
+import { AddCourseDto } from 'src/dto/addCourse';
+import { CourseDto } from 'src/dto/course';
+import { RemoveCourseDto } from 'src/dto/removeCourse';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -31,7 +33,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
@@ -46,21 +48,11 @@ export class CourseService {
         message: err.message,
       };
     }
+
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
     const personId = await (
       await this.authService.getPersonIdByUUID(personUUID)
     ).personId;
-
-    const isNotAvailable = await prisma.courses.findFirst({
-      where: {
-        name,
-        schoolId: Number(schoolId),
-      },
-    });
-
-    if (isNotAvailable) {
-      return RETURN_DATA.ALREADY_EXISTS;
-    }
 
     try {
       const courseData = await prisma.courses.create({
@@ -141,18 +133,14 @@ export class CourseService {
     }
   }
 
-  async removeCourse(body: RemoveCourse): Promise<ReturnMessage> {
-    const { courseUUID } = body;
+  async removeCourse(payload: RemoveCourseDto, request): Promise<ReturnMessage> {
+    const { courseUUID } = payload;
 
-    if (!validator.isUUID(courseUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const courseId = await this.databaseService;
+    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
 
     const course = await prisma.courses.findUnique({
       where: {
-        courseId: Number(courseId),
+        courseId,
       },
     });
 
@@ -814,7 +802,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1233,5 +1221,49 @@ export class CourseService {
       status: RETURN_DATA.SUCCESS.status,
       data: userSubmissions,
     };
+  }
+
+}
+
+export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
+  try {
+    const course = await prisma.courses.findFirst({
+      where: {
+        courseUUID,
+      },
+    });
+    return course;
+  } catch {
+    return null;
+  }
+
+}
+export async function findOneByName(courseName: string, schoolUUID): Promise<CourseDto> {
+  try {
+    const courseUUID = await prisma.schools.findFirst({
+      where: {
+        schoolUUID
+      },
+      select: {
+        schoolId: true,
+        courses: {
+          where: {
+            name: courseName
+          },
+          select: {
+            courseId: true,
+            schoolId: true,
+            courseUUID: true,
+            name: true,
+            courseDescription: true,
+            creationDate: true,
+            personCreationId: true,
+          }
+        }
+      }
+    });
+    return courseUUID.courses[0] ? courseUUID.courses[0] : null;
+  } catch {
+    return null;
   }
 }

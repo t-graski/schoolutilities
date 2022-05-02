@@ -10,10 +10,9 @@ import {
   Delete,
   Put,
   Param,
-  UploadedFiles,
   Body,
 } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { editFileName, fileFilter } from 'src/misc/fileUpload';
@@ -21,14 +20,15 @@ import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
-import { AddCourseDto } from 'src/DTOs/addCourse';
+import { AddCourseDto } from 'src/dto/addCourse';
+import { RemoveCourseDto } from 'src/dto/removeCourse';
 
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -47,10 +47,8 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Delete('/removeCourse')
-  async removeCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.removeCourse(
-      request.body?.courseId,
-    );
+  async removeCourse(@Body() removeCourse: RemoveCourseDto, @Req() request, @Res() response) {
+    const result = await this.courseService.removeCourse(removeCourse, request);
     return response.status(result.status).json(result?.message);
   }
 

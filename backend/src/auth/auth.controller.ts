@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { request } from 'https';
-import { LoginUserDto } from 'src/DTOs/loginUser';
+import { LoginUserDto } from 'src/dto/loginUser';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
