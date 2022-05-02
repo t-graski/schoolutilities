@@ -12,19 +12,21 @@ type Props = {
 const InputFieldLayout = styled("div", {
   display: "flex",
   alignItems: "center",
-  background: "$backgroundTertiary",
   width: "100%",
   borderRadius: "15px",
   border: "none",
   padding: "10.3px 20px",
   gap: "20px",
 
+  background: "$backgroundTertiary",
+
   variants: {
     editable: {
       true: {},
       false: {
-        background: "transparent",
         border: "none",
+
+        background: "transparent",
       },
     },
   },
@@ -34,6 +36,7 @@ const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
+  
   color: "$fontPrimary",
 });
 

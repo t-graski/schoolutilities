@@ -2,7 +2,7 @@ import { useState } from "react";
 import CourseText from "./CourseText";
 import CourseFile from "./CourseFile";
 import { Headline } from "../Headline";
-import { InputField } from "../InputField";
+import { InputField } from "../input/InputField";
 import moment from "moment";
 
 export function HeadlineDetailView({

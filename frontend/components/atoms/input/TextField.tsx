@@ -13,18 +13,21 @@ type Props = {
 
 const StyledTextArea = styled("textarea", {
   width: "100%",
-  color: "$fontPrimary",
+  
   background: "transparent",
-  fontSize: "1.2rem",
-  lineHeight: "1.5rem",
   border: "none",
-  outline: "none",
   padding: "0.5rem 0",
   minHeight: "50px",
   maxHeight: "50vh",
   borderBottom: "solid 1px transparent",
-  fontWeight: "bold",
+
+  color: "$fontPrimary",
   resize: "vertical",
+  fontWeight: "bold",
+  outline: "none",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+  
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },

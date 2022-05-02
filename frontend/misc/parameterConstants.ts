@@ -77,3 +77,31 @@ export const ID_STARTERS = {
   TIMEZONES: 7,
   EMAIL: 8,
 };
+
+export const PASSWORD_VALIDATION_MESSAGES = [
+  {
+    regex: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
+    errorMessage: "one lowercase and uppercase letter",
+    validIconName: "SvgCheckMark",
+    invalidIconName: "SvgExclamination",
+  },
+  {
+    regex: /.*[0-9].*/,
+    errorMessage: "one number",
+    validIconName: "SvgCheckMark",
+    invalidIconName: "SvgExclamination",
+  },
+  {
+    regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+    errorMessage:
+      "one special character",
+    validIconName: "SvgCheckMark",
+    invalidIconName: "SvgExclamination",
+  },
+  {
+    regex: /.{8,}/,
+    errorMessage: "8 or more letters",
+    validIconName: "SvgCheckMark",
+    invalidIconName: "SvgExclamination",
+  },
+];

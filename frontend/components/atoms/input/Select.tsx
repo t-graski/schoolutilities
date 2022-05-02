@@ -16,16 +16,18 @@ type Props = {
 };
 
 const StyledSelectField = styled("select", {
-  background: "$backgroundTertiary",
   width: "100%",
+  border: "none",
+  padding: "0.5rem 0",
+  borderBottom: "solid 1px transparent",
+
+  fontWeight: "bold",
+  background: "$backgroundTertiary",
+  outline: "none",
   color: "$fontPrimary",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
-  border: "none",
-  outline: "none",
-  padding: "0.5rem 0",
-  borderBottom: "solid 1px transparent",
-  fontWeight: "bold",
+
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },

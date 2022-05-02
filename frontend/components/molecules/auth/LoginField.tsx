@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { getAccessToken, logout } from "../../../misc/authHelper";
 import { regex } from "../../../misc/regex";
+import { PasswordInput } from "../../atoms/input/PasswordInput";
+import { PASSWORD_VALIDATION_MESSAGES } from "../../../misc/parameterConstants";
 
 type Props = {};
 
@@ -148,43 +150,16 @@ export const LoginField: React.FC<Props> = ({}) => {
             regex={regex.email}
             setValidInput={setEmailValid}
           ></InputField>
-          <InputField
+          <PasswordInput
             label="Password"
-            inputType="password"
             value={password}
             onChange={setPassword}
             iconName="SvgPassword"
             required={true}
-            validationOptions={[
-              {
-                regex: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
-                errorMessage: "At least one lowercase and uppercase letter",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /.*[0-9].*/,
-                errorMessage: "At least one number",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
-                errorMessage:
-                  "At least one special character (e.g. !@#$%^&*()_+-=[]{};':'|,.<>/)",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /.{8,}/,
-                errorMessage: "8 or more letters",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-            ]}
-            isHoverCardVisible={false}
+            validationOptions={PASSWORD_VALIDATION_MESSAGES}
             setValidInput={setPasswordValid}
-          ></InputField>
+            showPasswordStrength={false}
+          ></PasswordInput>
           <LoginButtonLayout>
             <Button
               backgroundColor="primary"

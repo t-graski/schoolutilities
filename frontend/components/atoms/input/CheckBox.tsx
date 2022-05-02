@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "../../stitches.config";
+import { styled } from "../../../stitches.config";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
 
@@ -15,16 +15,18 @@ const FieldLayout = styled("div", {
 });
 
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
-  all: "unset",
-  backgroundColor: "$backgroundTertiary",
   width: 25,
   height: 25,
-  borderRadius: 4,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  borderRadius: 4,
+
   cursor: "pointer",
   boxShadow: `0 2px 10px $backgroundSecondary`,
+  backgroundColor: "$backgroundTertiary",
+  all: "unset",
+
   "&:hover": { backgroundColor: "$backgroundTertiary" },
   "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
 });

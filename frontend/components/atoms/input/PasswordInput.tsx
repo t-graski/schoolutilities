@@ -24,40 +24,29 @@ type Props = {
   }[];
   min?: string;
   max?: string;
+  showPasswordStrength?: boolean;
 };
 
 const StyledInputField = styled("input", {
-  background: "$backgroundTertiary",
   display: "inline-block",
   width: "100%",
-  color: "$fontPrimary",
-  fontSize: "1.2rem",
-  lineHeight: "1.5rem",
   border: "none",
-  outline: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
+
   fontFamily: "$fontPrimary",
   fontWeight: "bold",
+  background: "$backgroundTertiary",
+  outline: "none",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+  color: "$fontPrimary",
+
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },
+
   variants: {
-    inputType: {
-      text: {},
-      password: {},
-      date: {},
-      email: {},
-      checkbox: {
-        width: "fit-content",
-        margin: "0 20px 0 0",
-      },
-      select: {},
-      "search-select": {},
-      textfield: {},
-      number: {},
-      "datetime-local": {},
-    },
     editable: {
       true: {},
       false: {
@@ -90,14 +79,16 @@ const StyledLabel = styled("label", {
 });
 
 const ErrorMessage = styled("span", {
-  color: "red",
   paddingLeft: "10px",
+
+  color: "red",
 });
 
 const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
+  
   color: "$fontPrimary",
 
   variants: {
@@ -109,7 +100,7 @@ const ImageLayout = styled("div", {
   },
 });
 
-export const InputField: React.FC<Props> = ({
+export const PasswordInput: React.FC<Props> = ({
   value,
   onChange,
   iconName,
@@ -121,6 +112,7 @@ export const InputField: React.FC<Props> = ({
   setValidInput,
   errorMessage = "",
   validationOptions,
+  showPasswordStrength = true,
   min,
   max,
 }) => {
@@ -147,15 +139,37 @@ export const InputField: React.FC<Props> = ({
       >
         <StyledLabel>
           <StyledInputField
-            type={"password"}
+            type={showPassword ? "text" : "password"}
             value={value}
             name={label}
             placeholder={label}
             editable={editable}
             readOnly={!editable}
             size={size}
-            onChange={onChange}
-            inputType={"password"}
+            onChange={(e) => {
+              onChange(e.target.value);
+              if (setValidInput) {
+                setValidInput(false);
+              }
+              if (validationOptions) {
+                const validationResults = validationOptions.map((option) => {
+                  const { regex, validIconName, invalidIconName } = option;
+                  const isValid = regex.test(e.target.value);
+                  return { ...option, valid: isValid };
+                });
+                setCurrentValidationResults(validationResults);
+              }
+            }}
+            onBlur={(e) => {
+              if (validationOptions) {
+                const validationResults = validationOptions.map((option) => {
+                  const { regex, validIconName, invalidIconName } = option;
+                  const isValid = regex.test(e.target.value);
+                  return { ...option, valid: isValid };
+                });
+                setCurrentValidationResults(validationResults);
+              }
+            }}
             {...(required && { required: true })}
             {...(min && { min })}
             {...(max && { max })}
@@ -182,7 +196,7 @@ export const InputField: React.FC<Props> = ({
             <SvgIcon iconName="SvgEye" />
           </ImageLayout>
         )}
-        {validationOptions && (
+        {validationOptions && showPasswordStrength && (
           <PasswordStrengthPopOver password={value} setValidInput={setValidInput} validationOptions={validationOptions}></PasswordStrengthPopOver>
         )}
       </InputFieldCore>

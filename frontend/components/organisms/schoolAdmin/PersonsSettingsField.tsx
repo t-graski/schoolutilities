@@ -5,7 +5,7 @@ import { getAccessToken, getUserData } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { regex } from "../../../misc/regex";
 import Skeleton from "react-loading-skeleton";
 

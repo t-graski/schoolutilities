@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getAccessToken } from "../../../misc/authHelper";
 import { Button } from "../../atoms/Button";
 import { Separator } from "../../atoms/Separator";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { MarkdownEditor } from "../cockpit/MarkdownEditor";
 
 type Props = {};

@@ -1,10 +1,13 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";
 import { SvgIcon } from "../../atoms/SvgIcon";
 import { regex } from "../../../misc/regex";
+import { PasswordInput } from "../../atoms/input/PasswordInput";
+import { CheckBox } from "../../atoms/input/CheckBox";
+import { PASSWORD_VALIDATION_MESSAGES } from "../../../misc/parameterConstants";
 
 type Props = {};
 
@@ -193,71 +196,28 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             setValidInput={setEmailValid}
             errorMessage="Please enter a valid email"
           ></InputField>
-          <InputField
+          <PasswordInput
             label="Password"
-            inputType="password"
             value={password}
             onChange={setPassword}
             iconName="SvgPassword"
             required={true}
-            validationOptions={[
-              {
-                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
-                errorMessage: "one uppercase and lowercase letter",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /^(?=.*[0-9])(?=.*\W).*$/,
-                errorMessage: "one number and special character",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /(?=.{8,}$)/,
-                errorMessage: "8 letters",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-            ]}
+            validationOptions={PASSWORD_VALIDATION_MESSAGES}
             setValidInput={setPasswordValid}
             errorMessage="Please enter a valid password"
-          ></InputField>
-          <InputField
+          ></PasswordInput>
+          <PasswordInput
             label="Password Confirmation"
-            inputType="password"
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
             iconName="SvgPassword"
             required={true}
-            validationOptions={[
-              {
-                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
-                errorMessage: "At least one uppercase and lowercase letter",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /^(?=.*[0-9])(?=.*\W).*$/,
-                errorMessage: "At least one number and special character",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /(?=.{8,}$)/,
-                errorMessage: "8 or more letters",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-            ]}
+            validationOptions={PASSWORD_VALIDATION_MESSAGES}
             setValidInput={setPasswordConfirmationValid}
             errorMessage="Please enter a valid password"
-          ></InputField>
-          <InputField
-            inputType="checkbox"
+          ></PasswordInput>
+          <CheckBox
             onChange={setTermsAccepted}
-            iconName=""
-            required={true}
           >
             <StyledAreement>
               I agree to all{" "}
@@ -265,7 +225,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
                 Terms & Conditions
               </StyledLInk>
             </StyledAreement>
-          </InputField>
+          </CheckBox>
           <Button
             backgroundColor="primary"
             color="primary"

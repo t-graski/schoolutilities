@@ -2,49 +2,6 @@ import React from "react";
 import { styled, styles } from "../../../stitches.config";
 import { SvgIcon } from "../SvgIcon";
 import Select from "react-select";
-import { blackA } from "@radix-ui/colors";
-import * as ProgressPrimitive from "@radix-ui/react-progress";
-
-const StyledProgress = styled(ProgressPrimitive.Root, {
-  position: "relative",
-  overflow: "hidden",
-  background: blackA.blackA9,
-  borderRadius: "99999px",
-  width: "100%",
-  height: 15,
-});
-
-const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {
-  backgroundColor: "$specialSecondary",
-  height: "100%",
-  transition: "width 660ms cubic-bezier(0.65, 0, 0.35, 1)",
-
-  variants: {
-    color: {
-      weak: {
-        backgroundColor: "red",
-      },
-      good: {
-        backgroundColor: "orange",
-      },
-      strong: {
-        backgroundColor: "lightgreen",
-      },
-      "very-strong": {
-        backgroundColor: "green",
-      },
-      overkill: {
-        // add background color with linear gradient in rainbows
-        background:
-          "linear-gradient(to right, #ff0080, #ff8c00, #ffe100, #00ff80, #0080ff, #8c00ff, #ff0080)",
-      },
-    },
-  },
-});
-
-// Exports
-export const Progress = StyledProgress;
-export const ProgressIndicator = StyledProgressIndicator;
 
 type Props = {
   selectOptions?: {
@@ -83,6 +40,7 @@ const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
+
   color: "$fontPrimary",
 
   variants: {
@@ -96,15 +54,17 @@ const ImageLayout = styled("div", {
 
 const StyledSelect = styled(Select, {
   width: "100%",
-  color: "$fontPrimary",
-  background: "transparent",
-  fontSize: "1.2rem",
-  lineHeight: "1.5rem",
   border: "none",
-  outline: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
+
   fontWeight: "bold",
+  color: "$fontPrimary",
+  background: "transparent",
+  outline: "none",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },

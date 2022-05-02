@@ -8,17 +8,20 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 
 const StyledProgress = styled(ProgressPrimitive.Root, {
   position: "relative",
+
   overflow: "hidden",
-  background: blackA.blackA9,
   borderRadius: "99999px",
   width: "100%",
   height: 15,
+
+  background: blackA.blackA9,
 });
 
 const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {
-  backgroundColor: "$specialSecondary",
   height: "100%",
-  transition: "width 660ms cubic-bezier(0.65, 0, 0.35, 1)",
+
+  transition: "width 660ms cubic-bezier(0.65, 0, 0.35, 1)",  
+  backgroundColor: "$specialSecondary",
 
   variants: {
     color: {
@@ -35,7 +38,6 @@ const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {
         backgroundColor: "green",
       },
       overkill: {
-        // add background color with linear gradient in rainbows
         background:
           "linear-gradient(to right, #ff0080, #ff8c00, #ffe100, #00ff80, #0080ff, #8c00ff, #ff0080)",
       },

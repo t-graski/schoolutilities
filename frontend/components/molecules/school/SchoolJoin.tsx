@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { styled } from "../../../stitches.config";
 import { getAccessToken } from "../../../misc/authHelper";
 import { useRouter } from "next/router";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import { regex } from "../../../misc/regex";
 

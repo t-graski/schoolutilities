@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";

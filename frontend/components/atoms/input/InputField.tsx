@@ -1,7 +1,7 @@
 import React from "react";
-import { styled } from "../../stitches.config";
+import { styled } from "../../../stitches.config";
 import type * as Stitches from "@stitches/react";
-import { SvgIcon } from "./SvgIcon";
+import { SvgIcon } from "../SvgIcon";
 
 type Props = {
   inputType: "text" | "date" | "email" | "number" | "datetime-local";
@@ -21,21 +21,24 @@ type Props = {
 };
 
 const StyledInputField = styled("input", {
-  background: "$backgroundTertiary",
   display: "inline-block",
   width: "100%",
-  color: "$fontPrimary",
-  fontSize: "1.2rem",
-  lineHeight: "1.5rem",
   border: "none",
-  outline: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
+
   fontFamily: "$fontPrimary",
   fontWeight: "bold",
+  background: "$backgroundTertiary",
+  outline: "none",
+  fontSize: "1.2rem",
+  lineHeight: "1.5rem",
+  color: "$fontPrimary",
+
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },
+
   variants: {
     editable: {
       true: {},
@@ -66,19 +69,21 @@ const StyledInputField = styled("input", {
 const InputFieldLayout = styled("div", {
   display: "flex",
   alignItems: "center",
-  background: "$backgroundTertiary",
   width: "100%",
   borderRadius: "15px",
   border: "none",
   padding: "10.3px 20px",
   gap: "20px",
 
+  background: "$backgroundTertiary",
+
   variants: {
     editable: {
       true: {},
       false: {
-        background: "transparent",
         border: "none",
+        
+        background: "transparent",
       },
     },
   },
@@ -90,14 +95,16 @@ const StyledLabel = styled("label", {
 });
 
 const ErrorMessage = styled("span", {
-  color: "red",
   paddingLeft: "10px",
+
+  color: "red",
 });
 
 const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
+
   color: "$fontPrimary",
 
   variants: {
@@ -118,6 +125,7 @@ const Required = styled("div", {
 export const InputField: React.FC<Props> = ({
   inputType,
   value,
+  onChange,
   iconName,
   editable = true,
   required = false,
@@ -146,6 +154,7 @@ export const InputField: React.FC<Props> = ({
         setIsInputValid(inputValueValid);
       }
     }
+    onChange(event.target.value);
   }
 
   return (

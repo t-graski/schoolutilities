@@ -4,7 +4,7 @@ import { Spacer } from "../../atoms/Spacer";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { regex } from "../../../misc/regex";
 import { Button } from "../../atoms/Button";
 

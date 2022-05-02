@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { getAccessToken } from "../../../misc/authHelper";
 import { Button } from "../../atoms/Button";
 import { Headline } from "../../atoms/Headline";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { SideDashboardBar } from "../SideDashboardBar";

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import { regex } from "../../../misc/regex";
 import { Headline } from "../../atoms/Headline";

@@ -8,7 +8,7 @@ import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../../misc/authHelper";
-import { InputField } from "../../../../../components/atoms/InputField";
+import { InputField } from "../../../../../components/atoms/input/InputField";
 import { Button } from "../../../../../components/atoms/Button";
 import { regex } from "../../../../../misc/regex";
 
