@@ -37,29 +37,6 @@ const NavLinksLayout = styled("div", {
   },
 });
 
-const StyledLink = styled("a", {
-  color: "$fontPrimary",
-  textDecoration: "none",
-  cursor: "pointer",
-  fontSize: "1.7rem",
-  paddingBottom: "5px",
-  transition: "all 200ms ease-in-out",
-  "&:hover": {
-    color: "$specialPrimary",
-  },
-
-  variants: {
-    marked: {
-      true: {
-        borderBottom: "2px solid $fontPrimary",
-      },
-      false: {
-        borderBottom: "none",
-      },
-    },
-  },
-});
-
 const SpecialLinkLayout = styled("div", {
   padding: "20px",
   display: "flex",
@@ -85,9 +62,7 @@ const StyledOpenButton = styled("button", {
   },
 });
 
-export const Navbar: React.FC<Props> = ({ }) => {
-  const router = useRouter();
-
+export const Navbar: React.FC<Props> = ({}) => {
   const [mobileVisible, setMobileVisible] = useState(false);
 
   return (

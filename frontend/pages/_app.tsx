@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { globalCss, lightTheme } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
-import { ThemeProvider } from "next-themes";
 import AOS from "aos";
 import "../misc/skeleton.css";
 import "../misc/sunEditor.css";
@@ -38,6 +37,7 @@ const globalStyles = globalCss({
 import "aos/dist/aos.css";
 import { SkeletonTheme } from "react-loading-skeleton";
 import Script from "next/script";
+import { ThemeProvider } from "next-themes";
 
 function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -60,7 +60,6 @@ function App({ Component, pageProps }: AppProps) {
         highlightColor="var(--colors-skeletonSecondary)"
         duration={1.3}
       >
-        {/* <NextUIProvider> */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
@@ -86,7 +85,6 @@ function App({ Component, pageProps }: AppProps) {
           src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
         ></Script>
         <Component {...pageProps} router={router} />
-        {/* </NextUIProvider> */}
       </SkeletonTheme>
     </ThemeProvider>
   );

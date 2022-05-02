@@ -562,8 +562,6 @@ export class CourseService {
 
     const courseData = {} as any;
 
-    courseData.canEdit = isTeacherOrHigher;
-
     try {
       const course = await prisma.courses.findUnique({
         where: {
@@ -656,6 +654,7 @@ export class CourseService {
         },
         persons: personsData,
         classes: classesData,
+        canEdit: isTeacherOrHigher,
       };
 
       courseData[courseDataItem.courseUUID] = courseDataItem;

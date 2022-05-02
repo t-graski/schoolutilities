@@ -23,7 +23,6 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "pages/help/articles"
   ],
   "exclude": [
     "node_modules"

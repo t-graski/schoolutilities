@@ -102,7 +102,6 @@ export const DownloadList: React.FC<Props> = ({ entries, entryProperties }) => {
                 {entry[entryProperties.downloadLink] && (
                   <SvgLink
                     href={entry[entryProperties.downloadLink]}
-                    download={entry[entryProperties.downloadName]}
                     target="_blank"
                   >
                     <SvgIconLayout>

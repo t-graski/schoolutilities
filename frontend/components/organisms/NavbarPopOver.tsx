@@ -22,7 +22,6 @@ const PopOverLayout = styled("div", {
   width: "100vw",
   height: "100vh",
   backgroundColor: "$backgroundSecondary",
-  display: "flex",
   alignItems: "center",
   flexDirection: "column",
   padding: "60px 10px",
@@ -37,6 +36,10 @@ const PopOverLayout = styled("div", {
         display: "none",
       },
     },
+  },
+
+  defaultVariants: {
+    visible: "false",
   },
 });
 
