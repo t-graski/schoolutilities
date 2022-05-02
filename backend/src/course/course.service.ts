@@ -18,6 +18,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 import * as moment from 'moment';
+import { AddCourseDto } from 'src/DTOs/addCourse';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -31,21 +32,8 @@ export class CourseService {
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
   ) {}
-  async addCourse(request): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } =
-      request.body;
-
-    if (
-      !name ||
-      !courseDescription ||
-      !schoolUUID ||
-      !persons ||
-      !classes ||
-      !validator.isLength(name, LENGTHS.COURSE_NAME) ||
-      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
+  async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
+    const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
     let personUUID;
 

@@ -11,6 +11,7 @@ import {
   Put,
   Param,
   UploadedFiles,
+  Body,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -20,6 +21,7 @@ import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
+import { AddCourseDto } from 'src/DTOs/addCourse';
 
 @Controller('api/course')
 export class CourseController {
@@ -31,8 +33,12 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Post('/addCourse')
-  async addCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.addCourse(request);
+  async addCourse(
+    @Body() addCourse: AddCourseDto,
+    @Req() request,
+    @Res() response,
+  ) {
+    const result = await this.courseService.addCourse(addCourse, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
