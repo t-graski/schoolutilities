@@ -1,8 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
   UpdateCourse,
-  RemoveCourse,
-  RemoveUser,
   ReturnMessage,
 } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
@@ -33,7 +31,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
@@ -49,10 +47,10 @@ export class CourseService {
       };
     }
 
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-    const personId = await (
-      await this.authService.getPersonIdByUUID(personUUID)
-    ).personId;
+    const [schoolId, personId] = await Promise.all([
+      this.helper.getSchoolIdByUUID(schoolUUID),
+      this.helper.getUserIdByUUID(personUUID),
+    ]);
 
     try {
       const courseData = await prisma.courses.create({
@@ -63,6 +61,11 @@ export class CourseService {
           schoolId: Number(schoolId),
           subjectId: 0,
           personCreationId: Number(personId),
+          coursePersons: {
+            create: {
+              personId,
+            },
+          },
         },
       });
 
@@ -95,10 +98,6 @@ export class CourseService {
 
       if (classes) {
         for (const schoolClass of classes) {
-          if (!validator.isUUID(schoolClass.slice(1), 4)) {
-            return RETURN_DATA.INVALID_INPUT;
-          }
-
           const schoolId = await this.databaseService.getClassIdByUUID(
             schoolClass,
           );
@@ -123,6 +122,7 @@ export class CourseService {
       delete courseData.courseId;
       delete courseData.schoolId;
       delete courseData.subjectId;
+      delete courseData.personCreationId;
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -133,7 +133,10 @@ export class CourseService {
     }
   }
 
-  async removeCourse(payload: RemoveCourseDto, request): Promise<ReturnMessage> {
+  async removeCourse(
+    payload: RemoveCourseDto,
+    request,
+  ): Promise<ReturnMessage> {
     const { courseUUID } = payload;
 
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
@@ -802,7 +805,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                        currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1222,7 +1225,6 @@ export class CourseService {
       data: userSubmissions,
     };
   }
-
 }
 
 export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
@@ -1236,19 +1238,21 @@ export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
   } catch {
     return null;
   }
-
 }
-export async function findOneByName(courseName: string, schoolUUID): Promise<CourseDto> {
+export async function findOneByName(
+  courseName: string,
+  schoolUUID,
+): Promise<CourseDto> {
   try {
     const courseUUID = await prisma.schools.findFirst({
       where: {
-        schoolUUID
+        schoolUUID,
       },
       select: {
         schoolId: true,
         courses: {
           where: {
-            name: courseName
+            name: courseName,
           },
           select: {
             courseId: true,
@@ -1258,9 +1262,9 @@ export async function findOneByName(courseName: string, schoolUUID): Promise<Cou
             courseDescription: true,
             creationDate: true,
             personCreationId: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
     return courseUUID.courses[0] ? courseUUID.courses[0] : null;
   } catch {
