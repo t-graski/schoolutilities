@@ -23,6 +23,11 @@ export default function Article() {
     <>
       <Head>
         <title>Patch Notes - SchoolUtilities</title>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7476966411807562"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
@@ -57,9 +62,10 @@ export default function Article() {
               <li>Text</li>
             </ArticleList>
             You can create those elements by opening the menu next to the course
-            title and clicking the &apos;Create Element&apos; button. Now you find
-            yourself in the &apos;Course-Editing-Mode&apos;, in which you can create,
-            delete and modify elements as well as drag them around as you wish.
+            title and clicking the &apos;Create Element&apos; button. Now you
+            find yourself in the &apos;Course-Editing-Mode&apos;, in which you
+            can create, delete and modify elements as well as drag them around
+            as you wish.
           </p>
           <br />
           <Headline
