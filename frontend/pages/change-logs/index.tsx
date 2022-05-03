@@ -11,6 +11,11 @@ export default function RegisterApproved() {
     <>
       <Head>
         <title>Change-Logs - SchoolUtilities</title>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7476966411807562"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>

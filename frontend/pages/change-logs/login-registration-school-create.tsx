@@ -23,7 +23,12 @@ export default function Article() {
   return (
     <>
       <Head>
-      <title>Patch Notes - SchoolUtilities</title>
+        <title>Patch Notes - SchoolUtilities</title>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7476966411807562"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
@@ -52,8 +57,8 @@ export default function Article() {
           </ArticleList>
           <br />
           <p>
-            If you don&apos;t want to miss out on any previous Patch Logs, you can
-            find them{" "}
+            If you don&apos;t want to miss out on any previous Patch Logs, you
+            can find them{" "}
             <Link href="/patch-logs" passHref>
               <StyledLink>here</StyledLink>
             </Link>
@@ -117,7 +122,10 @@ export default function Article() {
           <p>
             We also have our own Discord Bot, which you can invite to your
             discord server{" "}
-            <Link href="https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot" passHref>
+            <Link
+              href="https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot"
+              passHref
+            >
               <StyledLink>here</StyledLink>
             </Link>
             .<br />
