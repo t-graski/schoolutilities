@@ -5,7 +5,9 @@ import {
   IsString,
   Length,
 } from 'class-validator';
+import { IsArrayUnique } from 'src/decorators/IsArrayUnique';
 import { IsCustomUUID } from 'src/decorators/IsCustomUUID';
+import { IsUserUUIDExist } from 'src/decorators/IsUserUUIDExist';
 import { IsNameAvailable } from '../decorators/IsNameAvailable';
 
 export class AddCourseDto {
@@ -25,12 +27,17 @@ export class AddCourseDto {
   schoolUUID: string;
 
   @IsOptional()
+  @IsArrayUnique()
   @IsCustomUUID({
+    each: true,
+  })
+  @IsUserUUIDExist({
     each: true,
   })
   persons: string[];
 
   @IsOptional()
+  @IsArrayUnique()
   @IsCustomUUID({
     each: true,
   })

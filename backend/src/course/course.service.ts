@@ -135,18 +135,7 @@ export class CourseService {
 
   async removeCourse(payload: RemoveCourseDto, request): Promise<ReturnMessage> {
     const { courseUUID } = payload;
-
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-
-    const course = await prisma.courses.findUnique({
-      where: {
-        courseId,
-      },
-    });
-
-    if (!course) {
-      return RETURN_DATA.NOT_FOUND;
-    }
 
     try {
       await prisma.courses.delete({
