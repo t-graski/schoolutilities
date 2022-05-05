@@ -17,11 +17,6 @@ export default function ArticleOverview() {
     <SiteLayout>
       <Head>
         <title>Headline</title>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7476966411807562"
-          crossOrigin="anonymous"
-        ></script>
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
