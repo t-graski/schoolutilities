@@ -22,6 +22,11 @@ export default class Document extends NextDocument {
             }}
           ></script>
           <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7476966411807562"
+            crossOrigin="anonymous"
+          ></script>
+          <script
             type="text/javascript"
             src="https://cdn.cookielaw.org/consent/7d50b473-ca67-4ccc-9509-8fc4008d70b7-test/OtAutoBlock.js"
             async
