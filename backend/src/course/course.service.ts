@@ -1,8 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import {
-  UpdateCourse,
-  ReturnMessage,
-} from 'src/types/Course';
+import { UpdateCourse, ReturnMessage } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import {
@@ -19,6 +16,7 @@ import * as moment from 'moment';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { CourseDto } from 'src/dto/course';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
+import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -1224,6 +1222,19 @@ export class CourseService {
       status: RETURN_DATA.SUCCESS.status,
       data: userSubmissions,
     };
+  }
+
+  async getEvents(payload: GetEventsDto, request): Promise<ReturnMessage> {
+    const { schoolUUID, days } = payload;
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+
+    await prisma.schools.findFirst({
+      where: {
+        schoolUUID,
+      },
+    });
+    return RETURN_DATA.SUCCESS;
   }
 }
 

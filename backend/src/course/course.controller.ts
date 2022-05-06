@@ -22,13 +22,14 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
+import { GetEventsDto } from 'src/dto/getEvents';
 
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -47,7 +48,11 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Delete('/removeCourse')
-  async removeCourse(@Body() removeCourse: RemoveCourseDto, @Req() request, @Res() response) {
+  async removeCourse(
+    @Body() removeCourse: RemoveCourseDto,
+    @Req() request,
+    @Res() response,
+  ) {
     const result = await this.courseService.removeCourse(removeCourse, request);
     return response.status(result.status).json(result?.message);
   }
@@ -170,6 +175,20 @@ export class CourseController {
       request,
       params.elementUUID,
     );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Student)
+  @Get('/events/:schoolUUID/:days')
+  async getEvents(
+    @Param() params: GetEventsDto,
+    @Req() request,
+    @Res() response,
+  ) {
+    const result = await this.courseService.getEvents(params, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
