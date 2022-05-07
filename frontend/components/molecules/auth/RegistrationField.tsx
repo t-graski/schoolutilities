@@ -3,11 +3,12 @@ import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";
-import { SvgIcon } from "../../atoms/SvgIcon";
 import { regex } from "../../../utils/regex";
 import { PasswordInput } from "../../atoms/input/PasswordInput";
 import { CheckBox } from "../../atoms/input/CheckBox";
 import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
+import SvgQuality from "../../atoms/svg/SvgQuality";
+import SvgWarning from "../../atoms/svg/SvgWarning";
 
 type Props = {};
 
@@ -83,7 +84,7 @@ const StyledLink = styled("a", {
   },
 });
 
-export const RegistrationField: React.FC<Props> = ({}) => {
+export const RegistrationField: React.FC<Props> = ({ }) => {
   const [firstName, setFirstName] = React.useState("");
   const [firstNameValid, setFirstNameValid] = React.useState(false);
   const [lastName, setLastName] = React.useState("");
@@ -252,9 +253,13 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           <SuccessLayout>
             <StyledHeadline>{signUpInfo}</StyledHeadline>
             <SuccessImageLayout color={signUpWorking ? "success" : "error"}>
-              <SvgIcon
-                iconName={signUpWorking ? "SvgQuality" : "SvgWarning"}
-              ></SvgIcon>
+              {
+                signUpWorking ? (
+                  <SvgQuality />
+                ) : (
+                  <SvgWarning />
+                )
+              }
             </SuccessImageLayout>
             <SuccessDescription>
               {signUpWorking

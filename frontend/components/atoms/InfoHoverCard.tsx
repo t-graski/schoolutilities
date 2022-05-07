@@ -1,7 +1,7 @@
 import React from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
-import { SvgIcon } from "./SvgIcon";
+import SvgInfo from "./svg/SvgInfo";
 
 type Props = {};
 
@@ -61,17 +61,17 @@ const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
-  
+
   color: "$fontPrimary",
   cursor: "pointer",
 });
 
-export const InfoHoverCard: React.FC<Props> = ({children}) => {
+export const InfoHoverCard: React.FC<Props> = ({ children }) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
         <ImageLayout>
-          <SvgIcon iconName="SvgInfo" />
+          <SvgInfo />
         </ImageLayout>
       </HoverCardTrigger>
       <HoverCardContent sideOffset={5}>

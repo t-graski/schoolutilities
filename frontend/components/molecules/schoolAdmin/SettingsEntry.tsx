@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import Image from "next/image";
-import { SvgIcon } from "../../atoms/SvgIcon";
+import SvgDelete from "../../atoms/svg/SvgDelete";
 
 type Props = {
   editFunction?: Function;
@@ -89,7 +89,7 @@ export const SettingsEntry: React.FC<Props> = ({
               deleteFunction();
             }}
           >
-            <SvgIcon iconName="SvgDelete"></SvgIcon>
+            <SvgDelete />
           </SettingsEntryDeleteIcon>
         </SettingsEntryIcons>
       </SettingsEntryLayout>

@@ -5,10 +5,10 @@ import {
   ChevronRightIcon,
 } from "@radix-ui/react-icons";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { SvgIcon } from "../atoms/SvgIcon";
 import { useRouter } from "next/router";
 import { getAccessToken, getUserData, logout } from "../../utils/authHelper";
 import { useTheme } from "next-themes";
+import SvgRoundUser from "../atoms/svg/SvgRoundUser";
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -214,8 +214,7 @@ export const UserMenu = () => {
         setSchools(fetchedSchools);
         if (router.query.schoolUUID) {
           response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${
-              router.query.schoolUUID as string
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${router.query.schoolUUID as string
             }`,
             {
               method: "GET",
@@ -239,7 +238,7 @@ export const UserMenu = () => {
         <DropdownMenuTrigger asChild>
           <UserMenuLayout>
             <IconLayout>
-              <SvgIcon iconName="SvgRoundUser" />
+              <SvgRoundUser />
             </IconLayout>
             <StyledUserName>
               {userInfo && userInfo.firstName ? userInfo.firstName : "Profile"}
@@ -281,8 +280,7 @@ export const UserMenu = () => {
                         key={course.courseUUID}
                         onClick={() => {
                           router.push(
-                            `/school/${
-                              router.query.schoolUUID as string
+                            `/school/${router.query.schoolUUID as string
                             }/course/${course.courseUUID}`
                           );
                         }}
@@ -305,8 +303,7 @@ export const UserMenu = () => {
                       <DropdownMenuItem
                         onClick={() => {
                           router.push(
-                            `/school/${
-                              router.query.schoolUUID as string
+                            `/school/${router.query.schoolUUID as string
                             }/course/create-course`
                           );
                         }}

@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "@stitches/react";
 import Image from "next/image";
-import { SvgIcon } from "../../atoms/SvgIcon";
+import SvgDownload from "../../atoms/svg/SvgDownload";
 
 type Props = {
   logoName: string;
@@ -84,13 +84,13 @@ export const SingleLogo: React.FC<Props> = ({
       <DownloadButtonsLayout>
         <DownloadButton href={`/images/downloads/${logoName}.svg`} download={`${logoName}.svg`}>
           <DownloadSizer>
-            <SvgIcon iconName="SvgDownload"></SvgIcon>
+            <SvgDownload />
           </DownloadSizer>
           SVG
         </DownloadButton>
         <DownloadButton href={`/images/downloads/${logoName}.png`} download={`${logoName}.png`}>
           <DownloadSizer>
-            <SvgIcon iconName="SvgDownload"></SvgIcon>
+            <SvgDownload />
           </DownloadSizer>
           PNG
         </DownloadButton>

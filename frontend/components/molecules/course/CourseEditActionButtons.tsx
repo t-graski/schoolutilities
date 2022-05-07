@@ -6,9 +6,10 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 // to the entry point of the whole app
 // (e.g. src/index.js)
 import "react-nestable/dist/styles/index.css";
-import { SvgIcon } from "../../atoms/SvgIcon";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { styled, keyframes } from "@stitches/react";
+import SvgEdit from "../../atoms/svg/SvgEdit";
+import SvgDelete from "../../atoms/svg/SvgDelete";
 
 type Props = {
   item: Item;
@@ -219,7 +220,7 @@ export const CourseEditActionButtons: React.FC<Props> = ({
         <Dialog>
           <DialogTrigger asChild>
             <IconLayout>
-              <SvgIcon iconName="SvgEdit" />
+              <SvgEdit />
             </IconLayout>
           </DialogTrigger>
           <DialogContent>
@@ -256,7 +257,7 @@ export const CourseEditActionButtons: React.FC<Props> = ({
         <Dialog>
           <DialogTrigger asChild>
             <IconLayout>
-              <SvgIcon iconName="SvgDelete" />
+              <SvgDelete />
             </IconLayout>
           </DialogTrigger>
           <DialogContent>

@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { SvgIcon } from "../SvgIcon";
 import { useRouter } from "next/router";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
   elementsToChoose,
 } from "./CourseComponentDetailViews";
+import SvgEdit from "../svg/SvgEdit";
+import SvgCheckMark from "../svg/SvgCheckMark";
 
 type Props = { courseId: string; addNewEntry?: Function };
 
@@ -35,7 +36,7 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
   borderRadius: 15,
   padding: 8,
-  
+
   backgroundColor: "$backgroundSecondary",
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
@@ -356,7 +357,7 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <IconLayout>
-              <SvgIcon iconName="SvgEdit"></SvgIcon>
+              <SvgEdit />
             </IconLayout>
           </DropdownMenuTrigger>
 
@@ -373,7 +374,7 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
                 }}
               >
                 <DropdownMenuItemSvgLayout>
-                  <SvgIcon iconName="SvgCheckMark"></SvgIcon>
+                  <SvgCheckMark />
                 </DropdownMenuItemSvgLayout>
                 Add new entry
               </DropdownMenuItem>
@@ -382,14 +383,13 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
               <DropdownMenuItem
                 onClick={() => {
                   router.push(
-                    `/school/${
-                      router.query.schoolUUID as string
+                    `/school/${router.query.schoolUUID as string
                     }/course/${courseId}/elements`
                   );
                 }}
               >
                 <DropdownMenuItemSvgLayout>
-                  <SvgIcon iconName="SvgEdit"></SvgIcon>
+                  <SvgEdit />
                 </DropdownMenuItemSvgLayout>
                 Edit elements
               </DropdownMenuItem>
@@ -398,14 +398,13 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
             <DropdownMenuItem
               onClick={() => {
                 router.push(
-                  `/school/${
-                    router.query.schoolUUID as string
+                  `/school/${router.query.schoolUUID as string
                   }/course/${courseId}/edit`
                 );
               }}
             >
               <DropdownMenuItemSvgLayout>
-                <SvgIcon iconName="SvgEdit"></SvgIcon>
+                <SvgEdit />
               </DropdownMenuItemSvgLayout>
               Edit course
             </DropdownMenuItem>

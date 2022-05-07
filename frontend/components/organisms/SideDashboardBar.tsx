@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 import { styled } from "../../stitches.config";
-import { SvgIcon } from "../atoms/SvgIcon";
 
 type Props = {
   items: {

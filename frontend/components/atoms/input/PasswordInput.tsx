@@ -1,9 +1,10 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import type * as Stitches from "@stitches/react";
-import { SvgIcon } from "../SvgIcon";
 import { InputFieldCore } from "./InputFieldCore";
 import { PasswordStrengthPopOver } from "./PasswordStrengthPopOver";
+import SvgEyeRestricted from "../svg/SvgEyeRestricted";
+import SvgEye from "../svg/SvgEye";
 
 type Props = {
   value?: string;
@@ -88,7 +89,7 @@ const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
-  
+
   color: "$fontPrimary",
 
   variants: {
@@ -186,7 +187,7 @@ export const PasswordInput: React.FC<Props> = ({
               setShowPassword(true);
             }}
           >
-            <SvgIcon iconName="SvgEyeRestricted" />
+            <SvgEyeRestricted />
           </ImageLayout>
         )}
         {showPassword && (
@@ -196,7 +197,7 @@ export const PasswordInput: React.FC<Props> = ({
               setShowPassword(!showPassword);
             }}
           >
-            <SvgIcon iconName="SvgEye" />
+            <SvgEye />
           </ImageLayout>
         )}
         {validationOptions && showPasswordStrength && (

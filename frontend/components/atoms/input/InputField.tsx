@@ -1,7 +1,6 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import type * as Stitches from "@stitches/react";
-import { SvgIcon } from "../SvgIcon";
 
 type Props = {
   inputType: "text" | "date" | "email" | "number" | "datetime-local";

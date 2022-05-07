@@ -7,9 +7,12 @@ import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
 import { getAccessToken, logout } from "../../utils/authHelper";
 import cookie from "js-cookie";
-import { SvgIcon } from "../atoms/SvgIcon";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
 import { Separator } from "../atoms/Separator";
+import SvgUser from "../atoms/svg/SvgUser";
+import SvgHome from "../atoms/svg/SvgHome";
+import SvgRightArrow from "../atoms/svg/SvgRightArrow";
+import SvgSchool from "../atoms/svg/SvgSchool";
 
 type Props = {};
 
@@ -207,7 +210,7 @@ const ActionButtonLayout = styled("div", {
   marginTop: "20px",
 });
 
-export const ProfileSettings: React.FC<Props> = ({}) => {
+export const ProfileSettings: React.FC<Props> = ({ }) => {
   const router = useRouter();
   const [statusInfo, setStatusInfo] = useState("");
   const [userInfo, setUserInfo] = useState({
@@ -338,7 +341,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
       <ProfileLayout>
         <GeneralProfileNavbarLayout>
           <ProfileImageLayout>
-            <SvgIcon iconName="SvgUser" />
+            <SvgUser />
           </ProfileImageLayout>
           <ProfileName>
             {userInfo.firstName} {userInfo.lastName}
@@ -350,13 +353,13 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   color={router.query.tab !== "schools" ? "special" : "primary"}
                 >
                   <IconLayout>
-                    <SvgIcon iconName="SvgHome" />
+                    <SvgHome />
                   </IconLayout>
                   <LinkContentLayout>
                     <LinkLabel color="special">Account</LinkLabel>
 
                     <LinkArrow color="special">
-                      <SvgIcon iconName="SvgRightArrow" />
+                      <SvgRightArrow />
                     </LinkArrow>
                   </LinkContentLayout>
                 </LinkLayout>
@@ -368,13 +371,13 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   color={router.query.tab == "schools" ? "special" : "primary"}
                 >
                   <IconLayout>
-                    <SvgIcon iconName="SvgSchool" />
+                    <SvgSchool />
                   </IconLayout>
                   <LinkContentLayout>
                     <LinkLabel color="special">Schools</LinkLabel>
 
                     <LinkArrow color="special">
-                      <SvgIcon iconName="SvgRightArrow" />
+                      <SvgRightArrow />
                     </LinkArrow>
                   </LinkContentLayout>
                 </LinkLayout>
@@ -407,7 +410,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 label="Date of Birth"
                 showLabel={false}
                 value={new Date(userInfo.birthday).toLocaleDateString()}
-                onChange={(e) => {}}
+                onChange={(e) => { }}
                 iconName={""}
                 editable={false}
               />
@@ -441,7 +444,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 label="User Since"
                 showLabel={false}
                 value={longDateCreationDate}
-                onChange={(e) => {}}
+                onChange={(e) => { }}
                 iconName={""}
                 editable={false}
               />

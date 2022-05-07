@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { styled } from "../../stitches.config";
-import { SvgIcon } from "../atoms/SvgIcon";
 import Link from "next/link";
 import NavbarPopOver from "./NavbarPopOver";
 import { NavigationMenuPart } from "./NavigationMenuPart";
 import UserMenu from "../molecules/UserMenu";
+import SvgHamburger from "../atoms/svg/SvgHamburger";
+import SvgOpenLogo from "../atoms/svg/SvgOpenLogo";
 
 type Props = {};
 
@@ -61,7 +62,7 @@ const StyledOpenButton = styled("button", {
   },
 });
 
-export const Navbar: React.FC<Props> = ({}) => {
+export const Navbar: React.FC<Props> = ({ }) => {
   const [mobileVisible, setMobileVisible] = useState(false);
 
   return (
@@ -74,7 +75,7 @@ export const Navbar: React.FC<Props> = ({}) => {
         <Link href="/" passHref>
           <a>
             <LogoLayout>
-              <SvgIcon iconName="SvgOpenLogo" />
+              <SvgOpenLogo />
             </LogoLayout>
           </a>
         </Link>
@@ -87,7 +88,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           </Link>
         </SpecialLinkLayout>
         <StyledOpenButton onClick={() => setMobileVisible(true)}>
-          <SvgIcon iconName="SvgHamburger" />
+          <SvgHamburger />
         </StyledOpenButton>
       </NavbarLayout>
     </>

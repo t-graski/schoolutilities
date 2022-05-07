@@ -6,7 +6,7 @@ import { Separator } from "../../atoms/Separator";
 import { styled } from "@stitches/react";
 import { Spacer } from "../../atoms/Spacer";
 import Image from "next/image";
-import { SvgIcon } from "../../atoms/SvgIcon";
+import SvgLogoPencilOnly from "../../atoms/svg/SvgLogoPencilOnly";
 
 type Props = {
   title: string;
@@ -51,7 +51,7 @@ export const BrandStartPageField: React.FC<Props> = ({
           <Description>{description}</Description>
         </div>
         <IconLayout>
-          <SvgIcon iconName="SvgLogoPencilOnly" />
+          <SvgLogoPencilOnly />
         </IconLayout>
       </BrandStartPageFieldLayout>
     </>

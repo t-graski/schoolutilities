@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "../../stitches.config";
-import { SvgIcon } from "../atoms/SvgIcon";
+import SvgDownload from "../atoms/svg/SvgDownload";
 
 type Props = {
   entries: Array<any>;
@@ -105,7 +105,7 @@ export const DownloadList: React.FC<Props> = ({ entries, entryProperties }) => {
                     target="_blank"
                   >
                     <SvgIconLayout>
-                      <SvgIcon iconName="SvgDownload"></SvgIcon>
+                      <SvgDownload />
                     </SvgIconLayout>
                   </SvgLink>
                 )}

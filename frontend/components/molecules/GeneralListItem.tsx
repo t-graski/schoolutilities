@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import { useRouter } from "next/router";
-import { SvgIcon } from "../atoms/SvgIcon";
 
 type Props = {
   title: string;

@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import cookie from "js-cookie";
 import { Progressbar } from "../../molecules/Progressbar";
 import { Spacer } from "../../atoms/Spacer";
-import { SvgIcon } from "../../atoms/SvgIcon";
 import { getAccessToken } from "../../../utils/authHelper";
 
 type Props = {

@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "../../../stitches.config";
 import Image from "next/image";
 import Link from "next/link";
-import { SvgIcon } from "../../atoms/SvgIcon";
 
 export type SideDashboardProps = {
   links: {

@@ -94,7 +94,7 @@ const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
 });
 const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
   ...itemStyles,
-  
+
   '&[data-state="open"]': {
     backgroundColor: "$specialPrimary",
     color: "$fontPrimary",
@@ -315,7 +315,7 @@ const AddButton = styled("button", {
   "&:focus": { boxShadow: `0 0 0 2px black` },
 
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
-  
+
   "&:disabled:hover": {
     backgroundColor: "$specialSecondary",
     color: "$fontPrimary",

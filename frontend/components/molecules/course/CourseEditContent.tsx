@@ -5,11 +5,11 @@ import Nestable, { Item } from "react-nestable";
 // to the entry point of the whole app
 // (e.g. src/index.js)
 import "react-nestable/dist/styles/index.css";
-import { SvgIcon } from "../../atoms/SvgIcon";
 import { styled } from "@stitches/react";
 import CourseEditActionButtons from "./CourseEditActionButtons";
 import { elementsToChoose } from "../../atoms/course/CourseComponentDetailViews";
 import { getAccessToken } from "../../../utils/authHelper";
+import SvgAlert from "../../atoms/svg/SvgAlert";
 
 type Props = {
   courseId: string;
@@ -72,7 +72,7 @@ export const CourseEditContent: React.FC<Props> = ({
 
   useEffect(() => {
     updateResponseBody();
-    
+
     function updateResponseBody() {
       const requestBody = {
         courseUUID: courseId,
@@ -151,7 +151,7 @@ export const CourseEditContent: React.FC<Props> = ({
         items={items}
         renderItem={renderItem}
         maxDepth={2}
-        renderCollapseIcon={() => <SvgIcon iconName="SvgAlert" />}
+        renderCollapseIcon={() => <SvgAlert />}
         onChange={(changeEvent) => {
           setItems(changeEvent.items);
         }}

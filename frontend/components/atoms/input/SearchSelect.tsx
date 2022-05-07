@@ -1,6 +1,5 @@
 import React from "react";
 import { styled, styles } from "../../../stitches.config";
-import { SvgIcon } from "../SvgIcon";
 import Select from "react-select";
 
 type Props = {

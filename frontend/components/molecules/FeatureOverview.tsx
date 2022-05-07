@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "../../stitches.config";
-import { SvgIcon } from "../atoms/SvgIcon";
 
 export type FeatureOverviewProps = {
   iconName: string;

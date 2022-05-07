@@ -5,6 +5,7 @@ import Footer from "../../components/organisms/Footer";
 import { Spacer } from "../../components/atoms/Spacer";
 import { SvgIcon } from "../../components/atoms/SvgIcon";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
+import SvgSuperman from "../../components/atoms/svg/SvgSuperman";
 
 const MainContent = styled("div", {
   position: "absolute",
@@ -53,7 +54,7 @@ export default function Home() {
         <StyledHeadline>
           You&apos;ve just received some superpowers
           <SvgLayout>
-            <SvgIcon iconName="SvgSuperman"></SvgIcon>
+            <SvgSuperman />
           </SvgLayout>
           <br />
           What do you wanna do with them?

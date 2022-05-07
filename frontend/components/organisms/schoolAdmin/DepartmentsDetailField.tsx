@@ -5,7 +5,8 @@ import { Button } from "../../atoms/Button";
 import { regex } from "../../../utils/regex";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
-import { SvgIcon } from "../../atoms/SvgIcon";
+import SvgEdit from "../../atoms/svg/SvgEdit";
+import SvgDelete from "../../atoms/svg/SvgDelete";
 
 type Props = {
   setDisabled: Function;
@@ -305,7 +306,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     setPopUpIsVisible(true);
                   }}
                 >
-                  <SvgIcon iconName="SvgEdit"></SvgIcon>
+                  <SvgEdit />
                 </DepartmentEditIcon>
                 <DepartmentDeleteIcon
                   onClick={() => {
@@ -319,7 +320,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     }
                   }}
                 >
-                  <SvgIcon iconName="SvgDelete"></SvgIcon>
+                  <SvgDelete />
                 </DepartmentDeleteIcon>
               </DepartmentIcons>
             </DepartmentLayout>

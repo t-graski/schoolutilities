@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "../../stitches.config";
 import Image from "next/image";
 import cookie from "js-cookie";
-import { SvgIcon } from "../atoms/SvgIcon";
+import SvgUser from "../atoms/svg/SvgUser";
 
 type Props = {
   links: {
@@ -207,7 +207,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
           <StyledAccountLink href={userData ? "/auth/login" : "/auth/login"}>
             <AccountButton>
               <AccountButtonIconLayout>
-                <SvgIcon iconName="SvgUser"></SvgIcon>
+                <SvgUser />
               </AccountButtonIconLayout>
               <AccountButtonText>
                 {userData ? userData.firstname : "Login"}

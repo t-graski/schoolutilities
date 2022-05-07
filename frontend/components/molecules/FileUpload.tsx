@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
 import { styled } from "../../stitches.config";
 import { useDropzone } from "react-dropzone";
-import { SvgIcon } from "../atoms/SvgIcon";
 import { useRouter } from "next/router";
 import { getAccessToken } from "../../utils/authHelper";
 import { Spacer } from "../atoms/Spacer";
 import { Button } from "../atoms/Button";
+import SvgDelete from "../atoms/svg/SvgDelete";
 
 export type Props = {};
 
@@ -48,7 +48,7 @@ const StyledHeadline = styled("h4", {
   margin: "20px 0",
 });
 
-export const FileUpload: React.FC<Props> = ({}) => {
+export const FileUpload: React.FC<Props> = ({ }) => {
   const [files, setFiles] = useState([]);
   const [filesSent, setFilesSent] = useState("");
 
@@ -103,7 +103,7 @@ export const FileUpload: React.FC<Props> = ({}) => {
             removeFileFromList(file);
           }}
         >
-          <SvgIcon iconName="SvgDelete" />
+          <SvgDelete />
         </RemoveButton>
       </li>
     );

@@ -1,5 +1,4 @@
 import React from "react";
-import { SvgIcon } from "../../atoms/SvgIcon";
 import { Separator } from "../../atoms/Separator";
 import Link from "next/link";
 import { styled } from "@stitches/react";
