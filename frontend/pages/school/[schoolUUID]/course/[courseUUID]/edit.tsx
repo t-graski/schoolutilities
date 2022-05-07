@@ -168,7 +168,7 @@ export default function Features() {
           <Separator width="small" alignment="left" />
         </HeadlineLayout>
         <InputField
-          label={inputData.courseName}
+          label={"Course name"}
           inputType="text"
           value={inputData.courseName}
           onChange={(e) => {
@@ -181,7 +181,7 @@ export default function Features() {
           errorMessage="Your course needs a name, doesn't it?"
         ></InputField>
         <InputField
-          label={inputData.courseDescription}
+          label={"Course description"}
           inputType="text"
           value={inputData.courseDescription}
           onChange={(e) => {
