@@ -33,7 +33,7 @@ const StyledTextArea = styled("textarea", {
   },
 });
 
-export const Select: React.FC<Props> = ({
+export const TextField: React.FC<Props> = ({
   value,
   onChange,
   iconName,

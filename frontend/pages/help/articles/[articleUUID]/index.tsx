@@ -7,7 +7,7 @@ import { Separator } from "../../../../components/atoms/Separator";
 import { CourseSelectionList } from "../../../../components/organisms/course/CourseSelectionList";
 import Footer from "../../../../components/organisms/Footer";
 import { useEffect, useState } from "react";
-import { getAccessToken } from "../../../../misc/authHelper";
+import { getAccessToken } from "../../../../utils/authHelper";
 import { useRouter } from "next/router";
 import { Article } from "../../../../components/organisms/help/Article";
 import { ContentLayout } from "../../../school/[schoolUUID]/course/[courseUUID]/elements";

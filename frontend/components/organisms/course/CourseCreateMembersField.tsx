@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
+import { SearchSelect } from "../../atoms/input/SearchSelect";
 
 type Props = {
   setDisabled: Function;
@@ -108,9 +109,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
         </div>
         <Spacer size="verySmall"></Spacer>
         <Label>Select classes for this course:</Label>
-        <InputField
-          label="Classes"
-          inputType="search-select"
+        <SearchSelect
           selectValue={inputData.classes}
           onChange={(e) => {
             setInputData({
@@ -120,13 +119,10 @@ export const CourseCreateMembersField: React.FC<Props> = ({
           }}
           iconName="SvgSchool"
           selectMultiValues={true}
-          required={false}
           selectOptions={classes}
         />
         <Label>Select persons for this course:</Label>
-        <InputField
-          label="Persons"
-          inputType="search-select"
+        <SearchSelect
           selectValue={inputData.members}
           onChange={(e) => {
             console.log(e);
@@ -137,7 +133,6 @@ export const CourseCreateMembersField: React.FC<Props> = ({
           }}
           iconName="SvgSchool"
           selectMultiValues={true}
-          required={false}
           selectOptions={members}
         />
       </CourseCreateDetailLayout>

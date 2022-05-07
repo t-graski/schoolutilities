@@ -26,7 +26,7 @@ const IconLayout = styled("div", {
   display: "flex",
   width: "120px",
   height: "150px",
-  color: "$specialSecondary"
+  color: "$specialSecondary",
 });
 
 const TitleLayout = styled("div", {
@@ -60,11 +60,12 @@ export const GeneralListItem: React.FC<Props> = ({
         <Button
           backgroundColor={"primary"}
           color={"primary"}
-          label={buttonText}
           onClick={() => {
             router.push(href);
           }}
-        />
+        >
+          {buttonText}
+        </Button>
       </GeneralListItemLayout>
     </>
   );

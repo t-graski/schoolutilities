@@ -12,11 +12,13 @@ type Props = {
 };
 
 const Header = styled("h1", {
+  width: "100%",
+
   fontSize: "4.5rem",
   fontWeight: "700",
   color: "$fontPrimary",
-  width: "100%",
   textAlign: "center",
+  
   variants: {
     alignment: {
       left: {

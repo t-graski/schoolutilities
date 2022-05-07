@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
 import Skeleton from "react-loading-skeleton";
 

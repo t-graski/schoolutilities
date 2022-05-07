@@ -7,7 +7,7 @@ import cookie from "js-cookie";
 import { Progressbar } from "../../molecules/Progressbar";
 import { Spacer } from "../../atoms/Spacer";
 import { SvgIcon } from "../../atoms/SvgIcon";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 
 type Props = {
   steps: {
@@ -202,12 +202,13 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
             disabled={activeStep === 0 || isButtonDisabled}
             backgroundColor="primary"
             color="primary"
-            label="BACK"
             onClick={() => {
               setActiveStep(activeStep - 1);
             }}
             isVisible={!statusInfo}
-          ></Button>
+          >
+            BACK
+          </Button>
           <ProgressbarLayout>
             <Progressbar
               steps={steps}
@@ -223,7 +224,6 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
               }
               backgroundColor="primary"
               color="primary"
-              label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
               onClick={async () => {
                 if (activeStep + 1 === steps.length) {
                   await saveInputs();
@@ -234,7 +234,9 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
                 }
               }}
               isVisible={!statusInfo}
-            ></Button>
+            >
+              {activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
+            </Button>
           </ButtonLayout>
         </NavigationLayout>
       </ProgressLayout>

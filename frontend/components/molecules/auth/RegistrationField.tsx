@@ -4,10 +4,10 @@ import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";
 import { SvgIcon } from "../../atoms/SvgIcon";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
 import { PasswordInput } from "../../atoms/input/PasswordInput";
 import { CheckBox } from "../../atoms/input/CheckBox";
-import { PASSWORD_VALIDATION_MESSAGES } from "../../../misc/parameterConstants";
+import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
 
 type Props = {};
 
@@ -229,22 +229,20 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           <Button
             backgroundColor="primary"
             color="primary"
-            label="Sign up"
             onClick={() => {
               handleSubmit();
             }}
             disabled={isDisabled}
-          ></Button>
+          >Sign up</Button>
           <Link href="/auth?tab=login">
             <a>
               <Button
                 backgroundColor="secondary"
                 color="primary"
-                label="Log in instead"
                 onClick={() => {
                   handleSubmit();
                 }}
-              ></Button>
+              >Log in instead</Button>
             </a>
           </Link>
         </RegistrationLayout>

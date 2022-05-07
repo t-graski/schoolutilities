@@ -34,7 +34,12 @@ module.exports = {
         source: "/status",
         destination: "https://schoolutilities.statuspage.io/",
         permanent: true,
-      }
+      },
     ];
   },
 };
+
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+module.exports = withBundleAnalyzer({});

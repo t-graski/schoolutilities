@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { useRouter } from "next/router";
-import { getAccessToken, getUserData } from "../../../misc/authHelper";
+import { getAccessToken, getUserData } from "../../../utils/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import { InputField } from "../../atoms/input/InputField";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
 import Skeleton from "react-loading-skeleton";
+import { Select } from "../../atoms/input/Select";
 
 type Props = {};
 
@@ -221,15 +222,14 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
             }}
           >
             <StyledInputField>
-              <InputField
-                inputType="select"
+              <Select
                 selectValue={roleId}
                 selectOptions={RoleOrder}
                 onChange={(event) => {
                   setRoleId(event);
                 }}
                 iconName=""
-              ></InputField>
+              ></Select>
             </StyledInputField>
           </SettingsPopUp>
         )}

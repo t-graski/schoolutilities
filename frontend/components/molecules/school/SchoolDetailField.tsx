@@ -4,7 +4,8 @@ import { InputField } from "../../atoms/input/InputField";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
+import { Select } from "../../atoms/input/Select";
 
 type Props = {
   setDisabled: Function;
@@ -89,28 +90,22 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           setValidInput={setSchoolNameValid}
           errorMessage="Your school needs a name, doesn't it?"
         ></InputField>
-        <InputField
+        <Select
           label="Language"
-          inputType="select"
-          value={schoolLanguage}
           onChange={setSchoolLanguage}
           iconName="SvgLanguage"
           required={true}
-          errorMessage="Tell us the language you speak in your school"
           selectOptions={[
             { value: "german", label: "German" },
             { value: "english", label: "English" },
           ]}
           selectValue={schoolLanguage}
-        ></InputField>
-        <InputField
+        ></Select>
+        <Select
           label="Timezone (GMT+0)"
-          inputType="select"
-          value={schoolTimezone}
           onChange={setSchoolTimezone}
           iconName="SvgTimezone"
           required={true}
-          errorMessage="Try to select a timezone in the drop-down menu"
           selectOptions={[
             { value: "", label: "Timezone" },
             { value: "GMT+0", label: "GMT+0" },
@@ -131,7 +126,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
             { value: "GMT+12", label: "Pacific/Fiji" },
           ]}
           selectValue={schoolTimezone}
-        ></InputField>
+        ></Select>
       </SchoolDetailLayout>
     </>
   );

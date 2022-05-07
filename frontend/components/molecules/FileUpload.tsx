@@ -3,7 +3,7 @@ import { styled } from "../../stitches.config";
 import { useDropzone } from "react-dropzone";
 import { SvgIcon } from "../atoms/SvgIcon";
 import { useRouter } from "next/router";
-import { getAccessToken } from "../../misc/authHelper";
+import { getAccessToken } from "../../utils/authHelper";
 import { Spacer } from "../atoms/Spacer";
 import { Button } from "../atoms/Button";
 
@@ -132,11 +132,10 @@ export const FileUpload: React.FC<Props> = ({}) => {
             <Button
               backgroundColor={"primary"}
               color={"primary"}
-              label={"Hand in"}
               onClick={() => {
                 uploadFile(files[0]);
               }}
-            ></Button>
+            >Hand in</Button>
           </aside>
         </section>
       )}

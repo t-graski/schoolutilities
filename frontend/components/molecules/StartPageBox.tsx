@@ -99,11 +99,10 @@ export const StartPageBox: React.FC<Props> = ({
           <Button
             backgroundColor={"tertiary"}
             color={"primary"}
-            label={buttonText}
             onClick={() => {
               router.push(buttonLink);
             }}
-          ></Button>
+          >{buttonText}</Button>
           <Link href={linkUrl} passHref>
             <StyledLink>{linkText}</StyledLink>
           </Link>

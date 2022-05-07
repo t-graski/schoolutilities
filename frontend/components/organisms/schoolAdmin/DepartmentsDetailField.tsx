@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { SvgIcon } from "../../atoms/SvgIcon";
@@ -249,16 +249,14 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
               </StyledInputField>
               <PopUpButtonLayout>
                 <Button
-                  label="Close"
                   onClick={() => {
                     setDepartmentName("");
                     setPopUpIsVisible(false);
                   }}
                   backgroundColor={"secondary"}
                   color={"primary"}
-                />
+                >Close</Button>
                 <Button
-                  label={departmentId == -1 ? "Add" : "Edit"}
                   onClick={savePopUpInput}
                   backgroundColor={"primary"}
                   color={"primary"}
@@ -268,7 +266,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                       departmentName == departments[departmentId])
                   }
                   type="submit"
-                />
+                >{departmentId == -1 ? "Add" : "Edit"}</Button>
               </PopUpButtonLayout>
             </PopUpContentLayout>
           </PopUpLayout>

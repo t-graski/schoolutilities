@@ -149,12 +149,15 @@ export const PasswordInput: React.FC<Props> = ({
             onChange={(e) => {
               onChange(e.target.value);
               if (setValidInput) {
-                setValidInput(false);
+                setValidInput(true);
               }
               if (validationOptions) {
                 const validationResults = validationOptions.map((option) => {
                   const { regex, validIconName, invalidIconName } = option;
                   const isValid = regex.test(e.target.value);
+                  if (setValidInput && !isValid) {
+                    setValidInput(false);
+                  }
                   return { ...option, valid: isValid };
                 });
                 setCurrentValidationResults(validationResults);

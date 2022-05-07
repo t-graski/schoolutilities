@@ -7,7 +7,7 @@ import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../misc/authHelper";
+import { getAccessToken } from "../../../../../utils/authHelper";
 import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseContent from "../../../../../components/molecules/course/CourseContent";
 import { Button } from "../../../../../components/atoms/Button";
@@ -118,7 +118,6 @@ export default function Features() {
             <p>No elements in this course yet</p>
             <Spacer size="small"></Spacer>
             <Button
-              label="Add elements"
               onClick={() => {
                 router.push(
                   `/school/${schoolUUID}/course/${courseUUID}/elements`
@@ -126,7 +125,7 @@ export default function Features() {
               }}
               backgroundColor={"primary"}
               color={"primary"}
-            ></Button>
+            >Add elements</Button>
             <Spacer size="small"></Spacer>
           </>
         )}
@@ -143,11 +142,10 @@ export default function Features() {
         <Button
           backgroundColor={"primary"}
           color={"primary"}
-          label={"Back to courses"}
           onClick={() => {
             router.push(`/school/${schoolUUID}/course`);
           }}
-        ></Button>
+        >Back to courses</Button>
       </ContentLayout>
       <Footer></Footer>
     </>

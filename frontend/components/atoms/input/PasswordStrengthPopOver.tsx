@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { SvgIcon } from "../SvgIcon";
 import { InfoHoverCard } from "../InfoHoverCard";
-import { calculatePasswordStrengthIndex } from "../../../misc/authHelper";
+import { calculatePasswordStrengthIndex } from "../../../utils/authHelper";
 import { blackA } from "@radix-ui/colors";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 

@@ -6,7 +6,7 @@ import { Navbar } from "../../../../../components/organisms/Navbar";
 import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import Footer from "../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../misc/authHelper";
+import { getAccessToken } from "../../../../../utils/authHelper";
 import CourseEditContent from "../../../../../components/molecules/course/CourseEditContent";
 import { Button } from "../../../../../components/atoms/Button";
 import AddCourseElement from "../../../../../components/atoms/course/AddCourseElement";
@@ -121,17 +121,15 @@ export default function Features() {
             <Button
               backgroundColor={"secondary"}
               color={"primary"}
-              label={"Cancel"}
               onClick={() => {
                 router.push(
                   `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
                 );
               }}
-            ></Button>
+            >Cancel</Button>
             <Button
               backgroundColor={"primary"}
               color={"primary"}
-              label={"Save"}
               onClick={async () => {
                 let accessToken = await getAccessToken();
                 const saveResponse = await fetch(
@@ -157,7 +155,7 @@ export default function Features() {
                   }
                 }
               }}
-            ></Button>
+            >Save</Button>
           </CourseHeaderLayout>
         </HeadlineLayout>
         <Spacer size="verySmall"></Spacer>

@@ -4,7 +4,7 @@ import { InputField } from "../../atoms/input/InputField";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
 
 type Props = {
   setDisabled: Function;

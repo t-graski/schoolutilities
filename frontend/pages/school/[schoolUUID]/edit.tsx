@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { ClassesSettingsField } from "../../../components/organisms/schoolAdmin/ClassesSettingsField";
 import { PersonsSettingsField } from "../../../components/organisms/schoolAdmin/PersonsSettingsField";
 import { JoinCodesSettingsField } from "../../../components/organisms/schoolAdmin/JoinCodesSettingsField";
-import { getAccessToken, getUserData, logout } from "../../../misc/authHelper";
+import { getAccessToken, getUserData, logout } from "../../../utils/authHelper";
 
 const SettingsLayout = styled("div", {
   display: "flex",

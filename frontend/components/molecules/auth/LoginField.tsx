@@ -5,10 +5,10 @@ import { Button } from "../../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
-import { getAccessToken, logout } from "../../../misc/authHelper";
-import { regex } from "../../../misc/regex";
+import { getAccessToken, logout } from "../../../utils/authHelper";
+import { regex } from "../../../utils/regex";
 import { PasswordInput } from "../../atoms/input/PasswordInput";
-import { PASSWORD_VALIDATION_MESSAGES } from "../../../misc/parameterConstants";
+import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
 
 type Props = {};
 
@@ -81,6 +81,7 @@ export const LoginField: React.FC<Props> = ({}) => {
   }
 
   function checkInputData() {
+    console.log(emailValid, passwordValid);
     if (emailValid && passwordValid) {
       if (isDisabled) {
         setDisabled(false);
@@ -164,12 +165,13 @@ export const LoginField: React.FC<Props> = ({}) => {
             <Button
               backgroundColor="primary"
               color="primary"
-              label="Sign in"
               onClick={() => {
                 handleSubmit();
               }}
               disabled={isDisabled}
-            ></Button>
+            >
+              Sign in
+            </Button>
             <Link href="/auth/password-reset" passHref>
               <StyledLink>Reset Password</StyledLink>
             </Link>
@@ -185,21 +187,23 @@ export const LoginField: React.FC<Props> = ({}) => {
                 <Button
                   backgroundColor="primary"
                   color="primary"
-                  label="See your profile"
                   onClick={() => {}}
-                ></Button>
+                >
+                  See your profile
+                </Button>
               </a>
             </Link>
             <Button
               backgroundColor="secondary"
               color="primary"
-              label="Logout"
               onClick={() => {
                 logout();
                 setSignUpInfo("");
                 setLoggedIn(false);
               }}
-            ></Button>
+            >
+              Logout
+            </Button>
           </ButtonLayout>
         )}
         {!loginSuccess && signUpInfo && (
@@ -207,11 +211,12 @@ export const LoginField: React.FC<Props> = ({}) => {
             <Button
               backgroundColor="secondary"
               color="primary"
-              label="Try again"
               onClick={() => {
                 setSignUpInfo("");
               }}
-            ></Button>
+            >
+              Try again
+            </Button>
           </ButtonLayout>
         )}
       </StyledInfo>

@@ -1,11 +1,12 @@
 import { styled } from "@stitches/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 import { Button } from "../../atoms/Button";
 import { Separator } from "../../atoms/Separator";
 import { InputField } from "../../atoms/input/InputField";
 import { MarkdownEditor } from "../cockpit/MarkdownEditor";
+import { TextField } from "../../atoms/input/TextField";
 
 type Props = {};
 
@@ -98,29 +99,30 @@ export const ArticleEdit: React.FC<Props> = ({}) => {
         label={"Title"}
         value={title}
       ></InputField>
-      <InputField
-        inputType={"textfield"}
+      <TextField
         onChange={setCatchPhrase}
         iconName={""}
         label={"Beschreibung"}
         value={catchPhrase}
-      ></InputField>
+      ></TextField>
       <MarkdownEditor saveContent={setContent} value={content}></MarkdownEditor>
       <ButtonLayout>
         <Button
           backgroundColor={"primary"}
           color={"primary"}
-          label={"Save"}
           onClick={saveContent}
-        ></Button>
+        >
+          Save
+        </Button>
         <Button
           backgroundColor={"secondary"}
           color={"primary"}
-          label={"Cancel"}
           onClick={() => {
             router.push("/cockpit/articles");
           }}
-        ></Button>
+        >
+          Cancel
+        </Button>
       </ButtonLayout>
     </ArticleAddFieldLayout>
   );

@@ -7,7 +7,7 @@ import {
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { SvgIcon } from "../atoms/SvgIcon";
 import { useRouter } from "next/router";
-import { getAccessToken, getUserData, logout } from "../../misc/authHelper";
+import { getAccessToken, getUserData, logout } from "../../utils/authHelper";
 import { useTheme } from "next-themes";
 
 const slideUpAndFade = keyframes({

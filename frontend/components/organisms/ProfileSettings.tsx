@@ -5,7 +5,7 @@ import { Button } from "../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
-import { getAccessToken, logout } from "../../misc/authHelper";
+import { getAccessToken, logout } from "../../utils/authHelper";
 import cookie from "js-cookie";
 import { SvgIcon } from "../atoms/SvgIcon";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
@@ -416,9 +416,8 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 <Button
                   backgroundColor={"primary"}
                   color={"primary"}
-                  label="SAVE CHANGES"
                   onClick={saveChanges}
-                ></Button>
+                >SAVE CHANGES</Button>
               </ActionButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
@@ -475,12 +474,11 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     <Button
                       backgroundColor={"primary"}
                       color={"primary"}
-                      label="JOIN A SCHOOL"
                       onClick={() => {
                         setStatusInfo("");
                         getUserInfo2();
                       }}
-                    ></Button>
+                    >JOIN A SCHOOL</Button>
                   </a>
                 </Link>
                 <Spacer size="verySmall"></Spacer>
@@ -489,12 +487,11 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     <Button
                       backgroundColor={"secondary"}
                       color={"primary"}
-                      label="CREATE A SCHOOL"
                       onClick={() => {
                         setStatusInfo("");
                         getUserInfo2();
                       }}
-                    ></Button>
+                    >CREATE A SCHOOL</Button>
                   </a>
                 </Link>
               </ButtonLayout>

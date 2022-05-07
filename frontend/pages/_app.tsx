@@ -3,9 +3,12 @@ import { useRouter } from "next/router";
 import { globalCss, lightTheme } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import AOS from "aos";
-import "../misc/skeleton.css";
-import "../misc/sunEditor.css";
+import { ReactQueryDevtools } from "react-query/devtools";
+import "../utils/skeleton.css";
+import "../utils/sunEditor.css";
+import { IdProvider } from '@radix-ui/react-id';
 
 const globalStyles = globalCss({
   "*": {
@@ -45,48 +48,54 @@ function App({ Component, pageProps }: AppProps) {
     AOS.init({});
   }, []);
   const router = useRouter();
+  const queryClient = new QueryClient();
 
   globalStyles();
 
   return (
-    <ThemeProvider
-      disableTransitionOnChange
-      attribute="class"
-      value={{ light: lightTheme.className, dark: "dark-theme" }}
-      defaultTheme="system"
-    >
-      <SkeletonTheme
-        baseColor="var(--colors-backgroundSecondary)"
-        highlightColor="var(--colors-skeletonSecondary)"
-        duration={1.3}
-      >
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-        ></Script>
-        <Script
-          dangerouslySetInnerHTML={{
-            __html: `
+    <IdProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          disableTransitionOnChange
+          attribute="class"
+          value={{ light: lightTheme.className, dark: "dark-theme" }}
+          defaultTheme="system"
+        >
+          <SkeletonTheme
+            baseColor="var(--colors-backgroundSecondary)"
+            highlightColor="var(--colors-skeletonSecondary)"
+            duration={1.3}
+          >
+            <Script
+              async
+              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+            ></Script>
+            <Script
+              dangerouslySetInnerHTML={{
+                __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', 'G-879Y3BTW0K', {
                   page_path: window.location.pathname,
                 });`,
-          }}
-          id="google-analytics-tag"
-        ></Script>
-        <Script
-          src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
-          strategy="lazyOnload"
-        ></Script>
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-        ></Script>
-        <Component {...pageProps} router={router} />
-      </SkeletonTheme>
-    </ThemeProvider>
+              }}
+              id="google-analytics-tag"
+            ></Script>
+            <Script
+              src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+              strategy="lazyOnload"
+            ></Script>
+            <Script
+              async
+              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+            ></Script>
+            <Component {...pageProps} router={router} />
+          </SkeletonTheme>
+        </ThemeProvider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </IdProvider>
   );
 }
 

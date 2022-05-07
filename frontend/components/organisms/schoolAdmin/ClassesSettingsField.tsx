@@ -2,14 +2,15 @@ import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import Link from "next/link";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
 import { useRouter } from "next/router";
 import { Spacer } from "../../atoms/Spacer";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import Skeleton from "react-loading-skeleton";
+import { Select } from "../../atoms/input/Select";
 
 type Props = {};
 
@@ -263,8 +264,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                 max="30"
               />
               <Spacer size="verySmall" />
-              <InputField
-                inputType="select"
+              <Select
                 selectValue={departmentUUID}
                 selectOptions={departments.map((department) => {
                   return {
@@ -276,7 +276,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                   setDepartmentUUId(event);
                 }}
                 iconName=""
-              ></InputField>
+              ></Select>
             </StyledInputField>
           </SettingsPopUp>
         )}

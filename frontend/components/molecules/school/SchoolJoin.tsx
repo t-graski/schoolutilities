@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { styled } from "../../../stitches.config";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
 import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
 
 export type SideDashboardProps = {};
 
@@ -94,8 +94,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
             disabled={!joinCodeValid}
             backgroundColor={"primary"}
             color={"primary"}
-            label={"Join School"}
-          ></Button>
+          >Join School</Button>
         </StyledContentLayout>
       </SchoolInputLayout>
     </>

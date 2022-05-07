@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
 import Skeleton from "react-loading-skeleton";
+import { useQuery } from "react-query";
 
 export type SideDashboardProps = {};
 
@@ -56,62 +57,65 @@ const SchoolDescription = styled("p", {
   color: "$fontPrimary",
 });
 
-export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
-  const [schools, setSchools] = useState([]);
-  const router = useRouter();
-  useEffect(() => {
-    updateSchoolsFromDatabase();
-
-    async function updateSchoolsFromDatabase() {
-      let accessToken = await getAccessToken();
-      if (!accessToken) {
-        router.push("/auth?tab=login");
-      } else {
-        let response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        let fetchedSchools = await response.json();
-        if (fetchedSchools.length == 0) {
-          router.push("/school/join");
-        } else if (fetchedSchools.length == 1) {
-          // redirectRoute(router, fetchedSchools[0]);
-        }
-        setSchools(fetchedSchools);
-      }
+async function fetchSchools() {
+  const accessToken = await getAccessToken();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     }
-  }, [router]);
+  );
+  const data = await response.json();
+  return data;
+}
+
+export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
+  const { data: schools, status } = useQuery("schools", fetchSchools);
+  const router = useRouter();
+
+  if (status == "loading") {
+    return (
+      <SchoolList>
+        <Skeleton width="100%" height={150}></Skeleton>
+        <Skeleton width="100%" height={150}></Skeleton>
+      </SchoolList>
+    );
+  }
+
+  if (status == "error") {
+    return <div>Error</div>;
+  }
+
+  if (status == "success") {
+    if (schools.length == 0) {
+      router.push("/school/join");
+    }
+    if (schools.length == 1) {
+      redirectRoute(router, schools[0]);
+    }
+  }
 
   return (
     <>
       <SchoolList>
-        {schools.length > 0 ? (
-          schools.map((school) => (
-            <SchoolLayout
-              key={school.schoolUUID}
-              onClick={() => {
-                redirectRoute(router, school);
-              }}
-            >
-              <SchoolName>{school.schoolName}</SchoolName>
-              <SchoolDescription>
-                {
-                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia"
-                }
-              </SchoolDescription>
-            </SchoolLayout>
-          ))
-        ) : (
-          <>
-            <Skeleton width="100%" height={150}></Skeleton>
-            <Skeleton width="100%" height={150}></Skeleton>
-          </>
-        )}
+        {schools.map((school) => (
+          <SchoolLayout
+            key={school.schoolUUID}
+            onClick={() => {
+              redirectRoute(router, school);
+            }}
+          >
+            <SchoolName>{school.schoolName}</SchoolName>
+            <SchoolDescription>
+              {
+                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia"
+              }
+            </SchoolDescription>
+          </SchoolLayout>
+        ))}
       </SchoolList>
     </>
   );

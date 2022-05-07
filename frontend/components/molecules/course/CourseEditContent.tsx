@@ -9,7 +9,7 @@ import { SvgIcon } from "../../atoms/SvgIcon";
 import { styled } from "@stitches/react";
 import CourseEditActionButtons from "./CourseEditActionButtons";
 import { elementsToChoose } from "../../atoms/course/CourseComponentDetailViews";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 
 type Props = {
   courseId: string;
