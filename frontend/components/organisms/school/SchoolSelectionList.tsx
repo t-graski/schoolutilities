@@ -89,13 +89,11 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
     return <div>Error</div>;
   }
 
-  if (status == "success") {
-    if (schools.length == 0) {
-      router.push("/school/join");
-    }
-    if (schools.length == 1) {
-      redirectRoute(router, schools[0]);
-    }
+  if (schools.length == 0) {
+    router.push("/school/join");
+  }
+  if (schools.length == 1) {
+    redirectRoute(router, schools[0]);
   }
 
   return (
