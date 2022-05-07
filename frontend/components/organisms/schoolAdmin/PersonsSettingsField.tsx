@@ -5,8 +5,6 @@ import { getAccessToken, getUserData } from "../../../utils/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
-import { InputField } from "../../atoms/input/InputField";
-import { regex } from "../../../utils/regex";
 import Skeleton from "react-loading-skeleton";
 import { Select } from "../../atoms/input/Select";
 
@@ -228,7 +226,6 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
                 onChange={(event) => {
                   setRoleId(event);
                 }}
-                iconName=""
               ></Select>
             </StyledInputField>
           </SettingsPopUp>

@@ -9,7 +9,7 @@ import SvgEye from "../svg/SvgEye";
 type Props = {
   value?: string;
   onChange: Function;
-  iconName: string;
+  icon?: any;
   editable?: boolean;
   required?: boolean;
   label?: string;
@@ -104,7 +104,7 @@ const ImageLayout = styled("div", {
 export const PasswordInput: React.FC<Props> = ({
   value,
   onChange,
-  iconName,
+  icon,
   editable = true,
   required = false,
   label = "",
@@ -133,7 +133,7 @@ export const PasswordInput: React.FC<Props> = ({
   return (
     <>
       <InputFieldCore
-        iconName={iconName}
+        icon={icon}
         required={required}
         label={label}
         showLabel={showLabel}

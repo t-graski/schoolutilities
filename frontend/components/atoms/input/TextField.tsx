@@ -5,7 +5,7 @@ import { InputFieldCore } from "./InputFieldCore";
 type Props = {
   value?: string;
   onChange: Function;
-  iconName: string;
+  icon?: any;
   required?: boolean;
   label?: string;
   showLabel?: boolean;
@@ -13,7 +13,7 @@ type Props = {
 
 const StyledTextArea = styled("textarea", {
   width: "100%",
-  
+
   background: "transparent",
   border: "none",
   padding: "0.5rem 0",
@@ -27,7 +27,7 @@ const StyledTextArea = styled("textarea", {
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
-  
+
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
   },
@@ -36,7 +36,7 @@ const StyledTextArea = styled("textarea", {
 export const TextField: React.FC<Props> = ({
   value,
   onChange,
-  iconName,
+  icon,
   required = false,
   label = "",
   showLabel = true,
@@ -44,13 +44,13 @@ export const TextField: React.FC<Props> = ({
 
   return (
     <>
-      <InputFieldCore iconName={iconName} required={required} label={label} showLabel={showLabel}>
-          <StyledTextArea
-            placeholder={label}
-            onChange={(e) => onChange(e.target.value)}
-            {...(required && { required: true })}
-            value={value}
-          ></StyledTextArea>
+      <InputFieldCore icon={icon} required={required} label={label} showLabel={showLabel}>
+        <StyledTextArea
+          placeholder={label}
+          onChange={(e) => onChange(e.target.value)}
+          {...(required && { required: true })}
+          value={value}
+        ></StyledTextArea>
       </InputFieldCore>
     </>
   );

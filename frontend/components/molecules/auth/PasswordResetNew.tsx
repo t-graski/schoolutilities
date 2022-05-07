@@ -4,10 +4,9 @@ import { Spacer } from "../../atoms/Spacer";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
-import { InputField } from "../../atoms/input/InputField";
-import { regex } from "../../../utils/regex";
 import { Button } from "../../atoms/Button";
 import { PasswordInput } from "../../atoms/input/PasswordInput";
+import SvgPassword from "../../atoms/svg/SvgPassword";
 
 const PasswordResetLayout = styled("div", {
   display: "flex",
@@ -85,7 +84,7 @@ export const PasswordResetNew = () => {
               label="Password"
               value={password}
               onChange={setPassword}
-              iconName="SvgPassword"
+              icon={SvgPassword}
               required={true}
               setValidInput={setPasswordValid}
               errorMessage="Please enter a valid password"
@@ -94,7 +93,7 @@ export const PasswordResetNew = () => {
               label="Password Confirmation"
               value={passwordConfirmation}
               onChange={setPasswordConfirmation}
-              iconName="SvgPassword"
+              icon={SvgPassword}
               required={true}
               setValidInput={setPasswordConfirmationValid}
               errorMessage="Please enter a valid password"

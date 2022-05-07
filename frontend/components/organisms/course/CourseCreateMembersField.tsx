@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/input/InputField";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { getAccessToken } from "../../../utils/authHelper";
 import { SearchSelect } from "../../atoms/input/SearchSelect";
+import SvgSchool from "../../atoms/svg/SvgSchool";
 
 type Props = {
   setDisabled: Function;
@@ -117,7 +117,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
               classes: e,
             });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           selectMultiValues={true}
           selectOptions={classes}
         />
@@ -131,7 +131,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
               members: e,
             });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           selectMultiValues={true}
           selectOptions={members}
         />

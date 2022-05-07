@@ -189,6 +189,8 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
     }
   }
 
+
+
   return (
     <>
       <ProgressLayout>
@@ -206,7 +208,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusHeadline}
               </StyledHeadline>
               <SuccessImageLayout color={statusInfo && statusInfo.statusColor}>
-                <SvgIcon iconName={statusInfo.statusIcon}></SvgIcon>
+                {/* <SvgIcon iconName={statusInfo.statusIcon}></SvgIcon> */}
               </SuccessImageLayout>
               <SuccessDescription>
                 {statusInfo && statusInfo.statusDescription}

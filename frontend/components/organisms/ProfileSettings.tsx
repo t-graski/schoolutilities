@@ -400,7 +400,6 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 label="Firstname"
                 value={userInfo.firstName}
                 onChange={(e) => {}}
-                iconName={""}
                 editable={false}
               /> */}
               <Spacer size="verySmall"></Spacer>
@@ -411,7 +410,6 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 showLabel={false}
                 value={new Date(userInfo.birthday).toLocaleDateString()}
                 onChange={(e) => { }}
-                iconName={""}
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
@@ -435,7 +433,6 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 onChange={(e) => {
                   setUserInfo({ ...userInfo, email: e });
                 }}
-                iconName={""}
               />
               <Spacer size="verySmall"></Spacer>
               <InputLabel>User Since</InputLabel>
@@ -445,7 +442,6 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 showLabel={false}
                 value={longDateCreationDate}
                 onChange={(e) => { }}
-                iconName={""}
                 editable={false}
               />
             </ProfileDataColumn>

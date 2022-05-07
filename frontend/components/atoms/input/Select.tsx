@@ -9,7 +9,7 @@ type Props = {
   }[];
   selectValue?: any;
   onChange: Function;
-  iconName: string;
+  icon?: any;
   required?: boolean;
   label?: string;
   showLabel?: boolean;
@@ -39,7 +39,7 @@ export const Select: React.FC<Props> = ({
   selectOptions,
   selectValue,
   onChange,
-  iconName,
+  icon,
   required = false,
   label = "",
   showLabel = true,
@@ -47,7 +47,7 @@ export const Select: React.FC<Props> = ({
 
   return (
     <>
-      <InputFieldCore iconName={iconName} required={required} label={label} showLabel={showLabel}>
+      <InputFieldCore icon={icon} required={required} label={label} showLabel={showLabel}>
         <StyledSelectField
           placeholder={label}
           onChange={(e) => onChange(e.target.value)}

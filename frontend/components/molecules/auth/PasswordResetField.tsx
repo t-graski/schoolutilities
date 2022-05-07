@@ -7,6 +7,7 @@ import { Separator } from "../../atoms/Separator";
 import { InputField } from "../../atoms/input/InputField";
 import { regex } from "../../../utils/regex";
 import { Button } from "../../atoms/Button";
+import SvgEmail from "../../atoms/svg/SvgEmail";
 
 const PasswordResetLayout = styled("div", {
   display: "flex",
@@ -77,7 +78,7 @@ export const PasswordResetField = () => {
               inputType="email"
               value={email}
               onChange={setEmail}
-              iconName="SvgEmail"
+              icon={SvgEmail}
               regex={regex.email}
               setValidInput={setEmailValid}
               showLabel={false}

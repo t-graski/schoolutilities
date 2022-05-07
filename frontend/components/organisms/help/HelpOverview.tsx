@@ -8,7 +8,7 @@ type Props = {
     title: string;
     href: string;
     description: string;
-    iconName: string;
+    icon?: any;
   }[];
 };
 
@@ -23,6 +23,8 @@ const HelpOverviewLayout = styled("div", {
 });
 
 const HelpOverview: React.FC<Props> = ({ items }) => {
+
+
   return (
     <>
       <HelpOverviewLayout>
@@ -31,7 +33,7 @@ const HelpOverview: React.FC<Props> = ({ items }) => {
             title={item.title}
             href={item.href}
             description={item.description}
-            iconName={item.iconName}
+            icon={item.icon}
             key={index}
           />
         ))}

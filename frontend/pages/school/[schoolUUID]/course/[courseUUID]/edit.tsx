@@ -12,6 +12,7 @@ import { InputField } from "../../../../../components/atoms/input/InputField";
 import { Button } from "../../../../../components/atoms/Button";
 import { regex } from "../../../../../utils/regex";
 import { SearchSelect } from "../../../../../components/atoms/input/SearchSelect";
+import SvgSchool from "../../../../../components/atoms/svg/SvgSchool";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -173,7 +174,7 @@ export default function Features() {
           onChange={(e) => {
             setInputData({ ...inputData, courseName: e });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={true}
           regex={regex.schoolName}
           setValidInput={setCourseNameValid}
@@ -186,7 +187,7 @@ export default function Features() {
           onChange={(e) => {
             setInputData({ ...inputData, courseDescription: e });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={false}
           setValidInput={setCourseDescriptionValid}
           errorMessage="Your course needs a description, doesn't it?"
@@ -203,7 +204,8 @@ export default function Features() {
                   persons: e,
                 });
               }}
-              iconName="SvgSchool"
+              icon={SvgSchool}
+
               selectMultiValues={true}
               selectOptions={persons}
             />
@@ -221,7 +223,7 @@ export default function Features() {
                   classes: e,
                 });
               }}
-              iconName="SvgSchool"
+              icon={SvgSchool}
               selectMultiValues={true}
               selectOptions={classes}
             />

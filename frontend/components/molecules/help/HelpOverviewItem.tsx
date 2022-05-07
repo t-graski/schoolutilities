@@ -7,7 +7,7 @@ type Props = {
   title: string;
   href: string;
   description: string;
-  iconName: string;
+  icon?: any;
 };
 
 const GeneralListItemLayout = styled("a", {
@@ -55,14 +55,17 @@ export const HelpOverviewItem: React.FC<Props> = ({
   title,
   href,
   description,
-  iconName,
+  icon,
 }) => {
+
+  const Icon = icon;
+
   return (
     <>
       <Link href={href} passHref>
         <GeneralListItemLayout>
           <IconLayout>
-            <SvgIcon iconName={iconName} />
+            {icon && <Icon />}
           </IconLayout>
           <TitleLayout>{title}</TitleLayout>
           <Separator width={"ultraSmall"} alignment={"center"}></Separator>

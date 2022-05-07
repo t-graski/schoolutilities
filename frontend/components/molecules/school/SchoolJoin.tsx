@@ -78,7 +78,6 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
           <InputField
             inputType={"text"}
             onChange={setJoinCode}
-            iconName={""}
             regex={regex.name}
             setValidInput={setJoinCodeValid}
             errorMessage="Please enter a valid join code"

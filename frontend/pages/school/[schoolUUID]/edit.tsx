@@ -9,6 +9,10 @@ import { ClassesSettingsField } from "../../../components/organisms/schoolAdmin/
 import { PersonsSettingsField } from "../../../components/organisms/schoolAdmin/PersonsSettingsField";
 import { JoinCodesSettingsField } from "../../../components/organisms/schoolAdmin/JoinCodesSettingsField";
 import { getAccessToken, getUserData, logout } from "../../../utils/authHelper";
+import SvgDepartment from "../../../components/atoms/svg/SvgDepartment";
+import SvgClass from "../../../components/atoms/svg/SvgClass";
+import SvgStudent from "../../../components/atoms/svg/SvgStudent";
+import SvgTeacher from "../../../components/atoms/svg/SvgTeacher";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -69,30 +73,30 @@ export default function CreateSchool() {
         <SideDashboard
           links={[
             {
-              iconName: "SvgDepartment",
+              icon: SvgDepartment,
               label: "Departments",
               href: `/school/${schoolUUID}/edit?tab=departments`,
               highlighted:
                 urlParam != "persons" &&
-                urlParam != "classes" &&
-                urlParam != "join-codes"
+                  urlParam != "classes" &&
+                  urlParam != "join-codes"
                   ? true
                   : false,
             },
             {
-              iconName: "SvgClass",
+              icon: SvgClass,
               label: "Classes",
               href: `/school/${schoolUUID}/edit?tab=classes`,
               highlighted: urlParam == "classes" ? true : false,
             },
             {
-              iconName: "SvgStudent",
+              icon: SvgStudent,
               label: "Persons",
               href: `/school/${schoolUUID}/edit?tab=persons`,
               highlighted: urlParam == "persons" ? true : false,
             },
             {
-              iconName: "SvgTeacher",
+              icon: SvgTeacher,
               label: "Invite Codes",
               href: `/school/${schoolUUID}/edit?tab=join-codes`,
               highlighted: urlParam == "join-codes" ? true : false,

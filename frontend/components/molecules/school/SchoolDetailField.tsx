@@ -6,6 +6,8 @@ import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { regex } from "../../../utils/regex";
 import { Select } from "../../atoms/input/Select";
+import SvgSchool from "../../atoms/svg/SvgSchool";
+import SvgLanguage from "../../atoms/svg/SvgLanguage";
 
 type Props = {
   setDisabled: Function;
@@ -84,7 +86,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           inputType="text"
           value={schoolName}
           onChange={setSchoolName}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={true}
           regex={regex.schoolName}
           setValidInput={setSchoolNameValid}
@@ -93,7 +95,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         <Select
           label="Language"
           onChange={setSchoolLanguage}
-          iconName="SvgLanguage"
+          icon={SvgLanguage}
           required={true}
           selectOptions={[
             { value: "german", label: "German" },
@@ -104,7 +106,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
         <Select
           label="Timezone (GMT+0)"
           onChange={setSchoolTimezone}
-          iconName="SvgTimezone"
+          icon={SvgLanguage}
           required={true}
           selectOptions={[
             { value: "", label: "Timezone" },

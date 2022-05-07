@@ -5,6 +5,7 @@ import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { regex } from "../../../utils/regex";
+import SvgSchool from "../../atoms/svg/SvgSchool";
 
 type Props = {
   setDisabled: Function;
@@ -67,7 +68,7 @@ export const CourseCreateDetailField: React.FC<Props> = ({
           onChange={(e) => {
             setInputData({ ...inputData, courseName: e });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={true}
           regex={regex.schoolName}
           setValidInput={setCourseNameValid}
@@ -80,7 +81,7 @@ export const CourseCreateDetailField: React.FC<Props> = ({
           onChange={(e) => {
             setInputData({ ...inputData, courseDescription: e });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={false}
           setValidInput={setCourseDescriptionValid}
           errorMessage="Your course needs a description, doesn't it?"

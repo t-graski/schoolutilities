@@ -73,12 +73,10 @@ export const ArticleAddField: React.FC<Props> = ({}) => {
       <InputField
         inputType={"text"}
         onChange={setTitle}
-        iconName={""}
         label={"Title"}
       ></InputField>
       <TextField
         onChange={setCatchPhrase}
-        iconName={""}
         label={"Beschreibung"}
       ></TextField>
       <MarkdownEditor saveContent={setContent} value=""></MarkdownEditor>

@@ -6,6 +6,7 @@ type Props = {
   description: string;
   logos: {
     name: string;
+    icon?: any;
     imageBg: "1" | "2" | "3";
     orientation?: "horizontal" | "vertical";
   }[];
@@ -36,6 +37,7 @@ export const LogoPresentationBox: React.FC<Props> = ({
         {logos.map((logo, index) => (
           <SingleLogo
             logoName={logo.name}
+            icon={logo.icon}
             imageBg={logo.imageBg}
             orientation={logo.orientation}
             key={index}

@@ -7,7 +7,7 @@ type Props = {
   inputType: "text" | "date" | "email" | "number" | "datetime-local";
   value?: string;
   onChange: Function;
-  iconName: string;
+  icon?: any;
   editable?: boolean;
   required?: boolean;
   label?: string;
@@ -81,7 +81,7 @@ export const InputField: React.FC<Props> = ({
   inputType,
   value,
   onChange,
-  iconName,
+  icon,
   editable = true,
   required = false,
   label = "",
@@ -114,7 +114,7 @@ export const InputField: React.FC<Props> = ({
 
   return (
     <>
-      <InputFieldCore iconName={iconName} required={required} label={label} showLabel={showLabel}>
+      <InputFieldCore icon={icon} required={required} label={label} showLabel={showLabel}>
         <StyledLabel>
           <StyledInputField
             type={inputType}

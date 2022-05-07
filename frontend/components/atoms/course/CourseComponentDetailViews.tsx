@@ -32,7 +32,7 @@ export function HeadlineDetailView({
           });
           setButtonDisabled(value.length === 0);
         }}
-        iconName={""}
+        icon={""}
         size="small"
       ></InputField>
     </>
@@ -64,7 +64,6 @@ export function TextDetailView({
           });
           setButtonDisabled(value.length === 0);
         }}
-        iconName={""}
       ></TextField>
     </>
   );
@@ -108,7 +107,6 @@ export function ExerciseDetailView({
           });
           setButtonDisabled(value.length === 0);
         }}
-        iconName={""}
         size="small"
       ></InputField>
       <TextField
@@ -124,7 +122,6 @@ export function ExerciseDetailView({
             description: value,
           });
         }}
-        iconName={""}
       ></TextField>
       <InputField
         label="Due date"
@@ -142,7 +139,6 @@ export function ExerciseDetailView({
             dueTime: new Date(Date.parse(value)).toISOString(),
           });
         }}
-        iconName={""}
         size="small"
       ></InputField>
     </>

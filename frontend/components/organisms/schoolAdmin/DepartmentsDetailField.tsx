@@ -241,7 +241,6 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                       setDepartmentNameValid(false);
                     }
                   }}
-                  iconName=""
                   regex={regex.schoolName}
                   setValidInput={setDepartmentNameValid}
                   min="2"

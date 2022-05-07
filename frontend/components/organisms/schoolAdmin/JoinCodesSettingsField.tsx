@@ -242,7 +242,6 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
                 onChange={(event) => {
                   setJoinCodeName(event);
                 }}
-                iconName=""
                 regex={regex.schoolName}
                 setValidInput={setJoinCodeNameValid}
                 min="2"

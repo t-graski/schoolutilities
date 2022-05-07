@@ -5,6 +5,7 @@ import SvgDownload from "../../atoms/svg/SvgDownload";
 
 type Props = {
   logoName: string;
+  icon?: any;
   imageBg?: "1" | "2" | "3";
   orientation?: "horizontal" | "vertical";
 };
@@ -71,14 +72,18 @@ const DownloadButton = styled("a", {
 
 export const SingleLogo: React.FC<Props> = ({
   logoName,
+  icon,
   imageBg,
   orientation = "horizontal",
 }) => {
+
+  const Icon = icon;
+
   return (
     <div>
       <SingleLogoLayout imageBg={imageBg}>
         <LogoSizer orientation={orientation}>
-          <SvgIcon iconName={`Svg${logoName}`} />
+          {icon && <Icon />}
         </LogoSizer>
       </SingleLogoLayout>
       <DownloadButtonsLayout>

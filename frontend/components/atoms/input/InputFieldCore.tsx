@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "../../../stitches.config";
 
 type Props = {
-  iconName: string;
+  icon?: any;
   required?: boolean;
   label?: string;
   showLabel?: boolean;
@@ -35,7 +35,7 @@ const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
-  
+
   color: "$fontPrimary",
 });
 
@@ -47,13 +47,16 @@ const Required = styled("div", {
 
 export const InputFieldCore: React.FC<Props> = ({
   children,
-  iconName,
+  icon,
   required = false,
   label = "",
   showLabel = true,
 }) => {
 
+  const Icon = icon;
+
   return (
+
     <>
       {label && showLabel && (
         <>
@@ -63,9 +66,9 @@ export const InputFieldCore: React.FC<Props> = ({
         </>
       )}
       <InputFieldLayout>
-        {iconName && (
+        {icon && (
           <ImageLayout>
-            <SvgIcon iconName={iconName} />
+            <Icon />
           </ImageLayout>
         )}
         {children}

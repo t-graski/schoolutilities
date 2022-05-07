@@ -9,6 +9,8 @@ import { getAccessToken, logout } from "../../../utils/authHelper";
 import { regex } from "../../../utils/regex";
 import { PasswordInput } from "../../atoms/input/PasswordInput";
 import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
+import SvgEmail from "../../atoms/svg/SvgEmail";
+import SvgPassword from "../../atoms/svg/SvgPassword";
 
 type Props = {};
 
@@ -53,7 +55,7 @@ const StyledLink = styled("a", {
   },
 });
 
-export const LoginField: React.FC<Props> = ({}) => {
+export const LoginField: React.FC<Props> = ({ }) => {
   const [email, setEmail] = React.useState("");
   const [emailValid, setEmailValid] = React.useState(false);
   const [password, setPassword] = React.useState("");
@@ -146,7 +148,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconName="SvgEmail"
+            icon={SvgEmail}
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
@@ -155,7 +157,7 @@ export const LoginField: React.FC<Props> = ({}) => {
             label="Password"
             value={password}
             onChange={setPassword}
-            iconName="SvgPassword"
+            icon={SvgPassword}
             required={true}
             validationOptions={PASSWORD_VALIDATION_MESSAGES}
             setValidInput={setPasswordValid}
@@ -187,7 +189,7 @@ export const LoginField: React.FC<Props> = ({}) => {
                 <Button
                   backgroundColor="primary"
                   color="primary"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   See your profile
                 </Button>

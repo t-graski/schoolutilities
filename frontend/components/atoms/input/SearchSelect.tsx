@@ -11,7 +11,7 @@ type Props = {
   selectValue?: any;
   selectMultiValues?: boolean;
   onChange: Function;
-  iconName: string;
+  icon?: any;
   editable?: boolean;
 };
 
@@ -199,12 +199,12 @@ export const SearchSelect: React.FC<Props> = ({
   selectValue,
   selectMultiValues,
   onChange,
-  iconName,
+  icon,
   editable = true,
 }) => {
   return (
     <>
-      <InputFieldCore iconName={iconName} showLabel={false}>
+      <InputFieldCore icon={icon} showLabel={false}>
         <StyledSelect
           styles={selectStyled}
           options={selectOptions}

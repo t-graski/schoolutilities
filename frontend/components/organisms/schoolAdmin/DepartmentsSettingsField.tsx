@@ -255,7 +255,6 @@ export const DepartmentsSettingsField: React.FC<Props> = ({ }) => {
                 onChange={(event) => {
                   setDepartmentName(event);
                 }}
-                iconName=""
                 regex={regex.schoolName}
                 setValidInput={setDepartmentNameValid}
                 min="2"

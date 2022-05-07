@@ -5,7 +5,7 @@ import { styled } from "../../stitches.config";
 type Props = {
   items: {
     name: string;
-    iconName: string;
+    icon?: any;
     href: string;
   }[];
   active?: string;
@@ -82,19 +82,22 @@ export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {
   return (
     <>
       <SideDashboardBarLayout>
-        {items.map((item) => (
-          <Link href={item.href} key={item.name} passHref>
-            <SideDashboardBarItemLink
-              href={item.href}
-              highlighted={active.toLowerCase() == item.name.toLowerCase()}
-            >
-              <IconLayout>
-                <SvgIcon iconName={item.iconName} />
-              </IconLayout>
-              <SideDashboardBarItemName>{item.name}</SideDashboardBarItemName>
-            </SideDashboardBarItemLink>
-          </Link>
-        ))}
+        {items.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link href={item.href} key={item.name} passHref>
+              <SideDashboardBarItemLink
+                href={item.href}
+                highlighted={active.toLowerCase() == item.name.toLowerCase()}
+              >
+                <IconLayout>
+                  <Icon />
+                </IconLayout>
+                <SideDashboardBarItemName>{item.name}</SideDashboardBarItemName>
+              </SideDashboardBarItemLink>
+            </Link>
+          )
+        })}
       </SideDashboardBarLayout>
     </>
   );

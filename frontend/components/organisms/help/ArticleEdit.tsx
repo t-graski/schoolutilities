@@ -27,7 +27,7 @@ const ButtonLayout = styled("div", {
   gap: "20px",
 });
 
-export const ArticleEdit: React.FC<Props> = ({}) => {
+export const ArticleEdit: React.FC<Props> = ({ }) => {
   const [title, setTitle] = useState("");
   const [catchPhrase, setCatchPhrase] = useState("");
   const [content, setContent] = useState("");
@@ -95,13 +95,11 @@ export const ArticleEdit: React.FC<Props> = ({}) => {
       <InputField
         inputType={"text"}
         onChange={setTitle}
-        iconName={""}
         label={"Title"}
         value={title}
       ></InputField>
       <TextField
         onChange={setCatchPhrase}
-        iconName={""}
         label={"Beschreibung"}
         value={catchPhrase}
       ></TextField>

@@ -257,7 +257,6 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                     setSchoolClassNameValid(false);
                   }
                 }}
-                iconName=""
                 regex={regex.schoolName}
                 setValidInput={setSchoolClassNameValid}
                 min="2"
@@ -275,7 +274,6 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
                 onChange={(event) => {
                   setDepartmentUUId(event);
                 }}
-                iconName=""
               ></Select>
             </StyledInputField>
           </SettingsPopUp>

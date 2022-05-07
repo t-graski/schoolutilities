@@ -9,6 +9,10 @@ import { CheckBox } from "../../atoms/input/CheckBox";
 import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
 import SvgQuality from "../../atoms/svg/SvgQuality";
 import SvgWarning from "../../atoms/svg/SvgWarning";
+import SvgName from "../../atoms/svg/SvgName";
+import SvgBirthDate from "../../atoms/svg/SvgBirthDate";
+import SvgEmail from "../../atoms/svg/SvgEmail";
+import SvgPassword from "../../atoms/svg/SvgPassword";
 
 type Props = {};
 
@@ -159,7 +163,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="text"
             value={firstName}
             onChange={setFirstName}
-            iconName="SvgName"
+            icon={SvgName}
             required={true}
             regex={regex.name}
             setValidInput={setFirstNameValid}
@@ -170,7 +174,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="text"
             value={lastName}
             onChange={setLastName}
-            iconName="SvgName"
+            icon={SvgName}
             required={true}
             regex={regex.name}
             setValidInput={setLastNameValid}
@@ -181,7 +185,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="date"
             value={birthDate}
             onChange={setBirthDate}
-            iconName="SvgBirthDate"
+            icon={SvgBirthDate}
             required={true}
             min="1900-01-01"
             max={new Date().toJSON().split("T")[0]}
@@ -191,7 +195,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconName="SvgEmail"
+            icon={SvgEmail}
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
@@ -201,7 +205,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             label="Password"
             value={password}
             onChange={setPassword}
-            iconName="SvgPassword"
+            icon={SvgPassword}
             required={true}
             validationOptions={PASSWORD_VALIDATION_MESSAGES}
             setValidInput={setPasswordValid}
@@ -211,7 +215,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             label="Password Confirmation"
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
-            iconName="SvgPassword"
+            icon={SvgPassword}
             required={true}
             validationOptions={PASSWORD_VALIDATION_MESSAGES}
             setValidInput={setPasswordConfirmationValid}

@@ -5,6 +5,7 @@ import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
+import SvgAlert from "../../components/atoms/svg/SvgAlert";
 
 export default function RegisterApproved({ items }) {
   return (
@@ -42,7 +43,7 @@ export async function getStaticProps() {
           title: item.headline,
           href: `/help/articles/${item.articleUUID}`,
           description: item.catchPhrase,
-          iconName: "SvgAlert",
+          icon: SvgAlert,
         };
       }),
     },
