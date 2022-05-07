@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import type * as Stitches from "@stitches/react";
+import { InputFieldCore } from "./InputFieldCore";
 
 type Props = {
   inputType: "text" | "date" | "email" | "number" | "datetime-local";
@@ -65,29 +66,6 @@ const StyledInputField = styled("input", {
   },
 });
 
-const InputFieldLayout = styled("div", {
-  display: "flex",
-  alignItems: "center",
-  width: "100%",
-  borderRadius: "15px",
-  border: "none",
-  padding: "10.3px 20px",
-  gap: "20px",
-
-  background: "$backgroundTertiary",
-
-  variants: {
-    editable: {
-      true: {},
-      false: {
-        border: "none",
-
-        background: "transparent",
-      },
-    },
-  },
-});
-
 const StyledLabel = styled("label", {
   height: "fit-content",
   width: "100%",
@@ -97,28 +75,6 @@ const ErrorMessage = styled("span", {
   paddingLeft: "10px",
 
   color: "red",
-});
-
-const ImageLayout = styled("div", {
-  display: "flex",
-  width: "30px",
-  height: "30px",
-
-  color: "$fontPrimary",
-
-  variants: {
-    cursor: {
-      pointer: {
-        cursor: "pointer",
-      },
-    },
-  },
-});
-
-const InputFieldLabel = styled("div", {});
-
-const Required = styled("div", {
-  display: "inline-block",
 });
 
 export const InputField: React.FC<Props> = ({
@@ -158,19 +114,7 @@ export const InputField: React.FC<Props> = ({
 
   return (
     <>
-      {label && showLabel && (
-        <>
-          <InputFieldLabel>
-            {label} {required && <Required>*</Required>}
-          </InputFieldLabel>
-        </>
-      )}
-      <InputFieldLayout editable={editable}>
-        {iconName && (
-          <ImageLayout>
-            <SvgIcon iconName={iconName} />
-          </ImageLayout>
-        )}
+      <InputFieldCore iconName={iconName} required={required} label={label} showLabel={showLabel}>
         <StyledLabel>
           <StyledInputField
             type={inputType}
@@ -186,7 +130,7 @@ export const InputField: React.FC<Props> = ({
             {...(max && { max })}
           />
         </StyledLabel>
-      </InputFieldLayout>
+      </InputFieldCore>
       {errorMessage && isInputValid === false && (
         <ErrorMessage>{errorMessage}</ErrorMessage>
       )}

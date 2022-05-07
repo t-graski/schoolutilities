@@ -1,6 +1,7 @@
 import React from "react";
 import { styled, styles } from "../../../stitches.config";
 import Select from "react-select";
+import { InputFieldCore } from "./InputFieldCore";
 
 type Props = {
   selectOptions?: {
@@ -201,15 +202,9 @@ export const SearchSelect: React.FC<Props> = ({
   iconName,
   editable = true,
 }) => {
-  
   return (
     <>
-      <InputFieldLayout>
-        {iconName && (
-          <ImageLayout>
-            <SvgIcon iconName={iconName} />
-          </ImageLayout>
-        )}
+      <InputFieldCore iconName={iconName} showLabel={false}>
         <StyledSelect
           styles={selectStyled}
           options={selectOptions}
@@ -223,7 +218,7 @@ export const SearchSelect: React.FC<Props> = ({
             onChange(value);
           }}
         ></StyledSelect>
-      </InputFieldLayout>
+      </InputFieldCore>
     </>
   );
 };

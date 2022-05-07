@@ -8,7 +8,7 @@ type Props = {
   href: string;
   buttonText: string;
   description: string;
-  iconName: string;
+  icon: any;
 };
 
 const GeneralListItemLayout = styled("div", {
@@ -45,14 +45,15 @@ export const GeneralListItem: React.FC<Props> = ({
   href,
   buttonText,
   description,
-  iconName,
+  icon,
 }) => {
   const router = useRouter();
+  const Icon = icon;
   return (
     <>
       <GeneralListItemLayout>
         <IconLayout>
-          <SvgIcon iconName={iconName} />
+          <Icon />
         </IconLayout>
         <TitleLayout>{title}</TitleLayout>
         <DescriptionLayout>{description}</DescriptionLayout>

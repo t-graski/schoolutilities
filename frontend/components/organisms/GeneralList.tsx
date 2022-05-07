@@ -9,7 +9,7 @@ type Props = {
     href: string;
     buttonText: string;
     description: string;
-    iconName: string;
+    icon: any;
   }[];
 };
 
@@ -41,7 +41,7 @@ const GeneralList: React.FC<Props> = ({ items }) => {
               href={item.href}
               buttonText={item.buttonText}
               description={item.description}
-              iconName={item.iconName}
+              icon={item.icon}
             />
             <Separator
               key={index + items.length}

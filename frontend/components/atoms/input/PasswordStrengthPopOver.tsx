@@ -4,6 +4,8 @@ import { InfoHoverCard } from "../InfoHoverCard";
 import { calculatePasswordStrengthIndex } from "../../../utils/authHelper";
 import { blackA } from "@radix-ui/colors";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
+import SvgCheckMark from "../svg/SvgCheckMark";
+import SvgExclamination from "../svg/SvgExclamination";
 
 const StyledProgress = styled(ProgressPrimitive.Root, {
   position: "relative",
@@ -19,7 +21,7 @@ const StyledProgress = styled(ProgressPrimitive.Root, {
 const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {
   height: "100%",
 
-  transition: "width 660ms cubic-bezier(0.65, 0, 0.35, 1)",  
+  transition: "width 660ms cubic-bezier(0.65, 0, 0.35, 1)",
   backgroundColor: "$specialSecondary",
 
   variants: {
@@ -166,13 +168,11 @@ export const PasswordStrengthPopOver: React.FC<Props> = ({
                   validationResult.valid ? validationResult.valid : false
                 }
               >
-                <SvgIcon
-                  iconName={
-                    validationResult.valid
-                      ? validationResult.validIconName
-                      : validationResult.invalidIconName
-                  }
-                />
+                {validationResult.valid ? (
+                  <SvgCheckMark></SvgCheckMark>
+                ) : (
+                  <SvgExclamination></SvgExclamination>
+                )}
               </InfoHoverCardIcon>
               <InfoHoverCardText>
                 {validationResult.errorMessage}

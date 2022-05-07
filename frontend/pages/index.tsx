@@ -4,6 +4,9 @@ import Head from "next/head";
 import { StartPageBox } from "../components/molecules/StartPageBox";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import SvgDiscordLogo from "../components/atoms/svg/SvgDiscordLogo";
+import SvgSchool from "../components/atoms/svg/SvgSchool";
+import SvgPremium from "../components/atoms/svg/SvgPremium";
 
 const Footer = dynamic(() => import("../components/organisms/Footer"));
 const GeneralList = dynamic(
@@ -84,7 +87,7 @@ export default function Home() {
                   "Take a look at our Discord Bot, which reminds you on upcoming Events and simplifies your life.",
                 href: "/bot",
                 buttonText: "LET'S GET STARTED",
-                iconName: "SvgDiscordLogo",
+                icon: SvgDiscordLogo,
               },
               {
                 title: "Create School",
@@ -92,7 +95,7 @@ export default function Home() {
                   "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
                 href: "/school/create",
                 buttonText: "GET ME THERE",
-                iconName: "SvgSchool",
+                icon: SvgSchool,
               },
               {
                 title: "Premium",
@@ -100,7 +103,7 @@ export default function Home() {
                   "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
                 href: "/premium",
                 buttonText: "LEARN MORE",
-                iconName: "SvgPremium",
+                icon: SvgPremium,
               },
             ]}
           ></GeneralList>
