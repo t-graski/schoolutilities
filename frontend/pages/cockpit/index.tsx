@@ -68,21 +68,18 @@ export default function Home() {
               href: "/cockpit/articles",
               description:
                 "Increase the feeling of genius updates and new features.",
-              icon: SvgAlert,
             },
             {
               title: "Help penurious guys",
               href: "/admin/news",
               description:
                 "Grab your first aid bag, run to someone and help them with gorgeous articles.",
-              icon: SvgFirstAidKit,
             },
             {
               title: "Statistics",
               href: "/admin/stats",
               description:
                 "Life is all about numbers. Let's learn more about those little fancy characters.",
-              icon: SvgAttendance,
             },
           ]}
         ></HelpOverview>

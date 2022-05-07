@@ -43,7 +43,6 @@ export async function getStaticProps() {
           title: item.headline,
           href: `/help/articles/${item.articleUUID}`,
           description: item.catchPhrase,
-          icon: SvgAlert,
         };
       }),
     },

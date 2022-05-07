@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled } from "../../../stitches.config";
 import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";

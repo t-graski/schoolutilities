@@ -93,7 +93,7 @@ function App({ Component, pageProps }: AppProps) {
             <Component {...pageProps} router={router} />
           </SkeletonTheme>
         </ThemeProvider>
-        <ReactQueryDevtools />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </IdProvider>
   );
