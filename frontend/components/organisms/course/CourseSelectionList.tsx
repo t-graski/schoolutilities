@@ -3,6 +3,7 @@ import { styled } from "../../../stitches.config";
 import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
 import Skeleton from "react-loading-skeleton";
+import { useQuery } from "react-query";
 
 export type SideDashboardProps = {};
 
@@ -71,35 +72,51 @@ const CourseDescription = styled("p", {
   margin: 0,
 });
 
-export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
+export const CourseSelectionList: React.FC<SideDashboardProps> = ({ }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID;
-  const [courses, setCourses] = useState(null);
-  useEffect(() => {
-    updateCoursesFromDatabase();
-    
-    async function updateCoursesFromDatabase() {
-      let accessToken = await getAccessToken();
-      if (!accessToken) {
-        router.push("/auth?tab=login&redirect=/school/course");
-      } else {
-        if (schoolUUID) {
-          let response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-          let fetchedCourses = await response.json();
-          setCourses(fetchedCourses);
-        }
+  const { data: courses, status } = useQuery("courses", fetchCourses);
+
+  async function fetchCourses() {
+    let accessToken = await getAccessToken();
+    if (!accessToken) {
+      router.push("/auth?tab=login&redirect=/school/course");
+    } else {
+      if (schoolUUID) {
+        let response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        return await response.json();
       }
     }
-  }, [router, schoolUUID]);
+  }
 
+  if (status === "error") {
+    return <div>Error</div>
+  }
+
+  if (status === "loading") {
+    return (<>
+      <CourseList>
+        <Skeleton width="100%" height={150}></Skeleton>
+        <Skeleton width="100%" height={150}></Skeleton>
+        <Skeleton width="100%" height={150}></Skeleton>
+        <Skeleton width="100%" height={150}></Skeleton>
+      </CourseList>
+    </>);
+  }
+
+  if (courses.length === 0) {
+    return (<>
+      You haven&apos;t been added to any course yet.
+    </>)
+  }
   return (
     <>
       <CourseList>
@@ -120,19 +137,6 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
               <CourseDescription>{course.courseDescription}</CourseDescription>
             </CourseLayout>
           ))
-        )}
-        { courses && courses.length == 0 && (
-          <>
-            You haven&apos;t been added to any course yet.
-          </>
-        )}
-        { !courses && (
-          <>
-            <Skeleton width="100%" height={150}></Skeleton>
-            <Skeleton width="100%" height={150}></Skeleton>
-            <Skeleton width="100%" height={150}></Skeleton>
-            <Skeleton width="100%" height={150}></Skeleton>
-          </>
         )}
       </CourseList>
     </>
