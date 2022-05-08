@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled } from "../../../stitches.config";
 import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
@@ -33,14 +33,16 @@ const CourseLayout = styled("div", {
   height: "100%",
   padding: "10px 35px",
   borderRadius: "35px",
+
   backgroundColor: "$backgroundTertiary",
   transition: "all 200ms ease-in-out",
-  "&:hover": {
-    opacity: "0.8",
-  },
   cursor: "pointer",
   placeSelf: "center",
   color: "$fontPrimary",
+
+  "&:hover": {
+    opacity: "0.8",
+  },
 
   "@mobileOnly": {
     padding: "10px 20px",
@@ -49,78 +51,84 @@ const CourseLayout = styled("div", {
 });
 
 const CourseName = styled("p", {
+  width: "100%",
+  margin: 0,
+
   fontSize: "2.2rem",
   fontWeight: "bold",
-  width: "100%",
   textAlign: "left",
   lineHeight: "2.2rem",
-  margin: 0,
 });
 
 const TeacherName = styled("p", {
   display: "inline-block",
+  width: "100%",
+  marginBottom: "10px",
+
   fontSize: "1.1rem",
   fontWeight: "bold",
-  width: "100%",
   textAlign: "left",
-  marginBottom: "10px",
 });
 
 const CourseDescription = styled("p", {
+  margin: 0,
+
   fontSize: "0.8rem",
   textAlign: "left",
-  margin: 0,
 });
 
-export const CourseSelectionList: React.FC<SideDashboardProps> = ({ }) => {
-  const router = useRouter();
-  const schoolUUID = router.query.schoolUUID;
-  const { data: courses, status } = useQuery("courses", fetchCourses);
-
-  async function fetchCourses() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth?tab=login&redirect=/school/course");
-    } else {
-      if (schoolUUID) {
-        let response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        return await response.json();
-      }
+async function fetchCourses(schoolUUID) {
+  let accessToken = await getAccessToken();
+  let response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
   }
 
+  return response.json();
+}
+
+export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
+  const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
+
+  const { data: courses, status } = useQuery(["courses", schoolUUID], () =>
+    fetchCourses(schoolUUID)
+  );
+
   if (status === "error") {
-    return <div>Error</div>
+    return <div>Error</div>;
   }
 
   if (status === "loading") {
-    return (<>
-      <CourseList>
-        <Skeleton width="100%" height={150}></Skeleton>
-        <Skeleton width="100%" height={150}></Skeleton>
-        <Skeleton width="100%" height={150}></Skeleton>
-        <Skeleton width="100%" height={150}></Skeleton>
-      </CourseList>
-    </>);
+    return (
+      <>
+        <CourseList>
+          <Skeleton width="100%" height={150}></Skeleton>
+          <Skeleton width="100%" height={150}></Skeleton>
+          <Skeleton width="100%" height={150}></Skeleton>
+          <Skeleton width="100%" height={150}></Skeleton>
+        </CourseList>
+      </>
+    );
   }
 
   if (courses.length === 0) {
-    return (<>
-      You haven&apos;t been added to any course yet.
-    </>)
+    return <>You haven&apos;t been added to any course yet.</>;
   }
   return (
     <>
       <CourseList>
-        {courses && courses.length > 0 && (
+        {courses &&
+          courses.length > 0 &&
           courses.map((course) => (
             <CourseLayout
               key={course.courseUUID}
@@ -136,8 +144,7 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({ }) => {
               </TeacherName>
               <CourseDescription>{course.courseDescription}</CourseDescription>
             </CourseLayout>
-          ))
-        )}
+          ))}
       </CourseList>
     </>
   );

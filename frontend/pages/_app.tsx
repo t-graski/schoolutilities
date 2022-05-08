@@ -8,7 +8,7 @@ import AOS from "aos";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../utils/skeleton.css";
 import "../utils/sunEditor.css";
-import { IdProvider } from '@radix-ui/react-id';
+import { IdProvider } from "@radix-ui/react-id";
 
 const globalStyles = globalCss({
   "*": {
@@ -41,6 +41,7 @@ import "aos/dist/aos.css";
 import { SkeletonTheme } from "react-loading-skeleton";
 import Script from "next/script";
 import { ThemeProvider } from "next-themes";
+import ProtectedRoute from "../components/atoms/ProtectedRoute";
 
 function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -54,47 +55,49 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <IdProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          disableTransitionOnChange
-          attribute="class"
-          value={{ light: lightTheme.className, dark: "dark-theme" }}
-          defaultTheme="system"
-        >
-          <SkeletonTheme
-            baseColor="var(--colors-backgroundSecondary)"
-            highlightColor="var(--colors-skeletonSecondary)"
-            duration={1.3}
+      <ProtectedRoute router={router}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider
+            disableTransitionOnChange
+            attribute="class"
+            value={{ light: lightTheme.className, dark: "dark-theme" }}
+            defaultTheme="system"
           >
-            <Script
-              async
-              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-            ></Script>
-            <Script
-              dangerouslySetInnerHTML={{
-                __html: `
+            <SkeletonTheme
+              baseColor="var(--colors-backgroundSecondary)"
+              highlightColor="var(--colors-skeletonSecondary)"
+              duration={1.3}
+            >
+              <Script
+                async
+                src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+              ></Script>
+              <Script
+                dangerouslySetInnerHTML={{
+                  __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', 'G-879Y3BTW0K', {
                   page_path: window.location.pathname,
                 });`,
-              }}
-              id="google-analytics-tag"
-            ></Script>
-            <Script
-              src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
-              strategy="lazyOnload"
-            ></Script>
-            <Script
-              async
-              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-            ></Script>
-            <Component {...pageProps} router={router} />
-          </SkeletonTheme>
-        </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+                }}
+                id="google-analytics-tag"
+              ></Script>
+              <Script
+                src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+                strategy="lazyOnload"
+              ></Script>
+              <Script
+                async
+                src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+              ></Script>
+              <Component {...pageProps} router={router} />
+            </SkeletonTheme>
+          </ThemeProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </ProtectedRoute>
     </IdProvider>
   );
 }

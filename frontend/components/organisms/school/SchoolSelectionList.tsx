@@ -68,8 +68,12 @@ async function fetchSchools() {
       },
     }
   );
-  const data = await response.json();
-  return data;
+
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
+  }
+  
+  return response.json();
 }
 
 export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
@@ -89,11 +93,13 @@ export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
     return <div>Error</div>;
   }
 
-  if (schools.length == 0) {
-    router.push("/school/join");
-  }
-  if (schools.length == 1) {
-    redirectRoute(router, schools[0]);
+  if (status == "success") {
+    if (schools.length == 0) {
+      router.push("/school/join");
+    }
+    if (schools.length == 1) {
+      redirectRoute(router, schools[0]);
+    }
   }
 
   return (

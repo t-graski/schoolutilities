@@ -11,6 +11,7 @@ import { getAccessToken } from "../../../../../utils/authHelper";
 import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseContent from "../../../../../components/molecules/course/CourseContent";
 import { Button } from "../../../../../components/atoms/Button";
+import { useQuery } from "react-query";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -27,72 +28,78 @@ const HeadlineLayout = styled("div", {
   alignItems: "center",
 });
 
+async function fetchCourse(courseUUID) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
+  }
+
+  const data = await response.json();
+
+  for (let key in data) {
+    return data[key];
+  }
+
+  throw new Error("No course found");
+}
+
+async function fetchCourseContent(courseUUID) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements/${courseUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
+  }
+
+  return response.json();
+}
+
 export default function Features() {
   const router = useRouter();
 
-  const [courseName, setCourseName] = useState("");
-  const [courseUUID, setCourseUUID] = useState("");
-  const [schoolUUID, setSchoolUUID] = useState("");
-  const [canEditCourse, setCanEditCourse] = useState(false);
+  const courseUUID = router.query.courseUUID as string;
+  const schoolUUID = router.query.schoolUUID as string;
 
-  useEffect(() => {
-    requestDataFromDatabase();
-  });
+  const { data: items, status: contentStatus } = useQuery(
+    ["items", courseUUID],
+    () => fetchCourseContent(courseUUID)
+  );
+  const { data: course, status: courseStatus } = useQuery(
+    ["course", courseUUID],
+    () => fetchCourse(courseUUID)
+  );
 
-  async function requestDataFromDatabase() {
-    if (!Array.isArray(router.query.courseUUID)) {
-      setCourseUUID(router.query.courseUUID);
-    }
-    if (!Array.isArray(router.query.schoolUUID)) {
-      setSchoolUUID(router.query.schoolUUID);
-    }
-    let accessToken = await getAccessToken();
-    if (courseUUID && accessToken && courseName == "") {
-      const courseResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (courseResponse) {
-        if (courseResponse.status == 200) {
-          const courseData = await courseResponse.json();
-          for (let key in courseData) {
-            setCourseName(courseData[key].courseName);
-            setCanEditCourse(courseData[key].canEdit);
-          }
-        } else {
-          setCourseName("Database error");
-        }
-      }
-      const elementsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements/${courseUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (elementsResponse) {
-        if (elementsResponse.status == 200) {
-          const courseData = await elementsResponse.json();
-          console.log(courseData);
-          setItems(courseData);
-        } else {
-          setCourseName("Database error");
-        }
-      }
-    } else if (!accessToken) {
-      router.push("/auth?tab=login");
-    }
+  if (contentStatus === "loading" || courseStatus === "loading") {
+    return null;
   }
-  const [items, setItems] = useState([]);
+
+  if (contentStatus === "error" || courseStatus === "error") {
+    return <div>Error</div>;
+  }
+
+  const { courseName, canEdit } = course;
 
   return (
     <>
@@ -108,12 +115,12 @@ export default function Features() {
             label={courseName}
             alignment="left"
           ></Headline>
-          {canEditCourse && <CourseMenu courseId={courseUUID}></CourseMenu>}
+          {canEdit && <CourseMenu courseId={courseUUID}></CourseMenu>}
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
         <CourseContent items={items}></CourseContent>
-        {items.length == 0 && canEditCourse && (
+        {items.length == 0 && canEdit && (
           <>
             <p>No elements in this course yet</p>
             <Spacer size="small"></Spacer>
@@ -125,11 +132,13 @@ export default function Features() {
               }}
               backgroundColor={"primary"}
               color={"primary"}
-            >Add elements</Button>
+            >
+              Add elements
+            </Button>
             <Spacer size="small"></Spacer>
           </>
         )}
-        {items.length == 0 && !canEditCourse && (
+        {items.length == 0 && !canEdit && (
           <>
             <p>
               The administrator of this site hasn&apos;t added elements to this
@@ -145,7 +154,9 @@ export default function Features() {
           onClick={() => {
             router.push(`/school/${schoolUUID}/course`);
           }}
-        >Back to courses</Button>
+        >
+          Back to courses
+        </Button>
       </ContentLayout>
       <Footer></Footer>
     </>
