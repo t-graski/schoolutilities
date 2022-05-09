@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumberString, IsPositive } from 'class-validator';
 import { IsCustomUUID } from 'src/decorators/IsCustomUUID';
 
 export class GetEventsDto {
@@ -7,7 +7,7 @@ export class GetEventsDto {
   schoolUUID: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsNumberString()
   days: number;
 }
 
@@ -17,11 +17,13 @@ export class CourseEvent {
   courseUUID: string;
   courseName: string;
   elementUUID: string;
-  name: string;
+  elementName: string;
   description: string;
-  dueTime: Date;
+  dueDate: Date;
   submitLater: boolean;
   submitLaterDate: Date;
   maxFileSize: number;
   allowedFileTypes: string;
 }
+
+

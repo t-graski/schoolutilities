@@ -35,7 +35,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
@@ -809,7 +809,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1270,8 +1270,13 @@ export class CourseService {
                 fileSubmissionSettings: {
                   where: {
                     dueTime: {
-                      gt: moment(new Date()).add(days, 'days').toDate(),
+                      lte: moment(new Date(Date.now())).add(days, 'days').toDate(),
                     },
+                    AND: {
+                      dueTime: {
+                        gte: moment(new Date(Date.now())).toDate(),
+                      }
+                    }
                   },
                   select: {
                     name: true,
@@ -1302,7 +1307,13 @@ export class CourseService {
               courseUUID: course.courseUUID,
               courseName: course.name,
               elementUUID: element.elementUUID,
-              ...element.fileSubmissionSettings[0],
+              elementName: element.fileSubmissionSettings[0].name,
+              description: element.fileSubmissionSettings[0].description,
+              dueDate: element.fileSubmissionSettings[0].dueTime,
+              submitLater: element.fileSubmissionSettings[0].submitLater,
+              submitLaterDate: element.fileSubmissionSettings[0].submitLaterTime,
+              maxFileSize: element.fileSubmissionSettings[0].maxFileSize,
+              allowedFileTypes: element.fileSubmissionSettings[0].allowedFileTypes,
             });
           }
         }
