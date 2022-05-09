@@ -13,8 +13,6 @@ model coursePersons {
   courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
   persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
 
-
-
   @@unique([courseId, personId], name: "coursePersonId")
   @@index([personId], map: "fkCoursepersonspersonid")
   @@index([courseId], map: "fkCoursepersonscourseid")

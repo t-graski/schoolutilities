@@ -22,7 +22,7 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
-import { GetEventsDto } from 'src/dto/getEvents';
+import { GetEventsDto } from 'src/dto/events';
 
 @Controller('api/course')
 export class CourseController {
