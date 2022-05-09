@@ -192,23 +192,6 @@ model schools {
 
   schoolJoinCodes schoolJoinCodes[]
   schoolPersons   schoolPersons[]
-  @@index([languageId], map: "languageId")
-}
-
-model subjects {
-  subjectId   Int       @id @default(autoincrement()) @map("subject_id")
-  subjectName String    @map("subject_name") @db.VarChar(255)
-  classId     Int       @map("class_id")
-  courses     courses[]
-}
-
-model personBadges {
-  personBadgeId Int     @id @default(autoincrement()) @map("person_badge_id")
-  personId      Int     @map("person_id")
-  badgeId       Int     @map("badge_id")
-  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonbadgeperson")
-
-  @@map("person_badges")
 }
 
 model courses {
@@ -225,11 +208,28 @@ model courses {
   subjects subjects  @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
   members  persons[] @relation(references: [personId])
 
-  coursePersons coursePersons[]
-  courseClasses courseClasses[]
+  coursePersons  coursePersons[]
+  courseClasses  courseClasses[]
+  courseElements courseElements[]
   @@unique([name, schoolId], map: "uniqueCourseNameSchoolId")
   @@index([schoolId], map: "fkCourseschool")
   @@index([subjectId], map: "fkCoursesubject")
+}
+
+model subjects {
+  subjectId   Int       @id @default(autoincrement()) @map("subject_id")
+  subjectName String    @map("subject_name") @db.VarChar(255)
+  classId     Int       @map("class_id")
+  courses     courses[]
+}
+
+model personBadges {
+  personBadgeId Int     @id @default(autoincrement()) @map("person_badge_id")
+  personId      Int     @map("person_id")
+  badgeId       Int     @map("badge_id")
+  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonbadgeperson")
+
+  @@map("person_badges")
 }
 
 model schoolJoinCodes {
@@ -323,6 +323,9 @@ model courseElements {
   creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
   personCreationId Int      @map("person_creation_id")
   courseId         Int      @map("course_id")
+  course           courses  @relation(fields: [courseId], references: [courseId])
+
+  fileSubmissionSettings fileSubmissionSettings[]
 
   @@index([courseId], map: "fkCourseElementCourseId")
   @@index([parentId], map: "fkCourseElementParentId")
@@ -360,6 +363,8 @@ model fileSubmissionSettings {
   submitLaterTime  DateTime @map("submit_later_time") @db.Timestamp(0)
   maxFileSize      Int      @map("max_file_size")
   allowedFileTypes String   @map("allowed_file_types") @db.VarChar(255)
+
+  courseElements courseElements @relation(fields: [courseElementId], references: [elementId], onUpdate: Restrict, map: "fkFileSubmissionCourseElementId")
 
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@map("file_submission_settings")

@@ -1,5 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { UpdateCourse, ReturnMessage } from 'src/types/Course';
+import {
+  UpdateCourse,
+  RemoveCourse,
+  RemoveUser,
+  ReturnMessage,
+} from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import {
@@ -13,10 +18,9 @@ import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 import * as moment from 'moment';
-import { AddCourseDto } from 'src/dto/addCourse';
 import { CourseDto } from 'src/dto/course';
-import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/getEvents';
+// import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -30,8 +34,21 @@ export class CourseService {
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
   ) {}
-  async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } = payload;
+  async addCourse(request): Promise<ReturnMessage> {
+    const { name, courseDescription, schoolUUID, persons, classes } =
+      request.body;
+
+    if (
+      !name ||
+      !courseDescription ||
+      !schoolUUID ||
+      !persons ||
+      !classes ||
+      !validator.isLength(name, LENGTHS.COURSE_NAME) ||
+      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
 
     let personUUID;
 
@@ -44,11 +61,21 @@ export class CourseService {
         message: err.message,
       };
     }
+    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId = await (
+      await this.authService.getPersonIdByUUID(personUUID)
+    ).personId;
 
-    const [schoolId, personId] = await Promise.all([
-      this.helper.getSchoolIdByUUID(schoolUUID),
-      this.helper.getUserIdByUUID(personUUID),
-    ]);
+    const isNotAvailable = await prisma.courses.findFirst({
+      where: {
+        name,
+        schoolId: Number(schoolId),
+      },
+    });
+
+    if (isNotAvailable) {
+      return RETURN_DATA.ALREADY_EXISTS;
+    }
 
     try {
       const courseData = await prisma.courses.create({
@@ -59,11 +86,6 @@ export class CourseService {
           schoolId: Number(schoolId),
           subjectId: 0,
           personCreationId: Number(personId),
-          coursePersons: {
-            create: {
-              personId,
-            },
-          },
         },
       });
 
@@ -96,6 +118,10 @@ export class CourseService {
 
       if (classes) {
         for (const schoolClass of classes) {
+          if (!validator.isUUID(schoolClass.slice(1), 4)) {
+            return RETURN_DATA.INVALID_INPUT;
+          }
+
           const schoolId = await this.databaseService.getClassIdByUUID(
             schoolClass,
           );
@@ -120,7 +146,6 @@ export class CourseService {
       delete courseData.courseId;
       delete courseData.schoolId;
       delete courseData.subjectId;
-      delete courseData.personCreationId;
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -131,12 +156,24 @@ export class CourseService {
     }
   }
 
-  async removeCourse(
-    payload: RemoveCourseDto,
-    request,
-  ): Promise<ReturnMessage> {
-    const { courseUUID } = payload;
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
+  async removeCourse(body: RemoveCourse): Promise<ReturnMessage> {
+    const { courseUUID } = body;
+
+    if (!validator.isUUID(courseUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const courseId = await this.databaseService;
+
+    const course = await prisma.courses.findUnique({
+      where: {
+        courseId: Number(courseId),
+      },
+    });
+
+    if (!course) {
+      return RETURN_DATA.NOT_FOUND;
+    }
 
     try {
       await prisma.courses.delete({
@@ -1218,11 +1255,61 @@ export class CourseService {
     const jwt = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(jwt);
 
-    await prisma.schools.findFirst({
+    let courses = await prisma.schools.findFirst({
       where: {
         schoolUUID,
       },
+      select: {
+        schoolId: true,
+        courses: {
+          select: {
+            courseId: true,
+            courseElements: {
+              where: {
+                typeId: {
+                  equals: 3,
+                },
+              },
+              select: {
+                elementId: true,
+                creationDate: true,
+                elementOrder: true,
+                visible: true,
+                fileSubmissionSettings: {
+                  where: {
+                    dueTime: {
+                      lt: moment(new Date()).add(days, 'days').toDate(),
+                    },
+                  },
+                  select: {
+                    name: true,
+                    description: true,
+                    dueTime: true,
+                    submitLater: true,
+                    submitLaterTime: true,
+                    maxFileSize: true,
+                    allowedFileTypes: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
+
+    courses.courses.forEach((course) => {
+      //if courseelements is  empty array skip
+      if (course.courseElements.length === 0) {
+        return;
+      }
+      console.log(
+        course.courseElements.forEach((element) => {
+          console.log(element);
+        }),
+      );
+    });
+
     return RETURN_DATA.SUCCESS;
   }
 }
