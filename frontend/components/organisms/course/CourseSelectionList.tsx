@@ -4,6 +4,7 @@ import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
 import Skeleton from "react-loading-skeleton";
 import { useQuery } from "react-query";
+import { fetchCourses } from "../../../utils/requests";
 
 export type SideDashboardProps = {};
 
@@ -76,25 +77,6 @@ const CourseDescription = styled("p", {
   fontSize: "0.8rem",
   textAlign: "left",
 });
-
-async function fetchCourses(schoolUUID) {
-  let accessToken = await getAccessToken();
-  let response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourses/${schoolUUID}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-
-  if (response.status !== 200) {
-    throw new Error(response.statusText);
-  }
-
-  return response.json();
-}
 
 export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
   const router = useRouter();

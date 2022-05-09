@@ -1,5 +1,5 @@
 import { styled } from "../../../../../stitches.config";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Navbar } from "../../../../../components/organisms/Navbar";
@@ -12,6 +12,7 @@ import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseContent from "../../../../../components/molecules/course/CourseContent";
 import { Button } from "../../../../../components/atoms/Button";
 import { useQuery } from "react-query";
+import { fetchCourse, fetchCourseContent } from "../../../../../utils/requests";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -27,54 +28,6 @@ const HeadlineLayout = styled("div", {
   justifyContent: "flex-start",
   alignItems: "center",
 });
-
-async function fetchCourse(courseUUID) {
-  const accessToken = await getAccessToken();
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-
-  if (response.status !== 200) {
-    throw new Error(response.statusText);
-  }
-
-  const data = await response.json();
-
-  for (let key in data) {
-    return data[key];
-  }
-
-  throw new Error("No course found");
-}
-
-async function fetchCourseContent(courseUUID) {
-  const accessToken = await getAccessToken();
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements/${courseUUID}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-
-  if (response.status !== 200) {
-    throw new Error(response.statusText);
-  }
-
-  return response.json();
-}
 
 export default function Features() {
   const router = useRouter();

@@ -1,9 +1,9 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
-import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
 import Skeleton from "react-loading-skeleton";
 import { useQuery } from "react-query";
+import { fetchSchools } from "../../../utils/requests";
 
 export type SideDashboardProps = {};
 
@@ -56,25 +56,6 @@ const SchoolDescription = styled("p", {
   margin: 0,
   color: "$fontPrimary",
 });
-
-async function fetchSchools() {
-  const accessToken = await getAccessToken();
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-
-  if (response.status !== 200) {
-    throw new Error(response.statusText);
-  }
-  
-  return response.json();
-}
 
 export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {
   const { data: schools, status } = useQuery("schools", fetchSchools);

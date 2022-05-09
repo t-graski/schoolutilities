@@ -5,7 +5,7 @@ import { Button } from "../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
-import { getAccessToken, logout } from "../../utils/authHelper";
+import { getAccessToken, logout, setSelectedSchool } from "../../utils/authHelper";
 import cookie from "js-cookie";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
 import { Separator } from "../atoms/Separator";
@@ -455,7 +455,7 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                   <SchoolLayout
                     key={school.schoolUUID}
                     onClick={() => {
-                      cookie.set("schoolUUID", school.schoolUUID);
+                      setSelectedSchool(school.schoolUUID);
                       router.push(`/school/${school.schoolUUID}/edit`);
                     }}
                   >

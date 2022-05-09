@@ -11,6 +11,8 @@ import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import Skeleton from "react-loading-skeleton";
 import { Select } from "../../atoms/input/Select";
+import { useQuery } from "react-query";
+import { fetchSchoolClasses, fetchSchoolDepartments } from "../../../utils/requests";
 
 type Props = {};
 
@@ -64,9 +66,6 @@ const StyledDeleteText = styled("p", {
 });
 
 export const ClassesSettingsField: React.FC<Props> = ({}) => {
-  const [departments, setDepartments] = React.useState([]);
-  const [classes, setClasses] = React.useState([]);
-  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [schoolClassName, setSchoolClassName] = React.useState("");
@@ -77,49 +76,8 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  useEffect(() => {
-    if (isFirstTime) {
-      updateSettingsEntriesFromDatabase();
-      setIsFirstTime(false);
-    }
-
-    async function updateSettingsEntriesFromDatabase() {
-      let accessToken = await getAccessToken();
-      if (!accessToken) {
-        router.push("/auth/login");
-      }
-      if (!schoolUUID) {
-        router.push("/school/select");
-      }
-      if (accessToken && schoolUUID && isFirstTime) {
-        let returnValue = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        let json = await returnValue.json();
-        setClasses(json);
-
-        returnValue = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        json = await returnValue.json();
-        setDepartments(json);
-      }
-    }
-  }, [isFirstTime, schoolUUID, router]);
+  const {data: classes, status: classesStatus} = useQuery(["classes", schoolUUID], () => fetchSchoolClasses(schoolUUID));
+  const {data: departments, status: departmentsStatus} = useQuery(["departments", schoolUUID], () => fetchSchoolDepartments(schoolUUID));
 
   function savePopUpInput() {
     if (schoolClassId == "") {
@@ -310,7 +268,7 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {classes.length > 0 ? (
+          {classesStatus == "success" && classes.length > 0 ? (
             classes.map((entry) => (
               <SettingsEntryLayout
                 key={entry.classUUID}

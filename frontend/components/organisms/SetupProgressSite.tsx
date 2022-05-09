@@ -5,7 +5,7 @@ import Link from "next/link";
 import cookie from "js-cookie";
 import { Progressbar } from "../molecules/Progressbar";
 import { Spacer } from "../atoms/Spacer";
-import { getAccessToken } from "../../utils/authHelper";
+import { getAccessToken, setSelectedSchool } from "../../utils/authHelper";
 
 type Props = {
   steps: {
@@ -132,6 +132,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
       if (schoolResponse.status == 200) {
         let data = await schoolResponse.json();
         setSchoolUUID(data.schoolUUID);
+        setSelectedSchool(data.schoolUUID);
         if (data && data.schoolUUID) {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
