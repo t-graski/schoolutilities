@@ -18,7 +18,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
@@ -766,7 +766,7 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() {}
+  async getMaxFileSize() { }
   async removeUserFromUpdateEmailList(personId: number): Promise<any> {
     if (personId) {
       try {
@@ -1185,26 +1185,18 @@ export class HelperService {
       throw new Error(ERROR_CODES.COURSE_ID_NULL_OR_INVALID);
     }
   }
-  async getCourseUsers(courseId: number): Promise<any> {
+  async getCourseUsers(courseId?: number): Promise<any> {
     if (courseId) {
       try {
-        const courseUsers = await prisma.coursePersons.findMany({
+        const users = await prisma.courses.findFirst({
           where: {
-            courseId: courseId,
+            courseId,
           },
-        });
-
-        const users = [];
-
-        for (const user of courseUsers) {
-          const userData = await prisma.persons.findUnique({
-            where: {
-              personId: user.personId,
-            },
-          });
-          users.push(userData);
-        }
-        return users;
+          select: {
+            coursePersons: true,
+          }
+        })
+        return users.coursePersons;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -1218,7 +1210,7 @@ export class HelperService {
       try {
         const courseClasses = await prisma.courseClasses.findMany({
           where: {
-            courseId: courseId,
+            courseId,
           },
         });
 

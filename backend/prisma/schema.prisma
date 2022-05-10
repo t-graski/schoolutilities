@@ -194,7 +194,7 @@ model schools {
 
 model courses {
   courseId          Int      @id @default(autoincrement()) @map("course_id")
-  courseUUID        String   @map("course_uuid") @db.VarChar(255)
+  courseUUID        String   @unique(map: "courseUUID") @map("course_uuid") @db.VarChar(255)
   name              String   @db.VarChar(255)
   courseDescription String   @map("course_description") @db.Text
   schoolId          Int      @map("school_id")

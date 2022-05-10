@@ -20,20 +20,19 @@ import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
-import { AddCourseDto } from 'src/dto/addCourse';
-import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
+import { AddCourseDto, RemoveCourseDto, UpdateCourseDto } from 'src/dto/course';
 
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
-  @Post('/addCourse')
+  @Post('/')
   async addCourse(
     @Body() addCourse: AddCourseDto,
     @Req() request,
@@ -47,7 +46,7 @@ export class CourseController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
-  @Delete('/removeCourse')
+  @Delete('/')
   async removeCourse(
     @Body() removeCourse: RemoveCourseDto,
     @Req() request,
@@ -59,9 +58,9 @@ export class CourseController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
-  @Put('/updateCourse')
-  async updateCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.updateCourse(request.body);
+  @Put('/')
+  async updateCourse(@Body() updateCourse: UpdateCourseDto, @Req() request, @Res() response) {
+    const result = await this.courseService.updateCourse(updateCourse);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
