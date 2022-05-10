@@ -36,6 +36,7 @@ const AddIconLayout = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
+
   backgroundColor: "$specialPrimary",
   cursor: "pointer",
 });
@@ -60,8 +61,9 @@ const DepartmentLayout = styled("div", {
   alignItems: "center",
   padding: "20px",
   justifyContent: "space-between",
-  backgroundColor: "$backgroundTertiary",
   borderRadius: "20px",
+
+  backgroundColor: "$backgroundTertiary",
 });
 
 const DepartmentName = styled("p", {
@@ -84,9 +86,10 @@ const DepartmentEditIcon = styled("div", {
   padding: "10px",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$specialSecondary",
+
   cursor: "pointer",
   color: "$fontPrimary",
+  backgroundColor: "$specialSecondary",
 });
 
 const DepartmentDeleteIcon = styled("div", {
@@ -97,12 +100,18 @@ const DepartmentDeleteIcon = styled("div", {
   padding: "10px",
   alignItems: "center",
   borderRadius: "50%",
+
   backgroundColor: "$specialTertiary",
   cursor: "pointer",
   color: "$fontPrimary",
 });
 
 const PopUpLayout = styled("div", {
+  position: "absolute",
+  top: "0",
+  left: "0",
+  zIndex: "10",
+
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -110,10 +119,6 @@ const PopUpLayout = styled("div", {
   width: "100vw",
   height: "100vh",
   backgroundColor: "rgba(0,0,0,0.7)",
-  position: "absolute",
-  top: "0",
-  left: "0",
-  zIndex: "10",
 });
 
 const PopUpContentLayout = styled("div", {
@@ -121,9 +126,10 @@ const PopUpContentLayout = styled("div", {
   flexDirection: "column",
   gap: "10px",
   width: "50%",
-  backgroundColor: "$backgroundPrimary",
   padding: "30px",
   borderRadius: "20px",
+
+  backgroundColor: "$backgroundPrimary",
 });
 
 const StyledInputField = styled("div", {
@@ -134,8 +140,9 @@ const StyledInputField = styled("div", {
 const StyledPopUpHeadline = styled("h2", {
   fontSize: "2.5rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
   margin: "0",
+
+  color: "$fontPrimary",
 });
 
 const PopUpButtonLayout = styled("div", {
@@ -146,9 +153,10 @@ const PopUpButtonLayout = styled("div", {
 });
 
 const Description = styled("p", {
+  margin: "15px 0",
+  
   fontSize: "1.2rem",
   color: "$fontPrimary",
-  margin: "15px 0",
 });
 
 export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {

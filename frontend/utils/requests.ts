@@ -13,7 +13,7 @@ export async function fetchSchools() {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    throw new Error(formatErrorMessage(response));
   }
 
   return response.json();
@@ -32,7 +32,7 @@ export async function fetchCourses(schoolUUID) {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    throw new Error(formatErrorMessage(response));
   }
 
   return response.json();
@@ -53,7 +53,7 @@ export async function fetchCourse(courseUUID) {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    throw new Error(formatErrorMessage(response));
   }
 
   const data = await response.json();
@@ -80,7 +80,7 @@ export async function fetchCourseContent(courseUUID) {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    throw new Error(formatErrorMessage(response));
   }
 
   return response.json();
@@ -101,7 +101,7 @@ export async function fetchSchoolClasses(schoolUUID) {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    throw new Error(formatErrorMessage(response));
   }
 
   return response.json();
@@ -122,7 +122,7 @@ export async function fetchSchoolPersons(schoolUUID) {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    throw new Error(formatErrorMessage(response));
   }
 
   return response.json();
@@ -143,8 +143,188 @@ export async function fetchSchoolDepartments(schoolUUID) {
   );
 
   if (response.status !== 200) {
-    throw new Error(response.statusText);
+    throw new Error(formatErrorMessage(response));
   }
 
   return response.json();
+}
+
+export async function addSchoolClass(data) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function deleteSchoolClass(classUUID) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ classUUID }),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function editSchoolClass(data) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function addDepartment(data) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function deleteDepartment(departmentUUID) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ departmentUUID }),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function editDepartment(data) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function deleteSchoolPerson(data) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/leaveSchool`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function editSchoolPerson(data) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/role`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+function formatErrorMessage(error) {
+  return `Error ${error.status} - ${error.statusText}`;
 }

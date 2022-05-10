@@ -1,5 +1,5 @@
 import { styled } from "../../../../../stitches.config";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Navbar } from "../../../../../components/organisms/Navbar";
@@ -10,6 +10,8 @@ import { getAccessToken } from "../../../../../utils/authHelper";
 import CourseEditContent from "../../../../../components/molecules/course/CourseEditContent";
 import { Button } from "../../../../../components/atoms/Button";
 import AddCourseElement from "../../../../../components/atoms/course/AddCourseElement";
+import { fetchCourse, fetchCourseContent } from "../../../../../utils/requests";
+import { useQuery } from "react-query";
 
 export const ContentLayout = styled("div", {
   display: "flex",
@@ -45,45 +47,28 @@ const CourseHeaderLayout = styled("div", {
 export default function Features() {
   const router = useRouter();
 
-  const [courseName, setCourseName] = useState("");
-  const [courseUUID, setCourseUUID] = useState("");
+  const courseUUID = router.query.courseUUID as string;
+  const schoolUUID = router.query.schoolUUID as string;
 
-  useEffect(() => {
-    requestDataFromDatabase();
-  });
+  const { data: items, status: contentStatus } = useQuery(
+    ["items", courseUUID],
+    () => fetchCourseContent(courseUUID)
+  );
+  const { data: course, status: courseStatus } = useQuery(
+    ["course", courseUUID],
+    () => fetchCourse(courseUUID)
+  );
 
-  async function requestDataFromDatabase() {
-    const currentCourseUUID = router.query.courseUUID;
-    if (!Array.isArray(currentCourseUUID)) {
-      setCourseUUID(currentCourseUUID);
-    }
-    let accessToken = await getAccessToken();
-    if (courseUUID && accessToken && courseName == "") {
-      const courseResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (courseResponse) {
-        if (courseResponse.status == 200) {
-          const courseData = await courseResponse.json();
-          for (let key in courseData) {
-            setCourseName(courseData[key].courseName);
-          }
-        } else {
-          setCourseName("Database error");
-        }
-      }
-    } else if (!accessToken) {
-      router.push("/auth?tab=login");
-    }
+  if (contentStatus === "loading" || courseStatus === "loading") {
+    return null;
   }
-  const [items, setItems] = useState([]);
+
+  if (contentStatus === "error" || courseStatus === "error") {
+    return <div>Error</div>;
+  }
+
+  const { courseName } = course;
+
   const [itemsCounter, setItemsCounter] = useState(0);
 
   const [responseBody, setResponseBody] = useState({});
@@ -122,11 +107,11 @@ export default function Features() {
               backgroundColor={"secondary"}
               color={"primary"}
               onClick={() => {
-                router.push(
-                  `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
-                );
+                router.push(`/school/${schoolUUID}/course/${courseUUID}`);
               }}
-            >Cancel</Button>
+            >
+              Cancel
+            </Button>
             <Button
               backgroundColor={"primary"}
               color={"primary"}
@@ -143,8 +128,6 @@ export default function Features() {
                     body: JSON.stringify(responseBody),
                   }
                 );
-                console.log(responseBody);
-                console.log(saveResponse);
                 if (saveResponse) {
                   if (saveResponse.status == 200) {
                     router.push(
@@ -155,7 +138,9 @@ export default function Features() {
                   }
                 }
               }}
-            >Save</Button>
+            >
+              Save
+            </Button>
           </CourseHeaderLayout>
         </HeadlineLayout>
         <Spacer size="verySmall"></Spacer>

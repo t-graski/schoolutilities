@@ -1,15 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getAccessToken } from "../../../utils/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import { LoadingAnimation } from "../../molecules/LoadingAnimation";
 import { regex } from "../../../utils/regex";
 import Skeleton from "react-loading-skeleton";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  addDepartment,
+  deleteDepartment,
+  editDepartment,
+  fetchSchoolDepartments,
+} from "../../../utils/requests";
 
 type Props = {};
 
@@ -21,6 +27,7 @@ const SchoolDetailLayout = styled("form", {
   marginTop: "12vh",
   width: "100%",
   padding: "40px 60px",
+
   overflowY: "scroll",
 });
 
@@ -52,15 +59,16 @@ const SettingsEntryLink = styled("a", {
 });
 
 const StyledError = styled("p", {
-  color: "$specialTertiary",
-  fontSize: "1.5rem",
-  fontWeight: "700",
   marginTop: "15px",
   marginBottom: "15px",
   border: "solid 2px $specialTertiary",
   padding: "20px",
   width: "fit-content",
   borderRadius: "25px",
+
+  color: "$specialTertiary",
+  fontSize: "1.5rem",
+  fontWeight: "700",
 });
 
 const LoadingLayout = styled("div", {
@@ -68,166 +76,123 @@ const LoadingLayout = styled("div", {
 });
 
 const StyledDeleteText = styled("p", {
+  marginTop: "15px",
+
   fontSize: "1rem",
   color: "$fontPrimary",
-  marginTop: "15px",
 });
 
-export const DepartmentsSettingsField: React.FC<Props> = ({ }) => {
-  const [departments, setDepartments] = React.useState([]);
-  const [isFirstTime, setIsFirstTime] = React.useState(true);
+export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [departmentName, setDepartmentName] = React.useState("");
   const [departmentNameValid, setDepartmentNameValid] = React.useState(false);
   const [departmentId, setDepartmentId] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  useEffect(() => {
-    updateSettingsEntriesFromDatabase();
-  });
+  const queryClient = useQueryClient();
 
-  async function updateSettingsEntriesFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (!accessToken) {
-      router.push("/auth/login");
-    }
-    if (!schoolUUID && accessToken) {
-      router.push("/school/select");
-    }
-    if (accessToken && schoolUUID && isFirstTime) {
-      setIsLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      const fetchedDepartments = await response.json();
-      setDepartments(fetchedDepartments);
-      setIsFirstTime(false);
-      setIsLoading(false);
-    }
-  }
+  const { data: departments, status: departmentsStatus } = useQuery(
+    ["departments", schoolUUID],
+    () => fetchSchoolDepartments(schoolUUID)
+  );
 
-  function savePopUpInput() {
-    if (departmentId == "") {
-      addSettingsEntry();
-    } else {
-      editSettingsEntry();
-    }
-    setEditPopUpIsVisible(false);
-  }
+  const addDepartmentMutation = useMutation(addDepartment, {
+    onMutate: async () => {
+      await queryClient.cancelQueries(["departments", schoolUUID]);
 
-  async function addSettingsEntry() {
-    const data = {
-      schoolUUID,
-      departmentName: departmentName,
-      isVisible: "true",
-      childsVisible: "true",
-    };
-    setIsLoading(true);
-    const returnValue = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    if (returnValue.status !== 200) {
-      setError("Error while saving department");
-      setIsLoading(false);
-    } else {
-      const body = await returnValue.json();
-      setError("");
       let entry = {
-        departmentUUID: body.departmentUUID,
+        schoolUUID,
         departmentName: departmentName,
+        departmentUUID: "newEntry",
+        isVisible: "true",
+        childsVisible: "true",
       };
+
+      queryClient.setQueryData(["departments", schoolUUID], (old: any) => [
+        ...old,
+        entry,
+      ]);
+
+      return { entry };
+    },
+    onSuccess: (response) => {
+      let entry = {
+        departmentUUID: response.departmentUUID,
+        departmentName: response.name,
+      };
+
+      queryClient.setQueryData(["departments", schoolUUID], (old: any) =>
+        old.map((currEntry) =>
+          currEntry.departmentUUID === "newEntry" ? entry : currEntry
+        )
+      );
+
       setDepartmentId("");
       setDepartmentName("");
       setDepartmentNameValid(false);
-      setIsLoading(false);
-      setDepartments([...departments, entry]);
-    }
-  }
+    },
+    onError: (err: any) => {
+      setError(err.message);
 
-  async function editSettingsEntry() {
-    const data = {
-      departmentUUID: departmentId,
-      departmentName: departmentName,
-      isVisible: "true",
-      childsVisible: "true",
-    };
-    setIsLoading(true);
-    const returnValue = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
-    if (returnValue.status !== 200) {
-      setError("Error trying to save");
-      setIsLoading(false);
-    } else {
-      setError("");
-      const newEntries = departments.map((department, index) => {
-        if (department.departmentUUID == departmentId) {
-          department.departmentName = departmentName;
-          return department;
-        } else {
-          return department;
-        }
-      });
-      setIsLoading(false);
-      setDepartments(newEntries);
-    }
-  }
-
-  async function deleteSettingsEntry(id) {
-    setIsLoading(true);
-    const returnValue = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/department`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          departmentUUID: id,
-        }),
-      }
-    );
-    if (returnValue.status !== 200) {
-      setError("Error trying to save");
-      setIsLoading(false);
-    } else {
-      setError("");
-      let newSettingsEntries = departments.filter(
-        (department) => department.departmentUUID !== id
+      queryClient.setQueryData(["departments", schoolUUID], (old: any) =>
+        old.filter((currEntry) => currEntry.departmentUUID !== "newEntry")
       );
+    },
+  });
 
-      setDepartments(newSettingsEntries);
-      if (newSettingsEntries.length == 0) {
-        setDepartments([]);
-      }
-      setIsLoading(false);
+  const deleteDepartmentMutation = useMutation(deleteDepartment, {
+    onSuccess: async () => {
+      await queryClient.cancelQueries(["departments", schoolUUID]);
+
+      queryClient.setQueryData(["departments", schoolUUID], (old: any) =>
+        old.filter((currElement) => currElement.departmentUUID !== departmentId)
+      );
+    },
+    onError: (err: any) => {
+      setError(err.message);
+    },
+  });
+
+  const editDepartmentMutation = useMutation(editDepartment, {
+    onSuccess: async () => {
+      await queryClient.cancelQueries(["departments", schoolUUID]);
+
+      queryClient.setQueryData(["departments", schoolUUID], (old: any) =>
+        old.map((currEntry) =>
+          currEntry.departmentUUID === departmentId
+            ? {
+                ...currEntry,
+                departmentName: departmentName,
+              }
+            : currEntry
+        )
+      );
+    },
+    onError: (err: any) => {
+      setError(err.message);
+    },
+  });
+
+  function savePopUpInput() {
+    if (departmentId == "") {
+      addDepartmentMutation.mutate({
+        schoolUUID,
+        departmentName: departmentName,
+        isVisible: "true",
+        childsVisible: "true",
+      });
+    } else {
+      editDepartmentMutation.mutate({
+        departmentUUID: departmentId,
+        departmentName: departmentName,
+        isVisible: "true",
+        childsVisible: "true",
+      });
     }
+    setEditPopUpIsVisible(false);
   }
 
   return (
@@ -269,7 +234,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({ }) => {
             inputValid={true}
             saveLabel="Confirm"
             saveFunction={() => {
-              deleteSettingsEntry(departmentId);
+              deleteDepartmentMutation.mutate(departmentId);
               setDeletePopUpIsVisible(false);
             }}
             closeFunction={() => {
@@ -293,44 +258,48 @@ export const DepartmentsSettingsField: React.FC<Props> = ({ }) => {
           }}
         ></SettingsHeader>
         <LoadingLayout>
-          <LoadingAnimation isVisible={isLoading} />
           {error && <StyledError>{error}</StyledError>}
           <SettingsEntriesLayout>
-            {departments.length > 0 ? departments.map((entry, index) => (
-              <SettingsEntryLayout
-                key={entry.departmentUUID}
-                data-key={entry.departmentUUID}
-              >
-                <SettingsEntry
-                  editFunction={() => {
-                    setDepartmentName(entry.departmentName);
-                    setDepartmentId(entry.departmentUUID);
-                    setEditPopUpIsVisible(true);
-                  }}
-                  deleteFunction={() => {
-                    setDeletePopUpIsVisible(true);
-                    setDepartmentId(entry.departmentUUID);
-                  }}
-                  highlighted={
-                    router.query &&
-                    router.query.departmentUUID &&
-                    entry.departmentUUID == router.query.departmentUUID
-                  }
+            {departmentsStatus == "success" && departments.length > 0 ? (
+              departments.map((entry, index) => (
+                <SettingsEntryLayout
+                  key={entry.departmentUUID}
+                  data-key={entry.departmentUUID}
                 >
-                  <Link
-                    href={`/school/${router.query.schoolUUID as string
-                      }/edit?tab=classes&departmentUUID=${entry.departmentUUID}`}
-                      passHref
+                  <SettingsEntry
+                    editFunction={() => {
+                      setDepartmentName(entry.departmentName);
+                      setDepartmentId(entry.departmentUUID);
+                      setEditPopUpIsVisible(true);
+                    }}
+                    deleteFunction={() => {
+                      setDeletePopUpIsVisible(true);
+                      setDepartmentId(entry.departmentUUID);
+                    }}
+                    highlighted={
+                      router.query &&
+                      router.query.departmentUUID &&
+                      entry.departmentUUID == router.query.departmentUUID
+                    }
                   >
-                    <SettingsEntryLink>
-                      <SettingsEntryName>
-                        {entry.departmentName}
-                      </SettingsEntryName>
-                    </SettingsEntryLink>
-                  </Link>
-                </SettingsEntry>
-              </SettingsEntryLayout>
-            )) : (
+                    <Link
+                      href={`/school/${
+                        router.query.schoolUUID as string
+                      }/edit?tab=classes&departmentUUID=${
+                        entry.departmentUUID
+                      }`}
+                      passHref
+                    >
+                      <SettingsEntryLink>
+                        <SettingsEntryName>
+                          {entry.departmentName}
+                        </SettingsEntryName>
+                      </SettingsEntryLink>
+                    </Link>
+                  </SettingsEntry>
+                </SettingsEntryLayout>
+              ))
+            ) : (
               <>
                 <Skeleton width="100%" height={80}></Skeleton>
                 <Skeleton width="100%" height={80}></Skeleton>
