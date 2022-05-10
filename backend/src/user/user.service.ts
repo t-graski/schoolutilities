@@ -22,7 +22,7 @@ export class UserService {
     private readonly authService: AuthService,
     private readonly mailService: MailService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   async getSchools(token: string): Promise<ReturnMessage> {
     const jwt = await this.authService.decodeJWT(token);
@@ -480,5 +480,18 @@ export class UserService {
 
   parseLanguage(id: number) {
     return id === 1 ? 'de' : 'en';
+  }
+}
+
+export async function findOneByUUID(userUUID: string): Promise<any> { //!TODO change to person
+  try {
+    const user = await prisma.persons.findFirst({
+      where: {
+        personUUID: userUUID,
+      },
+    });
+    return user ? user : null;
+  } catch {
+    return null;
   }
 }

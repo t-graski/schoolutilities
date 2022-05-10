@@ -6,9 +6,11 @@ import {
   HttpStatus,
   Post,
   UseGuards,
+  Body,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { request } from 'https';
+import { LoginUserDto } from 'src/dto/loginUser';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -16,7 +18,8 @@ import { JwtRefreshTokenAuthGuard } from './refreshToken/jwt-refresh-token-auth.
 
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
+
   @Post('register')
   async registerUser(@Req() request, @Res() response) {
     const result = await this.authService.registerUser(request.body);

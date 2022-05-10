@@ -18,6 +18,11 @@ import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 import * as moment from 'moment';
+import { CourseDto } from 'src/dto/course';
+import { CourseEvent, GetEventsDto } from 'src/dto/events';
+import { AddCourseDto } from 'src/dto/addCourse';
+import { RemoveCourseDto } from 'src/dto/removeCourse';
+// import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -30,22 +35,9 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
-  async addCourse(request): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } =
-      request.body;
-
-    if (
-      !name ||
-      !courseDescription ||
-      !schoolUUID ||
-      !persons ||
-      !classes ||
-      !validator.isLength(name, LENGTHS.COURSE_NAME) ||
-      !validator.isLength(courseDescription, LENGTHS.COURSE_DESCRIPTION)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
+  ) { }
+  async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
+    const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
     let personUUID;
 
@@ -58,21 +50,11 @@ export class CourseService {
         message: err.message,
       };
     }
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-    const personId = await (
-      await this.authService.getPersonIdByUUID(personUUID)
-    ).personId;
 
-    const isNotAvailable = await prisma.courses.findFirst({
-      where: {
-        name,
-        schoolId: Number(schoolId),
-      },
-    });
-
-    if (isNotAvailable) {
-      return RETURN_DATA.ALREADY_EXISTS;
-    }
+    const [schoolId, personId] = await Promise.all([
+      this.helper.getSchoolIdByUUID(schoolUUID),
+      this.helper.getUserIdByUUID(personUUID),
+    ]);
 
     try {
       const courseData = await prisma.courses.create({
@@ -83,6 +65,11 @@ export class CourseService {
           schoolId: Number(schoolId),
           subjectId: 0,
           personCreationId: Number(personId),
+          coursePersons: {
+            create: {
+              personId,
+            },
+          },
         },
       });
 
@@ -115,10 +102,6 @@ export class CourseService {
 
       if (classes) {
         for (const schoolClass of classes) {
-          if (!validator.isUUID(schoolClass.slice(1), 4)) {
-            return RETURN_DATA.INVALID_INPUT;
-          }
-
           const schoolId = await this.databaseService.getClassIdByUUID(
             schoolClass,
           );
@@ -143,6 +126,7 @@ export class CourseService {
       delete courseData.courseId;
       delete courseData.schoolId;
       delete courseData.subjectId;
+      delete courseData.personCreationId;
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -153,18 +137,17 @@ export class CourseService {
     }
   }
 
-  async removeCourse(body: RemoveCourse): Promise<ReturnMessage> {
-    const { courseUUID } = body;
+  async removeCourse(
+    payload: RemoveCourseDto,
+    request,
+  ): Promise<ReturnMessage> {
+    const { courseUUID } = payload;
 
-    if (!validator.isUUID(courseUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const courseId = await this.databaseService;
+    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
 
     const course = await prisma.courses.findUnique({
       where: {
-        courseId: Number(courseId),
+        courseId,
       },
     });
 
@@ -337,73 +320,6 @@ export class CourseService {
     }
   }
 
-  async addUser(request): Promise<ReturnMessage> {
-    const jwt = await this.helper.extractJWTToken(request);
-    const requesterId = await this.helper.getUserIdfromJWT(jwt);
-    const { courseUUID, userUUID, schoolUUID } = request.body;
-    const userId = await this.helper.getUserIdByUUID(userUUID);
-    const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
-
-    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'You are not part of this school',
-      };
-    }
-
-    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'User is not part of this school',
-      };
-    }
-
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-    const isTeacher = await this.helper.isTeacher(requesterId, schoolId);
-    const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
-
-    if (isTeacher || isAdmin) {
-      const courseUser = await prisma.coursePersons.findUnique({
-        where: {
-          coursePersonId: {
-            courseId: Number(courseId),
-            personId: Number(userId),
-          },
-        },
-      });
-
-      if (courseUser) {
-        return {
-          status: HttpStatus.CONFLICT,
-          message: 'User already exists',
-        };
-      }
-
-      try {
-        await prisma.coursePersons.create({
-          data: {
-            courseId: Number(courseId),
-            personId: Number(userId),
-          },
-        });
-      } catch (err) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'User not added',
-        };
-      }
-
-      return {
-        status: HttpStatus.OK,
-        message: 'User added successfully',
-      };
-    }
-    return {
-      status: HttpStatus.UNAUTHORIZED,
-      message: 'Unauthorized',
-    };
-  }
-
   async removeUser(request): Promise<ReturnMessage> {
     const jwt = await this.helper.extractJWTToken(request);
     const requesterId = await this.helper.getUserIdfromJWT(jwt);
@@ -466,6 +382,73 @@ export class CourseService {
           message: 'User not deleted',
         };
       }
+    }
+    return {
+      status: HttpStatus.UNAUTHORIZED,
+      message: 'Unauthorized',
+    };
+  }
+
+  async addUser(request): Promise<ReturnMessage> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const requesterId = await this.helper.getUserIdfromJWT(jwt);
+    const { courseUUID, userUUID, schoolUUID } = request.body;
+    const userId = await this.helper.getUserIdByUUID(userUUID);
+    const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
+
+    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        message: 'You are not part of this school',
+      };
+    }
+
+    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        message: 'User is not part of this school',
+      };
+    }
+
+    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
+    const isTeacher = await this.helper.isTeacher(requesterId, schoolId);
+    const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
+
+    if (isTeacher || isAdmin) {
+      const courseUser = await prisma.coursePersons.findUnique({
+        where: {
+          coursePersonId: {
+            courseId: Number(courseId),
+            personId: Number(userId),
+          },
+        },
+      });
+
+      if (courseUser) {
+        return {
+          status: HttpStatus.CONFLICT,
+          message: 'User already exists',
+        };
+      }
+
+      try {
+        await prisma.coursePersons.create({
+          data: {
+            courseId: Number(courseId),
+            personId: Number(userId),
+          },
+        });
+      } catch (err) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'User not added',
+        };
+      }
+
+      return {
+        status: HttpStatus.OK,
+        message: 'User added successfully',
+      };
     }
     return {
       status: HttpStatus.UNAUTHORIZED,
@@ -826,7 +809,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1245,5 +1228,146 @@ export class CourseService {
       status: RETURN_DATA.SUCCESS.status,
       data: userSubmissions,
     };
+  }
+
+  async getEvents(payload: GetEventsDto, request): Promise<ReturnMessage> {
+    const { schoolUUID, days } = payload;
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+
+    let courses = await prisma.schools.findFirst({
+      where: {
+        schoolUUID,
+      },
+      select: {
+        schoolUUID: true,
+        name: true,
+        courses: {
+          where: {
+            coursePersons: {
+              some: {
+                personId: Number(userId),
+              },
+            },
+          },
+          select: {
+            courseUUID: true,
+            name: true,
+            courseElements: {
+              where: {
+                typeId: {
+                  equals: 3,
+                },
+                AND: {
+                  visible: true,
+                },
+              },
+              select: {
+                elementUUID: true,
+                creationDate: true,
+                elementOrder: true,
+                visible: true,
+                fileSubmissionSettings: {
+                  where: {
+                    dueTime: {
+                      lte: moment(new Date(Date.now())).add(days, 'days').toDate(),
+                    },
+                    AND: {
+                      dueTime: {
+                        gte: moment(new Date(Date.now())).toDate(),
+                      }
+                    }
+                  },
+                  select: {
+                    name: true,
+                    description: true,
+                    dueTime: true,
+                    submitLater: true,
+                    submitLaterTime: true,
+                    maxFileSize: true,
+                    allowedFileTypes: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const eventItems: CourseEvent[] = [];
+
+    for (const course of courses.courses) {
+      if (course.courseElements.length != 0) {
+        for (const element of course.courseElements) {
+          if (element.fileSubmissionSettings.length != 0) {
+            eventItems.push({
+              schoolUUID: courses.schoolUUID,
+              schoolName: courses.name,
+              courseUUID: course.courseUUID,
+              courseName: course.name,
+              elementUUID: element.elementUUID,
+              elementName: element.fileSubmissionSettings[0].name,
+              description: element.fileSubmissionSettings[0].description,
+              dueDate: element.fileSubmissionSettings[0].dueTime,
+              submitLater: element.fileSubmissionSettings[0].submitLater,
+              submitLaterDate: element.fileSubmissionSettings[0].submitLaterTime,
+              maxFileSize: element.fileSubmissionSettings[0].maxFileSize,
+              allowedFileTypes: element.fileSubmissionSettings[0].allowedFileTypes,
+            });
+          }
+        }
+      }
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: eventItems,
+    };
+  }
+}
+
+export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
+  try {
+    const course = await prisma.courses.findFirst({
+      where: {
+        courseUUID,
+      },
+    });
+    return course;
+  } catch {
+    return null;
+  }
+}
+export async function findOneByName(
+  courseName: string,
+  schoolUUID,
+): Promise<CourseDto> {
+  try {
+    const courseUUID = await prisma.schools.findFirst({
+      where: {
+        schoolUUID,
+      },
+      select: {
+        schoolId: true,
+        courses: {
+          where: {
+            name: courseName,
+          },
+          select: {
+            courseId: true,
+            schoolId: true,
+            courseUUID: true,
+            name: true,
+            courseDescription: true,
+            creationDate: true,
+            personCreationId: true,
+          },
+        },
+      },
+    });
+    return courseUUID.courses[0] ? courseUUID.courses[0] : null;
+  } catch {
+    return null;
   }
 }

@@ -10,9 +10,9 @@ import {
   Delete,
   Put,
   Param,
-  UploadedFiles,
+  Body,
 } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { editFileName, fileFilter } from 'src/misc/fileUpload';
@@ -20,6 +20,9 @@ import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
+import { AddCourseDto } from 'src/dto/addCourse';
+import { RemoveCourseDto } from 'src/dto/removeCourse';
+import { GetEventsDto } from 'src/dto/events';
 
 @Controller('api/course')
 export class CourseController {
@@ -31,8 +34,12 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Post('/addCourse')
-  async addCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.addCourse(request);
+  async addCourse(
+    @Body() addCourse: AddCourseDto,
+    @Req() request,
+    @Res() response,
+  ) {
+    const result = await this.courseService.addCourse(addCourse, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
@@ -41,10 +48,12 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Delete('/removeCourse')
-  async removeCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.removeCourse(
-      request.body?.courseId,
-    );
+  async removeCourse(
+    @Body() removeCourse: RemoveCourseDto,
+    @Req() request,
+    @Res() response,
+  ) {
+    const result = await this.courseService.removeCourse(removeCourse, request);
     return response.status(result.status).json(result?.message);
   }
 
@@ -166,6 +175,20 @@ export class CourseController {
       request,
       params.elementUUID,
     );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Student)
+  @Get('/events/:schoolUUID/:days')
+  async getEvents(
+    @Param() params: GetEventsDto,
+    @Req() request,
+    @Res() response,
+  ) {
+    const result = await this.courseService.getEvents(params, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
