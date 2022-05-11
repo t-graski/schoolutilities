@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
@@ -43,6 +43,7 @@ const SuccessLayout = styled("div", {
   width: "100%",
   padding: "0 10vw",
   gap: "40px",
+
   color: "$fontPrimary",
 });
 
@@ -77,12 +78,13 @@ const SuccessDescription = styled("p", {
 });
 
 const StyledLink = styled("a", {
-  color: "$specialPrimary",
-  fontSize: "1.2rem",
-  fontWeight: "bold",
   padding: "20px",
   border: "2px solid $specialPrimary",
   borderRadius: "25px",
+
+  color: "$specialPrimary",
+  fontSize: "1.2rem",
+  fontWeight: "bold",
   textDecoration: "none",
   cursor: "pointer",
   transition: "all 0.2s",

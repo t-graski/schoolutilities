@@ -44,10 +44,12 @@ const SideDashboardBarItemLink = styled("a", {
   display: "flex",
   flexDirection: "row",
   gap: "20px",
-  textDecoration: "none",
-  color: "$fontPrimary",
   padding: "15px 0",
+
   transition: "all 0.2s ease-in-out",
+  color: "$fontPrimary",
+  textDecoration: "none",
+
   "&:hover": {
     opacity: "1",
   },

@@ -5,7 +5,11 @@ import { Button } from "../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
-import { getAccessToken, logout, setSelectedSchool } from "../../utils/authHelper";
+import {
+  getAccessToken,
+  logout,
+  setSelectedSchool,
+} from "../../utils/authHelper";
 import cookie from "js-cookie";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
 import { Separator } from "../atoms/Separator";
@@ -210,7 +214,7 @@ const ActionButtonLayout = styled("div", {
   marginTop: "20px",
 });
 
-export const ProfileSettings: React.FC<Props> = ({ }) => {
+export const ProfileSettings: React.FC<Props> = ({}) => {
   const router = useRouter();
   const [statusInfo, setStatusInfo] = useState("");
   const [userInfo, setUserInfo] = useState({
@@ -272,63 +276,6 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
       setIsLoading(false);
     }
   }, [isFirstTime, router]);
-
-  async function getUserInfo2() {
-    const token = await getAccessToken();
-    if (!token) {
-      router.push("/auth?tab=login");
-    }
-    setIsLoading(true);
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (response.status !== 200) {
-      setStatusInfo("Error: " + response.status);
-    } else {
-      console.log(response);
-      const data = await response.json();
-
-      setUserInfo(data);
-      console.log(data);
-    }
-    setIsLoading(false);
-  }
-
-  async function saveChanges() {
-    const token = await getAccessToken();
-    console.log(token);
-    if (!token) {
-      router.push("/auth?tab=login");
-    }
-    setIsLoading(true);
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/changeEmail`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          newEmail: userInfo.email,
-        }),
-      }
-    );
-    if (response.status !== 200) {
-      setStatusInfo("Error: " + response.status);
-    } else {
-      getUserInfo2();
-      setStatusInfo(
-        "You now have to verify your new email address to complete the change."
-      );
-    }
-    setIsLoading(false);
-  }
 
   const longDateCreationDate = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -409,17 +356,10 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 label="Date of Birth"
                 showLabel={false}
                 value={new Date(userInfo.birthday).toLocaleDateString()}
-                onChange={(e) => { }}
+                onChange={(e) => {}}
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
-              <ActionButtonLayout>
-                <Button
-                  backgroundColor={"primary"}
-                  color={"primary"}
-                  onClick={saveChanges}
-                >SAVE CHANGES</Button>
-              </ActionButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
             <ProfileDataColumn>
@@ -441,7 +381,7 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 label="User Since"
                 showLabel={false}
                 value={longDateCreationDate}
-                onChange={(e) => { }}
+                onChange={(e) => {}}
                 editable={false}
               />
             </ProfileDataColumn>
@@ -473,11 +413,10 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                     <Button
                       backgroundColor={"primary"}
                       color={"primary"}
-                      onClick={() => {
-                        setStatusInfo("");
-                        getUserInfo2();
-                      }}
-                    >JOIN A SCHOOL</Button>
+                      onClick={() => {}}
+                    >
+                      JOIN A SCHOOL
+                    </Button>
                   </a>
                 </Link>
                 <Spacer size="verySmall"></Spacer>
@@ -486,11 +425,10 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                     <Button
                       backgroundColor={"secondary"}
                       color={"primary"}
-                      onClick={() => {
-                        setStatusInfo("");
-                        getUserInfo2();
-                      }}
-                    >CREATE A SCHOOL</Button>
+                      onClick={() => {}}
+                    >
+                      CREATE A SCHOOL
+                    </Button>
                   </a>
                 </Link>
               </ButtonLayout>
