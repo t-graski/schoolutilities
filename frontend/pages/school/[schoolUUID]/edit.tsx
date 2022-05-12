@@ -13,6 +13,7 @@ import SvgDepartment from "../../../components/atoms/svg/SvgDepartment";
 import SvgClass from "../../../components/atoms/svg/SvgClass";
 import SvgStudent from "../../../components/atoms/svg/SvgStudent";
 import SvgTeacher from "../../../components/atoms/svg/SvgTeacher";
+import { useQueryClient } from "react-query";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -28,6 +29,8 @@ export default function CreateSchool() {
   const [userData, setUserData] = useState(null);
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     fetchData();
@@ -53,9 +56,9 @@ export default function CreateSchool() {
   function getSecondPart() {
     switch (urlParam) {
       case "classes":
-        return <ClassesSettingsField />;
+        return <ClassesSettingsField queryClient={queryClient} />;
       case "persons":
-        return <PersonsSettingsField />;
+        return <PersonsSettingsField queryClient={queryClient} />;
       case "join-codes":
         return <JoinCodesSettingsField />;
       default:

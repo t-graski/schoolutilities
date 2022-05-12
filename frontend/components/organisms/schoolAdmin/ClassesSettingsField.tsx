@@ -19,7 +19,9 @@ import {
   fetchSchoolDepartments,
 } from "../../../utils/requests";
 
-type Props = {};
+type Props = {
+  queryClient: any;
+};
 
 const SchoolDetailLayout = styled("form", {
   display: "flex",
@@ -70,7 +72,9 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const ClassesSettingsField: React.FC<Props> = ({}) => {
+export const ClassesSettingsField: React.FC<Props> = ({
+  queryClient,
+}) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [schoolClassName, setSchoolClassName] = React.useState("");
@@ -80,8 +84,6 @@ export const ClassesSettingsField: React.FC<Props> = ({}) => {
   const [error, setError] = React.useState("");
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
-
-  const queryClient = useQueryClient();
 
   const { data: classes, status: classesStatus } = useQuery(
     ["classes", schoolUUID],

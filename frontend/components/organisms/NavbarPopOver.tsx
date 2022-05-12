@@ -117,7 +117,7 @@ export const NavbarPopOver: React.FC<Props> = ({ visible, setVisibility }) => {
         <StyledCloseButton onClick={() => setVisibility(false)}>
           <SvgClose />
         </StyledCloseButton>
-        <Link href="/">
+        <Link href="/" passHref>
           <a>
             <LogoLayout>
               <SvgOpenLogo />
@@ -139,9 +139,7 @@ export const NavbarPopOver: React.FC<Props> = ({ visible, setVisibility }) => {
             </StyledLink>
           </Link>
           <SpecialLinkLayout>
-            <Link href="/profile/settings" passHref>
-              <UserMenu></UserMenu>
-            </Link>
+            <UserMenu></UserMenu>
           </SpecialLinkLayout>
         </NavLinksLayout>
       </PopOverLayout>

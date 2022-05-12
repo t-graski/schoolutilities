@@ -13,7 +13,9 @@ import {
   fetchSchoolPersons,
 } from "../../../utils/requests";
 
-type Props = {};
+type Props = {
+  queryClient: any;
+};
 
 const SchoolDetailLayout = styled("form", {
   display: "flex",
@@ -76,7 +78,9 @@ const PersonRoleName = styled("p", {
   color: "$fontPrimary",
 });
 
-export const PersonsSettingsField: React.FC<Props> = ({}) => {
+export const PersonsSettingsField: React.FC<Props> = ({
+  queryClient,
+}) => {
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [personName, setPersonName] = React.useState("");
@@ -85,8 +89,6 @@ export const PersonsSettingsField: React.FC<Props> = ({}) => {
   const [error, setError] = React.useState("");
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
-
-  const queryClient = useQueryClient();
 
   const { data: persons, status: personsStatus } = useQuery(
     ["persons", schoolUUID],

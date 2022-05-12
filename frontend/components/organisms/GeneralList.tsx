@@ -19,8 +19,9 @@ const GeneralListLayout = styled("div", {
   justifyContent: "space-evenly",
   gap: "30px",
   width: "100vw",
-  color: "$fontPrimary",
   padding: "10vh 10vw",
+
+  color: "$fontPrimary",
 
   "@mobileOnly": {
     gridTemplateColumns: "1fr",

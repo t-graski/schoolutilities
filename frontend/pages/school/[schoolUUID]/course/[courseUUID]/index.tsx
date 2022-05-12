@@ -7,12 +7,15 @@ import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../utils/authHelper";
 import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseContent from "../../../../../components/molecules/course/CourseContent";
 import { Button } from "../../../../../components/atoms/Button";
 import { useQuery } from "react-query";
-import { fetchCourse, fetchCourseContent } from "../../../../../utils/requests";
+import {
+  fetchCourseContent,
+  fetchCourses,
+} from "../../../../../utils/requests";
+import Skeleton from "react-loading-skeleton";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -37,22 +40,66 @@ export default function Features() {
 
   const { data: items, status: contentStatus } = useQuery(
     ["items", courseUUID],
-    () => fetchCourseContent(courseUUID)
+    () => fetchCourseContent(courseUUID),
+    {
+      staleTime: 20000,
+    }
   );
-  const { data: course, status: courseStatus } = useQuery(
-    ["course", courseUUID],
-    () => fetchCourse(courseUUID)
+  const { data: courses, status: coursesStatus } = useQuery(
+    ["courses", schoolUUID],
+    async () => fetchCourses(schoolUUID),
+    {
+      staleTime: 20000,
+    }
   );
 
-  if (contentStatus === "loading" || courseStatus === "loading") {
-    return null;
+  if (contentStatus === "loading" || coursesStatus === "loading") {
+    return (
+      <>
+        <Head>
+          <title>Course - SchoolUtilities</title>
+        </Head>
+        <Navbar></Navbar>
+        <Spacer size="small"></Spacer>
+        <ContentLayout>
+          <HeadlineLayout>
+            <Skeleton width={300} height={60}></Skeleton>
+          </HeadlineLayout>
+          <Spacer size="verySmall"></Spacer>
+          <Separator width="small" alignment="left" />
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width="100%" height={80}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width="80%" height={40}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width="100%" height={50}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width="100%" height={30}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width="100%" height={80}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Button
+            backgroundColor={"primary"}
+            color={"primary"}
+            onClick={() => {
+              router.push(`/school/${schoolUUID}/course`);
+            }}
+          >
+            Back to courses
+          </Button>
+        </ContentLayout>
+        <Footer></Footer>
+      </>
+    );
   }
 
-  if (contentStatus === "error" || courseStatus === "error") {
+  if (contentStatus === "error" || coursesStatus === "error") {
     return <div>Error</div>;
   }
 
-  const { courseName, canEdit } = course;
+  const { courseName, canEdit } = courses.find(
+    (currCourse) => currCourse.courseUUID === courseUUID
+  );
 
   return (
     <>

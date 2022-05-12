@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "../../stitches.config";
 import { InputField } from "../atoms/input/InputField";
 import { Button } from "../atoms/Button";
@@ -7,10 +7,8 @@ import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
 import {
   getAccessToken,
-  logout,
   setSelectedSchool,
 } from "../../utils/authHelper";
-import cookie from "js-cookie";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
 import { Separator } from "../atoms/Separator";
 import SvgUser from "../atoms/svg/SvgUser";

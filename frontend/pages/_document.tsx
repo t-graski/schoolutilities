@@ -20,37 +20,36 @@ export default class Document extends NextDocument {
                   page_path: window.location.pathname,
                 });`,
             }}
+            defer
           ></script>
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7476966411807562" crossOrigin="anonymous"></script>
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7476966411807562"
+            crossOrigin="anonymous"
+            defer
+          ></script>
           <script
             type="text/javascript"
             src="https://cdn.cookielaw.org/consent/7d50b473-ca67-4ccc-9509-8fc4008d70b7-test/OtAutoBlock.js"
             async
+            defer
           ></script>
           <script
             src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
             type="text/javascript"
             data-domain-script="7d50b473-ca67-4ccc-9509-8fc4008d70b7-test"
             async
+            defer
           ></script>
-          <script type="text/javascript">function OptanonWrapper() {}</script>
-          <script type="text/javascript">function OptanonWrapper() {}</script>
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `function OptanonWrapper() {}`,
+            }}
+          ></script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
-              /* poppins-100 - latin */
-@font-face {
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 100;
-  src: url('/fonts/poppins-v15-latin-100.eot'); /* IE9 Compat Modes */
-  src: local(''),
-       url('/fonts/poppins-v15-latin-100.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('/fonts/poppins-v15-latin-100.woff2') format('woff2'), /* Super Modern Browsers */
-       url('/fonts/poppins-v15-latin-100.woff') format('woff'), /* Modern Browsers */
-       url('/fonts/poppins-v15-latin-100.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('/fonts/poppins-v15-latin-100.svg#Poppins') format('svg'); /* Legacy iOS */
-}
 /* poppins-300 - latin */
 @font-face {
   font-family: 'Poppins';

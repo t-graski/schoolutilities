@@ -13,6 +13,7 @@ import { useTheme } from "next-themes";
 import SvgRoundUser from "../atoms/svg/SvgRoundUser";
 import { useQuery } from "react-query";
 import { fetchCourses, fetchSchools } from "../../utils/requests";
+import Link from "next/link";
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -184,7 +185,7 @@ const ArrowLayout = styled("div", {
   variants: {
     open: {
       true: {
-        transform: "rotate(90deg)",
+        transform: "rotate(-90deg)",
       },
       false: {},
     },
@@ -192,6 +193,15 @@ const ArrowLayout = styled("div", {
 });
 
 const StyledUserName = styled("p", {});
+
+const StyledLink = styled("a", {
+  display: "flex",
+  width: "100%",
+  justifyContent: "space-between",
+
+  color: "$fontPrimary",
+  textDecoration: "none",
+});
 
 export const UserMenu = () => {
   const router = useRouter();
@@ -202,24 +212,33 @@ export const UserMenu = () => {
 
   const { data: schools, status: schoolsStatus } = useQuery(
     "schools",
-    fetchSchools
+    fetchSchools,
+    {
+      refetchOnMount: false,
+      staleTime: 120000,
+    }
   );
   const { data: courses, status: coursesStatus } = useQuery(
     ["courses", currentSchool],
     () => fetchCourses(currentSchool),
     {
-      enabled: !!currentSchool,
+      refetchOnMount: false,
+      staleTime: 30000,
     }
   );
   const { data: userInfo, status: userInfoStatus } = useQuery(
     "userInfo",
-    getUserData
+    getUserData,
+    {
+      refetchOnMount: false,
+      staleTime: 60000,
+    }
   );
 
   if (schoolsStatus === "success" && !currentSchool) {
     setCurrentSchool(schools[0].schoolUUID);
   }
-  
+
   return (
     <Box>
       <DropdownMenu onOpenChange={setOpen}>
@@ -240,21 +259,17 @@ export const UserMenu = () => {
         <DropdownMenuContent sideOffset={5} alignOffset={0}>
           {userInfoStatus == "success" && (
             <>
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/profile/settings");
-                }}
-              >
-                Profile
+              <DropdownMenuItem>
+                <Link href={"/profile/settings"} passHref>
+                  <StyledLink>Profile</StyledLink>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenu>
-                <DropdownMenuTriggerItem
-                  onClick={() => {
-                    router.push(`/school/${currentSchool}/course`);
-                  }}
-                >
-                  Courses
+                <DropdownMenuTriggerItem>
+                  <Link href={`/school/${currentSchool}/course`} passHref>
+                    <StyledLink>Courses</StyledLink>
+                  </Link>
                   <RightSlot>
                     <ChevronRightIcon />
                   </RightSlot>
@@ -263,52 +278,50 @@ export const UserMenu = () => {
                   {coursesStatus == "success" &&
                     Array.isArray(courses) &&
                     courses.map((course) => (
-                      <DropdownMenuItem
-                        key={course.courseUUID}
-                        onClick={() => {
-                          router.push(
-                            `/school/${currentSchool}/course/${course.courseUUID}`
-                          );
-                        }}
-                      >
-                        {course.courseName}
+                      <DropdownMenuItem key={course.courseUUID}>
+                        <Link
+                          href={`/school/${currentSchool}/course/${course.courseUUID}`}
+                          passHref
+                        >
+                          <StyledLink>{course.courseName}</StyledLink>
+                        </Link>
                       </DropdownMenuItem>
                     ))}
                   {coursesStatus == "success" && courses.length == 0 && (
-                    <DropdownMenuItem
-                      onClick={() => {
-                        router.push("/school/select");
-                      }}
-                    >
-                      Select a school to see courses
+                    <DropdownMenuItem>
+                      <Link href={"/school/select"} passHref>
+                        <StyledLink>Profile</StyledLink>
+                      </Link>
                     </DropdownMenuItem>
                   )}
                   {coursesStatus == "success" && courses.length > 0 && (
                     <>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => {
-                          router.push(
-                            `/school/${currentSchool}/course/create-course`
-                          );
-                        }}
-                      >
-                        Create a course
+                      <DropdownMenuItem>
+                        <Link
+                          href={`/school/${currentSchool}/course/create-course`}
+                          passHref
+                        >
+                          <StyledLink>Create a course</StyledLink>
+                        </Link>
                       </DropdownMenuItem>
                     </>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu>
-                <DropdownMenuTriggerItem
-                  onClick={() => {
-                    router.push("/school/select");
-                  }}
-                >
-                  Schools
-                  <RightSlot>
-                    <ChevronRightIcon />
-                  </RightSlot>
+                <DropdownMenuTriggerItem>
+                  <Link
+                    href={`/school/${currentSchool}/course/create-course`}
+                    passHref
+                  >
+                    <StyledLink>
+                      Schools
+                      <RightSlot>
+                        <ChevronRightIcon />
+                      </RightSlot>
+                    </StyledLink>
+                  </Link>
                 </DropdownMenuTriggerItem>
                 <DropdownMenuContent sideOffset={2} alignOffset={-5}>
                   <DropdownMenuRadioGroup
@@ -334,12 +347,10 @@ export const UserMenu = () => {
                   {schoolsStatus == "success" && schools.length > 0 && (
                     <DropdownMenuSeparator />
                   )}
-                  <DropdownMenuItem
-                    onClick={() => {
-                      router.push("/school/join");
-                    }}
-                  >
-                    Join a school
+                  <DropdownMenuItem>
+                    <Link href={"/school/join"} passHref>
+                      <StyledLink>Join a school</StyledLink>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {

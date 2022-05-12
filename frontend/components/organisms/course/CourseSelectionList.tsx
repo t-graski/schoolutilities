@@ -82,8 +82,12 @@ export const CourseSelectionList: React.FC<SideDashboardProps> = ({}) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const { data: courses, status } = useQuery(["courses", schoolUUID], () =>
-    fetchCourses(schoolUUID)
+  const { data: courses, status } = useQuery(
+    ["courses", schoolUUID],
+    () => fetchCourses(schoolUUID),
+    {
+      staleTime: 20000,
+    }
   );
 
   if (status === "error") {

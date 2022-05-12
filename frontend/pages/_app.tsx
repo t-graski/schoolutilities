@@ -17,7 +17,7 @@ const globalStyles = globalCss({
     padding: 0,
   },
   body: {
-    fontFamily: "Poppins",
+    fontFamily: "Poppins, sans-serif",
     fontWeight: "400",
     overflowX: "hidden",
     backgroundColor: "$backgroundPrimary",
@@ -56,47 +56,47 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <IdProvider>
       <ProtectedRoute router={router}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider
-            disableTransitionOnChange
-            attribute="class"
-            value={{ light: lightTheme.className, dark: "dark-theme" }}
-            defaultTheme="system"
+        <ThemeProvider
+          disableTransitionOnChange
+          attribute="class"
+          value={{ light: lightTheme.className, dark: "dark-theme" }}
+          defaultTheme="system"
+        >
+          <SkeletonTheme
+            baseColor="var(--colors-backgroundSecondary)"
+            highlightColor="var(--colors-skeletonSecondary)"
+            duration={1.3}
           >
-            <SkeletonTheme
-              baseColor="var(--colors-backgroundSecondary)"
-              highlightColor="var(--colors-skeletonSecondary)"
-              duration={1.3}
-            >
-              <Script
-                async
-                src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-              ></Script>
-              <Script
-                dangerouslySetInnerHTML={{
-                  __html: `
+            <Script
+              async
+              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+            ></Script>
+            <Script
+              dangerouslySetInnerHTML={{
+                __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', 'G-879Y3BTW0K', {
                   page_path: window.location.pathname,
                 });`,
-                }}
-                id="google-analytics-tag"
-              ></Script>
-              <Script
-                src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
-                strategy="lazyOnload"
-              ></Script>
-              <Script
-                async
-                src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-              ></Script>
+              }}
+              id="google-analytics-tag"
+            ></Script>
+            <Script
+              src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+              strategy="lazyOnload"
+            ></Script>
+            <Script
+              async
+              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+            ></Script>
+            <QueryClientProvider client={queryClient}>
               <Component {...pageProps} router={router} />
-            </SkeletonTheme>
-          </ThemeProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </SkeletonTheme>
+        </ThemeProvider>
       </ProtectedRoute>
     </IdProvider>
   );
