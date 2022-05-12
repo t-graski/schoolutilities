@@ -7,9 +7,11 @@
 -- Server version: 5.7.35
 -- PHP Version: 7.4.20
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE
+= "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone
+= "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -27,14 +29,21 @@ SET time_zone = "+00:00";
 -- Table structure for table `courses`
 --
 
-CREATE TABLE `courses` (
-  `course_id` int(11) NOT NULL,
-  `course_uuid` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+CREATE TABLE `courses`
+(
+  `course_id` int
+(11) NOT NULL,
+  `course_uuid` varchar
+(255) NOT NULL,
+  `name` varchar
+(255) NOT NULL,
   `course_description` text NOT NULL,
-  `school_id` int(11) NOT NULL,
-  `subject_id` int(11) NOT NULL,
-  `class_id` int(11) NOT NULL
+  `school_id` int
+(11) NOT NULL,
+  `subject_id` int
+(11) NOT NULL,
+  `class_id` int
+(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -43,20 +52,29 @@ CREATE TABLE `courses` (
 -- Table structure for table `course_files`
 --
 
-CREATE TABLE `course_files` (
-  `course_file_id` int(11) NOT NULL,
-  `course_file_uuid` varchar(255) NOT NULL,
-  `file_name` varchar(255) NOT NULL,
+CREATE TABLE `course_files`
+(
+  `course_file_id` int
+(11) NOT NULL,
+  `course_file_uuid` varchar
+(255) NOT NULL,
+  `file_name` varchar
+(255) NOT NULL,
   `date_uploaded` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `file_size` int(11) NOT NULL,
-  `file_type` varchar(255) NOT NULL
+  `file_size` int
+(11) NOT NULL,
+  `file_type` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `course_files`
 --
 
-INSERT INTO `course_files` (`course_file_id`, `course_file_uuid`, `file_name`, `date_uploaded`, `file_size`, `file_type`) VALUES
+INSERT INTO `course_files` (`
+course_file_id`,
+`course_file_uuid
+`, `file_name`, `date_uploaded`, `file_size`, `file_type`) VALUES
 (5, '6d0c96707-dc20-4d9e-9a72-3631dcbc7af1.jpg', '57156093', '2021-11-25 20:20:04', 14896, 'image/jpeg');
 
 -- --------------------------------------------------------
@@ -65,9 +83,12 @@ INSERT INTO `course_files` (`course_file_id`, `course_file_uuid`, `file_name`, `
 -- Table structure for table `course_persons`
 --
 
-CREATE TABLE `course_persons` (
-  `course_id` int(255) NOT NULL,
-  `person_id` int(255) NOT NULL
+CREATE TABLE `course_persons`
+(
+  `course_id` int
+(255) NOT NULL,
+  `person_id` int
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -76,20 +97,30 @@ CREATE TABLE `course_persons` (
 -- Table structure for table `departments`
 --
 
-CREATE TABLE `departments` (
-  `department_id` int(255) NOT NULL,
-  `department_uuid` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `school_id` int(255) NOT NULL,
-  `is_visible` tinyint(1) NOT NULL DEFAULT '1',
-  `childs_visible` tinyint(1) NOT NULL DEFAULT '1'
+CREATE TABLE `departments`
+(
+  `department_id` int
+(255) NOT NULL,
+  `department_uuid` varchar
+(255) NOT NULL,
+  `name` varchar
+(255) NOT NULL,
+  `school_id` int
+(255) NOT NULL,
+  `is_visible` tinyint
+(1) NOT NULL DEFAULT '1',
+  `childs_visible` tinyint
+(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `departments`
 --
 
-INSERT INTO `departments` (`department_id`, `department_uuid`, `name`, `school_id`, `is_visible`, `childs_visible`) VALUES
+INSERT INTO `departments` (`
+department_id`,
+`department_uuid
+`, `name`, `school_id`, `is_visible`, `childs_visible`) VALUES
 (2, '', 'Medientechnik v2', 1, 0, 0),
 (7, '', 'v2', 1, 1, 0),
 (8, '', 'Alo', 2, 0, 0),
@@ -110,13 +141,19 @@ INSERT INTO `departments` (`department_id`, `department_uuid`, `name`, `school_i
 -- Table structure for table `email_log`
 --
 
-CREATE TABLE `email_log` (
-  `email_id` int(255) NOT NULL,
-  `email_uuid` varchar(255) NOT NULL,
-  `person_id` int(255) NOT NULL,
+CREATE TABLE `email_log`
+(
+  `email_id` int
+(255) NOT NULL,
+  `email_uuid` varchar
+(255) NOT NULL,
+  `person_id` int
+(255) NOT NULL,
   `email_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `email_subject` varchar(255) NOT NULL,
-  `email_receiver` varchar(255) NOT NULL
+  `email_subject` varchar
+(255) NOT NULL,
+  `email_receiver` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -125,17 +162,24 @@ CREATE TABLE `email_log` (
 -- Table structure for table `languages`
 --
 
-CREATE TABLE `languages` (
-  `language_id` int(255) NOT NULL,
-  `language_name` varchar(255) NOT NULL,
-  `language_tag` varchar(255) NOT NULL
+CREATE TABLE `languages`
+(
+  `language_id` int
+(255) NOT NULL,
+  `language_name` varchar
+(255) NOT NULL,
+  `language_tag` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `languages`
 --
 
-INSERT INTO `languages` (`language_id`, `language_name`, `language_tag`) VALUES
+INSERT INTO `languages` (`
+language_id`,
+`language_name
+`, `language_tag`) VALUES
 (1, 'german', 'de-DE'),
 (2, 'english', 'en-US');
 
@@ -145,10 +189,14 @@ INSERT INTO `languages` (`language_id`, `language_name`, `language_tag`) VALUES
 -- Table structure for table `login_tokens`
 --
 
-CREATE TABLE `login_tokens` (
-  `login_token_id` int(255) NOT NULL,
-  `person_id` int(255) NOT NULL,
-  `refresh_token` varchar(255) NOT NULL,
+CREATE TABLE `login_tokens`
+(
+  `login_token_id` int
+(255) NOT NULL,
+  `person_id` int
+(255) NOT NULL,
+  `refresh_token` varchar
+(255) NOT NULL,
   `creation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -158,15 +206,23 @@ CREATE TABLE `login_tokens` (
 -- Table structure for table `persons`
 --
 
-CREATE TABLE `persons` (
-  `person_id` int(255) NOT NULL,
-  `person_uuid` varchar(255) NOT NULL,
-  `firstname` varchar(255) NOT NULL,
-  `lastname` varchar(255) NOT NULL,
+CREATE TABLE `persons`
+(
+  `person_id` int
+(255) NOT NULL,
+  `person_uuid` varchar
+(255) NOT NULL,
+  `firstname` varchar
+(255) NOT NULL,
+  `lastname` varchar
+(255) NOT NULL,
   `birthdate` date NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email_verified` tinyint(1) NOT NULL DEFAULT '0',
+  `email` varchar
+(255) NOT NULL,
+  `password` varchar
+(255) NOT NULL,
+  `email_verified` tinyint
+(1) NOT NULL DEFAULT '0',
   `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -176,10 +232,14 @@ CREATE TABLE `persons` (
 -- Table structure for table `person_roles`
 --
 
-CREATE TABLE `person_roles` (
-  `person_id` int(255) NOT NULL,
-  `role_id` int(255) NOT NULL,
-  `school_id` int(255) NOT NULL
+CREATE TABLE `person_roles`
+(
+  `person_id` int
+(255) NOT NULL,
+  `role_id` int
+(255) NOT NULL,
+  `school_id` int
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -188,17 +248,24 @@ CREATE TABLE `person_roles` (
 -- Table structure for table `register_tokens`
 --
 
-CREATE TABLE `register_tokens` (
-  `register_link_id` int(255) NOT NULL,
-  `person_id` int(255) NOT NULL,
-  `token` varchar(255) NOT NULL
+CREATE TABLE `register_tokens`
+(
+  `register_link_id` int
+(255) NOT NULL,
+  `person_id` int
+(255) NOT NULL,
+  `token` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `register_tokens`
 --
 
-INSERT INTO `register_tokens` (`register_link_id`, `person_id`, `token`) VALUES
+INSERT INTO `register_tokens` (`
+register_link_id`,
+`person_id
+`, `token`) VALUES
 (1, 1, 'akjVD3xc_WnsLjcyEeb7z'),
 (7, 7, '2A8YTMAYi6hs3OJjXcy36'),
 (10, 10, 'EZrVEjlpxLBiBP3mej_yi'),
@@ -214,16 +281,22 @@ INSERT INTO `register_tokens` (`register_link_id`, `person_id`, `token`) VALUES
 -- Table structure for table `roles`
 --
 
-CREATE TABLE `roles` (
-  `role_id` int(255) NOT NULL,
-  `role_name` varchar(255) NOT NULL
+CREATE TABLE `roles`
+(
+  `role_id` int
+(255) NOT NULL,
+  `role_name` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `roles`
 --
 
-INSERT INTO `roles` (`role_id`, `role_name`) VALUES
+INSERT INTO `roles` (`
+role_id`,
+`role_name
+`) VALUES
 (0, 'Supervisor'),
 (1, 'Admin'),
 (2, 'Student'),
@@ -235,19 +308,28 @@ INSERT INTO `roles` (`role_id`, `role_name`) VALUES
 -- Table structure for table `schools`
 --
 
-CREATE TABLE `schools` (
-  `school_id` int(255) NOT NULL,
-  `school_uuid` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `language_id` int(255) NOT NULL,
-  `timezone` varchar(255) NOT NULL
+CREATE TABLE `schools`
+(
+  `school_id` int
+(255) NOT NULL,
+  `school_uuid` varchar
+(255) NOT NULL,
+  `name` varchar
+(255) NOT NULL,
+  `language_id` int
+(255) NOT NULL,
+  `timezone` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `schools`
 --
 
-INSERT INTO `schools` (`school_id`, `school_uuid`, `name`, `language_id`, `timezone`) VALUES
+INSERT INTO `schools` (`
+school_id`,
+`school_uuid
+`, `name`, `language_id`, `timezone`) VALUES
 (1, '', 'HTL Leonding', 1, '+00:00'),
 (2, '', 'HTL Leonding', 1, '+00:00'),
 (3, '', 'HTL Leonding', 1, '+00:00'),
@@ -261,11 +343,16 @@ INSERT INTO `schools` (`school_id`, `school_uuid`, `name`, `language_id`, `timez
 -- Table structure for table `school_classes`
 --
 
-CREATE TABLE `school_classes` (
-  `class_id` int(255) NOT NULL,
-  `class_uuid` varchar(255) NOT NULL,
-  `department_id` int(255) NOT NULL,
-  `class_name` varchar(255) NOT NULL
+CREATE TABLE `school_classes`
+(
+  `class_id` int
+(255) NOT NULL,
+  `class_uuid` varchar
+(255) NOT NULL,
+  `department_id` int
+(255) NOT NULL,
+  `class_name` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -274,13 +361,21 @@ CREATE TABLE `school_classes` (
 -- Table structure for table `school_join_codes`
 --
 
-CREATE TABLE `school_join_codes` (
-  `school_join_code_id` int(11) NOT NULL,
-  `school_id` int(11) NOT NULL,
-  `join_code` varchar(255) NOT NULL,
-  `expire_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `join_code_name` varchar(255) NOT NULL,
-  `person_creation_id` int(11) NOT NULL,
+CREATE TABLE `school_join_codes`
+(
+  `school_join_code_id` int
+(11) NOT NULL,
+  `school_id` int
+(11) NOT NULL,
+  `join_code` varchar
+(255) NOT NULL,
+  `expire_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON
+UPDATE CURRENT_TIMESTAMP,
+  `join_code_name
+` varchar
+(255) NOT NULL,
+  `person_creation_id` int
+(11) NOT NULL,
   `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -290,9 +385,12 @@ CREATE TABLE `school_join_codes` (
 -- Table structure for table `school_persons`
 --
 
-CREATE TABLE `school_persons` (
-  `school_id` int(255) NOT NULL,
-  `person_id` int(255) NOT NULL,
+CREATE TABLE `school_persons`
+(
+  `school_id` int
+(255) NOT NULL,
+  `person_id` int
+(255) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -301,10 +399,14 @@ CREATE TABLE `school_persons` (
 -- Table structure for table `subjects`
 --
 
-CREATE TABLE `subjects` (
-  `subject_id` int(255) NOT NULL,
-  `subject_name` varchar(255) NOT NULL,
-  `class_id` int(255) NOT NULL
+CREATE TABLE `subjects`
+(
+  `subject_id` int
+(255) NOT NULL,
+  `subject_name` varchar
+(255) NOT NULL,
+  `class_id` int
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -313,17 +415,24 @@ CREATE TABLE `subjects` (
 -- Table structure for table `timezones`
 --
 
-CREATE TABLE `timezones` (
-  `timezone_id` int(255) NOT NULL,
-  `timezone_uuid` varchar(255) NOT NULL,
-  `timezone_name` varchar(255) NOT NULL
+CREATE TABLE `timezones`
+(
+  `timezone_id` int
+(255) NOT NULL,
+  `timezone_uuid` varchar
+(255) NOT NULL,
+  `timezone_name` varchar
+(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `timezones`
 --
 
-INSERT INTO `timezones` (`timezone_id`, `timezone_uuid`, `timezone_name`) VALUES
+INSERT INTO `timezones` (`
+timezone_id`,
+`timezone_uuid
+`, `timezone_name`) VALUES
 (1, '77bbddc32-0d96-425c-8abf-60d94b663981', 'Africa/Accra'),
 (2, '7c2c566ba-d627-41bf-bcac-f16a53b20fbf', 'Africa/Addis_Ababa'),
 (3, '79ee9dc2e-a2d9-41ca-953e-c6e071ca3931', 'Africa/Algiers'),
@@ -740,120 +849,154 @@ INSERT INTO `timezones` (`timezone_id`, `timezone_uuid`, `timezone_name`) VALUES
 -- Indexes for table `courses`
 --
 ALTER TABLE `courses`
-  ADD PRIMARY KEY (`course_id`),
-  ADD UNIQUE KEY `unique_course_name_school_id` (`name`,`school_id`),
-  ADD KEY `fk_course_school` (`school_id`),
-  ADD KEY `fk_course_subject` (`subject_id`),
-  ADD KEY `fk_course_class` (`class_id`);
+ADD PRIMARY KEY
+(`course_id`),
+ADD UNIQUE KEY `unique_course_name_school_id`
+(`name`,`school_id`),
+ADD KEY `fk_course_school`
+(`school_id`),
+ADD KEY `fk_course_subject`
+(`subject_id`),
+ADD KEY `fk_course_class`
+(`class_id`);
 
 --
 -- Indexes for table `course_files`
 --
 ALTER TABLE `course_files`
-  ADD PRIMARY KEY (`course_file_id`);
+ADD PRIMARY KEY
+(`course_file_id`);
 
 --
 -- Indexes for table `course_persons`
 --
 ALTER TABLE `course_persons`
-  ADD UNIQUE KEY `coursePersonId` (`course_id`,`person_id`),
-  ADD KEY `fk_course_persons_person_id` (`person_id`);
+ADD UNIQUE KEY `coursePersonId`
+(`course_id`,`person_id`),
+ADD KEY `fk_course_persons_person_id`
+(`person_id`);
 
 --
 -- Indexes for table `departments`
 --
 ALTER TABLE `departments`
-  ADD PRIMARY KEY (`department_id`),
-  ADD KEY `fk_department_school` (`school_id`);
+ADD PRIMARY KEY
+(`department_id`),
+ADD KEY `fk_department_school`
+(`school_id`);
 
 --
 -- Indexes for table `email_log`
 --
 ALTER TABLE `email_log`
-  ADD PRIMARY KEY (`email_id`),
-  ADD KEY `fk_email_log_person` (`person_id`);
+ADD PRIMARY KEY
+(`email_id`),
+ADD KEY `fk_email_log_person`
+(`person_id`);
 
 --
 -- Indexes for table `languages`
 --
 ALTER TABLE `languages`
-  ADD PRIMARY KEY (`language_id`);
+ADD PRIMARY KEY
+(`language_id`);
 
 --
 -- Indexes for table `login_tokens`
 --
 ALTER TABLE `login_tokens`
-  ADD PRIMARY KEY (`login_token_id`),
-  ADD KEY `fk_login_token_person` (`person_id`);
+ADD PRIMARY KEY
+(`login_token_id`),
+ADD KEY `fk_login_token_person`
+(`person_id`);
 
 --
 -- Indexes for table `persons`
 --
 ALTER TABLE `persons`
-  ADD PRIMARY KEY (`person_id`),
-  ADD UNIQUE KEY `unique_persons_email` (`email`),
-  ADD UNIQUE KEY `person_uuid_unique` (`person_uuid`),
+ADD PRIMARY KEY
+(`person_id`),
+ADD UNIQUE KEY `unique_persons_email`
+(`email`),
+ADD UNIQUE KEY `person_uuid_unique`
+(`person_uuid`),
 
 --
 -- Indexes for table `person_roles`
 --
 ALTER TABLE `person_roles`
-  ADD UNIQUE KEY `person_role_school_id` (`person_id`,`role_id`,`school_id`),
-  ADD KEY `fk_person_role_role` (`role_id`),
-  ADD KEY `fk_person_role_school` (`school_id`);
+ADD UNIQUE KEY `person_role_school_id`
+(`person_id`,`role_id`,`school_id`),
+ADD KEY `fk_person_role_role`
+(`role_id`),
+ADD KEY `fk_person_role_school`
+(`school_id`);
 
 --
 -- Indexes for table `register_tokens`
 --
 ALTER TABLE `register_tokens`
-  ADD PRIMARY KEY (`register_link_id`),
-  ADD KEY `fk_register_token_person` (`person_id`);
+ADD PRIMARY KEY
+(`register_link_id`),
+ADD KEY `fk_register_token_person`
+(`person_id`);
 
 --
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
-  ADD PRIMARY KEY (`role_id`);
+ADD PRIMARY KEY
+(`role_id`);
 
 --
 -- Indexes for table `schools`
 --
 ALTER TABLE `schools`
-  ADD PRIMARY KEY (`school_id`),
-  ADD KEY `language_id` (`language_id`);
+ADD PRIMARY KEY
+(`school_id`),
+ADD KEY `language_id`
+(`language_id`);
 
 --
 -- Indexes for table `school_classes`
 --
 ALTER TABLE `school_classes`
-  ADD PRIMARY KEY (`class_id`),
-  ADD KEY `fk_school_class_deparment` (`department_id`);
+ADD PRIMARY KEY
+(`class_id`),
+ADD KEY `fk_school_class_deparment`
+(`department_id`);
 
 --
 -- Indexes for table `school_join_codes`
 --
 ALTER TABLE `school_join_codes`
-  ADD PRIMARY KEY (`school_join_code_id`);
+ADD PRIMARY KEY
+(`school_join_code_id`);
 
 --
 -- Indexes for table `school_persons`
 --
 ALTER TABLE `school_persons`
-  ADD UNIQUE KEY `schoolPersonId` (`school_id`,`person_id`),
-  ADD KEY `fk_school_persons_person_id` (`person_id`);
+ADD UNIQUE KEY `schoolPersonId`
+(`school_id`,`person_id`),
+ADD KEY `fk_school_persons_person_id`
+(`person_id`);
 
 --
 -- Indexes for table `subjects`
 --
 ALTER TABLE `subjects`
-  ADD PRIMARY KEY (`subject_id`);
+ADD PRIMARY KEY
+(`subject_id`);
 
 --
 -- Indexes for table `timezones`
 --
 ALTER TABLE `timezones`
-  ADD PRIMARY KEY (`timezone_id`),
-  ADD UNIQUE KEY `timezone_name_unique` (`timezone_name`);
+ADD PRIMARY KEY
+(`timezone_id`),
+ADD UNIQUE KEY `timezone_name_unique`
+(`timezone_name`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -863,85 +1006,99 @@ ALTER TABLE `timezones`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `course_id` int
+(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `course_files`
 --
 ALTER TABLE `course_files`
-  MODIFY `course_file_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `course_file_id` int
+(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `department_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `department_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `email_log`
 --
 ALTER TABLE `email_log`
-  MODIFY `email_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `email_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `languages`
 --
 ALTER TABLE `languages`
-  MODIFY `language_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `language_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `login_tokens`
 --
 ALTER TABLE `login_tokens`
-  MODIFY `login_token_id` int(255) NOT NULL AUTO_INCREMENT;
+  MODIFY `login_token_id` int
+(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `persons`
 --
 ALTER TABLE `persons`
-  MODIFY `person_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `person_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `register_tokens`
 --
 ALTER TABLE `register_tokens`
-  MODIFY `register_link_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `register_link_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `role_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `role_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `schools`
 --
 ALTER TABLE `schools`
-  MODIFY `school_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `school_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `school_classes`
 --
 ALTER TABLE `school_classes`
-  MODIFY `class_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `class_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `school_join_codes`
 --
 ALTER TABLE `school_join_codes`
-  MODIFY `school_join_code_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `school_join_code_id` int
+(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `subject_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `subject_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `timezones`
 --
 ALTER TABLE `timezones`
-  MODIFY `timezone_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=408;
+  MODIFY `timezone_id` int
+(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=408;
 
 --
 -- Constraints for dumped tables
@@ -951,73 +1108,107 @@ ALTER TABLE `timezones`
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
-  ADD CONSTRAINT `fk_course_class` FOREIGN KEY (`class_id`) REFERENCES `school_classes` (`class_id`),
-  ADD CONSTRAINT `fk_course_school` FOREIGN KEY (`school_id`) REFERENCES `schools` (`school_id`),
-  ADD CONSTRAINT `fk_course_subject` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`subject_id`);
+ADD CONSTRAINT `fk_course_class` FOREIGN KEY
+(`class_id`) REFERENCES `school_classes`
+(`class_id`),
+ADD CONSTRAINT `fk_course_school` FOREIGN KEY
+(`school_id`) REFERENCES `schools`
+(`school_id`),
+ADD CONSTRAINT `fk_course_subject` FOREIGN KEY
+(`subject_id`) REFERENCES `subjects`
+(`subject_id`);
 
 --
 -- Constraints for table `course_persons`
 --
 ALTER TABLE `course_persons`
-  ADD CONSTRAINT `fk_course_persons_course_id` FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`),
-  ADD CONSTRAINT `fk_course_persons_person_id` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`);
+ADD CONSTRAINT `fk_course_persons_course_id` FOREIGN KEY
+(`course_id`) REFERENCES `courses`
+(`course_id`),
+ADD CONSTRAINT `fk_course_persons_person_id` FOREIGN KEY
+(`person_id`) REFERENCES `persons`
+(`person_id`);
 
 --
 -- Constraints for table `departments`
 --
 ALTER TABLE `departments`
-  ADD CONSTRAINT `fk_department_school` FOREIGN KEY (`school_id`) REFERENCES `schools` (`school_id`);
+ADD CONSTRAINT `fk_department_school` FOREIGN KEY
+(`school_id`) REFERENCES `schools`
+(`school_id`);
 
 --
 -- Constraints for table `email_log`
 --
 ALTER TABLE `email_log`
-  ADD CONSTRAINT `fk_email_log_person` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`);
+ADD CONSTRAINT `fk_email_log_person` FOREIGN KEY
+(`person_id`) REFERENCES `persons`
+(`person_id`);
 
 --
 -- Constraints for table `login_tokens`
 --
 ALTER TABLE `login_tokens`
-  ADD CONSTRAINT `fk_login_token_person` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`);
+ADD CONSTRAINT `fk_login_token_person` FOREIGN KEY
+(`person_id`) REFERENCES `persons`
+(`person_id`);
 
 --
 -- Constraints for table `persons`
 --
 ALTER TABLE `persons`
-  ADD CONSTRAINT `fk_person_class` FOREIGN KEY (`class_ide`) REFERENCES `school_classes` (`class_id`);
+ADD CONSTRAINT `fk_person_class` FOREIGN KEY
+(`class_ide`) REFERENCES `school_classes`
+(`class_id`);
 
 --
 -- Constraints for table `person_roles`
 --
 ALTER TABLE `person_roles`
-  ADD CONSTRAINT `fk_person_role_person` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`),
-  ADD CONSTRAINT `fk_person_role_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
-  ADD CONSTRAINT `fk_person_role_school` FOREIGN KEY (`school_id`) REFERENCES `schools` (`school_id`);
+ADD CONSTRAINT `fk_person_role_person` FOREIGN KEY
+(`person_id`) REFERENCES `persons`
+(`person_id`),
+ADD CONSTRAINT `fk_person_role_role` FOREIGN KEY
+(`role_id`) REFERENCES `roles`
+(`role_id`),
+ADD CONSTRAINT `fk_person_role_school` FOREIGN KEY
+(`school_id`) REFERENCES `schools`
+(`school_id`);
 
 --
 -- Constraints for table `register_tokens`
 --
 ALTER TABLE `register_tokens`
-  ADD CONSTRAINT `fk_register_token_person` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`);
+ADD CONSTRAINT `fk_register_token_person` FOREIGN KEY
+(`person_id`) REFERENCES `persons`
+(`person_id`);
 
 --
 -- Constraints for table `schools`
 --
 ALTER TABLE `schools`
-  ADD CONSTRAINT `fk_school_language` FOREIGN KEY (`language_id`) REFERENCES `languages` (`language_id`);
+ADD CONSTRAINT `fk_school_language` FOREIGN KEY
+(`language_id`) REFERENCES `languages`
+(`language_id`);
 
 --
 -- Constraints for table `school_classes`
 --
 ALTER TABLE `school_classes`
-  ADD CONSTRAINT `fk_school_class_deparment` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
+ADD CONSTRAINT `fk_school_class_deparment` FOREIGN KEY
+(`department_id`) REFERENCES `departments`
+(`department_id`);
 
 --
 -- Constraints for table `school_persons`
 --
 ALTER TABLE `school_persons`
-  ADD CONSTRAINT `fk_school_persons_person_id` FOREIGN KEY (`person_id`) REFERENCES `persons` (`person_id`),
-  ADD CONSTRAINT `fk_school_persons_school_id` FOREIGN KEY (`school_id`) REFERENCES `schools` (`school_id`);
+ADD CONSTRAINT `fk_school_persons_person_id` FOREIGN KEY
+(`person_id`) REFERENCES `persons`
+(`person_id`),
+ADD CONSTRAINT `fk_school_persons_school_id` FOREIGN KEY
+(`school_id`) REFERENCES `schools`
+(`school_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

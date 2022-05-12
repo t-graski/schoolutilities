@@ -324,7 +324,9 @@ model courseElements {
   course           courses  @relation(fields: [courseId], references: [courseId])
 
   fileSubmissionSettings fileSubmissionSettings[]
+  headlineSettings       headlineSettings[]
 
+  textSettings textSettings[]
   @@index([courseId], map: "fkCourseElementCourseId")
   @@index([parentId], map: "fkCourseElementParentId")
   @@index([typeId], map: "fkCourseElementTypeId")
@@ -337,6 +339,8 @@ model headlineSettings {
   courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
   label           String @map("label") @db.VarChar(255)
 
+  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId], onUpdate: Restrict, map: "fkHeadlineSettingsCourseElementId")
+
   @@index([courseElementId], map: "fkHeadlineCourseElementId")
   @@map("headline_settings")
 }
@@ -346,6 +350,7 @@ model textSettings {
   courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
   text            String @map("text") @db.VarChar(255)
 
+  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId], onUpdate: Restrict, map: "fkTextSettingsCourseElementId")
 
   @@index([courseElementId], map: "fkTextCourseElementId")
   @@map("text_settings")
@@ -396,4 +401,18 @@ model articles {
   publishDate      DateTime @map("publish_date") @db.Timestamp(0)
   creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
   personCreationId Int      @map("person_creation_id")
+}
+
+model requestLog {
+  requestId     Int      @id @default(autoincrement()) @map("request_id")
+  ip            String   @map("ip") @db.VarChar(255)
+  time          DateTime @default(now()) @map("time") @db.Timestamp(0)
+  method        String   @map("method") @db.VarChar(255)
+  path          String   @map("path") @db.VarChar(3000)
+  status        Int      @map("status")
+  contentLength Int      @map("content_length")
+  userAgent     String   @map("user_agent") @db.VarChar(255)
+  responseTime   Float    @map("response_time")
+
+  @@map("request_log")
 }

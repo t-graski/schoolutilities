@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -15,6 +15,8 @@ import { HelperModule } from './helper/helper.module';
 import { ArticleService } from './article/article.service';
 import { ArticleController } from './article/article.controller';
 import { ArticleModule } from './article/article.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { RequestLogger } from './applogger.middleware';
 
 @Module({
   imports: [
@@ -30,8 +32,16 @@ import { ArticleModule } from './article/article.module';
     StatusModule,
     HelperModule,
     ArticleModule,
+    ThrottlerModule.forRoot({
+      ttl: 30,
+      limit: 30,
+    }),
   ],
   controllers: [AppController, ArticleController],
   providers: [AppService, ArticleService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLogger).forRoutes('*');
+  }
+}

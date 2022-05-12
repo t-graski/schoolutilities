@@ -1,14 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import {
-  UpdateCourse,
-  RemoveCourse,
-  RemoveUser,
   ReturnMessage,
 } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import {
-  LENGTHS,
   RETURN_DATA,
   ID_STARTERS,
   ERROR_CODES,
@@ -28,7 +24,6 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class CourseService {
-  connection: any;
   constructor(
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
@@ -429,14 +424,17 @@ export class CourseService {
 
   async getAllCourses(
     schoolUUID: string,
+    query,
     token: string,
   ): Promise<ReturnMessage> {
+
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
     const jwt = await this.authService.decodeJWT(token);
     const personUUID = jwt.personUUID;
+    const { page, limit } = query;
 
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
@@ -445,18 +443,26 @@ export class CourseService {
     try {
       const courses = await prisma.courses.findMany({
         where: {
-          schoolId: Number(schoolId),
+          schoolId,
+          AND: {
+            coursePersons: {
+              some: {
+                personId,
+              },
+            }
+          }
         },
         select: {
           courseId: true,
           courseUUID: true,
           name: true,
           courseDescription: true,
-          schoolId: true,
           creationDate: true,
           personCreationId: true,
         },
-      });
+        skip: Number((page - 1) * limit),
+        take: Number(limit),
+      })
 
       for (let course of courses) {
         const creator = await prisma.persons.findUnique({
@@ -481,6 +487,7 @@ export class CourseService {
             lastName: creator.lastName,
           },
         };
+
         if (await this.helper.userIsInCourse(personId, course.courseId)) {
           courseData.push(courseDataItem);
         }
@@ -1030,18 +1037,41 @@ export class CourseService {
       };
     }
 
-    const element = await prisma.courseElements.findFirst({
+    const settings = await prisma.courseElements.findFirst({
       where: {
-        elementId: Number(elementId),
+        elementId: elementId,
       },
+      select: {
+        personCreationId: true,
+        elementUUID: true,
+        creationDate: true,
+        visible: true,
+        courseId: true,
+        course: {
+          select: {
+            courseUUID: true,
+          },
+        },
+        fileSubmissionSettings: {
+          select: {
+            name: true,
+            description: true,
+            dueTime: true,
+            submitLater: true,
+            submitLaterTime: true,
+            maxFileSize: true,
+            allowedFileTypes: true,
+          },
+        },
+        textSettings: {
+          select: {
+            text: true,
+          },
+        },
+      }
     });
 
-    const elementOptions = await this.helper.getElementOptions(
-      element.elementId,
-      element.typeId,
-    );
-
-    const creator = await this.helper.getUserById(element.personCreationId);
+    const creator = await this.helper.getUserById(settings.personCreationId);
     const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
       userId,
       schoolId,
@@ -1055,27 +1085,21 @@ export class CourseService {
     });
 
     const elementItem = {
-      elementUUID: element.elementUUID,
-      courseUUID: await this.helper.getCourseUUIDById(element.courseId),
-      visible: Boolean(element.visible),
-      creationDate: element.creationDate,
+      elementUUID: settings.elementUUID,
+      courseUUID: settings.course!.courseUUID,
+      visible: Boolean(settings.visible),
+      creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
       hasSubmitted: hasSubmitted ? true : false,
       creator: {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
         lastName: creator.lastName,
-        fullName: creator.firstName + ' ' + creator.lastName,
+        fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
-        name: elementOptions.name,
-        description: elementOptions.description,
-        dueDate: elementOptions.dueDate,
-        submitLater: Boolean(elementOptions.submitLater),
-        submitLaterDate: elementOptions.submitLaterDate,
-        maxFileSize: elementOptions.maxFileSize,
-        allowedFileTypes: elementOptions.allowedFileTypes.replace(/\s/g, ''),
-      },
+        ...settings.textSettings[0] || settings.fileSubmissionSettings[0],
+      }
     };
 
     return {

@@ -1,10 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { ValidatorOptions } from 'class-validator';
 import { AppModule } from './app.module';
+import { Logger } from './logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       skipMissingProperties: true,

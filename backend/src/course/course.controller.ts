@@ -11,6 +11,7 @@ import {
   Put,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -22,8 +23,10 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { GetEventsDto } from 'src/dto/events';
 import { AddCourseDto, RemoveCourseDto, UpdateCourseDto } from 'src/dto/course';
+import { Throttler } from 'src/throttler';
 
 @Controller('api/course')
+@UseGuards(Throttler)
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
@@ -83,10 +86,11 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Get('/getCourses/:schoolUUID')
   @Roles(Role.Student)
-  async getCourses(@Param() params, @Req() request, @Res() response) {
+  async getCourses(@Param() params, @Query() query, @Req() request, @Res() response) {
     const token = request.headers.authorization.split(' ')[1];
     const result = await this.courseService.getAllCourses(
       params.schoolUUID,
+      query,
       token,
     );
     return response
