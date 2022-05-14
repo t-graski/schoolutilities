@@ -71,7 +71,8 @@ export default function Article() {
             </li>
             <li>Added a new user menu to the navigation bar.</li>
             <li>
-              Added a button in the user menu to change the website&apos;s theme.
+              Added a button in the user menu to change the website&apos;s
+              theme.
             </li>
             <li>
               Added{" "}
@@ -99,7 +100,8 @@ export default function Article() {
           ></Headline>
           <ArticleList>
             <li>
-              Fixed bug in password validation causing &apos;_&apos; to be not allowed.
+              Fixed bug in password validation causing &apos;_&apos; to be not
+              allowed.
             </li>
             <li>Fixed many hyperlinks not working properly</li>
             <li>Fixed favicon not working.</li>
