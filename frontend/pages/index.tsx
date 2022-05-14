@@ -2,11 +2,8 @@ import { styled } from "../stitches.config";
 import { Navbar } from "../components/organisms/Navbar";
 import Head from "next/head";
 import { StartPageBox } from "../components/molecules/StartPageBox";
+import Image from "next/image";
 import dynamic from "next/dynamic";
-import SvgDiscordLogo from "../components/atoms/svg/SvgDiscordLogo";
-import SvgSchool from "../components/atoms/svg/SvgSchool";
-import SvgPremium from "../components/atoms/svg/SvgPremium";
-import SvgStartpageArtwork from "../components/atoms/svg/SvgStartpageArtwork";
 
 const Footer = dynamic(() => import("../components/organisms/Footer"));
 const GeneralList = dynamic(
@@ -24,8 +21,8 @@ export const MainContent = styled("div", {
 const FirstBoxLayout = styled("div", {
   display: "flex",
   width: "100vw",
-  marginTop: "100px",
-  paddingBottom: "13vw",
+  marginTop: "10vh",
+  height: "80vh",
 });
 
 const ArtworkLayout = styled("div", {
@@ -57,39 +54,57 @@ export default function Home() {
         </Head>
         <Navbar />
         <ArtworkLayout>
-          <SvgStartpageArtwork></SvgStartpageArtwork>
+          <Image
+            layout="fill"
+            alt="Main Artwork"
+            src="/images/startpage_artwork.svg"
+          />
         </ArtworkLayout>
         <FirstBoxLayout>
-          <StartPageBox></StartPageBox>
+          <StartPageBox
+            title="LET’S MAKE"
+            title2=" SCHOOL EASY."
+            description="We think it is extremely important to bring
+            joy into the daily School-Routine of students
+            and teachers. With incredible features and
+            the right design, we make this possible."
+            descriptionLine="This is SchoolUtilities."
+            buttonText="REGISTER NOW"
+            buttonLink="/auth?tab=register"
+            linkText="LEARN MORE"
+            linkUrl="/learn-more"
+          ></StartPageBox>
         </FirstBoxLayout>
-        <GeneralList
-          items={[
-            {
-              title: "Discord Bot",
-              description:
-                "Take a look at our Discord Bot, which reminds you on upcoming Events and simplifies your life.",
-              href: "/bot",
-              buttonText: "LET'S GET STARTED",
-              icon: SvgDiscordLogo,
-            },
-            {
-              title: "Create School",
-              description:
-                "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
-              href: "/school/create",
-              buttonText: "GET ME THERE",
-              icon: SvgSchool,
-            },
-            {
-              title: "Premium",
-              description:
-                "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
-              href: "/premium",
-              buttonText: "LEARN MORE",
-              icon: SvgPremium,
-            },
-          ]}
-        ></GeneralList>
+        <div data-aos="fade-up">
+          <GeneralList
+            items={[
+              {
+                title: "Discord Bot",
+                description:
+                  "Take a look at our Discord Bot, which reminds you on upcoming Events and simplifies your life.",
+                href: "/bot",
+                buttonText: "LET'S GET STARTED",
+                iconName: "SvgDiscordLogo",
+              },
+              {
+                title: "Create School",
+                description:
+                  "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
+                href: "/school/create",
+                buttonText: "GET ME THERE",
+                iconName: "SvgSchool",
+              },
+              {
+                title: "Premium",
+                description:
+                  "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
+                href: "/premium",
+                buttonText: "LEARN MORE",
+                iconName: "SvgPremium",
+              },
+            ]}
+          ></GeneralList>
+        </div>
         <Footer />
       </MainContent>
     </>

@@ -33,6 +33,7 @@ export const CourseFile: React.FC<Props> = ({
   maxFileSize,
   allowedFileTypes,
 }) => {
+  console.log(elementUUID);
   const Router = useRouter();
   return (
     <>

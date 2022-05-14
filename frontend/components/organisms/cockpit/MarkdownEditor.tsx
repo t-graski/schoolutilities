@@ -1,4 +1,5 @@
-import React from "react";
+import { styled } from "@stitches/react";
+import React, { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {

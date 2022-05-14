@@ -23,7 +23,7 @@ const StyledText = styled("p", {
 });
 
 const StyledHeadline = styled(Headline, {
-  fontWeight: "$bolder",
+  fontWeight: "900",
 });
 
 const ImageLayout = styled("div", {

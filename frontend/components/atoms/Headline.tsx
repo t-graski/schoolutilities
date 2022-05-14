@@ -12,13 +12,11 @@ type Props = {
 };
 
 const Header = styled("h1", {
-  width: "100%",
-
   fontSize: "4.5rem",
-  fontWeight: "$bold",
+  fontWeight: "700",
   color: "$fontPrimary",
+  width: "100%",
   textAlign: "center",
-
   variants: {
     alignment: {
       left: {
@@ -32,10 +30,10 @@ const Header = styled("h1", {
     fontWeight: {
       normal: {},
       bold: {
-        fontWeight: "$bold",
+        fontWeight: "700",
       },
       extraBold: {
-        fontWeight: "$bolder",
+        fontWeight: "900",
       },
     },
     size: {

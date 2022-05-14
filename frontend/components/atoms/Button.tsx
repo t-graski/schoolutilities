@@ -1,15 +1,27 @@
+import React from "react";
 import { lightTheme, styled } from "../../stitches.config";
+import type * as Stitches from "@stitches/react";
 
-export const Button = styled("button", {
+type Props = {
+  backgroundColor: Stitches.VariantProps<
+    typeof StyledButton
+  >["backgroundColor"];
+  color: Stitches.VariantProps<typeof StyledButton>["color"];
+  label: string;
+  disabled?: boolean;
+  onClick: Function;
+  type?: "button" | "submit" | "reset";
+  isVisible?: boolean;
+};
+
+const StyledButton = styled("button", {
   borderRadius: "8px",
   width: "fit-content",
-  border: "none",
-  padding: "10px 20px",
-
   fontSize: "1rem",
+  border: "none",
   cursor: "pointer",
+  padding: "10px 20px",
   fontWeight: "bold",
-
   ":hover": {
     backgroundColor: "$backgroundColor",
     color: "$color",
@@ -18,7 +30,6 @@ export const Button = styled("button", {
     backgroundColor: "$backgroundColor",
     color: "$color",
   },
-  
   variants: {
     backgroundColor: {
       primary: {
@@ -54,3 +65,31 @@ export const Button = styled("button", {
     },
   },
 });
+
+export const Button: React.FC<Props> = ({
+  backgroundColor,
+  color,
+  label,
+  disabled = false,
+  onClick,
+  type = "button",
+  isVisible = true,
+}) => {
+  return (
+    <>
+      <StyledButton
+        onClick={() => {
+          onClick();
+        }}
+        backgroundColor={backgroundColor}
+        color={color}
+        {...(disabled && { disabled: true })}
+        isDisabled={disabled}
+        type={type}
+        isVisible={isVisible}
+      >
+        {label}
+      </StyledButton>
+    </>
+  );
+};

@@ -5,6 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 type Props = {
+  title: string;
+  title2?: string;
+  description: string;
+  descriptionLine: string;
+  buttonText: string;
+  buttonLink: string;
+  linkText: string;
+  linkUrl: string;
 };
 
 const StartPageBoxLayout = styled("div", {
@@ -22,21 +30,21 @@ const StartPageBoxLayout = styled("div", {
 
 const StartPageBoxTitle = styled("h1", {
   fontSize: "3rem",
-  fontWeight: "$bolder",
+  fontWeight: "900",
   margin: "0",
   marginBottom: "20px",
 });
 
 const StartPageBoxDescription = styled("p", {
   fontSize: "1.5rem",
-  fontWeight: "$medium",
+  fontWeight: "500",
   margin: "0",
   marginBottom: "20px",
 });
 
 const StartPageBoxDescriptionLine = styled("p", {
   fontSize: "1.5rem",
-  fontWeight: "$bold",
+  fontWeight: "700",
   margin: "0",
   marginBottom: "20px",
 });
@@ -45,7 +53,7 @@ const StyledLink = styled("a", {
   height: "fit-content",
   lineHeight: "1.5rem",
   fontSize: "1.5rem",
-  fontWeight: "$bold",
+  fontWeight: "700",
   margin: "0",
   color: "$fontPrimary",
   textDecoration: "none",
@@ -65,36 +73,39 @@ const ButtonLayout = styled("div", {
 });
 
 export const StartPageBox: React.FC<Props> = ({
+  title,
+  title2,
+  description,
+  descriptionLine,
+  buttonText,
+  buttonLink,
+  linkText,
+  linkUrl,
 }) => {
   const router = useRouter();
   return (
     <>
       <StartPageBoxLayout>
         <StartPageBoxTitle>
-          LET’S MAKE
+          {title}
           <br />
-          SCHOOL EASY.
+          {title2}
         </StartPageBoxTitle>
-        <StartPageBoxDescription>
-          We think it is extremely important to bring joy into the daily
-          School-Routine of students and teachers. With incredible features and
-          the right design, we make this possible.
-        </StartPageBoxDescription>
+        <StartPageBoxDescription>{description}</StartPageBoxDescription>
         <StartPageBoxDescriptionLine>
-          This is SchoolUtilities.
+          {descriptionLine}
         </StartPageBoxDescriptionLine>
         <ButtonLayout>
           <Button
             backgroundColor={"tertiary"}
             color={"primary"}
+            label={buttonText}
             onClick={() => {
-              router.push("/auth?tab=register");
+              router.push(buttonLink);
             }}
-          >
-            REGISTER NOW
-          </Button>
-          <Link href="/learn-more" passHref>
-            <StyledLink>LEARN MORE</StyledLink>
+          ></Button>
+          <Link href={linkUrl} passHref>
+            <StyledLink>{linkText}</StyledLink>
           </Link>
         </ButtonLayout>
       </StartPageBoxLayout>

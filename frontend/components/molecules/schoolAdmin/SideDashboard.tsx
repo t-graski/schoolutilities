@@ -2,10 +2,11 @@ import React from "react";
 import { styled } from "../../../stitches.config";
 import Image from "next/image";
 import Link from "next/link";
+import { SvgIcon } from "../../atoms/SvgIcon";
 
 export type SideDashboardProps = {
   links: {
-    icon?: any;
+    iconName: string;
     label: string;
     href: string;
     highlighted?: boolean;
@@ -170,8 +171,6 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
     },
   });
 
-  
-
   return (
     <>
       <DashboardNavbarLayout data-size={isOpen ? "normal" : "small"}>
@@ -206,9 +205,6 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
               if (!link.highlighted) {
                 link.highlighted = false;
               }
-
-              const Icon = link.icon;
-
               return (
                 <Link href={link.href} key={index} passHref>
                   <LinkLayout
@@ -218,7 +214,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
                     <SvgIconLayout
                       color={link.highlighted ? "highlighted" : "normal"}
                     >
-                      <Icon />
+                      <SvgIcon iconName={link.iconName} />
                     </SvgIconLayout>
                     {isOpen && (
                       <LinkLabel

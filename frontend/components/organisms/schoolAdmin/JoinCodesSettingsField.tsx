@@ -1,19 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/input/InputField";
+import { InputField } from "../../atoms/InputField";
 import { useRouter } from "next/router";
+import { getAccessToken } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
-import { regex } from "../../../utils/regex";
+import { regex } from "../../../misc/regex";
 import Skeleton from "react-loading-skeleton";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  addSchoolJoinCode,
-  deleteJoinCode,
-  editJoinCode,
-  fetchSchoolJoinCodes,
-} from "../../../utils/requests";
 
 type Props = {};
 
@@ -24,9 +18,8 @@ const SchoolDetailLayout = styled("form", {
   justifySelf: "center",
   width: "100%",
   padding: "40px 60px",
-  marginTop: "12vh",
-
   overflowY: "scroll",
+  marginTop: "12vh",
 });
 
 const SettingsEntriesLayout = styled("div", {
@@ -52,16 +45,15 @@ const StyledInputField = styled("div", {
 });
 
 const StyledError = styled("p", {
+  color: "$specialTertiary",
+  fontSize: "1.5rem",
+  fontWeight: "700",
   marginTop: "15px",
   marginBottom: "15px",
   border: "solid 2px $specialTertiary",
   padding: "20px",
   width: "fit-content",
   borderRadius: "25px",
-
-  color: "$specialTertiary",
-  fontSize: "1.5rem",
-  fontWeight: "$bold",
 });
 
 const DepartmentName = styled("p", {
@@ -70,13 +62,14 @@ const DepartmentName = styled("p", {
 });
 
 const StyledDeleteText = styled("p", {
-  marginTop: "15px",
-
   fontSize: "1rem",
   color: "$fontPrimary",
+  marginTop: "15px",
 });
 
-export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
+export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
+  const [joinCodes, setJoinCodes] = React.useState([]);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [joinCodeName, setJoinCodeName] = React.useState("");
@@ -86,76 +79,142 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const queryClient = useQueryClient();
-
-  const { data: joinCodes, status: joinCodesStatus } = useQuery(
-    ["joinCodes", schoolUUID],
-    () => fetchSchoolJoinCodes(schoolUUID)
-  );
-
-  const addJoinCodeMutation = useMutation(addSchoolJoinCode, {
-    onSuccess: (response) => {
-      let entry = {
-        joinCode: response.joinCode,
-        joinCodeName,
-      };
-
-      queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) => [
-        ...old,
-        entry,
-      ]);
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
+  useEffect(() => {
+    updateSettingsEntriesFromDatabase();
   });
 
-  const deleteJoinCodeMutation = useMutation(deleteJoinCode, {
-    onSuccess: async () => {
-      await queryClient.cancelQueries(["joinCodes", schoolUUID]);
-
-      queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.joinCode !== joinCodeId)
+  async function updateSettingsEntriesFromDatabase() {
+    let accessToken = await getAccessToken();
+    console.log(accessToken);
+    if (!accessToken) {
+      router.push("/auth/login");
+    }
+    if (!schoolUUID) {
+      router.push("/school/select");
+    }
+    if (accessToken && schoolUUID && isFirstTime) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
-
-  const editJoinCodeMutation = useMutation(editJoinCode, {
-    onSuccess: async () => {
-      let entry = {
-        joinCode: joinCodeId,
-        joinCodeName: joinCodeName,
-      };
-
-      queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) =>
-        old.map((currEntry) =>
-          currEntry.joinCode === joinCodeId ? entry : currEntry
-        )
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
+      const fetchedJoinCodes = await response.json();
+      setJoinCodes(fetchedJoinCodes);
+      setIsFirstTime(false);
+    }
+  }
 
   function savePopUpInput() {
     if (joinCodeId == "") {
-      addJoinCodeMutation.mutate({
-        schoolUUID,
-        joinCodeName,
-        expireDate: "2022-10-22 14:00:00",
-      });
+      addSettingsEntry();
     } else {
-      editJoinCodeMutation.mutate({
-        joinCode: joinCodeId,
-        joinCodeName,
-        expireDate: "2022-10-22 14:00:00",
-      });
+      editSettingsEntry();
     }
     setEditPopUpIsVisible(false);
+  }
+
+  async function addSettingsEntry() {
+    let accessToken = await getAccessToken();
+    const data = {
+      schoolUUID,
+      joinCodeName: joinCodeName,
+      expireDate: "2022-10-22 14:00:00",
+    };
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    console.log(returnValue);
+    if (returnValue.status !== 200) {
+      setError("Error while adding");
+    } else {
+      const body = await returnValue.json();
+      setError("");
+      let entry = {
+        joinCode: body.joinCode,
+        joinCodeName,
+      };
+      setJoinCodes([...joinCodes, entry]);
+    }
+  }
+
+  async function editSettingsEntry() {
+    let accessToken = await getAccessToken();
+    const data = {
+      joinCode: joinCodeId,
+      joinCodeName,
+      expireDate: "2022-10-22 14:00:00",
+    };
+    console.log(data);
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (returnValue.status !== 200) {
+      setError("Error trying to save");
+    } else {
+      setError("");
+      const newEntries = joinCodes.map((joinCode, index) => {
+        if (joinCode.joinCode == joinCodeId) {
+          joinCode.joinCodeName = joinCodeName;
+          return joinCode;
+        } else {
+          return joinCode;
+        }
+      });
+      setJoinCodes(newEntries);
+    }
+  }
+
+  async function deleteSettingsEntry(id) {
+    let accessToken = await getAccessToken();
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/joinCode`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          joinCode: id,
+        }),
+      }
+    );
+    if (returnValue.status !== 200) {
+      setError("Error trying to save");
+      console.log(returnValue);
+    } else {
+      setError("");
+      let newSettingsEntries = joinCodes.filter(
+        (department) => department.joinCode !== id
+      );
+
+      setJoinCodes(newSettingsEntries);
+      if (newSettingsEntries.length == 0) {
+        setJoinCodes([]);
+      }
+    }
   }
 
   return (
@@ -183,6 +242,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
                 onChange={(event) => {
                   setJoinCodeName(event);
                 }}
+                iconName=""
                 regex={regex.schoolName}
                 setValidInput={setJoinCodeNameValid}
                 min="2"
@@ -197,7 +257,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
             inputValid={true}
             saveLabel="Confirm"
             saveFunction={() => {
-              deleteJoinCodeMutation.mutate(joinCodeId);
+              deleteSettingsEntry(joinCodeId);
               setDeletePopUpIsVisible(false);
             }}
             closeFunction={() => {
@@ -207,8 +267,8 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
             }}
           >
             <StyledDeleteText>
-              This action can&apos;t be undone and will permanently remove the
-              invite code {joinCodeName}.
+              This action can&apos;t be undone and will permanently remove the invite
+              code {joinCodeName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}
@@ -222,34 +282,29 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
         ></SettingsHeader>
         {error && <StyledError>{error}</StyledError>}
         <SettingsEntriesLayout>
-          {joinCodesStatus == "success" && joinCodes.length > 0 ? (
-            joinCodes.map((entry, index) => (
-              <SettingsEntryLayout
-                key={entry.joinCode}
-                data-key={entry.joinCode}
+          {joinCodes.length > 0 ? joinCodes.map((entry, index) => (
+            <SettingsEntryLayout key={entry.joinCode} data-key={entry.joinCode}>
+              <SettingsEntry
+                editFunction={() => {
+                  setJoinCodeName(entry.joinCodeName);
+                  setJoinCodeId(entry.joinCode);
+                  setEditPopUpIsVisible(true);
+                }}
+                deleteFunction={() => {
+                  setJoinCodeId(entry.joinCode);
+                  setDeletePopUpIsVisible(true);
+                }}
+                highlighted={
+                  router.query &&
+                  router.query.joinCode &&
+                  entry.joinCode == router.query.joinCode
+                }
               >
-                <SettingsEntry
-                  editFunction={() => {
-                    setJoinCodeName(entry.joinCodeName);
-                    setJoinCodeId(entry.joinCode);
-                    setEditPopUpIsVisible(true);
-                  }}
-                  deleteFunction={() => {
-                    setJoinCodeId(entry.joinCode);
-                    setDeletePopUpIsVisible(true);
-                  }}
-                  highlighted={
-                    router.query &&
-                    router.query.joinCode &&
-                    entry.joinCode == router.query.joinCode
-                  }
-                >
-                  <SettingsEntryName>{entry.joinCode}</SettingsEntryName>
-                  <DepartmentName>{entry.joinCodeName}</DepartmentName>
-                </SettingsEntry>
-              </SettingsEntryLayout>
-            ))
-          ) : (
+                <SettingsEntryName>{entry.joinCode}</SettingsEntryName>
+                <DepartmentName>{entry.joinCodeName}</DepartmentName>
+              </SettingsEntry>
+            </SettingsEntryLayout>
+          )) : (
             <>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>

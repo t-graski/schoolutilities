@@ -32,13 +32,6 @@ export const styles = {
       large: "48px",
       "1-large": "64px",
     },
-    fontWeights: {
-      light: '300',
-      regular: '400',
-      medium: '500',
-      bold: '700',
-      bolder: '900',
-    },
     sizes: {
       1: "5px",
       2: "10px",

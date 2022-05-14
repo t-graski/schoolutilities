@@ -1,11 +1,10 @@
 import React from "react";
 import { styled } from "@stitches/react";
 import Image from "next/image";
-import SvgDownload from "../../atoms/svg/SvgDownload";
+import { SvgIcon } from "../../atoms/SvgIcon";
 
 type Props = {
   logoName: string;
-  icon?: any;
   imageBg?: "1" | "2" | "3";
   orientation?: "horizontal" | "vertical";
 };
@@ -72,30 +71,26 @@ const DownloadButton = styled("a", {
 
 export const SingleLogo: React.FC<Props> = ({
   logoName,
-  icon,
   imageBg,
   orientation = "horizontal",
 }) => {
-
-  const Icon = icon;
-
   return (
     <div>
       <SingleLogoLayout imageBg={imageBg}>
         <LogoSizer orientation={orientation}>
-          {icon && <Icon />}
+          <SvgIcon iconName={`Svg${logoName}`} />
         </LogoSizer>
       </SingleLogoLayout>
       <DownloadButtonsLayout>
         <DownloadButton href={`/images/downloads/${logoName}.svg`} download={`${logoName}.svg`}>
           <DownloadSizer>
-            <SvgDownload />
+            <SvgIcon iconName="SvgDownload"></SvgIcon>
           </DownloadSizer>
           SVG
         </DownloadButton>
         <DownloadButton href={`/images/downloads/${logoName}.png`} download={`${logoName}.png`}>
           <DownloadSizer>
-            <SvgDownload />
+            <SvgIcon iconName="SvgDownload"></SvgIcon>
           </DownloadSizer>
           PNG
         </DownloadButton>

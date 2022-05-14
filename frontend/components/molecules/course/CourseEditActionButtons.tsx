@@ -6,10 +6,9 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 // to the entry point of the whole app
 // (e.g. src/index.js)
 import "react-nestable/dist/styles/index.css";
+import { SvgIcon } from "../../atoms/SvgIcon";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { styled, keyframes } from "@stitches/react";
-import SvgEdit from "../../atoms/svg/SvgEdit";
-import SvgDelete from "../../atoms/svg/SvgDelete";
 
 type Props = {
   item: Item;
@@ -91,7 +90,7 @@ function Content({ children, ...props }) {
 
 const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
-  fontWeight: "$medium",
+  fontWeight: 500,
   color: "$fontPrimary",
   fontSize: 17,
   marginBottom: 10,
@@ -187,7 +186,7 @@ const AddButton = styled("button", {
   borderRadius: 15,
   padding: "10px 20px",
   fontSize: "1rem",
-  fontWeight: "$medium",
+  fontWeight: 500,
   cursor: "pointer",
   width: "fit-content",
   transition: "all 0.2s",
@@ -220,7 +219,7 @@ export const CourseEditActionButtons: React.FC<Props> = ({
         <Dialog>
           <DialogTrigger asChild>
             <IconLayout>
-              <SvgEdit />
+              <SvgIcon iconName="SvgEdit" />
             </IconLayout>
           </DialogTrigger>
           <DialogContent>
@@ -257,7 +256,7 @@ export const CourseEditActionButtons: React.FC<Props> = ({
         <Dialog>
           <DialogTrigger asChild>
             <IconLayout>
-              <SvgDelete />
+              <SvgIcon iconName="SvgDelete" />
             </IconLayout>
           </DialogTrigger>
           <DialogContent>

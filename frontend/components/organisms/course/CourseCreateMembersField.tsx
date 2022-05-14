@@ -1,16 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
+import { InputField } from "../../atoms/InputField";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
-import { SearchSelect } from "../../atoms/input/SearchSelect";
-import SvgSchool from "../../atoms/svg/SvgSchool";
-import {
-  fetchSchoolClasses,
-  fetchSchoolPersons,
-} from "../../../utils/requests";
-import { useQuery } from "react-query";
+import { getAccessToken } from "../../../misc/authHelper";
 
 type Props = {
   setDisabled: Function;
@@ -40,38 +35,65 @@ export const CourseCreateMembersField: React.FC<Props> = ({
   inputData,
   setInputData,
 }) => {
-  const { data: classes, status: classesStatus } = useQuery(
-    "classes",
-    async () => {
-      const currentClasses = await fetchSchoolClasses(
-        router.query.schoolUUID as string
-      );
-      return currentClasses.map((schoolClass) => {
-        return {
-          value: schoolClass.classUUID,
-          label: schoolClass.className,
-        };
-      });
-    }
-  );
-  const { data: members, status: membersStatus } = useQuery(
-    "members",
-    async () => {
-      const currentMembers = await fetchSchoolPersons(
-        router.query.schoolUUID as string
-      );
-      return currentMembers.map((member) => {
-        return {
-          value: member.personUUID,
-          label: `${member.lastName} ${member.firstName}`,
-        };
-      });
-    }
-  );
-
+  const [classes, setClasses] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [isFirstTime, setIsFirstTime] = useState(true);
   const router = useRouter();
 
   setDisabled(false);
+
+  useEffect(() => {
+    if (isFirstTime) {
+      fetchSelectData();
+      setIsFirstTime(false);
+    }
+
+    async function fetchSelectData() {
+      let accessToken = await getAccessToken();
+      const schoolUUID = router.query.schoolUUID as string;
+      const classResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const classData = await classResponse.json();
+      console.log(classData);
+      if (classData.length > 0) {
+        setClasses(
+          classData.map((schoolClass) => {
+            return {
+              value: schoolClass.classUUID,
+              label: schoolClass.className,
+            };
+          })
+        );
+      }
+      const memberResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const memberData = await memberResponse.json();
+      setMembers(
+        memberData.map((member) => {
+          return {
+            value: member.personUUID,
+            label: `${member.lastName} ${member.firstName}`,
+          };
+        })
+      );
+    }
+  }, [isFirstTime, router.query.schoolUUID]);
 
   return (
     <>
@@ -86,7 +108,9 @@ export const CourseCreateMembersField: React.FC<Props> = ({
         </div>
         <Spacer size="verySmall"></Spacer>
         <Label>Select classes for this course:</Label>
-        <SearchSelect
+        <InputField
+          label="Classes"
+          inputType="search-select"
           selectValue={inputData.classes}
           onChange={(e) => {
             setInputData({
@@ -94,12 +118,15 @@ export const CourseCreateMembersField: React.FC<Props> = ({
               classes: e,
             });
           }}
-          icon={SvgSchool}
+          iconName="SvgSchool"
           selectMultiValues={true}
+          required={false}
           selectOptions={classes}
         />
         <Label>Select persons for this course:</Label>
-        <SearchSelect
+        <InputField
+          label="Persons"
+          inputType="search-select"
           selectValue={inputData.members}
           onChange={(e) => {
             console.log(e);
@@ -108,8 +135,9 @@ export const CourseCreateMembersField: React.FC<Props> = ({
               members: e,
             });
           }}
-          icon={SvgSchool}
+          iconName="SvgSchool"
           selectMultiValues={true}
+          required={false}
           selectOptions={members}
         />
       </CourseCreateDetailLayout>

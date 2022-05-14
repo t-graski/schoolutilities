@@ -1,4 +1,5 @@
 import React from "react";
+import { SvgIcon } from "../../atoms/SvgIcon";
 import { Separator } from "../../atoms/Separator";
 import Link from "next/link";
 import { styled } from "@stitches/react";
@@ -7,7 +8,7 @@ type Props = {
   title: string;
   href: string;
   description: string;
-  icon?: any;
+  iconName: string;
 };
 
 const GeneralListItemLayout = styled("a", {
@@ -55,17 +56,14 @@ export const HelpOverviewItem: React.FC<Props> = ({
   title,
   href,
   description,
-  icon,
+  iconName,
 }) => {
-
-  const Icon = icon;
-
   return (
     <>
       <Link href={href} passHref>
         <GeneralListItemLayout>
           <IconLayout>
-            {icon && <Icon />}
+            <SvgIcon iconName={iconName} />
           </IconLayout>
           <TitleLayout>{title}</TitleLayout>
           <Separator width={"ultraSmall"} alignment={"center"}></Separator>

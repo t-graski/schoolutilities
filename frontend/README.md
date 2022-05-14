@@ -25,10 +25,3 @@ For the installation you need to have node.js installed.
 ## Usage
 
 
-## Programming
-
-### CSS Property ordering
-
-For css property ordering we use these guidelines:
-
-https://github.com/necolas/idiomatic-css#declaration-order

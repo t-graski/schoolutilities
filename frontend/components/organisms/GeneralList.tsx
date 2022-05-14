@@ -9,7 +9,7 @@ type Props = {
     href: string;
     buttonText: string;
     description: string;
-    icon: any;
+    iconName: string;
   }[];
 };
 
@@ -19,9 +19,8 @@ const GeneralListLayout = styled("div", {
   justifyContent: "space-evenly",
   gap: "30px",
   width: "100vw",
-  padding: "10vh 10vw",
-
   color: "$fontPrimary",
+  padding: "10vh 10vw",
 
   "@mobileOnly": {
     gridTemplateColumns: "1fr",
@@ -42,7 +41,7 @@ const GeneralList: React.FC<Props> = ({ items }) => {
               href={item.href}
               buttonText={item.buttonText}
               description={item.description}
-              icon={item.icon}
+              iconName={item.iconName}
             />
             <Separator
               key={index + items.length}
