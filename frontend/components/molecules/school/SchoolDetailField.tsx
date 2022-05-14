@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
+import { Select } from "../../atoms/input/Select";
+import SvgSchool from "../../atoms/svg/SvgSchool";
+import SvgLanguage from "../../atoms/svg/SvgLanguage";
 
 type Props = {
   setDisabled: Function;
@@ -83,34 +86,28 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
           inputType="text"
           value={schoolName}
           onChange={setSchoolName}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={true}
           regex={regex.schoolName}
           setValidInput={setSchoolNameValid}
           errorMessage="Your school needs a name, doesn't it?"
         ></InputField>
-        <InputField
+        <Select
           label="Language"
-          inputType="select"
-          value={schoolLanguage}
           onChange={setSchoolLanguage}
-          iconName="SvgLanguage"
+          icon={SvgLanguage}
           required={true}
-          errorMessage="Tell us the language you speak in your school"
           selectOptions={[
             { value: "german", label: "German" },
             { value: "english", label: "English" },
           ]}
           selectValue={schoolLanguage}
-        ></InputField>
-        <InputField
+        ></Select>
+        <Select
           label="Timezone (GMT+0)"
-          inputType="select"
-          value={schoolTimezone}
           onChange={setSchoolTimezone}
-          iconName="SvgTimezone"
+          icon={SvgLanguage}
           required={true}
-          errorMessage="Try to select a timezone in the drop-down menu"
           selectOptions={[
             { value: "", label: "Timezone" },
             { value: "GMT+0", label: "GMT+0" },
@@ -131,7 +128,7 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
             { value: "GMT+12", label: "Pacific/Fiji" },
           ]}
           selectValue={schoolTimezone}
-        ></InputField>
+        ></Select>
       </SchoolDetailLayout>
     </>
   );

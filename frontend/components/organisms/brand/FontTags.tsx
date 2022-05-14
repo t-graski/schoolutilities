@@ -25,20 +25,17 @@ const TagLayout = styled("div", {
 
   variants: {
     fontStyle: {
-      Lighter: {
-        fontWeight: "100",
-      },
-      Light: {
-        fontWeight: "300",
-      },
       Regular: {
-        fontWeight: "500",
+        fontWeight: "$regular",
+      },
+      Medium: {
+        fontWeight: "$medium",
       },
       Bold: {
-        fontWeight: "700",
+        fontWeight: "$bold",
       },
       Bolder: {
-        fontWeight: "900",
+        fontWeight: "$bolder",
       },
     },
   },
@@ -49,7 +46,9 @@ export const FontTags: React.FC<Props> = ({ fontStyles }) => {
     <>
       <TagsLayout>
         {fontStyles.map((fontStyle, index) => (
-          <TagLayout fontStyle={fontStyle} key={index}>{fontStyle}</TagLayout>
+          <TagLayout fontStyle={fontStyle} key={index}>
+            {fontStyle}
+          </TagLayout>
         ))}
       </TagsLayout>
     </>

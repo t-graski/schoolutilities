@@ -6,7 +6,7 @@ import { Separator } from "../../atoms/Separator";
 import { styled } from "@stitches/react";
 import { Spacer } from "../../atoms/Spacer";
 import Image from "next/image";
-import { SvgIcon } from "../../atoms/SvgIcon";
+import SvgLogoPencilOnly from "../../atoms/svg/SvgLogoPencilOnly";
 
 type Props = {
   title: string;
@@ -22,19 +22,19 @@ const BrandStartPageFieldLayout = styled("div", {
 
 const Description = styled("p", {
   fontSize: "1.5rem",
-  fontWeight: "500",
+  fontWeight: "$medium",
   margin: "0",
   marginBottom: "20px",
 });
 
 const IconLayout = styled("div", {
-    width: "180px",
-    height: "180px",
-    padding: "50px",
-    paddingTop: "30px",
-    borderRadius: "50%",
-    backgroundColor: "$backgroundTertiary",
-    margin: "0 auto",
+  width: "180px",
+  height: "180px",
+  padding: "50px",
+  paddingTop: "30px",
+  borderRadius: "50%",
+  backgroundColor: "$backgroundTertiary",
+  margin: "0 auto",
 });
 
 export const BrandStartPageField: React.FC<Props> = ({
@@ -51,7 +51,7 @@ export const BrandStartPageField: React.FC<Props> = ({
           <Description>{description}</Description>
         </div>
         <IconLayout>
-          <SvgIcon iconName="SvgLogoPencilOnly" />
+          <SvgLogoPencilOnly />
         </IconLayout>
       </BrandStartPageFieldLayout>
     </>

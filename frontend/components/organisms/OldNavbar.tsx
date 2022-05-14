@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "../../stitches.config";
 import Image from "next/image";
 import cookie from "js-cookie";
-import { SvgIcon } from "../atoms/SvgIcon";
+import SvgUser from "../atoms/svg/SvgUser";
 
 type Props = {
   links: {
@@ -63,7 +63,7 @@ const NavbarLogoText = styled("span", {
   variants: {
     isOnMain: {
       true: {
-        fontWeight: "700",
+        fontWeight: "$bold",
       },
     },
   },
@@ -121,7 +121,7 @@ const AccountButton = styled("button", {
 
 const AccountButtonText = styled("p", {
   color: "$fontPrimary",
-  fontWeight: "700",
+  fontWeight: "$bold",
   fontSize: "0.9rem",
 });
 
@@ -207,7 +207,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
           <StyledAccountLink href={userData ? "/auth/login" : "/auth/login"}>
             <AccountButton>
               <AccountButtonIconLayout>
-                <SvgIcon iconName="SvgUser"></SvgIcon>
+                <SvgUser />
               </AccountButtonIconLayout>
               <AccountButtonText>
                 {userData ? userData.firstname : "Login"}

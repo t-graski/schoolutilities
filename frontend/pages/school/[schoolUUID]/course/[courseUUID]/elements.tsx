@@ -5,20 +5,12 @@ import { useRouter } from "next/router";
 import { Navbar } from "../../../../../components/organisms/Navbar";
 import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
-import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../misc/authHelper";
-import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseEditContent from "../../../../../components/molecules/course/CourseEditContent";
 import { Button } from "../../../../../components/atoms/Button";
 import AddCourseElement from "../../../../../components/atoms/course/AddCourseElement";
-
-export const ContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-  padding: "50px 10vw",
-});
+import { getAccessToken } from "../../../../../utils/authHelper";
+import { ContentLayout } from "../../../../../utils/styles";
 
 const HeadlineLayout = styled("div", {
   display: "flex",
@@ -106,7 +98,6 @@ export default function Features() {
               alignment="left"
             ></Headline>
             <AddCourseElement
-              courseId={courseUUID}
               addNewEntry={(choosenElement, config) => {
                 setItems([
                   ...items,
@@ -124,17 +115,15 @@ export default function Features() {
             <Button
               backgroundColor={"secondary"}
               color={"primary"}
-              label={"Cancel"}
               onClick={() => {
                 router.push(
                   `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
                 );
               }}
-            ></Button>
+            >Cancel</Button>
             <Button
               backgroundColor={"primary"}
               color={"primary"}
-              label={"Save"}
               onClick={async () => {
                 let accessToken = await getAccessToken();
                 const saveResponse = await fetch(
@@ -160,7 +149,7 @@ export default function Features() {
                   }
                 }
               }}
-            ></Button>
+            >Save</Button>
           </CourseHeaderLayout>
         </HeadlineLayout>
         <Spacer size="verySmall"></Spacer>
