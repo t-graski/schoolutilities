@@ -50,6 +50,8 @@ export class ArticleController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Roles(Role.Supervisor)
+  @UseGuards(JwtAuthGuard)
   @Get('/article/:articleUUID')
   async getArticle(@Param() params, @Req() request, @Res() response) {
     const result = await this.articleService.getArticle(
@@ -61,6 +63,8 @@ export class ArticleController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Roles(Role.Supervisor)
+  @UseGuards(JwtAuthGuard)
   @Get('/articles')
   async getArticles(@Req() request, @Res() response) {
     const result = await this.articleService.getAllArticles(request);

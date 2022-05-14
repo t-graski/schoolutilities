@@ -68,16 +68,6 @@ export function logout() {
   cookie.remove("userProfile");
 }
 
-export function setSelectedSchool(schoolUUID: string) {
-  cookie.set("selectedSchool", schoolUUID, {
-    expires: 1,
-  });
-}
-
-export function getSelectedSchool(): string {
-  return cookie.get("selectedSchool");
-}
-
 export function calculatePasswordStrengthIndex(password) {
   let score = 0;
   if (!password) {

@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/input/InputField";
+import { InputField } from "../../atoms/InputField";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
-import { regex } from "../../../utils/regex";
-import SvgSchool from "../../atoms/svg/SvgSchool";
+import { regex } from "../../../misc/regex";
 
 type Props = {
   setDisabled: Function;
@@ -68,7 +67,7 @@ export const CourseCreateDetailField: React.FC<Props> = ({
           onChange={(e) => {
             setInputData({ ...inputData, courseName: e });
           }}
-          icon={SvgSchool}
+          iconName="SvgSchool"
           required={true}
           regex={regex.schoolName}
           setValidInput={setCourseNameValid}
@@ -81,7 +80,7 @@ export const CourseCreateDetailField: React.FC<Props> = ({
           onChange={(e) => {
             setInputData({ ...inputData, courseDescription: e });
           }}
-          icon={SvgSchool}
+          iconName="SvgSchool"
           required={false}
           setValidInput={setCourseDescriptionValid}
           errorMessage="Your course needs a description, doesn't it?"

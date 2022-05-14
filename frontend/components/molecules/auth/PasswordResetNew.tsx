@@ -4,9 +4,9 @@ import { Spacer } from "../../atoms/Spacer";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
+import { InputField } from "../../atoms/InputField";
+import { regex } from "../../../misc/regex";
 import { Button } from "../../atoms/Button";
-import { PasswordInput } from "../../atoms/input/PasswordInput";
-import SvgPassword from "../../atoms/svg/SvgPassword";
 
 const PasswordResetLayout = styled("div", {
   display: "flex",
@@ -80,24 +80,66 @@ export const PasswordResetNew = () => {
       {!responseText && (
         <PasswordResetLayout>
           <StyledContentLayout>
-            <PasswordInput
+            <InputField
               label="Password"
+              inputType="password"
               value={password}
               onChange={setPassword}
-              icon={SvgPassword}
+              iconName="SvgPassword"
               required={true}
+              validationOptions={[
+                {
+                  regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                  errorMessage: "one uppercase and lowercase letter",
+                  validIconName: "SvgCheckMark",
+                  invalidIconName: "SvgExclamination",
+                },
+                {
+                  regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                  errorMessage: "one number and special character",
+                  validIconName: "SvgCheckMark",
+                  invalidIconName: "SvgExclamination",
+                },
+                {
+                  regex: /(?=.{8,}$)/,
+                  errorMessage: "8 letters",
+                  validIconName: "SvgCheckMark",
+                  invalidIconName: "SvgExclamination",
+                },
+              ]}
               setValidInput={setPasswordValid}
               errorMessage="Please enter a valid password"
-            ></PasswordInput>
-            <PasswordInput
+            ></InputField>
+            <InputField
               label="Password Confirmation"
+              inputType="password"
               value={passwordConfirmation}
               onChange={setPasswordConfirmation}
-              icon={SvgPassword}
+              iconName="SvgPassword"
               required={true}
+              validationOptions={[
+                {
+                  regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                  errorMessage: "At least one uppercase and lowercase letter",
+                  validIconName: "SvgCheckMark",
+                  invalidIconName: "SvgExclamination",
+                },
+                {
+                  regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                  errorMessage: "At least one number and special character",
+                  validIconName: "SvgCheckMark",
+                  invalidIconName: "SvgExclamination",
+                },
+                {
+                  regex: /(?=.{8,}$)/,
+                  errorMessage: "8 or more letters",
+                  validIconName: "SvgCheckMark",
+                  invalidIconName: "SvgExclamination",
+                },
+              ]}
               setValidInput={setPasswordConfirmationValid}
               errorMessage="Please enter a valid password"
-            ></PasswordInput>
+            ></InputField>
             <Button
               onClick={() => {
                 if (passwordValid && passwordConfirmationValid) {
@@ -107,9 +149,8 @@ export const PasswordResetNew = () => {
               disabled={!passwordValid || !passwordConfirmationValid}
               backgroundColor={"primary"}
               color={"primary"}
-            >
-              Change password
-            </Button>
+              label={"Change password"}
+            ></Button>
           </StyledContentLayout>
         </PasswordResetLayout>
       )}
@@ -123,9 +164,8 @@ export const PasswordResetNew = () => {
             disabled={!passwordValid || !passwordConfirmationValid}
             backgroundColor={"primary"}
             color={"primary"}
-          >
-            Login
-          </Button>
+            label={"Login"}
+          ></Button>
           <Spacer size={"small"}></Spacer>
         </PasswordResetLayout>
       )}

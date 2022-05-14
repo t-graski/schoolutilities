@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { styled } from "../../stitches.config";
-import { InputField } from "../atoms/input/InputField";
+import { InputField } from "../atoms/InputField";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
-import { getAccessToken, setSelectedSchool } from "../../utils/authHelper";
+import { getAccessToken, logout } from "../../misc/authHelper";
+import cookie from "js-cookie";
+import { SvgIcon } from "../atoms/SvgIcon";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
 import { Separator } from "../atoms/Separator";
-import SvgUser from "../atoms/svg/SvgUser";
-import SvgHome from "../atoms/svg/SvgHome";
-import SvgRightArrow from "../atoms/svg/SvgRightArrow";
-import SvgSchool from "../atoms/svg/SvgSchool";
 
 type Props = {};
 
@@ -41,7 +39,7 @@ const ProfileImageLayout = styled("div", {
 const ProfileName = styled("div", {
   marginBottom: "10px",
   width: "100%",
-  fontWeight: "$bold",
+  fontWeight: 700,
   fontSize: "1.5rem",
   textAlign: "center",
   color: "$fontPrimary",
@@ -139,7 +137,7 @@ const ProfileDataColumn = styled("div", {
 });
 
 const InputLabel = styled("p", {
-  fontWeight: "$medium",
+  fontWeight: "500",
   fontSize: "1.8rem",
   color: "$fontPrimary",
   margin: "0",
@@ -149,7 +147,7 @@ const InputLabel = styled("p", {
 });
 
 const StatusInfo = styled("p", {
-  fontWeight: "$medium",
+  fontWeight: "500",
   fontSize: "1.8rem",
   color: "$fontPrimary",
   margin: "0",
@@ -272,6 +270,63 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     }
   }, [isFirstTime, router]);
 
+  async function getUserInfo2() {
+    const token = await getAccessToken();
+    if (!token) {
+      router.push("/auth?tab=login");
+    }
+    setIsLoading(true);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status !== 200) {
+      setStatusInfo("Error: " + response.status);
+    } else {
+      console.log(response);
+      const data = await response.json();
+
+      setUserInfo(data);
+      console.log(data);
+    }
+    setIsLoading(false);
+  }
+
+  async function saveChanges() {
+    const token = await getAccessToken();
+    console.log(token);
+    if (!token) {
+      router.push("/auth?tab=login");
+    }
+    setIsLoading(true);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/changeEmail`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          newEmail: userInfo.email,
+        }),
+      }
+    );
+    if (response.status !== 200) {
+      setStatusInfo("Error: " + response.status);
+    } else {
+      getUserInfo2();
+      setStatusInfo(
+        "You now have to verify your new email address to complete the change."
+      );
+    }
+    setIsLoading(false);
+  }
+
   const longDateCreationDate = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "long",
@@ -283,7 +338,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
       <ProfileLayout>
         <GeneralProfileNavbarLayout>
           <ProfileImageLayout>
-            <SvgUser />
+            <SvgIcon iconName="SvgUser" />
           </ProfileImageLayout>
           <ProfileName>
             {userInfo.firstName} {userInfo.lastName}
@@ -295,13 +350,13 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   color={router.query.tab !== "schools" ? "special" : "primary"}
                 >
                   <IconLayout>
-                    <SvgHome />
+                    <SvgIcon iconName="SvgHome" />
                   </IconLayout>
                   <LinkContentLayout>
                     <LinkLabel color="special">Account</LinkLabel>
 
                     <LinkArrow color="special">
-                      <SvgRightArrow />
+                      <SvgIcon iconName="SvgRightArrow" />
                     </LinkArrow>
                   </LinkContentLayout>
                 </LinkLayout>
@@ -313,13 +368,13 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   color={router.query.tab == "schools" ? "special" : "primary"}
                 >
                   <IconLayout>
-                    <SvgSchool />
+                    <SvgIcon iconName="SvgSchool" />
                   </IconLayout>
                   <LinkContentLayout>
                     <LinkLabel color="special">Schools</LinkLabel>
 
                     <LinkArrow color="special">
-                      <SvgRightArrow />
+                      <SvgIcon iconName="SvgRightArrow" />
                     </LinkArrow>
                   </LinkContentLayout>
                 </LinkLayout>
@@ -342,6 +397,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 label="Firstname"
                 value={userInfo.firstName}
                 onChange={(e) => {}}
+                iconName={""}
                 editable={false}
               /> */}
               <Spacer size="verySmall"></Spacer>
@@ -352,9 +408,18 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 showLabel={false}
                 value={new Date(userInfo.birthday).toLocaleDateString()}
                 onChange={(e) => {}}
+                iconName={""}
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
+              <ActionButtonLayout>
+                <Button
+                  backgroundColor={"primary"}
+                  color={"primary"}
+                  label="SAVE CHANGES"
+                  onClick={saveChanges}
+                ></Button>
+              </ActionButtonLayout>
               {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
             </ProfileDataColumn>
             <ProfileDataColumn>
@@ -368,6 +433,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 onChange={(e) => {
                   setUserInfo({ ...userInfo, email: e });
                 }}
+                iconName={""}
               />
               <Spacer size="verySmall"></Spacer>
               <InputLabel>User Since</InputLabel>
@@ -377,6 +443,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 showLabel={false}
                 value={longDateCreationDate}
                 onChange={(e) => {}}
+                iconName={""}
                 editable={false}
               />
             </ProfileDataColumn>
@@ -390,7 +457,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   <SchoolLayout
                     key={school.schoolUUID}
                     onClick={() => {
-                      setSelectedSchool(school.schoolUUID);
+                      cookie.set("schoolUUID", school.schoolUUID);
                       router.push(`/school/${school.schoolUUID}/edit`);
                     }}
                   >
@@ -408,10 +475,12 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     <Button
                       backgroundColor={"primary"}
                       color={"primary"}
-                      onClick={() => {}}
-                    >
-                      JOIN A SCHOOL
-                    </Button>
+                      label="JOIN A SCHOOL"
+                      onClick={() => {
+                        setStatusInfo("");
+                        getUserInfo2();
+                      }}
+                    ></Button>
                   </a>
                 </Link>
                 <Spacer size="verySmall"></Spacer>
@@ -420,10 +489,12 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     <Button
                       backgroundColor={"secondary"}
                       color={"primary"}
-                      onClick={() => {}}
-                    >
-                      CREATE A SCHOOL
-                    </Button>
+                      label="CREATE A SCHOOL"
+                      onClick={() => {
+                        setStatusInfo("");
+                        getUserInfo2();
+                      }}
+                    ></Button>
                   </a>
                 </Link>
               </ButtonLayout>

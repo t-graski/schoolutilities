@@ -5,11 +5,10 @@ import { useRouter } from "next/router";
 // to the entry point of the whole app
 // (e.g. src/index.js)
 import "react-nestable/dist/styles/index.css";
+import { SvgIcon } from "../atoms/SvgIcon";
 import { styled } from "@stitches/react";
 import Link from "next/link";
 import UserMenu from "../molecules/UserMenu";
-import SvgClose from "../atoms/svg/SvgClose";
-import SvgOpenLogo from "../atoms/svg/SvgOpenLogo";
 
 type Props = {
   visible: boolean;
@@ -115,12 +114,12 @@ export const NavbarPopOver: React.FC<Props> = ({ visible, setVisibility }) => {
     <>
       <PopOverLayout visible={visible}>
         <StyledCloseButton onClick={() => setVisibility(false)}>
-          <SvgClose />
+          <SvgIcon iconName="SvgClose" />
         </StyledCloseButton>
-        <Link href="/" passHref>
+        <Link href="/">
           <a>
             <LogoLayout>
-              <SvgOpenLogo />
+              <SvgIcon iconName="SvgOpenLogo" />
             </LogoLayout>
           </a>
         </Link>
@@ -139,7 +138,9 @@ export const NavbarPopOver: React.FC<Props> = ({ visible, setVisibility }) => {
             </StyledLink>
           </Link>
           <SpecialLinkLayout>
-            <UserMenu></UserMenu>
+            <Link href="/profile/settings" passHref>
+              <UserMenu></UserMenu>
+            </Link>
           </SpecialLinkLayout>
         </NavLinksLayout>
       </PopOverLayout>

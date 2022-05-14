@@ -62,7 +62,7 @@ const MenuBubbleIcon = styled("span", {
 const MenuBubbleText = styled("span", {
   fontSize: "1.8rem",
   marginLeft: "30px",
-  fontWeight: "$bold",
+  fontWeight: "700",
 });
 
 const MenuBubbleImage = styled("div", {

@@ -2,13 +2,14 @@ import React from "react";
 import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import { useRouter } from "next/router";
+import { SvgIcon } from "../atoms/SvgIcon";
 
 type Props = {
   title: string;
   href: string;
   buttonText: string;
   description: string;
-  icon: any;
+  iconName: string;
 };
 
 const GeneralListItemLayout = styled("div", {
@@ -25,7 +26,7 @@ const IconLayout = styled("div", {
   display: "flex",
   width: "120px",
   height: "150px",
-  color: "$specialSecondary",
+  color: "$specialSecondary"
 });
 
 const TitleLayout = styled("div", {
@@ -45,27 +46,25 @@ export const GeneralListItem: React.FC<Props> = ({
   href,
   buttonText,
   description,
-  icon,
+  iconName,
 }) => {
   const router = useRouter();
-  const Icon = icon;
   return (
     <>
       <GeneralListItemLayout>
         <IconLayout>
-          <Icon />
+          <SvgIcon iconName={iconName} />
         </IconLayout>
         <TitleLayout>{title}</TitleLayout>
         <DescriptionLayout>{description}</DescriptionLayout>
         <Button
           backgroundColor={"primary"}
           color={"primary"}
+          label={buttonText}
           onClick={() => {
             router.push(href);
           }}
-        >
-          {buttonText}
-        </Button>
+        />
       </GeneralListItemLayout>
     </>
   );

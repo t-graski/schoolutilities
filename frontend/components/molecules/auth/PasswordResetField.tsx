@@ -4,10 +4,9 @@ import { Spacer } from "../../atoms/Spacer";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
-import { InputField } from "../../atoms/input/InputField";
-import { regex } from "../../../utils/regex";
+import { InputField } from "../../atoms/InputField";
+import { regex } from "../../../misc/regex";
 import { Button } from "../../atoms/Button";
-import SvgEmail from "../../atoms/svg/SvgEmail";
 
 const PasswordResetLayout = styled("div", {
   display: "flex",
@@ -78,7 +77,7 @@ export const PasswordResetField = () => {
               inputType="email"
               value={email}
               onChange={setEmail}
-              icon={SvgEmail}
+              iconName="SvgEmail"
               regex={regex.email}
               setValidInput={setEmailValid}
               showLabel={false}
@@ -92,9 +91,8 @@ export const PasswordResetField = () => {
               disabled={!emailValid}
               backgroundColor={"primary"}
               color={"primary"}
-            >
-              Reset Password
-            </Button>
+              label={"Reset Password"}
+            ></Button>
           </StyledContentLayout>
         </PasswordResetLayout>
       )}

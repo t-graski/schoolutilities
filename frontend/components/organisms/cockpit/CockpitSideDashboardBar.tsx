@@ -1,16 +1,12 @@
 import React from "react";
-import SvgAlert from "../../atoms/svg/SvgAlert";
-import SvgDepartment from "../../atoms/svg/SvgDepartment";
-import SvgSchool from "../../atoms/svg/SvgSchool";
-import SvgUser from "../../atoms/svg/SvgUser";
 import { SideDashboardBar } from "../SideDashboardBar";
 
 type Props = {
-  active?: string
+    active?: string
 };
 
 export const CockpitSideDashboardBar: React.FC<Props> = ({
-  active = "",
+    active = "",
 }) => {
   return (
     <>
@@ -18,27 +14,27 @@ export const CockpitSideDashboardBar: React.FC<Props> = ({
         items={[
           {
             name: "Articles",
-            icon: SvgAlert,
+            iconName: "SvgAlert",
             href: "/cockpit/articles",
           },
           {
             name: "Schools",
-            icon: SvgSchool,
+            iconName: "school",
             href: "/schools",
           },
           {
             name: "Departments",
-            icon: SvgDepartment,
+            iconName: "department",
             href: "/departments",
           },
           {
             name: "Users",
-            icon: SvgUser,
+            iconName: "user",
             href: "/users",
           },
           {
             name: "Settings",
-            icon: SvgUser,
+            iconName: "settings",
             href: "/settings",
           },
         ]}

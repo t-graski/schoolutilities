@@ -1,7 +1,6 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import { Separator } from "../../atoms/Separator";
-import SvgAlert from "../../atoms/svg/SvgAlert";
 import { HelpOverviewItem } from "../../molecules/help/HelpOverviewItem";
 
 type Props = {
@@ -9,6 +8,7 @@ type Props = {
     title: string;
     href: string;
     description: string;
+    iconName: string;
   }[];
 };
 
@@ -23,8 +23,6 @@ const HelpOverviewLayout = styled("div", {
 });
 
 const HelpOverview: React.FC<Props> = ({ items }) => {
-
-
   return (
     <>
       <HelpOverviewLayout>
@@ -33,7 +31,7 @@ const HelpOverview: React.FC<Props> = ({ items }) => {
             title={item.title}
             href={item.href}
             description={item.description}
-            icon={SvgAlert}
+            iconName={item.iconName}
             key={index}
           />
         ))}

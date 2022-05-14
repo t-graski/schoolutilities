@@ -2,9 +2,8 @@ import { useState } from "react";
 import CourseText from "./CourseText";
 import CourseFile from "./CourseFile";
 import { Headline } from "../Headline";
-import { InputField } from "../input/InputField";
+import { InputField } from "../InputField";
 import moment from "moment";
-import { TextField } from "../input/TextField";
 
 export function HeadlineDetailView({
   children,
@@ -32,7 +31,7 @@ export function HeadlineDetailView({
           });
           setButtonDisabled(value.length === 0);
         }}
-        icon={""}
+        iconName={""}
         size="small"
       ></InputField>
     </>
@@ -50,9 +49,10 @@ export function TextDetailView({
 
   return (
     <>
-      <TextField
+      <InputField
         label="Text"
         value={currentDetailsConfig.text}
+        inputType={"textfield"}
         onChange={(value) => {
           setCurrentDetailsConfig({
             ...currentDetailsConfig,
@@ -64,7 +64,9 @@ export function TextDetailView({
           });
           setButtonDisabled(value.length === 0);
         }}
-      ></TextField>
+        iconName={""}
+        size="small"
+      ></InputField>
     </>
   );
 }
@@ -107,11 +109,13 @@ export function ExerciseDetailView({
           });
           setButtonDisabled(value.length === 0);
         }}
+        iconName={""}
         size="small"
       ></InputField>
-      <TextField
+      <InputField
         label="Description"
         value={currentDetailsConfig.description}
+        inputType={"textfield"}
         onChange={(value) => {
           setCurrentDetailsConfig({
             ...currentDetailsConfig,
@@ -122,7 +126,9 @@ export function ExerciseDetailView({
             description: value,
           });
         }}
-      ></TextField>
+        iconName={""}
+        size="small"
+      ></InputField>
       <InputField
         label="Due date"
         value={moment(currentDetailsConfig.dueTime).format("YYYY-MM-DDTHH:mm")}
@@ -139,6 +145,7 @@ export function ExerciseDetailView({
             dueTime: new Date(Date.parse(value)).toISOString(),
           });
         }}
+        iconName={""}
         size="small"
       ></InputField>
     </>

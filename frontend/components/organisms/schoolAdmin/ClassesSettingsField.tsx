@@ -1,27 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/input/InputField";
+import { InputField } from "../../atoms/InputField";
 import Link from "next/link";
-import { regex } from "../../../utils/regex";
+import { regex } from "../../../misc/regex";
 import { useRouter } from "next/router";
 import { Spacer } from "../../atoms/Spacer";
+import { getAccessToken } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import Skeleton from "react-loading-skeleton";
-import { Select } from "../../atoms/input/Select";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  addSchoolClass,
-  deleteSchoolClass,
-  editSchoolClass,
-  fetchSchoolClasses,
-  fetchSchoolDepartments,
-} from "../../../utils/requests";
 
-type Props = {
-  queryClient: any;
-};
+type Props = {};
 
 const SchoolDetailLayout = styled("form", {
   display: "flex",
@@ -72,9 +62,10 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const ClassesSettingsField: React.FC<Props> = ({
-  queryClient,
-}) => {
+export const ClassesSettingsField: React.FC<Props> = ({}) => {
+  const [departments, setDepartments] = React.useState([]);
+  const [classes, setClasses] = React.useState([]);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [schoolClassName, setSchoolClassName] = React.useState("");
@@ -85,113 +76,156 @@ export const ClassesSettingsField: React.FC<Props> = ({
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const { data: classes, status: classesStatus } = useQuery(
-    ["classes", schoolUUID],
-    () => fetchSchoolClasses(schoolUUID)
-  );
-  const { data: departments, status: departmentsStatus } = useQuery(
-    ["departments", schoolUUID],
-    () => fetchSchoolDepartments(schoolUUID)
-  );
+  useEffect(() => {
+    if (isFirstTime) {
+      updateSettingsEntriesFromDatabase();
+      setIsFirstTime(false);
+    }
 
-  const addClassMutation = useMutation(addSchoolClass, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(["classes", schoolUUID]);
+    async function updateSettingsEntriesFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth/login");
+      }
+      if (!schoolUUID) {
+        router.push("/school/select");
+      }
+      if (accessToken && schoolUUID && isFirstTime) {
+        let returnValue = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/classes/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let json = await returnValue.json();
+        setClasses(json);
 
-      let entry = {
-        classUUID: "newEntry",
-        className: schoolClassName,
-        departmentUUID,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
-        ).departmentName,
-      };
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) => [
-        ...old,
-        entry,
-      ]);
-
-      return { entry };
-    },
-    onSuccess: (newEntry) => {
-      let entry = {
-        classUUID: newEntry.classUUID,
-        className: newEntry.className,
-        departmentUUID,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
-        ).departmentName,
-      };
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.map((currEntry) =>
-          currEntry.classUUID === "newEntry" ? entry : currEntry
-        )
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.filter((currEntry) => currEntry.classUUID !== "newEntry")
-      );
-    },
-  });
-
-  const deleteClassMutation = useMutation(deleteSchoolClass, {
-    onSuccess: async () => {
-      await queryClient.cancelQueries(["classes", schoolUUID]);
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.classUUID !== schoolClassId)
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
-
-  const editClassMutation = useMutation(editSchoolClass, {
-    onSuccess: async (response) => {
-      let entry = {
-        classUUID: response.classUUID,
-        className: response.className,
-        departmentUUID,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
-        ).departmentName,
-      };
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.map((currEntry) =>
-          currEntry.classUUID === response.classUUID ? entry : currEntry
-        )
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
+        returnValue = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/departments/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        json = await returnValue.json();
+        setDepartments(json);
+      }
+    }
+  }, [isFirstTime, schoolUUID, router]);
 
   function savePopUpInput() {
     if (schoolClassId == "") {
-      addClassMutation.mutate({
-        classUUID: "newEntry",
+      addSettingsEntry();
+    } else {
+      editSettingsEntry();
+    }
+    setEditPopUpIsVisible(false);
+  }
+
+  async function addSettingsEntry() {
+    const data = {
+      departmentUUID,
+      className: schoolClassName,
+    };
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (returnValue.status !== 200) {
+      setError("Error while saving class");
+      console.log(returnValue);
+    } else {
+      const body = await returnValue.json();
+      setError("");
+      let entry = {
+        classUUID: body.classUUID,
         className: schoolClassName,
         departmentUUID,
         departmentName: departments.find(
           (department) => department.departmentUUID === departmentUUID
         ).departmentName,
-      });
-    } else {
-      editClassMutation.mutate({
-        classUUID: schoolClassId,
-        className: schoolClassName,
-        departmentUUID,
-      });
+      };
+      setClasses([...classes, entry]);
     }
-    setEditPopUpIsVisible(false);
+  }
+
+  async function editSettingsEntry() {
+    const data = {
+      classUUID: schoolClassId,
+      departmentUUID,
+      className: schoolClassName,
+    };
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (returnValue.status !== 200) {
+      setError("Error trying to save");
+    } else {
+      setError("");
+      const newEntries = classes.map((schoolClass, index) => {
+        if (schoolClass.classUUID == schoolClassId) {
+          schoolClass.className = schoolClassName;
+          schoolClass.departmentName = departments.find(
+            (department) => department.departmentUUID === departmentUUID
+          ).departmentName;
+          schoolClass.departmentUUID = departmentUUID;
+          return schoolClass;
+        } else {
+          return schoolClass;
+        }
+      });
+      setClasses(newEntries);
+    }
+  }
+
+  async function deleteSettingsEntry(id) {
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/class`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          classUUID: id,
+        }),
+      }
+    );
+    if (returnValue.status !== 200) {
+      setError("Error trying to delete");
+      console.log(returnValue);
+    } else {
+      setError("");
+      let newSettingsEntries = classes.filter(
+        (schoolClass) => schoolClass.classUUID !== id
+      );
+
+      setClasses(newSettingsEntries);
+      if (newSettingsEntries.length == 0) {
+        setClasses([]);
+      }
+    }
   }
 
   return (
@@ -222,13 +256,15 @@ export const ClassesSettingsField: React.FC<Props> = ({
                     setSchoolClassNameValid(false);
                   }
                 }}
+                iconName=""
                 regex={regex.schoolName}
                 setValidInput={setSchoolClassNameValid}
                 min="2"
                 max="30"
               />
               <Spacer size="verySmall" />
-              <Select
+              <InputField
+                inputType="select"
                 selectValue={departmentUUID}
                 selectOptions={departments.map((department) => {
                   return {
@@ -239,7 +275,8 @@ export const ClassesSettingsField: React.FC<Props> = ({
                 onChange={(event) => {
                   setDepartmentUUId(event);
                 }}
-              ></Select>
+                iconName=""
+              ></InputField>
             </StyledInputField>
           </SettingsPopUp>
         )}
@@ -249,7 +286,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
             inputValid={true}
             saveLabel="Confirm"
             saveFunction={() => {
-              deleteClassMutation.mutate(schoolClassId);
+              deleteSettingsEntry(schoolClassId);
               setDeletePopUpIsVisible(false);
             }}
             closeFunction={() => {
@@ -275,7 +312,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {classesStatus == "success" && classes.length > 0 ? (
+          {classes.length > 0 ? (
             classes.map((entry) => (
               <SettingsEntryLayout
                 key={entry.classUUID}

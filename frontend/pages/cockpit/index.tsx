@@ -3,11 +3,8 @@ import { Navbar } from "../../components/organisms/Navbar";
 import Head from "next/head";
 import Footer from "../../components/organisms/Footer";
 import { Spacer } from "../../components/atoms/Spacer";
+import { SvgIcon } from "../../components/atoms/SvgIcon";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
-import SvgSuperman from "../../components/atoms/svg/SvgSuperman";
-import SvgAlert from "../../components/atoms/svg/SvgAlert";
-import SvgFirstAidKit from "../../components/atoms/svg/SvgFirstAidKit";
-import SvgAttendance from "../../components/atoms/svg/SvgAttendance";
 
 const MainContent = styled("div", {
   position: "absolute",
@@ -56,7 +53,7 @@ export default function Home() {
         <StyledHeadline>
           You&apos;ve just received some superpowers
           <SvgLayout>
-            <SvgSuperman />
+            <SvgIcon iconName="SvgSuperman"></SvgIcon>
           </SvgLayout>
           <br />
           What do you wanna do with them?
@@ -68,18 +65,21 @@ export default function Home() {
               href: "/cockpit/articles",
               description:
                 "Increase the feeling of genius updates and new features.",
+              iconName: "SvgAlert",
             },
             {
               title: "Help penurious guys",
               href: "/admin/news",
               description:
                 "Grab your first aid bag, run to someone and help them with gorgeous articles.",
+              iconName: "SvgFirstAidKit",
             },
             {
               title: "Statistics",
               href: "/admin/stats",
               description:
                 "Life is all about numbers. Let's learn more about those little fancy characters.",
+              iconName: "SvgStats",
             },
           ]}
         ></HelpOverview>

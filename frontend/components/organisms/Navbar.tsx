@@ -1,35 +1,33 @@
 import React, { useState } from "react";
 import { styled } from "../../stitches.config";
+import { SvgIcon } from "../atoms/SvgIcon";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import NavbarPopOver from "./NavbarPopOver";
 import { NavigationMenuPart } from "./NavigationMenuPart";
 import UserMenu from "../molecules/UserMenu";
-import SvgHamburger from "../atoms/svg/SvgHamburger";
-import SvgOpenLogo from "../atoms/svg/SvgOpenLogo";
 
 type Props = {};
 
 const NavbarLayout = styled("div", {
+  display: "flex",
   position: "absolute",
   top: 0,
   left: 0,
-  zIndex: "1",
-
-  display: "flex",
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
   width: "100vw",
-  padding: "0 50px",
-
+  padding: "0 45px",
   color: "$fontPrimary",
+  height: "12vh",
+  zIndex: "1",
 });
 
 const LogoLayout = styled("div", {
   display: "flex",
   width: "130px",
   height: "fit-content",
-
   color: "$fontPrimary",
 });
 
@@ -44,7 +42,6 @@ const SpecialLinkLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-
   color: "$fontPrimary",
 
   "@mobileOnly": {
@@ -65,30 +62,20 @@ const StyledOpenButton = styled("button", {
   },
 });
 
-const PopOverLayout = styled("div", {
-  display: "none",
-
-  "@mobileOnly": {
-    display: "flex",
-  },
-});
-
 export const Navbar: React.FC<Props> = ({}) => {
   const [mobileVisible, setMobileVisible] = useState(false);
 
   return (
     <>
-      <PopOverLayout>
-        <NavbarPopOver
-          visible={mobileVisible}
-          setVisibility={setMobileVisible}
-        ></NavbarPopOver>
-      </PopOverLayout>
+      <NavbarPopOver
+        visible={mobileVisible}
+        setVisibility={setMobileVisible}
+      ></NavbarPopOver>
       <NavbarLayout>
         <Link href="/" passHref>
           <a>
             <LogoLayout>
-              <SvgOpenLogo />
+              <SvgIcon iconName="SvgOpenLogo" />
             </LogoLayout>
           </a>
         </Link>
@@ -101,7 +88,7 @@ export const Navbar: React.FC<Props> = ({}) => {
           </Link>
         </SpecialLinkLayout>
         <StyledOpenButton onClick={() => setMobileVisible(true)}>
-          <SvgHamburger />
+          <SvgIcon iconName="SvgHamburger" />
         </StyledOpenButton>
       </NavbarLayout>
     </>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { styled } from "../../../stitches.config";
-import { getAccessToken } from "../../../utils/authHelper";
+import { getAccessToken } from "../../../misc/authHelper";
 import { useRouter } from "next/router";
-import { InputField } from "../../atoms/input/InputField";
+import { InputField } from "../../atoms/InputField";
 import { Button } from "../../atoms/Button";
-import { regex } from "../../../utils/regex";
+import { regex } from "../../../misc/regex";
 
 export type SideDashboardProps = {};
 
@@ -78,6 +78,7 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
           <InputField
             inputType={"text"}
             onChange={setJoinCode}
+            iconName={""}
             regex={regex.name}
             setValidInput={setJoinCodeValid}
             errorMessage="Please enter a valid join code"
@@ -93,7 +94,8 @@ export const SchoolJoin: React.FC<SideDashboardProps> = ({}) => {
             disabled={!joinCodeValid}
             backgroundColor={"primary"}
             color={"primary"}
-          >Join School</Button>
+            label={"Join School"}
+          ></Button>
         </StyledContentLayout>
       </SchoolInputLayout>
     </>

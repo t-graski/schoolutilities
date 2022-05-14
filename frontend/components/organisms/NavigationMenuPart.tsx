@@ -2,9 +2,7 @@ import React from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import { violet } from "@radix-ui/colors";
-import Link from "next/link";
-import { getSelectedSchool } from "../../utils/authHelper";
+import { violet, mauve, indigo, purple } from "@radix-ui/colors";
 
 const enterFromRight = keyframes({
   from: { transform: "translateX(200px)", opacity: 0 },
@@ -68,7 +66,7 @@ const itemStyles = {
   padding: "8px 12px",
   outline: "none",
   userSelect: "none",
-  fontWeight: "$medium",
+  fontWeight: 500,
   lineHeight: 1,
   borderRadius: 4,
   fontSize: 15,
@@ -110,14 +108,12 @@ const StyledTriggerWithCaret = React.forwardRef<any>(function Content(
   );
 });
 
-const StyledLink = styled(Link, {
+const StyledLink = styled(NavigationMenuPrimitive.Link, {
   ...itemStyles,
   display: "block",
   textDecoration: "none",
   fontSize: 15,
   lineHeight: 1,
-  width: "100%",
-  height: "100%",
 });
 
 const StyledContent = styled(NavigationMenuPrimitive.Content, {
@@ -235,7 +231,7 @@ const ContentList = styled("ul", {
 const ListItem = styled("li", {});
 
 const LinkTitle = styled("div", {
-  fontWeight: "$bold",
+  fontWeight: 700,
   lineHeight: 1.2,
   marginBottom: 5,
   color: "$fontPrimary",
@@ -263,12 +259,65 @@ const ContentListItem = React.forwardRef<any, any>(function Content(
           transition: "background-color 150ms ease",
           "&:hover": { backgroundColor: "$backgroundTertiary" },
         }}
-        passHref
       >
-        <a>
-          <LinkTitle>{title}</LinkTitle>
-          <LinkText>{children}</LinkText>
-        </a>
+        <LinkTitle>{title}</LinkTitle>
+        <LinkText>{children}</LinkText>
+      </NavigationMenuLink>
+    </ListItem>
+  );
+});
+
+const ContentListItemCallout = React.forwardRef<any>(function Content(
+  { children, ...props },
+  forwardedRef
+) {
+  return (
+    <ListItem css={{ gridRow: "span 3" }}>
+      <NavigationMenuLink
+        {...props}
+        href="/"
+        ref={forwardedRef}
+        css={{
+          display: "flex",
+          justifyContent: "flex-end",
+          flexDirection: "column",
+          width: "100%",
+          height: "100%",
+          background: `linear-gradient(135deg, ${purple.purple9} 0%, ${indigo.indigo9} 100%);`,
+          borderRadius: 6,
+          padding: 25,
+        }}
+      >
+        <svg
+          aria-hidden
+          width="38"
+          height="38"
+          viewBox="0 0 25 25"
+          fill="white"
+        >
+          <path d="M12 25C7.58173 25 4 21.4183 4 17C4 12.5817 7.58173 9 12 9V25Z"></path>
+          <path d="M12 0H4V8H12V0Z"></path>
+          <path d="M17 8C19.2091 8 21 6.20914 21 4C21 1.79086 19.2091 0 17 0C14.7909 0 13 1.79086 13 4C13 6.20914 14.7909 8 17 8Z"></path>
+        </svg>
+        <LinkTitle
+          css={{
+            fontSize: 18,
+            color: "white",
+            marginTop: 16,
+            marginBottom: 7,
+          }}
+        >
+          Radix Primitives
+        </LinkTitle>
+        <LinkText
+          css={{
+            fontSize: 14,
+            color: mauve.mauve4,
+            lineHeight: 1.3,
+          }}
+        >
+          Unstyled, accessible components for React.
+        </LinkText>
       </NavigationMenuLink>
     </ListItem>
   );
@@ -285,8 +334,6 @@ const ViewportPosition = styled("div", {
 });
 
 export const NavigationMenuPart = () => {
-  const schoolUUID = getSelectedSchool();
-
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -297,11 +344,7 @@ export const NavigationMenuPart = () => {
             <ContentList layout="two">
               <ContentListItem
                 title="Courses"
-                href={
-                  schoolUUID
-                    ? `/school/${schoolUUID}/course`
-                    : "/school/select?redirect=/course"
-                }
+                href="/school/select?redirect=/course"
               >
                 This is where everything happens.
               </ContentListItem>
@@ -317,9 +360,15 @@ export const NavigationMenuPart = () => {
                 can add our discord bot to your personal server.
               </ContentListItem>
               <ContentListItem title="Premium" href="/premium">
-                With SchoolUtilities&apos; premium features, your school can
-                unleash it&apos;s full potential.
+                With SchoolUtilities&apos; premium features, your school can unleash
+                it&apos;s full potential.
               </ContentListItem>
+              {/* <ContentListItem
+                title="Releases"
+                href="/docs/primitives/overview/releases"
+              >
+                Radix Primitives releases and their changelogs.
+              </ContentListItem> */}
             </ContentList>
           </NavigationMenuContent>
         </NavigationMenuItem>

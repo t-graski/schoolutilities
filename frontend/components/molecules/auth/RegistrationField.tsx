@@ -1,18 +1,10 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/input/InputField";
+import { InputField } from "../../atoms/InputField";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";
-import { regex } from "../../../utils/regex";
-import { PasswordInput } from "../../atoms/input/PasswordInput";
-import { CheckBox } from "../../atoms/input/CheckBox";
-import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
-import SvgQuality from "../../atoms/svg/SvgQuality";
-import SvgWarning from "../../atoms/svg/SvgWarning";
-import SvgName from "../../atoms/svg/SvgName";
-import SvgBirthDate from "../../atoms/svg/SvgBirthDate";
-import SvgEmail from "../../atoms/svg/SvgEmail";
-import SvgPassword from "../../atoms/svg/SvgPassword";
+import { SvgIcon } from "../../atoms/SvgIcon";
+import { regex } from "../../../misc/regex";
 
 type Props = {};
 
@@ -88,7 +80,7 @@ const StyledLink = styled("a", {
   },
 });
 
-export const RegistrationField: React.FC<Props> = ({ }) => {
+export const RegistrationField: React.FC<Props> = ({}) => {
   const [firstName, setFirstName] = React.useState("");
   const [firstNameValid, setFirstNameValid] = React.useState(false);
   const [lastName, setLastName] = React.useState("");
@@ -163,7 +155,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="text"
             value={firstName}
             onChange={setFirstName}
-            icon={SvgName}
+            iconName="SvgName"
             required={true}
             regex={regex.name}
             setValidInput={setFirstNameValid}
@@ -174,7 +166,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="text"
             value={lastName}
             onChange={setLastName}
-            icon={SvgName}
+            iconName="SvgName"
             required={true}
             regex={regex.name}
             setValidInput={setLastNameValid}
@@ -185,7 +177,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="date"
             value={birthDate}
             onChange={setBirthDate}
-            icon={SvgBirthDate}
+            iconName="SvgBirthDate"
             required={true}
             min="1900-01-01"
             max={new Date().toJSON().split("T")[0]}
@@ -195,34 +187,77 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            icon={SvgEmail}
+            iconName="SvgEmail"
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
             errorMessage="Please enter a valid email"
           ></InputField>
-          <PasswordInput
+          <InputField
             label="Password"
+            inputType="password"
             value={password}
             onChange={setPassword}
-            icon={SvgPassword}
+            iconName="SvgPassword"
             required={true}
-            validationOptions={PASSWORD_VALIDATION_MESSAGES}
+            validationOptions={[
+              {
+                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                errorMessage: "one uppercase and lowercase letter",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                errorMessage: "one number and special character",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /(?=.{8,}$)/,
+                errorMessage: "8 letters",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+            ]}
             setValidInput={setPasswordValid}
             errorMessage="Please enter a valid password"
-          ></PasswordInput>
-          <PasswordInput
+          ></InputField>
+          <InputField
             label="Password Confirmation"
+            inputType="password"
             value={passwordConfirmation}
             onChange={setPasswordConfirmation}
-            icon={SvgPassword}
+            iconName="SvgPassword"
             required={true}
-            validationOptions={PASSWORD_VALIDATION_MESSAGES}
+            validationOptions={[
+              {
+                regex: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
+                errorMessage: "At least one uppercase and lowercase letter",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /^(?=.*[0-9])(?=.*\W).*$/,
+                errorMessage: "At least one number and special character",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+              {
+                regex: /(?=.{8,}$)/,
+                errorMessage: "8 or more letters",
+                validIconName: "SvgCheckMark",
+                invalidIconName: "SvgExclamination",
+              },
+            ]}
             setValidInput={setPasswordConfirmationValid}
             errorMessage="Please enter a valid password"
-          ></PasswordInput>
-          <CheckBox
+          ></InputField>
+          <InputField
+            inputType="checkbox"
             onChange={setTermsAccepted}
+            iconName=""
+            required={true}
           >
             <StyledAreement>
               I agree to all{" "}
@@ -230,24 +265,26 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
                 Terms & Conditions
               </StyledLInk>
             </StyledAreement>
-          </CheckBox>
+          </InputField>
           <Button
             backgroundColor="primary"
             color="primary"
+            label="Sign up"
             onClick={() => {
               handleSubmit();
             }}
             disabled={isDisabled}
-          >Sign up</Button>
+          ></Button>
           <Link href="/auth?tab=login">
             <a>
               <Button
                 backgroundColor="secondary"
                 color="primary"
+                label="Log in instead"
                 onClick={() => {
                   handleSubmit();
                 }}
-              >Log in instead</Button>
+              ></Button>
             </a>
           </Link>
         </RegistrationLayout>
@@ -257,13 +294,9 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
           <SuccessLayout>
             <StyledHeadline>{signUpInfo}</StyledHeadline>
             <SuccessImageLayout color={signUpWorking ? "success" : "error"}>
-              {
-                signUpWorking ? (
-                  <SvgQuality />
-                ) : (
-                  <SvgWarning />
-                )
-              }
+              <SvgIcon
+                iconName={signUpWorking ? "SvgQuality" : "SvgWarning"}
+              ></SvgIcon>
             </SuccessImageLayout>
             <SuccessDescription>
               {signUpWorking

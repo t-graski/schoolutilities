@@ -1,21 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { useRouter } from "next/router";
+import { getAccessToken, getUserData } from "../../../misc/authHelper";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
+import { InputField } from "../../atoms/InputField";
+import { regex } from "../../../misc/regex";
 import Skeleton from "react-loading-skeleton";
-import { Select } from "../../atoms/input/Select";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  deleteSchoolPerson,
-  editSchoolPerson,
-  fetchSchoolPersons,
-} from "../../../utils/requests";
 
-type Props = {
-  queryClient: any;
-};
+type Props = {};
 
 const SchoolDetailLayout = styled("form", {
   display: "flex",
@@ -25,7 +19,6 @@ const SchoolDetailLayout = styled("form", {
   width: "100%",
   padding: "40px 60px",
   marginTop: "12vh",
-
   overflowY: "scroll",
 });
 
@@ -47,10 +40,9 @@ const SettingsEntryName = styled("p", {
 });
 
 const StyledDeleteText = styled("p", {
-  marginTop: "15px",
-
   fontSize: "1rem",
   color: "$fontPrimary",
+  marginTop: "15px",
 });
 
 export const RoleOrder = [
@@ -78,9 +70,9 @@ const PersonRoleName = styled("p", {
   color: "$fontPrimary",
 });
 
-export const PersonsSettingsField: React.FC<Props> = ({
-  queryClient,
-}) => {
+export const PersonsSettingsField: React.FC<Props> = ({}) => {
+  const [persons, setPersons] = React.useState([]);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [personName, setPersonName] = React.useState("");
@@ -90,43 +82,109 @@ export const PersonsSettingsField: React.FC<Props> = ({
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const { data: persons, status: personsStatus } = useQuery(
-    ["persons", schoolUUID],
-    async () => fetchSchoolPersons(schoolUUID)
-  );
+  useEffect(() => {
+    if (isFirstTime) {
+      updateSettingsEntriesFromDatabase();
+      setIsFirstTime(false);
+    }
 
-  const deletePersonMutation = useMutation(deleteSchoolPerson, {
-    onSuccess: async () => {
-      await queryClient.cancelQueries(["persons", schoolUUID]);
+    async function updateSettingsEntriesFromDatabase() {
+      let accessToken = await getAccessToken();
+      if (!accessToken) {
+        router.push("/auth/login");
+      }
+      if (!schoolUUID) {
+        router.push("/school/select");
+      }
+      if (accessToken && schoolUUID && isFirstTime) {
+        let returnValue = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/getPersons/${schoolUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        let json = await returnValue.json();
+        
+        setPersons(json);
+      }
+    }
+  }, [isFirstTime, router, schoolUUID]);
 
-      queryClient.setQueryData(["persons", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.personUUID !== personUUID)
+  async function deleteSettingsEntry(id) {
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/leaveSchool`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          schoolUUID,
+          personUUID: id,
+        }),
+      }
+    );
+    if (returnValue.status !== 200) {
+      setError("Error trying to delete");
+    } else {
+      setError("");
+      let newSettingsEntries = persons.filter(
+        (person) => person.personUUID !== id
       );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
 
-  const editPersonMutation = useMutation(editSchoolPerson, {
-    onSuccess: async () => {
-      await queryClient.cancelQueries(["persons", schoolUUID]);
+      setPersons(newSettingsEntries);
+      if (newSettingsEntries.length == 0) {
+        setPersons([]);
+      }
+    }
+  }
 
-      queryClient.setQueryData(["persons", schoolUUID], (old: any) =>
-        old.map((currEntry) =>
-          currEntry.personUUID === personUUID
-            ? {
-                ...currEntry,
-                roleId: roleId,
-                roleName: RoleOrder.find(
-                  (role) => role.value === Number(roleId)
-                ).label,
-              }
-            : currEntry
-        )
-      );
-    },
-  });
+  async function savePopUpInput() {
+    const data = {
+      schoolUUID,
+      personUUID,
+      roleId,
+    };
+    let accessToken = await getAccessToken();
+    if (!accessToken) {
+      router.push("/auth/login");
+    }
+    const returnValue = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/role`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    console.log(returnValue);
+    if (returnValue.status !== 200) {
+      setError("Error trying to save");
+    } else {
+      setError("");
+      const newEntries = persons.map((person) => {
+        if (person.personUUID == personUUID) {
+          person.roleId = roleId;
+          person.roleName = RoleOrder.find(
+            (role) => role.value == Number(roleId)
+          ).label;
+          return person;
+        } else {
+          return person;
+        }
+      });
+      setPersons(newEntries);
+    }
+    setEditPopUpIsVisible(false);
+  }
 
   return (
     <>
@@ -137,7 +195,7 @@ export const PersonsSettingsField: React.FC<Props> = ({
             inputValid={true}
             saveLabel="Confirm"
             saveFunction={() => {
-              deletePersonMutation.mutate({ schoolUUID, personUUID });
+              deleteSettingsEntry(personUUID);
               setDeletePopUpIsVisible(false);
             }}
             closeFunction={() => {
@@ -156,34 +214,29 @@ export const PersonsSettingsField: React.FC<Props> = ({
             headline={"Edit person role"}
             inputValid={true}
             saveLabel={"Save"}
-            saveFunction={() => {
-              editPersonMutation.mutate({
-                schoolUUID,
-                personUUID,
-                roleId,
-              });
-              setEditPopUpIsVisible(false);
-            }}
+            saveFunction={savePopUpInput}
             closeFunction={() => {
               setEditPopUpIsVisible(false);
               setPersonName("");
             }}
           >
             <StyledInputField>
-              <Select
+              <InputField
+                inputType="select"
                 selectValue={roleId}
                 selectOptions={RoleOrder}
                 onChange={(event) => {
                   setRoleId(event);
                 }}
-              ></Select>
+                iconName=""
+              ></InputField>
             </StyledInputField>
           </SettingsPopUp>
         )}
         <SettingsHeader headline="Persons"></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {personsStatus == "success" && persons.length > 0 ? (
+          {persons.length > 0 ? (
             persons.map((entry, index) => (
               <SettingsEntryLayout
                 key={entry.personUUID}

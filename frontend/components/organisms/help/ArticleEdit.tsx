@@ -1,12 +1,11 @@
 import { styled } from "@stitches/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { getAccessToken } from "../../../utils/authHelper";
+import { getAccessToken } from "../../../misc/authHelper";
 import { Button } from "../../atoms/Button";
 import { Separator } from "../../atoms/Separator";
-import { InputField } from "../../atoms/input/InputField";
+import { InputField } from "../../atoms/InputField";
 import { MarkdownEditor } from "../cockpit/MarkdownEditor";
-import { TextField } from "../../atoms/input/TextField";
 
 type Props = {};
 
@@ -27,7 +26,7 @@ const ButtonLayout = styled("div", {
   gap: "20px",
 });
 
-export const ArticleEdit: React.FC<Props> = ({ }) => {
+export const ArticleEdit: React.FC<Props> = ({}) => {
   const [title, setTitle] = useState("");
   const [catchPhrase, setCatchPhrase] = useState("");
   const [content, setContent] = useState("");
@@ -95,32 +94,33 @@ export const ArticleEdit: React.FC<Props> = ({ }) => {
       <InputField
         inputType={"text"}
         onChange={setTitle}
+        iconName={""}
         label={"Title"}
         value={title}
       ></InputField>
-      <TextField
+      <InputField
+        inputType={"textfield"}
         onChange={setCatchPhrase}
+        iconName={""}
         label={"Beschreibung"}
         value={catchPhrase}
-      ></TextField>
+      ></InputField>
       <MarkdownEditor saveContent={setContent} value={content}></MarkdownEditor>
       <ButtonLayout>
         <Button
           backgroundColor={"primary"}
           color={"primary"}
+          label={"Save"}
           onClick={saveContent}
-        >
-          Save
-        </Button>
+        ></Button>
         <Button
           backgroundColor={"secondary"}
           color={"primary"}
+          label={"Cancel"}
           onClick={() => {
             router.push("/cockpit/articles");
           }}
-        >
-          Cancel
-        </Button>
+        ></Button>
       </ButtonLayout>
     </ArticleAddFieldLayout>
   );

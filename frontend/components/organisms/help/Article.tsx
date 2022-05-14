@@ -1,23 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { styled } from "../../../stitches.config";
+import { getAccessToken } from "../../../misc/authHelper";
+import { useRouter } from "next/router";
+import Skeleton from "react-loading-skeleton";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { ArticleDetails } from "../../article/ArticleDetails";
 import { Spacer } from "../../atoms/Spacer";
+import { ContentLayout } from "../../../pages/school/[schoolUUID]/course/[courseUUID]/elements";
 
-export type SideDashboardProps = {
-  content: {
-    headline: string;
-    content: string;
-    creator: {
-      firstName: string;
-      lastName: string;
+export type SideDashboardProps = {};
+
+export const Article: React.FC<SideDashboardProps> = ({}) => {
+  const router = useRouter();
+  const articleUUID = router.query.articleUUID;
+
+  useEffect(() => {
+    getContent();
+
+    async function getContent() {
+      let accessToken = await getAccessToken();
+      if (accessToken && articleUUID) {
+        const getRequest = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/article/${articleUUID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const getResponse = await getRequest.json();
+        setContent(getResponse);
+      }
     };
-    creationDate: string;
-    readingTime: number;
-  };
-};
+  }, [articleUUID]);
 
-export const Article: React.FC<SideDashboardProps> = ({ content }) => {
+  const [content, setContent] = useState({
+    headline: "",
+    content: "",
+    creator: {
+      firstName: "",
+      lastName: "",
+    },
+    creationDate: "",
+    readingTime: 0,
+  });
+
   return (
     <>
       <Headline label={content.headline}></Headline>

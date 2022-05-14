@@ -1,11 +1,10 @@
 import { styled } from "@stitches/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { getAccessToken } from "../../../utils/authHelper";
+import { getAccessToken } from "../../../misc/authHelper";
 import { Button } from "../../atoms/Button";
 import { Headline } from "../../atoms/Headline";
-import { InputField } from "../../atoms/input/InputField";
-import { TextField } from "../../atoms/input/TextField";
+import { InputField } from "../../atoms/InputField";
 import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { SideDashboardBar } from "../SideDashboardBar";
@@ -73,26 +72,31 @@ export const ArticleAddField: React.FC<Props> = ({}) => {
       <InputField
         inputType={"text"}
         onChange={setTitle}
+        iconName={""}
         label={"Title"}
       ></InputField>
-      <TextField
+      <InputField
+        inputType={"textfield"}
         onChange={setCatchPhrase}
+        iconName={""}
         label={"Beschreibung"}
-      ></TextField>
+      ></InputField>
       <MarkdownEditor saveContent={setContent} value=""></MarkdownEditor>
       <ButtonLayout>
         <Button
           backgroundColor={"primary"}
           color={"primary"}
+          label={"Save"}
           onClick={saveContent}
-        >Save</Button>
+        ></Button>
         <Button
           backgroundColor={"secondary"}
           color={"primary"}
+          label={"Cancel"}
           onClick={() => {
             router.push("/cockpit/articles");
           }}
-        >Cancel</Button>
+        ></Button>
       </ButtonLayout>
     </ArticleAddFieldLayout>
   );
