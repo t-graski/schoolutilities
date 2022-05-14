@@ -4,10 +4,8 @@ import { globalCss, lightTheme } from "../stitches.config";
 import { hotjar } from "react-hotjar";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import AOS from "aos";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../utils/skeleton.css";
-import "../utils/sunEditor.css";
 import { IdProvider } from "@radix-ui/react-id";
 
 const globalStyles = globalCss({
@@ -18,7 +16,7 @@ const globalStyles = globalCss({
   },
   body: {
     fontFamily: "Poppins, sans-serif",
-    fontWeight: "400",
+    fontWeight: "$regular",
     overflowX: "hidden",
     backgroundColor: "$backgroundPrimary",
     minHeight: "100vh",
@@ -28,30 +26,31 @@ const globalStyles = globalCss({
     position: "absolute",
     top: 0,
     left: 0,
+    zIndex: 1,
+
     width: "100%",
     height: "100%",
-    backgroundColor: "transparent !important",
     border: "1px dashed $fontPrimary !important",
     borderRadius: "15px !important",
-    zIndex: 1,
+
+    backgroundColor: "transparent !important",
   },
 });
 
-import "aos/dist/aos.css";
 import { SkeletonTheme } from "react-loading-skeleton";
 import Script from "next/script";
 import { ThemeProvider } from "next-themes";
 import ProtectedRoute from "../components/atoms/ProtectedRoute";
 
 function App({ Component, pageProps }: AppProps) {
+  globalStyles();
+
   useEffect(() => {
     hotjar.initialize(2700632, 6);
-    AOS.init({});
   }, []);
+  
   const router = useRouter();
   const queryClient = new QueryClient();
-
-  globalStyles();
 
   return (
     <IdProvider>
@@ -70,6 +69,7 @@ function App({ Component, pageProps }: AppProps) {
             <Script
               async
               src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+              defer
             ></Script>
             <Script
               dangerouslySetInnerHTML={{
@@ -82,14 +82,17 @@ function App({ Component, pageProps }: AppProps) {
                 });`,
               }}
               id="google-analytics-tag"
+              defer
             ></Script>
             <Script
               src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
               strategy="lazyOnload"
+              defer
             ></Script>
             <Script
               async
               src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+              defer
             ></Script>
             <QueryClientProvider client={queryClient}>
               <Component {...pageProps} router={router} />

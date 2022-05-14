@@ -63,7 +63,7 @@ const NavbarLogoText = styled("span", {
   variants: {
     isOnMain: {
       true: {
-        fontWeight: "700",
+        fontWeight: "$bold",
       },
     },
   },
@@ -121,7 +121,7 @@ const AccountButton = styled("button", {
 
 const AccountButtonText = styled("p", {
   color: "$fontPrimary",
-  fontWeight: "700",
+  fontWeight: "$bold",
   fontSize: "0.9rem",
 });
 

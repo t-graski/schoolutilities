@@ -61,7 +61,7 @@ const itemStyles = {
 
   userSelect: "none",
   cursor: "pointer",
-  fontWeight: "500",
+  fontWeight: "$medium",
   fontSize: "1.05rem",
   all: "unset",
   lineHeight: 1,
@@ -205,7 +205,7 @@ function Content({ children, ...props }) {
 const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
 
-  fontWeight: 500,
+  fontWeight: "$medium",
   color: "$fontPrimary",
   fontSize: 17,
 });
@@ -303,7 +303,7 @@ const AddButton = styled("button", {
   width: "fit-content",
 
   fontSize: "1rem",
-  fontWeight: 500,
+  fontWeight: "$medium",
   cursor: "pointer",
   transition: "all 0.2s",
   backgroundColor: "$specialSecondary",

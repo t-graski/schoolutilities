@@ -91,7 +91,7 @@ function Content({ children, ...props }) {
 
 const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
-  fontWeight: 500,
+  fontWeight: "$medium",
   color: "$fontPrimary",
   fontSize: 17,
   marginBottom: 10,
@@ -187,7 +187,7 @@ const AddButton = styled("button", {
   borderRadius: 15,
   padding: "10px 20px",
   fontSize: "1rem",
-  fontWeight: 500,
+  fontWeight: "$medium",
   cursor: "pointer",
   width: "fit-content",
   transition: "all 0.2s",

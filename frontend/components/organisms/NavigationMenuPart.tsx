@@ -68,7 +68,7 @@ const itemStyles = {
   padding: "8px 12px",
   outline: "none",
   userSelect: "none",
-  fontWeight: 500,
+  fontWeight: "$medium",
   lineHeight: 1,
   borderRadius: 4,
   fontSize: 15,
@@ -235,7 +235,7 @@ const ContentList = styled("ul", {
 const ListItem = styled("li", {});
 
 const LinkTitle = styled("div", {
-  fontWeight: 700,
+  fontWeight: "$bold",
   lineHeight: 1.2,
   marginBottom: 5,
   color: "$fontPrimary",

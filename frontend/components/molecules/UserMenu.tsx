@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import { DotFilledIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { useRouter } from "next/router";
 import {
   getSelectedSchool,
   getUserData,
@@ -63,7 +62,7 @@ const itemStyles = {
   display: "flex",
   alignItems: "center",
   height: 25,
-  fontWeight: "500",
+  fontWeight: "$medium",
   fontSize: "1.05rem",
   padding: "3px 8px",
   position: "relative",
@@ -154,6 +153,7 @@ const RightSlot = styled("div", {
 });
 
 const IconLayout = styled("div", {
+  display: "flex",
   width: "30px",
   height: "30px",
   padding: "5px",
@@ -204,7 +204,6 @@ const StyledLink = styled("a", {
 });
 
 export const UserMenu = () => {
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -352,12 +351,10 @@ export const UserMenu = () => {
                       <StyledLink>Join a school</StyledLink>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      router.push("/school/create");
-                    }}
-                  >
-                    Create new school
+                  <DropdownMenuItem>
+                    <Link href={"/school/create"} passHref>
+                      <StyledLink>Create new school</StyledLink>
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -425,28 +422,25 @@ export const UserMenu = () => {
               <DropdownMenuItem
                 onClick={() => {
                   logout();
-                  router.push("/");
                 }}
               >
-                Logout
+                <Link href={"/"} passHref>
+                  <StyledLink>Logout</StyledLink>
+                </Link>
               </DropdownMenuItem>
             </>
           )}
           {userInfoStatus != "success" && (
             <>
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/auth?tab=register");
-                }}
-              >
-                Register
+              <DropdownMenuItem>
+                <Link href={"/auth?tab=register"} passHref>
+                  <StyledLink>Register</StyledLink>
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  router.push("/auth?tab=login");
-                }}
-              >
-                Login
+              <DropdownMenuItem>
+                <Link href={"/"} passHref>
+                  <StyledLink>Login</StyledLink>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenu>

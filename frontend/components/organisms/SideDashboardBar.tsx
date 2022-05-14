@@ -76,7 +76,7 @@ const IconLayout = styled("div", {
 
 const SideDashboardBarItemName = styled("p", {
   fontSize: "1rem",
-  fontWeight: "700",
+  fontWeight: "$bold",
   color: "$fontPrimary",
 });
 
@@ -98,7 +98,7 @@ export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {
                 <SideDashboardBarItemName>{item.name}</SideDashboardBarItemName>
               </SideDashboardBarItemLink>
             </Link>
-          )
+          );
         })}
       </SideDashboardBarLayout>
     </>

@@ -5,10 +5,7 @@ import { Button } from "../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
-import {
-  getAccessToken,
-  setSelectedSchool,
-} from "../../utils/authHelper";
+import { getAccessToken, setSelectedSchool } from "../../utils/authHelper";
 import { LoadingAnimation } from "../molecules/LoadingAnimation";
 import { Separator } from "../atoms/Separator";
 import SvgUser from "../atoms/svg/SvgUser";
@@ -44,7 +41,7 @@ const ProfileImageLayout = styled("div", {
 const ProfileName = styled("div", {
   marginBottom: "10px",
   width: "100%",
-  fontWeight: 700,
+  fontWeight: "$bold",
   fontSize: "1.5rem",
   textAlign: "center",
   color: "$fontPrimary",
@@ -142,7 +139,7 @@ const ProfileDataColumn = styled("div", {
 });
 
 const InputLabel = styled("p", {
-  fontWeight: "500",
+  fontWeight: "$medium",
   fontSize: "1.8rem",
   color: "$fontPrimary",
   margin: "0",
@@ -152,7 +149,7 @@ const InputLabel = styled("p", {
 });
 
 const StatusInfo = styled("p", {
-  fontWeight: "500",
+  fontWeight: "$medium",
   fontSize: "1.8rem",
   color: "$fontPrimary",
   margin: "0",

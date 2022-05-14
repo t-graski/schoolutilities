@@ -22,19 +22,19 @@ const BrandStartPageFieldLayout = styled("div", {
 
 const Description = styled("p", {
   fontSize: "1.5rem",
-  fontWeight: "500",
+  fontWeight: "$medium",
   margin: "0",
   marginBottom: "20px",
 });
 
 const IconLayout = styled("div", {
-    width: "180px",
-    height: "180px",
-    padding: "50px",
-    paddingTop: "30px",
-    borderRadius: "50%",
-    backgroundColor: "$backgroundTertiary",
-    margin: "0 auto",
+  width: "180px",
+  height: "180px",
+  padding: "50px",
+  paddingTop: "30px",
+  borderRadius: "50%",
+  backgroundColor: "$backgroundTertiary",
+  margin: "0 auto",
 });
 
 export const BrandStartPageField: React.FC<Props> = ({

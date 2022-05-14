@@ -54,7 +54,7 @@ const SettingsEntryName = styled("p", {
 const StyledError = styled("p", {
   color: "$specialTertiary",
   fontSize: "1.5rem",
-  fontWeight: "700",
+  fontWeight: "$bold",
   marginTop: "15px",
   marginBottom: "15px",
   border: "solid 2px $specialTertiary",

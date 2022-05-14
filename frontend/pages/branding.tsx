@@ -134,7 +134,7 @@ export default function Home() {
             <StyledH2>FONTS</StyledH2>
             <StyledH3>Poppins</StyledH3>
             <FontTags
-              fontStyles={["Lighter", "Light", "Regular", "Bold", "Bolder"]}
+              fontStyles={["Regular", "Medium", "Bold", "Bolder"]}
             ></FontTags>
             <Spacer size="small"></Spacer>
           </InnerContentLayout>

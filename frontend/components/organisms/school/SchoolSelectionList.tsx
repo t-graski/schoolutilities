@@ -32,28 +32,32 @@ const SchoolLayout = styled("div", {
   margin: "20px auto",
   padding: "20px 40px",
   borderRadius: "15px",
+  
   backgroundColor: "$backgroundTertiary",
   transition: "all 200ms ease-in-out",
+  cursor: "pointer",
+  placeSelf: "center",
+
   "&:hover": {
     backgroundColor: "$backgroundSecondary",
   },
-  cursor: "pointer",
-  placeSelf: "center",
 });
 
 const SchoolName = styled("p", {
+  width: "100%",
+  margin: 0,
+
+  textAlign: "left",
+  color: "$fontPrimary",
   fontSize: "30px",
   fontWeight: "bold",
-  width: "100%",
-  textAlign: "left",
-  margin: 0,
-  color: "$fontPrimary",
 });
 
 const SchoolDescription = styled("p", {
+  margin: 0,
+
   fontSize: "14px",
   textAlign: "left",
-  margin: 0,
   color: "$fontPrimary",
 });
 

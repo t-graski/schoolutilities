@@ -68,7 +68,7 @@ const StyledError = styled("p", {
 
   color: "$specialTertiary",
   fontSize: "1.5rem",
-  fontWeight: "700",
+  fontWeight: "$bold",
 });
 
 const LoadingLayout = styled("div", {

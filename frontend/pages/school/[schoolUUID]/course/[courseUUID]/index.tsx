@@ -53,6 +53,10 @@ export default function Features() {
     }
   );
 
+  function getRandomNumber(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   if (contentStatus === "loading" || coursesStatus === "loading") {
     return (
       <>
@@ -68,15 +72,13 @@ export default function Features() {
           <Spacer size="verySmall"></Spacer>
           <Separator width="small" alignment="left" />
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width="100%" height={80}></Skeleton>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width="80%" height={40}></Skeleton>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width="100%" height={50}></Skeleton>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width="100%" height={30}></Skeleton>
-          <Spacer size="verySmall"></Spacer>
-          <Skeleton width="100%" height={80}></Skeleton>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
           <Spacer size="verySmall"></Spacer>
           <Button
             backgroundColor={"primary"}

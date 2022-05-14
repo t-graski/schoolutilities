@@ -10,13 +10,7 @@ import CourseEditContent from "../../../../../components/molecules/course/Course
 import { Button } from "../../../../../components/atoms/Button";
 import AddCourseElement from "../../../../../components/atoms/course/AddCourseElement";
 import { getAccessToken } from "../../../../../utils/authHelper";
-
-export const ContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-  padding: "50px 10vw",
-});
+import { ContentLayout } from "../../../../../utils/styles";
 
 const HeadlineLayout = styled("div", {
   display: "flex",

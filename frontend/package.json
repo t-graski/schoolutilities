@@ -33,7 +33,6 @@
     "@stitches/react": "^1.2.8",
     "@svgr/cli": "^6.0.0",
     "@types/react": "^17.0.26",
-    "aos": "^2.3.4",
     "axios": "^0.21.4",
     "fetch-blob": "^3.1.2",
     "jodit-react": "^1.2.18",

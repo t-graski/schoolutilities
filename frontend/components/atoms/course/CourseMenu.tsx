@@ -4,9 +4,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { useRouter } from "next/router";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import {
-  elementsToChoose,
-} from "./CourseComponentDetailViews";
+import { elementsToChoose } from "./CourseComponentDetailViews";
 import SvgEdit from "../svg/SvgEdit";
 import SvgCheckMark from "../svg/SvgCheckMark";
 
@@ -65,7 +63,7 @@ const itemStyles = {
   userSelect: "none",
   cursor: "pointer",
   all: "unset",
-  fontWeight: "500",
+  fontWeight: "$medium",
   lineHeight: 1,
   color: "$fontPrimary",
   fontSize: "1.05rem",
@@ -218,7 +216,7 @@ function Content({ children, ...props }) {
 const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
 
-  fontWeight: 500,
+  fontWeight: "$medium",
   color: "$fontPrimary",
   fontSize: 17,
 });
@@ -315,7 +313,7 @@ const AddButton = styled("button", {
   borderRadius: 15,
   padding: "10px 20px",
   fontSize: "1rem",
-  fontWeight: 500,
+  fontWeight: "$medium",
   width: "fit-content",
 
   cursor: "pointer",
@@ -383,7 +381,8 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
               <DropdownMenuItem
                 onClick={() => {
                   router.push(
-                    `/school/${router.query.schoolUUID as string
+                    `/school/${
+                      router.query.schoolUUID as string
                     }/course/${courseId}/elements`
                   );
                 }}
@@ -398,7 +397,8 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
             <DropdownMenuItem
               onClick={() => {
                 router.push(
-                  `/school/${router.query.schoolUUID as string
+                  `/school/${
+                    router.query.schoolUUID as string
                   }/course/${courseId}/edit`
                 );
               }}

@@ -56,7 +56,7 @@ const FeatureDescriptionLayout = styled("div", {
 
 const StyledHeadline = styled("h2", {
   fontSize: "3rem",
-  fontWeight: "700",
+  fontWeight: "$bold",
 });
 
 const StyledDescription = styled("p", {

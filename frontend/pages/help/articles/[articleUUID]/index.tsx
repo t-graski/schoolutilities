@@ -5,7 +5,7 @@ import { Spacer } from "../../../../components/atoms/Spacer";
 import Footer from "../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../utils/authHelper";
 import { Article } from "../../../../components/organisms/help/Article";
-import { ContentLayout } from "../../../school/[schoolUUID]/course/[courseUUID]/elements";
+import { ContentLayout } from "../../../../utils/styles";
 
 export default function ArticleOverview({ content }) {
   return (

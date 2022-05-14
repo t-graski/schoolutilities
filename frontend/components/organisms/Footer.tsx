@@ -2,19 +2,24 @@ import Link from "next/link";
 import React from "react";
 import { styled } from "../../stitches.config";
 import Image from "next/image";
+import SvgLogoPencilCombinedCompact from "../atoms/svg/SvgLogoPencilCombinedCompact";
+import SvgPatreon from "../atoms/svg/SvgPatreon";
+import SvgInstagram from "../atoms/svg/SvgInstagram";
 
 type Props = {};
 
 const FooterLayout = styled("footer", {
+  position: "absolute",
+  top: "100%",
+  left: "0",
+
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   width: "100vw",
-  position: "absolute",
-  top: "100%",
-  left: "0",
   gap: "40px",
   padding: "4vh 5vw",
+
   backgroundColor: "$backgroundQuaternary",
   color: "$fontPrimary",
 });
@@ -36,7 +41,9 @@ const FooterContentLayout = styled("div", {
 const LogoLayout = styled("div", {
   display: "flex",
   width: "150px",
-  height: "fit-content",
+  height: "98px",
+
+  color: "$fontPrimary",
 });
 
 const LinkLayout = styled("div", {
@@ -50,21 +57,24 @@ const LinkLayout = styled("div", {
 });
 
 const LinkHeadline = styled("div", {
+  marginBottom: "0.5vh",
+
   fontSize: "1.3rem",
   fontWeight: "bold",
   textTransform: "uppercase",
-  marginBottom: "0.5vh",
 });
 
 const StyledLink = styled("a", {
   display: "flex",
   alignItems: "center",
   gap: "15px",
+
   fontSize: "1.1rem",
   textDecoration: "none",
   color: "$fontPrimary",
   cursor: "pointer",
   transition: "color 0.2s ease-in-out",
+
   "&:hover": {
     color: "$specialPrimary",
   },
@@ -73,15 +83,17 @@ const StyledLink = styled("a", {
 const FooterSpacer = styled("div", {
   display: "flex",
   height: "2px",
-  backgroundColor: "$fontPrimary",
   width: "100%",
   maxWidth: "1200px",
+
+  backgroundColor: "$fontPrimary",
 });
 
 const StyledRightText = styled("div", {
+  marginBottom: "0.5vh",
+
   fontSize: "1.1rem",
   textAlign: "left",
-  marginBottom: "0.5vh",
 });
 
 const ImprintLayout = styled("div", {
@@ -90,7 +102,14 @@ const ImprintLayout = styled("div", {
   gap: "30px",
 });
 
-const Footer: React.FC<Props> = ({ }) => {
+const IconLayout = styled("div", {
+  display: "flex",
+  width: "30px",
+  height: "30px",
+  padding: "5px",
+});
+
+const Footer: React.FC<Props> = ({}) => {
   return (
     <>
       <FooterLayout>
@@ -98,12 +117,7 @@ const Footer: React.FC<Props> = ({ }) => {
           <Link href="/" passHref>
             <a>
               <LogoLayout>
-                <Image
-                  src="/images/Schoolutilities_Logo_Closed.png"
-                  alt="SchoolUtilities Logo"
-                  width="150"
-                  height="98"
-                />
+                <SvgLogoPencilCombinedCompact></SvgLogoPencilCombinedCompact>
               </LogoLayout>
             </a>
           </Link>
@@ -141,24 +155,18 @@ const Footer: React.FC<Props> = ({ }) => {
               href="https://www.instagram.com/schoolutilities/"
               target="_blank"
             >
-              <Image
-                src="/images/icons/instagram.png"
-                alt="Instagram"
-                width="30"
-                height="30"
-              />
+              <IconLayout>
+                <SvgInstagram></SvgInstagram>
+              </IconLayout>
               Instagram
             </StyledLink>
             <StyledLink
               href="https://www.patreon.com/schoolutilities"
               target="_blank"
             >
-              <Image
-                src="/images/Patreon.png"
-                alt="Patreon"
-                width="30"
-                height="30"
-              />
+              <IconLayout>
+                <SvgPatreon></SvgPatreon>
+              </IconLayout>
               Patreon
             </StyledLink>
           </LinkLayout>

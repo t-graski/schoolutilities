@@ -21,7 +21,7 @@ const LogoPresentationLayout = styled("div", {
 
 const Description = styled("p", {
   fontSize: "1.5rem",
-  fontWeight: "500",
+  fontWeight: "$medium",
   margin: "0",
   marginBottom: "20px",
 });

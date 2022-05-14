@@ -4,17 +4,17 @@ import { SettingsHeader } from "../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../molecules/schoolAdmin/SettingsEntry";
 
 type Props = {
-    headline: string;
-    headlineDescription: string;
-    addEntry: Function;
-    entries: Array<any>;
-    entryProperties: { 
-        name: string;
-        description?: string;
-        id?: string;
-    }
-    editEntry: Function;
-    deleteEntry: Function;
+  headline: string;
+  headlineDescription: string;
+  addEntry: Function;
+  entries: Array<any>;
+  entryProperties: {
+    name: string;
+    description?: string;
+    id?: string;
+  };
+  editEntry: Function;
+  deleteEntry: Function;
 };
 
 const SchoolDetailLayout = styled("form", {
@@ -48,7 +48,7 @@ const SettingsEntryName = styled("p", {
 const StyledError = styled("p", {
   color: "$specialTertiary",
   fontSize: "1.5rem",
-  fontWeight: "700",
+  fontWeight: "$bold",
   marginTop: "15px",
   marginBottom: "15px",
   border: "solid 2px $specialTertiary",
@@ -63,13 +63,13 @@ const DepartmentName = styled("p", {
 });
 
 export const EditableList: React.FC<Props> = ({
-    headline,
-    headlineDescription,
-    addEntry,
-    entries,
-    entryProperties,
-    editEntry,
-    deleteEntry,
+  headline,
+  headlineDescription,
+  addEntry,
+  entries,
+  entryProperties,
+  editEntry,
+  deleteEntry,
 }) => {
   const [error, setError] = React.useState("");
 
@@ -88,14 +88,18 @@ export const EditableList: React.FC<Props> = ({
             <SettingsEntryLayout key={entry[entryProperties.id ?? index]}>
               <SettingsEntry
                 editFunction={() => {
-                    editEntry(entry[entryProperties.id] ?? index);
+                  editEntry(entry[entryProperties.id] ?? index);
                 }}
                 deleteFunction={() => {
-                    deleteEntry(entry[entryProperties.id] ?? index);
+                  deleteEntry(entry[entryProperties.id] ?? index);
                 }}
               >
-                <SettingsEntryName>{entry[entryProperties.name]}</SettingsEntryName>
-                <DepartmentName>{entry[entryProperties.description]}</DepartmentName>
+                <SettingsEntryName>
+                  {entry[entryProperties.name]}
+                </SettingsEntryName>
+                <DepartmentName>
+                  {entry[entryProperties.description]}
+                </DepartmentName>
               </SettingsEntry>
             </SettingsEntryLayout>
           ))}
