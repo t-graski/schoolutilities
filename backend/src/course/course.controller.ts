@@ -22,7 +22,12 @@ import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
 import { GetEventsDto } from 'src/dto/events';
-import { AddCourseDto, RemoveCourseDto, UpdateCourseDto } from 'src/dto/course';
+import {
+  AddCourseDto,
+  GetAllCoursesDto,
+  RemoveCourseDto,
+  UpdateCourseDto,
+} from 'src/dto/course';
 import { Throttler } from 'src/throttler';
 
 @Controller('api/course')
@@ -31,7 +36,7 @@ export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -56,13 +61,18 @@ export class CourseController {
     @Res() response,
   ) {
     const result = await this.courseService.removeCourse(removeCourse, request);
+
     return response.status(result.status).json(result?.message);
   }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Put('/')
-  async updateCourse(@Body() updateCourse: UpdateCourseDto, @Req() request, @Res() response) {
+  async updateCourse(
+    @Body() updateCourse: UpdateCourseDto,
+    @Req() request,
+    @Res() response,
+  ) {
     const result = await this.courseService.updateCourse(updateCourse);
     return response
       .status(result.status)
@@ -86,13 +96,14 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Get('/getCourses/:schoolUUID')
   @Roles(Role.Student)
-  async getCourses(@Param() params, @Query() query, @Req() request, @Res() response) {
+  async getCourses(
+    @Param() params: GetAllCoursesDto,
+    @Query() query,
+    @Req() request,
+    @Res() response,
+  ) {
     const token = request.headers.authorization.split(' ')[1];
-    const result = await this.courseService.getAllCourses(
-      params.schoolUUID,
-      query,
-      token,
-    );
+    const result = await this.courseService.getAllCourses(params, query, token);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

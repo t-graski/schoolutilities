@@ -1,0 +1,790 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">backend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >TimezoneService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/timezone/timezone.service.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getTimezoneByName" >getTimezoneByName</a>
+                            </li>
+                            <li>
+                                <a href="#getTimezones" >getTimezones</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#importTimezones" >importTimezones</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTimezoneByName"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getTimezoneByName</b></span>
+                        <a href="#getTimezoneByName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getTimezoneByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="27"
+                            class="link-to-prism">src/timezone/timezone.service.ts:27</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTimezones"></a>
+                    <span class="name">
+                        <span ><b>getTimezones</b></span>
+                        <a href="#getTimezones"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getTimezones()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="40"
+                            class="link-to-prism">src/timezone/timezone.service.ts:40</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="importTimezones"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>importTimezones</b></span>
+                        <a href="#importTimezones"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>importTimezones()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="9"
+                            class="link-to-prism">src/timezone/timezone.service.ts:9</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
+import { PrismaClient } from &#x27;@prisma/client&#x27;;
+import { ID_STARTERS, RETURN_DATA } from &#x27;src/misc/parameterConstants&#x27;;
+import { ReturnMessage } from &#x27;src/types/Database&#x27;;
+import { v4 as uuidv4 } from &#x27;uuid&#x27;;
+const prisma &#x3D; new PrismaClient();
+@Injectable()
+export class TimezoneService {
+  async importTimezones(): Promise&lt;ReturnMessage&gt; {
+    const timezones &#x3D; this.getTimezones();
+
+    try {
+      for (let i &#x3D; 0; i &lt; timezones.length; i++) {
+        await prisma.timezones.create({
+          data: {
+            timezoneUUID: &#x60;${ID_STARTERS.TIMEZONES}${uuidv4()}&#x60;,
+            timezoneName: timezones[i],
+          },
+        });
+      }
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async getTimezoneByName(name: string): Promise&lt;ReturnMessage&gt; {
+    try {
+      await prisma.timezones.findFirst({
+        where: {
+          timezoneName: name,
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  getTimezones() {
+    const timezones &#x3D; [
+      &#x27;Africa/Accra&#x27;,
+      &#x27;Africa/Addis_Ababa&#x27;,
+      &#x27;Africa/Algiers&#x27;,
+      &#x27;Africa/Asmera&#x27;,
+      &#x27;Africa/Bamako&#x27;,
+      &#x27;Africa/Bangui&#x27;,
+      &#x27;Africa/Banjul&#x27;,
+      &#x27;Africa/Bissau&#x27;,
+      &#x27;Africa/Blantyre&#x27;,
+      &#x27;Africa/Brazzaville&#x27;,
+      &#x27;Africa/Bujumbura&#x27;,
+      &#x27;Africa/Cairo&#x27;,
+      &#x27;Africa/Casablanca&#x27;,
+      &#x27;Africa/Ceuta&#x27;,
+      &#x27;Africa/Conakry&#x27;,
+      &#x27;Africa/Dakar&#x27;,
+      &#x27;Africa/Dar_es_Salaam&#x27;,
+      &#x27;Africa/Djibouti&#x27;,
+      &#x27;Africa/Douala&#x27;,
+      &#x27;Africa/El_Aaiun&#x27;,
+      &#x27;Africa/Freetown&#x27;,
+      &#x27;Africa/Gaborone&#x27;,
+      &#x27;Africa/Harare&#x27;,
+      &#x27;Africa/Johannesburg&#x27;,
+      &#x27;Africa/Juba&#x27;,
+      &#x27;Africa/Kampala&#x27;,
+      &#x27;Africa/Khartoum&#x27;,
+      &#x27;Africa/Kigali&#x27;,
+      &#x27;Africa/Kinshasa&#x27;,
+      &#x27;Africa/Lagos&#x27;,
+      &#x27;Africa/Libreville&#x27;,
+      &#x27;Africa/Lome&#x27;,
+      &#x27;Africa/Luanda&#x27;,
+      &#x27;Africa/Lubumbashi&#x27;,
+      &#x27;Africa/Lusaka&#x27;,
+      &#x27;Africa/Malabo&#x27;,
+      &#x27;Africa/Maputo&#x27;,
+      &#x27;Africa/Maseru&#x27;,
+      &#x27;Africa/Mbabane&#x27;,
+      &#x27;Africa/Mogadishu&#x27;,
+      &#x27;Africa/Monrovia&#x27;,
+      &#x27;Africa/Nairobi&#x27;,
+      &#x27;Africa/Ndjamena&#x27;,
+      &#x27;Africa/Niamey&#x27;,
+      &#x27;Africa/Nouakchott&#x27;,
+      &#x27;Africa/Ouagadougou&#x27;,
+      &#x27;Africa/Porto-Novo&#x27;,
+      &#x27;Africa/Sao_Tome&#x27;,
+      &#x27;Africa/Tripoli&#x27;,
+      &#x27;Africa/Tunis&#x27;,
+      &#x27;Africa/Windhoek&#x27;,
+      &#x27;America/Anchorage&#x27;,
+      &#x27;America/Anguilla&#x27;,
+      &#x27;America/Antigua&#x27;,
+      &#x27;America/Araguaina&#x27;,
+      &#x27;America/Argentina/La_Rioja&#x27;,
+      &#x27;America/Argentina/Rio_Gallegos&#x27;,
+      &#x27;America/Argentina/Salta&#x27;,
+      &#x27;America/Argentina/San_Juan&#x27;,
+      &#x27;America/Argentina/San_Luis&#x27;,
+      &#x27;America/Argentina/Tucuman&#x27;,
+      &#x27;America/Argentina/Ushuaia&#x27;,
+      &#x27;America/Aruba&#x27;,
+      &#x27;America/Asuncion&#x27;,
+      &#x27;America/Bahia&#x27;,
+      &#x27;America/Bahia_Banderas&#x27;,
+      &#x27;America/Barbados&#x27;,
+      &#x27;America/Belem&#x27;,
+      &#x27;America/Belize&#x27;,
+      &#x27;America/Blanc-Sablon&#x27;,
+      &#x27;America/Boa_Vista&#x27;,
+      &#x27;America/Bogota&#x27;,
+      &#x27;America/Boise&#x27;,
+      &#x27;America/Buenos_Aires&#x27;,
+      &#x27;America/Cambridge_Bay&#x27;,
+      &#x27;America/Campo_Grande&#x27;,
+      &#x27;America/Cancun&#x27;,
+      &#x27;America/Caracas&#x27;,
+      &#x27;America/Catamarca&#x27;,
+      &#x27;America/Cayenne&#x27;,
+      &#x27;America/Cayman&#x27;,
+      &#x27;America/Chicago&#x27;,
+      &#x27;America/Chihuahua&#x27;,
+      &#x27;America/Coral_Harbour&#x27;,
+      &#x27;America/Cordoba&#x27;,
+      &#x27;America/Costa_Rica&#x27;,
+      &#x27;America/Creston&#x27;,
+      &#x27;America/Cuiaba&#x27;,
+      &#x27;America/Curacao&#x27;,
+      &#x27;America/Danmarkshavn&#x27;,
+      &#x27;America/Dawson&#x27;,
+      &#x27;America/Dawson_Creek&#x27;,
+      &#x27;America/Denver&#x27;,
+      &#x27;America/Detroit&#x27;,
+      &#x27;America/Dominica&#x27;,
+      &#x27;America/Edmonton&#x27;,
+      &#x27;America/Eirunepe&#x27;,
+      &#x27;America/El_Salvador&#x27;,
+      &#x27;America/Fortaleza&#x27;,
+      &#x27;America/Glace_Bay&#x27;,
+      &#x27;America/Godthab&#x27;,
+      &#x27;America/Goose_Bay&#x27;,
+      &#x27;America/Grand_Turk&#x27;,
+      &#x27;America/Grenada&#x27;,
+      &#x27;America/Guadeloupe&#x27;,
+      &#x27;America/Guatemala&#x27;,
+      &#x27;America/Guayaquil&#x27;,
+      &#x27;America/Guyana&#x27;,
+      &#x27;America/Halifax&#x27;,
+      &#x27;America/Havana&#x27;,
+      &#x27;America/Hermosillo&#x27;,
+      &#x27;America/Indiana/Knox&#x27;,
+      &#x27;America/Indiana/Marengo&#x27;,
+      &#x27;America/Indiana/Petersburg&#x27;,
+      &#x27;America/Indiana/Tell_City&#x27;,
+      &#x27;America/Indiana/Vevay&#x27;,
+      &#x27;America/Indiana/Vincennes&#x27;,
+      &#x27;America/Indiana/Winamac&#x27;,
+      &#x27;America/Indianapolis&#x27;,
+      &#x27;America/Inuvik&#x27;,
+      &#x27;America/Iqaluit&#x27;,
+      &#x27;America/Jamaica&#x27;,
+      &#x27;America/Jujuy&#x27;,
+      &#x27;America/Juneau&#x27;,
+      &#x27;America/Kentucky/Monticello&#x27;,
+      &#x27;America/Kralendijk&#x27;,
+      &#x27;America/La_Paz&#x27;,
+      &#x27;America/Lima&#x27;,
+      &#x27;America/Los_Angeles&#x27;,
+      &#x27;America/Louisville&#x27;,
+      &#x27;America/Lower_Princes&#x27;,
+      &#x27;America/Maceio&#x27;,
+      &#x27;America/Managua&#x27;,
+      &#x27;America/Manaus&#x27;,
+      &#x27;America/Marigot&#x27;,
+      &#x27;America/Martinique&#x27;,
+      &#x27;America/Matamoros&#x27;,
+      &#x27;America/Mazatlan&#x27;,
+      &#x27;America/Mendoza&#x27;,
+      &#x27;America/Menominee&#x27;,
+      &#x27;America/Merida&#x27;,
+      &#x27;America/Mexico_City&#x27;,
+      &#x27;America/Moncton&#x27;,
+      &#x27;America/Monterrey&#x27;,
+      &#x27;America/Montevideo&#x27;,
+      &#x27;America/Montreal&#x27;,
+      &#x27;America/Montserrat&#x27;,
+      &#x27;America/Nassau&#x27;,
+      &#x27;America/New_York&#x27;,
+      &#x27;America/Nipigon&#x27;,
+      &#x27;America/Nome&#x27;,
+      &#x27;America/Noronha&#x27;,
+      &#x27;America/North_Dakota/Beulah&#x27;,
+      &#x27;America/North_Dakota/Center&#x27;,
+      &#x27;America/North_Dakota/New_Salem&#x27;,
+      &#x27;America/Ojinaga&#x27;,
+      &#x27;America/Panama&#x27;,
+      &#x27;America/Pangnirtung&#x27;,
+      &#x27;America/Paramaribo&#x27;,
+      &#x27;America/Phoenix&#x27;,
+      &#x27;America/Port-au-Prince&#x27;,
+      &#x27;America/Port_of_Spain&#x27;,
+      &#x27;America/Porto_Velho&#x27;,
+      &#x27;America/Puerto_Rico&#x27;,
+      &#x27;America/Rainy_River&#x27;,
+      &#x27;America/Rankin_Inlet&#x27;,
+      &#x27;America/Recife&#x27;,
+      &#x27;America/Regina&#x27;,
+      &#x27;America/Resolute&#x27;,
+      &#x27;America/Rio_Branco&#x27;,
+      &#x27;America/Santa_Isabel&#x27;,
+      &#x27;America/Santarem&#x27;,
+      &#x27;America/Santiago&#x27;,
+      &#x27;America/Santo_Domingo&#x27;,
+      &#x27;America/Sao_Paulo&#x27;,
+      &#x27;America/Scoresbysund&#x27;,
+      &#x27;America/Sitka&#x27;,
+      &#x27;America/St_Barthelemy&#x27;,
+      &#x27;America/St_Johns&#x27;,
+      &#x27;America/St_Kitts&#x27;,
+      &#x27;America/St_Lucia&#x27;,
+      &#x27;America/St_Thomas&#x27;,
+      &#x27;America/St_Vincent&#x27;,
+      &#x27;America/Swift_Current&#x27;,
+      &#x27;America/Tegucigalpa&#x27;,
+      &#x27;America/Thule&#x27;,
+      &#x27;America/Thunder_Bay&#x27;,
+      &#x27;America/Tijuana&#x27;,
+      &#x27;America/Toronto&#x27;,
+      &#x27;America/Tortola&#x27;,
+      &#x27;America/Vancouver&#x27;,
+      &#x27;America/Whitehorse&#x27;,
+      &#x27;America/Winnipeg&#x27;,
+      &#x27;America/Yakutat&#x27;,
+      &#x27;America/Yellowknife&#x27;,
+      &#x27;Antarctica/Casey&#x27;,
+      &#x27;Antarctica/Davis&#x27;,
+      &#x27;Antarctica/DumontDUrville&#x27;,
+      &#x27;Antarctica/Macquarie&#x27;,
+      &#x27;Antarctica/Mawson&#x27;,
+      &#x27;Antarctica/McMurdo&#x27;,
+      &#x27;Antarctica/Palmer&#x27;,
+      &#x27;Antarctica/Rothera&#x27;,
+      &#x27;Antarctica/Syowa&#x27;,
+      &#x27;Antarctica/Vostok&#x27;,
+      &#x27;Arctic/Longyearbyen&#x27;,
+      &#x27;Asia/Aden&#x27;,
+      &#x27;Asia/Almaty&#x27;,
+      &#x27;Asia/Amman&#x27;,
+      &#x27;Asia/Anadyr&#x27;,
+      &#x27;Asia/Aqtau&#x27;,
+      &#x27;Asia/Aqtobe&#x27;,
+      &#x27;Asia/Ashgabat&#x27;,
+      &#x27;Asia/Baghdad&#x27;,
+      &#x27;Asia/Bahrain&#x27;,
+      &#x27;Asia/Baku&#x27;,
+      &#x27;Asia/Bangkok&#x27;,
+      &#x27;Asia/Beirut&#x27;,
+      &#x27;Asia/Bishkek&#x27;,
+      &#x27;Asia/Brunei&#x27;,
+      &#x27;Asia/Calcutta&#x27;,
+      &#x27;Asia/Chita&#x27;,
+      &#x27;Asia/Choibalsan&#x27;,
+      &#x27;Asia/Colombo&#x27;,
+      &#x27;Asia/Damascus&#x27;,
+      &#x27;Asia/Dhaka&#x27;,
+      &#x27;Asia/Dili&#x27;,
+      &#x27;Asia/Dubai&#x27;,
+      &#x27;Asia/Dushanbe&#x27;,
+      &#x27;Asia/Hong_Kong&#x27;,
+      &#x27;Asia/Hovd&#x27;,
+      &#x27;Asia/Irkutsk&#x27;,
+      &#x27;Asia/Jakarta&#x27;,
+      &#x27;Asia/Jayapura&#x27;,
+      &#x27;Asia/Jerusalem&#x27;,
+      &#x27;Asia/Kabul&#x27;,
+      &#x27;Asia/Kamchatka&#x27;,
+      &#x27;Asia/Karachi&#x27;,
+      &#x27;Asia/Kathmandu&#x27;,
+      &#x27;Asia/Khandyga&#x27;,
+      &#x27;Asia/Kolkata&#x27;,
+      &#x27;Asia/Krasnoyarsk&#x27;,
+      &#x27;Asia/Kuala_Lumpur&#x27;,
+      &#x27;Asia/Kuching&#x27;,
+      &#x27;Asia/Kuwait&#x27;,
+      &#x27;Asia/Macau&#x27;,
+      &#x27;Asia/Magadan&#x27;,
+      &#x27;Asia/Makassar&#x27;,
+      &#x27;Asia/Manila&#x27;,
+      &#x27;Asia/Muscat&#x27;,
+      &#x27;Asia/Nicosia&#x27;,
+      &#x27;Asia/Novokuznetsk&#x27;,
+      &#x27;Asia/Novosibirsk&#x27;,
+      &#x27;Asia/Omsk&#x27;,
+      &#x27;Asia/Oral&#x27;,
+      &#x27;Asia/Phnom_Penh&#x27;,
+      &#x27;Asia/Pontianak&#x27;,
+      &#x27;Asia/Pyongyang&#x27;,
+      &#x27;Asia/Qatar&#x27;,
+      &#x27;Asia/Qyzylorda&#x27;,
+      &#x27;Asia/Rangoon&#x27;,
+      &#x27;Asia/Riyadh&#x27;,
+      &#x27;Asia/Saigon&#x27;,
+      &#x27;Asia/Sakhalin&#x27;,
+      &#x27;Asia/Samarkand&#x27;,
+      &#x27;Asia/Seoul&#x27;,
+      &#x27;Asia/Shanghai&#x27;,
+      &#x27;Asia/Singapore&#x27;,
+      &#x27;Asia/Srednekolymsk&#x27;,
+      &#x27;Asia/Taipei&#x27;,
+      &#x27;Asia/Tashkent&#x27;,
+      &#x27;Asia/Tbilisi&#x27;,
+      &#x27;Asia/Tehran&#x27;,
+      &#x27;Asia/Thimphu&#x27;,
+      &#x27;Asia/Tokyo&#x27;,
+      &#x27;Asia/Ulaanbaatar&#x27;,
+      &#x27;Asia/Urumqi&#x27;,
+      &#x27;Asia/Ust-Nera&#x27;,
+      &#x27;Asia/Vientiane&#x27;,
+      &#x27;Asia/Vladivostok&#x27;,
+      &#x27;Asia/Yakutsk&#x27;,
+      &#x27;Asia/Yekaterinburg&#x27;,
+      &#x27;Asia/Yerevan&#x27;,
+      &#x27;Atlantic/Azores&#x27;,
+      &#x27;Atlantic/Bermuda&#x27;,
+      &#x27;Atlantic/Canary&#x27;,
+      &#x27;Atlantic/Cape_Verde&#x27;,
+      &#x27;Atlantic/Faeroe&#x27;,
+      &#x27;Atlantic/Madeira&#x27;,
+      &#x27;Atlantic/Reykjavik&#x27;,
+      &#x27;Atlantic/South_Georgia&#x27;,
+      &#x27;Atlantic/St_Helena&#x27;,
+      &#x27;Atlantic/Stanley&#x27;,
+      &#x27;Australia/Adelaide&#x27;,
+      &#x27;Australia/Brisbane&#x27;,
+      &#x27;Australia/Broken_Hill&#x27;,
+      &#x27;Australia/Currie&#x27;,
+      &#x27;Australia/Darwin&#x27;,
+      &#x27;Australia/Hobart&#x27;,
+      &#x27;Australia/Lindeman&#x27;,
+      &#x27;Australia/Melbourne&#x27;,
+      &#x27;Australia/Perth&#x27;,
+      &#x27;Australia/Sydney&#x27;,
+      &#x27;Europe/Amsterdam&#x27;,
+      &#x27;Europe/Andorra&#x27;,
+      &#x27;Europe/Astrakhan&#x27;,
+      &#x27;Europe/Athens&#x27;,
+      &#x27;Europe/Belgrade&#x27;,
+      &#x27;Europe/Berlin&#x27;,
+      &#x27;Europe/Bratislava&#x27;,
+      &#x27;Europe/Brussels&#x27;,
+      &#x27;Europe/Bucharest&#x27;,
+      &#x27;Europe/Budapest&#x27;,
+      &#x27;Europe/Busingen&#x27;,
+      &#x27;Europe/Chisinau&#x27;,
+      &#x27;Europe/Copenhagen&#x27;,
+      &#x27;Europe/Dublin&#x27;,
+      &#x27;Europe/Gibraltar&#x27;,
+      &#x27;Europe/Guernsey&#x27;,
+      &#x27;Europe/Helsinki&#x27;,
+      &#x27;Europe/Isle_of_Man&#x27;,
+      &#x27;Europe/Istanbul&#x27;,
+      &#x27;Europe/Jersey&#x27;,
+      &#x27;Europe/Kaliningrad&#x27;,
+      &#x27;Europe/Kiev&#x27;,
+      &#x27;Europe/Kirov&#x27;,
+      &#x27;Europe/Lisbon&#x27;,
+      &#x27;Europe/Ljubljana&#x27;,
+      &#x27;Europe/London&#x27;,
+      &#x27;Europe/Luxembourg&#x27;,
+      &#x27;Europe/Madrid&#x27;,
+      &#x27;Europe/Malta&#x27;,
+      &#x27;Europe/Mariehamn&#x27;,
+      &#x27;Europe/Minsk&#x27;,
+      &#x27;Europe/Monaco&#x27;,
+      &#x27;Europe/Moscow&#x27;,
+      &#x27;Europe/Nicosia&#x27;,
+      &#x27;Europe/Oslo&#x27;,
+      &#x27;Europe/Paris&#x27;,
+      &#x27;Europe/Podgorica&#x27;,
+      &#x27;Europe/Prague&#x27;,
+      &#x27;Europe/Riga&#x27;,
+      &#x27;Europe/Rome&#x27;,
+      &#x27;Europe/Samara&#x27;,
+      &#x27;Europe/San_Marino&#x27;,
+      &#x27;Europe/Sarajevo&#x27;,
+      &#x27;Europe/Simferopol&#x27;,
+      &#x27;Europe/Skopje&#x27;,
+      &#x27;Europe/Sofia&#x27;,
+      &#x27;Europe/Stockholm&#x27;,
+      &#x27;Europe/Tallinn&#x27;,
+      &#x27;Europe/Tirane&#x27;,
+      &#x27;Europe/Ulyanovsk&#x27;,
+      &#x27;Europe/Uzhgorod&#x27;,
+      &#x27;Europe/Vaduz&#x27;,
+      &#x27;Europe/Vatican&#x27;,
+      &#x27;Europe/Vienna&#x27;,
+      &#x27;Europe/Vilnius&#x27;,
+      &#x27;Europe/Volgograd&#x27;,
+      &#x27;Europe/Warsaw&#x27;,
+      &#x27;Europe/Zagreb&#x27;,
+      &#x27;Europe/Zaporozhye&#x27;,
+      &#x27;Europe/Zurich&#x27;,
+      &#x27;Indian/Antananarivo&#x27;,
+      &#x27;Indian/Chagos&#x27;,
+      &#x27;Indian/Christmas&#x27;,
+      &#x27;Indian/Cocos&#x27;,
+      &#x27;Indian/Comoro&#x27;,
+      &#x27;Indian/Kerguelen&#x27;,
+      &#x27;Indian/Mahe&#x27;,
+      &#x27;Indian/Maldives&#x27;,
+      &#x27;Indian/Mauritius&#x27;,
+      &#x27;Indian/Mayotte&#x27;,
+      &#x27;Indian/Reunion&#x27;,
+      &#x27;MST7MDT&#x27;,
+      &#x27;PST8PDT&#x27;,
+      &#x27;Pacific/Apia&#x27;,
+      &#x27;Pacific/Auckland&#x27;,
+      &#x27;Pacific/Efate&#x27;,
+      &#x27;Pacific/Enderbury&#x27;,
+      &#x27;Pacific/Fakaofo&#x27;,
+      &#x27;Pacific/Fiji&#x27;,
+      &#x27;Pacific/Funafuti&#x27;,
+      &#x27;Pacific/Galapagos&#x27;,
+      &#x27;Pacific/Guadalcanal&#x27;,
+      &#x27;Pacific/Guam&#x27;,
+      &#x27;Pacific/Honolulu&#x27;,
+      &#x27;Pacific/Johnston&#x27;,
+      &#x27;Pacific/Kosrae&#x27;,
+      &#x27;Pacific/Kwajalein&#x27;,
+      &#x27;Pacific/Majuro&#x27;,
+      &#x27;Pacific/Midway&#x27;,
+      &#x27;Pacific/Nauru&#x27;,
+      &#x27;Pacific/Niue&#x27;,
+      &#x27;Pacific/Noumea&#x27;,
+      &#x27;Pacific/Pago_Pago&#x27;,
+      &#x27;Pacific/Palau&#x27;,
+      &#x27;Pacific/Ponape&#x27;,
+      &#x27;Pacific/Port_Moresby&#x27;,
+      &#x27;Pacific/Rarotonga&#x27;,
+      &#x27;Pacific/Saipan&#x27;,
+      &#x27;Pacific/Tahiti&#x27;,
+      &#x27;Pacific/Tarawa&#x27;,
+      &#x27;Pacific/Tongatapu&#x27;,
+      &#x27;Pacific/Truk&#x27;,
+      &#x27;Pacific/Wake&#x27;,
+      &#x27;Pacific/Wallis&#x27;,
+    ];
+    return timezones;
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'TimezoneService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

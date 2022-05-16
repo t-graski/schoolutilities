@@ -1,0 +1,1492 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">backend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Miscellaneous</li>
+  <li>Variables</li>
+</ol>
+
+<section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#BADGES" title="src/misc/badges.ts" ><b>BADGES</b>&nbsp;&nbsp;&nbsp;(src/.../badges.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#bcrypt" title="src/auth/auth.service.ts" ><b>bcrypt</b>&nbsp;&nbsp;&nbsp;(src/.../auth.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#bcrypt" title="src/user/user.service.ts" ><b>bcrypt</b>&nbsp;&nbsp;&nbsp;(src/.../user.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CryptoJS" title="src/users/users.service.ts" ><b>CryptoJS</b>&nbsp;&nbsp;&nbsp;(src/.../users.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#editFileName" title="src/misc/fileUpload.ts" ><b>editFileName</b>&nbsp;&nbsp;&nbsp;(src/.../fileUpload.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ERROR_CODES" title="src/misc/parameterConstants.ts" ><b>ERROR_CODES</b>&nbsp;&nbsp;&nbsp;(src/.../parameterConstants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#fileFilter" title="src/misc/fileUpload.ts" ><b>fileFilter</b>&nbsp;&nbsp;&nbsp;(src/.../fileUpload.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ID_STARTERS" title="src/misc/parameterConstants.ts" ><b>ID_STARTERS</b>&nbsp;&nbsp;&nbsp;(src/.../parameterConstants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#jwtConstants" title="src/auth/constants.ts" ><b>jwtConstants</b>&nbsp;&nbsp;&nbsp;(src/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LENGTHS" title="src/misc/parameterConstants.ts" ><b>LENGTHS</b>&nbsp;&nbsp;&nbsp;(src/.../parameterConstants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#nodemailer" title="src/mail/mail.service.ts" ><b>nodemailer</b>&nbsp;&nbsp;&nbsp;(src/.../mail.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PASSWORD" title="src/misc/parameterConstants.ts" ><b>PASSWORD</b>&nbsp;&nbsp;&nbsp;(src/.../parameterConstants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/applogger.middleware.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../applogger.middleware.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/article/article.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../article.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/auth/auth.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../auth.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/course/course.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../course.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/database/database.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../database.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/file/file.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../file.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/helper/helper.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../helper.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/mail/mail.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../mail.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/misc/fileUpload.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../fileUpload.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/schoolAdmin/schoolAdmin.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../schoolAdmin.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/statistics/statistics.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../statistics.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/timezone/timezone.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../timezone.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/user/user.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../user.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#prisma" title="src/auth/refreshToken/refreshToken.service.ts" ><b>prisma</b>&nbsp;&nbsp;&nbsp;(src/.../refreshToken.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#regex" title="src/regex.ts" ><b>regex</b>&nbsp;&nbsp;&nbsp;(src/.../regex.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RETURN_DATA" title="src/misc/parameterConstants.ts" ><b>RETURN_DATA</b>&nbsp;&nbsp;&nbsp;(src/.../parameterConstants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RETURN_MESSAGES" title="src/misc/parameterConstants.ts" ><b>RETURN_MESSAGES</b>&nbsp;&nbsp;&nbsp;(src/.../parameterConstants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RFC5646_LANGUAGE_TAGS" title="src/misc/rfc5654.ts" ><b>RFC5646_LANGUAGE_TAGS</b>&nbsp;&nbsp;&nbsp;(src/.../rfc5654.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RoleOrder" title="src/roles/role.enum.ts" ><b>RoleOrder</b>&nbsp;&nbsp;&nbsp;(src/.../role.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Roles" title="src/roles/roles.decorator.ts" ><b>Roles</b>&nbsp;&nbsp;&nbsp;(src/.../roles.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ROLES_KEY" title="src/roles/roles.decorator.ts" ><b>ROLES_KEY</b>&nbsp;&nbsp;&nbsp;(src/.../roles.decorator.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/misc/badges.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BADGES"></a>
+                    <span class="name">
+                        <span ><b>BADGES</b></span>
+                        <a href="#BADGES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    0: &#x27;Administrator&#x27;,
+    1: &#x27;Certified Staff&#x27;,
+    2: &#x27;Bot&#x27;,
+    3: &#x27;Certified Moderator&#x27;,
+    4: &#x27;Translator&#x27;,
+    5: &#x27;Proofreader&#x27;,
+    6: &#x27;Premium&#x27;,
+    7: &#x27;Bug Hunter&#x27;,
+    8: &#x27;Originator&#x27;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/auth.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bcrypt"></a>
+                    <span class="name">
+                        <span ><b>bcrypt</b></span>
+                        <a href="#bcrypt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>require(&#x27;bcrypt&#x27;)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/user/user.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bcrypt"></a>
+                    <span class="name">
+                        <span ><b>bcrypt</b></span>
+                        <a href="#bcrypt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>require(&#x27;bcrypt&#x27;)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/users/users.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CryptoJS"></a>
+                    <span class="name">
+                        <span ><b>CryptoJS</b></span>
+                        <a href="#CryptoJS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>require(&#x27;crypto-js&#x27;)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/misc/fileUpload.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="editFileName"></a>
+                    <span class="name">
+                        <span ><b>editFileName</b></span>
+                        <a href="#editFileName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(req, file, callback) &#x3D;&gt; {
+  const uuid &#x3D; uuidv4();
+  const fileExtName &#x3D; extname(file.originalname);
+
+  callback(
+    null,
+    &#x60;${ID_STARTERS.FILES}${uuid}${fileExtName}&#x60;,
+    (req.originalName &#x3D; file.filename),
+  );
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fileFilter"></a>
+                    <span class="name">
+                        <span ><b>fileFilter</b></span>
+                        <a href="#fileFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>async (req, file, callback) &#x3D;&gt; {
+  const { elementUUID } &#x3D; req.body;
+
+  const elementId &#x3D; await getElementIdByUUID(elementUUID);
+  let fileExtensions &#x3D; await getAllowedExtensions(elementId);
+  fileExtensions &#x3D; fileExtensions.replace(/\s/g, &#x27;&#x27;);
+  const fileExtensionsArray &#x3D; fileExtensions.split(&#x27;,&#x27;);
+
+  const allowedExtensions &#x3D; fileExtensionsArray
+    .map((ext) &#x3D;&gt; &#x60;\.(${ext.toLowerCase()})$&#x60;)
+    .join(&#x27;|&#x27;);
+
+  if (!file.originalname.match(allowedExtensions)) {
+    return callback(
+      null,
+      false,
+      (req.fileValidationError &#x3D; RETURN_DATA.INVALID_FILE),
+    );
+  }
+
+  callback(null, true);
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/misc/parameterConstants.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ERROR_CODES"></a>
+                    <span class="name">
+                        <span ><b>ERROR_CODES</b></span>
+                        <a href="#ERROR_CODES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  USER_UUID_NULL_OR_INVALID: &#x27;ERORR_100&#x27;,
+  USER_ID_NULL_OR_INVALID: &#x27;ERORR_101&#x27;,
+  USER_ID_OR_UUID_NULL_OR_INVALID: &#x27;ERORR_102&#x27;,
+  USER_EMAIL_NULL_OR_INVALID: &#x27;ERORR_103&#x27;,
+  SCHOOL_UUID_NULL_OR_INVALID: &#x27;ERORR_200&#x27;,
+  SCHOOL_ID_NULL_OR_INVALID: &#x27;ERORR_201&#x27;,
+  COURSE_UUID_NULL_OR_INVALID: &#x27;ERORR_300&#x27;,
+  COURSE_ID_NULL_OR_INVALID: &#x27;ERORR_301&#x27;,
+  DATABASE_ERROR: &#x27;ERROR_400&#x27;,
+  ELEMENT_ID_OR_TYPE_ID_NULL_OR_INVALID: &#x27;ERROR_500&#x27;,
+  ELEMENT_UUID_NULL_OR_INVALID: &#x27;ERROR_501&#x27;,
+  ELEMENT_ID_NULL_OR_INVALID: &#x27;ERROR_502&#x27;,
+  ELEMENT_OPTIONS_NULL: &#x27;ERROR_503&#x27;,
+  ELEMENT_NULL: &#x27;ERROR_504&#x27;,
+  NO_JWT_TOKEN_PROVIDED: &#x27;ERROR_600&#x27;,
+  CLASS_UUID_NULL_OR_INVALID: &#x27;ERROR_700&#x27;,
+  ARTICLE_UUID_NULL_OR_INVALID: &#x27;ERROR_800&#x27;,
+  EMAIL_NULL_OR_INVALID: &#x27;ERROR_900&#x27;,
+  TOKEN_NULL_OR_INVALID: &#x27;ERROR_1000&#x27;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ID_STARTERS"></a>
+                    <span class="name">
+                        <span ><b>ID_STARTERS</b></span>
+                        <a href="#ID_STARTERS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  INTERNAL: 0,
+  USER: 1,
+  SCHOOL: 2,
+  DEPARTMENT: 3,
+  CLASS: 4,
+  COURSE: 5,
+  FILES: 6,
+  TIMEZONES: 7,
+  EMAIL: 8,
+  COURSE_ELEMENT: 9,
+  ARTICLE: &#x27;A&#x27;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LENGTHS"></a>
+                    <span class="name">
+                        <span ><b>LENGTHS</b></span>
+                        <a href="#LENGTHS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  PERSON_NAME: {
+    min: 2,
+    max: 26,
+  },
+  EMAIL: {
+    min: 6,
+    max: 100,
+  },
+  PASSWORD: {
+    min: 8,
+    max: 256,
+  },
+  NAME: {
+    min: 1,
+    max: 60,
+  },
+  COURSE_NAME: {
+    min: 1,
+    max: 25,
+  },
+  COURSE_DESCRIPTION: {
+    min: 0,
+    max: 1000,
+  },
+  CLASS_NAME: {
+    min: 1,
+    max: 25,
+  },
+  DEPARTMENT_NAME: {
+    min: 1,
+    max: 25,
+  },
+  JOIN_CODE_NAME: {
+    min: 0,
+    max: 25,
+  },
+  DISPLAY_NAME: {
+    min: 4,
+    max: 16,
+  },
+  BIOGRAPHY: {
+    min: 0,
+    max: 1000,
+  },
+  LOCATION: {
+    min: 0,
+    max: 100,
+  },
+  MAX_JOIN_CODES: 10,
+  MAX_FILE_SIZE: 100000000,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PASSWORD"></a>
+                    <span class="name">
+                        <span ><b>PASSWORD</b></span>
+                        <a href="#PASSWORD"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  minLength: 8,
+  minLowercase: 1,
+  minUppercase: 1,
+  minNumbers: 1,
+  minSymbols: 1,
+  returnScore: false,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RETURN_DATA"></a>
+                    <span class="name">
+                        <span ><b>RETURN_DATA</b></span>
+                        <a href="#RETURN_DATA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  INVALID_INPUT: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.INVALID_INPUT_MESSAGE,
+  },
+  DATABASE_ERROR: {
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    message: RETURN_MESSAGES.DATABASE_ERROR_MESSAGE,
+  },
+  SUCCESS: {
+    status: HttpStatus.OK,
+    message: RETURN_MESSAGES.SUCCESS_MESSAGE,
+  },
+  ALREADY_EXISTS: {
+    status: HttpStatus.CONFLICT,
+    message: RETURN_MESSAGES.ALREADY_EXISTS_MESSAGE,
+  },
+  NOT_FOUND: {
+    status: HttpStatus.NOT_FOUND,
+    message: RETURN_MESSAGES.NOT_FOUND_MESSAGE,
+  },
+  REFERENCE_ERROR: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.REFERENCE_ERROR_MESSAGE,
+  },
+  UNIQUE_ERROR: {
+    status: HttpStatus.CONFLICT,
+    message: RETURN_MESSAGES.UNIQUE_ERROR_MESSAGE,
+  },
+  MAX_JOIN_CODES_REACHED: {
+    status: HttpStatus.FORBIDDEN,
+    message: RETURN_MESSAGES.MAX_JOIN_CODES_REACHED_MESSAGE,
+  },
+  INVALID_FILE: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.INVALID_FILE_MESSAGE,
+  },
+  MAX_FILE_SIZE_EXCEEDED: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.FILE_SIZE_EXCEEDED_MESSAGE,
+  },
+  NO_FILE_PROVIDED: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.NO_FILE_PROVIDED_MESSAGE,
+  },
+  DEPARTMENTS_SAME_NAMES: {
+    status: HttpStatus.BAD_REQUEST,
+    message: RETURN_MESSAGES.DEPARTMENTS_SAME_NAMES_MESSAGE,
+  },
+  LAST_USER: {
+    status: HttpStatus.CONFLICT,
+    message: RETURN_MESSAGES.LAST_USER_MESSAGE,
+  },
+  FORBIDDEN: {
+    status: HttpStatus.FORBIDDEN,
+    message: RETURN_MESSAGES.FORBIDDEN_MESSAGE,
+  },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RETURN_MESSAGES"></a>
+                    <span class="name">
+                        <span ><b>RETURN_MESSAGES</b></span>
+                        <a href="#RETURN_MESSAGES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  INVALID_INPUT_MESSAGE: &#x27;Invalid input&#x27;,
+  DATABASE_ERROR_MESSAGE: &#x27;Database error&#x27;,
+  SUCCESS_MESSAGE: &#x27;Operation successfully executed&#x27;,
+  ALREADY_EXISTS_MESSAGE: &#x27;Entry already exists&#x27;,
+  NOT_FOUND_MESSAGE: &#x27;Entry not found&#x27;,
+  REFERENCE_ERROR_MESSAGE: &#x27;Foreign key reference error&#x27;,
+  UNIQUE_ERROR_MESSAGE: &#x27;Unique constraint error&#x27;,
+  MAX_JOIN_CODES_REACHED_MESSAGE: &#x60;Maximum number of join codes reached (${LENGTHS.MAX_JOIN_CODES})&#x60;,
+  INVALID_FILE_MESSAGE: &#x27;Invalid file type provided&#x27;,
+  FILE_SIZE_EXCEEDED_MESSAGE: &#x60;Maximum file size exceeded ${LENGTHS.MAX_FILE_SIZE} bytes&#x60;,
+  NO_FILE_PROVIDED_MESSAGE: &#x27;No file provided&#x27;,
+  DEPARTMENTS_SAME_NAMES_MESSAGE: &#x27;Department name occurs multiple times&#x27;,
+  LAST_USER_MESSAGE: &#x27;Cannot delete last user&#x27;,
+  FORBIDDEN_MESSAGE: &#x27;Forbidden&#x27;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/constants.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="jwtConstants"></a>
+                    <span class="name">
+                        <span ><b>jwtConstants</b></span>
+                        <a href="#jwtConstants"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  secret: process.env.PASSWORD_ENCRYPTION_KEY,
+  refreshTokenExpiryTime: &#x27;168h&#x27;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/mail/mail.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nodemailer"></a>
+                    <span class="name">
+                        <span ><b>nodemailer</b></span>
+                        <a href="#nodemailer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>require(&#x27;nodemailer&#x27;)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/applogger.middleware.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/article/article.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/course/course.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/database/database.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/file/file.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/helper/helper.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/schoolAdmin/schoolAdmin.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/statistics/statistics.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/timezone/timezone.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/refreshToken/refreshToken.service.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prisma"></a>
+                    <span class="name">
+                        <span ><b>prisma</b></span>
+                        <a href="#prisma"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new PrismaClient()</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/regex.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="regex"></a>
+                    <span class="name">
+                        <span ><b>regex</b></span>
+                        <a href="#regex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  email:
+    /^(([^&lt;&gt;()\[\]\\.,;:\s@&quot;]+(\.[^&lt;&gt;()\[\]\\.,;:\s@&quot;]+)*)|(&quot;.+&quot;))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+  password:
+    /^(?&#x3D;.*[a-z])(?&#x3D;.*[A-Z])(?&#x3D;.*\d)(?&#x3D;.*[@$!%*?&amp;])[A-Za-z\d@$!%*?&amp;]{8,}$/,
+  phone: /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/,
+  name: /^[a-zA-Z äöüÄÖÜ]{2,30}$/,
+  title: /^[a-zA-Z 0-9!._-]{2,30}$/,
+  schoolName: /^[a-zA-Z 0-9!._-]{2,30}$/,
+  number: /^[0-9]{1,10}$/,
+  date: /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/,
+  time: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+  timezone: /^(?:Z|[+-](?:2[0-3]|[01][0-4]):(00|15|30|45))$/,
+  zip: /^[0-9]{5}$/,
+  url: /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/,
+  ip: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+  mac: /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/,
+  hex: /^#?([0-9a-f]{6}|[0-9a-f]{3})$/i,
+  color: /^(#?([0-9a-f]{6}|[0-9a-f]{3}))$/i,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/misc/rfc5654.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RFC5646_LANGUAGE_TAGS"></a>
+                    <span class="name">
+                        <span ><b>RFC5646_LANGUAGE_TAGS</b></span>
+                        <a href="#RFC5646_LANGUAGE_TAGS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &#x27;af&#x27;: &#x27;Afrikaans&#x27;,
+    &#x27;af-ZA&#x27;: &#x27;Afrikaans (South Africa)&#x27;,
+    &#x27;ar&#x27;: &#x27;Arabic&#x27;,
+    &#x27;ar-AE&#x27;: &#x27;Arabic (U.A.E.)&#x27;,
+    &#x27;ar-BH&#x27;: &#x27;Arabic (Bahrain)&#x27;,
+    &#x27;ar-DZ&#x27;: &#x27;Arabic (Algeria)&#x27;,
+    &#x27;ar-EG&#x27;: &#x27;Arabic (Egypt)&#x27;,
+    &#x27;ar-IQ&#x27;: &#x27;Arabic (Iraq)&#x27;,
+    &#x27;ar-JO&#x27;: &#x27;Arabic (Jordan)&#x27;,
+    &#x27;ar-KW&#x27;: &#x27;Arabic (Kuwait)&#x27;,
+    &#x27;ar-LB&#x27;: &#x27;Arabic (Lebanon)&#x27;,
+    &#x27;ar-LY&#x27;: &#x27;Arabic (Libya)&#x27;,
+    &#x27;ar-MA&#x27;: &#x27;Arabic (Morocco)&#x27;,
+    &#x27;ar-OM&#x27;: &#x27;Arabic (Oman)&#x27;,
+    &#x27;ar-QA&#x27;: &#x27;Arabic (Qatar)&#x27;,
+    &#x27;ar-SA&#x27;: &#x27;Arabic (Saudi Arabia)&#x27;,
+    &#x27;ar-SY&#x27;: &#x27;Arabic (Syria)&#x27;,
+    &#x27;ar-TN&#x27;: &#x27;Arabic (Tunisia)&#x27;,
+    &#x27;ar-YE&#x27;: &#x27;Arabic (Yemen)&#x27;,
+    &#x27;az&#x27;: &#x27;Azeri (Latin)&#x27;,
+    &#x27;az-AZ&#x27;: &#x27;Azeri (Latin) (Azerbaijan)&#x27;,
+    &#x27;az-Cyrl-AZ&#x27;: &#x27;Azeri (Cyrillic) (Azerbaijan)&#x27;,
+    &#x27;be&#x27;: &#x27;Belarusian&#x27;,
+    &#x27;be-BY&#x27;: &#x27;Belarusian (Belarus)&#x27;,
+    &#x27;bg&#x27;: &#x27;Bulgarian&#x27;,
+    &#x27;bg-BG&#x27;: &#x27;Bulgarian (Bulgaria)&#x27;,
+    &#x27;bs-BA&#x27;: &#x27;Bosnian (Bosnia and Herzegovina)&#x27;,
+    &#x27;ca&#x27;: &#x27;Catalan&#x27;,
+    &#x27;ca-ES&#x27;: &#x27;Catalan (Spain)&#x27;,
+    &#x27;cs&#x27;: &#x27;Czech&#x27;,
+    &#x27;cs-CZ&#x27;: &#x27;Czech (Czech Republic)&#x27;,
+    &#x27;cy&#x27;: &#x27;Welsh&#x27;,
+    &#x27;cy-GB&#x27;: &#x27;Welsh (United Kingdom)&#x27;,
+    &#x27;da&#x27;: &#x27;Danish&#x27;,
+    &#x27;da-DK&#x27;: &#x27;Danish (Denmark)&#x27;,
+    &#x27;de&#x27;: &#x27;German&#x27;,
+    &#x27;de-AT&#x27;: &#x27;German (Austria)&#x27;,
+    &#x27;de-CH&#x27;: &#x27;German (Switzerland)&#x27;,
+    &#x27;de-DE&#x27;: &#x27;German (Germany)&#x27;,
+    &#x27;de-LI&#x27;: &#x27;German (Liechtenstein)&#x27;,
+    &#x27;de-LU&#x27;: &#x27;German (Luxembourg)&#x27;,
+    &#x27;dv&#x27;: &#x27;Divehi&#x27;,
+    &#x27;dv-MV&#x27;: &#x27;Divehi (Maldives)&#x27;,
+    &#x27;el&#x27;: &#x27;Greek&#x27;,
+    &#x27;el-GR&#x27;: &#x27;Greek (Greece)&#x27;,
+    &#x27;en&#x27;: &#x27;English&#x27;,
+    &#x27;en-AU&#x27;: &#x27;English (Australia)&#x27;,
+    &#x27;en-BZ&#x27;: &#x27;English (Belize)&#x27;,
+    &#x27;en-CA&#x27;: &#x27;English (Canada)&#x27;,
+    &#x27;en-CB&#x27;: &#x27;English (Caribbean)&#x27;,
+    &#x27;en-GB&#x27;: &#x27;English (United Kingdom)&#x27;,
+    &#x27;en-IE&#x27;: &#x27;English (Ireland)&#x27;,
+    &#x27;en-JM&#x27;: &#x27;English (Jamaica)&#x27;,
+    &#x27;en-NZ&#x27;: &#x27;English (New Zealand)&#x27;,
+    &#x27;en-PH&#x27;: &#x27;English (Republic of the Philippines)&#x27;,
+    &#x27;en-TT&#x27;: &#x27;English (Trinidad and Tobago)&#x27;,
+    &#x27;en-US&#x27;: &#x27;English (United States)&#x27;,
+    &#x27;en-ZA&#x27;: &#x27;English (South Africa)&#x27;,
+    &#x27;en-ZW&#x27;: &#x27;English (Zimbabwe)&#x27;,
+    &#x27;eo&#x27;: &#x27;Esperanto&#x27;,
+    &#x27;es&#x27;: &#x27;Spanish&#x27;,
+    &#x27;es-AR&#x27;: &#x27;Spanish (Argentina)&#x27;,
+    &#x27;es-BO&#x27;: &#x27;Spanish (Bolivia)&#x27;,
+    &#x27;es-CL&#x27;: &#x27;Spanish (Chile)&#x27;,
+    &#x27;es-CO&#x27;: &#x27;Spanish (Colombia)&#x27;,
+    &#x27;es-CR&#x27;: &#x27;Spanish (Costa Rica)&#x27;,
+    &#x27;es-DO&#x27;: &#x27;Spanish (Dominican Republic)&#x27;,
+    &#x27;es-EC&#x27;: &#x27;Spanish (Ecuador)&#x27;,
+    &#x27;es-ES&#x27;: &#x27;Spanish (Spain)&#x27;,
+    &#x27;es-GT&#x27;: &#x27;Spanish (Guatemala)&#x27;,
+    &#x27;es-HN&#x27;: &#x27;Spanish (Honduras)&#x27;,
+    &#x27;es-MX&#x27;: &#x27;Spanish (Mexico)&#x27;,
+    &#x27;es-NI&#x27;: &#x27;Spanish (Nicaragua)&#x27;,
+    &#x27;es-PA&#x27;: &#x27;Spanish (Panama)&#x27;,
+    &#x27;es-PE&#x27;: &#x27;Spanish (Peru)&#x27;,
+    &#x27;es-PR&#x27;: &#x27;Spanish (Puerto Rico)&#x27;,
+    &#x27;es-PY&#x27;: &#x27;Spanish (Paraguay)&#x27;,
+    &#x27;es-SV&#x27;: &#x27;Spanish (El Salvador)&#x27;,
+    &#x27;es-UY&#x27;: &#x27;Spanish (Uruguay)&#x27;,
+    &#x27;es-VE&#x27;: &#x27;Spanish (Venezuela)&#x27;,
+    &#x27;et&#x27;: &#x27;Estonian&#x27;,
+    &#x27;et-EE&#x27;: &#x27;Estonian (Estonia)&#x27;,
+    &#x27;eu&#x27;: &#x27;Basque&#x27;,
+    &#x27;eu-ES&#x27;: &#x27;Basque (Spain)&#x27;,
+    &#x27;fa&#x27;: &#x27;Farsi&#x27;,
+    &#x27;fa-IR&#x27;: &#x27;Farsi (Iran)&#x27;,
+    &#x27;fi&#x27;: &#x27;Finnish&#x27;,
+    &#x27;fi-FI&#x27;: &#x27;Finnish (Finland)&#x27;,
+    &#x27;fo&#x27;: &#x27;Faroese&#x27;,
+    &#x27;fo-FO&#x27;: &#x27;Faroese (Faroe Islands)&#x27;,
+    &#x27;fr&#x27;: &#x27;French&#x27;,
+    &#x27;fr-BE&#x27;: &#x27;French (Belgium)&#x27;,
+    &#x27;fr-CA&#x27;: &#x27;French (Canada)&#x27;,
+    &#x27;fr-CH&#x27;: &#x27;French (Switzerland)&#x27;,
+    &#x27;fr-FR&#x27;: &#x27;French (France)&#x27;,
+    &#x27;fr-LU&#x27;: &#x27;French (Luxembourg)&#x27;,
+    &#x27;fr-MC&#x27;: &#x27;French (Principality of Monaco)&#x27;,
+    &#x27;gl&#x27;: &#x27;Galician&#x27;,
+    &#x27;gl-ES&#x27;: &#x27;Galician (Spain)&#x27;,
+    &#x27;gu&#x27;: &#x27;Gujarati&#x27;,
+    &#x27;gu-IN&#x27;: &#x27;Gujarati (India)&#x27;,
+    &#x27;he&#x27;: &#x27;Hebrew&#x27;,
+    &#x27;he-IL&#x27;: &#x27;Hebrew (Israel)&#x27;,
+    &#x27;hi&#x27;: &#x27;Hindi&#x27;,
+    &#x27;hi-IN&#x27;: &#x27;Hindi (India)&#x27;,
+    &#x27;hr&#x27;: &#x27;Croatian&#x27;,
+    &#x27;hr-BA&#x27;: &#x27;Croatian (Bosnia and Herzegovina)&#x27;,
+    &#x27;hr-HR&#x27;: &#x27;Croatian (Croatia)&#x27;,
+    &#x27;hu&#x27;: &#x27;Hungarian&#x27;,
+    &#x27;hu-HU&#x27;: &#x27;Hungarian (Hungary)&#x27;,
+    &#x27;hy&#x27;: &#x27;Armenian&#x27;,
+    &#x27;hy-AM&#x27;: &#x27;Armenian (Armenia)&#x27;,
+    &#x27;id&#x27;: &#x27;Indonesian&#x27;,
+    &#x27;id-ID&#x27;: &#x27;Indonesian (Indonesia)&#x27;,
+    &#x27;is&#x27;: &#x27;Icelandic&#x27;,
+    &#x27;is-IS&#x27;: &#x27;Icelandic (Iceland)&#x27;,
+    &#x27;it&#x27;: &#x27;Italian&#x27;,
+    &#x27;it-CH&#x27;: &#x27;Italian (Switzerland)&#x27;,
+    &#x27;it-IT&#x27;: &#x27;Italian (Italy)&#x27;,
+    &#x27;ja&#x27;: &#x27;Japanese&#x27;,
+    &#x27;ja-JP&#x27;: &#x27;Japanese (Japan)&#x27;,
+    &#x27;ka&#x27;: &#x27;Georgian&#x27;,
+    &#x27;ka-GE&#x27;: &#x27;Georgian (Georgia)&#x27;,
+    &#x27;kk&#x27;: &#x27;Kazakh&#x27;,
+    &#x27;kk-KZ&#x27;: &#x27;Kazakh (Kazakhstan)&#x27;,
+    &#x27;kn&#x27;: &#x27;Kannada&#x27;,
+    &#x27;kn-IN&#x27;: &#x27;Kannada (India)&#x27;,
+    &#x27;ko&#x27;: &#x27;Korean&#x27;,
+    &#x27;ko-KR&#x27;: &#x27;Korean (Korea)&#x27;,
+    &#x27;kok&#x27;: &#x27;Konkani&#x27;,
+    &#x27;kok-IN&#x27;: &#x27;Konkani (India)&#x27;,
+    &#x27;ky&#x27;: &#x27;Kyrgyz&#x27;,
+    &#x27;ky-KG&#x27;: &#x27;Kyrgyz (Kyrgyzstan)&#x27;,
+    &#x27;lt&#x27;: &#x27;Lithuanian&#x27;,
+    &#x27;lt-LT&#x27;: &#x27;Lithuanian (Lithuania)&#x27;,
+    &#x27;lv&#x27;: &#x27;Latvian&#x27;,
+    &#x27;lv-LV&#x27;: &#x27;Latvian (Latvia)&#x27;,
+    &#x27;mi&#x27;: &#x27;Maori&#x27;,
+    &#x27;mi-NZ&#x27;: &#x27;Maori (New Zealand)&#x27;,
+    &#x27;mk&#x27;: &#x27;FYRO Macedonian&#x27;,
+    &#x27;mk-MK&#x27;: &#x27;FYRO Macedonian (Former Yugoslav Republic of Macedonia)&#x27;,
+    &#x27;mn&#x27;: &#x27;Mongolian&#x27;,
+    &#x27;mn-MN&#x27;: &#x27;Mongolian (Mongolia)&#x27;,
+    &#x27;mr&#x27;: &#x27;Marathi&#x27;,
+    &#x27;mr-IN&#x27;: &#x27;Marathi (India)&#x27;,
+    &#x27;ms&#x27;: &#x27;Malay&#x27;,
+    &#x27;ms-BN&#x27;: &#x27;Malay (Brunei Darussalam)&#x27;,
+    &#x27;ms-MY&#x27;: &#x27;Malay (Malaysia)&#x27;,
+    &#x27;mt&#x27;: &#x27;Maltese&#x27;,
+    &#x27;mt-MT&#x27;: &#x27;Maltese (Malta)&#x27;,
+    &#x27;nb&#x27;: &#x27;Norwegian (Bokm?l)&#x27;,
+    &#x27;nb-NO&#x27;: &#x27;Norwegian (Bokm?l) (Norway)&#x27;,
+    &#x27;nl&#x27;: &#x27;Dutch&#x27;,
+    &#x27;nl-BE&#x27;: &#x27;Dutch (Belgium)&#x27;,
+    &#x27;nl-NL&#x27;: &#x27;Dutch (Netherlands)&#x27;,
+    &#x27;nn-NO&#x27;: &#x27;Norwegian (Nynorsk) (Norway)&#x27;,
+    &#x27;ns&#x27;: &#x27;Northern Sotho&#x27;,
+    &#x27;ns-ZA&#x27;: &#x27;Northern Sotho (South Africa)&#x27;,
+    &#x27;pa&#x27;: &#x27;Punjabi&#x27;,
+    &#x27;pa-IN&#x27;: &#x27;Punjabi (India)&#x27;,
+    &#x27;pl&#x27;: &#x27;Polish&#x27;,
+    &#x27;pl-PL&#x27;: &#x27;Polish (Poland)&#x27;,
+    &#x27;ps&#x27;: &#x27;Pashto&#x27;,
+    &#x27;ps-AR&#x27;: &#x27;Pashto (Afghanistan)&#x27;,
+    &#x27;pt&#x27;: &#x27;Portuguese&#x27;,
+    &#x27;pt-BR&#x27;: &#x27;Portuguese (Brazil)&#x27;,
+    &#x27;pt-PT&#x27;: &#x27;Portuguese (Portugal)&#x27;,
+    &#x27;qu&#x27;: &#x27;Quechua&#x27;,
+    &#x27;qu-BO&#x27;: &#x27;Quechua (Bolivia)&#x27;,
+    &#x27;qu-EC&#x27;: &#x27;Quechua (Ecuador)&#x27;,
+    &#x27;qu-PE&#x27;: &#x27;Quechua (Peru)&#x27;,
+    &#x27;ro&#x27;: &#x27;Romanian&#x27;,
+    &#x27;ro-RO&#x27;: &#x27;Romanian (Romania)&#x27;,
+    &#x27;ru&#x27;: &#x27;Russian&#x27;,
+    &#x27;ru-RU&#x27;: &#x27;Russian (Russia)&#x27;,
+    &#x27;sa&#x27;: &#x27;Sanskrit&#x27;,
+    &#x27;sa-IN&#x27;: &#x27;Sanskrit (India)&#x27;,
+    &#x27;se&#x27;: &#x27;Sami&#x27;,
+    &#x27;se-FI&#x27;: &#x27;Sami (Finland)&#x27;,
+    &#x27;se-NO&#x27;: &#x27;Sami (Norway)&#x27;,
+    &#x27;se-SE&#x27;: &#x27;Sami (Sweden)&#x27;,
+    &#x27;sk&#x27;: &#x27;Slovak&#x27;,
+    &#x27;sk-SK&#x27;: &#x27;Slovak (Slovakia)&#x27;,
+    &#x27;sl&#x27;: &#x27;Slovenian&#x27;,
+    &#x27;sl-SI&#x27;: &#x27;Slovenian (Slovenia)&#x27;,
+    &#x27;sq&#x27;: &#x27;Albanian&#x27;,
+    &#x27;sq-AL&#x27;: &#x27;Albanian (Albania)&#x27;,
+    &#x27;sr-BA&#x27;: &#x27;Serbian (Latin) (Bosnia and Herzegovina)&#x27;,
+    &#x27;sr-Cyrl-BA&#x27;: &#x27;Serbian (Cyrillic) (Bosnia and Herzegovina)&#x27;,
+    &#x27;sr-SP&#x27;: &#x27;Serbian (Latin) (Serbia and Montenegro)&#x27;,
+    &#x27;sr-Cyrl-SP&#x27;: &#x27;Serbian (Cyrillic) (Serbia and Montenegro)&#x27;,
+    &#x27;sv&#x27;: &#x27;Swedish&#x27;,
+    &#x27;sv-FI&#x27;: &#x27;Swedish (Finland)&#x27;,
+    &#x27;sv-SE&#x27;: &#x27;Swedish (Sweden)&#x27;,
+    &#x27;sw&#x27;: &#x27;Swahili&#x27;,
+    &#x27;sw-KE&#x27;: &#x27;Swahili (Kenya)&#x27;,
+    &#x27;syr&#x27;: &#x27;Syriac&#x27;,
+    &#x27;syr-SY&#x27;: &#x27;Syriac (Syria)&#x27;,
+    &#x27;ta&#x27;: &#x27;Tamil&#x27;,
+    &#x27;ta-IN&#x27;: &#x27;Tamil (India)&#x27;,
+    &#x27;te&#x27;: &#x27;Telugu&#x27;,
+    &#x27;te-IN&#x27;: &#x27;Telugu (India)&#x27;,
+    &#x27;th&#x27;: &#x27;Thai&#x27;,
+    &#x27;th-TH&#x27;: &#x27;Thai (Thailand)&#x27;,
+    &#x27;tl&#x27;: &#x27;Tagalog&#x27;,
+    &#x27;tl-PH&#x27;: &#x27;Tagalog (Philippines)&#x27;,
+    &#x27;tn&#x27;: &#x27;Tswana&#x27;,
+    &#x27;tn-ZA&#x27;: &#x27;Tswana (South Africa)&#x27;,
+    &#x27;tr&#x27;: &#x27;Turkish&#x27;,
+    &#x27;tr-TR&#x27;: &#x27;Turkish (Turkey)&#x27;,
+    &#x27;tt&#x27;: &#x27;Tatar&#x27;,
+    &#x27;tt-RU&#x27;: &#x27;Tatar (Russia)&#x27;,
+    &#x27;ts&#x27;: &#x27;Tsonga&#x27;,
+    &#x27;uk&#x27;: &#x27;Ukrainian&#x27;,
+    &#x27;uk-UA&#x27;: &#x27;Ukrainian (Ukraine)&#x27;,
+    &#x27;ur&#x27;: &#x27;Urdu&#x27;,
+    &#x27;ur-PK&#x27;: &#x27;Urdu (Islamic Republic of Pakistan)&#x27;,
+    &#x27;uz&#x27;: &#x27;Uzbek (Latin)&#x27;,
+    &#x27;uz-UZ&#x27;: &#x27;Uzbek (Latin) (Uzbekistan)&#x27;,
+    &#x27;uz-Cyrl-UZ&#x27;: &#x27;Uzbek (Cyrillic) (Uzbekistan)&#x27;,
+    &#x27;vi&#x27;: &#x27;Vietnamese&#x27;,
+    &#x27;vi-VN&#x27;: &#x27;Vietnamese (Viet Nam)&#x27;,
+    &#x27;xh&#x27;: &#x27;Xhosa&#x27;,
+    &#x27;xh-ZA&#x27;: &#x27;Xhosa (South Africa)&#x27;,
+    &#x27;zh&#x27;: &#x27;Chinese&#x27;,
+    &#x27;zh-CN&#x27;: &#x27;Chinese (S)&#x27;,
+    &#x27;zh-HK&#x27;: &#x27;Chinese (Hong Kong)&#x27;,
+    &#x27;zh-MO&#x27;: &#x27;Chinese (Macau)&#x27;,
+    &#x27;zh-SG&#x27;: &#x27;Chinese (Singapore)&#x27;,
+    &#x27;zh-TW&#x27;: &#x27;Chinese (T)&#x27;,
+    &#x27;zu&#x27;: &#x27;Zulu&#x27;,
+    &#x27;zu-ZA&#x27;: &#x27;Zulu (South Africa)&#x27;
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/roles/role.enum.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RoleOrder"></a>
+                    <span class="name">
+                        <span ><b>RoleOrder</b></span>
+                        <a href="#RoleOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  // DO NOT CHANGE ORDER
+  Supervisor: 0,
+  Admin: 1,
+  Teacher: 2,
+  Student: 3,
+  Verified: 4,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/roles/roles.decorator.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Roles"></a>
+                    <span class="name">
+                        <span ><b>Roles</b></span>
+                        <a href="#Roles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(...roles: Role[]) &#x3D;&gt; SetMetadata(ROLES_KEY, roles)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ROLES_KEY"></a>
+                    <span class="name">
+                        <span ><b>ROLES_KEY</b></span>
+                        <a href="#ROLES_KEY"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;roles&#x27;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,7 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import {
-  ReturnMessage,
-} from 'src/types/Course';
+import { ReturnMessage } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import {
@@ -14,7 +12,13 @@ import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 import * as moment from 'moment';
-import { AddCourseDto, CourseDto, RemoveCourseDto, UpdateCourseDto } from 'src/dto/course';
+import {
+  AddCourseDto,
+  CourseDto,
+  GetAllCoursesDto,
+  RemoveCourseDto,
+  UpdateCourseDto,
+} from 'src/dto/course';
 import { CourseEvent, GetEventsDto } from 'src/dto/events';
 // import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -28,7 +32,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
@@ -423,17 +427,13 @@ export class CourseService {
   }
 
   async getAllCourses(
-    schoolUUID: string,
+    payload: GetAllCoursesDto,
     query,
     token: string,
   ): Promise<ReturnMessage> {
-
-    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
     const jwt = await this.authService.decodeJWT(token);
     const personUUID = jwt.personUUID;
+    const { schoolUUID } = payload;
     const { page, limit } = query;
 
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
@@ -449,8 +449,8 @@ export class CourseService {
               some: {
                 personId,
               },
-            }
-          }
+            },
+          },
         },
         select: {
           courseId: true,
@@ -462,7 +462,7 @@ export class CourseService {
         },
         skip: Number((page - 1) * limit),
         take: Number(limit),
-      })
+      });
 
       for (let course of courses) {
         const creator = await prisma.persons.findUnique({
@@ -787,7 +787,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                        currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1068,7 +1068,7 @@ export class CourseService {
             text: true,
           },
         },
-      }
+      },
     });
 
     const creator = await this.helper.getUserById(settings.personCreationId);
@@ -1098,8 +1098,8 @@ export class CourseService {
         fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
-        ...settings.textSettings[0] || settings.fileSubmissionSettings[0],
-      }
+        ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
+      },
     };
 
     return {
@@ -1265,13 +1265,15 @@ export class CourseService {
                 fileSubmissionSettings: {
                   where: {
                     dueTime: {
-                      lte: moment(new Date(Date.now())).add(days, 'days').toDate(),
+                      lte: moment(new Date(Date.now()))
+                        .add(days, 'days')
+                        .toDate(),
                     },
                     AND: {
                       dueTime: {
                         gte: moment(new Date(Date.now())).toDate(),
-                      }
-                    }
+                      },
+                    },
                   },
                   select: {
                     name: true,
@@ -1306,9 +1308,11 @@ export class CourseService {
               description: element.fileSubmissionSettings[0].description,
               dueDate: element.fileSubmissionSettings[0].dueTime,
               submitLater: element.fileSubmissionSettings[0].submitLater,
-              submitLaterDate: element.fileSubmissionSettings[0].submitLaterTime,
+              submitLaterDate:
+                element.fileSubmissionSettings[0].submitLaterTime,
               maxFileSize: element.fileSubmissionSettings[0].maxFileSize,
-              allowedFileTypes: element.fileSubmissionSettings[0].allowedFileTypes,
+              allowedFileTypes:
+                element.fileSubmissionSettings[0].allowedFileTypes,
             });
           }
         }

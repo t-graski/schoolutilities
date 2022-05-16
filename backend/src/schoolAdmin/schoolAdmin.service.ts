@@ -32,7 +32,7 @@ export class SchoolAdminService {
     private readonly databaseService: DatabaseService,
     private readonly authService: AuthService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   async addSchoolConfig(
     body: AddSchool,
@@ -1170,5 +1170,21 @@ export class SchoolAdminService {
 
   toBoolean(value): boolean {
     return value === '1';
+  }
+}
+
+export async function findOneByUUID(schoolUUID: string): Promise<any> {
+  try {
+    const school = await prisma.schools.findFirst({
+      where: {
+        schoolUUID,
+      },
+      select: {
+        schoolId: true,
+      },
+    });
+    return school;
+  } catch {
+    return null;
   }
 }

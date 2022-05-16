@@ -1,0 +1,3180 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">backend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >SchoolAdminService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/schoolAdmin/schoolAdmin.service.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addClass" >addClass</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addDepartment" >addDepartment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addDepartments" >addDepartments</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addJoinCode" >addJoinCode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addSchoolConfig" >addSchoolConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#generateJoinCode" >generateJoinCode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAllJoinCodes" >getAllJoinCodes</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getClasses" >getClasses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getDepartments" >getDepartments</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getDetailedSchoolInformation" >getDetailedSchoolInformation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getPersonsOfSchool" >getPersonsOfSchool</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getSchoolInformation" >getSchoolInformation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getUserPermissions" >getUserPermissions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#joinSchool" >joinSchool</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#leaveSchool" >leaveSchool</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeClass" >removeClass</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeDepartment" >removeDepartment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeJoinCode" >removeJoinCode</a>
+                            </li>
+                            <li>
+                                <a href="#toBoolean" >toBoolean</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateClass" >updateClass</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateDepartment" >updateDepartment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateJoinCode" >updateJoinCode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateRole" >updateRole</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(databaseService: <a href="../injectables/DatabaseService.html" target="_self">DatabaseService</a>, authService: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, helper: <a href="../injectables/HelperService.html" target="_self">HelperService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:30</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>databaseService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/DatabaseService.html" target="_self" >DatabaseService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>helper</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/HelperService.html" target="_self" >HelperService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addClass"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>addClass</b></span>
+                        <a href="#addClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addClass(body: <a href="../interfaces/AddClass.html" target="_self">AddClass</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="120"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:120</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/AddClass.html" target="_self" >AddClass</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addDepartment"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>addDepartment</b></span>
+                        <a href="#addDepartment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addDepartment(body: <a href="../interfaces/AddDepartment.html" target="_self">AddDepartment</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="319"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:319</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/AddDepartment.html" target="_self" >AddDepartment</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addDepartments"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>addDepartments</b></span>
+                        <a href="#addDepartments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addDepartments(body)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="370"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:370</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addJoinCode"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>addJoinCode</b></span>
+                        <a href="#addJoinCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addJoinCode(body: <a href="../interfaces/AddJoinCode.html" target="_self">AddJoinCode</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="637"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:637</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/AddJoinCode.html" target="_self" >AddJoinCode</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addSchoolConfig"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>addSchoolConfig</b></span>
+                        <a href="#addSchoolConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addSchoolConfig(body: <a href="../interfaces/AddSchool.html" target="_self">AddSchool</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:37</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/AddSchool.html" target="_self" >AddSchool</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateJoinCode"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>generateJoinCode</b></span>
+                        <a href="#generateJoinCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generateJoinCode()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="825"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:825</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllJoinCodes"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getAllJoinCodes</b></span>
+                        <a href="#getAllJoinCodes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAllJoinCodes(schoolUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="780"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:780</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schoolUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getClasses"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getClasses</b></span>
+                        <a href="#getClasses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getClasses(schoolUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="248"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:248</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schoolUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDepartments"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getDepartments</b></span>
+                        <a href="#getDepartments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDepartments(schoolUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="286"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:286</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schoolUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDetailedSchoolInformation"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getDetailedSchoolInformation</b></span>
+                        <a href="#getDetailedSchoolInformation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDetailedSchoolInformation(schoolUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="957"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:957</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schoolUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getPersonsOfSchool"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getPersonsOfSchool</b></span>
+                        <a href="#getPersonsOfSchool"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getPersonsOfSchool(schoolUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="862"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:862</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schoolUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSchoolInformation"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getSchoolInformation</b></span>
+                        <a href="#getSchoolInformation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getSchoolInformation(schoolUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="908"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:908</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schoolUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getUserPermissions"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getUserPermissions</b></span>
+                        <a href="#getUserPermissions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getUserPermissions(body: <a href="../interfaces/UserPermissions.html" target="_self">UserPermissions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="846"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:846</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/UserPermissions.html" target="_self" >UserPermissions</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="joinSchool"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>joinSchool</b></span>
+                        <a href="#joinSchool"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>joinSchool(joinCode: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="490"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:490</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>joinCode</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="leaveSchool"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>leaveSchool</b></span>
+                        <a href="#leaveSchool"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>leaveSchool(body: <a href="../interfaces/JoinSchool.html" target="_self">JoinSchool</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="575"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:575</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/JoinSchool.html" target="_self" >JoinSchool</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeClass"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>removeClass</b></span>
+                        <a href="#removeClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeClass(classUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="169"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:169</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>classUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeDepartment"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>removeDepartment</b></span>
+                        <a href="#removeDepartment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeDepartment(body: <a href="../interfaces/UpdateDepartment.html" target="_self">UpdateDepartment</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="409"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:409</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/UpdateDepartment.html" target="_self" >UpdateDepartment</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeJoinCode"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>removeJoinCode</b></span>
+                        <a href="#removeJoinCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeJoinCode(body: <a href="../interfaces/RemoveJoinCode.html" target="_self">RemoveJoinCode</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="708"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:708</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/RemoveJoinCode.html" target="_self" >RemoveJoinCode</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toBoolean"></a>
+                    <span class="name">
+                        <span ><b>toBoolean</b></span>
+                        <a href="#toBoolean"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toBoolean(value)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1171"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:1171</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateClass"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>updateClass</b></span>
+                        <a href="#updateClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateClass(body: <a href="../interfaces/UpdateClass.html" target="_self">UpdateClass</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="203"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:203</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/UpdateClass.html" target="_self" >UpdateClass</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateDepartment"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>updateDepartment</b></span>
+                        <a href="#updateDepartment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateDepartment(body: <a href="../interfaces/UpdateDepartment.html" target="_self">UpdateDepartment</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="445"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:445</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/UpdateDepartment.html" target="_self" >UpdateDepartment</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateJoinCode"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>updateJoinCode</b></span>
+                        <a href="#updateJoinCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateJoinCode(body: <a href="../interfaces/UpdateJoinCode.html" target="_self">UpdateJoinCode</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="742"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:742</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="../interfaces/UpdateJoinCode.html" target="_self" >UpdateJoinCode</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateRole"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>updateRole</b></span>
+                        <a href="#updateRole"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateRole(request)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1147"
+                            class="link-to-prism">src/schoolAdmin/schoolAdmin.service.ts:1147</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, HttpStatus } from &#x27;@nestjs/common&#x27;;
+import { regex } from &#x27;src/regex&#x27;;
+import { nanoid } from &#x27;nanoid&#x27;;
+import validator from &#x27;validator&#x27;;
+import { PrismaClient } from &#x27;@prisma/client&#x27;;
+import { LENGTHS, RETURN_DATA, ID_STARTERS } from &#x27;src/misc/parameterConstants&#x27;;
+import { v4 as uuidv4 } from &#x27;uuid&#x27;;
+import { Role, RoleOrder } from &#x27;../roles/role.enum&#x27;;
+import {
+  AddClass,
+  AddSchool,
+  ReturnMessage,
+  UpdateClass,
+  AddDepartment,
+  UpdateDepartment,
+  AddJoinCode,
+  RemoveJoinCode,
+  UpdateJoinCode,
+  JoinSchool,
+  UserPermissions,
+} from &#x27;src/types/SchoolAdmin&#x27;;
+import { DatabaseService } from &#x27;src/database/database.service&#x27;;
+import { AuthService } from &#x27;src/auth/auth.service&#x27;;
+import { HelperService } from &#x27;src/helper/helper.service&#x27;;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require(&#x27;dotenv&#x27;).config();
+const prisma &#x3D; new PrismaClient();
+
+@Injectable()
+export class SchoolAdminService {
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly authService: AuthService,
+    private readonly helper: HelperService,
+  ) {}
+
+  async addSchoolConfig(
+    body: AddSchool,
+    token: string,
+  ): Promise&lt;ReturnMessage&gt; {
+    const { name, languageId, timezone, description &#x3D; &#x27;&#x27; } &#x3D; body;
+    if (
+      !validator.isLength(name, LENGTHS.CLASS_NAME)
+      // !regex.timezone.test(timezone) ||
+      // !validator.isNumeric(languageId)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const jwt &#x3D; await this.authService.decodeJWT(token);
+    const personUUID &#x3D; jwt.personUUID;
+    const personId &#x3D; await this.databaseService.getPersonIdByUUID(personUUID);
+
+    try {
+      const school &#x3D; await prisma.schools.create({
+        data: {
+          schoolUUID: &#x60;${ID_STARTERS.SCHOOL}${uuidv4()}&#x60;,
+          name,
+          description,
+          personCreationId: Number(personId),
+          languages: {
+            connect: {
+              languageId: Number(languageId),
+            },
+          },
+          timezone,
+        },
+      });
+
+      await prisma.schoolPersons.create({
+        data: {
+          schools: {
+            connect: {
+              schoolId: Number(school.schoolId),
+            },
+          },
+          persons: {
+            connect: {
+              personId: Number(personId),
+            },
+          },
+        },
+      });
+
+      await prisma.personRoles.create({
+        data: {
+          roles: {
+            connect: {
+              roleId: 1,
+            },
+          },
+          persons: {
+            connect: {
+              personId: Number(personId),
+            },
+          },
+          schools: {
+            connect: {
+              schoolId: Number(school.schoolId),
+            },
+          },
+        },
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: {
+          schoolUUID: school.schoolUUID,
+          schoolName: school.name,
+          description,
+          languageId: school.languageId &#x3D;&#x3D; 1 ? &#x27;de&#x27; : &#x27;en&#x27;,
+          timezone: school.timezone,
+        },
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async addClass(body: AddClass): Promise&lt;ReturnMessage&gt; {
+    const { departmentUUID, className } &#x3D; body;
+    if (
+      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
+      !validator.isUUID(departmentUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const departmentId &#x3D; await this.databaseService.getDepartmentIdByUUID(
+      departmentUUID,
+    );
+
+    const isNotAvailable &#x3D; await prisma.schoolClasses.findFirst({
+      where: {
+        departmentId: Number(departmentId),
+        className: className,
+      },
+    });
+
+    if (isNotAvailable) {
+      return RETURN_DATA.ALREADY_EXISTS;
+    }
+
+    try {
+      const schoolClass &#x3D; await prisma.schoolClasses.create({
+        data: {
+          classUUID: &#x60;${ID_STARTERS.CLASS}${uuidv4()}&#x60;,
+          departments: {
+            connect: {
+              departmentId: Number(departmentId),
+            },
+          },
+          className: className,
+        },
+      });
+
+      delete schoolClass.departmentId;
+      delete schoolClass.classId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: schoolClass,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async removeClass(classUUID: string): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(classUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const classId &#x3D; await this.databaseService.getClassIdByUUID(classUUID);
+
+    const schoolClass &#x3D; await prisma.schoolClasses.findUnique({
+      where: {
+        classId: Number(classId),
+      },
+    });
+
+    if (!schoolClass) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    try {
+      await prisma.schoolClasses.delete({
+        where: {
+          classId: Number(classId),
+        },
+      });
+    } catch (err) {
+      // Foreign key constraint failed
+      if (err.code &#x3D;&#x3D;&#x3D; &#x27;P2003&#x27;) {
+        return RETURN_DATA.REFERENCE_ERROR;
+      } else {
+        return RETURN_DATA.DATABASE_ERROR;
+      }
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async updateClass(body: UpdateClass): Promise&lt;ReturnMessage&gt; {
+    const { className, classUUID, departmentUUID } &#x3D; body;
+    if (
+      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
+      !validator.isUUID(classUUID.slice(1), 4) ||
+      !validator.isUUID(departmentUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const classId &#x3D; await this.databaseService.getClassIdByUUID(classUUID);
+    const departmentId &#x3D; await this.databaseService.getDepartmentIdByUUID(
+      departmentUUID,
+    );
+
+    try {
+      const schoolClass &#x3D; await prisma.schoolClasses.update({
+        where: {
+          classId: Number(classId),
+        },
+        data: {
+          className: className,
+          departments: {
+            connect: {
+              departmentId: Number(departmentId),
+            },
+          },
+        },
+      });
+
+      delete schoolClass.departmentId;
+      delete schoolClass.classId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: schoolClass,
+      };
+    } catch (err) {
+      if (err.code &#x3D;&#x3D;&#x3D; &#x27;P2002&#x27;) {
+        return RETURN_DATA.ALREADY_EXISTS;
+      }
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getClasses(schoolUUID: string): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const departments &#x3D; await this.databaseService.getDepartments({
+      schoolUUID,
+    });
+
+    const classes &#x3D; [];
+    try {
+      for (const department of departments.data) {
+        const departmentClasses &#x3D; await prisma.schoolClasses.findMany({
+          where: {
+            departmentId: department.departmentId,
+          },
+        });
+
+        const filteredClasses &#x3D; departmentClasses.map((departmentClass) &#x3D;&gt; {
+          return {
+            departmentUUID: department.departmentUUID,
+            departmentName: department.name,
+            classUUID: departmentClass.classUUID,
+            className: departmentClass.className,
+          };
+        });
+
+        classes.push(...filteredClasses);
+      }
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: classes,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getDepartments(schoolUUID: string): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    try {
+      const departments &#x3D; await prisma.departments.findMany({
+        where: {
+          schoolId: Number(schoolId),
+        },
+      });
+
+      const departmentsWithoutIds &#x3D; departments.map((department) &#x3D;&gt; {
+        const { departmentUUID, name, isVisible, childsVisible } &#x3D; department;
+        return {
+          departmentUUID: departmentUUID,
+          departmentName: name,
+          isVisible: isVisible,
+          childsVisible: childsVisible,
+        };
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: departmentsWithoutIds,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async addDepartment(body: AddDepartment): Promise&lt;ReturnMessage&gt; {
+    const { departmentName, schoolUUID, isVisible, childsVisible } &#x3D; body;
+    if (
+      !validator.isLength(departmentName, LENGTHS.DEPARTMENT_NAME) ||
+      !validator.isUUID(schoolUUID.slice(1), 4) ||
+      !validator.isBoolean(isVisible) ||
+      !validator.isBoolean(childsVisible)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    const isNotAvailable &#x3D; await prisma.departments.findFirst({
+      where: {
+        schoolId: Number(schoolId),
+        name: departmentName,
+      },
+    });
+
+    if (isNotAvailable) {
+      return RETURN_DATA.ALREADY_EXISTS;
+    }
+
+    try {
+      const department &#x3D; await prisma.departments.create({
+        data: {
+          departmentUUID: &#x60;${ID_STARTERS.DEPARTMENT}${uuidv4()}&#x60;,
+          name: departmentName,
+          schools: {
+            connect: {
+              schoolId: Number(schoolId),
+            },
+          },
+          isVisible: this.toBoolean(isVisible),
+          childsVisible: this.toBoolean(childsVisible),
+        },
+      });
+
+      delete department.departmentId;
+      delete department.schoolId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: department,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async addDepartments(body): Promise&lt;ReturnMessage&gt; {
+    if (body.departments.length &#x3D;&#x3D; 0) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const names &#x3D; body.departments.map((department) &#x3D;&gt; department.name);
+    const isNotUnique &#x3D; names.some((name, index) &#x3D;&gt; {
+      return names.indexOf(name) !&#x3D;&#x3D; index;
+    });
+
+    if (isNotUnique) {
+      return RETURN_DATA.DEPARTMENTS_SAME_NAMES;
+    }
+
+    for (const department of body.departments) {
+      const isNotAvailable &#x3D; await prisma.departments.findFirst({
+        where: {
+          schoolId: Number(department.schoolId),
+          name: department.name,
+        },
+      });
+      if (isNotAvailable) {
+        return RETURN_DATA.ALREADY_EXISTS;
+      }
+    }
+
+    try {
+      for (const department of body.departments) {
+        const addDepartment &#x3D; await this.addDepartment(department);
+        if (addDepartment.status !&#x3D; 200) {
+          return addDepartment;
+        }
+      }
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async removeDepartment(body: UpdateDepartment): Promise&lt;ReturnMessage&gt; {
+    const { departmentUUID } &#x3D; body;
+    if (!validator.isUUID(departmentUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const departmentId &#x3D; await this.databaseService.getDepartmentIdByUUID(
+      departmentUUID,
+    );
+
+    const department &#x3D; await prisma.departments.findUnique({
+      where: {
+        departmentId: Number(departmentId),
+      },
+    });
+
+    if (!department) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+    try {
+      await prisma.departments.delete({
+        where: {
+          departmentId: Number(departmentId),
+        },
+      });
+    } catch (err) {
+      // Foreign key constraint failed
+      if (err.code &#x3D;&#x3D;&#x3D; &#x27;P2003&#x27;) {
+        return RETURN_DATA.REFERENCE_ERROR;
+      } else {
+        return RETURN_DATA.DATABASE_ERROR;
+      }
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async updateDepartment(body: UpdateDepartment): Promise&lt;ReturnMessage&gt; {
+    const { departmentUUID, departmentName, isVisible, childsVisible } &#x3D; body;
+    if (
+      !validator.isLength(departmentName, LENGTHS.DEPARTMENT_NAME) ||
+      !validator.isUUID(departmentUUID.slice(1), 4) ||
+      !validator.isBoolean(isVisible) ||
+      !validator.isBoolean(childsVisible)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const departmentId &#x3D; await this.databaseService.getDepartmentIdByUUID(
+      departmentUUID,
+    );
+
+    const department &#x3D; await prisma.departments.findUnique({
+      where: {
+        departmentId: Number(departmentId),
+      },
+    });
+
+    if (!department) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    try {
+      await prisma.departments.update({
+        where: {
+          departmentId: Number(departmentId),
+        },
+        data: {
+          name: departmentName,
+          isVisible: this.toBoolean(isVisible),
+          childsVisible: this.toBoolean(childsVisible),
+        },
+      });
+    } catch (err) {
+      if (err.code &#x3D;&#x3D;&#x3D; &#x27;P2002&#x27;) {
+        return RETURN_DATA.UNIQUE_ERROR;
+      }
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async joinSchool(joinCode: string, token: string): Promise&lt;ReturnMessage&gt; {
+    const jwt &#x3D; await this.authService.decodeJWT(token);
+
+    const personUUID &#x3D; jwt.personUUID;
+    const schoolUUID &#x3D; await this.databaseService.getSchoolUUIDByJoinCode(
+      joinCode,
+    );
+
+    if (
+      !validator.isUUID(personUUID.slice(1), 4) ||
+      !validator.isUUID(schoolUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const person &#x3D; await prisma.persons.findFirst({
+      where: {
+        personUUID: personUUID,
+      },
+    });
+
+    const school &#x3D; await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+    });
+
+    if (!school || !person) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId &#x3D; await this.databaseService.getPersonIdByUUID(personUUID);
+
+    try {
+      await prisma.schoolPersons.create({
+        data: {
+          persons: {
+            connect: {
+              personId: personId,
+            },
+          },
+          schools: {
+            connect: {
+              schoolId: schoolId,
+            },
+          },
+        },
+      });
+
+      await prisma.personRoles.create({
+        data: {
+          persons: {
+            connect: {
+              personId: personId,
+            },
+          },
+          roles: {
+            connect: {
+              roleId: 3,
+            },
+          },
+          schools: {
+            connect: {
+              schoolId: schoolId,
+            },
+          },
+        },
+      });
+    } catch (err) {
+      if (err.code &#x3D;&#x3D;&#x3D; &#x27;P2002&#x27;) {
+        return RETURN_DATA.ALREADY_EXISTS;
+      }
+
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: {
+        schoolUUID: schoolUUID,
+      },
+    };
+  }
+
+  async leaveSchool(body: JoinSchool): Promise&lt;ReturnMessage&gt; {
+    const { personUUID, schoolUUID } &#x3D; body;
+    if (
+      !validator.isUUID(personUUID.slice(1), 4) ||
+      !validator.isUUID(schoolUUID.slice(1), 4)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const person &#x3D; await prisma.persons.findUnique({
+      where: {
+        personUUID: personUUID,
+      },
+    });
+
+    const school &#x3D; await prisma.schools.findFirst({
+      where: {
+        schoolUUID: schoolUUID,
+      },
+    });
+
+    if (!school || !person) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId &#x3D; await this.databaseService.getPersonIdByUUID(personUUID);
+    const role &#x3D; await this.databaseService.getUserRoles(personId.toString());
+
+    const roleEntry &#x3D; role.find((entry) &#x3D;&gt; entry.schoolId &#x3D;&#x3D;&#x3D; schoolId);
+    if (roleEntry.roleId &#x3D;&#x3D;&#x3D; 1) {
+      return RETURN_DATA.LAST_USER;
+    }
+
+    const isOnlyUser &#x3D; await prisma.schoolPersons.findMany({
+      where: {
+        schools: {
+          schoolId: schoolId,
+        },
+      },
+    });
+
+    const isOnlyUserArray &#x3D; isOnlyUser.map((entry) &#x3D;&gt; entry.schoolId);
+
+    if (isOnlyUserArray.length &#x3D;&#x3D; 1) return RETURN_DATA.LAST_USER;
+
+    try {
+      await prisma.schoolPersons.delete({
+        where: {
+          schoolPersonId: {
+            personId: personId,
+            schoolId: schoolId,
+          },
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async addJoinCode(body: AddJoinCode, token: string): Promise&lt;ReturnMessage&gt; {
+    const { schoolUUID, expireDate, joinCodeName &#x3D; &#x27;&#x27; } &#x3D; body;
+    const jwt &#x3D; await this.authService.decodeJWT(token);
+    const personUUID &#x3D; jwt.personUUID;
+
+    if (
+      !validator.isUUID(schoolUUID.slice(1), 4) ||
+      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME) ||
+      !validator.isUUID(personUUID.slice(1), 4) ||
+      !(new Date(expireDate).getTime() &gt; 0)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const personId &#x3D; await this.databaseService.getPersonIdByUUID(personUUID);
+
+    const nameIsNotAvailable &#x3D; await prisma.schoolJoinCodes.findFirst({
+      where: {
+        schoolId: Number(schoolId),
+        joinCodeName: joinCodeName,
+      },
+    });
+
+    if (nameIsNotAvailable &amp;&amp; nameIsNotAvailable.joinCodeName !&#x3D;&#x3D; &#x27;&#x27;) {
+      return RETURN_DATA.ALREADY_EXISTS;
+    }
+
+    const schoolJoinCodes &#x3D; await prisma.schoolJoinCodes.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+    });
+
+    if (schoolJoinCodes.length &gt;&#x3D; LENGTHS.MAX_JOIN_CODES) {
+      return RETURN_DATA.MAX_JOIN_CODES_REACHED;
+    }
+
+    const joinCode &#x3D; await this.generateJoinCode();
+    try {
+      const joinCodeData &#x3D; await prisma.schoolJoinCodes.create({
+        data: {
+          schools: {
+            connect: {
+              schoolId: Number(schoolId),
+            },
+          },
+          joinCodeName: joinCodeName,
+          joinCode,
+          expireDate: new Date(expireDate),
+          persons: {
+            connect: {
+              personId: Number(personId),
+            },
+          },
+        },
+      });
+
+      delete joinCodeData.schoolJoinCodeId;
+      delete joinCodeData.schoolId;
+      delete joinCodeData.personCreationId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: joinCodeData,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async removeJoinCode(body: RemoveJoinCode): Promise&lt;ReturnMessage&gt; {
+    const { joinCode } &#x3D; body;
+
+    if (!joinCode) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const joinCodeData &#x3D; await prisma.schoolJoinCodes.findUnique({
+      where: {
+        joinCode: joinCode,
+      },
+    });
+
+    if (!joinCodeData) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    try {
+      await prisma.schoolJoinCodes.delete({
+        where: {
+          joinCode: joinCode,
+        },
+      });
+    } catch (err) {
+      // Foreign key constraint failed
+      if (err.code &#x3D;&#x3D;&#x3D; &#x27;P2003&#x27;) {
+        return RETURN_DATA.REFERENCE_ERROR;
+      } else {
+        return RETURN_DATA.DATABASE_ERROR;
+      }
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async updateJoinCode(body: UpdateJoinCode): Promise&lt;ReturnMessage&gt; {
+    const { joinCode, expireDate, joinCodeName &#x3D; &#x27;&#x27; } &#x3D; body;
+    if (
+      !(new Date(expireDate).getTime() &gt; 0) ||
+      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME)
+    ) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const joinCodeData &#x3D; await prisma.schoolJoinCodes.findUnique({
+      where: {
+        joinCode,
+      },
+    });
+
+    if (!joinCodeData) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    try {
+      await prisma.schoolJoinCodes.update({
+        where: {
+          joinCode,
+        },
+        data: {
+          joinCodeName,
+          expireDate: new Date(expireDate),
+        },
+      });
+    } catch (err) {
+      if (err.code &#x3D;&#x3D;&#x3D; &#x27;P2002&#x27;) {
+        return RETURN_DATA.ALREADY_EXISTS;
+      }
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async getAllJoinCodes(schoolUUID: string): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    const joinCodes &#x3D; await prisma.schoolJoinCodes.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        joinCodeName: true,
+        expireDate: true,
+        joinCode: true,
+        personCreationId: true,
+      },
+    });
+
+    const joinCodesData &#x3D; [];
+
+    for (const joinCode of joinCodes) {
+      const person &#x3D; await this.databaseService.getPersonById(
+        joinCode.personCreationId,
+      );
+
+      joinCodesData.push({
+        joinCodeName: joinCode.joinCodeName,
+        expireDate: joinCode.expireDate,
+        joinCode: joinCode.joinCode,
+        personUUID: person.personUUID,
+        firstName: person.firstName,
+        lastName: person.lastName,
+      });
+    }
+
+    if (!joinCodes) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+    return {
+      status: HttpStatus.OK,
+      data: joinCodesData,
+    };
+  }
+
+  async generateJoinCode(): Promise&lt;string&gt; {
+    let joinCode &#x3D; nanoid().slice(8);
+    const joinCodeExists &#x3D; await prisma.schoolJoinCodes.findUnique({
+      where: {
+        joinCode: joinCode,
+      },
+    });
+
+    if (!joinCodeExists) return joinCode;
+    while (
+      await !prisma.schoolJoinCodes.findUnique({
+        where: {
+          joinCode: joinCode,
+        },
+      })
+    ) {
+      joinCode &#x3D; nanoid().slice(8);
+    }
+    return joinCode;
+  }
+
+  async getUserPermissions(body: UserPermissions): Promise&lt;ReturnMessage&gt; {
+    const { personUUID } &#x3D; body;
+    if (!validator.isUUID(personUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const personRoles &#x3D; await this.databaseService.getPersonRolesByPersonUUID(
+      personUUID,
+    );
+
+    return {
+      status: HttpStatus.OK,
+      data: personRoles,
+    };
+  }
+
+  async getPersonsOfSchool(schoolUUID: string): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    try {
+      const persons &#x3D; await prisma.schoolPersons.findMany({
+        where: {
+          schoolId: Number(schoolId),
+        },
+        select: {
+          personId: true,
+        },
+      });
+
+      const personsData &#x3D; [];
+      for (const person of persons) {
+        const personData &#x3D; await this.databaseService.getPersonById(
+          person.personId,
+        );
+
+        const personRole &#x3D;
+          await this.databaseService.getPersonRolesByPersonUUID(
+            personData.personUUID,
+          );
+
+        personsData.push({
+          personUUID: personData.personUUID,
+          firstName: personData.firstName,
+          lastName: personData.lastName,
+          roleName: personRole[0].roleName,
+          roleId: personRole[0].roleId,
+        });
+      }
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: personsData,
+      };
+    } catch (err) {
+      console.log(err);
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getSchoolInformation(
+    schoolUUID: string,
+    token: string,
+  ): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    const school &#x3D; await prisma.schools.findUnique({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        name: true,
+        schoolUUID: true,
+        description: true,
+        creationDate: true,
+        timezone: true,
+        personCreationId: true,
+      },
+    });
+
+    if (!school) return RETURN_DATA.NOT_FOUND;
+
+    const creator &#x3D; await this.databaseService.getPersonById(
+      school.personCreationId,
+    );
+
+    const schoolDataItem &#x3D; {
+      schoolName: school.name,
+      schoolUUID: school.schoolUUID,
+      description: school.description,
+      timezone: school.timezone,
+      creationDate: school.creationDate,
+      creator: {
+        personUUID: creator.personUUID,
+        firstName: creator.firstName,
+        lastName: creator.lastName,
+      },
+    };
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: schoolDataItem,
+    };
+  }
+
+  async getDetailedSchoolInformation(
+    schoolUUID: string,
+    token: string,
+  ): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    const school &#x3D; await prisma.schools.findUnique({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        name: true,
+        schoolUUID: true,
+        description: true,
+        creationDate: true,
+        timezone: true,
+        personCreationId: true,
+      },
+    });
+
+    if (!school) return RETURN_DATA.NOT_FOUND;
+
+    const creator &#x3D; await this.databaseService.getPersonById(
+      school.personCreationId,
+    );
+
+    const schoolData &#x3D; {};
+
+    const schoolDataItem &#x3D; {
+      schoolName: school.name,
+      schoolUUID: school.schoolUUID,
+      description: school.description,
+      timezone: school.timezone,
+      creationDate: school.creationDate,
+      creator: {
+        personUUID: creator.personUUID,
+        firstName: creator.firstName,
+        lastName: creator.lastName,
+      },
+    };
+
+    schoolData[schoolUUID] &#x3D; schoolDataItem;
+
+    const persons &#x3D; await prisma.schoolPersons.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        personId: true,
+      },
+    });
+
+    const personsData &#x3D; [];
+    for (const person of persons) {
+      const personData &#x3D; await this.databaseService.getPersonById(
+        person.personId,
+      );
+
+      const personRole &#x3D; await this.databaseService.getPersonRolesByPersonUUID(
+        personData.personUUID,
+      );
+
+      personsData.push({
+        personUUID: personData.personUUID,
+        firstName: personData.firstName,
+        lastName: personData.lastName,
+        roleName: personRole[0].roleName,
+        roleUUID: personRole[0].roleUUID,
+      });
+    }
+
+    schoolData[schoolUUID].persons &#x3D; personsData;
+
+    const departmentData &#x3D; [];
+
+    const departments &#x3D; await prisma.departments.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        departmentId: true,
+        departmentUUID: true,
+        name: true,
+      },
+    });
+
+    for (const department of departments) {
+      const departmentDataItem &#x3D; {
+        departmentUUID: department.departmentUUID,
+        name: department.name,
+        classes: [],
+      };
+
+      const classes &#x3D; await prisma.schoolClasses.findMany({
+        where: {
+          departmentId: Number(department.departmentId),
+        },
+        select: {
+          classId: true,
+          classUUID: true,
+          className: true,
+        },
+      });
+
+      if (!classes) departmentData.push(departmentDataItem);
+
+      for (const classItem of classes) {
+        const classDataItem &#x3D; {
+          classUUID: classItem.classUUID,
+          className: classItem.className,
+        };
+
+        departmentDataItem.classes.push(classDataItem);
+        departmentData.push(departmentDataItem);
+      }
+    }
+
+    schoolData[schoolUUID].departments &#x3D; departmentData;
+
+    const coursesData &#x3D; [];
+
+    const courses &#x3D; await prisma.courses.findMany({
+      where: {
+        schoolId: Number(schoolId),
+      },
+      select: {
+        courseId: true,
+        courseUUID: true,
+        name: true,
+        courseDescription: true,
+        creationDate: true,
+        personCreationId: true,
+      },
+    });
+
+    for (const course of courses) {
+      const creator &#x3D; await this.databaseService.getPersonById(
+        course.personCreationId,
+      );
+
+      const courseDataItem &#x3D; {
+        courseName: course.name,
+        courseUUID: course.courseUUID,
+        description: course.courseDescription,
+        creationDate: course.creationDate,
+        creator: {
+          personUUID: creator.personUUID,
+          firstName: creator.firstName,
+          lastName: creator.lastName,
+        },
+        persons: [],
+      };
+
+      const coursePersons &#x3D; await prisma.coursePersons.findMany({
+        where: {
+          courseId: Number(course.courseId),
+        },
+        select: {
+          personId: true,
+        },
+      });
+
+      for (const coursePerson of coursePersons) {
+        const coursePersonData &#x3D; await this.databaseService.getPersonById(
+          coursePerson.personId,
+        );
+
+        const coursePersonItem &#x3D; {
+          personUUID: coursePersonData.personUUID,
+          firstName: coursePersonData.firstName,
+          lastName: coursePersonData.lastName,
+        };
+
+        courseDataItem.persons.push(coursePersonItem);
+      }
+      coursesData.push(courseDataItem);
+    }
+
+    schoolData[schoolUUID].courses &#x3D; coursesData;
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: schoolData,
+    };
+  }
+
+  async updateRole(request): Promise&lt;ReturnMessage&gt; {
+    const { personUUID, schoolUUID, roleId } &#x3D; request.body;
+
+    try {
+      const personId &#x3D; await this.helper.getUserIdByUUID(personUUID);
+      const schoolId &#x3D; await this.helper.getSchoolIdByUUID(schoolUUID);
+      await prisma.personRoles.update({
+        where: {
+          schoolPersonId: {
+            personId,
+            schoolId,
+          },
+        },
+        data: {
+          roleId: Number(roleId),
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      console.log(error);
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  toBoolean(value): boolean {
+    return value &#x3D;&#x3D;&#x3D; &#x27;1&#x27;;
+  }
+}
+
+export async function findOneByUUID(schoolUUID: string): Promise&lt;any&gt; {
+  try {
+    const school &#x3D; await prisma.schools.findFirst({
+      where: {
+        schoolUUID,
+      },
+      select: {
+        schoolId: true,
+      },
+    });
+    return school;
+  } catch {
+    return null;
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'SchoolAdminService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
