@@ -1,5 +1,5 @@
 import { styled } from "../../../../../stitches.config";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Navbar } from "../../../../../components/organisms/Navbar";
@@ -7,10 +7,15 @@ import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../misc/authHelper";
 import CourseMenu from "../../../../../components/atoms/course/CourseMenu";
 import CourseContent from "../../../../../components/molecules/course/CourseContent";
 import { Button } from "../../../../../components/atoms/Button";
+import { useQuery } from "react-query";
+import {
+  fetchCourseContent,
+  fetchCourses,
+} from "../../../../../utils/requests";
+import Skeleton from "react-loading-skeleton";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -30,69 +35,73 @@ const HeadlineLayout = styled("div", {
 export default function Features() {
   const router = useRouter();
 
-  const [courseName, setCourseName] = useState("");
-  const [courseUUID, setCourseUUID] = useState("");
-  const [schoolUUID, setSchoolUUID] = useState("");
-  const [canEditCourse, setCanEditCourse] = useState(false);
+  const courseUUID = router.query.courseUUID as string;
+  const schoolUUID = router.query.schoolUUID as string;
 
-  useEffect(() => {
-    requestDataFromDatabase();
-  });
+  const { data: items, status: contentStatus } = useQuery(
+    ["items", courseUUID],
+    () => fetchCourseContent(courseUUID),
+    {
+      staleTime: 20000,
+    }
+  );
+  const { data: courses, status: coursesStatus } = useQuery(
+    ["courses", schoolUUID],
+    async () => fetchCourses(schoolUUID),
+    {
+      staleTime: 20000,
+    }
+  );
 
-  async function requestDataFromDatabase() {
-    if (!Array.isArray(router.query.courseUUID)) {
-      setCourseUUID(router.query.courseUUID);
-    }
-    if (!Array.isArray(router.query.schoolUUID)) {
-      setSchoolUUID(router.query.schoolUUID);
-    }
-    let accessToken = await getAccessToken();
-    if (courseUUID && accessToken && courseName == "") {
-      const courseResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/getCourseInfo/${courseUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (courseResponse) {
-        if (courseResponse.status == 200) {
-          const courseData = await courseResponse.json();
-          for (let key in courseData) {
-            setCourseName(courseData[key].courseName);
-            setCanEditCourse(courseData[key].canEdit);
-          }
-        } else {
-          setCourseName("Database error");
-        }
-      }
-      const elementsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements/${courseUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (elementsResponse) {
-        if (elementsResponse.status == 200) {
-          const courseData = await elementsResponse.json();
-          console.log(courseData);
-          setItems(courseData);
-        } else {
-          setCourseName("Database error");
-        }
-      }
-    } else if (!accessToken) {
-      router.push("/auth?tab=login");
-    }
+  function getRandomNumber(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  const [items, setItems] = useState([]);
+
+  if (contentStatus === "loading" || coursesStatus === "loading") {
+    return (
+      <>
+        <Head>
+          <title>Course - SchoolUtilities</title>
+        </Head>
+        <Navbar></Navbar>
+        <Spacer size="small"></Spacer>
+        <ContentLayout>
+          <HeadlineLayout>
+            <Skeleton width={300} height={60}></Skeleton>
+          </HeadlineLayout>
+          <Spacer size="verySmall"></Spacer>
+          <Separator width="small" alignment="left" />
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Button
+            backgroundColor={"primary"}
+            color={"primary"}
+            onClick={() => {
+              router.push(`/school/${schoolUUID}/course`);
+            }}
+          >
+            Back to courses
+          </Button>
+        </ContentLayout>
+        <Footer></Footer>
+      </>
+    );
+  }
+
+  if (contentStatus === "error" || coursesStatus === "error") {
+    return <div>Error</div>;
+  }
+
+  const { courseName, canEdit } = courses.find(
+    (currCourse) => currCourse.courseUUID === courseUUID
+  );
 
   return (
     <>
@@ -108,17 +117,16 @@ export default function Features() {
             label={courseName}
             alignment="left"
           ></Headline>
-          {canEditCourse && <CourseMenu courseId={courseUUID}></CourseMenu>}
+          {canEdit && <CourseMenu courseId={courseUUID}></CourseMenu>}
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
         <CourseContent items={items}></CourseContent>
-        {items.length == 0 && canEditCourse && (
+        {items.length == 0 && canEdit && (
           <>
             <p>No elements in this course yet</p>
             <Spacer size="small"></Spacer>
             <Button
-              label="Add elements"
               onClick={() => {
                 router.push(
                   `/school/${schoolUUID}/course/${courseUUID}/elements`
@@ -126,11 +134,13 @@ export default function Features() {
               }}
               backgroundColor={"primary"}
               color={"primary"}
-            ></Button>
+            >
+              Add elements
+            </Button>
             <Spacer size="small"></Spacer>
           </>
         )}
-        {items.length == 0 && !canEditCourse && (
+        {items.length == 0 && !canEdit && (
           <>
             <p>
               The administrator of this site hasn&apos;t added elements to this
@@ -143,11 +153,12 @@ export default function Features() {
         <Button
           backgroundColor={"primary"}
           color={"primary"}
-          label={"Back to courses"}
           onClick={() => {
             router.push(`/school/${schoolUUID}/course`);
           }}
-        ></Button>
+        >
+          Back to courses
+        </Button>
       </ContentLayout>
       <Footer></Footer>
     </>

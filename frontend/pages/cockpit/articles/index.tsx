@@ -8,7 +8,7 @@ import { CockpitSideDashboardBar } from "../../../components/organisms/cockpit/C
 import { MainContent } from "../../index";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getAccessToken } from "../../../misc/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 import { SettingsPopUp } from "../../../components/molecules/schoolAdmin/SettingsPopUp";
 
 export const ContentLayout = styled("div", {

@@ -1,21 +1,20 @@
 import { styled } from "../stitches.config";
 import { Navbar } from "../components/organisms/Navbar";
 import Head from "next/head";
-import { StartPageBox } from "../components/molecules/StartPageBox";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Spacer } from "../components/atoms/Spacer";
-import { Separator } from "../components/atoms/Separator";
-import { Headline } from "../components/atoms/Headline";
 import { BrandStartPageField } from "../components/organisms/brand/BrandStartPageField";
 import { LogoPresentationBox } from "../components/organisms/brand/LogoPresentationBox";
 import { ColorBox } from "../components/organisms/brand/ColorBox";
 import { FontTags } from "../components/organisms/brand/FontTags";
+import SvgLogoPencilCombinedCompact from "../components/atoms/svg/SvgLogoPencilCombinedCompact";
+import SvgLogoPencilCombinedCompactBlack from "../components/atoms/svg/SvgLogoPencilCombinedCompactBlack";
+import SvgLogoPencilCombinedCompactWhite from "../components/atoms/svg/SvgLogoPencilCombinedCompactWhite";
+import SvgLogoPencilLeft from "../components/atoms/svg/SvgLogoPencilLeft";
+import SvgLogoPencilLeftBlack from "../components/atoms/svg/SvgLogoPencilLeftBlack";
+import SvgLogoPencilLeftWhite from "../components/atoms/svg/SvgLogoPencilLeftWhite";
 
 const Footer = dynamic(() => import("../components/organisms/Footer"));
-const GeneralList = dynamic(
-  () => import("../components/organisms/GeneralList")
-);
 
 export const MainContent = styled("div", {
   position: "absolute",
@@ -79,9 +78,9 @@ export default function Home() {
             <LogoPresentationBox
               description="Our default logo with lettering is available in three different variants: Color, black - and white!"
               logos={[
-                { name: "LogoPencilCombinedCompact", imageBg: "1" },
-                { name: "LogoPencilCombinedCompactBlack", imageBg: "2" },
-                { name: "LogoPencilCombinedCompactWhite", imageBg: "3" },
+                { name: "LogoPencilCombinedCompact", icon: SvgLogoPencilCombinedCompact, imageBg: "1" },
+                { name: "LogoPencilCombinedCompactBlack", icon: SvgLogoPencilCombinedCompactBlack, imageBg: "2" },
+                { name: "LogoPencilCombinedCompactWhite", icon: SvgLogoPencilCombinedCompactWhite, imageBg: "3" },
               ]}
             ></LogoPresentationBox>
             <Spacer size="small"></Spacer>
@@ -89,9 +88,9 @@ export default function Home() {
             <LogoPresentationBox
               description="Brand-lettering with icon"
               logos={[
-                { name: "LogoPencilLeft", imageBg: "1" },
-                { name: "LogoPencilLeftBlack", imageBg: "2" },
-                { name: "LogoPencilLeftWhite", imageBg: "3" },
+                { name: "LogoPencilLeft", icon: SvgLogoPencilLeft, imageBg: "1" },
+                { name: "LogoPencilLeftBlack", icon: SvgLogoPencilLeftBlack, imageBg: "2" },
+                { name: "LogoPencilLeftWhite", icon: SvgLogoPencilLeftWhite, imageBg: "3" },
               ]}
             ></LogoPresentationBox>
             <Spacer size="small"></Spacer>
@@ -135,7 +134,7 @@ export default function Home() {
             <StyledH2>FONTS</StyledH2>
             <StyledH3>Poppins</StyledH3>
             <FontTags
-              fontStyles={["Lighter", "Light", "Regular", "Bold", "Bolder"]}
+              fontStyles={["Regular", "Medium", "Bold", "Bolder"]}
             ></FontTags>
             <Spacer size="small"></Spacer>
           </InnerContentLayout>

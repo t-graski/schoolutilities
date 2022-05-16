@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { SvgIcon } from "../SvgIcon";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import {
-  elementsToChoose,
-} from "./CourseComponentDetailViews";
+import { elementsToChoose } from "./CourseComponentDetailViews";
 import { AddIcon } from "../AddIcon";
 
-type Props = { courseId: string; addNewEntry?: Function };
+type Props = { addNewEntry?: Function };
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
@@ -33,9 +30,10 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
-  backgroundColor: "$backgroundSecondary",
   borderRadius: 15,
   padding: 8,
+
+  backgroundColor: "$backgroundSecondary",
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
   "@media (prefers-reduced-motion: no-preference)": {
@@ -52,20 +50,22 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
 });
 
 const itemStyles = {
-  all: "unset",
-  lineHeight: 1,
-  color: "$fontPrimary",
+  position: "relative",
+
+  paddingLeft: 25,
+  padding: "3px 8px",
+  height: 25,
   borderRadius: 5,
   display: "flex",
   alignItems: "center",
-  height: 25,
-  fontWeight: "500",
-  fontSize: "1.05rem",
-  padding: "3px 8px",
-  position: "relative",
-  paddingLeft: 25,
+
   userSelect: "none",
   cursor: "pointer",
+  fontWeight: "$medium",
+  fontSize: "1.05rem",
+  all: "unset",
+  lineHeight: 1,
+  color: "$fontPrimary",
 
   "&[data-disabled]": {
     color: "$fontPrimary",
@@ -80,6 +80,7 @@ const itemStyles = {
 
 const StyledItem = styled(DropdownMenuPrimitive.Item, {
   ...itemStyles,
+
   paddingLeft: "10px",
   padding: "7px",
   gap: "15px",
@@ -92,15 +93,17 @@ const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
   ...itemStyles,
 });
 const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
+  ...itemStyles,
+
   '&[data-state="open"]': {
     backgroundColor: "$specialPrimary",
     color: "$fontPrimary",
   },
-  ...itemStyles,
 });
 
 const StyledLabel = styled(DropdownMenuPrimitive.Label, {
   paddingLeft: 25,
+
   fontSize: 12,
   lineHeight: "25px",
   color: "$fontPrimary",
@@ -108,13 +111,15 @@ const StyledLabel = styled(DropdownMenuPrimitive.Label, {
 
 const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
-  backgroundColor: "$fontPrimary",
   margin: 5,
+
+  backgroundColor: "$fontPrimary",
 });
 
 const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
   position: "absolute",
   left: 0,
+
   width: 25,
   display: "inline-flex",
   alignItems: "center",
@@ -122,9 +127,11 @@ const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
 });
 
 const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
-  fill: "$fontPrimary",
   position: "relative",
+
   right: 0,
+
+  fill: "$fontPrimary",
 });
 
 // Exports
@@ -152,31 +159,37 @@ const contentShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: "$backgroundSecondary",
   position: "fixed",
+
+  backgroundColor: "$backgroundSecondary",
   opacity: 0.8,
   inset: 0,
+
   "@media (prefers-reduced-motion: no-preference)": {
     animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
-  backgroundColor: "$backgroundPrimary",
-  borderRadius: 6,
-  boxShadow:
-    "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
   position: "fixed",
   top: "50%",
   left: "50%",
-  transform: "translate(-50%, -50%)",
+
+  borderRadius: 6,
   width: "90vw",
   maxWidth: "600px",
   maxHeight: "85vh",
   padding: 25,
+
+  backgroundColor: "$backgroundPrimary",
+  boxShadow:
+    "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
+  transform: "translate(-50%, -50%)",
+
   "@media (prefers-reduced-motion: no-preference)": {
     animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
+
   "&:focus": { outline: "none" },
 });
 
@@ -191,13 +204,15 @@ function Content({ children, ...props }) {
 
 const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
-  fontWeight: 500,
+
+  fontWeight: "$medium",
   color: "$fontPrimary",
   fontSize: 17,
 });
 
 const StyledDescription = styled(DialogPrimitive.Description, {
   margin: "10px 0 20px",
+
   color: "$fontPrimary",
   fontSize: 15,
   lineHeight: 1.5,
@@ -212,20 +227,22 @@ const DialogDescription = StyledDescription;
 const DialogClose = DialogPrimitive.Close;
 
 const IconButton = styled("button", {
-  all: "unset",
-  fontFamily: "inherit",
+  position: "absolute",
+  top: 10,
+  right: 10,
+
   borderRadius: "100%",
   height: 30,
   width: 30,
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+
   color: "$fontPrimary",
-  position: "absolute",
-  top: 10,
-  right: 10,
   cursor: "pointer",
   transition: "all 0.2s ease-in-out",
+  all: "unset",
+  fontFamily: "inherit",
 
   "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
   "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
@@ -248,12 +265,13 @@ const SelectionLayout = styled("div", {
 });
 
 const Element = styled("div", {
-  fontSize: "1rem",
   padding: "10px 20px",
-  cursor: "pointer",
   border: "1px solid $fontPrimary",
   borderRadius: 15,
+
   transition: "all 0.2s",
+  cursor: "pointer",
+  fontSize: "1rem",
 
   "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
 
@@ -282,25 +300,29 @@ const AddButton = styled("button", {
   justifySelf: "end",
   borderRadius: 15,
   padding: "10px 20px",
-  fontSize: "1rem",
-  fontWeight: 500,
-  cursor: "pointer",
   width: "fit-content",
-  transition: "all 0.2s",
 
+  fontSize: "1rem",
+  fontWeight: "$medium",
+  cursor: "pointer",
+  transition: "all 0.2s",
   backgroundColor: "$specialSecondary",
   color: "$fontPrimary",
   boxShadow: `0 2px 10px $specialPrimary`,
+
   "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+
   "&:focus": { boxShadow: `0 0 0 2px black` },
+
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
+
   "&:disabled:hover": {
     backgroundColor: "$specialSecondary",
     color: "$fontPrimary",
   },
 });
 
-export const AddCourseElement: React.FC<Props> = ({ courseId, addNewEntry }) => {
+export const AddCourseElement: React.FC<Props> = ({ addNewEntry }) => {
   const [open, setOpen] = useState(false);
   const [choosenElementId, setChoosenElementId] = useState("");
   const [detailsConfig, setDetailsConfig] = useState({});
@@ -316,9 +338,11 @@ export const AddCourseElement: React.FC<Props> = ({ courseId, addNewEntry }) => 
 
   return (
     <>
-      <AddIcon addFunction={() => {
+      <AddIcon
+        addFunction={() => {
           setOpen(true);
-      }}></AddIcon>
+        }}
+      ></AddIcon>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent>

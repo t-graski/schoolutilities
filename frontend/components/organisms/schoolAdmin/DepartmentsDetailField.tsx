@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
-import { regex } from "../../../misc/regex";
+import { regex } from "../../../utils/regex";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
-import { SvgIcon } from "../../atoms/SvgIcon";
+import SvgEdit from "../../atoms/svg/SvgEdit";
+import SvgDelete from "../../atoms/svg/SvgDelete";
 
 type Props = {
   setDisabled: Function;
@@ -35,6 +36,7 @@ const AddIconLayout = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
+
   backgroundColor: "$specialPrimary",
   cursor: "pointer",
 });
@@ -59,8 +61,9 @@ const DepartmentLayout = styled("div", {
   alignItems: "center",
   padding: "20px",
   justifyContent: "space-between",
-  backgroundColor: "$backgroundTertiary",
   borderRadius: "20px",
+
+  backgroundColor: "$backgroundTertiary",
 });
 
 const DepartmentName = styled("p", {
@@ -83,9 +86,10 @@ const DepartmentEditIcon = styled("div", {
   padding: "10px",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$specialSecondary",
+
   cursor: "pointer",
   color: "$fontPrimary",
+  backgroundColor: "$specialSecondary",
 });
 
 const DepartmentDeleteIcon = styled("div", {
@@ -96,12 +100,18 @@ const DepartmentDeleteIcon = styled("div", {
   padding: "10px",
   alignItems: "center",
   borderRadius: "50%",
+
   backgroundColor: "$specialTertiary",
   cursor: "pointer",
   color: "$fontPrimary",
 });
 
 const PopUpLayout = styled("div", {
+  position: "absolute",
+  top: "0",
+  left: "0",
+  zIndex: "10",
+
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
@@ -109,10 +119,6 @@ const PopUpLayout = styled("div", {
   width: "100vw",
   height: "100vh",
   backgroundColor: "rgba(0,0,0,0.7)",
-  position: "absolute",
-  top: "0",
-  left: "0",
-  zIndex: "10",
 });
 
 const PopUpContentLayout = styled("div", {
@@ -120,9 +126,10 @@ const PopUpContentLayout = styled("div", {
   flexDirection: "column",
   gap: "10px",
   width: "50%",
-  backgroundColor: "$backgroundPrimary",
   padding: "30px",
   borderRadius: "20px",
+
+  backgroundColor: "$backgroundPrimary",
 });
 
 const StyledInputField = styled("div", {
@@ -133,8 +140,9 @@ const StyledInputField = styled("div", {
 const StyledPopUpHeadline = styled("h2", {
   fontSize: "2.5rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
   margin: "0",
+
+  color: "$fontPrimary",
 });
 
 const PopUpButtonLayout = styled("div", {
@@ -145,9 +153,10 @@ const PopUpButtonLayout = styled("div", {
 });
 
 const Description = styled("p", {
+  margin: "15px 0",
+  
   fontSize: "1.2rem",
   color: "$fontPrimary",
-  margin: "15px 0",
 });
 
 export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
@@ -240,7 +249,6 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                       setDepartmentNameValid(false);
                     }
                   }}
-                  iconName=""
                   regex={regex.schoolName}
                   setValidInput={setDepartmentNameValid}
                   min="2"
@@ -249,16 +257,14 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
               </StyledInputField>
               <PopUpButtonLayout>
                 <Button
-                  label="Close"
                   onClick={() => {
                     setDepartmentName("");
                     setPopUpIsVisible(false);
                   }}
                   backgroundColor={"secondary"}
                   color={"primary"}
-                />
+                >Close</Button>
                 <Button
-                  label={departmentId == -1 ? "Add" : "Edit"}
                   onClick={savePopUpInput}
                   backgroundColor={"primary"}
                   color={"primary"}
@@ -268,7 +274,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                       departmentName == departments[departmentId])
                   }
                   type="submit"
-                />
+                >{departmentId == -1 ? "Add" : "Edit"}</Button>
               </PopUpButtonLayout>
             </PopUpContentLayout>
           </PopUpLayout>
@@ -307,7 +313,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     setPopUpIsVisible(true);
                   }}
                 >
-                  <SvgIcon iconName="SvgEdit"></SvgIcon>
+                  <SvgEdit />
                 </DepartmentEditIcon>
                 <DepartmentDeleteIcon
                   onClick={() => {
@@ -321,7 +327,7 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                     }
                   }}
                 >
-                  <SvgIcon iconName="SvgDelete"></SvgIcon>
+                  <SvgDelete />
                 </DepartmentDeleteIcon>
               </DepartmentIcons>
             </DepartmentLayout>

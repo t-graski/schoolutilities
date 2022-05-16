@@ -15,6 +15,7 @@ const HrLayout = styled("div", {
   display: "flex",
   width: "100%",
   minHeight: "3px",
+  
   variants: {
     alignment: {
       center: {
@@ -39,15 +40,19 @@ const HrLayout = styled("div", {
 });
 
 const StyledSeparator = styled(SeparatorPrimitive.Root, {
-  backgroundColor: "$fontPrimary",
   borderRadius: "10px",
+
+  backgroundColor: "$fontPrimary",
+
   "&[data-orientation=horizontal]": {
     height: 3,
   },
+
   "&[data-orientation=vertical]": {
     height: "100%",
     width: 3,
   },
+  
   variants: {
     width: {
       big: {
