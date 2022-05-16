@@ -28,6 +28,8 @@ const PopOverLayout = styled("div", {
   padding: "60px 10px",
   gap: "10px",
   zIndex: "20",
+  display: "none",
+  
   variants: {
     visible: {
       true: {
