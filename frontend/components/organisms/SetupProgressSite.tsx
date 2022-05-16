@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
 import cookie from "js-cookie";
 import { Progressbar } from "../molecules/Progressbar";
 import { Spacer } from "../atoms/Spacer";
-import { SvgIcon } from "../atoms/SvgIcon";
-import { getAccessToken } from "../../misc/authHelper";
+import { getAccessToken, setSelectedSchool } from "../../utils/authHelper";
 
 type Props = {
   steps: {
@@ -44,6 +43,7 @@ const SuccessLayout = styled("div", {
   width: "100%",
   padding: "0 10vw",
   gap: "40px",
+
   color: "$fontPrimary",
 });
 
@@ -78,12 +78,13 @@ const SuccessDescription = styled("p", {
 });
 
 const StyledLink = styled("a", {
-  color: "$specialPrimary",
-  fontSize: "1.2rem",
-  fontWeight: "bold",
   padding: "20px",
   border: "2px solid $specialPrimary",
   borderRadius: "25px",
+
+  color: "$specialPrimary",
+  fontSize: "1.2rem",
+  fontWeight: "bold",
   textDecoration: "none",
   cursor: "pointer",
   transition: "all 0.2s",
@@ -133,6 +134,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
       if (schoolResponse.status == 200) {
         let data = await schoolResponse.json();
         setSchoolUUID(data.schoolUUID);
+        setSelectedSchool(data.schoolUUID);
         if (data && data.schoolUUID) {
           let creationGoneWrong = false;
           const storage = JSON.parse(localStorage.getItem("departments"));
@@ -190,6 +192,8 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
     }
   }
 
+
+
   return (
     <>
       <ProgressLayout>
@@ -207,7 +211,7 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusHeadline}
               </StyledHeadline>
               <SuccessImageLayout color={statusInfo && statusInfo.statusColor}>
-                <SvgIcon iconName={statusInfo.statusIcon}></SvgIcon>
+                {/* <SvgIcon iconName={statusInfo.statusIcon}></SvgIcon> */}
               </SuccessImageLayout>
               <SuccessDescription>
                 {statusInfo && statusInfo.statusDescription}
@@ -226,12 +230,13 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
             disabled={activeStep === 0 || isButtonDisabled}
             backgroundColor="primary"
             color="primary"
-            label="BACK"
             onClick={() => {
               setActiveStep(activeStep - 1);
             }}
             isVisible={!statusInfo}
-          ></Button>
+          >
+            BACK
+          </Button>
           <ProgressbarLayout>
             <Progressbar
               steps={steps}
@@ -247,7 +252,6 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
               }
               backgroundColor="primary"
               color="primary"
-              label={activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
               onClick={async () => {
                 if (activeStep + 1 === steps.length) {
                   await saveInputs();
@@ -258,7 +262,9 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 }
               }}
               isVisible={!statusInfo}
-            ></Button>
+            >
+              {activeStep + 1 === steps.length ? "FINISH" : "NEXT"}
+            </Button>
           </ButtonLayout>
         </NavigationLayout>
       </ProgressLayout>

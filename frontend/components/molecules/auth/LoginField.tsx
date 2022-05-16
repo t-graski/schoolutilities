@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/InputField";
+import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
-import { getAccessToken, logout } from "../../../misc/authHelper";
-import { regex } from "../../../misc/regex";
+import { getAccessToken, logout } from "../../../utils/authHelper";
+import { regex } from "../../../utils/regex";
+import { PasswordInput } from "../../atoms/input/PasswordInput";
+import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
+import SvgEmail from "../../atoms/svg/SvgEmail";
+import SvgPassword from "../../atoms/svg/SvgPassword";
 
 type Props = {};
 
@@ -51,7 +55,7 @@ const StyledLink = styled("a", {
   },
 });
 
-export const LoginField: React.FC<Props> = ({}) => {
+export const LoginField: React.FC<Props> = ({ }) => {
   const [email, setEmail] = React.useState("");
   const [emailValid, setEmailValid] = React.useState(false);
   const [password, setPassword] = React.useState("");
@@ -79,6 +83,7 @@ export const LoginField: React.FC<Props> = ({}) => {
   }
 
   function checkInputData() {
+    console.log(emailValid, passwordValid);
     if (emailValid && passwordValid) {
       if (isDisabled) {
         setDisabled(false);
@@ -143,58 +148,32 @@ export const LoginField: React.FC<Props> = ({}) => {
             inputType="email"
             value={email}
             onChange={setEmail}
-            iconName="SvgEmail"
+            icon={SvgEmail}
             required={true}
             regex={regex.email}
             setValidInput={setEmailValid}
           ></InputField>
-          <InputField
+          <PasswordInput
             label="Password"
-            inputType="password"
             value={password}
             onChange={setPassword}
-            iconName="SvgPassword"
+            icon={SvgPassword}
             required={true}
-            validationOptions={[
-              {
-                regex: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
-                errorMessage: "At least one lowercase and uppercase letter",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /.*[0-9].*/,
-                errorMessage: "At least one number",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
-                errorMessage:
-                  "At least one special character (e.g. !@#$%^&*()_+-=[]{};':'|,.<>/)",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-              {
-                regex: /.{8,}/,
-                errorMessage: "8 or more letters",
-                validIconName: "SvgCheckMark",
-                invalidIconName: "SvgExclamination",
-              },
-            ]}
-            isHoverCardVisible={false}
+            validationOptions={PASSWORD_VALIDATION_MESSAGES}
             setValidInput={setPasswordValid}
-          ></InputField>
+            showPasswordStrength={false}
+          ></PasswordInput>
           <LoginButtonLayout>
             <Button
               backgroundColor="primary"
               color="primary"
-              label="Sign in"
               onClick={() => {
                 handleSubmit();
               }}
               disabled={isDisabled}
-            ></Button>
+            >
+              Sign in
+            </Button>
             <Link href="/auth/password-reset" passHref>
               <StyledLink>Reset Password</StyledLink>
             </Link>
@@ -210,21 +189,23 @@ export const LoginField: React.FC<Props> = ({}) => {
                 <Button
                   backgroundColor="primary"
                   color="primary"
-                  label="See your profile"
-                  onClick={() => {}}
-                ></Button>
+                  onClick={() => { }}
+                >
+                  See your profile
+                </Button>
               </a>
             </Link>
             <Button
               backgroundColor="secondary"
               color="primary"
-              label="Logout"
               onClick={() => {
                 logout();
                 setSignUpInfo("");
                 setLoggedIn(false);
               }}
-            ></Button>
+            >
+              Logout
+            </Button>
           </ButtonLayout>
         )}
         {!loginSuccess && signUpInfo && (
@@ -232,11 +213,12 @@ export const LoginField: React.FC<Props> = ({}) => {
             <Button
               backgroundColor="secondary"
               color="primary"
-              label="Try again"
               onClick={() => {
                 setSignUpInfo("");
               }}
-            ></Button>
+            >
+              Try again
+            </Button>
           </ButtonLayout>
         )}
       </StyledInfo>

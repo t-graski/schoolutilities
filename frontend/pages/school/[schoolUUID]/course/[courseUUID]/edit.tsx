@@ -7,10 +7,12 @@ import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
 import Footer from "../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../misc/authHelper";
-import { InputField } from "../../../../../components/atoms/InputField";
+import { getAccessToken } from "../../../../../utils/authHelper";
+import { InputField } from "../../../../../components/atoms/input/InputField";
 import { Button } from "../../../../../components/atoms/Button";
-import { regex } from "../../../../../misc/regex";
+import { regex } from "../../../../../utils/regex";
+import { SearchSelect } from "../../../../../components/atoms/input/SearchSelect";
+import SvgSchool from "../../../../../components/atoms/svg/SvgSchool";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -166,26 +168,26 @@ export default function Features() {
           <Separator width="small" alignment="left" />
         </HeadlineLayout>
         <InputField
-          label={inputData.courseName}
+          label={"Course name"}
           inputType="text"
           value={inputData.courseName}
           onChange={(e) => {
             setInputData({ ...inputData, courseName: e });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={true}
           regex={regex.schoolName}
           setValidInput={setCourseNameValid}
           errorMessage="Your course needs a name, doesn't it?"
         ></InputField>
         <InputField
-          label={inputData.courseDescription}
+          label={"Course description"}
           inputType="text"
           value={inputData.courseDescription}
           onChange={(e) => {
             setInputData({ ...inputData, courseDescription: e });
           }}
-          iconName="SvgSchool"
+          icon={SvgSchool}
           required={false}
           setValidInput={setCourseDescriptionValid}
           errorMessage="Your course needs a description, doesn't it?"
@@ -193,9 +195,7 @@ export default function Features() {
         {persons && inputData.persons && (
           <>
             <Label>Select persons for this course:</Label>
-            <InputField
-              label="Persons"
-              inputType="search-select"
+            <SearchSelect
               selectValue={inputData.persons}
               onChange={(e) => {
                 console.log(e);
@@ -204,9 +204,9 @@ export default function Features() {
                   persons: e,
                 });
               }}
-              iconName="SvgSchool"
+              icon={SvgSchool}
+
               selectMultiValues={true}
-              required={false}
               selectOptions={persons}
             />
           </>
@@ -214,9 +214,7 @@ export default function Features() {
         {classes && inputData.classes && (
           <>
             <Label>Select classes for this course:</Label>
-            <InputField
-              label="Classes"
-              inputType="search-select"
+            <SearchSelect
               selectValue={inputData.classes}
               onChange={(e) => {
                 console.log(e);
@@ -225,9 +223,8 @@ export default function Features() {
                   classes: e,
                 });
               }}
-              iconName="SvgSchool"
+              icon={SvgSchool}
               selectMultiValues={true}
-              required={false}
               selectOptions={classes}
             />
           </>
@@ -235,15 +232,15 @@ export default function Features() {
         <Spacer size="verySmall"></Spacer>
         <ButtonLayout>
           <Button
-            label="Cancel"
             onClick={() => {
               router.push(`/school/${schoolUUID}/course/${courseUUID}`);
             }}
             backgroundColor={"secondary"}
             color={"primary"}
-          ></Button>
+          >
+            Cancel
+          </Button>
           <Button
-            label="Save"
             onClick={async () => {
               let accessToken = await getAccessToken();
               if (courseUUID && accessToken) {
@@ -292,7 +289,9 @@ export default function Features() {
             }}
             backgroundColor={"primary"}
             color={"primary"}
-          ></Button>
+          >
+            Save
+          </Button>
         </ButtonLayout>
       </ContentLayout>
       <Footer></Footer>

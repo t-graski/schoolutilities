@@ -66,15 +66,15 @@ export const SettingsPopUp: React.FC<Props> = ({
           {children}
           <PopUpButtonLayout>
             <Button
-              label="Cancel"
               onClick={() => {
                 closeFunction();
               }}
               backgroundColor={"secondary"}
               color={"primary"}
-            />
+            >
+              Cancel
+            </Button>
             <Button
-              label={saveLabel}
               onClick={() => {
                 saveFunction();
               }}
@@ -82,7 +82,9 @@ export const SettingsPopUp: React.FC<Props> = ({
               color={"primary"}
               disabled={!inputValid}
               type="button"
-            />
+            >
+              {saveLabel}
+            </Button>
           </PopUpButtonLayout>
         </PopUpContentLayout>
       </PopUpLayout>

@@ -5,7 +5,7 @@ import Head from "next/head";
 import { CourseSelectionList } from "../../../../components/organisms/course/CourseSelectionList";
 import { Headline } from "../../../../components/atoms/Headline";
 import { Separator } from "../../../../components/atoms/Separator";
-import { ContentLayout } from "./[courseUUID]/elements";
+import { ContentLayout } from "../../../../utils/styles";
 
 export default function CreateCourse() {
   return (

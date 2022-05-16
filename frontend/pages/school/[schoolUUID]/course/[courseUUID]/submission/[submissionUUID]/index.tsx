@@ -7,7 +7,7 @@ import { Spacer } from "../../../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../../../components/atoms/Separator";
 import Footer from "../../../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../../../misc/authHelper";
+import { getAccessToken } from "../../../../../../../utils/authHelper";
 import { FileUpload } from "../../../../../../../components/molecules/FileUpload";
 import { Button } from "../../../../../../../components/atoms/Button";
 import { SubmissionsOverview } from "../../../../../../../components/organisms/course/SubmissionsOverview";
@@ -98,22 +98,29 @@ export default function Features() {
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
-        {!submissionContent.canEdit && !submissionContent.hasSubmitted && <FileUpload></FileUpload>}
-        {!submissionContent.canEdit && submissionContent.hasSubmitted && (<>You already submitted a file</>)}
+        {!submissionContent.canEdit && !submissionContent.hasSubmitted && (
+          <FileUpload></FileUpload>
+        )}
+        {!submissionContent.canEdit && submissionContent.hasSubmitted && (
+          <>You already submitted a file</>
+        )}
         {submissionContent.canEdit && (
-          <SubmissionsOverview submissionUUID={submissionUUID}></SubmissionsOverview>
+          <SubmissionsOverview
+            submissionUUID={submissionUUID}
+          ></SubmissionsOverview>
         )}
         <Spacer size="verySmall"></Spacer>
         <Button
           backgroundColor={"secondary"}
           color={"primary"}
-          label={"Back to course"}
           onClick={() => {
             router.push(
               `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
             );
           }}
-        ></Button>
+        >
+          Back to course
+        </Button>
         <Spacer size="verySmall"></Spacer>
       </ContentLayout>
       <Footer></Footer>

@@ -4,8 +4,9 @@ import { styled } from "../../stitches.config";
 type Props = {};
 
 const BasicSiteLayout = styled("div", {
-  height: "100vh",
   position: "relative",
+  
+  height: "100vh",
 });
 
 export const SiteLayout: React.FC<Props> = ({ children }) => {

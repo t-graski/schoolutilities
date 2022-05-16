@@ -8,6 +8,7 @@ type Props = {
 
 const SpacerBox = styled("div", {
   display: "inline-block",
+  
   variants: {
     size: {
       verySmall: {

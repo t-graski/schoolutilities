@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 export class StatisticsService {
   constructor() {}
 
-  // @Cron('20 * * * * *')
+  // @Cron('10 * * * * *')
   async getStatistics() {
     // console.log('Schools: ' + (await this.getSchoolAmount()));
     // console.log('Users: ' + (await this.getUserAmount()));

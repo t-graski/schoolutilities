@@ -8,7 +8,12 @@ import { useRouter } from "next/router";
 import { ClassesSettingsField } from "../../../components/organisms/schoolAdmin/ClassesSettingsField";
 import { PersonsSettingsField } from "../../../components/organisms/schoolAdmin/PersonsSettingsField";
 import { JoinCodesSettingsField } from "../../../components/organisms/schoolAdmin/JoinCodesSettingsField";
-import { getAccessToken, getUserData, logout } from "../../../misc/authHelper";
+import { getAccessToken, getUserData, logout } from "../../../utils/authHelper";
+import SvgDepartment from "../../../components/atoms/svg/SvgDepartment";
+import SvgClass from "../../../components/atoms/svg/SvgClass";
+import SvgStudent from "../../../components/atoms/svg/SvgStudent";
+import SvgTeacher from "../../../components/atoms/svg/SvgTeacher";
+import { useQueryClient } from "react-query";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -24,6 +29,8 @@ export default function CreateSchool() {
   const [userData, setUserData] = useState(null);
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     fetchData();
@@ -49,9 +56,9 @@ export default function CreateSchool() {
   function getSecondPart() {
     switch (urlParam) {
       case "classes":
-        return <ClassesSettingsField />;
+        return <ClassesSettingsField queryClient={queryClient} />;
       case "persons":
-        return <PersonsSettingsField />;
+        return <PersonsSettingsField queryClient={queryClient} />;
       case "join-codes":
         return <JoinCodesSettingsField />;
       default:
@@ -69,30 +76,30 @@ export default function CreateSchool() {
         <SideDashboard
           links={[
             {
-              iconName: "SvgDepartment",
+              icon: SvgDepartment,
               label: "Departments",
               href: `/school/${schoolUUID}/edit?tab=departments`,
               highlighted:
                 urlParam != "persons" &&
-                urlParam != "classes" &&
-                urlParam != "join-codes"
+                  urlParam != "classes" &&
+                  urlParam != "join-codes"
                   ? true
                   : false,
             },
             {
-              iconName: "SvgClass",
+              icon: SvgClass,
               label: "Classes",
               href: `/school/${schoolUUID}/edit?tab=classes`,
               highlighted: urlParam == "classes" ? true : false,
             },
             {
-              iconName: "SvgStudent",
+              icon: SvgStudent,
               label: "Persons",
               href: `/school/${schoolUUID}/edit?tab=persons`,
               highlighted: urlParam == "persons" ? true : false,
             },
             {
-              iconName: "SvgTeacher",
+              icon: SvgTeacher,
               label: "Invite Codes",
               href: `/school/${schoolUUID}/edit?tab=join-codes`,
               highlighted: urlParam == "join-codes" ? true : false,

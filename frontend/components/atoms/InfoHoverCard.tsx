@@ -1,7 +1,7 @@
 import React from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
-import { SvgIcon } from "./SvgIcon";
+import SvgInfo from "./svg/SvgInfo";
 
 type Props = {};
 
@@ -29,7 +29,7 @@ const StyledContent = styled(HoverCardPrimitive.Content, {
   borderRadius: 6,
   padding: 20,
   width: 400,
-  backgroundColor: "$backgroundPrimary",
+
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
   "@media (prefers-reduced-motion: no-preference)": {
@@ -44,6 +44,7 @@ const StyledContent = styled(HoverCardPrimitive.Content, {
       '&[data-side="left"]': { animationName: slideRightAndFade },
     },
   },
+  backgroundColor: "$backgroundPrimary",
 });
 
 const StyledArrow = styled(HoverCardPrimitive.Arrow, {
@@ -60,16 +61,17 @@ const ImageLayout = styled("div", {
   display: "flex",
   width: "30px",
   height: "30px",
+
   color: "$fontPrimary",
   cursor: "pointer",
 });
 
-export const InfoHoverCard: React.FC<Props> = ({children}) => {
+export const InfoHoverCard: React.FC<Props> = ({ children }) => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
         <ImageLayout>
-          <SvgIcon iconName="SvgInfo" />
+          <SvgInfo />
         </ImageLayout>
       </HoverCardTrigger>
       <HoverCardContent sideOffset={5}>

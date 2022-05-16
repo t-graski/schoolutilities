@@ -9,7 +9,7 @@ import { CourseCreateProgressSite } from "../../../../components/organisms/cours
 import { CourseCreateDetailField } from "../../../../components/organisms/course/CourseCreateDetailField";
 import { CourseCreateMembersField } from "../../../../components/organisms/course/CourseCreateMembersField";
 import { useRouter } from "next/router";
-import { getAccessToken } from "../../../../misc/authHelper";
+import { getAccessToken } from "../../../../utils/authHelper";
 
 const CreateCourseLayout = styled("div", {
   display: "flex",
