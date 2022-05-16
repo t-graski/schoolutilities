@@ -68,6 +68,10 @@ export function logout() {
   cookie.remove("userProfile");
 }
 
+export function loggedIn(): boolean {
+  return !(cookie.get("accessToken") == undefined && cookie.get("refreshToken") == undefined);
+}
+
 export function setSelectedSchool(schoolUUID: string) {
   cookie.set("selectedSchool", schoolUUID, {
     expires: 1,

@@ -6,6 +6,7 @@ const SvgOpenLogo = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    alt="Open Logo"
   >
     <g clipPath="url(#a)">
       <path

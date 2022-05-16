@@ -5,6 +5,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import {
   getSelectedSchool,
   getUserData,
+  loggedIn,
   logout,
   setSelectedSchool,
 } from "../../utils/authHelper";
@@ -215,6 +216,7 @@ export const UserMenu = () => {
     {
       refetchOnMount: false,
       staleTime: 120000,
+      enabled: loggedIn(),
     }
   );
   const { data: courses, status: coursesStatus } = useQuery(
@@ -223,6 +225,7 @@ export const UserMenu = () => {
     {
       refetchOnMount: false,
       staleTime: 30000,
+      enabled: loggedIn(),
     }
   );
   const { data: userInfo, status: userInfoStatus } = useQuery(
@@ -231,6 +234,7 @@ export const UserMenu = () => {
     {
       refetchOnMount: false,
       staleTime: 60000,
+      enabled: loggedIn(),
     }
   );
 

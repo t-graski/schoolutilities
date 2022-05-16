@@ -100,7 +100,7 @@ export const Navbar: React.FC<Props> = ({}) => {
             <UserMenu></UserMenu>
           </Link>
         </SpecialLinkLayout>
-        <StyledOpenButton onClick={() => setMobileVisible(true)}>
+        <StyledOpenButton onClick={() => setMobileVisible(true)} aria-label="Open hamburger menu">
           <SvgHamburger />
         </StyledOpenButton>
       </NavbarLayout>

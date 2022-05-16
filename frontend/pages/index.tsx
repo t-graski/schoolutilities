@@ -46,6 +46,7 @@ export default function Home() {
           <meta property="og:type" content="SchoolUtilities"></meta>
           <meta property="og:url" content="https://schoolutilities.net/"></meta>
           <meta property="og:title" content="SchoolUtilities"></meta>
+          <meta name="description" content="LET’S MAKE SCHOOL EASY."></meta>
           <meta
             property="og:description"
             content="LET’S MAKE SCHOOL EASY."
