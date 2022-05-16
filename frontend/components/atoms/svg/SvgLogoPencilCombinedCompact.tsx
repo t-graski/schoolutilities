@@ -6,6 +6,7 @@ const SvgLogoPencilCombinedCompact = (props) => (
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
+    alt="Pencil Logo"
   >
     <g clipPath="url(#a)">
       <path
