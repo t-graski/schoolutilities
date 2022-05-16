@@ -85,7 +85,7 @@ export const StartPageBox: React.FC<Props> = ({
         </StartPageBoxDescriptionLine>
         <ButtonLayout>
           <Button
-            backgroundColor={"tertiary"}
+            backgroundColor={"primary"}
             color={"primary"}
             onClick={() => {
               router.push("/auth?tab=register");

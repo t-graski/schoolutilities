@@ -86,7 +86,7 @@ export const Navbar: React.FC<Props> = ({}) => {
       </PopOverLayout>
       <NavbarLayout>
         <Link href="/" passHref>
-          <a>
+          <a aria-label="Startpage">
             <LogoLayout>
               <SvgOpenLogo />
             </LogoLayout>
