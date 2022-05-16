@@ -115,7 +115,7 @@ const Footer: React.FC<Props> = ({}) => {
       <FooterLayout>
         <FooterContentLayout>
           <Link href="/" passHref>
-            <a>
+            <a aria-label="Startpage">
               <LogoLayout>
                 <SvgLogoPencilCombinedCompact></SvgLogoPencilCombinedCompact>
               </LogoLayout>

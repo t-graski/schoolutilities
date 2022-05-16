@@ -11,7 +11,7 @@ export const styles = {
       fontSecondary: "#242424",
       fontTertiary: "#3c3f46",
       specialPrimary: "#eda33f",
-      specialSecondary: "#738adb",
+      specialSecondary: "#4f71ca",
       specialTertiary: "#D23737",
       specialQuaternary: "#E0E2EB",
       specialQuinary: "#B1B6CD",
