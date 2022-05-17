@@ -12,7 +12,6 @@ import SvgClose from "../atoms/svg/SvgClose";
 import SvgOpenLogo from "../atoms/svg/SvgOpenLogo";
 
 type Props = {
-  visible: boolean;
   setVisibility: Function;
 };
 
@@ -28,22 +27,6 @@ const PopOverLayout = styled("div", {
   padding: "60px 10px",
   gap: "10px",
   zIndex: "20",
-  display: "none",
-  
-  variants: {
-    visible: {
-      true: {
-        display: "flex",
-      },
-      false: {
-        display: "none",
-      },
-    },
-  },
-
-  defaultVariants: {
-    visible: "false",
-  },
 });
 
 const LogoLayout = styled("div", {
@@ -111,11 +94,11 @@ const StyledCloseButton = styled("button", {
   fontSize: "2.5rem",
 });
 
-export const NavbarPopOver: React.FC<Props> = ({ visible, setVisibility }) => {
+export const NavbarPopOver: React.FC<Props> = ({ setVisibility }) => {
   const router = useRouter();
   return (
     <>
-      <PopOverLayout visible={visible}>
+      <PopOverLayout>
         <StyledCloseButton onClick={() => setVisibility(false)}>
           <SvgClose />
         </StyledCloseButton>
