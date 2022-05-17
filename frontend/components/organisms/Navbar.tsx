@@ -68,8 +68,19 @@ const StyledOpenButton = styled("button", {
 const PopOverLayout = styled("div", {
   display: "none",
 
-  "@mobileOnly": {
-    display: "flex",
+  variants: {
+    visible: {
+      true: {
+        display: "flex",
+      },
+      false: {
+        display: "none",
+      },
+    },
+  },
+
+  defaultVariants: {
+    visible: "false",
   },
 });
 
@@ -78,11 +89,8 @@ export const Navbar: React.FC<Props> = ({}) => {
 
   return (
     <>
-      <PopOverLayout>
-        <NavbarPopOver
-          visible={mobileVisible}
-          setVisibility={setMobileVisible}
-        ></NavbarPopOver>
+      <PopOverLayout visible={mobileVisible}>
+        <NavbarPopOver setVisibility={setMobileVisible}></NavbarPopOver>
       </PopOverLayout>
       <NavbarLayout>
         <Link href="/" passHref>
@@ -100,7 +108,10 @@ export const Navbar: React.FC<Props> = ({}) => {
             <UserMenu></UserMenu>
           </Link>
         </SpecialLinkLayout>
-        <StyledOpenButton onClick={() => setMobileVisible(true)} aria-label="Open hamburger menu">
+        <StyledOpenButton
+          onClick={() => setMobileVisible(true)}
+          aria-label="Open hamburger menu"
+        >
           <SvgHamburger />
         </StyledOpenButton>
       </NavbarLayout>
