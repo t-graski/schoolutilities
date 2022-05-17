@@ -20,7 +20,6 @@ async function bootstrap() {
     .setDescription('The SchoolUtilities API')
     .setVersion('1.0.0')
     .addTag('schoolutilities')
-    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

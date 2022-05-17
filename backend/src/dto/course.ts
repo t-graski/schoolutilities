@@ -56,16 +56,28 @@ export class AddCourseDto {
   @IsNameAvailable()
   name: string;
 
+  @ApiProperty({
+    description: 'The description of the course',
+    type: String,
+  })
   @IsOptional()
   @IsString()
   @Length(2, 1000)
   courseDescription: string;
 
+  @ApiProperty({
+    description: 'The id of the school',
+    type: Number,
+  })
   @IsNotEmpty()
   @IsCustomUUID()
   @IsSchoolExist()
   schoolUUID: string;
 
+  @ApiProperty({
+    description: 'The user of a course',
+    type: [String],
+  })
   @IsOptional()
   @IsArrayUnique()
   @IsCustomUUID({
@@ -76,6 +88,10 @@ export class AddCourseDto {
   })
   persons: string[];
 
+  @ApiProperty({
+    description: 'The classes of a course',
+    type: [String],
+  })
   @IsOptional()
   @IsArrayUnique()
   @IsCustomUUID({
