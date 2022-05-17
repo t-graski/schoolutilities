@@ -2,7 +2,9 @@ import { styled } from "../../../../../stitches.config";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Navbar } from "../../../../../components/organisms/Navbar";
+const Navbar = dynamic(
+  () => import("../../../../../components/organisms/Navbar")
+);
 import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import Footer from "../../../../../components/organisms/Footer";
@@ -11,6 +13,7 @@ import { Button } from "../../../../../components/atoms/Button";
 import AddCourseElement from "../../../../../components/atoms/course/AddCourseElement";
 import { getAccessToken } from "../../../../../utils/authHelper";
 import { ContentLayout } from "../../../../../utils/styles";
+import dynamic from "next/dynamic";
 
 const HeadlineLayout = styled("div", {
   display: "flex",
@@ -120,7 +123,9 @@ export default function Features() {
                   `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
                 );
               }}
-            >Cancel</Button>
+            >
+              Cancel
+            </Button>
             <Button
               backgroundColor={"primary"}
               color={"primary"}
@@ -149,7 +154,9 @@ export default function Features() {
                   }
                 }
               }}
-            >Save</Button>
+            >
+              Save
+            </Button>
           </CourseHeaderLayout>
         </HeadlineLayout>
         <Spacer size="verySmall"></Spacer>

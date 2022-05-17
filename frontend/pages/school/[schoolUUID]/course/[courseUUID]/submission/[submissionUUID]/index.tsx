@@ -2,7 +2,9 @@ import { styled } from "../../../../../../../stitches.config";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Navbar } from "../../../../../../../components/organisms/Navbar";
+const Navbar = dynamic(
+  () => import("../../../../../../../components/organisms/Navbar")
+);
 import { Spacer } from "../../../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../../../components/atoms/Separator";
@@ -11,6 +13,7 @@ import { getAccessToken } from "../../../../../../../utils/authHelper";
 import { FileUpload } from "../../../../../../../components/molecules/FileUpload";
 import { Button } from "../../../../../../../components/atoms/Button";
 import { SubmissionsOverview } from "../../../../../../../components/organisms/course/SubmissionsOverview";
+import dynamic from "next/dynamic";
 
 const ContentLayout = styled("div", {
   display: "flex",

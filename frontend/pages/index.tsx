@@ -1,5 +1,4 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/organisms/Navbar";
 import Head from "next/head";
 import { StartPageBox } from "../components/molecules/StartPageBox";
 import dynamic from "next/dynamic";
@@ -12,14 +11,7 @@ const Footer = dynamic(() => import("../components/organisms/Footer"));
 const GeneralList = dynamic(
   () => import("../components/organisms/GeneralList")
 );
-
-export const MainContent = styled("div", {
-  position: "absolute",
-  top: "0",
-  left: "0",
-  width: "100vw",
-  paddingTop: "98px",
-});
+const Navbar = dynamic(() => import("../components/organisms/Navbar"));
 
 const FirstBoxLayout = styled("div", {
   display: "flex",
@@ -40,59 +32,57 @@ const ArtworkLayout = styled("div", {
 export default function Home() {
   return (
     <>
-      <MainContent>
-        <Head>
-          <title>SchoolUtilities</title>
-          <meta property="og:type" content="SchoolUtilities"></meta>
-          <meta property="og:url" content="https://schoolutilities.net/"></meta>
-          <meta property="og:title" content="SchoolUtilities"></meta>
-          <meta name="description" content="LET’S MAKE SCHOOL EASY."></meta>
-          <meta
-            property="og:description"
-            content="LET’S MAKE SCHOOL EASY."
-          ></meta>
-          <meta
-            property="og:image"
-            content="https://i.imgur.com/KJ63K3r.png"
-          ></meta>
-        </Head>
-        <Navbar />
-        <ArtworkLayout>
-          <SvgStartpageArtwork></SvgStartpageArtwork>
-        </ArtworkLayout>
-        <FirstBoxLayout>
-          <StartPageBox></StartPageBox>
-        </FirstBoxLayout>
-        <GeneralList
-          items={[
-            {
-              title: "Discord Bot",
-              description:
-                "Take a look at our Discord Bot, which reminds you on upcoming Events and simplifies your life.",
-              href: "/bot",
-              buttonText: "LET'S GET STARTED",
-              icon: SvgDiscordLogo,
-            },
-            {
-              title: "Create School",
-              description:
-                "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
-              href: "/school/create",
-              buttonText: "GET ME THERE",
-              icon: SvgSchool,
-            },
-            {
-              title: "Premium",
-              description:
-                "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
-              href: "/premium",
-              buttonText: "LEARN MORE",
-              icon: SvgPremium,
-            },
-          ]}
-        ></GeneralList>
-        <Footer />
-      </MainContent>
+      <Head>
+        <title>SchoolUtilities</title>
+        <meta property="og:type" content="SchoolUtilities"></meta>
+        <meta property="og:url" content="https://schoolutilities.net/"></meta>
+        <meta property="og:title" content="SchoolUtilities"></meta>
+        <meta name="description" content="LET’S MAKE SCHOOL EASY."></meta>
+        <meta
+          property="og:description"
+          content="LET’S MAKE SCHOOL EASY."
+        ></meta>
+        <meta
+          property="og:image"
+          content="https://i.imgur.com/KJ63K3r.png"
+        ></meta>
+      </Head>
+      <Navbar />
+      <ArtworkLayout>
+        <SvgStartpageArtwork></SvgStartpageArtwork>
+      </ArtworkLayout>
+      <FirstBoxLayout>
+        <StartPageBox></StartPageBox>
+      </FirstBoxLayout>
+      <GeneralList
+        items={[
+          {
+            title: "Discord Bot",
+            description:
+              "Take a look at our Discord Bot, which reminds you on upcoming Events and simplifies your life.",
+            href: "/bot",
+            buttonText: "LET'S GET STARTED",
+            icon: SvgDiscordLogo,
+          },
+          {
+            title: "Create School",
+            description:
+              "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
+            href: "/school/create",
+            buttonText: "GET ME THERE",
+            icon: SvgSchool,
+          },
+          {
+            title: "Premium",
+            description:
+              "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
+            href: "/premium",
+            buttonText: "GET PREMIUM",
+            icon: SvgPremium,
+          },
+        ]}
+      ></GeneralList>
+      <Footer />
     </>
   );
 }

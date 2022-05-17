@@ -279,7 +279,6 @@ export const UserMenu = () => {
                 </DropdownMenuTriggerItem>
                 <DropdownMenuContent sideOffset={2} alignOffset={-5}>
                   {coursesStatus == "success" &&
-                    Array.isArray(courses) &&
                     courses.map((course) => (
                       <DropdownMenuItem key={course.courseUUID}>
                         <Link

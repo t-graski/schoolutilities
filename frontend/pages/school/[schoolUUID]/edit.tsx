@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navbar } from "../../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../../components/organisms/Navbar"));
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
 import { SideDashboard } from "../../../components/molecules/schoolAdmin/SideDashboard";
@@ -14,6 +14,7 @@ import SvgClass from "../../../components/atoms/svg/SvgClass";
 import SvgStudent from "../../../components/atoms/svg/SvgStudent";
 import SvgTeacher from "../../../components/atoms/svg/SvgTeacher";
 import { useQueryClient } from "react-query";
+import dynamic from "next/dynamic";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -81,8 +82,8 @@ export default function CreateSchool() {
               href: `/school/${schoolUUID}/edit?tab=departments`,
               highlighted:
                 urlParam != "persons" &&
-                  urlParam != "classes" &&
-                  urlParam != "join-codes"
+                urlParam != "classes" &&
+                urlParam != "join-codes"
                   ? true
                   : false,
             },

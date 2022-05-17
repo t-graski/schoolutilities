@@ -1,5 +1,5 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../components/organisms/Navbar"));
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { Spacer } from "../components/atoms/Spacer";
@@ -78,9 +78,21 @@ export default function Home() {
             <LogoPresentationBox
               description="Our default logo with lettering is available in three different variants: Color, black - and white!"
               logos={[
-                { name: "LogoPencilCombinedCompact", icon: SvgLogoPencilCombinedCompact, imageBg: "1" },
-                { name: "LogoPencilCombinedCompactBlack", icon: SvgLogoPencilCombinedCompactBlack, imageBg: "2" },
-                { name: "LogoPencilCombinedCompactWhite", icon: SvgLogoPencilCombinedCompactWhite, imageBg: "3" },
+                {
+                  name: "LogoPencilCombinedCompact",
+                  icon: SvgLogoPencilCombinedCompact,
+                  imageBg: "1",
+                },
+                {
+                  name: "LogoPencilCombinedCompactBlack",
+                  icon: SvgLogoPencilCombinedCompactBlack,
+                  imageBg: "2",
+                },
+                {
+                  name: "LogoPencilCombinedCompactWhite",
+                  icon: SvgLogoPencilCombinedCompactWhite,
+                  imageBg: "3",
+                },
               ]}
             ></LogoPresentationBox>
             <Spacer size="small"></Spacer>
@@ -88,9 +100,21 @@ export default function Home() {
             <LogoPresentationBox
               description="Brand-lettering with icon"
               logos={[
-                { name: "LogoPencilLeft", icon: SvgLogoPencilLeft, imageBg: "1" },
-                { name: "LogoPencilLeftBlack", icon: SvgLogoPencilLeftBlack, imageBg: "2" },
-                { name: "LogoPencilLeftWhite", icon: SvgLogoPencilLeftWhite, imageBg: "3" },
+                {
+                  name: "LogoPencilLeft",
+                  icon: SvgLogoPencilLeft,
+                  imageBg: "1",
+                },
+                {
+                  name: "LogoPencilLeftBlack",
+                  icon: SvgLogoPencilLeftBlack,
+                  imageBg: "2",
+                },
+                {
+                  name: "LogoPencilLeftWhite",
+                  icon: SvgLogoPencilLeftWhite,
+                  imageBg: "3",
+                },
               ]}
             ></LogoPresentationBox>
             <Spacer size="small"></Spacer>

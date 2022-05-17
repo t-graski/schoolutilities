@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Footer from "../../../../components/organisms/Footer";
-import { Navbar } from "../../../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../../../components/organisms/Navbar"));
 import { Spacer } from "../../../../components/atoms/Spacer";
 import { styled } from "../../../../stitches.config";
 import Head from "next/head";
@@ -10,6 +10,7 @@ import { CourseCreateDetailField } from "../../../../components/organisms/course
 import { CourseCreateMembersField } from "../../../../components/organisms/course/CourseCreateMembersField";
 import { useRouter } from "next/router";
 import { getAccessToken } from "../../../../utils/authHelper";
+import dynamic from "next/dynamic";
 
 const CreateCourseLayout = styled("div", {
   display: "flex",

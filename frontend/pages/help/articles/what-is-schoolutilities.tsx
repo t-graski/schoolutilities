@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Navbar } from "../../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../../components/organisms/Navbar"));
 import { Spacer } from "../../../components/atoms/Spacer";
 import { Headline } from "../../../components/atoms/Headline";
 import { Separator } from "../../../components/atoms/Separator";
@@ -11,6 +11,7 @@ import { StyledLink } from "../../../components/article/Link";
 import { ImageLayout } from "../../../components/article/ImageLayout";
 import Image from "next/image";
 import { ArticleDetails } from "../../../components/article/ArticleDetails";
+import dynamic from "next/dynamic";
 
 export default function Article() {
   const articleDetails = {
