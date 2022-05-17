@@ -1,13 +1,11 @@
 import { styled } from "../../stitches.config";
-import { Navbar } from "../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import Head from "next/head";
 import Footer from "../../components/organisms/Footer";
 import { Spacer } from "../../components/atoms/Spacer";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
 import SvgSuperman from "../../components/atoms/svg/SvgSuperman";
-import SvgAlert from "../../components/atoms/svg/SvgAlert";
-import SvgFirstAidKit from "../../components/atoms/svg/SvgFirstAidKit";
-import SvgAttendance from "../../components/atoms/svg/SvgAttendance";
+import dynamic from "next/dynamic";
 
 const MainContent = styled("div", {
   position: "absolute",

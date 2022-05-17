@@ -2,10 +2,8 @@ import React from "react";
 import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
-type Props = {
-};
+type Props = {};
 
 const StartPageBoxLayout = styled("div", {
   display: "flex",
@@ -34,11 +32,8 @@ const StartPageBoxDescription = styled("p", {
   marginBottom: "20px",
 });
 
-const StartPageBoxDescriptionLine = styled("p", {
-  fontSize: "1.5rem",
+const BoldDescription = styled("span", {
   fontWeight: "$bold",
-  margin: "0",
-  marginBottom: "20px",
 });
 
 const StyledLink = styled("a", {
@@ -64,9 +59,7 @@ const ButtonLayout = styled("div", {
   },
 });
 
-export const StartPageBox: React.FC<Props> = ({
-}) => {
-  const router = useRouter();
+export const StartPageBox: React.FC<Props> = ({}) => {
   return (
     <>
       <StartPageBoxLayout>
@@ -79,20 +72,15 @@ export const StartPageBox: React.FC<Props> = ({
           We think it is extremely important to bring joy into the daily
           School-Routine of students and teachers. With incredible features and
           the right design, we make this possible.
+          <br />
+          <BoldDescription>This is SchoolUtilities.</BoldDescription>
         </StartPageBoxDescription>
-        <StartPageBoxDescriptionLine>
-          This is SchoolUtilities.
-        </StartPageBoxDescriptionLine>
         <ButtonLayout>
-          <Button
-            backgroundColor={"primary"}
-            color={"primary"}
-            onClick={() => {
-              router.push("/auth?tab=register");
-            }}
-          >
-            REGISTER NOW
-          </Button>
+          <Link href="/auth?tab=register" passHref>
+            <Button backgroundColor={"primary"} color={"primary"}>
+              REGISTER NOW
+            </Button>
+          </Link>
           <Link href="/learn-more" passHref>
             <StyledLink>SEE FEATURES</StyledLink>
           </Link>

@@ -69,6 +69,7 @@ function App({ Component, pageProps }: AppProps) {
             <Script
               async
               src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+              strategy="lazyOnload"
               defer
             ></Script>
             <Script
@@ -82,6 +83,7 @@ function App({ Component, pageProps }: AppProps) {
                 });`,
               }}
               id="google-analytics-tag"
+              strategy="lazyOnload"
               defer
             ></Script>
             <Script
@@ -92,6 +94,7 @@ function App({ Component, pageProps }: AppProps) {
             <Script
               async
               src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+              strategy="lazyOnload"
               defer
             ></Script>
             <QueryClientProvider client={queryClient}>

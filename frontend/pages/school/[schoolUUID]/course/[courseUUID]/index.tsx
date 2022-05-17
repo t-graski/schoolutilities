@@ -2,7 +2,9 @@ import { styled } from "../../../../../stitches.config";
 import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Navbar } from "../../../../../components/organisms/Navbar";
+const Navbar = dynamic(
+  () => import("../../../../../components/organisms/Navbar")
+);
 import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
@@ -16,6 +18,7 @@ import {
   fetchCourses,
 } from "../../../../../utils/requests";
 import Skeleton from "react-loading-skeleton";
+import dynamic from "next/dynamic";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -72,13 +75,25 @@ export default function Features() {
           <Spacer size="verySmall"></Spacer>
           <Separator width="small" alignment="left" />
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Skeleton
+            width={`${getRandomNumber(70, 100)}%`}
+            height={getRandomNumber(40, 80)}
+          ></Skeleton>
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Skeleton
+            width={`${getRandomNumber(70, 100)}%`}
+            height={getRandomNumber(40, 80)}
+          ></Skeleton>
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Skeleton
+            width={`${getRandomNumber(70, 100)}%`}
+            height={getRandomNumber(40, 80)}
+          ></Skeleton>
           <Spacer size="verySmall"></Spacer>
-          <Skeleton width={`${getRandomNumber(70, 100)}%`} height={getRandomNumber(40, 80)}></Skeleton>
+          <Skeleton
+            width={`${getRandomNumber(70, 100)}%`}
+            height={getRandomNumber(40, 80)}
+          ></Skeleton>
           <Spacer size="verySmall"></Spacer>
           <Button
             backgroundColor={"primary"}

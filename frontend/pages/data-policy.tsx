@@ -1,8 +1,9 @@
 import { styled } from "../stitches.config";
-import { Navbar } from "../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../components/organisms/Navbar"));
 import Footer from "../components/organisms/Footer";
 import Head from "next/head";
 import { Spacer } from "../components/atoms/Spacer";
+import dynamic from "next/dynamic";
 
 const StyledDiv = styled("div", {
   padding: "0 15vw",

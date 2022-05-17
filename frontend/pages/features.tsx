@@ -1,4 +1,4 @@
-import { Navbar } from "../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../components/organisms/Navbar"));
 import Footer from "../components/organisms/Footer";
 import { Headline } from "../components/atoms/Headline";
 import { Spacer } from "../components/atoms/Spacer";
@@ -9,6 +9,7 @@ import SvgTimetable from "../components/atoms/svg/SvgTimetable";
 import SvgCalculator from "../components/atoms/svg/SvgCalculator";
 import SvgAttendance from "../components/atoms/svg/SvgAttendance";
 import SvgAlert from "../components/atoms/svg/SvgAlert";
+import dynamic from "next/dynamic";
 
 export default function Features() {
   return (

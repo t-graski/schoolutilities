@@ -1,15 +1,14 @@
 import { styled } from "../../../stitches.config";
-import { Navbar } from "../../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../../components/organisms/Navbar"));
 import Head from "next/head";
 import Footer from "../../../components/organisms/Footer";
-import { Spacer } from "../../../components/atoms/Spacer";
 import { EditableList } from "../../../components/organisms/EditableList";
 import { CockpitSideDashboardBar } from "../../../components/organisms/cockpit/CockpitSideDashboardBar";
-import { MainContent } from "../../index";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getAccessToken } from "../../../utils/authHelper";
 import { SettingsPopUp } from "../../../components/molecules/schoolAdmin/SettingsPopUp";
+import dynamic from "next/dynamic";
 
 export const ContentLayout = styled("div", {
   display: "flex",
@@ -88,67 +87,65 @@ export default function Home() {
 
   return (
     <>
-      <MainContent>
-        <Head>
-          <title>Articles (Cockpit) - SchoolUtilities</title>
-          <meta property="og:type" content="SchoolUtilities"></meta>
-          <meta property="og:url" content="https://schoolutilities.net/"></meta>
-          <meta property="og:title" content="SchoolUtilities"></meta>
-          <meta
-            property="og:description"
-            content="LET’S MAKE SCHOOL EASY."
-          ></meta>
-          <meta
-            property="og:image"
-            content="https://i.imgur.com/KJ63K3r.png"
-          ></meta>
-        </Head>
-        <Navbar />
-        <ContentLayout>
-          {deletePopUpIsVisible && (
-            <SettingsPopUp
-              headline={`Remove ${articleName}`}
-              inputValid={true}
-              saveLabel="Confirm"
-              saveFunction={() => {
-                deleteSettingsEntry(articleUUID);
-                setDeletePopUpIsVisible(false);
-              }}
-              closeFunction={() => {
-                setDeletePopUpIsVisible(false);
-                setArticleName("");
-              }}
-            >
-              <StyledDeleteText>
-                This action can&apos;t be undone and will permanently remove the
-                class {articleName}.
-              </StyledDeleteText>
-            </SettingsPopUp>
-          )}
-          <CockpitSideDashboardBar active="Articles"></CockpitSideDashboardBar>
-          <EditableList
-            headline="Articles"
-            headlineDescription="Articles are the main content of your cockpit. You can add, edit and delete articles here."
-            addEntry={() => {
-              router.push("/cockpit/articles/create");
+      <Head>
+        <title>Articles (Cockpit) - SchoolUtilities</title>
+        <meta property="og:type" content="SchoolUtilities"></meta>
+        <meta property="og:url" content="https://schoolutilities.net/"></meta>
+        <meta property="og:title" content="SchoolUtilities"></meta>
+        <meta
+          property="og:description"
+          content="LET’S MAKE SCHOOL EASY."
+        ></meta>
+        <meta
+          property="og:image"
+          content="https://i.imgur.com/KJ63K3r.png"
+        ></meta>
+      </Head>
+      <Navbar />
+      <ContentLayout>
+        {deletePopUpIsVisible && (
+          <SettingsPopUp
+            headline={`Remove ${articleName}`}
+            inputValid={true}
+            saveLabel="Confirm"
+            saveFunction={() => {
+              deleteSettingsEntry(articleUUID);
+              setDeletePopUpIsVisible(false);
             }}
-            entries={items}
-            entryProperties={{
-              name: "name",
-              description: "description",
-              id: "id",
+            closeFunction={() => {
+              setDeletePopUpIsVisible(false);
+              setArticleName("");
             }}
-            editEntry={(item) => {
-              router.push(`/cockpit/articles/${item}/edit`);
-            }}
-            deleteEntry={(uuid) => {
-              setArticleUUID(uuid);
-              setArticleName(items.find((item) => item.id === uuid).name);
-              setDeletePopUpIsVisible(true);
-            }}
-          ></EditableList>
-        </ContentLayout>
-      </MainContent>
+          >
+            <StyledDeleteText>
+              This action can&apos;t be undone and will permanently remove the
+              class {articleName}.
+            </StyledDeleteText>
+          </SettingsPopUp>
+        )}
+        <CockpitSideDashboardBar active="Articles"></CockpitSideDashboardBar>
+        <EditableList
+          headline="Articles"
+          headlineDescription="Articles are the main content of your cockpit. You can add, edit and delete articles here."
+          addEntry={() => {
+            router.push("/cockpit/articles/create");
+          }}
+          entries={items}
+          entryProperties={{
+            name: "name",
+            description: "description",
+            id: "id",
+          }}
+          editEntry={(item) => {
+            router.push(`/cockpit/articles/${item}/edit`);
+          }}
+          deleteEntry={(uuid) => {
+            setArticleUUID(uuid);
+            setArticleName(items.find((item) => item.id === uuid).name);
+            setDeletePopUpIsVisible(true);
+          }}
+        ></EditableList>
+      </ContentLayout>
       <Footer />
     </>
   );

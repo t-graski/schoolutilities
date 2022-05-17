@@ -1,11 +1,12 @@
 import Head from "next/head";
-import { Navbar } from "../../../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../../../components/organisms/Navbar"));
 import { SiteLayout } from "../../../../components/atoms/SiteLayout";
 import { Spacer } from "../../../../components/atoms/Spacer";
 import Footer from "../../../../components/organisms/Footer";
 import { getAccessToken } from "../../../../utils/authHelper";
 import { Article } from "../../../../components/organisms/help/Article";
 import { ContentLayout } from "../../../../utils/styles";
+import dynamic from "next/dynamic";
 
 export default function ArticleOverview({ content }) {
   return (

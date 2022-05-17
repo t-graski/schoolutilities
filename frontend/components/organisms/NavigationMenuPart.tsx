@@ -335,12 +335,12 @@ export const NavigationMenuPart = () => {
                 See our incredible innovations for each release and also what we
                 have messed up in earlier releases.
               </ContentListItem>
-              <ContentListItem title="About" href="/help/faq">
+              <ContentListItem title="About" href="/about-us">
                 Get acquainted with the whole story about SchoolUtilities.
               </ContentListItem>
               <ContentListItem
                 title="FAQ"
-                href="/docs/primitives/overview/releases"
+                href="/help/faq"
               >
                 If you have any questions, you&apos;ll probably find them here.
               </ContentListItem>

@@ -2,7 +2,9 @@ import { styled } from "../../../../../stitches.config";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Navbar } from "../../../../../components/organisms/Navbar";
+const Navbar = dynamic(
+  () => import("../../../../../components/organisms/Navbar")
+);
 import { Spacer } from "../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../components/atoms/Separator";
@@ -13,6 +15,7 @@ import { Button } from "../../../../../components/atoms/Button";
 import { regex } from "../../../../../utils/regex";
 import { SearchSelect } from "../../../../../components/atoms/input/SearchSelect";
 import SvgSchool from "../../../../../components/atoms/svg/SvgSchool";
+import dynamic from "next/dynamic";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -205,7 +208,6 @@ export default function Features() {
                 });
               }}
               icon={SvgSchool}
-
               selectMultiValues={true}
               selectOptions={persons}
             />

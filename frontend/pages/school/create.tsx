@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { DepartmentsDetailField } from "../../components/organisms/schoolAdmin/DepartmentsDetailField";
 import Footer from "../../components/organisms/Footer";
-import { Navbar } from "../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import { SchoolDetailField } from "../../components/molecules/school/SchoolDetailField";
 import { SetupProgressSite } from "../../components/organisms/SetupProgressSite";
 import { Spacer } from "../../components/atoms/Spacer";
 import { styled } from "../../stitches.config";
 import Head from "next/head";
 import { SiteLayout } from "../../components/atoms/SiteLayout";
+import dynamic from "next/dynamic";
 
 const CreateSchoolLayout = styled("div", {
   display: "flex",

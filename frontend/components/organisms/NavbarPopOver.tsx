@@ -1,15 +1,12 @@
 import React from "react";
 import { useRouter } from "next/router";
-
-// this usually goes once
-// to the entry point of the whole app
-// (e.g. src/index.js)
-import "react-nestable/dist/styles/index.css";
 import { styled } from "@stitches/react";
 import Link from "next/link";
 import UserMenu from "../molecules/UserMenu";
 import SvgClose from "../atoms/svg/SvgClose";
 import SvgOpenLogo from "../atoms/svg/SvgOpenLogo";
+import { loggedIn } from "../../utils/authHelper";
+import { Button } from "../atoms/Button";
 
 type Props = {
   setVisibility: Function;
@@ -96,6 +93,8 @@ const StyledCloseButton = styled("button", {
 
 export const NavbarPopOver: React.FC<Props> = ({ setVisibility }) => {
   const router = useRouter();
+
+  const isLoggedIn = loggedIn();
   return (
     <>
       <PopOverLayout>
@@ -124,7 +123,19 @@ export const NavbarPopOver: React.FC<Props> = ({ setVisibility }) => {
             </StyledLink>
           </Link>
           <SpecialLinkLayout>
-            <UserMenu></UserMenu>
+            {isLoggedIn ? (
+              <UserMenu></UserMenu>
+            ) : (
+              <Button
+                backgroundColor={"primary"}
+                color={"primary"}
+                onClick={() => {
+                  router.push("/auth?tab=register");
+                }}
+              >
+                LOG IN
+              </Button>
+            )}
           </SpecialLinkLayout>
         </NavLinksLayout>
       </PopOverLayout>

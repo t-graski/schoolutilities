@@ -1,6 +1,6 @@
 import { styled } from "../../stitches.config";
 import React, { useEffect, useState } from "react";
-import { Navbar } from "../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import Footer from "../../components/organisms/Footer";
 import { Spacer } from "../../components/atoms/Spacer";
 import { InfoBox } from "../../components/molecules/InfoBox";
@@ -9,6 +9,7 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 import Head from "next/head";
 import { RegistrationField } from "../../components/molecules/auth/RegistrationField";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 
 const LoginAuthLayout = styled("div", {
   display: "grid",

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Navbar } from "../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
@@ -10,6 +10,7 @@ import Footer from "../../components/organisms/Footer";
 import Link from "next/link";
 
 import React from "react";
+import dynamic from "next/dynamic";
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -180,8 +181,8 @@ export default function RegisterApproved() {
       answer: (
         <>
           <p>
-            No, you can join up to 5 schools at the same time. But don&apos;t worry
-            you can always leave schools.
+            No, you can join up to 5 schools at the same time. But don&apos;t
+            worry you can always leave schools.
           </p>
         </>
       ),

@@ -1,9 +1,10 @@
 import { styled } from "../../stitches.config";
-import { Navbar } from "../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import Footer from "../../components/organisms/Footer";
 import Head from "next/head";
 import { Headline } from "../../components/atoms/Headline";
 import { ProfileSettings } from "../../components/organisms/ProfileSettings";
+import dynamic from "next/dynamic";
 
 const Maincontent = styled("div", {
   position: "absolute",

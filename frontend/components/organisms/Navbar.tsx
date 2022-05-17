@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import { styled } from "../../stitches.config";
 import Link from "next/link";
-import NavbarPopOver from "./NavbarPopOver";
-import { NavigationMenuPart } from "./NavigationMenuPart";
-import UserMenu from "../molecules/UserMenu";
-import SvgHamburger from "../atoms/svg/SvgHamburger";
-import SvgOpenLogo from "../atoms/svg/SvgOpenLogo";
+import { loggedIn } from "../../utils/authHelper";
+import { Button } from "../atoms/Button";
+import dynamic from "next/dynamic";
+
+const UserMenu = dynamic(() => import("../molecules/UserMenu"));
+const NavigationMenuPart = dynamic(() => import("./NavigationMenuPart"));
+const NavbarPopOver = dynamic(() => import("./NavbarPopOver"));
+const SvgHamburger = dynamic(() => import("../atoms/svg/SvgHamburger"));
+const SvgOpenLogo = dynamic(() => import("../atoms/svg/SvgOpenLogo"));
 
 type Props = {};
 
 const NavbarLayout = styled("div", {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  zIndex: "1",
+  zIndex: "2",
 
   display: "flex",
   flexDirection: "row",
@@ -26,9 +27,7 @@ const NavbarLayout = styled("div", {
 });
 
 const LogoLayout = styled("div", {
-  display: "flex",
   width: "130px",
-  height: "fit-content",
 
   color: "$fontPrimary",
 });
@@ -40,6 +39,8 @@ const NavLinksLayout = styled("div", {
 });
 
 const SpecialLinkLayout = styled("div", {
+  zIndex: "2",
+
   padding: "20px",
   display: "flex",
   flexDirection: "column",
@@ -53,6 +54,8 @@ const SpecialLinkLayout = styled("div", {
 });
 
 const StyledOpenButton = styled("button", {
+  zIndex: "2",
+
   width: "45px",
   height: "45px",
   backgroundColor: "transparent",
@@ -84,8 +87,10 @@ const PopOverLayout = styled("div", {
   },
 });
 
-export const Navbar: React.FC<Props> = ({}) => {
+const Navbar: React.FC<Props> = ({}) => {
   const [mobileVisible, setMobileVisible] = useState(false);
+
+  const isLoggedIn = loggedIn();
 
   return (
     <>
@@ -104,9 +109,15 @@ export const Navbar: React.FC<Props> = ({}) => {
           <NavigationMenuPart></NavigationMenuPart>
         </NavLinksLayout>
         <SpecialLinkLayout>
-          <Link href="/profile/settings" passHref>
+          {isLoggedIn ? (
             <UserMenu></UserMenu>
-          </Link>
+          ) : (
+            <Link href="/auth?tab=login" passHref>
+              <Button backgroundColor={"primary"} color={"primary"}>
+                LOG IN
+              </Button>
+            </Link>
+          )}
         </SpecialLinkLayout>
         <StyledOpenButton
           onClick={() => setMobileVisible(true)}
@@ -118,3 +129,7 @@ export const Navbar: React.FC<Props> = ({}) => {
     </>
   );
 };
+
+Navbar.defaultProps = {};
+
+export default Navbar;

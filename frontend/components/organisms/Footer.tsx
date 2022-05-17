@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 import { styled } from "../../stitches.config";
-import Image from "next/image";
 import SvgLogoPencilCombinedCompact from "../atoms/svg/SvgLogoPencilCombinedCompact";
 import SvgPatreon from "../atoms/svg/SvgPatreon";
 import SvgInstagram from "../atoms/svg/SvgInstagram";

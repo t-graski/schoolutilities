@@ -1,11 +1,12 @@
 import Head from "next/head";
-import { Navbar } from "../../components/organisms/Navbar";
+const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
 import SvgAlert from "../../components/atoms/svg/SvgAlert";
+import dynamic from "next/dynamic";
 
 export default function RegisterApproved({ items }) {
   return (
