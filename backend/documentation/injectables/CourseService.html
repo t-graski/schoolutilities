@@ -1,0 +1,2741 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">backend documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >CourseService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/course/course.service.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addCourse" >addCourse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addUser" >addUser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#courseElements" >courseElements</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAllCourses" >getAllCourses</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getCourseElements" >getCourseElements</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getCourseInfo" >getCourseInfo</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getCourseUUIDById" >getCourseUUIDById</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getElement" >getElement</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getEvents" >getEvents</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getSubmissions" >getSubmissions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeCourse" >removeCourse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#removeUser" >removeUser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#submitExercise" >submitExercise</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateCourse" >updateCourse</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(authService: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, databaseService: <a href="../injectables/DatabaseService.html" target="_self">DatabaseService</a>, helper: <a href="../injectables/HelperService.html" target="_self">HelperService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/course/course.service.ts:30</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>authService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>databaseService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/DatabaseService.html" target="_self" >DatabaseService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>helper</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/HelperService.html" target="_self" >HelperService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addCourse"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>addCourse</b></span>
+                        <a href="#addCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addCourse(payload: <a href="../interfaces/AddCourse.html" target="_self">AddCourseDto</a>, request)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">src/course/course.service.ts:36</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+                                    <td>
+                                                <code><a href="../interfaces/AddCourse.html" target="_self" >AddCourseDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>request</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addUser"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>addUser</b></span>
+                        <a href="#addUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addUser(request)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="362"
+                            class="link-to-prism">src/course/course.service.ts:362</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="courseElements"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>courseElements</b></span>
+                        <a href="#courseElements"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>courseElements(request)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="632"
+                            class="link-to-prism">src/course/course.service.ts:632</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllCourses"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getAllCourses</b></span>
+                        <a href="#getAllCourses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAllCourses(payload: <a href="../classes/GetAllCoursesDto.html" target="_self">GetAllCoursesDto</a>, query, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="429"
+                            class="link-to-prism">src/course/course.service.ts:429</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+                                    <td>
+                                                <code><a href="../classes/GetAllCoursesDto.html" target="_self" >GetAllCoursesDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>query</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCourseElements"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getCourseElements</b></span>
+                        <a href="#getCourseElements"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCourseElements(courseUUID)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="956"
+                            class="link-to-prism">src/course/course.service.ts:956</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseUUID</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCourseInfo"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getCourseInfo</b></span>
+                        <a href="#getCourseInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCourseInfo(courseUUID: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, token: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="504"
+                            class="link-to-prism">src/course/course.service.ts:504</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseUUID</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>token</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCourseUUIDById"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getCourseUUIDById</b></span>
+                        <a href="#getCourseUUIDById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCourseUUIDById(courseId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1111"
+                            class="link-to-prism">src/course/course.service.ts:1111</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>courseId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getElement"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getElement</b></span>
+                        <a href="#getElement"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getElement(request, elementUUID)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1026"
+                            class="link-to-prism">src/course/course.service.ts:1026</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>elementUUID</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getEvents"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getEvents</b></span>
+                        <a href="#getEvents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getEvents(payload: <a href="../classes/GetEventsDto.html" target="_self">GetEventsDto</a>, request)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1228"
+                            class="link-to-prism">src/course/course.service.ts:1228</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+                                    <td>
+                                                <code><a href="../classes/GetEventsDto.html" target="_self" >GetEventsDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>request</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSubmissions"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getSubmissions</b></span>
+                        <a href="#getSubmissions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getSubmissions(request, elementUUID)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1169"
+                            class="link-to-prism">src/course/course.service.ts:1169</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>elementUUID</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeCourse"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>removeCourse</b></span>
+                        <a href="#removeCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeCourse(payload: <a href="../interfaces/RemoveCourse.html" target="_self">RemoveCourseDto</a>, request)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">src/course/course.service.ts:137</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+                                    <td>
+                                                <code><a href="../interfaces/RemoveCourse.html" target="_self" >RemoveCourseDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>request</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeUser"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>removeUser</b></span>
+                        <a href="#removeUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeUser(request)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="293"
+                            class="link-to-prism">src/course/course.service.ts:293</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitExercise"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>submitExercise</b></span>
+                        <a href="#submitExercise"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>submitExercise(request, file)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1128"
+                            class="link-to-prism">src/course/course.service.ts:1128</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>request</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>file</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateCourse"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>updateCourse</b></span>
+                        <a href="#updateCourse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateCourse(payload: <a href="../interfaces/UpdateCourse.html" target="_self">UpdateCourseDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="171"
+                            class="link-to-prism">src/course/course.service.ts:171</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>payload</td>
+                                    <td>
+                                                <code><a href="../interfaces/UpdateCourse.html" target="_self" >UpdateCourseDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ReturnMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;;
+import { ReturnMessage } from &#x27;src/types/Course&#x27;;
+import { PrismaClient } from &#x27;@prisma/client&#x27;;
+import validator from &#x27;validator&#x27;;
+import {
+  RETURN_DATA,
+  ID_STARTERS,
+  ERROR_CODES,
+} from &#x27;src/misc/parameterConstants&#x27;;
+import { v4 as uuidv4 } from &#x27;uuid&#x27;;
+import { AuthService } from &#x27;src/auth/auth.service&#x27;;
+import { DatabaseService } from &#x27;src/database/database.service&#x27;;
+import { HelperService } from &#x27;src/helper/helper.service&#x27;;
+import * as moment from &#x27;moment&#x27;;
+import {
+  AddCourseDto,
+  CourseDto,
+  GetAllCoursesDto,
+  RemoveCourseDto,
+  UpdateCourseDto,
+} from &#x27;src/dto/course&#x27;;
+import { CourseEvent, GetEventsDto } from &#x27;src/dto/events&#x27;;
+// import { GetEventsDto } from &#x27;src/dto/getEvents&#x27;;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require(&#x27;dotenv&#x27;).config();
+
+const prisma &#x3D; new PrismaClient();
+
+@Injectable()
+export class CourseService {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly databaseService: DatabaseService,
+    private readonly helper: HelperService,
+  ) {}
+  async addCourse(payload: AddCourseDto, request): Promise&lt;ReturnMessage&gt; {
+    const { name, courseDescription, schoolUUID, persons, classes } &#x3D; payload;
+
+    let personUUID;
+
+    try {
+      const token &#x3D; await this.helper.extractJWTToken(request);
+      personUUID &#x3D; await this.helper.getUserUUIDfromJWT(token);
+    } catch (err) {
+      return {
+        status: HttpStatus.NOT_ACCEPTABLE,
+        message: err.message,
+      };
+    }
+
+    const [schoolId, personId] &#x3D; await Promise.all([
+      this.helper.getSchoolIdByUUID(schoolUUID),
+      this.helper.getUserIdByUUID(personUUID),
+    ]);
+
+    try {
+      const courseData &#x3D; await prisma.courses.create({
+        data: {
+          courseUUID: &#x60;${ID_STARTERS.COURSE}${uuidv4()}&#x60;,
+          name,
+          courseDescription,
+          schoolId: Number(schoolId),
+          subjectId: 0,
+          personCreationId: Number(personId),
+          coursePersons: {
+            create: {
+              personId,
+            },
+          },
+        },
+      });
+
+      if (persons) {
+        for (const person of persons) {
+          if (!validator.isUUID(person.slice(1), 4)) {
+            return RETURN_DATA.INVALID_INPUT;
+          }
+
+          const personId &#x3D; await (
+            await this.authService.getPersonIdByUUID(person)
+          ).personId;
+
+          await prisma.coursePersons.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseData.courseId),
+                },
+              },
+              persons: {
+                connect: {
+                  personId: Number(personId),
+                },
+              },
+            },
+          });
+        }
+      }
+
+      if (classes) {
+        for (const schoolClass of classes) {
+          const schoolId &#x3D; await this.databaseService.getClassIdByUUID(
+            schoolClass,
+          );
+
+          await prisma.courseClasses.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseData.courseId),
+                },
+              },
+              schoolClasses: {
+                connect: {
+                  classId: Number(schoolId),
+                },
+              },
+            },
+          });
+        }
+      }
+
+      delete courseData.courseId;
+      delete courseData.schoolId;
+      delete courseData.subjectId;
+      delete courseData.personCreationId;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: courseData,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async removeCourse(
+    payload: RemoveCourseDto,
+    request,
+  ): Promise&lt;ReturnMessage&gt; {
+    const { courseUUID } &#x3D; payload;
+
+    const courseId &#x3D; await this.helper.getCourseIdByUUID(courseUUID);
+
+    const course &#x3D; await prisma.courses.findUnique({
+      where: {
+        courseId,
+      },
+    });
+
+    if (!course) {
+      return RETURN_DATA.NOT_FOUND;
+    }
+
+    try {
+      await prisma.courses.delete({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          courseId: true,
+          name: true,
+        },
+      });
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async updateCourse(payload: UpdateCourseDto): Promise&lt;ReturnMessage&gt; {
+    const {
+      courseUUID,
+      courseName,
+      courseDescription,
+      subjectId &#x3D; 0,
+      classes,
+      persons,
+    } &#x3D; payload;
+
+    const patchCourse &#x3D; await prisma.courses.update({
+      where: { courseUUID },
+      data: {
+        name: courseName,
+        courseDescription: courseDescription,
+        subjectId: subjectId,
+      },
+    });
+
+    const courseId &#x3D; patchCourse.courseId;
+
+    if (persons) {
+      const courseUsers &#x3D; await this.helper.getCourseUsers(courseId);
+      const courseUsersIds &#x3D; courseUsers.map(
+        (courseUser) &#x3D;&gt; courseUser.personId,
+      );
+      for (let user of persons) {
+        const userId &#x3D; await this.helper.getUserIdByUUID(user);
+
+        if (!courseUsersIds.includes(userId)) {
+          await prisma.coursePersons.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: courseId,
+                },
+              },
+              persons: {
+                connect: {
+                  personId: userId,
+                },
+              },
+            },
+          });
+        }
+
+        if (courseUsersIds.includes(userId) &amp;&amp; !persons.includes(user)) {
+          await prisma.coursePersons.delete({
+            where: {
+              coursePersonId: {
+                courseId: courseId,
+                personId: userId,
+              },
+            },
+          });
+        }
+      }
+    }
+
+    if (classes) {
+      const courseClasses &#x3D; await this.helper.getCourseClasses(courseId);
+      const courseClassesIds &#x3D; courseClasses.map(
+        (courseClass) &#x3D;&gt; courseClass.classId,
+      );
+
+      for (const schoolClass of classes) {
+        const classId &#x3D; await this.helper.getClassIdByUUID(schoolClass);
+
+        if (!courseClassesIds.includes(classId)) {
+          await prisma.courseClasses.create({
+            data: {
+              courses: {
+                connect: {
+                  courseId: Number(courseId),
+                },
+              },
+              schoolClasses: {
+                connect: {
+                  classId: Number(classId),
+                },
+              },
+            },
+          });
+        }
+
+        if (
+          courseClassesIds.includes(classId) &amp;&amp;
+          !classes.includes(schoolClass)
+        ) {
+          await prisma.courseClasses.delete({
+            where: {
+              courseClassId: {
+                courseId: Number(courseId),
+                classId: Number(classId),
+              },
+            },
+          });
+        }
+      }
+    }
+
+    const schoolUUID &#x3D; await this.helper.getSchoolUUIDById(
+      patchCourse.schoolId,
+    );
+
+    const personCreationUUID &#x3D; await this.helper.getUserUUIDById(
+      patchCourse.personCreationId,
+    );
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: {
+        schoolUUID: schoolUUID,
+        courseUUID: patchCourse.courseUUID,
+        courseName: patchCourse.name,
+        courseDescription: patchCourse.courseDescription,
+        creationDate: patchCourse.creationDate,
+        personCreationUUID: personCreationUUID,
+      },
+    };
+  }
+
+  async removeUser(request): Promise&lt;ReturnMessage&gt; {
+    const jwt &#x3D; await this.helper.extractJWTToken(request);
+    const requesterId &#x3D; await this.helper.getUserIdfromJWT(jwt);
+    const { courseUUID, userUUID, schoolUUID } &#x3D; request.body;
+    const userId &#x3D; await this.helper.getUserIdByUUID(userUUID);
+    const schoolId &#x3D; await this.helper.getSchoolIdByUUID(schoolUUID);
+
+    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        message: &#x27;You are not part of this school&#x27;,
+      };
+    }
+
+    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        message: &#x27;User is not part of this school&#x27;,
+      };
+    }
+
+    const courseId &#x3D; await this.helper.getCourseIdByUUID(courseUUID);
+    const isTeacher &#x3D; await this.helper.isTeacher(requesterId, schoolId);
+    const isAdmin &#x3D; await this.helper.isAdmin(requesterId, schoolId);
+
+    if (isTeacher || isAdmin) {
+      const courseUser &#x3D; await prisma.coursePersons.findUnique({
+        where: {
+          coursePersonId: {
+            courseId: Number(courseId),
+            personId: Number(userId),
+          },
+        },
+      });
+
+      if (!courseUser) {
+        return {
+          status: HttpStatus.NOT_FOUND,
+          message: &#x27;User not found&#x27;,
+        };
+      }
+
+      const deleteCourseUser &#x3D; await prisma.coursePersons.delete({
+        where: {
+          coursePersonId: {
+            courseId: Number(courseId),
+            personId: Number(userId),
+          },
+        },
+      });
+
+      if (deleteCourseUser) {
+        return {
+          status: HttpStatus.OK,
+          message: &#x27;User deleted successfully&#x27;,
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: &#x27;User not deleted&#x27;,
+        };
+      }
+    }
+    return {
+      status: HttpStatus.UNAUTHORIZED,
+      message: &#x27;Unauthorized&#x27;,
+    };
+  }
+
+  async addUser(request): Promise&lt;ReturnMessage&gt; {
+    const jwt &#x3D; await this.helper.extractJWTToken(request);
+    const requesterId &#x3D; await this.helper.getUserIdfromJWT(jwt);
+    const { courseUUID, userUUID, schoolUUID } &#x3D; request.body;
+    const userId &#x3D; await this.helper.getUserIdByUUID(userUUID);
+    const schoolId &#x3D; await this.helper.getSchoolIdByUUID(schoolUUID);
+
+    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        message: &#x27;You are not part of this school&#x27;,
+      };
+    }
+
+    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        message: &#x27;User is not part of this school&#x27;,
+      };
+    }
+
+    const courseId &#x3D; await this.helper.getCourseIdByUUID(courseUUID);
+    const isTeacher &#x3D; await this.helper.isTeacher(requesterId, schoolId);
+    const isAdmin &#x3D; await this.helper.isAdmin(requesterId, schoolId);
+
+    if (isTeacher || isAdmin) {
+      const courseUser &#x3D; await prisma.coursePersons.findUnique({
+        where: {
+          coursePersonId: {
+            courseId: Number(courseId),
+            personId: Number(userId),
+          },
+        },
+      });
+
+      if (courseUser) {
+        return {
+          status: HttpStatus.CONFLICT,
+          message: &#x27;User already exists&#x27;,
+        };
+      }
+
+      try {
+        await prisma.coursePersons.create({
+          data: {
+            courseId: Number(courseId),
+            personId: Number(userId),
+          },
+        });
+      } catch (err) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: &#x27;User not added&#x27;,
+        };
+      }
+
+      return {
+        status: HttpStatus.OK,
+        message: &#x27;User added successfully&#x27;,
+      };
+    }
+    return {
+      status: HttpStatus.UNAUTHORIZED,
+      message: &#x27;Unauthorized&#x27;,
+    };
+  }
+
+  async getAllCourses(
+    payload: GetAllCoursesDto,
+    query,
+    token: string,
+  ): Promise&lt;ReturnMessage&gt; {
+    const jwt &#x3D; await this.authService.decodeJWT(token);
+    const personUUID &#x3D; jwt.personUUID;
+    const { schoolUUID } &#x3D; payload;
+    const { page, limit } &#x3D; query;
+
+    const personId &#x3D; await this.databaseService.getPersonIdByUUID(personUUID);
+    const schoolId &#x3D; await this.databaseService.getSchoolIdByUUID(schoolUUID);
+
+    const courseData &#x3D; [];
+    try {
+      const courses &#x3D; await prisma.courses.findMany({
+        where: {
+          schoolId,
+          AND: {
+            coursePersons: {
+              some: {
+                personId,
+              },
+            },
+          },
+        },
+        select: {
+          courseId: true,
+          courseUUID: true,
+          name: true,
+          courseDescription: true,
+          creationDate: true,
+          personCreationId: true,
+        },
+        skip: Number((page - 1) * limit),
+        take: Number(limit),
+      });
+
+      for (let course of courses) {
+        const creator &#x3D; await prisma.persons.findUnique({
+          where: {
+            personId: Number(course.personCreationId),
+          },
+          select: {
+            personUUID: true,
+            firstName: true,
+            lastName: true,
+          },
+        });
+
+        const courseDataItem &#x3D; {
+          courseUUID: course.courseUUID,
+          courseName: course.name,
+          courseDescription: course.courseDescription,
+          creationDate: course.creationDate,
+          creator: {
+            personUUID: creator.personUUID,
+            firstName: creator.firstName,
+            lastName: creator.lastName,
+          },
+        };
+
+        if (await this.helper.userIsInCourse(personId, course.courseId)) {
+          courseData.push(courseDataItem);
+        }
+      }
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: courseData,
+      };
+    } catch (err) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getCourseInfo(
+    courseUUID: string,
+    token: string,
+  ): Promise&lt;ReturnMessage&gt; {
+    if (!validator.isUUID(courseUUID.slice(1), 4)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const jwt &#x3D; await this.authService.decodeJWT(token);
+    const personUUID &#x3D; jwt.personUUID;
+
+    const personId &#x3D; await this.databaseService.getPersonIdByUUID(personUUID);
+    const courseId &#x3D; await this.databaseService.getCourseUUIDById(courseUUID);
+    const schoolId &#x3D; await this.helper.getSchoolIdByCourseId(courseId);
+
+    const isTeacherOrHigher &#x3D; await this.helper.isTeacherOrHigher(
+      personId,
+      schoolId,
+    );
+
+    const courseData &#x3D; {} as any;
+
+    try {
+      const course &#x3D; await prisma.courses.findUnique({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          courseUUID: true,
+          name: true,
+          courseDescription: true,
+          schoolId: true,
+          creationDate: true,
+          personCreationId: true,
+        },
+      });
+
+      if (!(await this.helper.userIsInCourse(personId, courseId)))
+        return RETURN_DATA.FORBIDDEN;
+
+      const creator &#x3D; await prisma.persons.findUnique({
+        where: {
+          personId: Number(course.personCreationId),
+        },
+        select: {
+          personUUID: true,
+          firstName: true,
+          lastName: true,
+        },
+      });
+
+      const persons &#x3D; await prisma.coursePersons.findMany({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          personId: true,
+        },
+      });
+
+      const personsData &#x3D; [];
+
+      for (let person of persons) {
+        const personData &#x3D; await prisma.persons.findUnique({
+          where: {
+            personId: Number(person.personId),
+          },
+          select: {
+            personUUID: true,
+            firstName: true,
+            lastName: true,
+          },
+        });
+        personsData.push(personData);
+      }
+
+      const classes &#x3D; await prisma.courseClasses.findMany({
+        where: {
+          courseId: Number(courseId),
+        },
+        select: {
+          classId: true,
+        },
+      });
+
+      const classesData &#x3D; [];
+
+      if (classes) {
+        for (let schoolClass of classes) {
+          const classData &#x3D; await prisma.schoolClasses.findUnique({
+            where: {
+              classId: Number(schoolClass.classId),
+            },
+            select: {
+              classUUID: true,
+              className: true,
+            },
+          });
+          classesData.push(classData);
+        }
+      }
+
+      const courseDataItem &#x3D; {
+        courseUUID: course.courseUUID,
+        courseName: course.name,
+        courseDescription: course.courseDescription,
+        creationDate: course.creationDate,
+        creator: {
+          personUUID: creator.personUUID,
+          firstName: creator.firstName,
+          lastName: creator.lastName,
+        },
+        persons: personsData,
+        classes: classesData,
+        canEdit: isTeacherOrHigher,
+      };
+
+      courseData[courseDataItem.courseUUID] &#x3D; courseDataItem;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: courseData,
+      };
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async courseElements(request): Promise&lt;ReturnMessage&gt; {
+    //try {
+    const token &#x3D; await this.helper.extractJWTToken(request);
+    let { courseUUID, elements } &#x3D; request.body;
+    const courseId &#x3D; await this.helper.getCourseIdByUUID(courseUUID);
+    const userId &#x3D; await this.helper.getUserIdfromJWT(token);
+
+    for (const element of elements) {
+      if (element.children) {
+        for (const child of element.children) {
+          child.parentUUID &#x3D; element.elementUUID;
+          child.elementOrder &#x3D; element.children.indexOf(child) + 1;
+          if (child.tag &#x3D;&#x3D;&#x3D; &#x27;deleted&#x27;) {
+            await this.helper.deleteElement(
+              await this.helper.getElementIdByUUID(child.elementUUID),
+              child.options.type,
+            );
+            if (element.children.length &#x3D;&#x3D;&#x3D; 1) {
+              delete element.children;
+            } else {
+              element.children &#x3D; element.children.filter(
+                (child) &#x3D;&gt; child.elementUUID !&#x3D;&#x3D; child.elementUUID,
+              );
+            }
+          }
+        }
+        if (element.tag &#x3D;&#x3D;&#x3D; &#x27;deleted&#x27; &amp;&amp; element.elementUUID !&#x3D; &#x27;&#x27;) {
+          await this.helper.deleteElement(
+            await this.helper.getElementIdByUUID(element.elementUUID),
+            element.options.type,
+          );
+          elements &#x3D; elements.filter(
+            (child) &#x3D;&gt; child.elementUUID !&#x3D;&#x3D; child.elementUUID,
+          );
+        }
+      }
+      element.elementOrder &#x3D; elements.indexOf(element) + 1;
+    }
+
+    const currentElements &#x3D; await prisma.courseElements.findMany({
+      where: {
+        courseId: Number(courseId),
+      },
+      select: {
+        elementId: true,
+        elementUUID: true,
+        typeId: true,
+        parentId: true,
+        visible: true,
+        elementOrder: true,
+        creationDate: true,
+        personCreationId: true,
+      },
+    });
+
+    const elementsWithOptions &#x3D; [];
+
+    for (let element of currentElements) {
+      if (element.elementUUID) {
+        const elementOptions &#x3D; await this.helper.getElementOptions(
+          element.elementId,
+          element.typeId,
+        );
+
+        elementsWithOptions.push({
+          elementUUID: element.elementUUID,
+          elementId: element.elementId,
+          parentId: element.parentId,
+          elementOrder: element.elementOrder,
+          creationDate: element.creationDate,
+          personCreationId: element.personCreationId,
+          elementOptions: {
+            type: element.typeId.toString(),
+            visible: element.visible.toString(),
+            ...elementOptions,
+          },
+        });
+      }
+    }
+
+    elements.forEach(async (element) &#x3D;&gt; {
+      let parentId &#x3D; 0;
+      if (element.elementUUID) {
+        if (await this.helper.elementExists(element.elementUUID)) {
+          let currentElement &#x3D; {
+            elementUUID: element.elementUUID,
+            elementId: await this.helper.getElementIdByUUID(
+              element.elementUUID,
+            ),
+            parentId: 0,
+            elementOrder: element.elementOrder,
+            elementOptions: element.options,
+          };
+
+          let elementWithOptions &#x3D; elementsWithOptions.find(
+            (e) &#x3D;&gt; e.elementUUID &#x3D;&#x3D;&#x3D; element.elementUUID,
+          );
+
+          if (elementWithOptions) {
+            let updateNeeded &#x3D; false;
+
+            if (
+              elementWithOptions.parentId !&#x3D;&#x3D; currentElement.parentId ||
+              elementWithOptions.elementOrder !&#x3D;&#x3D; currentElement.elementOrder
+            ) {
+              updateNeeded &#x3D; true;
+            }
+
+            for (const option in elementWithOptions.elementOptions) {
+              if (
+                elementWithOptions.elementOptions[option] !&#x3D;&#x3D;
+                currentElement.elementOptions[option]
+              ) {
+                updateNeeded &#x3D; true;
+              }
+            }
+
+            if (updateNeeded) {
+              const elementUpdate &#x3D; await prisma.courseElements.update({
+                where: {
+                  elementId: Number(currentElement.elementId),
+                },
+                data: {
+                  parentId: Number(currentElement.parentId),
+                  visible: Boolean(currentElement.elementOptions.visible),
+                  elementOrder: Number(currentElement.elementOrder),
+                },
+              });
+
+              await this.helper.updateElementOptions(
+                currentElement.elementOptions,
+                currentElement.elementId,
+                Number(currentElement.elementOptions.type),
+              );
+            }
+
+            if (element.children) {
+              element.children.forEach(async (child) &#x3D;&gt; {
+                if (child.elementUUID) {
+                  if (await this.helper.elementExists(child.elementUUID)) {
+                    const currentChild &#x3D; {
+                      elementUUID: child.elementUUID,
+                      elementId: await this.helper.getElementIdByUUID(
+                        child.elementUUID,
+                      ),
+                      parentId: currentElement.elementId,
+                      elementOrder: child.elementOrder,
+                      elementOptions: child.options,
+                    };
+
+                    const childWithOptions &#x3D; elementsWithOptions.find(
+                      (e) &#x3D;&gt; e.elementUUID &#x3D;&#x3D;&#x3D; child.elementUUID,
+                    );
+                    let updateNeeded &#x3D; false;
+
+                    if (
+                      childWithOptions.parentId !&#x3D;&#x3D; currentChild.parentId ||
+                      childWithOptions.elementOrder !&#x3D;&#x3D;
+                        currentChild.elementOrder
+                    ) {
+                      updateNeeded &#x3D; true;
+                    }
+
+                    for (let option in childWithOptions.elementOptions) {
+                      if (
+                        childWithOptions.elementOptions[option] !&#x3D;&#x3D;
+                        currentChild.elementOptions[option]
+                      ) {
+                        updateNeeded &#x3D; true;
+                      }
+                    }
+
+                    if (updateNeeded) {
+                      await prisma.courseElements.update({
+                        where: {
+                          elementId: Number(currentChild.elementId),
+                        },
+                        data: {
+                          parentId: Number(currentChild.parentId),
+                          visible: Boolean(currentChild.elementOptions.visible),
+                          elementOrder: Number(currentChild.elementOrder),
+                        },
+                      });
+
+                      await this.helper.updateElementOptions(
+                        currentChild.elementOptions,
+                        currentChild.elementId,
+                        Number(currentChild.elementOptions.type),
+                      );
+                    }
+                  }
+                } else {
+                  let courseElement &#x3D; {
+                    elementUUID: &#x60;${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}&#x60;,
+                    courseId: Number(courseId),
+                    typeId: Number(child.options.type),
+                    parentId: child.parentUUID
+                      ? await this.helper.getElementIdByUUID(child.parentUUID)
+                      : 0,
+                    visible: Boolean(child.options.visible),
+                    elementOrder: child.elementOrder,
+                    personCreationId: Number(userId),
+                  };
+
+                  let createdElement &#x3D; await prisma.courseElements.create({
+                    data: courseElement,
+                  });
+
+                  await this.helper.createElementOptions(
+                    child.options,
+                    createdElement.elementId,
+                    Number(child.options.type),
+                  );
+                  return RETURN_DATA.SUCCESS;
+                }
+              });
+            }
+          }
+        }
+      } else {
+        let parentId &#x3D; 0;
+        let courseElement &#x3D; {
+          elementUUID: &#x60;${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}&#x60;,
+          courseId: Number(courseId),
+          typeId: Number(element.options.type),
+          parentId: element.parentUUID
+            ? await this.helper.getElementIdByUUID(element.parentUUID)
+            : 0,
+          visible: Boolean(element.options.visible),
+          elementOrder: element.elementOrder,
+          personCreationId: Number(userId),
+        };
+
+        let createdElement &#x3D; await prisma.courseElements.create({
+          data: courseElement,
+        });
+
+        parentId &#x3D; createdElement.elementId;
+
+        await this.helper.createElementOptions(
+          element.options,
+          createdElement.elementId,
+          Number(element.options.type),
+        );
+
+        if (element.children) {
+          element.children.forEach(async (child) &#x3D;&gt; {
+            if (child.elementUUID) {
+              if (await this.helper.elementExists(child.elementUUID)) {
+                let currentChild &#x3D; {
+                  elementUUID: child.elementUUID,
+                  elementId: await this.helper.getElementIdByUUID(
+                    child.elementUUID,
+                  ),
+                  parentId: createdElement.elementId,
+                  elementOrder: child.elementOrder,
+                  elementOptions: child.options,
+                };
+
+                let childWithOptions &#x3D; elementsWithOptions.find(
+                  (e) &#x3D;&gt; e.elementUUID &#x3D;&#x3D;&#x3D; child.elementUUID,
+                );
+                let updateNeeded &#x3D; false;
+
+                if (
+                  childWithOptions.parentId !&#x3D;&#x3D; currentChild.parentId ||
+                  childWithOptions.elementOrder !&#x3D;&#x3D; currentChild.elementOrder
+                ) {
+                  updateNeeded &#x3D; true;
+                }
+
+                for (let option in childWithOptions.elementOptions) {
+                  if (
+                    childWithOptions.elementOptions[option] !&#x3D;&#x3D;
+                    currentChild.elementOptions[option]
+                  ) {
+                    updateNeeded &#x3D; true;
+                  }
+                }
+
+                if (updateNeeded) {
+                  await prisma.courseElements.update({
+                    where: {
+                      elementId: Number(currentChild.elementId),
+                    },
+                    data: currentChild,
+                  });
+                }
+
+                await this.helper.updateElementOptions(
+                  currentChild.elementOptions,
+                  currentChild.elementId,
+                  Number(currentChild.elementOptions.type),
+                );
+              }
+            } else {
+              let courseElement &#x3D; {
+                elementUUID: &#x60;${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}&#x60;,
+                courseId: Number(courseId),
+                typeId: Number(child.options.type),
+                parentId: parentId,
+                visible: Boolean(child.options.visible),
+                elementOrder: child.elementOrder,
+                personCreationId: Number(userId),
+              };
+
+              let createdElement &#x3D; await prisma.courseElements.create({
+                data: courseElement,
+              });
+
+              await this.helper.createElementOptions(
+                child.options,
+                createdElement.elementId,
+                Number(child.options.type),
+              );
+            }
+          });
+        }
+        return RETURN_DATA.SUCCESS;
+      }
+    });
+    return RETURN_DATA.SUCCESS;
+  }
+
+  async getCourseElements(courseUUID): Promise&lt;ReturnMessage&gt; {
+    const courseId &#x3D; await this.helper.getCourseIdByUUID(courseUUID);
+
+    const currentElements &#x3D; await prisma.courseElements.findMany({
+      where: {
+        courseId: Number(courseId),
+      },
+      select: {
+        elementId: true,
+        elementUUID: true,
+        typeId: true,
+        parentId: true,
+        visible: true,
+        creationDate: true,
+        personCreationId: true,
+      },
+    });
+
+    const elementsWithOptions &#x3D; [];
+
+    for (const element of currentElements) {
+      if (element.elementUUID) {
+        const elementOptions &#x3D; await this.helper.getElementOptions(
+          element.elementId,
+          element.typeId,
+        );
+
+        let parentUUID &#x3D; &#x27;0&#x27;;
+        if (element.parentId !&#x3D; 0) {
+          parentUUID &#x3D; await this.helper.getElementUUIDById(element.parentId);
+        }
+
+        elementsWithOptions.push({
+          elementUUID: element.elementUUID,
+          parentUUID: parentUUID,
+          options: {
+            type: element.typeId.toString(),
+            visible: Boolean(element.visible),
+            ...elementOptions,
+          },
+        });
+      }
+    }
+
+    let returnElements &#x3D; elementsWithOptions.filter(
+      (element) &#x3D;&gt; !element.parentUUID || element.parentUUID &#x3D;&#x3D;&#x3D; &#x27;0&#x27;,
+    );
+
+    for (const element of elementsWithOptions) {
+      if (element.parentUUID &amp;&amp; element.parentUUID !&#x3D;&#x3D; &#x27;0&#x27;) {
+        returnElements &#x3D; returnElements.map((currentElement) &#x3D;&gt; {
+          if (currentElement.elementUUID &#x3D;&#x3D;&#x3D; element.parentUUID) {
+            if (!currentElement.children) {
+              currentElement.children &#x3D; [];
+            }
+            currentElement.children.push(element);
+          }
+
+          return currentElement;
+        });
+        delete element.parentUUID;
+      }
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: returnElements,
+    };
+  }
+
+  async getElement(request, elementUUID): Promise&lt;ReturnMessage&gt; {
+    const jwt &#x3D; await this.helper.extractJWTToken(request);
+    const userId &#x3D; await this.helper.getUserIdfromJWT(jwt);
+    const elementId &#x3D; await this.helper.getElementIdByUUID(elementUUID);
+    const courseId &#x3D; await this.helper.getCourseIdByElementId(elementId);
+    const schoolId &#x3D; await this.helper.getSchoolIdByCourseId(courseId);
+
+    if (!(await this.helper.userIsInCourse(userId, courseId))) {
+      return {
+        status: HttpStatus.FORBIDDEN,
+        message: &#x27;You are not in this course&#x27;,
+      };
+    }
+
+    const settings &#x3D; await prisma.courseElements.findFirst({
+      where: {
+        elementId: elementId,
+      },
+      select: {
+        personCreationId: true,
+        elementUUID: true,
+        creationDate: true,
+        visible: true,
+        courseId: true,
+        course: {
+          select: {
+            courseUUID: true,
+          },
+        },
+        fileSubmissionSettings: {
+          select: {
+            name: true,
+            description: true,
+            dueTime: true,
+            submitLater: true,
+            submitLaterTime: true,
+            maxFileSize: true,
+            allowedFileTypes: true,
+          },
+        },
+        textSettings: {
+          select: {
+            text: true,
+          },
+        },
+      },
+    });
+
+    const creator &#x3D; await this.helper.getUserById(settings.personCreationId);
+    const isTeacherOrHigher &#x3D; await this.helper.isTeacherOrHigher(
+      userId,
+      schoolId,
+    );
+
+    const hasSubmitted &#x3D; await prisma.fileSubmissions.findFirst({
+      where: {
+        courseElementId: Number(elementId),
+        personId: Number(userId),
+      },
+    });
+
+    const elementItem &#x3D; {
+      elementUUID: settings.elementUUID,
+      courseUUID: settings.course!.courseUUID,
+      visible: Boolean(settings.visible),
+      creationDate: settings.creationDate,
+      canEdit: isTeacherOrHigher,
+      hasSubmitted: hasSubmitted ? true : false,
+      creator: {
+        userUUID: creator.personUUID,
+        firstName: creator.firstName,
+        lastName: creator.lastName,
+        fullName: &#x60;${creator.firstName} ${creator.lastName}&#x60;,
+      },
+      options: {
+        ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
+      },
+    };
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: elementItem,
+    };
+  }
+
+  async getCourseUUIDById(courseId: number): Promise&lt;string&gt; {
+    if (courseId) {
+      try {
+        const course &#x3D; await prisma.courses.findFirst({
+          where: {
+            courseId: courseId,
+          },
+        });
+        return course.courseUUID;
+      } catch (err) {
+        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      }
+    } else {
+      throw new Error(ERROR_CODES.SCHOOL_ID_NULL_OR_INVALID);
+    }
+  }
+
+  async submitExercise(request, file): Promise&lt;ReturnMessage&gt; {
+    const elementUUID &#x3D; request.body.elementUUID;
+    const elementId &#x3D; await this.helper.getElementIdByUUID(elementUUID);
+    const jwt &#x3D; await this.helper.extractJWTToken(request);
+    const userId &#x3D; await this.helper.getUserIdfromJWT(jwt);
+    const dueDate &#x3D; await this.helper.getElementDueDate(elementId);
+    const isSubmittedInTime &#x3D; moment(new Date(Date.now())).isAfter(dueDate);
+
+    const hasSubmitted &#x3D; await prisma.fileSubmissions.findFirst({
+      where: {
+        personId: Number(userId),
+        courseElementId: Number(elementId),
+      },
+    });
+
+    if (hasSubmitted) {
+      return {
+        status: HttpStatus.FORBIDDEN,
+        message: &#x27;You have already submitted this exercise&#x27;,
+      };
+    }
+
+    try {
+      await prisma.fileSubmissions.create({
+        data: {
+          courseElementId: Number(elementId),
+          fileName: file.filename,
+          fileSize: file.size,
+          fileType: file.mimetype,
+          personId: Number(userId),
+          submitedLate: !isSubmittedInTime,
+          notes: &#x27;&#x27;,
+          grade: &#x27;&#x27;,
+        },
+      });
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getSubmissions(request, elementUUID): Promise&lt;ReturnMessage&gt; {
+    const elementId &#x3D; await this.helper.getElementIdByUUID(elementUUID);
+    const jwt &#x3D; await this.helper.extractJWTToken(request);
+    const userId &#x3D; await this.helper.getUserIdfromJWT(jwt);
+    const courseId &#x3D; await this.helper.getCourseIdByElementId(elementId);
+
+    if (!(await this.helper.userIsInCourse(userId, courseId))) {
+      return {
+        status: HttpStatus.FORBIDDEN,
+        message: &#x27;You are not in this course&#x27;,
+      };
+    }
+
+    const submissions &#x3D; await prisma.fileSubmissions.findMany({
+      where: {
+        courseElementId: Number(elementId),
+      },
+    });
+
+    const courseUsers &#x3D; await this.helper.getCourseUsers(courseId);
+    const userSubmissions &#x3D; [];
+
+    for (const user of courseUsers) {
+      const userSubmissionItem &#x3D; {
+        userUUID: user.personUUID,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.firstName + &#x27; &#x27; + user.lastName,
+        submission: {} as any,
+      };
+
+      const userSubmission &#x3D; submissions.find((submission) &#x3D;&gt; {
+        return submission.personId &#x3D;&#x3D;&#x3D; user.personId;
+      });
+
+      let submissionItem &#x3D; {} as any;
+
+      if (userSubmission) {
+        submissionItem.fileName &#x3D; userSubmission.fileName;
+        submissionItem.fileSize &#x3D; userSubmission.fileSize;
+        submissionItem.fileType &#x3D; userSubmission.fileType;
+        submissionItem.submittedLate &#x3D; userSubmission.submitedLate;
+        submissionItem.notes &#x3D; userSubmission.notes;
+        submissionItem.grade &#x3D; userSubmission.grade;
+        submissionItem.submissionDate &#x3D; userSubmission.submissionTime;
+        submissionItem.download &#x3D; &#x60;${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.fileName}&#x60;;
+      } else {
+        submissionItem &#x3D; null;
+      }
+      userSubmissionItem.submission &#x3D; submissionItem;
+      userSubmissions.push(userSubmissionItem);
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: userSubmissions,
+    };
+  }
+
+  async getEvents(payload: GetEventsDto, request): Promise&lt;ReturnMessage&gt; {
+    const { schoolUUID, days } &#x3D; payload;
+    const jwt: string &#x3D; await this.helper.extractJWTToken(request);
+    const userId: number &#x3D; await this.helper.getUserIdfromJWT(jwt);
+
+    let courses &#x3D; await prisma.schools.findFirst({
+      where: {
+        schoolUUID,
+      },
+      select: {
+        schoolUUID: true,
+        name: true,
+        courses: {
+          where: {
+            coursePersons: {
+              some: {
+                personId: Number(userId),
+              },
+            },
+          },
+          select: {
+            courseUUID: true,
+            name: true,
+            courseElements: {
+              where: {
+                typeId: {
+                  equals: 3,
+                },
+                AND: {
+                  visible: true,
+                },
+              },
+              select: {
+                elementUUID: true,
+                creationDate: true,
+                elementOrder: true,
+                visible: true,
+                fileSubmissionSettings: {
+                  where: {
+                    dueTime: {
+                      lte: moment(new Date(Date.now()))
+                        .add(days, &#x27;days&#x27;)
+                        .toDate(),
+                    },
+                    AND: {
+                      dueTime: {
+                        gte: moment(new Date(Date.now())).toDate(),
+                      },
+                    },
+                  },
+                  select: {
+                    name: true,
+                    description: true,
+                    dueTime: true,
+                    submitLater: true,
+                    submitLaterTime: true,
+                    maxFileSize: true,
+                    allowedFileTypes: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const eventItems: CourseEvent[] &#x3D; [];
+
+    for (const course of courses.courses) {
+      if (course.courseElements.length !&#x3D; 0) {
+        for (const element of course.courseElements) {
+          if (element.fileSubmissionSettings.length !&#x3D; 0) {
+            eventItems.push({
+              schoolUUID: courses.schoolUUID,
+              schoolName: courses.name,
+              courseUUID: course.courseUUID,
+              courseName: course.name,
+              elementUUID: element.elementUUID,
+              elementName: element.fileSubmissionSettings[0].name,
+              description: element.fileSubmissionSettings[0].description,
+              dueDate: element.fileSubmissionSettings[0].dueTime,
+              submitLater: element.fileSubmissionSettings[0].submitLater,
+              submitLaterDate:
+                element.fileSubmissionSettings[0].submitLaterTime,
+              maxFileSize: element.fileSubmissionSettings[0].maxFileSize,
+              allowedFileTypes:
+                element.fileSubmissionSettings[0].allowedFileTypes,
+            });
+          }
+        }
+      }
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: eventItems,
+    };
+  }
+}
+
+export async function findOneByUUID(courseUUID: string): Promise&lt;CourseDto&gt; {
+  try {
+    const course &#x3D; await prisma.courses.findFirst({
+      where: {
+        courseUUID,
+      },
+    });
+    return course;
+  } catch {
+    return null;
+  }
+}
+export async function findOneByName(
+  courseName: string,
+  schoolUUID,
+): Promise&lt;CourseDto&gt; {
+  try {
+    const courseUUID &#x3D; await prisma.schools.findFirst({
+      where: {
+        schoolUUID,
+      },
+      select: {
+        schoolId: true,
+        courses: {
+          where: {
+            name: courseName,
+          },
+          select: {
+            courseId: true,
+            schoolId: true,
+            courseUUID: true,
+            name: true,
+            courseDescription: true,
+            creationDate: true,
+            personCreationId: true,
+          },
+        },
+      },
+    });
+    return courseUUID.courses[0] ? courseUUID.courses[0] : null;
+  } catch {
+    return null;
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'CourseService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
