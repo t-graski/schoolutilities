@@ -72,7 +72,7 @@ export const StartPageBox: React.FC<Props> = ({}) => {
           We think it is extremely important to bring joy into the daily
           School-Routine of students and teachers. With incredible features and
           the right design, we make this possible.
-          <br />
+          <br /><br/>
           <BoldDescription>This is SchoolUtilities.</BoldDescription>
         </StartPageBoxDescription>
         <ButtonLayout>

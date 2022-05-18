@@ -72,8 +72,8 @@ export default function CreateSchool() {
       <Head>
         <title>School Setup - SchoolUtilities</title>
       </Head>
+      <Navbar></Navbar>
       <SettingsLayout>
-        <Navbar></Navbar>
         <SideDashboard
           links={[
             {

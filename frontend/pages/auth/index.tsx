@@ -92,18 +92,16 @@ export default function Auth() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (router.query.tab && router.query.tab === "register" && showLogin) {
-      setShowLogin(false);
-    } else if (router.query.tab && router.query.tab === "login" && !showLogin) {
-      setShowLogin(true);
-    }
-  }, [router.query.tab, showLogin]);
+  if (router.query.tab && router.query.tab === "register" && showLogin) {
+    setShowLogin(false);
+  } else if (router.query.tab && router.query.tab === "login" && !showLogin) {
+    setShowLogin(true);
+  }
 
   return (
     <>
       <Head>
-        <title>Login - SchoolUtilities</title>
+        <title>{showLogin ? "Login" : "Register"} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
@@ -120,13 +118,12 @@ export default function Auth() {
         ></InfoBox>
         <Box>
           <Tabs
-            defaultValue={showLogin ? "login" : "register"}
+            defaultValue={"login"}
+            value={showLogin ? "login" : "register"}
             onValueChange={(value) => {
               if (value === "login") {
-                setShowLogin(true);
                 router.push("?tab=login");
               } else {
-                setShowLogin(false);
                 router.push("?tab=register");
               }
             }}

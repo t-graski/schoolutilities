@@ -15,6 +15,10 @@ import { useQuery } from "react-query";
 import { fetchCourses, fetchSchools } from "../../utils/requests";
 import Link from "next/link";
 
+type Props = {
+  setIsLoggedIn?: Function;
+};
+
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
   "100%": { opacity: 1, transform: "translateY(0)" },
@@ -204,7 +208,7 @@ const StyledLink = styled("a", {
   textDecoration: "none",
 });
 
-export const UserMenu = () => {
+export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -425,6 +429,7 @@ export const UserMenu = () => {
               <DropdownMenuItem
                 onClick={() => {
                   logout();
+                  setIsLoggedIn(false);
                 }}
               >
                 <Link href={"/"} passHref>
