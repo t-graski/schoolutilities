@@ -415,3 +415,24 @@ export async function editJoinCode(data) {
 function formatErrorMessage(error) {
   return `Error ${error.status} - ${error.statusText}`;
 }
+
+export async function fetchSubmissions(submissionUUID){
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/submissions/${submissionUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}

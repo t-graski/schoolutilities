@@ -1,57 +1,67 @@
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { getAccessToken } from "../../../utils/authHelper";
+import { styled } from "@stitches/react";
+import React from "react";
+import Skeleton from "react-loading-skeleton";
+import { useQuery } from "react-query";
+import { fetchSubmissions } from "../../../utils/requests";
+import { Spacer } from "../../atoms/Spacer";
 import { DownloadList } from "../DownloadList";
 
 type Props = {
   submissionUUID: string;
 };
 
-export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {
-  const router = useRouter();
-  useEffect(() => {
-    requestDataFromDatabase();
-  });
-  const [submissionsContent, setSubmissionsContent] = useState([]);
+const Headline = styled("h2", {
+  color: "$fontPrimary",
+});
 
-  async function requestDataFromDatabase() {
-    let accessToken = await getAccessToken();
-    if (submissionUUID && accessToken && submissionsContent.length == 0) {
-      const submissionResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/submissions/${submissionUUID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      if (submissionResponse) {
-        if (submissionResponse.status == 200) {
-          const submissionData = await submissionResponse.json();
-          const mappedSubmissions = [];
-          console.log(submissionData);
-          submissionData.forEach((person) => {
-            mappedSubmissions.push({
-              name: person.fullName,
-              description: person.submission ? `Submitted on ${new Date(person.submission.submissionDate).toLocaleDateString()}` : "Not submitted",
-              downloadLink: person.submission ? person.submission.download : "",
-              downloadName: person.submission ? person.submission.fileName : "",
-              id: person.userUUID,
-            });
-          });
-          setSubmissionsContent(mappedSubmissions);
-        }
-      }
-    } else if (!accessToken) {
-      router.push("/auth?tab=login");
+export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {
+  const { data: submissionsContent, status } = useQuery(
+    ["submissions", submissionUUID],
+    async () => {
+      const data = await fetchSubmissions(submissionUUID);
+
+      const mappedSubmissions = [];
+      data.forEach((person) => {
+        mappedSubmissions.push({
+          name: person.fullName,
+          description: person.submission
+            ? `Submitted on ${new Date(
+                person.submission.submissionDate
+              ).toLocaleDateString()}`
+            : "Not submitted",
+          downloadLink: person.submission ? person.submission.download : "",
+          downloadName: person.submission ? person.submission.fileName : "",
+          id: person.userUUID,
+        });
+      });
+      return mappedSubmissions;
     }
+  );
+
+  if (status === "loading") {
+    return (
+      <>
+        <Headline>Submissions from students</Headline>
+        <br></br>
+        <Skeleton width={"100%"} height={80}></Skeleton>
+        <Spacer size="verySmall"></Spacer>
+        <Skeleton width={"100%"} height={80}></Skeleton>
+        <Spacer size="verySmall"></Spacer>
+        <Skeleton width={"100%"} height={80}></Skeleton>
+        <Spacer size="verySmall"></Spacer>
+        <Skeleton width={"100%"} height={80}></Skeleton>
+        <Spacer size="verySmall"></Spacer>
+      </>
+    );
+  }
+
+  if (status === "error") {
+    return <div>Error</div>;
   }
 
   return (
     <>
-      <h2>Submissions from students</h2>
+      <Headline>Submissions from students</Headline>
       <br></br>
       <DownloadList
         entries={submissionsContent}

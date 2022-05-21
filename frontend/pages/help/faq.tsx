@@ -108,6 +108,10 @@ const AccordionLayout = styled("div", {
   width: "100%",
 });
 
+const StyledLink = styled("a", {
+  color: "$fontPrimary",
+});
+
 export const Accordion = StyledAccordion;
 export const AccordionItem = StyledItem;
 export const AccordionTrigger = React.forwardRef<any>(function Content(
@@ -143,13 +147,13 @@ export default function RegisterApproved() {
         <>
           <p>
             You can create a new school by clicking{" "}
-            <Link href="/school/create">
-              <a>here</a>
+            <Link href="/school/create" passHref>
+              <StyledLink>here</StyledLink>
             </Link>
             . If you need any further assistance creating your school, you can
             visit our{" "}
-            <Link href="/support/help">
-              <a>Help Center</a>
+            <Link href="/support/help" passHref>
+              <StyledLink>Help Center</StyledLink>
             </Link>
             .
           </p>
@@ -163,13 +167,13 @@ export default function RegisterApproved() {
           <p>
             If you have already created a school, you can create a new
             department by clicking{" "}
-            <Link href="/school/admin/create-department">
-              <a>here</a>
+            <Link href="/school/admin/create-department" passHref>
+              <StyledLink>here</StyledLink>
             </Link>
             . If you need any further assistance creating your department, you
             can visit our{" "}
-            <Link href="/support/help">
-              <a>Help Center</a>
+            <Link href="/support/help" passHref>
+              <StyledLink>Help Center</StyledLink>
             </Link>
             .
           </p>
@@ -194,8 +198,8 @@ export default function RegisterApproved() {
           <p>
             If you have forgotten your password or E-mail, you can reset either
             of them by clicking{" "}
-            <Link href="profile/forgot">
-              <a>here</a>
+            <Link href="profile/forgot" passHref>
+              <StyledLink>here</StyledLink>
             </Link>
             .
           </p>

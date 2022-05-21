@@ -61,6 +61,7 @@ const StyledOpenButton = styled("button", {
   backgroundColor: "transparent",
   border: "none",
   outline: "none",
+  color: "$fontPrimary",
   display: "none",
 
   "@mobileOnly": {
