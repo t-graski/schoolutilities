@@ -324,6 +324,7 @@ model courseElements {
   course           courses  @relation(fields: [courseId], references: [courseId])
 
   fileSubmissionSettings fileSubmissionSettings[]
+  fileSubmissions        fileSubmissions[]
 
   @@index([courseId], map: "fkCourseElementCourseId")
   @@index([parentId], map: "fkCourseElementParentId")
@@ -380,6 +381,8 @@ model fileSubmissions {
   notes            String   @map("notes") @db.Text
   grade            String   @map("grade")
 
+  courseElements          courseElements? @relation(fields: [courseElementId], references: [elementId])
+  courseElementsElementId Int?
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@index([personId], map: "fkFileSubmissionPersonId")
   @@map("file_submissions")
