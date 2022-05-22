@@ -5,7 +5,7 @@ import { Button } from "../../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cookie from "js-cookie";
-import { getAccessToken, logout } from "../../../utils/authHelper";
+import { getAccessToken } from "../../../utils/authHelper";
 import { regex } from "../../../utils/regex";
 import { PasswordInput } from "../../atoms/input/PasswordInput";
 import { PASSWORD_VALIDATION_MESSAGES } from "../../../utils/parameterConstants";
@@ -25,10 +25,11 @@ const StyledInfo = styled("div", {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
+  marginBottom: "20px",
+
   fontSize: "1.5rem",
   color: "$fontPrimary",
   fontWeight: "bold",
-  marginBottom: "20px",
 });
 
 const ButtonLayout = styled("div", {
@@ -55,15 +56,13 @@ const StyledLink = styled("a", {
   },
 });
 
-export const LoginField: React.FC<Props> = ({ }) => {
+export const LoginField: React.FC<Props> = ({}) => {
   const [email, setEmail] = React.useState("");
   const [emailValid, setEmailValid] = React.useState(false);
   const [password, setPassword] = React.useState("");
   const [passwordValid, setPasswordValid] = React.useState(false);
   const [isDisabled, setDisabled] = React.useState(true);
-  const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [signUpInfo, setSignUpInfo] = React.useState("");
-  const [loginSuccess, setLoginSuccess] = React.useState(false);
   const router = useRouter();
 
   checkInputData();
@@ -76,9 +75,7 @@ export const LoginField: React.FC<Props> = ({ }) => {
     const accessToken = await getAccessToken();
 
     if (accessToken) {
-      setSignUpInfo("You are already logged in!");
-      setLoggedIn(true);
-      setLoginSuccess(true);
+      router.push("/profile/settings");
     }
   }
 
@@ -105,32 +102,26 @@ export const LoginField: React.FC<Props> = ({ }) => {
           password,
         }),
         headers: { "Content-Type": "application/json" },
-      })
-        .then((response) => {
-          console.log(response);
-          if (response.status == 200) {
-            setSignUpInfo("You are logged in");
-            setLoggedIn(true);
-            setLoginSuccess(true);
-            let redirectRoute: string = Array.isArray(router.query.redirect)
-              ? router.query.redirect[0]
-              : router.query.redirect;
-            if (router.query && router.query.redirect) {
-              router.push(decodeURIComponent(redirectRoute));
-            }
-            return response.json();
+      }).then(async (response) => {
+        console.log(response);
+        if (response.status == 200) {
+          const data = await response.json();
+          let redirectRoute: string = Array.isArray(router.query.redirect)
+            ? router.query.redirect[0]
+            : router.query.redirect;
+          cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
+          cookie.set("refreshToken", data.refresh_token, { expires: 7 });
+          if (router.query && router.query.redirect) {
+            router.push(decodeURIComponent(redirectRoute));
           } else {
-            setSignUpInfo(
-              "Something went wrong, while trying to log in. You might have entered wrong credentials or you're not registered yet."
-            );
+            router.push("/");
           }
-        })
-        .then((data) => {
-          if (data) {
-            cookie.set("accessToken", data.access_token, { expires: 1 / 96 });
-            cookie.set("refreshToken", data.refresh_token, { expires: 7 });
-          }
-        });
+        } else {
+          setSignUpInfo(
+            "Something went wrong, while trying to log in. You might have entered wrong credentials or you're not registered yet."
+          );
+        }
+      });
     } catch (err) {
       setSignUpInfo(
         "Ihre Eingaben konnten nicht verarbeitet werden, versuchen Sie es später erneut"
@@ -138,6 +129,28 @@ export const LoginField: React.FC<Props> = ({ }) => {
       console.log(err);
     }
   }
+
+  const StyledSubmitButton = styled("input", {
+    borderRadius: "8px",
+    width: "fit-content",
+    border: "none",
+    padding: "10px 20px",
+
+    fontSize: "1rem",
+    cursor: "pointer",
+    color: "$fontPrimary",
+    fontWeight: "bold",
+    backgroundColor: "$specialSecondary",
+
+    ":hover": {
+      backgroundColor: "$backgroundColor",
+      color: "$color",
+    },
+    ":active": {
+      backgroundColor: "$backgroundColor",
+      color: "$color",
+    },
+  });
 
   return (
     <>
@@ -164,16 +177,10 @@ export const LoginField: React.FC<Props> = ({ }) => {
             showPasswordStrength={false}
           ></PasswordInput>
           <LoginButtonLayout>
-            <Button
-              backgroundColor="primary"
-              color="primary"
-              onClick={() => {
-                handleSubmit();
-              }}
-              disabled={isDisabled}
-            >
-              Sign in
-            </Button>
+            <StyledSubmitButton
+              type="submit"
+              value="Sign in"
+            ></StyledSubmitButton>
             <Link href="/auth/password-reset" passHref>
               <StyledLink>Reset Password</StyledLink>
             </Link>
@@ -182,33 +189,7 @@ export const LoginField: React.FC<Props> = ({ }) => {
       )}
       <StyledInfo>
         <p>{signUpInfo}</p>
-        {isLoggedIn && (
-          <ButtonLayout>
-            <Link href="/profile/settings">
-              <a>
-                <Button
-                  backgroundColor="primary"
-                  color="primary"
-                  onClick={() => { }}
-                >
-                  See your profile
-                </Button>
-              </a>
-            </Link>
-            <Button
-              backgroundColor="secondary"
-              color="primary"
-              onClick={() => {
-                logout();
-                setSignUpInfo("");
-                setLoggedIn(false);
-              }}
-            >
-              Logout
-            </Button>
-          </ButtonLayout>
-        )}
-        {!loginSuccess && signUpInfo && (
+        {signUpInfo && (
           <ButtonLayout>
             <Button
               backgroundColor="secondary"

@@ -80,7 +80,7 @@ export function ExerciseDetailView({
     submitLater: false,
     submitLaterTime: new Date(500).toISOString(),
     maxFileSize: 1000,
-    allowedFileTypes: ".jpg,.png",
+    allowedFileTypes: ".jpg,.png,.zip",
   },
   ...props
 }) {

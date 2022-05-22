@@ -144,7 +144,7 @@ const Footer: React.FC<Props> = ({}) => {
               <StyledLink>FAQ</StyledLink>
             </Link>
             <Link href="https://schoolutilities.statuspage.io/" passHref>
-              <StyledLink>Status</StyledLink>
+              <StyledLink target={"_blank"}>Status</StyledLink>
             </Link>
           </LinkLayout>
           <LinkLayout>

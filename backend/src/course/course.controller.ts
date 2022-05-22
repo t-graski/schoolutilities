@@ -11,6 +11,7 @@ import {
   Put,
   Param,
   Body,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -23,13 +24,15 @@ import { Role } from 'src/roles/role.enum';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
+import { of } from 'rxjs';
+import { Response } from 'express';
 
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -189,6 +192,38 @@ export class CourseController {
     @Res() response,
   ) {
     const result = await this.courseService.getEvents(params, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Teacher)
+  @Get('downloadAll/:elementUUID')
+  async downloadAll(@Param() params, @Req() request, @Res() response: Response) {
+    const result = await this.courseService.downloadAll(params, request);
+
+    return of(
+      response
+        .set('Content-Type', 'application/octet-stream')
+        .set('Content-Disposition', `attachment; filename="abc.zip"`)
+        .status(HttpStatus.OK)
+        .sendFile(`${result.data}`, { root: process.env.FILE_PATH }),
+    );
+
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('revertExercise/:elementUUID')
+  @Roles(Role.Student)
+  async revertExercise(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.revertExercise(
+      request,
+      params.elementUUID,
+    );
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

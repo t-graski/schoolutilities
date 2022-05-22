@@ -22,6 +22,8 @@ import { CourseDto } from 'src/dto/course';
 import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
+import * as fs from 'fs';
+let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -469,6 +471,10 @@ export class CourseService {
 
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
+    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
+      personId,
+      schoolId,
+    );
 
     const courseData = [];
     try {
@@ -504,6 +510,7 @@ export class CourseService {
           courseName: course.name,
           courseDescription: course.courseDescription,
           creationDate: course.creationDate,
+          canEdit: isTeacherOrHigher,
           creator: {
             personUUID: creator.personUUID,
             firstName: creator.firstName,
@@ -1325,7 +1332,58 @@ export class CourseService {
       data: eventItems,
     };
   }
+
+  async revertExercise(request, elementUUID): Promise<ReturnMessage> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+    try {
+      await prisma.fileSubmissions.delete({
+        where: {
+          fileSubmissionPersonId: {
+            courseElementId: Number(elementId),
+            personId: Number(userId),
+          }
+        }
+      })
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async downloadAll(params, request): Promise<ReturnMessage> {
+    const { elementUUID } = params;
+    const zip = new JSZip();
+
+    const files = await prisma.courseElements.findFirst({
+      where: {
+        elementUUID,
+      },
+      select: {
+        fileSubmissions: {
+          select: {
+            fileName: true,
+          },
+        },
+      },
+    });
+
+    const zipFolder = zip.folder(elementUUID);
+
+    files.fileSubmissions.forEach((file) => {
+      console.log(`${process.env.FILE_PATH}${file.fileName}`);
+
+      zipFolder.file(file.fileName, fs.readFileSync(`${process.env.FILE_PATH}${file.fileName}`));
+    });
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: zipFolder,
+    }
+  }
 }
+
 
 export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
   try {

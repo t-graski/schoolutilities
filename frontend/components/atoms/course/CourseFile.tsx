@@ -19,7 +19,9 @@ type Props = {
   allowedFileTypes: string;
 };
 
-const StyledLink = styled("picture", {
+const StyledLink = styled("a", {
+  color: "$fontPrimary",
+  textDecoration: "none",
   cursor: "pointer",
 });
 

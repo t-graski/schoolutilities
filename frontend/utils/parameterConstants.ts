@@ -151,4 +151,5 @@ export const appRoutes = {
   SCHOOL_CREATE: "/school/create",
   SCHOOL_JOIN: "/school/join",
   SCHOOL_SELECT: "/school/select",
+  DASHBOARD: "/dashboard",
 };

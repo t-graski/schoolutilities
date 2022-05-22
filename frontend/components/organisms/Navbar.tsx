@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "../../stitches.config";
 import Link from "next/link";
 import { loggedIn } from "../../utils/authHelper";
@@ -61,6 +61,7 @@ const StyledOpenButton = styled("button", {
   backgroundColor: "transparent",
   border: "none",
   outline: "none",
+  color: "$fontPrimary",
   display: "none",
 
   "@mobileOnly": {
@@ -90,7 +91,7 @@ const PopOverLayout = styled("div", {
 const Navbar: React.FC<Props> = ({}) => {
   const [mobileVisible, setMobileVisible] = useState(false);
 
-  const isLoggedIn = loggedIn();
+  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn());
 
   return (
     <>
@@ -110,7 +111,7 @@ const Navbar: React.FC<Props> = ({}) => {
         </NavLinksLayout>
         <SpecialLinkLayout>
           {isLoggedIn ? (
-            <UserMenu></UserMenu>
+            <UserMenu setIsLoggedIn={setIsLoggedIn}></UserMenu>
           ) : (
             <Link href="/auth?tab=login" passHref>
               <Button backgroundColor={"primary"} color={"primary"}>

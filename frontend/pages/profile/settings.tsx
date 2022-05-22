@@ -17,7 +17,6 @@ const FirstBoxLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "100vw",
-  marginTop: "18vh",
 });
 
 export default function Home() {

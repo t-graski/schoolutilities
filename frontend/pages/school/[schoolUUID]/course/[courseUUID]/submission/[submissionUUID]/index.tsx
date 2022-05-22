@@ -14,6 +14,10 @@ import { FileUpload } from "../../../../../../../components/molecules/FileUpload
 import { Button } from "../../../../../../../components/atoms/Button";
 import { SubmissionsOverview } from "../../../../../../../components/organisms/course/SubmissionsOverview";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { fetchCourseElement } from "../../../../../../../utils/requests";
+import { useQuery } from "react-query";
+import Skeleton from "react-loading-skeleton";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -32,54 +36,72 @@ const HeadlineLayout = styled("div", {
 
 export default function Features() {
   const router = useRouter();
+  const submissionUUID = router.query.submissionUUID as string;
 
-  const [submissionContent, setSubmissionContent] = useState({
-    name: "",
-    description: "",
-    dueTime: "",
-    submitLater: false,
-    submitLaterTime: new Date(500).toISOString(),
-    maxFileSize: 1000,
-    hasSubmitted: false,
-    allowedFileTypes: ".jpg,.png",
-    canEdit: false,
-  });
-  const [submissionUUID, setSubmissionUUID] = useState("");
+  const {
+    data: submissionContent,
+    status,
+    refetch,
+  } = useQuery(["courseElement", submissionUUID], async () => {
+    const data = await fetchCourseElement(submissionUUID);
+    console.log(data);
 
-  useEffect(() => {
-    requestDataFromDatabase();
+    data.options.canEdit = data.canEdit;
+    data.options.hasSubmitted = data.hasSubmitted;
+    return data.options;
   });
 
-  async function requestDataFromDatabase() {
-    if (!Array.isArray(submissionUUID)) {
-      setSubmissionUUID(router.query.submissionUUID as string);
-    }
-    let accessToken = await getAccessToken();
-    if (submissionUUID && accessToken && submissionContent.name == "") {
-      const submissionResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/element/${submissionUUID}`,
+  if (status === "loading") {
+    return (
+      <>
+        <Head>
+          <title>SchoolUtilities</title>
+        </Head>
+        <Navbar></Navbar>
+        <ContentLayout>
+          <HeadlineLayout>
+            <Skeleton width={300} height={80}></Skeleton>
+          </HeadlineLayout>
+          <Spacer size="verySmall"></Spacer>
+          <Separator width="small" alignment="left" />
+          <Spacer size="verySmall"></Spacer>
+
+          <Skeleton width={500} height={50}></Skeleton>
+          <Spacer size="verySmall"></Spacer>
+          <Link
+            href={`/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`}
+            passHref
+          >
+            <Button backgroundColor={"primary"} color={"primary"}>
+              Back to course
+            </Button>
+          </Link>
+          <Spacer size="verySmall"></Spacer>
+        </ContentLayout>
+        <Footer></Footer>
+      </>
+    );
+  }
+
+  async function deleteSubmission() {
+    const token = await getAccessToken();
+
+    if (submissionUUID) {
+      const request = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/revertExercise/${submissionUUID}`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      if (submissionResponse) {
-        if (submissionResponse.status == 200) {
-          const submissionData = await submissionResponse.json();
-          submissionData.options.canEdit = submissionData.canEdit;
-          submissionData.options.hasSubmitted = submissionData.hasSubmitted;
-          setSubmissionContent(submissionData.options);
-        }
+      if (request.status == 200) {
+        refetch();
       }
-    } else if (!accessToken) {
-      router.push("/auth?tab=login");
     }
   }
-
-  console.log(submissionContent);
 
   return (
     <>
@@ -90,7 +112,6 @@ export default function Features() {
         </title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <ContentLayout>
         <HeadlineLayout>
           <Headline
@@ -105,7 +126,18 @@ export default function Features() {
           <FileUpload></FileUpload>
         )}
         {!submissionContent.canEdit && submissionContent.hasSubmitted && (
-          <>You already submitted a file</>
+          <>
+            You already submitted a file
+            <Spacer size="verySmall"></Spacer>
+            <Button
+              backgroundColor={"secondary"}
+              color={"primary"}
+              onClick={deleteSubmission}
+            >
+              Remove submission
+            </Button>
+            <Spacer size="small"></Spacer>
+          </>
         )}
         {submissionContent.canEdit && (
           <SubmissionsOverview
@@ -113,17 +145,14 @@ export default function Features() {
           ></SubmissionsOverview>
         )}
         <Spacer size="verySmall"></Spacer>
-        <Button
-          backgroundColor={"secondary"}
-          color={"primary"}
-          onClick={() => {
-            router.push(
-              `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
-            );
-          }}
+        <Link
+          href={`/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`}
+          passHref
         >
-          Back to course
-        </Button>
+          <Button backgroundColor={"primary"} color={"primary"}>
+            Back to course
+          </Button>
+        </Link>
         <Spacer size="verySmall"></Spacer>
       </ContentLayout>
       <Footer></Footer>
