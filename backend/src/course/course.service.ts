@@ -1333,6 +1333,25 @@ export class CourseService {
     };
   }
 
+  async revertExercise(request, elementUUID): Promise<ReturnMessage> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+    try {
+      await prisma.fileSubmissions.delete({
+        where: {
+          fileSubmissionPersonId: {
+            courseElementId: Number(elementId),
+            personId: Number(userId),
+          }
+        }
+      })
+      return RETURN_DATA.SUCCESS;
+    } catch (error) {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
   async downloadAll(params, request): Promise<ReturnMessage> {
     const { elementUUID } = params;
     const zip = new JSZip();

@@ -381,8 +381,8 @@ model fileSubmissions {
   notes            String   @map("notes") @db.Text
   grade            String   @map("grade")
 
-  courseElements          courseElements? @relation(fields: [courseElementId], references: [elementId])
-  courseElementsElementId Int?
+  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
+  @@unique([courseElementId, personId], name: "fileSubmissionPersonId")
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@index([personId], map: "fkFileSubmissionPersonId")
   @@map("file_submissions")

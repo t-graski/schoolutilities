@@ -215,4 +215,17 @@ export class CourseController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('revertExercise/:elementUUID')
+  @Roles(Role.Student)
+  async revertExercise(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.revertExercise(
+      request,
+      params.elementUUID,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }
