@@ -15,7 +15,6 @@ export default function CreateCourse() {
         <title>Course Setup - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="small"></Spacer>
       <ContentLayout>
         <Headline label="My Courses"></Headline>
         <Separator width="small" alignment="center" />

@@ -15,7 +15,6 @@ export default function ShowCourses() {
         <title>Course Setup - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="Course selection"></Headline>
       <Separator width="small" alignment="center" />
       <CourseSelectionList></CourseSelectionList>

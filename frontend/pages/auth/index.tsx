@@ -104,7 +104,6 @@ export default function Auth() {
         <title>{showLogin ? "Login" : "Register"} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <LoginAuthLayout>
         <InfoBox
           headline={showLogin ? "Login" : "Register"}

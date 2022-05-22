@@ -75,7 +75,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     const accessToken = await getAccessToken();
 
     if (accessToken) {
-      router.push("/dashboard");
+      router.push("/profile/settings");
     }
   }
 
@@ -130,6 +130,28 @@ export const LoginField: React.FC<Props> = ({}) => {
     }
   }
 
+  const StyledSubmitButton = styled("input", {
+    borderRadius: "8px",
+    width: "fit-content",
+    border: "none",
+    padding: "10px 20px",
+
+    fontSize: "1rem",
+    cursor: "pointer",
+    color: "$fontPrimary",
+    fontWeight: "bold",
+    backgroundColor: "$specialSecondary",
+
+    ":hover": {
+      backgroundColor: "$backgroundColor",
+      color: "$color",
+    },
+    ":active": {
+      backgroundColor: "$backgroundColor",
+      color: "$color",
+    },
+  });
+
   return (
     <>
       {!signUpInfo && (
@@ -155,16 +177,10 @@ export const LoginField: React.FC<Props> = ({}) => {
             showPasswordStrength={false}
           ></PasswordInput>
           <LoginButtonLayout>
-            <Button
-              backgroundColor="primary"
-              color="primary"
-              onClick={() => {
-                handleSubmit();
-              }}
-              disabled={isDisabled}
-            >
-              Sign in
-            </Button>
+            <StyledSubmitButton
+              type="submit"
+              value="Sign in"
+            ></StyledSubmitButton>
             <Link href="/auth/password-reset" passHref>
               <StyledLink>Reset Password</StyledLink>
             </Link>
