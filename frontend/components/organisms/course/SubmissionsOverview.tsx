@@ -27,7 +27,9 @@ export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {
           description: person.submission
             ? `Submitted on ${new Date(
                 person.submission.submissionDate
-              ).toLocaleDateString()}`
+              ).toLocaleDateString()} at ${new Date(
+                person.submission.submissionDate
+              ).toLocaleTimeString()}`
             : "Not submitted",
           downloadLink: person.submission ? person.submission.download : "",
           downloadName: person.submission ? person.submission.fileName : "",
