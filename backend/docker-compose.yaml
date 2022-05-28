@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  main:
+    container_name: nestjs-api
+    build:
+      context: .
+      target: production
+    volumes:
+      - backendData:/mnt/1-file-storage-su/uploads
+    ports:
+      - 8888:8888
+    env_file:
+      - .env
+    networks:
+      - webnet
+networks:
+  webnet:
+volumes:
+  backendData:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/mnt/1-file-storage-su/uploads'
