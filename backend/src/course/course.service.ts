@@ -1159,11 +1159,15 @@ export class CourseService {
       };
     }
 
+    console.log(file);
+
+
     try {
       await prisma.fileSubmissions.create({
         data: {
           courseElementId: Number(elementId),
           fileName: file.filename,
+          originalName: file.originalname,
           fileSize: file.size,
           fileType: file.mimetype,
           personId: Number(userId),

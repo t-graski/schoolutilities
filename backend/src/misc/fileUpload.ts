@@ -35,7 +35,7 @@ export const editFileName = (req, file, callback) => {
   callback(
     null,
     `${ID_STARTERS.FILES}${uuid}${fileExtName}`,
-    (req.originalName = file.filename),
+    (req.fileName = file.filename),
   );
 };
 
