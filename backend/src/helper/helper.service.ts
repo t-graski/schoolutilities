@@ -1,4 +1,4 @@
-import { Injectable, Param } from '@nestjs/common';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -18,7 +18,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
@@ -286,7 +286,7 @@ export class HelperService {
         });
         return course.courseId;
       } catch (err) {
-        throw new Error(ERROR_CODES.DATABASE_ERROR);
+        throw new NotFoundException('Course not found: ' + courseUUID);
       }
     } else {
       throw new Error(ERROR_CODES.USER_UUID_NULL_OR_INVALID);
@@ -766,7 +766,7 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() {}
+  async getMaxFileSize() { }
   async removeUserFromUpdateEmailList(personId: number): Promise<any> {
     if (personId) {
       try {

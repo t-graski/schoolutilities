@@ -1,5 +1,5 @@
 import { StatusService } from './status.service';
-import { Controller, Get, HttpStatus, Req, Res } from '@nestjs/common';
+import { Controller, Get, HttpStatus, NotFoundException, Req, Res } from '@nestjs/common';
 import * as requestIp from 'request-ip';
 
 @Controller('api/status')
