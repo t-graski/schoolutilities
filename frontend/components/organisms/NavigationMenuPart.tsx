@@ -48,50 +48,60 @@ const fadeOut = keyframes({
 
 const StyledMenu = styled(NavigationMenuPrimitive.Root, {
   position: "relative",
+  zIndex: 1,
+
   display: "flex",
   justifyContent: "center",
   width: "60vw",
-  zIndex: 1,
 });
 
 const StyledList = styled(NavigationMenuPrimitive.List, {
   all: "unset",
+
   display: "flex",
   justifyContent: "center",
-  backgroundColor: "transparent",
   padding: 4,
   borderRadius: 6,
+
   listStyle: "none",
+  backgroundColor: "transparent",
 });
 
 const itemStyles = {
   padding: "8px 12px",
-  outline: "none",
-  userSelect: "none",
-  fontWeight: "$medium",
-  lineHeight: 1,
   borderRadius: 4,
+  
   fontSize: 15,
   color: "$fontPrimary",
+  lineHeight: 1,
+  fontWeight: "$medium",
+  outline: "none",
+  userSelect: "none",
+
   "&:focus": { position: "relative", boxShadow: `0 0 0 2px ${violet.violet7}` },
   "&:hover": { backgroundColor: "$backgroundSecondary" },
 };
 
 const StyledTrigger = styled(NavigationMenuPrimitive.Trigger, {
   all: "unset",
+
   ...itemStyles,
+
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  fontSize: "1.5rem",
   gap: 2,
+
+  fontSize: "1.5rem",
   cursor: "pointer",
 });
 
 const StyledCaret = styled(CaretDownIcon, {
   position: "relative",
-  color: "$fontPrimary",
   top: 1,
+
+  color: "$fontPrimary",
+  
   "[data-state=open] &": { transform: "rotate(-180deg)" },
   "@media (prefers-reduced-motion: no-preference)": {
     transition: "transform 250ms ease",
@@ -112,19 +122,23 @@ const StyledTriggerWithCaret = React.forwardRef<any>(function Content(
 
 const StyledLink = styled(Link, {
   ...itemStyles,
+
   display: "block",
+  width: "100%",
+  height: "100%",
+
   textDecoration: "none",
   fontSize: 15,
   lineHeight: 1,
-  width: "100%",
-  height: "100%",
 });
 
 const StyledContent = styled(NavigationMenuPrimitive.Content, {
   position: "absolute",
   top: 0,
   left: 0,
+
   width: "100%",
+
   "@media only screen and (min-width: 600px)": { width: "auto" },
   "@media (prefers-reduced-motion: no-preference)": {
     animationDuration: "250ms",
@@ -137,13 +151,14 @@ const StyledContent = styled(NavigationMenuPrimitive.Content, {
 });
 
 const StyledIndicator = styled(NavigationMenuPrimitive.Indicator, {
+  zIndex: 1,
+  top: "100%",
+
   display: "flex",
   alignItems: "flex-end",
   justifyContent: "center",
   height: 10,
-  top: "100%",
   overflow: "hidden",
-  zIndex: 1,
 
   "@media (prefers-reduced-motion: no-preference)": {
     transition: "width, transform 250ms ease",
@@ -155,11 +170,13 @@ const StyledIndicator = styled(NavigationMenuPrimitive.Indicator, {
 const StyledArrow = styled("div", {
   position: "relative",
   top: "70%",
-  backgroundColor: "white",
+  transform: "rotate(45deg)",
+  
   width: 10,
   height: 10,
-  transform: "rotate(45deg)",
   borderTopLeftRadius: 2,
+
+  backgroundColor: "white",
 });
 
 const StyledIndicatorWithArrow = React.forwardRef<any>(function Content(
@@ -176,14 +193,16 @@ const StyledIndicatorWithArrow = React.forwardRef<any>(function Content(
 const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   position: "relative",
   transformOrigin: "top center",
+
   marginTop: 10,
   width: "100%",
-  backgroundColor: "$backgroundPrimary",
   borderRadius: 6,
   overflow: "hidden",
+  height: "var(--radix-navigation-menu-viewport-height)",
+
+  backgroundColor: "$backgroundPrimary",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
-  height: "var(--radix-navigation-menu-viewport-height)",
 
   "@media only screen and (min-width: 600px)": {
     width: "var(--radix-navigation-menu-viewport-width)",
@@ -232,20 +251,37 @@ const ContentList = styled("ul", {
   },
 });
 
-const ListItem = styled("li", {});
+const ListItem = styled("li", {
+});
 
 const LinkTitle = styled("div", {
+  marginBottom: 5,
+
   fontWeight: "$bold",
   lineHeight: 1.2,
-  marginBottom: 5,
   color: "$fontPrimary",
 });
 
 const LinkText = styled("p", {
-  all: "unset",
   color: "$fontPrimary",
   lineHeight: 1.4,
   fontWeight: "initial",
+});
+
+const StyledA = styled("a", {
+  width: "100%",
+  height: "100%",
+  padding: "8px",
+  display: "block",
+  borderRadius: 5,
+
+  transition: "background-color 250ms ease",
+  color: "$fontPrimary",
+  textDecoration: "none",
+
+  "&:hover": {
+    backgroundColor: "$backgroundTertiary",
+  },
 });
 
 const ContentListItem = React.forwardRef<any, any>(function Content(
@@ -265,10 +301,10 @@ const ContentListItem = React.forwardRef<any, any>(function Content(
         }}
         passHref
       >
-        <a>
+        <StyledA>
           <LinkTitle>{title}</LinkTitle>
           <LinkText>{children}</LinkText>
-        </a>
+        </StyledA>
       </NavigationMenuLink>
     </ListItem>
   );
@@ -338,10 +374,7 @@ export const NavigationMenuPart = () => {
               <ContentListItem title="About" href="/about-us">
                 Get acquainted with the whole story about SchoolUtilities.
               </ContentListItem>
-              <ContentListItem
-                title="FAQ"
-                href="/help/faq"
-              >
+              <ContentListItem title="FAQ" href="/help/faq">
                 If you have any questions, you&apos;ll probably find them here.
               </ContentListItem>
             </ContentList>

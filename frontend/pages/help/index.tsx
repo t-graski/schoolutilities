@@ -5,7 +5,6 @@ import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
-import SvgAlert from "../../components/atoms/svg/SvgAlert";
 import dynamic from "next/dynamic";
 
 export default function RegisterApproved({ items }) {
@@ -15,7 +14,6 @@ export default function RegisterApproved({ items }) {
         <title>Help - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="Help Center"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
@@ -36,7 +34,7 @@ export async function getStaticProps() {
       },
     }
   );
-  const getResponse = await getRequest.json();
+  const getResponse = await getRequest.json();  
   return {
     props: {
       items: getResponse.map((item) => {
