@@ -14,7 +14,6 @@ export default function RegisterApproved() {
         <title>School Selection - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="My Schools"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="verySmall"></Spacer>

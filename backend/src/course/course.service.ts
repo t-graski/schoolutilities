@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import {
   UpdateCourse,
   RemoveCourse,
@@ -192,7 +192,7 @@ export class CourseService {
     });
 
     if (!course) {
-      return RETURN_DATA.NOT_FOUND;
+      throw new NotFoundException('Course not found: ' + courseUUID);
     }
 
     const patchCourse = await prisma.courses.update({
@@ -1159,11 +1159,15 @@ export class CourseService {
       };
     }
 
+    console.log(file);
+
+
     try {
       await prisma.fileSubmissions.create({
         data: {
           courseElementId: Number(elementId),
           fileName: file.filename,
+          originalName: file.originalname,
           fileSize: file.size,
           fileType: file.mimetype,
           personId: Number(userId),
