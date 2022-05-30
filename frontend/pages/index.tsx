@@ -78,7 +78,7 @@ export default function Home() {
             description:
               "To enjoy even more of SchoolUtilities' functionality, you can upgrade to Premium and appreciate ALL the benefits we offer.",
             href: "/premium",
-            buttonText: "GET PREMIUM",
+            buttonText: "GET PREMIUM NOW",
             icon: SvgPremium,
           },
         ]}
