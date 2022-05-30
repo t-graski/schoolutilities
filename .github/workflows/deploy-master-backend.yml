@@ -30,6 +30,7 @@ jobs:
             cd ../home/REMOTE_USER/
             docker image rm schoolutilities-backend || true
             docker stop schoolutilities-backend || true && docker rm schoolutilities-backend || true
+            docker-compose build
             docker-compose up -d
             docker image prune -f
           host: ${{ secrets.BACKEND_REMOTE_HOST }}

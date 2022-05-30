@@ -1,10 +1,5 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import {
-  UpdateCourse,
-  RemoveCourse,
-  RemoveUser,
-  ReturnMessage,
-} from 'src/types/Course';
+import { UpdateCourse, ReturnMessage } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import {
@@ -37,7 +32,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
   async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
@@ -816,7 +811,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                        currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1161,7 +1156,6 @@ export class CourseService {
 
     console.log(file);
 
-
     try {
       await prisma.fileSubmissions.create({
         data: {
@@ -1281,13 +1275,15 @@ export class CourseService {
                 fileSubmissionSettings: {
                   where: {
                     dueTime: {
-                      lte: moment(new Date(Date.now())).add(days, 'days').toDate(),
+                      lte: moment(new Date(Date.now()))
+                        .add(days, 'days')
+                        .toDate(),
                     },
                     AND: {
                       dueTime: {
                         gte: moment(new Date(Date.now())).toDate(),
-                      }
-                    }
+                      },
+                    },
                   },
                   select: {
                     name: true,
@@ -1322,9 +1318,11 @@ export class CourseService {
               description: element.fileSubmissionSettings[0].description,
               dueDate: element.fileSubmissionSettings[0].dueTime,
               submitLater: element.fileSubmissionSettings[0].submitLater,
-              submitLaterDate: element.fileSubmissionSettings[0].submitLaterTime,
+              submitLaterDate:
+                element.fileSubmissionSettings[0].submitLaterTime,
               maxFileSize: element.fileSubmissionSettings[0].maxFileSize,
-              allowedFileTypes: element.fileSubmissionSettings[0].allowedFileTypes,
+              allowedFileTypes:
+                element.fileSubmissionSettings[0].allowedFileTypes,
             });
           }
         }
@@ -1347,9 +1345,9 @@ export class CourseService {
           fileSubmissionPersonId: {
             courseElementId: Number(elementId),
             personId: Number(userId),
-          }
-        }
-      })
+          },
+        },
+      });
       return RETURN_DATA.SUCCESS;
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
@@ -1378,16 +1376,18 @@ export class CourseService {
     files.fileSubmissions.forEach((file) => {
       console.log(`${process.env.FILE_PATH}${file.fileName}`);
 
-      zipFolder.file(file.fileName, fs.readFileSync(`${process.env.FILE_PATH}${file.fileName}`));
+      zipFolder.file(
+        file.fileName,
+        fs.readFileSync(`${process.env.FILE_PATH}${file.fileName}`),
+      );
     });
 
     return {
       status: RETURN_DATA.SUCCESS.status,
       data: zipFolder,
-    }
+    };
   }
 }
-
 
 export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
   try {
