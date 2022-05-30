@@ -1,4 +1,4 @@
-FROM node
+FROM node:latest As production
 EXPOSE 3000
 WORKDIR /schoolutilites-frontend
 COPY . .

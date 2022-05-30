@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   main:
-    container_name: nestjs-api
+    container_name: schoolutilities-backend
     build:
       context: .
       target: production

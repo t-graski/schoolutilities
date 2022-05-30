@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  main:
+    container_name: schoolutilities-frontend
+    build:
+      context: .
+      target: production
+    ports:
+      - 3000:3000
+    env_file:
+      - .env.local
+    networks:
+      - webnet
+networks:
+  webnet:
