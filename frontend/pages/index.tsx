@@ -70,7 +70,7 @@ export default function Home() {
             description:
               "Create your own School and invite your friends to join you. Of course, you can edit everything as you wish. ",
             href: "/school/create",
-            buttonText: "GET ME THERE",
+            buttonText: "CREATE SCHOOL",
             icon: SvgSchool,
           },
           {
