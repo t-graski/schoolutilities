@@ -39,7 +39,6 @@ export default function CreateSchool() {
           <title>School Setup - SchoolUtilities</title>
         </Head>
         <Navbar></Navbar>
-        <Spacer size="small"></Spacer>
         <CreateSchoolLayout>
           <SetupProgressSite steps={progressSteps}></SetupProgressSite>
         </CreateSchoolLayout>
