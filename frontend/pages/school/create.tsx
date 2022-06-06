@@ -4,7 +4,6 @@ import Footer from "../../components/organisms/Footer";
 const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import { SchoolDetailField } from "../../components/molecules/school/SchoolDetailField";
 import { SetupProgressSite } from "../../components/organisms/SetupProgressSite";
-import { Spacer } from "../../components/atoms/Spacer";
 import { styled } from "../../stitches.config";
 import Head from "next/head";
 import { SiteLayout } from "../../components/atoms/SiteLayout";
