@@ -1,52 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 const Navbar = dynamic(() => import("../../../components/organisms/Navbar"));
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
-import { SideDashboard } from "../../../components/molecules/schoolAdmin/SideDashboard";
 import { DepartmentsSettingsField } from "../../../components/organisms/schoolAdmin/DepartmentsSettingsField";
 import { useRouter } from "next/router";
 import { ClassesSettingsField } from "../../../components/organisms/schoolAdmin/ClassesSettingsField";
 import { PersonsSettingsField } from "../../../components/organisms/schoolAdmin/PersonsSettingsField";
 import { JoinCodesSettingsField } from "../../../components/organisms/schoolAdmin/JoinCodesSettingsField";
-import { getAccessToken, getUserData, logout } from "../../../utils/authHelper";
-import SvgDepartment from "../../../components/atoms/svg/SvgDepartment";
-import SvgClass from "../../../components/atoms/svg/SvgClass";
-import SvgStudent from "../../../components/atoms/svg/SvgStudent";
-import SvgTeacher from "../../../components/atoms/svg/SvgTeacher";
 import { useQueryClient } from "react-query";
 import dynamic from "next/dynamic";
+import { SchoolAdminDashboardBar } from "../../../components/organisms/schoolAdmin/SchoolAdminDashboardBar";
 
 const SettingsLayout = styled("div", {
   display: "flex",
-  width: "100vw",
-  height: "100vh",
   position: "fixed",
-  top: 0,
-  left: 0,
+  top: "0",
+  left: "0",
+  right: "0",
+  bottom: "0",
+  paddingTop: "10vh",
 });
 
 export default function CreateSchool() {
-  const [isOpen, setIsOpen] = React.useState(true);
-  const [userData, setUserData] = useState(null);
   const router = useRouter();
-  const schoolUUID = router.query.schoolUUID as string;
 
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    fetchData();
-    async function fetchData() {
-      let accessToken = await getAccessToken();
-      if (!accessToken) {
-        router.push("/auth/login");
-      }
-      if (!schoolUUID && accessToken) {
-        router.push("/school/select");
-      }
-      const fetchedData = await getUserData();
-      setUserData(fetchedData);
-    }
-  }, [router, schoolUUID]);
 
   let urlParam;
   if (router.query && router.query.tab) {
@@ -54,6 +32,7 @@ export default function CreateSchool() {
   } else {
     urlParam = "";
   }
+
   function getSecondPart() {
     switch (urlParam) {
       case "classes":
@@ -62,6 +41,10 @@ export default function CreateSchool() {
         return <PersonsSettingsField queryClient={queryClient} />;
       case "join-codes":
         return <JoinCodesSettingsField />;
+      // case "general":
+      //   return <GeneralSettingsField queryClient={queryClient} />;
+      // case "info-page":
+      //   return <InfoPageSettingsField queryClient={queryClient} />;
       default:
         return <DepartmentsSettingsField></DepartmentsSettingsField>;
     }
@@ -74,55 +57,7 @@ export default function CreateSchool() {
       </Head>
       <Navbar></Navbar>
       <SettingsLayout>
-        <SideDashboard
-          links={[
-            {
-              icon: SvgDepartment,
-              label: "Departments",
-              href: `/school/${schoolUUID}/edit?tab=departments`,
-              highlighted:
-                urlParam != "persons" &&
-                urlParam != "classes" &&
-                urlParam != "join-codes"
-                  ? true
-                  : false,
-            },
-            {
-              icon: SvgClass,
-              label: "Classes",
-              href: `/school/${schoolUUID}/edit?tab=classes`,
-              highlighted: urlParam == "classes" ? true : false,
-            },
-            {
-              icon: SvgStudent,
-              label: "Persons",
-              href: `/school/${schoolUUID}/edit?tab=persons`,
-              highlighted: urlParam == "persons" ? true : false,
-            },
-            {
-              icon: SvgTeacher,
-              label: "Invite Codes",
-              href: `/school/${schoolUUID}/edit?tab=join-codes`,
-              highlighted: urlParam == "join-codes" ? true : false,
-            },
-          ]}
-          specialButton={{
-            imageSrc: "/images/icons/round_user_icon.svg",
-            imageAlt: "User Icon",
-            label: userData
-              ? userData.firstName + " " + userData.lastName
-              : "User",
-            href: "/profile/settings",
-            onClickImageSrc: "/images/icons/logout_icon.svg",
-            onClickImageAlt: "Logout Icon",
-            onClickImageFunction: () => {
-              logout();
-              router.push("/");
-            },
-          }}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        ></SideDashboard>
+        <SchoolAdminDashboardBar active={urlParam}></SchoolAdminDashboardBar>
         {getSecondPart()}
       </SettingsLayout>
     </>
