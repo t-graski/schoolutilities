@@ -81,7 +81,7 @@ export const StartPageBox: React.FC<Props> = ({}) => {
               REGISTER NOW
             </Button>
           </Link>
-          <Link href="/learn-more" passHref>
+          <Link href="/features" passHref>
             <StyledLink>SEE FEATURES</StyledLink>
           </Link>
         </ButtonLayout>
