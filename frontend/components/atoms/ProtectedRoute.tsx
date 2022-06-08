@@ -36,6 +36,7 @@ const ProtectedRoute = ({ router, children }) => {
         appRoutes.HELP_ARTICLES_WHAT_IS_SCHOOLUTILITIES,
         appRoutes.HELP_FAQ,
         appRoutes.LOGIN_REDIRECT,
+        appRoutes.PREMIUM_PLANS,
       ];
 
       /**

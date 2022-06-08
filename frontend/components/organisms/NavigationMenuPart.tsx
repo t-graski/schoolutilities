@@ -352,7 +352,7 @@ export const NavigationMenuPart = () => {
                 If you fell like you are not receiving enough notifications you
                 can add our discord bot to your personal server.
               </ContentListItem>
-              <ContentListItem title="Premium" href="/premium">
+              <ContentListItem title="Premium" href="/premium/plans">
                 With SchoolUtilities&apos; premium features, your school can
                 unleash it&apos;s full potential.
               </ContentListItem>
