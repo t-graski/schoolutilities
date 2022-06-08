@@ -12,7 +12,7 @@ const ContentLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "80vw",
-  margin: "0 10vw",
+  margin: "0 auto",
   maxWidth: "1200px",
 });
 
