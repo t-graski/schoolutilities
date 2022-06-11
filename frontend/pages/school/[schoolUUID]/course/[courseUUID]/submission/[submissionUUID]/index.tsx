@@ -1,5 +1,5 @@
 import { styled } from "../../../../../../../stitches.config";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 const Navbar = dynamic(
@@ -9,7 +9,6 @@ import { Spacer } from "../../../../../../../components/atoms/Spacer";
 import { Headline } from "../../../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../../../components/atoms/Separator";
 import Footer from "../../../../../../../components/organisms/Footer";
-import { getAccessToken } from "../../../../../../../utils/authHelper";
 import { FileUpload } from "../../../../../../../components/molecules/FileUpload";
 import { Button } from "../../../../../../../components/atoms/Button";
 import { SubmissionsOverview } from "../../../../../../../components/organisms/course/SubmissionsOverview";
@@ -33,6 +32,20 @@ const HeadlineLayout = styled("div", {
   justifyContent: "flex-start",
   alignItems: "center",
 });
+
+const StyledBackLink = styled("a", {
+  color: "$fontPrimary",
+  textDecoration: "none",
+  opacity: "0.8",
+});
+
+const SubmissionDescription = styled("p", {
+  fontSize: "1.2rem",
+  fontWeight: "400",
+  color: "$fontPrimary",
+  lineHeight: "1.5",
+});
+
 
 export default function Features() {
   const router = useRouter();
@@ -83,36 +96,22 @@ export default function Features() {
     );
   }
 
-  async function deleteSubmission() {
-    const token = await getAccessToken();
-
-    if (submissionUUID) {
-      const request = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/revertExercise/${submissionUUID}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (request.status == 200) {
-        refetch();
-      }
-    }
-  }
-
   return (
     <>
       <Head>
         <title>
-          {submissionContent ? submissionContent.name : "Submission"} -
+          {submissionContent.name} -
           SchoolUtilities
         </title>
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
+        <Link
+          href={`/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`}
+          passHref
+        >
+          <StyledBackLink>{"< Back to course"}</StyledBackLink>
+        </Link>
         <HeadlineLayout>
           <Headline
             width="content"
@@ -120,24 +119,15 @@ export default function Features() {
             alignment="left"
           ></Headline>
         </HeadlineLayout>
-        <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
+        <SubmissionDescription>
+          {submissionContent.description}
+        </SubmissionDescription>
+        <Spacer size="small"></Spacer>
+        <Separator width="big" alignment="left" />
+        <Spacer size="small"></Spacer>
         {!submissionContent.canEdit && !submissionContent.hasSubmitted && (
           <FileUpload></FileUpload>
-        )}
-        {!submissionContent.canEdit && submissionContent.hasSubmitted && (
-          <>
-            You already submitted a file
-            <Spacer size="verySmall"></Spacer>
-            <Button
-              backgroundColor={"secondary"}
-              color={"primary"}
-              onClick={deleteSubmission}
-            >
-              Remove submission
-            </Button>
-            <Spacer size="small"></Spacer>
-          </>
         )}
         {submissionContent.canEdit && (
           <SubmissionsOverview
@@ -145,14 +135,6 @@ export default function Features() {
           ></SubmissionsOverview>
         )}
         <Spacer size="verySmall"></Spacer>
-        <Link
-          href={`/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`}
-          passHref
-        >
-          <Button backgroundColor={"primary"} color={"primary"}>
-            Back to course
-          </Button>
-        </Link>
         <Spacer size="verySmall"></Spacer>
       </ContentLayout>
       <Footer></Footer>
