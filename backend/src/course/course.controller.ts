@@ -36,7 +36,7 @@ export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -61,7 +61,6 @@ export class CourseController {
     @Res() response,
   ) {
     const result = await this.courseService.removeCourse(removeCourse, request);
-
     return response.status(result.status).json(result?.message);
   }
 

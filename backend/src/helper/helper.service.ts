@@ -1,25 +1,29 @@
-import { Injectable, Param } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClient } from '@prisma/client';
 import {
   ERROR_CODES,
-  PASSWORD,
   ID_STARTERS,
-  RETURN_DATA,
 } from 'src/misc/parameterConstants';
 import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment-timezone';
 import { Role } from 'src/roles/role.enum';
-//import parameter constants
-
 const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
   constructor(private readonly jwtService: JwtService) { }
 
+  /**
+   * @param userUUID The unique user identifier 
+   * @returns The id of the corresponding user
+   * @example
+   * ```js
+   * const userId = await getUserIdByUUID('46ff4776-6324-4282-8cae-c9ca898340a3')
+   * ```
+   */
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
@@ -29,14 +33,23 @@ export class HelperService {
           },
         });
         return user.personId;
-      } catch (err) {
-        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      } catch {
+        throw new InternalServerErrorException('Database error');
       }
     } else {
-      throw new Error(ERROR_CODES.USER_UUID_NULL_OR_INVALID);
+      throw new BadRequestException('User UUID is null or invalid');
     }
   }
 
+  /**
+   * 
+   * @param userId The id of the user
+   * @returns The unique user identifier
+   * @example
+   * ```js
+   * const userUUID = await getUserUUIDByUserId(1)
+   * ```
+   */
   async getUserUUIDById(userId: number): Promise<string> {
     if (userId) {
       try {
@@ -46,11 +59,11 @@ export class HelperService {
           },
         });
         return user.personUUID;
-      } catch (err) {
-        throw new Error(ERROR_CODES.DATABASE_ERROR);
+      } catch {
+        throw new InternalServerErrorException('Database error');
       }
     } else {
-      throw new Error(ERROR_CODES.USER_ID_NULL_OR_INVALID);
+      throw new BadRequestException('User ID is null or invalid');
     }
   }
 
@@ -311,11 +324,6 @@ export class HelperService {
   }
 
   /**
-   * 
-=======
-  /**
-   *
->>>>>>> parent of 636a947 (merge)
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline

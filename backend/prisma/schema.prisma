@@ -373,6 +373,13 @@ model fileSubmissionSettings {
   @@map("file_submission_settings")
 }
 
+model fileSettings {
+  fileId          Int    @id @default(autoincrement()) @map("file_id")
+  courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
+  fileName        String @map("file_name") @db.VarChar(255)
+  fileUUID        String @map("file_uuid") @db.VarChar(255)
+}
+
 model fileSubmissions {
   fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
   courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
@@ -412,7 +419,7 @@ model requestLog {
   status        Int      @map("status")
   contentLength Int      @map("content_length")
   userAgent     String   @map("user_agent") @db.VarChar(255)
-  responseTime   Float    @map("response_time")
+  responseTime  Float    @map("response_time")
 
   @@map("request_log")
 }
