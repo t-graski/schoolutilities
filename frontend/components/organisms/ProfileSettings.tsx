@@ -1,17 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "../../stitches.config";
 import { InputField } from "../atoms/input/InputField";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
-import { getAccessToken, setSelectedSchool } from "../../utils/authHelper";
-import { LoadingAnimation } from "../molecules/LoadingAnimation";
+import { setSelectedSchool } from "../../utils/authHelper";
 import { Separator } from "../atoms/Separator";
 import SvgUser from "../atoms/svg/SvgUser";
 import SvgHome from "../atoms/svg/SvgHome";
 import SvgRightArrow from "../atoms/svg/SvgRightArrow";
 import SvgSchool from "../atoms/svg/SvgSchool";
+import {
+  fetchSchools,
+  fetchUserInfo,
+  requestPasswordReset,
+} from "../../utils/requests";
+import { useQuery } from "react-query";
+import Skeleton from "react-loading-skeleton";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { keyframes } from "@stitches/react";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 type Props = {};
 
@@ -202,75 +211,155 @@ const NoSchoolsText = styled("p", {
   color: "$fontPrimary",
 });
 
-const ActionButtonLayout = styled("div", {
-  display: "flex",
-  flexDirection: "row",
-  gap: "30px",
-  marginTop: "20px",
+const StyledTitle = styled(DialogPrimitive.Title, {
+  margin: 0,
+  fontWeight: "$medium",
+  color: "$fontPrimary",
+  fontSize: 17,
+  marginBottom: 10,
 });
+
+const StyledDescription = styled(DialogPrimitive.Description, {
+  margin: "10px 0 20px",
+  color: "$fontPrimary",
+  fontSize: 15,
+  lineHeight: 1.5,
+});
+
+const overlayShow = keyframes({
+  "0%": { opacity: 0 },
+  "100%": { opacity: 0.8 },
+});
+
+const contentShow = keyframes({
+  "0%": { opacity: 0, transform: "translate(-50%, -48%) scale(0.96)" },
+  "100%": { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
+});
+
+const StyledOverlay = styled(DialogPrimitive.Overlay, {
+  backgroundColor: "$backgroundSecondary",
+  position: "fixed",
+  opacity: 0.8,
+  inset: 0,
+  "@media (prefers-reduced-motion: no-preference)": {
+    animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  },
+});
+
+const StyledDialogContent = styled(DialogPrimitive.Content, {
+  backgroundColor: "$backgroundPrimary",
+  borderRadius: 6,
+  boxShadow:
+    "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
+  position: "fixed",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "90vw",
+  maxWidth: "600px",
+  maxHeight: "85vh",
+  padding: 25,
+  "@media (prefers-reduced-motion: no-preference)": {
+    animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  },
+  "&:focus": { outline: "none" },
+});
+
+const IconButton = styled("button", {
+  all: "unset",
+  fontFamily: "inherit",
+  borderRadius: "100%",
+  height: 30,
+  width: 30,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "$fontPrimary",
+  position: "absolute",
+  top: 10,
+  right: 10,
+  cursor: "pointer",
+  transition: "all 0.2s ease-in-out",
+
+  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+});
+
+function Content({ children, ...props }) {
+  return (
+    <DialogPrimitive.Portal>
+      <StyledOverlay />
+      <StyledDialogContent {...props}>{children}</StyledDialogContent>
+    </DialogPrimitive.Portal>
+  );
+}
+
+// Exports
+const Dialog = DialogPrimitive.Root;
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogContent = Content;
+const DialogTitle = StyledTitle;
+const DialogDescription = StyledDescription;
+const DialogClose = DialogPrimitive.Close;
 
 export const ProfileSettings: React.FC<Props> = ({}) => {
   const router = useRouter();
-  const [statusInfo, setStatusInfo] = useState("");
-  const [userInfo, setUserInfo] = useState({
-    firstName: "Firstname",
-    lastName: "Lastname",
-    email: "Email",
-    creationDate: new Date().toISOString(),
-    birthday: new Date().toISOString(),
-  });
-  const [isFirstTime, setIsFirstTime] = useState(true);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [schools, setSchools] = useState([]);
+  const [passwordResetSucessfull, setPasswordResetSucessfull] = useState(false);
+  const { data: userInfo, status: userInfoStatus } = useQuery(
+    "userInfo",
+    fetchUserInfo
+  );
+  const { data: schools, status: schoolsStatus } = useQuery(
+    "schools",
+    fetchSchools
+  );
 
-  useEffect(() => {
-    if (isFirstTime) {
-      getUserInfo();
-      updateSchoolsFromDatabase();
-      setIsFirstTime(false);
-    }
+  if (userInfoStatus === "loading" || schoolsStatus === "loading") {
+    return (
+      <>
+        <ProfileLayout>
+          <GeneralProfileNavbarLayout>
+            <ProfileName>
+              <Skeleton width={100} height={100} circle={true}></Skeleton>
+              <Spacer size="small"></Spacer>
+              <Skeleton width={300} height={60}></Skeleton>
+            </ProfileName>
+            <ProfileNavigationLinks>
+              <SpecialLinkLayout>
+                <Skeleton width={300} height={40}></Skeleton>
+                <Spacer size="verySmall" />
+                <Skeleton width={300} height={40}></Skeleton>
+              </SpecialLinkLayout>
+            </ProfileNavigationLinks>
+          </GeneralProfileNavbarLayout>
+          <Separator
+            width={"big"}
+            alignment={"left"}
+            orientation={"vertical"}
+            hideOnMobile={true}
+          />
+          <ProfileDataColumn>
+            <Spacer size="verySmall"></Spacer>
+            <InputLabel>Date of Birth</InputLabel>
+            <Skeleton width={300} height={50}></Skeleton>
+            <Spacer size="verySmall"></Spacer>
+          </ProfileDataColumn>
+          <ProfileDataColumn>
+            <Spacer size="verySmall"></Spacer>
+            <InputLabel>Email</InputLabel>
+            <Skeleton width={300} height={50}></Skeleton>
+            <Spacer size="verySmall"></Spacer>
+            <InputLabel>User Since</InputLabel>
+            <Skeleton width={300} height={50}></Skeleton>
+          </ProfileDataColumn>
+        </ProfileLayout>
+      </>
+    );
+  }
 
-    async function updateSchoolsFromDatabase() {
-      let accessToken = await getAccessToken();
-      let response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/getSchools`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      let fetchedSchools = await response.json();
-      setSchools(fetchedSchools);
-    }
-
-    async function getUserInfo() {
-      const token = await getAccessToken();
-      if (!token) {
-        router.push("/auth?tab=login");
-      }
-      setIsLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status !== 200) {
-        setStatusInfo("Error: " + response.status);
-      } else {
-        console.log(response);
-        const data = await response.json();
-
-        setUserInfo(data);
-        console.log(data);
-      }
-      setIsLoading(false);
-    }
-  }, [isFirstTime, router]);
+  if (userInfoStatus === "error" || schoolsStatus === "error") {
+    return <></>;
+  }
 
   const longDateCreationDate = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -336,14 +425,6 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
         {router.query.tab !== "schools" ? (
           <>
             <ProfileDataColumn>
-              {/* <InputLabel>Firstname</InputLabel>
-              <InputField
-                inputType="text"
-                label="Firstname"
-                value={userInfo.firstName}
-                onChange={(e) => {}}
-                editable={false}
-              /> */}
               <Spacer size="verySmall"></Spacer>
               <InputLabel>Date of Birth</InputLabel>
               <InputField
@@ -355,7 +436,41 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
-              {statusInfo && <StatusInfo>{statusInfo}</StatusInfo>}
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={async () => {
+                      try {
+                        await requestPasswordReset(userInfo.email);
+                        setPasswordResetSucessfull(true);
+                      } catch (e) {
+                        setPasswordResetSucessfull(false);
+                      }
+                    }}
+                    backgroundColor="primary"
+                    color="primary"
+                  >
+                    Change password
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogTitle>
+                    {passwordResetSucessfull ? "You got an email" : "Error"}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {passwordResetSucessfull
+                      ? `We just sent you an email with a link to change your
+                    password.`
+                      : "Something went wrong. Please try again later."}
+                  </DialogDescription>
+                  <DialogClose asChild>
+                    <IconButton>
+                      <Cross2Icon />
+                    </IconButton>
+                  </DialogClose>
+                </DialogContent>
+              </Dialog>
             </ProfileDataColumn>
             <ProfileDataColumn>
               <Spacer size="verySmall"></Spacer>
@@ -365,9 +480,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 label="Email"
                 showLabel={false}
                 value={userInfo.email}
-                onChange={(e) => {
-                  setUserInfo({ ...userInfo, email: e });
-                }}
+                onChange={(e) => {}}
               />
               <Spacer size="verySmall"></Spacer>
               <InputLabel>User Since</InputLabel>
@@ -431,7 +544,6 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           </>
         )}
       </ProfileLayout>
-      <LoadingAnimation isVisible={isLoading} />
     </>
   );
 };

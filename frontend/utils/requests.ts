@@ -457,3 +457,41 @@ export async function fetchCourseElement(courseElementUUID) {
 
   return response.json();
 }
+
+export async function fetchUserInfo() {
+  const token = await getAccessToken();
+  
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function requestPasswordReset(email) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/requestPasswordReset`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}

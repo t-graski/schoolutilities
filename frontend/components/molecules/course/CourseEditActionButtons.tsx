@@ -112,9 +112,6 @@ const DialogTitle = StyledTitle;
 const DialogDescription = StyledDescription;
 const DialogClose = DialogPrimitive.Close;
 
-// Your app...
-const Flex = styled("div", { display: "flex" });
-
 const IconButton = styled("button", {
   all: "unset",
   fontFamily: "inherit",
@@ -133,42 +130,6 @@ const IconButton = styled("button", {
 
   "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
   "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
-});
-
-const ElementSelectionLayout = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr 2fr",
-  gridGap: "40px",
-  marginBottom: 20,
-  width: "100%",
-});
-
-const SelectionLayout = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr",
-  gridGap: "10px",
-  width: "100%",
-  height: "fit-content",
-});
-
-const Element = styled("div", {
-  fontSize: "1rem",
-  padding: "10px 20px",
-  cursor: "pointer",
-  border: "1px solid $fontPrimary",
-  borderRadius: 15,
-  transition: "all 0.2s",
-
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
-
-  variants: {
-    highlighted: {
-      true: {
-        backgroundColor: "$fontPrimary",
-        color: "$backgroundPrimary",
-      },
-    },
-  },
 });
 
 const SelectedLayout = styled("div", {
