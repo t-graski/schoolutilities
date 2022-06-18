@@ -142,8 +142,6 @@ export default function Features() {
                     body: JSON.stringify(responseBody),
                   }
                 );
-                console.log(responseBody);
-                console.log(saveResponse);
                 if (saveResponse) {
                   if (saveResponse.status == 200) {
                     router.push(
