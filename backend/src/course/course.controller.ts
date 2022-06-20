@@ -32,7 +32,7 @@ export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -127,6 +127,7 @@ export class CourseController {
   async getCourseElements(@Param() params, @Req() request, @Res() response) {
     const result = await this.courseService.getCourseElements(
       params.courseUUID,
+      request,
     );
     return response
       .status(result.status)
@@ -200,7 +201,11 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Get('downloadAll/:elementUUID')
-  async downloadAll(@Param() params, @Req() request, @Res() response: Response) {
+  async downloadAll(
+    @Param() params,
+    @Req() request,
+    @Res() response: Response,
+  ) {
     const result = await this.courseService.downloadAll(params, request);
 
     return of(
@@ -223,6 +228,19 @@ export class CourseController {
     const result = await this.courseService.revertExercise(
       request,
       params.elementUUID,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('grade/:courseUUID')
+  @Roles(Role.Student)
+  async getGrade(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getGrade(
+      params.courseUUID,
+      request,
     );
     return response
       .status(result.status)

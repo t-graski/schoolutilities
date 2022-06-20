@@ -18,6 +18,7 @@ import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import * as fs from 'fs';
+import { GetGradeDto } from 'src/dto/grades';
 let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -980,8 +981,10 @@ export class CourseService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getCourseElements(courseUUID): Promise<ReturnMessage> {
+  async getCourseElements(courseUUID, request): Promise<ReturnMessage> {
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
 
     const currentElements = await prisma.courseElements.findMany({
       where: {
@@ -1008,6 +1011,29 @@ export class CourseService {
           element.typeId,
         );
 
+        let submission;
+
+        if (element.typeId === 3) {
+          let fileSubmission = await prisma.fileSubmissions.findFirst({
+            where: {
+              courseElementId: Number(element.elementId),
+              personId: Number(userId),
+            },
+          });
+
+          submission = {
+            grade: '',
+            notes: '',
+          };
+          
+          if (fileSubmission) {
+            submission = {
+              grade: fileSubmission.grade,
+              notes: fileSubmission.notes,
+            };
+          }
+        }
+
         let parentUUID = '0';
         if (element.parentId != 0) {
           parentUUID = await this.helper.getElementUUIDById(element.parentId);
@@ -1020,6 +1046,7 @@ export class CourseService {
             type: element.typeId.toString(),
             visible: Boolean(element.visible),
             weight: Number(element.weight),
+            ...submission,
             ...elementOptions,
           },
         });
@@ -1407,6 +1434,65 @@ export class CourseService {
     return {
       status: RETURN_DATA.SUCCESS.status,
       data: zipFolder,
+    };
+  }
+
+  async getGrade(payload: GetGradeDto, request): Promise<ReturnMessage> {
+    const { courseUUID } = payload;
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+
+    const grade = await prisma.courses.findFirst({
+      where: {
+        courseUUID,
+      },
+      select: {
+        courseElements: {
+          select: {
+            elementUUID: true,
+            typeId: true,
+            visible: true,
+            weight: true,
+            elementOrder: true,
+            fileSubmissions: true,
+          },
+        },
+      },
+    });
+
+    const elements = [];
+
+    for (const element of grade.courseElements) {
+      let item = {
+        elementUUID: element.elementUUID,
+        typeId: element.typeId,
+        visible: element.visible,
+        weight: element.weight,
+        elementOrder: element.elementOrder,
+        fileSubmission: {},
+      };
+
+      if (element.fileSubmissions.length != 0) {
+        const fileSubmission = element.fileSubmissions[0];
+
+        item.fileSubmission = {
+          fileName: fileSubmission.fileName,
+          originalName: fileSubmission.originalName,
+          fileSize: fileSubmission.fileSize,
+          fileType: fileSubmission.fileType,
+          submissionTime: fileSubmission.submissionTime,
+          submitedLate: fileSubmission.submitedLate,
+          grade: fileSubmission.grade,
+          notes: fileSubmission.notes,
+        };
+      }
+
+      elements.push(item);
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: elements,
     };
   }
 }
