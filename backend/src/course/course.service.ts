@@ -1019,6 +1019,7 @@ export class CourseService {
           options: {
             type: element.typeId.toString(),
             visible: Boolean(element.visible),
+            weight: Number(element.weight),
             ...elementOptions,
           },
         });
