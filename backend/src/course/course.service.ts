@@ -992,6 +992,7 @@ export class CourseService {
         elementUUID: true,
         typeId: true,
         parentId: true,
+        weight: true,
         visible: true,
         creationDate: true,
         personCreationId: true,
