@@ -1090,12 +1090,20 @@ export class CourseService {
       },
     });
 
-    const fileSubmissions = await prisma.fileSubmissions.findFirst({
+    let fileSubmissions = await prisma.fileSubmissions.findFirst({
       where: {
         courseElementId: Number(elementId),
         personId: userId,
       },
     });
+
+    if (!fileSubmissions) {
+      fileSubmissions = {
+        grade: ' ',
+        notes: ' ',
+        ...fileSubmissions,
+      };
+    }
 
     const elementItem = {
       elementUUID: element.elementUUID,
