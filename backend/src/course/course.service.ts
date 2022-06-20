@@ -855,6 +855,7 @@ export class CourseService {
                     visible: Boolean(child.options.visible),
                     elementOrder: child.elementOrder,
                     personCreationId: Number(userId),
+                    weight: Number(child.options.weight),
                   };
 
                   let createdElement = await prisma.courseElements.create({
@@ -884,6 +885,7 @@ export class CourseService {
           visible: Boolean(element.options.visible),
           elementOrder: element.elementOrder,
           personCreationId: Number(userId),
+          weight: element.options.weight,
         };
 
         let createdElement = await prisma.courseElements.create({
@@ -957,6 +959,7 @@ export class CourseService {
                 visible: Boolean(child.options.visible),
                 elementOrder: child.elementOrder,
                 personCreationId: Number(userId),
+                weight: Number(child.options.weight),
               };
 
               let createdElement = await prisma.courseElements.create({

@@ -321,6 +321,7 @@ model courseElements {
   creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
   personCreationId Int      @map("person_creation_id")
   courseId         Int      @map("course_id")
+  weight           Int      @map("weight")
   course           courses  @relation(fields: [courseId], references: [courseId])
 
   fileSubmissionSettings fileSubmissionSettings[]
@@ -373,7 +374,7 @@ model fileSubmissions {
   fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
   courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
   fileName         String   @map("file_name") @db.VarChar(255)
-  originalName String   @map("original_name") @db.VarChar(255)
+  originalName     String   @map("original_name") @db.VarChar(255)
   fileSize         Int      @map("file_size")
   fileType         String   @map("file_type") @db.VarChar(255)
   submissionTime   DateTime @default(now()) @map("submission_time") @db.Timestamp(0)

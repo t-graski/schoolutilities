@@ -18,7 +18,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
@@ -463,6 +463,7 @@ export class HelperService {
             elementOrder: element.elementOrder,
             personCreationId: element.personCreationId,
             courseId: element.courseId,
+            weight: element.weight,
           },
         });
         this.createElementOptions(
@@ -766,7 +767,7 @@ export class HelperService {
     }
   }
 
-  async getMaxFileSize() { }
+  async getMaxFileSize() {}
   async removeUserFromUpdateEmailList(personId: number): Promise<any> {
     if (personId) {
       try {
