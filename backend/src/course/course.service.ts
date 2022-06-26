@@ -1116,7 +1116,6 @@ export class CourseService {
       creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
       hasSubmitted: hasSubmitted ? true : false,
-      typeId: settings.typeId,
       creator: {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
@@ -1124,6 +1123,7 @@ export class CourseService {
         fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
+        type: settings.typeId,
         ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
       },
     };
