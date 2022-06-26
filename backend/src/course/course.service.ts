@@ -1497,24 +1497,33 @@ export class CourseService {
     };
   }
 
-  async addValuation(payload: ValuationDto, request: Request): Promise<ReturnMessage> {
+  async addOrUpdateValuation(payload: ValuationDto, request: Request): Promise<ReturnMessage> {
     const { elementUUID, userUUID, grade, notes } = payload;
-    const userId = await this.helper.getUserIdByUUID(userUUID);
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const creator = await this.helper.getUserIdByUUID(userUUID);
 
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
 
     try {
-      await prisma.fileSubmissions.update({
+      await prisma.submissionGrades.upsert({
         where: {
-          fileSubmissionPersonId: {
+          submissionGradePersonId: {
+            courseElementId: Number(elementId),
             personId: Number(userId),
-            courseElementId: elementId,
           },
         },
-        data: {
-          notes,
+        update: {
           grade,
-        }
+          notes,
+        },
+        create: {
+          courseElementId: Number(elementId),
+          personId: Number(userId),
+          grade,
+          notes,
+          creator,
+        },
       })
       return RETURN_DATA.SUCCESS;
     } catch {
