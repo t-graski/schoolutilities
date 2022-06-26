@@ -1071,6 +1071,7 @@ export class CourseService {
         creationDate: true,
         visible: true,
         courseId: true,
+        typeId: true,
         course: {
           select: {
             courseUUID: true,
@@ -1115,6 +1116,7 @@ export class CourseService {
       creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
       hasSubmitted: hasSubmitted ? true : false,
+      typeId: settings.typeId,
       creator: {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
