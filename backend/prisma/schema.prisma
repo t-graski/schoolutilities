@@ -325,6 +325,7 @@ model courseElements {
 
   fileSubmissionSettings fileSubmissionSettings[]
   fileSubmissions        fileSubmissions[]
+  textSettings           textSettings[]
 
   @@index([courseId], map: "fkCourseElementCourseId")
   @@index([parentId], map: "fkCourseElementParentId")
@@ -347,7 +348,7 @@ model textSettings {
   courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
   text            String @map("text") @db.VarChar(255)
 
-
+  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
   @@index([courseElementId], map: "fkTextCourseElementId")
   @@map("text_settings")
 }
@@ -373,7 +374,7 @@ model fileSubmissions {
   fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
   courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
   fileName         String   @map("file_name") @db.VarChar(255)
-  originalName String   @map("original_name") @db.VarChar(255)
+  originalName     String   @map("original_name") @db.VarChar(255)
   fileSize         Int      @map("file_size")
   fileType         String   @map("file_type") @db.VarChar(255)
   submissionTime   DateTime @default(now()) @map("submission_time") @db.Timestamp(0)
