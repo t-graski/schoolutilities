@@ -18,7 +18,8 @@ import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import * as fs from 'fs';
-import { GetGradeDto } from 'src/dto/grades';
+import { GetGradeDto, ValuationDto } from 'src/dto/grades';
+import { Request } from 'express';
 let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -33,7 +34,7 @@ export class CourseService {
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
   async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
     const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
@@ -812,7 +813,7 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                        currentChild.elementOrder
+                      currentChild.elementOrder
                     ) {
                       updateNeeded = true;
                     }
@@ -1025,7 +1026,7 @@ export class CourseService {
             grade: '',
             notes: '',
           };
-          
+
           if (fileSubmission) {
             submission = {
               grade: fileSubmission.grade,
@@ -1216,7 +1217,7 @@ export class CourseService {
           personId: Number(userId),
           submitedLate: !isSubmittedInTime,
           notes: '',
-          grade: '',
+          grade: 0,
         },
       });
       return RETURN_DATA.SUCCESS;
@@ -1494,6 +1495,31 @@ export class CourseService {
       status: RETURN_DATA.SUCCESS.status,
       data: elements,
     };
+  }
+
+  async addValuation(payload: ValuationDto, request: Request): Promise<ReturnMessage> {
+    const { elementUUID, userUUID, grade, notes } = payload;
+    const userId = await this.helper.getUserIdByUUID(userUUID);
+
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+
+    try {
+      await prisma.fileSubmissions.update({
+        where: {
+          fileSubmissionPersonId: {
+            personId: Number(userId),
+            courseElementId: elementId,
+          },
+        },
+        data: {
+          notes,
+          grade,
+        }
+      })
+      return RETURN_DATA.SUCCESS;
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
   }
 }
 

@@ -313,7 +313,7 @@ model schoolPersons {
 
 model courseElements {
   elementId        Int      @id @default(autoincrement()) @map("element_id")
-  elementUUID      String   @map("element_uuid") @db.VarChar(255)
+  elementUUID      String   @unique(map: "elementUUID") @map("element_uuid") @db.VarChar(255)
   typeId           Int      @map("type_id")
   parentId         Int      @map("parent_id")
   visible          Boolean  @map("visible")
@@ -381,7 +381,7 @@ model fileSubmissions {
   personId         Int      @map("person_id")
   submitedLate     Boolean  @map("submited_late")
   notes            String   @map("notes") @db.Text
-  grade            String   @map("grade")
+  grade            Int      @map("grade")
 
   courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
 

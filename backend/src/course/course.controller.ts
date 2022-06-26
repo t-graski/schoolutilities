@@ -25,14 +25,15 @@ import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { ValuationDto } from 'src/dto/grades';
 
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
@@ -242,6 +243,16 @@ export class CourseController {
       params.courseUUID,
       request,
     );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/valuation')
+  @Roles(Role.Teacher)
+  async addValuation(@Body() addValuation: ValuationDto, @Req() request: Request, @Res() response: Response) {
+    const result = await this.courseService.addValuation(addValuation, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
