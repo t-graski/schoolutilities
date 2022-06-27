@@ -18,7 +18,7 @@ import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import * as fs from 'fs';
-import { GetGradeDto, ValuationDto } from 'src/dto/grades';
+import { GetGradeDto, GetValuationDto, ValuationDto } from 'src/dto/grades';
 import { Request } from 'express';
 let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
@@ -1567,7 +1567,43 @@ export class CourseService {
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
+  async getValuation(payload: GetValuationDto, request): Promise<ReturnMessage> {
+    const { elementUUID } = payload;
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
+
+    const elementId = await this.helper.getElementIdByUUID(elementUUID);
+
+    const valuation = await prisma.submissionGrades.findUnique({
+      where: {
+        submissionGradePersonId: {
+          courseElementId: Number(elementId),
+          personId: Number(userId),
+        },
+      },
+      select: {
+        grade: true,
+        notes: true,
+      },
+    });
+
+    if (!valuation) {
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: {
+          grade: -1,
+          notes: '',
+        },
+      }
+    }
+    
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: valuation,
+    };
+  }
 }
+
 
 export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
   try {

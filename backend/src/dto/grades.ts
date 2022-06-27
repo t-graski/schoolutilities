@@ -24,6 +24,16 @@ export class ValuationDto {
   notes: string;
 }
 
+export class GetValuationDto {
+  @IsNotEmpty()
+  @IsCustomUUID()
+  elementUUID: string;
+
+  @IsNotEmpty()
+  @IsCustomUUID()
+  userUUID: string;
+}
+
 export class DeleteValuationDto {
   @IsNotEmpty()
   @IsCustomUUID()

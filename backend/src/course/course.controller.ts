@@ -26,7 +26,7 @@ import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
 import { Request, Response } from 'express';
-import { ValuationDto } from 'src/dto/grades';
+import { GetValuationDto, ValuationDto } from 'src/dto/grades';
 
 @Controller('api/course')
 export class CourseController {
@@ -249,6 +249,16 @@ export class CourseController {
   @Roles(Role.Teacher)
   async addValuation(@Body() addValuation: ValuationDto, @Req() request: Request, @Res() response: Response) {
     const result = await this.courseService.addOrUpdateValuation(addValuation, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/valuation')
+  @Roles(Role.Teacher)
+  async getValuation(@Body() getValuation: GetValuationDto, @Req() request: Request, @Res() response: Response) {
+    const result = await this.courseService.getValuation(getValuation, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
