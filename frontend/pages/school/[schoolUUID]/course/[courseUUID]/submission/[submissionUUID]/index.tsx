@@ -17,6 +17,7 @@ import Link from "next/link";
 import { fetchCourseElement } from "../../../../../../../utils/requests";
 import { useQuery } from "react-query";
 import Skeleton from "react-loading-skeleton";
+import { getAccessToken } from "../../../../../../../utils/authHelper";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -46,7 +47,6 @@ const SubmissionDescription = styled("p", {
   lineHeight: "1.5",
 });
 
-
 export default function Features() {
   const router = useRouter();
   const submissionUUID = router.query.submissionUUID as string;
@@ -63,6 +63,26 @@ export default function Features() {
     data.options.hasSubmitted = data.hasSubmitted;
     return data.options;
   });
+
+  async function deleteSubmission() {
+    const token = await getAccessToken();
+
+    if (submissionUUID) {
+      const request = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/revertExercise/${submissionUUID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (request.status == 200) {
+        refetch();
+      }
+    }
+  }
 
   if (status === "loading") {
     return (
@@ -99,10 +119,7 @@ export default function Features() {
   return (
     <>
       <Head>
-        <title>
-          {submissionContent.name} -
-          SchoolUtilities
-        </title>
+        <title>{submissionContent.name} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
@@ -128,6 +145,20 @@ export default function Features() {
         <Spacer size="small"></Spacer>
         {!submissionContent.canEdit && !submissionContent.hasSubmitted && (
           <FileUpload></FileUpload>
+        )}
+        {!submissionContent.canEdit && submissionContent.hasSubmitted && (
+          <>
+            You already submitted a file
+            <Spacer size="verySmall"></Spacer>
+            <Button
+              backgroundColor={"secondary"}
+              color={"primary"}
+              onClick={deleteSubmission}
+            >
+              Remove submission
+            </Button>
+            <Spacer size="small"></Spacer>
+          </>
         )}
         {submissionContent.canEdit && (
           <SubmissionsOverview

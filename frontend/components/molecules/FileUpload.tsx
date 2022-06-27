@@ -79,6 +79,10 @@ const IconLayout = styled("div", {
   height: "60px",
 });
 
+const StyledList = styled("ul", {
+  listStyle: "none",
+});
+
 export const FileUpload: React.FC<Props> = ({}) => {
   const [files, setFiles] = useState([]);
   const [filesSent, setFilesSent] = useState("");
@@ -162,18 +166,19 @@ export const FileUpload: React.FC<Props> = ({}) => {
             </BorderBox>
           </StyledDropzone>
           <aside>
-            <StyledHeadline>Files</StyledHeadline>
-            <ul>{fileHtml}</ul>
-            <Spacer size={"verySmall"}></Spacer>
-            <Button
-              backgroundColor={"primary"}
-              color={"primary"}
-              onClick={() => {
-                uploadFile(files[0]);
-              }}
-            >
-              Hand in
-            </Button>
+            <StyledList>{fileHtml}</StyledList>
+            <Spacer size={"small"}></Spacer>
+            {files.length > 0 && (
+              <Button
+                backgroundColor={"primary"}
+                color={"primary"}
+                onClick={() => {
+                  uploadFile(files[0]);
+                }}
+              >
+                Hand in
+              </Button>
+            )}
           </aside>
         </StyledSection>
       )}
