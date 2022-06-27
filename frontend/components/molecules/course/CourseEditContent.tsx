@@ -60,7 +60,6 @@ export const CourseEditContent: React.FC<Props> = ({
     if (elementsResponse) {
       if (elementsResponse.status == 200) {
         const courseData = await elementsResponse.json();
-        console.log(courseData);
         const newElements = [];
         courseData.forEach((element) => {
           newElements.push(mapElementOptionsToFrontend(element));
@@ -105,7 +104,7 @@ export const CourseEditContent: React.FC<Props> = ({
                   if (currentItem.id === item.id) {
                     return {
                       id: item.id,
-                      config: { ...config, currentChoosenElement },
+                      config: { ...config, choosenElement: currentChoosenElement },
                       children: currentItem.children,
                     };
                   } else if (childElement) {
@@ -115,7 +114,7 @@ export const CourseEditContent: React.FC<Props> = ({
                         if (child.id === item.id) {
                           return {
                             ...child,
-                            config: { ...config, currentChoosenElement },
+                            config: { ...config, choosenElement: currentChoosenElement },
                           };
                         } else {
                           return child;

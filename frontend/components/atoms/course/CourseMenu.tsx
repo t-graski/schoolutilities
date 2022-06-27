@@ -34,6 +34,9 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
   borderRadius: 15,
   padding: 8,
+  display: "flex",
+  flexDirection: "column",
+  gap: 10,
 
   backgroundColor: "$backgroundSecondary",
   boxShadow:
@@ -52,17 +55,16 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
 });
 
 const itemStyles = {
+  all: "unset",
   borderRadius: 5,
   display: "flex",
   alignItems: "center",
   height: 25,
-  padding: "3px 8px",
+  padding: "3px 5px",
   position: "relative",
-  paddingLeft: 25,
 
   userSelect: "none",
   cursor: "pointer",
-  all: "unset",
   fontWeight: "$medium",
   lineHeight: 1,
   color: "$fontPrimary",
@@ -81,11 +83,6 @@ const itemStyles = {
 
 const StyledItem = styled(DropdownMenuPrimitive.Item, {
   ...itemStyles,
-
-  paddingLeft: "10px",
-  padding: "7px",
-  gap: "15px",
-  display: "flex",
 });
 const StyledCheckboxItem = styled(DropdownMenuPrimitive.CheckboxItem, {
   ...itemStyles,
@@ -157,6 +154,7 @@ const IconLayout = styled("div", {
 
 const DropdownMenuItemSvgLayout = styled("div", {
   width: "20px",
+  marginRight: "10px",
 });
 
 const overlayShow = keyframes({
@@ -365,7 +363,7 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
             side="right"
             align="center"
           >
-            {addNewEntry && (
+            {addNewEntry ? (
               <DropdownMenuItem
                 onClick={() => {
                   setOpen(true);
@@ -376,8 +374,7 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
                 </DropdownMenuItemSvgLayout>
                 Add new entry
               </DropdownMenuItem>
-            )}
-            {!addNewEntry && (
+            ) : (
               <DropdownMenuItem
                 onClick={() => {
                   router.push(
