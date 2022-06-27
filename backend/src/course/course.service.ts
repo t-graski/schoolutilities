@@ -738,7 +738,6 @@ export class CourseService {
     }
 
     elements.forEach(async (element) => {
-      let parentId = 0;
       if (element.elementUUID) {
         if (await this.helper.elementExists(element.elementUUID)) {
           let currentElement = {
@@ -749,7 +748,7 @@ export class CourseService {
             parentId: 0,
             elementOrder: element.elementOrder,
             elementOptions: element.options,
-            weight: element.weight,
+            weight: element.options.weight,
           };
 
           let elementWithOptions = elementsWithOptions.find(
@@ -805,7 +804,7 @@ export class CourseService {
                       elementId: await this.helper.getElementIdByUUID(
                         child.elementUUID,
                       ),
-                      weight: child.weight,
+                      weight: child.options.weight,
                       parentId: currentElement.elementId,
                       elementOrder: child.elementOrder,
                       elementOptions: child.options,
@@ -820,7 +819,7 @@ export class CourseService {
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
                       currentChild.elementOrder ||
-                      childWithOptions.weight !== currentChild.weight
+                      currentChild.weight !== currentChild.weight
                     ) {
                       updateNeeded = true;
                     }
