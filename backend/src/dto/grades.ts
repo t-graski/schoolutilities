@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, isNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
 import { IsCustomUUID } from 'src/decorators/IsCustomUUID';
 
 export class GetGradeDto {
@@ -17,6 +17,7 @@ export class ValuationDto {
 
   @IsNotEmpty()
   @IsNumber()
+  @IsPositive()
   grade: number;
 
   @IsNotEmpty()
