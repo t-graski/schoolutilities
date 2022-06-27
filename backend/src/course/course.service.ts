@@ -1183,7 +1183,6 @@ export class CourseService {
       visible: Boolean(settings.visible),
       creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
-      weight: Number(settings.weight),
       ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
       creator: {
@@ -1193,6 +1192,7 @@ export class CourseService {
         fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
+        weight: Number(settings.weight),
         type: Number(settings.typeId),
         ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
       },
