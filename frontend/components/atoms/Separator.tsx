@@ -86,7 +86,6 @@ export const Separator: React.FC<Props> = ({
       <HrLayout alignment={alignment} visible={visible}>
         <StyledSeparator
           orientation={orientation}
-          css={{ margin: "0 15px" }}
           width={width}
           hideOnMobile={hideOnMobile}
         />

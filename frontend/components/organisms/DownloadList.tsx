@@ -1,12 +1,15 @@
 import React from "react";
 import { styled } from "../../stitches.config";
 import SvgDownload from "../atoms/svg/SvgDownload";
+import SvgEdit from "../atoms/svg/SvgEdit";
 
 type Props = {
   entries: Array<any>;
   entryProperties: {
     name: string;
     description?: string;
+    editLink?: string;
+    editName?: string;
     downloadLink?: string;
     downloadName?: string;
     id?: string;
@@ -71,6 +74,8 @@ const SettingsEntryDescription = styled("p", {
 const SvgIconLayout = styled("div", {
   width: "30px",
   height: "30px",
+
+  color: "$fontPrimary",
 });
 
 const SvgLink = styled("a", {
@@ -89,6 +94,7 @@ export const DownloadList: React.FC<Props> = ({ entries, entryProperties }) => {
         {error && <StyledError>{error}</StyledError>}
         <SettingsEntriesLayout>
           {entries.map((entry, index) => {
+            console.log(entry);
             return (
               <SettingsEntryLayout key={entry[entryProperties.id ?? index]}>
                 <SettingsDetailsLayout>
@@ -106,6 +112,13 @@ export const DownloadList: React.FC<Props> = ({ entries, entryProperties }) => {
                   >
                     <SvgIconLayout>
                       <SvgDownload />
+                    </SvgIconLayout>
+                  </SvgLink>
+                )}
+                {entry[entryProperties.editLink] && (
+                  <SvgLink href={entry[entryProperties.editLink]}>
+                    <SvgIconLayout>
+                      <SvgEdit />
                     </SvgIconLayout>
                   </SvgLink>
                 )}

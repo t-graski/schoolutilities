@@ -328,6 +328,7 @@ model courseElements {
   fileSubmissionSettings fileSubmissionSettings[]
   fileSubmissions        fileSubmissions[]
   submissionGrades       submissionGrades[]
+  textSettings           textSettings[]
 
   @@index([courseId], map: "fkCourseElementCourseId")
   @@index([parentId], map: "fkCourseElementParentId")
@@ -350,7 +351,7 @@ model textSettings {
   courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
   text            String @map("text") @db.VarChar(255)
 
-
+  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
   @@index([courseElementId], map: "fkTextCourseElementId")
   @@map("text_settings")
 }

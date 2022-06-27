@@ -1096,18 +1096,42 @@ export class CourseService {
       };
     }
 
-    const element = await prisma.courseElements.findFirst({
+    const settings = await prisma.courseElements.findFirst({
       where: {
-        elementId: Number(elementId),
+        elementId: elementId,
+      },
+      select: {
+        personCreationId: true,
+        elementUUID: true,
+        creationDate: true,
+        visible: true,
+        courseId: true,
+        typeId: true,
+        course: {
+          select: {
+            courseUUID: true,
+          },
+        },
+        fileSubmissionSettings: {
+          select: {
+            name: true,
+            description: true,
+            dueTime: true,
+            submitLater: true,
+            submitLaterTime: true,
+            maxFileSize: true,
+            allowedFileTypes: true,
+          },
+        },
+        textSettings: {
+          select: {
+            text: true,
+          },
+        },
       },
     });
 
-    const elementOptions = await this.helper.getElementOptions(
-      element.elementId,
-      element.typeId,
-    );
-
-    const creator = await this.helper.getUserById(element.personCreationId);
+    const creator = await this.helper.getUserById(settings.personCreationId);
     const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
       userId,
       schoolId,
@@ -1136,10 +1160,10 @@ export class CourseService {
     }
 
     const elementItem = {
-      elementUUID: element.elementUUID,
-      courseUUID: await this.helper.getCourseUUIDById(element.courseId),
-      visible: Boolean(element.visible),
-      creationDate: element.creationDate,
+      elementUUID: settings.elementUUID,
+      courseUUID: settings.course!.courseUUID,
+      visible: Boolean(settings.visible),
+      creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
       grade: fileSubmissions.grade,
       notes: fileSubmissions.notes,
@@ -1148,16 +1172,11 @@ export class CourseService {
         userUUID: creator.personUUID,
         firstName: creator.firstName,
         lastName: creator.lastName,
-        fullName: creator.firstName + ' ' + creator.lastName,
+        fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
-        name: elementOptions.name,
-        description: elementOptions.description,
-        dueDate: elementOptions.dueDate,
-        submitLater: Boolean(elementOptions.submitLater),
-        submitLaterDate: elementOptions.submitLaterDate,
-        maxFileSize: elementOptions.maxFileSize,
-        allowedFileTypes: elementOptions.allowedFileTypes.replace(/\s/g, ''),
+        type: settings.typeId,
+        ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
       },
     };
 

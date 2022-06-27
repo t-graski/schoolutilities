@@ -22,6 +22,7 @@ export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {
 
       const mappedSubmissions = [];
       data.forEach((person) => {
+        console.log(person);
         mappedSubmissions.push({
           name: person.fullName,
           description: person.submission
@@ -31,6 +32,7 @@ export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {
                 person.submission.submissionDate
               ).toLocaleTimeString()}`
             : "Not submitted",
+          editLink: submissionUUID + "/person/" + person.userUUID,
           downloadLink: person.submission ? person.submission.download : "",
           downloadName: person.submission ? person.submission.fileName : "",
           id: person.userUUID,
@@ -70,6 +72,7 @@ export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {
         entryProperties={{
           name: "name",
           description: "description",
+          editLink: "editLink",
           downloadLink: "downloadLink",
           downloadName: "downloadName",
           id: "id",
