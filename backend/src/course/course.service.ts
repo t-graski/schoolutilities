@@ -1568,11 +1568,10 @@ export class CourseService {
     }
   }
   async getValuation(payload: GetValuationDto, request): Promise<ReturnMessage> {
-    const { elementUUID } = payload;
-    const jwt = await this.helper.extractJWTToken(request);
-    const userId = await this.helper.getUserIdfromJWT(jwt);
-
+    const { elementUUID, userUUID } = payload;
+    const userId = await this.helper.getUserIdByUUID(userUUID);
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
+
 
     const valuation = await prisma.submissionGrades.findUnique({
       where: {
@@ -1596,7 +1595,7 @@ export class CourseService {
         },
       }
     }
-    
+
     return {
       status: RETURN_DATA.SUCCESS.status,
       data: valuation,

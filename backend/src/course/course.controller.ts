@@ -255,10 +255,10 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/valuation')
+  @Get('/valuation/:elementUUID/user/:userUUID')
   @Roles(Role.Teacher)
-  async getValuation(@Body() getValuation: GetValuationDto, @Req() request: Request, @Res() response: Response) {
-    const result = await this.courseService.getValuation(getValuation, request);
+  async getValuation(@Param() params: GetValuationDto, @Req() request: Request, @Res() response: Response) {
+    const result = await this.courseService.getValuation(params, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
