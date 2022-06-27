@@ -1109,12 +1109,36 @@ export class CourseService {
       },
     });
 
+    let evaluation;
+
+    let evaluationData = await prisma.submissionGrades.findUnique({
+      where: {
+        submissionGradePersonId: {
+          courseElementId: Number(elementId),
+          personId: userId,
+        }
+      }
+    })
+
+    if (evaluationData) {
+      evaluation = {
+        grade: evaluationData.grade,
+        notes: evaluationData.notes,
+      }
+    } else {
+      evaluation = {
+        grade: -1,
+        notes: "",
+      }
+    }
+
     const elementItem = {
       elementUUID: settings.elementUUID,
       courseUUID: settings.course!.courseUUID,
       visible: Boolean(settings.visible),
       creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
+      ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
       creator: {
         userUUID: creator.personUUID,
@@ -1185,8 +1209,6 @@ export class CourseService {
           fileType: file.mimetype,
           personId: Number(userId),
           submitedLate: !isSubmittedInTime,
-          notes: '',
-          grade: '',
         },
       });
       return RETURN_DATA.SUCCESS;
@@ -1237,8 +1259,8 @@ export class CourseService {
         submissionItem.fileSize = userSubmission.fileSize;
         submissionItem.fileType = userSubmission.fileType;
         submissionItem.submittedLate = userSubmission.submitedLate;
-        submissionItem.notes = userSubmission.notes;
-        submissionItem.grade = userSubmission.grade;
+        // submissionItem.notes = userSubmission.notes;
+        // submissionItem.grade = userSubmission.grade;
         submissionItem.submissionDate = userSubmission.submissionTime;
         submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.fileName}`;
       } else {

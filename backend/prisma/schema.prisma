@@ -102,6 +102,7 @@ model persons {
   personBadges          personBadges[]
   passwordResetTokens   passwordResetTokens[]
   emailChangeTokens     emailChangeTokens[]
+  submissionGrades      submissionGrades[]
 }
 
 model personSettings {
@@ -332,6 +333,7 @@ model courseElements {
   @@index([typeId], map: "fkCourseElementTypeId")
   @@index([personCreationId], map: "fkCourseElementPersonCreationId")
   @@map("course_elements")
+  submissionGrades submissionGrades[]
 }
 
 model headlineSettings {
@@ -380,14 +382,27 @@ model fileSubmissions {
   submissionTime   DateTime @default(now()) @map("submission_time") @db.Timestamp(0)
   personId         Int      @map("person_id")
   submitedLate     Boolean  @map("submited_late")
-  notes            String   @map("notes") @db.Text
-  grade            String   @map("grade")
 
   courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
   @@unique([courseElementId, personId], name: "fileSubmissionPersonId")
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@index([personId], map: "fkFileSubmissionPersonId")
   @@map("file_submissions")
+}
+
+model submissionGrades {
+  submissionGradeId Int             @id @default(autoincrement()) @map("submission_grade_id")
+  courseElementId   Int             @unique(map: "course_element_id") @map("course_element_id")
+  personId          Int             @unique(map: "person_id") @map("person_id")
+  grade             Int             @map("grade")
+  notes             String          @map("notes") @db.Text
+  creationDate      DateTime        @default(now()) @map("creation_date") @db.Timestamp(0)
+  creator           Int             @map("creator")
+  courseElements    courseElements? @relation(fields: [courseElementId], references: [elementId])
+  persons           persons?        @relation(fields: [personId], references: [personId])
+
+  @@unique([courseElementId, personId], name: "submissionGradePersonId")
+  @@map("submission_grades")
 }
 
 model articles {
