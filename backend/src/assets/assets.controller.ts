@@ -28,14 +28,14 @@ export class AssetsController {
     );
   }
 
-  @Get('/images/:filename')
-  async getImage(@Param('filename') filename, @Res() response) {
-    return of(
-      response
-        .status(HttpStatus.OK)
-        .sendFile(`${filename}`, { root: process.env.FILE_PATH }),
-    );
-  }
+  // @Get('/images/:filename')
+  // async getImage(@Param('filename') filename, @Res() response) {
+  //   return of(
+  //     response
+  //       .status(HttpStatus.OK)
+  //       .sendFile(`${filename}`, { root: process.env.FILE_PATH }),
+  //   );
+  // }
 
   @Get('/submissions/:fileUUID')
   async getSubmission(@Param('fileUUID') fileUUID, @Res() response) {
@@ -66,23 +66,23 @@ export class AssetsController {
     return response.status(HttpStatus.OK).json(logos);
   }
 
-  @Roles(Role.Supervisor)
-  @UseGuards(RolesGuard)
-  @Get('/list/images')
-  async listImages(@Res() response) {
-    const dir = process.env.FILE_PATH;
-    const files = fs.readdirSync(dir);
+  // @Roles(Role.Supervisor)
+  // @UseGuards(RolesGuard)
+  // @Get('/list/images')
+  // async listImages(@Res() response) {
+  //   const dir = process.env.FILE_PATH;
+  //   const files = fs.readdirSync(dir);
 
-    const images = [];
+  //   const images = [];
 
-    for (const file of files) {
-      images.push({
-        name: file,
-        size: fs.statSync(dir + file).size,
-        dateModified: fs.statSync(dir + file).mtime,
-      });
-    }
+  //   for (const file of files) {
+  //     images.push({
+  //       name: file,
+  //       size: fs.statSync(dir + file).size,
+  //       dateModified: fs.statSync(dir + file).mtime,
+  //     });
+  //   }
 
-    return response.status(HttpStatus.OK).json(images);
-  }
+  //   return response.status(HttpStatus.OK).json(images);
+  // }
 }

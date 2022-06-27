@@ -383,8 +383,6 @@ model fileSubmissions {
   submissionTime   DateTime @default(now()) @map("submission_time") @db.Timestamp(0)
   personId         Int      @map("person_id")
   submitedLate     Boolean  @map("submited_late")
-  notes            String   @map("notes") @db.Text
-  grade            Int      @map("grade")
 
   courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
 

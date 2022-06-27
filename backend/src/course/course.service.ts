@@ -1151,12 +1151,27 @@ export class CourseService {
       },
     });
 
-    if (!fileSubmissions) {
-      fileSubmissions = {
-        grade: ' ',
-        notes: ' ',
-        ...fileSubmissions,
-      };
+    let evaluation;
+
+    let evaluationData = await prisma.submissionGrades.findUnique({
+      where: {
+        submissionGradePersonId: {
+          courseElementId: Number(elementId),
+          personId: userId,
+        }
+      }
+    })
+
+    if (evaluationData) {
+      evaluation = {
+        grade: evaluationData.grade,
+        notes: evaluationData.notes,
+      }
+    } else {
+      evaluation = {
+        grade: -1,
+        notes: "",
+      }
     }
 
     const elementItem = {
@@ -1165,8 +1180,7 @@ export class CourseService {
       visible: Boolean(settings.visible),
       creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
-      grade: fileSubmissions.grade,
-      notes: fileSubmissions.notes,
+      ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
       creator: {
         userUUID: creator.personUUID,
@@ -1237,8 +1251,6 @@ export class CourseService {
           fileType: file.mimetype,
           personId: Number(userId),
           submitedLate: !isSubmittedInTime,
-          notes: '',
-          grade: 0,
         },
       });
       return RETURN_DATA.SUCCESS;
@@ -1289,8 +1301,8 @@ export class CourseService {
         submissionItem.fileSize = userSubmission.fileSize;
         submissionItem.fileType = userSubmission.fileType;
         submissionItem.submittedLate = userSubmission.submitedLate;
-        submissionItem.notes = userSubmission.notes;
-        submissionItem.grade = userSubmission.grade;
+        // submissionItem.notes = userSubmission.notes;
+        // submissionItem.grade = userSubmission.grade;
         submissionItem.submissionDate = userSubmission.submissionTime;
         submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.fileName}`;
       } else {
@@ -1504,8 +1516,8 @@ export class CourseService {
           fileType: fileSubmission.fileType,
           submissionTime: fileSubmission.submissionTime,
           submitedLate: fileSubmission.submitedLate,
-          grade: fileSubmission.grade,
-          notes: fileSubmission.notes,
+          // grade: fileSubmission.grade,
+          // notes: fileSubmission.notes,
         };
       }
 
