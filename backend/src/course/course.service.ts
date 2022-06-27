@@ -1116,6 +1116,7 @@ export class CourseService {
         visible: true,
         courseId: true,
         typeId: true,
+        weight: true,
         course: {
           select: {
             courseUUID: true,
@@ -1182,6 +1183,7 @@ export class CourseService {
       visible: Boolean(settings.visible),
       creationDate: settings.creationDate,
       canEdit: isTeacherOrHigher,
+      weight: Number(settings.weight),
       ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
       creator: {
