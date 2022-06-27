@@ -707,6 +707,7 @@ export class CourseService {
         elementOrder: true,
         creationDate: true,
         personCreationId: true,
+        weight: true,
       },
     });
 
@@ -726,6 +727,7 @@ export class CourseService {
           elementOrder: element.elementOrder,
           creationDate: element.creationDate,
           personCreationId: element.personCreationId,
+          weight: element.weight,
           elementOptions: {
             type: element.typeId.toString(),
             visible: element.visible.toString(),
@@ -747,6 +749,7 @@ export class CourseService {
             parentId: 0,
             elementOrder: element.elementOrder,
             elementOptions: element.options,
+            weight: element.weight,
           };
 
           let elementWithOptions = elementsWithOptions.find(
@@ -758,7 +761,8 @@ export class CourseService {
 
             if (
               elementWithOptions.parentId !== currentElement.parentId ||
-              elementWithOptions.elementOrder !== currentElement.elementOrder
+              elementWithOptions.elementOrder !== currentElement.elementOrder ||
+              elementWithOptions.weight !== currentElement.weight
             ) {
               updateNeeded = true;
             }
@@ -773,7 +777,7 @@ export class CourseService {
             }
 
             if (updateNeeded) {
-              const elementUpdate = await prisma.courseElements.update({
+              await prisma.courseElements.update({
                 where: {
                   elementId: Number(currentElement.elementId),
                 },
@@ -781,6 +785,7 @@ export class CourseService {
                   parentId: Number(currentElement.parentId),
                   visible: Boolean(currentElement.elementOptions.visible),
                   elementOrder: Number(currentElement.elementOrder),
+                  weight: Number(currentElement.weight),
                 },
               });
 
@@ -800,6 +805,7 @@ export class CourseService {
                       elementId: await this.helper.getElementIdByUUID(
                         child.elementUUID,
                       ),
+                      weight: child.weight,
                       parentId: currentElement.elementId,
                       elementOrder: child.elementOrder,
                       elementOptions: child.options,
@@ -813,7 +819,8 @@ export class CourseService {
                     if (
                       childWithOptions.parentId !== currentChild.parentId ||
                       childWithOptions.elementOrder !==
-                      currentChild.elementOrder
+                      currentChild.elementOrder ||
+                      childWithOptions.weight !== currentChild.weight
                     ) {
                       updateNeeded = true;
                     }
@@ -836,6 +843,7 @@ export class CourseService {
                           parentId: Number(currentChild.parentId),
                           visible: Boolean(currentChild.elementOptions.visible),
                           elementOrder: Number(currentChild.elementOrder),
+                          weight: Number(currentChild.weight),
                         },
                       });
 
@@ -911,6 +919,7 @@ export class CourseService {
                   elementId: await this.helper.getElementIdByUUID(
                     child.elementUUID,
                   ),
+                  weight: child.weight,
                   parentId: createdElement.elementId,
                   elementOrder: child.elementOrder,
                   elementOptions: child.options,
@@ -923,7 +932,8 @@ export class CourseService {
 
                 if (
                   childWithOptions.parentId !== currentChild.parentId ||
-                  childWithOptions.elementOrder !== currentChild.elementOrder
+                  childWithOptions.elementOrder !== currentChild.elementOrder ||
+                  childWithOptions.weight !== currentChild.weight
                 ) {
                   updateNeeded = true;
                 }
@@ -1046,7 +1056,7 @@ export class CourseService {
           elementUUID: element.elementUUID,
           parentUUID: parentUUID,
           options: {
-            type: element.typeId,
+            type: Number(element.typeId),
             visible: Boolean(element.visible),
             weight: Number(element.weight),
             ...evaluation,
@@ -1144,13 +1154,6 @@ export class CourseService {
       },
     });
 
-    let fileSubmissions = await prisma.fileSubmissions.findFirst({
-      where: {
-        courseElementId: Number(elementId),
-        personId: userId,
-      },
-    });
-
     let evaluation;
 
     let evaluationData = await prisma.submissionGrades.findUnique({
@@ -1189,7 +1192,7 @@ export class CourseService {
         fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
-        type: settings.typeId,
+        type: Number(settings.typeId),
         ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
       },
     };
@@ -1499,7 +1502,7 @@ export class CourseService {
     for (const element of grade.courseElements) {
       let item = {
         elementUUID: element.elementUUID,
-        typeId: element.typeId,
+        typeId: Number(element.typeId),
         visible: element.visible,
         weight: element.weight,
         elementOrder: element.elementOrder,
