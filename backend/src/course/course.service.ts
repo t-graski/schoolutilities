@@ -1012,26 +1012,28 @@ export class CourseService {
           element.typeId,
         );
 
-        let submission;
+        let evaluation;
 
         if (element.typeId === 3) {
-          let fileSubmission = await prisma.fileSubmissions.findFirst({
+          let evaluationData = await prisma.submissionGrades.findUnique({
             where: {
-              courseElementId: Number(element.elementId),
-              personId: Number(userId),
-            },
-          });
+              submissionGradePersonId: {
+                courseElementId: element.elementId,
+                personId: userId,
+              }
+            }
+          })
 
-          submission = {
-            grade: '',
-            notes: '',
-          };
-
-          if (fileSubmission) {
-            submission = {
-              grade: fileSubmission.grade,
-              notes: fileSubmission.notes,
-            };
+          if (evaluationData) {
+            evaluation = {
+              grade: evaluationData.grade,
+              notes: evaluationData.notes,
+            }
+          } else {
+            evaluation = {
+              grade: -1,
+              notes: "",
+            }
           }
         }
 
@@ -1044,10 +1046,10 @@ export class CourseService {
           elementUUID: element.elementUUID,
           parentUUID: parentUUID,
           options: {
-            type: element.typeId.toString(),
+            type: element.typeId,
             visible: Boolean(element.visible),
             weight: Number(element.weight),
-            ...submission,
+            ...evaluation,
             ...elementOptions,
           },
         });
