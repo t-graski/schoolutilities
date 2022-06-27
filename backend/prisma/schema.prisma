@@ -318,6 +318,7 @@ model courseElements {
   typeId           Int      @map("type_id")
   parentId         Int      @map("parent_id")
   visible          Boolean  @map("visible")
+  weight           Int      @map("weight")
   elementOrder     Int      @map("element_order")
   creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
   personCreationId Int      @map("person_creation_id")
@@ -328,12 +329,12 @@ model courseElements {
   fileSubmissions        fileSubmissions[]
   textSettings           textSettings[]
 
+  submissionGrades submissionGrades[]
   @@index([courseId], map: "fkCourseElementCourseId")
   @@index([parentId], map: "fkCourseElementParentId")
   @@index([typeId], map: "fkCourseElementTypeId")
   @@index([personCreationId], map: "fkCourseElementPersonCreationId")
   @@map("course_elements")
-  submissionGrades submissionGrades[]
 }
 
 model headlineSettings {
