@@ -251,7 +251,7 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Post('/valuation')
   @Roles(Role.Teacher)
-  async addValuation(@Body() addValuation: ValuationDto, @Req() request: Request, @Res() response: Response): Promise<Response<any, Record<string, any>>> {
+  async addValuation(@Body() addValuation: ValuationDto, @Req() request: Request, @Res() response: Response) {
     const result = await this.courseService.addOrUpdateValuation(addValuation, request);
     return response
       .status(result.status)

@@ -22,6 +22,7 @@ import {
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
 import { HelperService } from 'src/helper/helper.service';
+import { Request } from 'express';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
@@ -843,14 +844,15 @@ export class SchoolAdminService {
     return joinCode;
   }
 
-  async getUserPermissions(body: UserPermissions): Promise<ReturnMessage> {
-    const { personUUID } = body;
-    if (!validator.isUUID(personUUID.slice(1), 4)) {
+  async getUserPermissions(request: Request): Promise<ReturnMessage> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+    if (!validator.isUUID(userUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
     const personRoles = await this.databaseService.getPersonRolesByPersonUUID(
-      personUUID,
+      userUUID,
     );
 
     return {
