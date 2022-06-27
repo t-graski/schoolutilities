@@ -223,7 +223,6 @@ export default function RegisterApproved() {
         <title>FAQ - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="FAQ"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>

@@ -451,6 +451,8 @@ export async function fetchCourseElement(courseElementUUID) {
     }
   );
 
+  console.log(response);
+
   if (response.status !== 200) {
     throw new Error(formatErrorMessage(response));
   }
@@ -460,7 +462,7 @@ export async function fetchCourseElement(courseElementUUID) {
 
 export async function fetchUserInfo() {
   const token = await getAccessToken();
-  
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
     {
@@ -469,7 +471,7 @@ export async function fetchUserInfo() {
       },
     }
   );
-  
+
   if (response.status !== 200) {
     throw new Error(formatErrorMessage(response));
   }
@@ -486,6 +488,49 @@ export async function requestPasswordReset(email) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function fetchUserSubmissionData(submissionUUID, userUUID) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/valuation/${submissionUUID}/user/${userUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function saveGradeAndNote(elementUUID, userUUID, grade, notes) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/valuation`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ elementUUID, userUUID, grade, notes }),
     }
   );
 

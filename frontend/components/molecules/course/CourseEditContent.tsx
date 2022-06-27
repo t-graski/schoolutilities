@@ -44,6 +44,8 @@ export const CourseEditContent: React.FC<Props> = ({
     setIsFirstTime(false);
   }
 
+  console.log(items);
+
   async function updateElements() {
     console.log(courseId);
     let accessToken = await getAccessToken();
@@ -60,6 +62,7 @@ export const CourseEditContent: React.FC<Props> = ({
     if (elementsResponse) {
       if (elementsResponse.status == 200) {
         const courseData = await elementsResponse.json();
+        console.log(courseData);
         const newElements = [];
         courseData.forEach((element) => {
           newElements.push(mapElementOptionsToFrontend(element));
@@ -163,6 +166,7 @@ export default CourseEditContent;
 
 function mapElementOptions(element) {
   const { choosenElement, ...elementConfig } = element.config;
+  console.log(element.config);
   const mappedElement = {
     elementUUID: typeof element.id == "string" ? element.id : "",
     options: {
@@ -196,10 +200,10 @@ function addDeletedTag(children) {
 }
 
 function mapElementOptionsToFrontend(element) {
-  console.log(element);
   const { type, visible, ...elementConfig } = element.options;
-  console.log(element);
+  console.log(type);
   let choosenElement = elementsToChoose.find((e) => e.id === type);
+  console.log(choosenElement);
   const mappedElement = {
     id: element.elementUUID,
     config: {

@@ -1,5 +1,5 @@
 import { styled } from "../../../../../../../../../stitches.config";
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 const Navbar = dynamic(
@@ -9,12 +9,18 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useQuery } from "react-query";
 import Skeleton from "react-loading-skeleton";
-import { fetchCourseElement } from "../../../../../../../../../utils/requests";
+import {
+  fetchCourseElement,
+  fetchUserSubmissionData,
+  saveGradeAndNote,
+} from "../../../../../../../../../utils/requests";
 import { Spacer } from "../../../../../../../../../components/atoms/Spacer";
 import { Separator } from "../../../../../../../../../components/atoms/Separator";
 import { Button } from "../../../../../../../../../components/atoms/Button";
 import Footer from "../../../../../../../../../components/organisms/Footer";
 import { Headline } from "../../../../../../../../../components/atoms/Headline";
+import { InputField } from "../../../../../../../../../components/atoms/input/InputField";
+import { TextField } from "../../../../../../../../../components/atoms/input/TextField";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -45,12 +51,16 @@ const SubmissionDescription = styled("p", {
 });
 
 export default function Features() {
+  const [weight, setWeight] = useState("");
+  const [grade, setGrade] = useState(-1);
+  const [notes, setNotes] = useState("");
   const router = useRouter();
   const submissionUUID = router.query.submissionUUID as string;
+  const userUUID = router.query.userUUID as string;
 
   const {
     data: submissionContent,
-    status,
+    status: submissionContentStatus,
     refetch,
   } = useQuery(["courseElement", submissionUUID], async () => {
     const data = await fetchCourseElement(submissionUUID);
@@ -61,7 +71,25 @@ export default function Features() {
     return data.options;
   });
 
-  if (status === "loading") {
+  const { data: userSubmissionData, status: userSubmissionStatus } = useQuery(
+    ["userSubmission", submissionUUID, userUUID],
+    async () => {
+      const data = await fetchUserSubmissionData(submissionUUID, userUUID);
+
+      setGrade(data.grade >= 0 ? data.grade : "");
+      setNotes(data.notes);
+
+      return data;
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  if (
+    submissionContentStatus === "loading" ||
+    userSubmissionStatus === "loading"
+  ) {
     return (
       <>
         <Head>
@@ -120,9 +148,35 @@ export default function Features() {
         <Spacer size="small"></Spacer>
         <Separator width="big" alignment="left" />
         <Spacer size="small"></Spacer>
-        
+        <InputField
+          label="Grade"
+          value={grade >= 0 ? grade : ""}
+          inputType={"number"}
+          onChange={(value) => {
+            setGrade(value == "" ? -1 : Number(value));
+          }}
+          icon={""}
+          size="small"
+        ></InputField>
         <Spacer size="verySmall"></Spacer>
+        <TextField value={notes} onChange={setNotes} label="Note"></TextField>
         <Spacer size="verySmall"></Spacer>
+        <Button
+          backgroundColor="primary"
+          color="primary"
+          onClick={async () => {
+            try {
+              await saveGradeAndNote(submissionUUID, userUUID, grade, notes);
+              router.push(
+                `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}/submission/${submissionUUID}`
+              );
+            } catch (e) {
+              console.log(e);
+            }
+          }}
+        >
+          Save grade and note
+        </Button>
       </ContentLayout>
       <Footer></Footer>
     </>

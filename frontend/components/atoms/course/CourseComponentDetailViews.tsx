@@ -207,28 +207,28 @@ export function ExerciseDetailView({
 }
 
 export const elementsToChoose: {
-  id: string;
+  id: number;
   name: string;
   detailViewComponent: React.FC<{}>;
   component: React.FC<{}>;
   props: {};
 }[] = [
   {
-    id: "1",
+    id: 1,
     name: "Headline",
     detailViewComponent: HeadlineDetailView,
     component: Headline,
     props: {},
   },
   {
-    id: "2",
+    id: 2,
     name: "Text",
     detailViewComponent: TextDetailView,
     component: CourseText,
     props: {},
   },
   {
-    id: "3",
+    id: 3,
     name: "Exercise",
     detailViewComponent: ExerciseDetailView,
     component: CourseFile,

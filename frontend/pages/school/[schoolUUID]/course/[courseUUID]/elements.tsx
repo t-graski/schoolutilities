@@ -93,7 +93,6 @@ export default function Features() {
         <title>{courseName ? courseName : "Course"} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <ContentLayout>
         <HeadlineLayout>
           <CourseHeaderLayout>

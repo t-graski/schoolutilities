@@ -53,7 +53,9 @@ export default function Home() {
         <SvgStartpageArtwork></SvgStartpageArtwork>
       </ArtworkLayout>
       <FirstBoxLayout>
-        <StartPageBox></StartPageBox>
+        <StartPageBox title={["LET’S MAKE", "SCHOOL EASY."]} description={`We think it is extremely important to bring joy into the daily
+          School-Routine of students and teachers. With incredible features and
+          the right design, we make this possible.`} highlightedButtonText={""} highlightedButtonLink={""} buttonText={""} buttonLink={""}></StartPageBox>
       </FirstBoxLayout>
       <GeneralList
         items={[

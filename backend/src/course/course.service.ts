@@ -1537,8 +1537,8 @@ export class CourseService {
   async addOrUpdateValuation(payload: ValuationDto, request: Request): Promise<ReturnMessage> {
     const { elementUUID, userUUID, grade, notes } = payload;
     const jwt = await this.helper.extractJWTToken(request);
-    const userId = await this.helper.getUserIdfromJWT(jwt);
-    const creator = await this.helper.getUserIdByUUID(userUUID);
+    const creator = await this.helper.getUserIdfromJWT(jwt);
+    const userId = await this.helper.getUserIdByUUID(userUUID);
 
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
 
@@ -1572,7 +1572,6 @@ export class CourseService {
     const userId = await this.helper.getUserIdByUUID(userUUID);
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
 
-
     const valuation = await prisma.submissionGrades.findUnique({
       where: {
         submissionGradePersonId: {
@@ -1593,7 +1592,7 @@ export class CourseService {
           grade: -1,
           notes: '',
         },
-      }
+      };
     }
 
     return {

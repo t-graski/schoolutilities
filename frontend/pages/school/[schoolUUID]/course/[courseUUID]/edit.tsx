@@ -16,6 +16,13 @@ import { regex } from "../../../../../utils/regex";
 import { SearchSelect } from "../../../../../components/atoms/input/SearchSelect";
 import SvgSchool from "../../../../../components/atoms/svg/SvgSchool";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+
+const StyledBackLink = styled("a", {
+  color: "$fontPrimary",
+  textDecoration: "none",
+  opacity: "0.8",
+});
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -160,12 +167,17 @@ export default function Features() {
         </title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <ContentLayout>
+        <Link
+          href={`/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`}
+          passHref
+        >
+          <StyledBackLink>{"< Back to course"}</StyledBackLink>
+        </Link>
         <HeadlineLayout>
           <Headline
             width="content"
-            label="Edit course"
+            label="Course Settings"
             alignment="left"
           ></Headline>
           <Separator width="small" alignment="left" />
@@ -234,30 +246,9 @@ export default function Features() {
         <Spacer size="verySmall"></Spacer>
         <ButtonLayout>
           <Button
-            onClick={() => {
-              router.push(`/school/${schoolUUID}/course/${courseUUID}`);
-            }}
-            backgroundColor={"secondary"}
-            color={"primary"}
-          >
-            Cancel
-          </Button>
-          <Button
             onClick={async () => {
               let accessToken = await getAccessToken();
               if (courseUUID && accessToken) {
-                console.log(
-                  JSON.stringify({
-                    courseName: inputData.courseName,
-                    courseDescription: inputData.courseDescription,
-                    persons: inputData.persons.map(
-                      (dataInfo) => dataInfo.value
-                    ),
-                    classes: inputData.classes.map(
-                      (dataInfo) => dataInfo.value
-                    ),
-                  })
-                );
                 const response = await fetch(
                   `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/updateCourse`,
                   {
@@ -279,7 +270,6 @@ export default function Features() {
                     }),
                   }
                 );
-                console.log(response);
                 if (response.status == 200) {
                   router.push(`/school/${schoolUUID}/course/${courseUUID}`);
                 } else {

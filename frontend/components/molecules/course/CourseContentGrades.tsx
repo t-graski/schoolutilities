@@ -116,8 +116,10 @@ function Content({ item }) {
       <>
         <ComponentLayout>
           <Component {...additionalProps} {...choosenElement.props}></Component>
-          {formatWeightAsPercentage(item.config.weight)} /{" "}
-          {item.grade ? item.grade : item.config.grade}
+          {item.config.grade < 0
+            ? "0%"
+            : formatWeightAsPercentage(item.config.weight)}{" "}
+          / {item.config.grade < 0 ? "Not graded" : item.config.grade}
         </ComponentLayout>
       </>
     );
@@ -138,7 +140,7 @@ function calculateGrades(items) {
     } else {
       item.config.weight = item.config.weight / weightSum;
       grades +=
-        Number(item.config.grade ? item.config.grade : 0) * item.config.weight;
+        item.config.grade < 0 ? 0 : item.config.grade * item.config.weight;
       return item;
     }
   });
@@ -151,7 +153,7 @@ function calculateGrades(items) {
 
 function calculateWeightSum(items) {
   let weightSum = items.reduce((acc, item) => {
-    if (item.config.grade == "") {
+    if (item.config.grade == "" || item.config.grade < 0) {
       return acc;
     }
     return acc + item.config.weight;
