@@ -18,6 +18,8 @@ import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import * as fs from 'fs';
+import { GetGradeDto, ValuationDto } from 'src/dto/grades';
+import { Request } from 'express';
 let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -863,6 +865,7 @@ export class CourseService {
                     visible: Boolean(child.options.visible),
                     elementOrder: child.elementOrder,
                     personCreationId: Number(userId),
+                    weight: Number(child.options.weight),
                   };
 
                   let createdElement = await prisma.courseElements.create({
@@ -892,6 +895,7 @@ export class CourseService {
           visible: Boolean(element.options.visible),
           elementOrder: element.elementOrder,
           personCreationId: Number(userId),
+          weight: element.options.weight,
         };
 
         let createdElement = await prisma.courseElements.create({
@@ -967,6 +971,7 @@ export class CourseService {
                 visible: Boolean(child.options.visible),
                 elementOrder: child.elementOrder,
                 personCreationId: Number(userId),
+                weight: Number(child.options.weight),
               };
 
               let createdElement = await prisma.courseElements.create({
@@ -987,8 +992,10 @@ export class CourseService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getCourseElements(courseUUID): Promise<ReturnMessage> {
+  async getCourseElements(courseUUID, request): Promise<ReturnMessage> {
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
+    const jwt = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(jwt);
 
     const currentElements = await prisma.courseElements.findMany({
       where: {
@@ -999,6 +1006,7 @@ export class CourseService {
         elementUUID: true,
         typeId: true,
         parentId: true,
+        weight: true,
         visible: true,
         creationDate: true,
         personCreationId: true,
@@ -1014,6 +1022,31 @@ export class CourseService {
           element.typeId,
         );
 
+        let evaluation;
+
+        if (element.typeId === 3) {
+          let evaluationData = await prisma.submissionGrades.findUnique({
+            where: {
+              submissionGradePersonId: {
+                courseElementId: element.elementId,
+                personId: userId,
+              }
+            }
+          })
+
+          if (evaluationData) {
+            evaluation = {
+              grade: evaluationData.grade,
+              notes: evaluationData.notes,
+            }
+          } else {
+            evaluation = {
+              grade: -1,
+              notes: "",
+            }
+          }
+        }
+
         let parentUUID = '0';
         if (element.parentId != 0) {
           parentUUID = await this.helper.getElementUUIDById(element.parentId);
@@ -1025,6 +1058,8 @@ export class CourseService {
           options: {
             type: Number(element.typeId),
             visible: Boolean(element.visible),
+            weight: Number(element.weight),
+            ...evaluation,
             ...elementOptions,
           },
         });
@@ -1438,7 +1473,7 @@ export class CourseService {
       data: zipFolder,
     };
   }
-  
+
   async getGrade(payload: GetGradeDto, request): Promise<ReturnMessage> {
     const { courseUUID } = payload;
     const jwt = await this.helper.extractJWTToken(request);
