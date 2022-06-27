@@ -102,6 +102,7 @@ model persons {
   personBadges          personBadges[]
   passwordResetTokens   passwordResetTokens[]
   emailChangeTokens     emailChangeTokens[]
+  submissionGrades      submissionGrades[]
 }
 
 model personSettings {
@@ -313,7 +314,7 @@ model schoolPersons {
 
 model courseElements {
   elementId        Int      @id @default(autoincrement()) @map("element_id")
-  elementUUID      String   @map("element_uuid") @db.VarChar(255)
+  elementUUID      String   @unique(map: "elementUUID") @map("element_uuid") @db.VarChar(255)
   typeId           Int      @map("type_id")
   parentId         Int      @map("parent_id")
   visible          Boolean  @map("visible")
@@ -321,10 +322,12 @@ model courseElements {
   creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
   personCreationId Int      @map("person_creation_id")
   courseId         Int      @map("course_id")
+  weight           Int      @map("weight")
   course           courses  @relation(fields: [courseId], references: [courseId])
 
   fileSubmissionSettings fileSubmissionSettings[]
   fileSubmissions        fileSubmissions[]
+  submissionGrades       submissionGrades[]
   textSettings           textSettings[]
 
   @@index([courseId], map: "fkCourseElementCourseId")
@@ -381,13 +384,31 @@ model fileSubmissions {
   personId         Int      @map("person_id")
   submitedLate     Boolean  @map("submited_late")
   notes            String   @map("notes") @db.Text
-  grade            String   @map("grade")
+  grade            Int      @map("grade")
 
   courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
+
   @@unique([courseElementId, personId], name: "fileSubmissionPersonId")
   @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
   @@index([personId], map: "fkFileSubmissionPersonId")
   @@map("file_submissions")
+}
+
+model submissionGrades {
+  submissionGradeId Int      @id @default(autoincrement()) @map("submission_grade_id")
+  courseElementId   Int      @unique(map: "course_element_id") @map("course_element_id")
+  personId          Int      @unique(map: "person_id") @map("person_id")
+  grade             Int      @map("grade")
+  notes             String   @map("notes") @db.Text
+  creationDate      DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
+  creator           Int      @map("creator")
+
+  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
+  persons        persons?        @relation(fields: [personId], references: [personId])
+
+
+  @@unique([courseElementId, personId], name: "submissionGradePersonId")
+  @@map("submission_grades")
 }
 
 model articles {

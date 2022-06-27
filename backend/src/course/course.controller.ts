@@ -25,7 +25,8 @@ import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { ValuationDto } from 'src/dto/grades';
 
 @Controller('api/course')
 export class CourseController {
@@ -127,6 +128,7 @@ export class CourseController {
   async getCourseElements(@Param() params, @Req() request, @Res() response) {
     const result = await this.courseService.getCourseElements(
       params.courseUUID,
+      request,
     );
     return response
       .status(result.status)
@@ -200,7 +202,11 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Get('downloadAll/:elementUUID')
-  async downloadAll(@Param() params, @Req() request, @Res() response: Response) {
+  async downloadAll(
+    @Param() params,
+    @Req() request,
+    @Res() response: Response,
+  ) {
     const result = await this.courseService.downloadAll(params, request);
 
     return of(
@@ -224,6 +230,29 @@ export class CourseController {
       request,
       params.elementUUID,
     );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('grade/:courseUUID')
+  @Roles(Role.Student)
+  async getGrade(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getGrade(
+      params.courseUUID,
+      request,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/valuation')
+  @Roles(Role.Teacher)
+  async addValuation(@Body() addValuation: ValuationDto, @Req() request: Request, @Res() response: Response): Promise<Response<any, Record<string, any>>> {
+    const result = await this.courseService.addOrUpdateValuation(addValuation, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

@@ -19,6 +19,7 @@ import {
 } from "../../../../../utils/requests";
 import Skeleton from "react-loading-skeleton";
 import dynamic from "next/dynamic";
+import CourseContentGrades from "../../../../../components/molecules/course/CourseContentGrades";
 
 const ContentLayout = styled("div", {
   display: "flex",
@@ -114,11 +115,9 @@ export default function Features() {
     return <div>Error</div>;
   }
 
-  const { courseName, canEdit } = courses.find(
+  const { courseName } = courses.find(
     (currCourse) => currCourse.courseUUID === courseUUID
   );
-
-  console.log(items);
 
   return (
     <>
@@ -134,30 +133,11 @@ export default function Features() {
             label={courseName}
             alignment="left"
           ></Headline>
-          {canEdit && <CourseMenu courseId={courseUUID}></CourseMenu>}
         </HeadlineLayout>
         <Separator width="small" alignment="left" />
         <Spacer size="verySmall"></Spacer>
-        <CourseContent items={items}></CourseContent>
-        {items.length == 0 && canEdit && (
-          <>
-            <p>No elements in this course yet</p>
-            <Spacer size="small"></Spacer>
-            <Button
-              onClick={() => {
-                router.push(
-                  `/school/${schoolUUID}/course/${courseUUID}/elements`
-                );
-              }}
-              backgroundColor={"primary"}
-              color={"primary"}
-            >
-              Add elements
-            </Button>
-            <Spacer size="small"></Spacer>
-          </>
-        )}
-        {items.length == 0 && !canEdit && (
+        <CourseContentGrades items={items}></CourseContentGrades>
+        {items.length == 0 && (
           <>
             <p>
               The administrator of this site hasn&apos;t added elements to this
@@ -171,10 +151,10 @@ export default function Features() {
           backgroundColor={"primary"}
           color={"primary"}
           onClick={() => {
-            router.push(`/school/${schoolUUID}/course`);
+            router.push(`/school/${schoolUUID}/course/${courseUUID}/`);
           }}
         >
-          Back to courses
+          Back to course
         </Button>
       </ContentLayout>
       <Footer></Footer>

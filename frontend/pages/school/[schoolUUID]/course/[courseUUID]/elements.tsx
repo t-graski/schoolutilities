@@ -85,6 +85,8 @@ export default function Features() {
 
   const [responseBody, setResponseBody] = useState({});
 
+  console.log(responseBody);
+
   return (
     <>
       <Head>
@@ -131,6 +133,7 @@ export default function Features() {
               color={"primary"}
               onClick={async () => {
                 let accessToken = await getAccessToken();
+                console.log(responseBody);
                 const saveResponse = await fetch(
                   `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/courseElements`,
                   {
@@ -144,9 +147,9 @@ export default function Features() {
                 );
                 if (saveResponse) {
                   if (saveResponse.status == 200) {
-                    router.push(
-                      `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
-                    );
+                    // router.push(
+                    //   `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`
+                    // );
                   } else {
                     alert("Error while saving");
                   }

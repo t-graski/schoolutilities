@@ -5,7 +5,7 @@ import { InputFieldCore } from "./InputFieldCore";
 
 type Props = {
   inputType: "text" | "date" | "email" | "number" | "datetime-local";
-  value?: string;
+  value?: string | number;
   onChange: Function;
   icon?: any;
   editable?: boolean;

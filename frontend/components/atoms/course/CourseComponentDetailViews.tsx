@@ -10,7 +10,7 @@ export function HeadlineDetailView({
   children,
   setDetailsConfig,
   setButtonDisabled,
-  config = { label: "" },
+  config = { label: "", weight: 1 },
   ...props
 }) {
   const [currentDetailsConfig, setCurrentDetailsConfig] = useState(config);
@@ -35,6 +35,26 @@ export function HeadlineDetailView({
         icon={""}
         size="small"
       ></InputField>
+      <InputField
+        label="Weight"
+        value={currentDetailsConfig.weight}
+        inputType={"number"}
+        onChange={(value) => {
+          setCurrentDetailsConfig({
+            ...currentDetailsConfig,
+            weight: Number(value),
+          });
+          setDetailsConfig({
+            ...currentDetailsConfig,
+            weight: Number(value),
+          });
+          setButtonDisabled(
+            currentDetailsConfig.label.length === 0 || value <= 0
+          );
+        }}
+        icon={""}
+        size="small"
+      ></InputField>
     </>
   );
 }
@@ -43,7 +63,7 @@ export function TextDetailView({
   children,
   setDetailsConfig,
   setButtonDisabled,
-  config = { text: "" },
+  config = { text: "", weight: 1 },
   ...props
 }) {
   const [currentDetailsConfig, setCurrentDetailsConfig] = useState(config);
@@ -65,6 +85,26 @@ export function TextDetailView({
           setButtonDisabled(value.length === 0);
         }}
       ></TextField>
+      <InputField
+        label="Weight"
+        value={currentDetailsConfig.weight}
+        inputType={"number"}
+        onChange={(value) => {
+          setCurrentDetailsConfig({
+            ...currentDetailsConfig,
+            weight: Number(value),
+          });
+          setDetailsConfig({
+            ...currentDetailsConfig,
+            weight: Number(value),
+          });
+          setButtonDisabled(
+            currentDetailsConfig.text.length === 0 || value <= 0
+          );
+        }}
+        icon={""}
+        size="small"
+      ></InputField>
     </>
   );
 }
@@ -81,6 +121,7 @@ export function ExerciseDetailView({
     submitLaterTime: new Date(500).toISOString(),
     maxFileSize: 1000,
     allowedFileTypes: ".jpg,.png,.zip",
+    weight: 1,
   },
   ...props
 }) {
@@ -139,6 +180,26 @@ export function ExerciseDetailView({
             dueTime: new Date(Date.parse(value)).toISOString(),
           });
         }}
+        size="small"
+      ></InputField>
+      <InputField
+        label="Weight"
+        value={currentDetailsConfig.weight}
+        inputType={"number"}
+        onChange={(value) => {
+          setCurrentDetailsConfig({
+            ...currentDetailsConfig,
+            weight: Number(value),
+          });
+          setDetailsConfig({
+            ...currentDetailsConfig,
+            weight: Number(value),
+          });
+          setButtonDisabled(
+            currentDetailsConfig.name.length === 0 || value <= 0
+          );
+        }}
+        icon={""}
         size="small"
       ></InputField>
     </>
