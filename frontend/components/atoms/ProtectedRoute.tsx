@@ -37,6 +37,7 @@ const ProtectedRoute = ({ router, children }) => {
         appRoutes.HELP_FAQ,
         appRoutes.LOGIN_REDIRECT,
         appRoutes.PREMIUM_PLANS,
+        appRoutes.BOT_OVERVIEW,
       ];
 
       /**

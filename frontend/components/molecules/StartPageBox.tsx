@@ -3,7 +3,15 @@ import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
 
-type Props = {};
+type Props = {
+  title: string[];
+  description: string;
+  boldDescription?: string;
+  highlightedButtonText: string;
+  highlightedButtonLink: string;
+  buttonText: string;
+  buttonLink: string;
+};
 
 const StartPageBoxLayout = styled("div", {
   display: "flex",
@@ -59,30 +67,41 @@ const ButtonLayout = styled("div", {
   },
 });
 
-export const StartPageBox: React.FC<Props> = ({}) => {
+export const StartPageBox: React.FC<Props> = ({
+  title,
+  description,
+  boldDescription,
+  highlightedButtonText,
+  highlightedButtonLink,
+  buttonText,
+  buttonLink,
+}) => {
   return (
     <>
       <StartPageBoxLayout>
         <StartPageBoxTitle>
-          LET’S MAKE
-          <br />
-          SCHOOL EASY.
+          {title.map((text, index) => (
+            <>
+              <span key={index}>{text}</span>
+              <br />
+            </>
+          ))}
         </StartPageBoxTitle>
         <StartPageBoxDescription>
-          We think it is extremely important to bring joy into the daily
-          School-Routine of students and teachers. With incredible features and
-          the right design, we make this possible.
-          <br /><br/>
-          <BoldDescription>This is SchoolUtilities.</BoldDescription>
+          {description}
+          <br /><br />
+          {boldDescription && (
+            <BoldDescription>{boldDescription}</BoldDescription>
+          )}
         </StartPageBoxDescription>
         <ButtonLayout>
-          <Link href="/auth?tab=register" passHref>
+          <Link href={highlightedButtonLink} passHref>
             <Button backgroundColor={"primary"} color={"primary"}>
-              REGISTER NOW
+              {highlightedButtonText}
             </Button>
           </Link>
-          <Link href="/features" passHref>
-            <StyledLink>SEE FEATURES</StyledLink>
+          <Link href={buttonLink} passHref>
+            <StyledLink>{buttonText}</StyledLink>
           </Link>
         </ButtonLayout>
       </StartPageBoxLayout>

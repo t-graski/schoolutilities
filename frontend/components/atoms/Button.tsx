@@ -18,7 +18,7 @@ export const Button = styled("button", {
     backgroundColor: "$backgroundColor",
     color: "$color",
   },
-  
+
   variants: {
     backgroundColor: {
       primary: {
@@ -38,6 +38,17 @@ export const Button = styled("button", {
           color: "$fontSecondary",
         },
       },
+    },
+    fontWeight: {
+      bold: {
+        fontWeight: "bold",
+      },
+      medium: {
+        fontWeight: "500",
+      },
+      normal: {
+        fontWeight: "normal",
+      }
     },
     isDisabled: {
       true: {
