@@ -18,11 +18,11 @@ import { ArticleService } from './article.service';
 @UseGuards(RolesGuard)
 @Controller('api/articles')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) { }
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
-  @Post('/create')
+  @Post('/')
   async createArticle(@Req() request, @Res() response) {
     const result = await this.articleService.createArticle(request);
     return response
@@ -32,7 +32,7 @@ export class ArticleController {
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
-  @Delete('/delete')
+  @Delete('/')
   async deleteArticle(@Req() request, @Res() response) {
     const result = await this.articleService.deleteArticle(request);
     return response
@@ -42,7 +42,7 @@ export class ArticleController {
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
-  @Put('/edit')
+  @Put('/')
   async editArticle(@Req() request, @Res() response) {
     const result = await this.articleService.editArticle(request);
     return response
@@ -50,7 +50,7 @@ export class ArticleController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Get('/article/:articleUUID')
+  @Get('/:articleUUID')
   async getArticle(@Param() params, @Req() request, @Res() response) {
     const result = await this.articleService.getArticle(
       request,
@@ -61,7 +61,7 @@ export class ArticleController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Get('/articles')
+  @Get('/')
   async getArticles(@Req() request, @Res() response) {
     const result = await this.articleService.getAllArticles(request);
     return response

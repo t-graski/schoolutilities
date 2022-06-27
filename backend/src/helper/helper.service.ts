@@ -310,12 +310,8 @@ export class HelperService {
     }
   }
 
+
   /**
-   * 
-=======
-  /**
-   *
->>>>>>> parent of 636a947 (merge)
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline

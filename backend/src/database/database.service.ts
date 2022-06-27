@@ -160,7 +160,23 @@ export class DatabaseService {
         email: true,
       },
     });
+    return person;
+  }
 
+  async getPersonByUUID(personUUID: string): Promise<any> {
+    const person = await prisma.persons.findFirst({
+      where: {
+        personUUID,
+      },
+      select: {
+        personId: true,
+        personUUID: true,
+        firstName: true,
+        lastName: true,
+        birthDate: true,
+        email: true,
+      },
+    });
     return person;
   }
 
@@ -196,7 +212,7 @@ export class DatabaseService {
   async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
     const school = await prisma.schools.findFirst({
       where: {
-        schoolUUID: schoolUUID,
+        schoolUUID,
       },
       select: {
         schoolId: true,

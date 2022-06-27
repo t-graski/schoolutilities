@@ -12,7 +12,7 @@ export class MailController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Supervisor)
-  @Get('/getUserMails')
+  @Get('/userMails')
   async getMailsSentToUser(@Req() request, @Res() response) {
     const result = await this.mailService.getMailsSentToUser(
       request.body.email,
