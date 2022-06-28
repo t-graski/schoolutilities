@@ -334,7 +334,7 @@ const AddButton = styled("button", {
 
 export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
   const [open, setOpen] = useState(false);
-  const [choosenElementId, setChoosenElementId] = useState("");
+  const [choosenElementId, setChoosenElementId] = useState(-1);
   const [detailsConfig, setDetailsConfig] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const router = useRouter();

@@ -24,7 +24,7 @@ const ArtworkLayout = styled("div", {
   position: "absolute",
   top: "0",
   right: "0",
-  
+
   display: "block",
   width: "55vw",
   height: "calc(55vw/731*526)",
@@ -53,7 +53,17 @@ export default function Home() {
         <SvgStartpageArtwork></SvgStartpageArtwork>
       </ArtworkLayout>
       <FirstBoxLayout>
-        <StartPageBox></StartPageBox>
+        <StartPageBox
+          title={["LET’S MAKE", "SCHOOL EASY."]}
+          description={
+            "We think it is extremely important to bring joy into the daily School-Routine of students and teachers. With incredible features and the right design, we make this possible."
+          }
+          boldDescription={"This is SchoolUtilities."}
+          highlightedButtonText={"REGISTER NOW"}
+          highlightedButtonLink={"/auth?tab=register"}
+          buttonText={"SEE FEATURES"}
+          buttonLink={"/features"}
+        ></StartPageBox>
       </FirstBoxLayout>
       <GeneralList
         items={[
