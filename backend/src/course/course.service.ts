@@ -1013,7 +1013,7 @@ export class CourseService {
           elementUUID: element.elementUUID,
           parentUUID: parentUUID,
           options: {
-            type: element.typeId.toString(),
+            type: Number(element.typeId),
             visible: Boolean(element.visible),
             ...elementOptions,
           },
