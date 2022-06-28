@@ -210,10 +210,6 @@ export class CourseController {
         .status(HttpStatus.OK)
         .sendFile(`${result.data}`, { root: process.env.FILE_PATH }),
     );
-
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)
