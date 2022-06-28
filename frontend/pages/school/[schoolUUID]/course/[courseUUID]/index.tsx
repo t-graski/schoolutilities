@@ -46,6 +46,7 @@ export default function Features() {
     () => fetchCourseContent(courseUUID),
     {
       staleTime: 20000,
+      enabled: courseUUID !== "",
     }
   );
   const { data: courses, status: coursesStatus } = useQuery(
@@ -53,6 +54,7 @@ export default function Features() {
     async () => fetchCourses(schoolUUID),
     {
       staleTime: 20000,
+      enabled: schoolUUID !== "",
     }
   );
 
