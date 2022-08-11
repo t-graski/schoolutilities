@@ -3,7 +3,7 @@ import { styled } from "../../../stitches.config";
 import { Spacer } from "../../atoms/Spacer";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 import { Button } from "../../atoms/Button";
 import { PasswordInput } from "../../atoms/input/PasswordInput";
 import SvgPassword from "../../atoms/svg/SvgPassword";

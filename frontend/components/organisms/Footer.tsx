@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React from "react";
+import React, { memo } from "react";
 import { styled } from "../../stitches.config";
 import SvgLogoPencilCombinedCompact from "../atoms/svg/SvgLogoPencilCombinedCompact";
 import SvgPatreon from "../atoms/svg/SvgPatreon";
@@ -108,7 +108,7 @@ const IconLayout = styled("div", {
   padding: "5px",
 });
 
-const Footer: React.FC<Props> = ({}) => {
+const FooterPureComponent: React.FC<Props> = ({}) => {
   return (
     <>
       <FooterLayout>
@@ -189,6 +189,4 @@ const Footer: React.FC<Props> = ({}) => {
   );
 };
 
-Footer.defaultProps = {};
-
-export default Footer;
+export default memo(FooterPureComponent);

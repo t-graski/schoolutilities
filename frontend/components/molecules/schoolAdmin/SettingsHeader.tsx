@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "../../../stitches.config";
 import { AddIcon } from "../../atoms/AddIcon";
 import { Headline } from "../../atoms/Headline";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 
 type Props = {
   headline: string;

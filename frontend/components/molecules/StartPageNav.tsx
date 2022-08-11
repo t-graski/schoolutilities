@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "../../stitches.config";
 import Image from "next/image";
-import { Separator } from "../atoms/Separator";
+import Separator from "../atoms/Separator";
 
 type Props = {
   links: {

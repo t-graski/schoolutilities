@@ -2,7 +2,7 @@ import Head from "next/head";
 const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
-import { Separator } from "../../components/atoms/Separator";
+import Separator from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
 import { Changelog } from "../../components/organisms/Changelog";
 import dynamic from "next/dynamic";

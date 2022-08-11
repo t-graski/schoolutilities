@@ -1,5 +1,5 @@
 import React from "react";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 import Link from "next/link";
 import { styled } from "@stitches/react";
 
@@ -57,16 +57,13 @@ export const HelpOverviewItem: React.FC<Props> = ({
   description,
   icon,
 }) => {
-
   const Icon = icon;
 
   return (
     <>
       <Link href={href} passHref>
         <GeneralListItemLayout>
-          <IconLayout>
-            {icon && <Icon />}
-          </IconLayout>
+          <IconLayout>{icon && <Icon />}</IconLayout>
           <TitleLayout>{title}</TitleLayout>
           <Separator width={"ultraSmall"} alignment={"center"}></Separator>
           <DescriptionLayout>{description}</DescriptionLayout>

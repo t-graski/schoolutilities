@@ -3,7 +3,7 @@ import { styled } from "../../../stitches.config";
 import { Spacer } from "../../atoms/Spacer";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 
 const RegisterAuthLayout = styled("div", {
   width: "100%",

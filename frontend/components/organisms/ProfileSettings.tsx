@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
 import { setSelectedSchool } from "../../utils/authHelper";
-import { Separator } from "../atoms/Separator";
+import Separator from "../atoms/Separator";
 import SvgUser from "../atoms/svg/SvgUser";
 import SvgHome from "../atoms/svg/SvgHome";
 import SvgRightArrow from "../atoms/svg/SvgRightArrow";

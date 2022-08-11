@@ -1,6 +1,6 @@
 import React from "react";
 import { Headline } from "../../atoms/Headline";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 import { ArticleDetails } from "../../article/ArticleDetails";
 import { Spacer } from "../../atoms/Spacer";
 

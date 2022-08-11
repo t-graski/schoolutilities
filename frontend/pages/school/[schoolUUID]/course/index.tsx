@@ -4,7 +4,7 @@ import { Spacer } from "../../../../components/atoms/Spacer";
 import Head from "next/head";
 import { CourseSelectionList } from "../../../../components/organisms/course/CourseSelectionList";
 import { Headline } from "../../../../components/atoms/Headline";
-import { Separator } from "../../../../components/atoms/Separator";
+import Separator from "../../../../components/atoms/Separator";
 import { ContentLayout } from "../../../../utils/styles";
 import dynamic from "next/dynamic";
 

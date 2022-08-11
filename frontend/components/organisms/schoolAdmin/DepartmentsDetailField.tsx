@@ -4,7 +4,7 @@ import { InputField } from "../../atoms/input/InputField";
 import { Button } from "../../atoms/Button";
 import { regex } from "../../../utils/regex";
 import { Headline } from "../../atoms/Headline";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 import SvgEdit from "../../atoms/svg/SvgEdit";
 import SvgDelete from "../../atoms/svg/SvgDelete";
 
@@ -154,7 +154,7 @@ const PopUpButtonLayout = styled("div", {
 
 const Description = styled("p", {
   margin: "15px 0",
-  
+
   fontSize: "1.2rem",
   color: "$fontPrimary",
 });
@@ -263,7 +263,9 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                   }}
                   backgroundColor={"secondary"}
                   color={"primary"}
-                >Close</Button>
+                >
+                  Close
+                </Button>
                 <Button
                   onClick={savePopUpInput}
                   backgroundColor={"primary"}
@@ -274,7 +276,9 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                       departmentName == departments[departmentId])
                   }
                   type="submit"
-                >{departmentId == -1 ? "Add" : "Edit"}</Button>
+                >
+                  {departmentId == -1 ? "Add" : "Edit"}
+                </Button>
               </PopUpButtonLayout>
             </PopUpContentLayout>
           </PopUpLayout>

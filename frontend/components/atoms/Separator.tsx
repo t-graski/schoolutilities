@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { styled } from "../../stitches.config";
 import type * as Stitches from "@stitches/react";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
@@ -74,7 +74,7 @@ const StyledSeparator = styled(SeparatorPrimitive.Root, {
   },
 });
 
-export const Separator: React.FC<Props> = ({
+const SeparatorPureComponent: React.FC<Props> = ({
   width = "small",
   alignment,
   orientation = "horizontal",
@@ -94,3 +94,5 @@ export const Separator: React.FC<Props> = ({
     </>
   );
 };
+
+export default memo(SeparatorPureComponent);

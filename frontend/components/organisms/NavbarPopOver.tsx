@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useRouter } from "next/router";
 import { styled } from "@stitches/react";
 import Link from "next/link";
@@ -91,7 +91,7 @@ const StyledCloseButton = styled("button", {
   fontSize: "2.5rem",
 });
 
-export const NavbarPopOver: React.FC<Props> = ({ setVisibility }) => {
+export const NavbarPopOverPureComponent: React.FC<Props> = ({ setVisibility }) => {
   const router = useRouter();
 
   const isLoggedIn = loggedIn();
@@ -143,4 +143,4 @@ export const NavbarPopOver: React.FC<Props> = ({ setVisibility }) => {
   );
 };
 
-export default NavbarPopOver;
+export default memo(NavbarPopOverPureComponent);

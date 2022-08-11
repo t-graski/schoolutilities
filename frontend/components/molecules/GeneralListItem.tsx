@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
@@ -42,7 +42,7 @@ const DescriptionLayout = styled("div", {
   textAlign: "center",
 });
 
-export const GeneralListItem: React.FC<Props> = ({
+const GeneralListItemPureComponent: React.FC<Props> = ({
   title,
   href,
   buttonText,
@@ -69,3 +69,5 @@ export const GeneralListItem: React.FC<Props> = ({
     </>
   );
 };
+
+export default memo(GeneralListItemPureComponent);

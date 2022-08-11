@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
@@ -70,7 +70,7 @@ const StyledList = styled(NavigationMenuPrimitive.List, {
 const itemStyles = {
   padding: "8px 12px",
   borderRadius: 4,
-  
+
   fontSize: 15,
   color: "$fontPrimary",
   lineHeight: 1,
@@ -101,7 +101,7 @@ const StyledCaret = styled(CaretDownIcon, {
   top: 1,
 
   color: "$fontPrimary",
-  
+
   "[data-state=open] &": { transform: "rotate(-180deg)" },
   "@media (prefers-reduced-motion: no-preference)": {
     transition: "transform 250ms ease",
@@ -171,7 +171,7 @@ const StyledArrow = styled("div", {
   position: "relative",
   top: "70%",
   transform: "rotate(45deg)",
-  
+
   width: 10,
   height: 10,
   borderTopLeftRadius: 2,
@@ -251,8 +251,7 @@ const ContentList = styled("ul", {
   },
 });
 
-const ListItem = styled("li", {
-});
+const ListItem = styled("li", {});
 
 const LinkTitle = styled("div", {
   marginBottom: 5,
@@ -320,7 +319,7 @@ const ViewportPosition = styled("div", {
   perspective: "2000px",
 });
 
-export const NavigationMenuPart = () => {
+export const NavigationMenuPartPureComponent = () => {
   const schoolUUID = getSelectedSchool();
 
   return (
@@ -392,7 +391,7 @@ export const NavigationMenuPart = () => {
               </ContentListItem>
               <ContentListItem
                 title="Create course"
-                href="/school/select?redirect=/course/create"
+                href={`/school/${getSelectedSchool()}/course/create-course`}
               >
                 Create a course and start teaching your students.
               </ContentListItem>
@@ -410,4 +409,4 @@ export const NavigationMenuPart = () => {
   );
 };
 
-export default NavigationMenuPart;
+export default memo(NavigationMenuPartPureComponent);

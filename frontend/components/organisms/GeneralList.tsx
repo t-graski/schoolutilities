@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { styled } from "../../stitches.config";
-import { Separator } from "../atoms/Separator";
-import { GeneralListItem } from "../molecules/GeneralListItem";
+import Separator from "../atoms/Separator";
+import GeneralListItem from "../molecules/GeneralListItem";
 
 type Props = {
   items: {
@@ -30,7 +30,7 @@ const GeneralListLayout = styled("div", {
   },
 });
 
-const GeneralList: React.FC<Props> = ({ items }) => {
+const GeneralListPureComponent: React.FC<Props> = ({ items }) => {
   return (
     <>
       <GeneralListLayout>
@@ -59,8 +59,4 @@ const GeneralList: React.FC<Props> = ({ items }) => {
   );
 };
 
-GeneralList.defaultProps = {
-  items: [],
-};
-
-export default GeneralList;
+export default memo(GeneralListPureComponent);

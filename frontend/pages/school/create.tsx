@@ -1,13 +1,10 @@
-import { useState } from "react";
 import { DepartmentsDetailField } from "../../components/organisms/schoolAdmin/DepartmentsDetailField";
 import Footer from "../../components/organisms/Footer";
 const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import { SchoolDetailField } from "../../components/molecules/school/SchoolDetailField";
 import { SetupProgressSite } from "../../components/organisms/SetupProgressSite";
-import { Spacer } from "../../components/atoms/Spacer";
 import { styled } from "../../stitches.config";
 import Head from "next/head";
-import { SiteLayout } from "../../components/atoms/SiteLayout";
 import dynamic from "next/dynamic";
 
 const CreateSchoolLayout = styled("div", {
@@ -17,7 +14,7 @@ const CreateSchoolLayout = styled("div", {
 });
 
 export default function CreateSchool() {
-  const [progressSteps, setProgressSteps] = useState([
+  const progressSteps = [
     {
       label: "School Details",
       isDone: false,
@@ -30,20 +27,17 @@ export default function CreateSchool() {
       isActive: false,
       component: DepartmentsDetailField,
     },
-  ]);
+  ];
 
   return (
     <>
-      <SiteLayout>
-        <Head>
-          <title>School Setup - SchoolUtilities</title>
-        </Head>
-        <Navbar></Navbar>
-        <Spacer size="small"></Spacer>
-        <CreateSchoolLayout>
-          <SetupProgressSite steps={progressSteps}></SetupProgressSite>
-        </CreateSchoolLayout>
-      </SiteLayout>
+      <Head>
+        <title>School Setup - SchoolUtilities</title>
+      </Head>
+      <Navbar></Navbar>
+      <CreateSchoolLayout>
+        <SetupProgressSite steps={progressSteps}></SetupProgressSite>
+      </CreateSchoolLayout>
       <Footer></Footer>
     </>
   );

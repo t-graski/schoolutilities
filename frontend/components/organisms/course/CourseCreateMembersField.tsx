@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "../../../stitches.config";
 import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { SearchSelect } from "../../atoms/input/SearchSelect";
 import SvgSchool from "../../atoms/svg/SvgSchool";

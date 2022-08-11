@@ -2,7 +2,7 @@ const Navbar = dynamic(() => import("../components/organisms/Navbar"));
 import Footer from "../components/organisms/Footer";
 import { Headline } from "../components/atoms/Headline";
 import { Spacer } from "../components/atoms/Spacer";
-import { Separator } from "../components/atoms/Separator";
+import Separator from "../components/atoms/Separator";
 import { FeatureOverviewList } from "../components/organisms/FeatureOverviewList";
 import Head from "next/head";
 import SvgTimetable from "../components/atoms/svg/SvgTimetable";

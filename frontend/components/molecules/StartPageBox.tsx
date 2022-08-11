@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { styled } from "../../stitches.config";
 import { Button } from "../atoms/Button";
 import Link from "next/link";
@@ -67,7 +67,7 @@ const ButtonLayout = styled("div", {
   },
 });
 
-export const StartPageBox: React.FC<Props> = ({
+const StartPageBoxPureComponent: React.FC<Props> = ({
   title,
   description,
   boldDescription,
@@ -108,3 +108,5 @@ export const StartPageBox: React.FC<Props> = ({
     </>
   );
 };
+
+export default memo(StartPageBoxPureComponent);

@@ -2,7 +2,7 @@ import Head from "next/head";
 const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
-import { Separator } from "../../components/atoms/Separator";
+import Separator from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
 import dynamic from "next/dynamic";
@@ -34,7 +34,7 @@ export async function getStaticProps() {
       },
     }
   );
-  const getResponse = await getRequest.json();  
+  const getResponse = await getRequest.json();
   return {
     props: {
       items: getResponse.map((item) => {

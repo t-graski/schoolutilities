@@ -1,6 +1,6 @@
 import { styled } from "../../stitches.config";
 import Head from "next/head";
-import { StartPageBox } from "../../components/molecules/StartPageBox";
+import StartPageBox from "../../components/molecules/StartPageBox";
 import dynamic from "next/dynamic";
 import { FeatureList } from "../../components/organisms/FeatureList";
 import { Spacer } from "../../components/atoms/Spacer";

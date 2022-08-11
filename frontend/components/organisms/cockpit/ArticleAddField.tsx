@@ -6,7 +6,7 @@ import { Button } from "../../atoms/Button";
 import { Headline } from "../../atoms/Headline";
 import { InputField } from "../../atoms/input/InputField";
 import { TextField } from "../../atoms/input/TextField";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { SideDashboardBar } from "../SideDashboardBar";
 import { MarkdownEditor } from "./MarkdownEditor";
@@ -75,24 +75,25 @@ export const ArticleAddField: React.FC<Props> = ({}) => {
         onChange={setTitle}
         label={"Title"}
       ></InputField>
-      <TextField
-        onChange={setCatchPhrase}
-        label={"Beschreibung"}
-      ></TextField>
+      <TextField onChange={setCatchPhrase} label={"Beschreibung"}></TextField>
       <MarkdownEditor saveContent={setContent} value=""></MarkdownEditor>
       <ButtonLayout>
         <Button
           backgroundColor={"primary"}
           color={"primary"}
           onClick={saveContent}
-        >Save</Button>
+        >
+          Save
+        </Button>
         <Button
           backgroundColor={"secondary"}
           color={"primary"}
           onClick={() => {
             router.push("/cockpit/articles");
           }}
-        >Cancel</Button>
+        >
+          Cancel
+        </Button>
       </ButtonLayout>
     </ArticleAddFieldLayout>
   );

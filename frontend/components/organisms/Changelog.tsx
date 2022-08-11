@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "../../stitches.config";
 import Link from "next/link";
-import { Separator } from "../atoms/Separator";
+import Separator from "../atoms/Separator";
 
 type Props = {
   entries: {
@@ -9,7 +9,7 @@ type Props = {
     date: string;
     headline: string;
     text: string;
-  }[]
+  }[];
 };
 
 const ChangeLogsLayout = styled("div", {

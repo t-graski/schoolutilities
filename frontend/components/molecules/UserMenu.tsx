@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import { DotFilledIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
@@ -208,7 +208,7 @@ const StyledLink = styled("a", {
   textDecoration: "none",
 });
 
-export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
+export const UserMenuPureComponent: React.FC<Props> = ({ setIsLoggedIn }) => {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -487,4 +487,4 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
   );
 };
 
-export default UserMenu;
+export default memo(UserMenuPureComponent);

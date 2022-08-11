@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import { Headline } from "../../atoms/Headline";
-import { Separator } from "../../atoms/Separator";
+import Separator from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { regex } from "../../../utils/regex";
 import { Select } from "../../atoms/input/Select";
@@ -67,7 +67,15 @@ export const SchoolDetailField: React.FC<Props> = ({ setDisabled }) => {
       }
       setIsFirstTime(false);
     }
-  }, [schoolNameValid, schoolLanguage, schoolTimezone, isDisabled, schoolName, setDisabled, isFirstTime]);
+  }, [
+    schoolNameValid,
+    schoolLanguage,
+    schoolTimezone,
+    isDisabled,
+    schoolName,
+    setDisabled,
+    isFirstTime,
+  ]);
 
   return (
     <>
