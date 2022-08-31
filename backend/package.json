@@ -37,7 +37,7 @@
     "dotenv": "^16.0.0",
     "jszip": "^3.10.0",
     "moment": "^2.29.3",
-    "moment-timezone": "^0.5.34",
+    "moment-timezone": "^0.5.35",
     "nanoid": "^3.3.2",
     "nodemailer": "^6.7.3",
     "passport": "^0.5.2",
