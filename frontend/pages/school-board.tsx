@@ -180,7 +180,6 @@ export default function Home() {
       } else {
         setCounterString("");
       }
-      // check if the time is 8:00 am
     }, 1000);
 
     return () => {
