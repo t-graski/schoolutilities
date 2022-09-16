@@ -94,8 +94,8 @@ const times = [
     minute: 25,
   },
   {
-    hour: 20,
-    minute: 13,
+    hour: 17,
+    minute: 15,
     end: true,
   },
 ];
@@ -160,26 +160,19 @@ export default function Home() {
             setShowHighlight(false);
           }, 5000);
         }
-        // if (
-        //   addSeconds(10).getHours() === time.hour &&
-        //   addSeconds(10).getMinutes() === time.minute
-        // ) {
-        //   if (new Date().getSeconds() > 49) {
-        //     setCounterString(60 - new Date().getSeconds() + "");
-        //   } else if (new Date().getSeconds() == 0) {
-        //     setCounterString(time?.end ? "Pause!" : "Start!");
-        //   } else {
-        //     setCounterString("");
-        //   }
-        // }
+        if (
+          addSeconds(10).getHours() === time.hour &&
+          addSeconds(10).getMinutes() === time.minute
+        ) {
+          if (new Date().getSeconds() > 54) {
+            setCounterString(60 - new Date().getSeconds() + "");
+          } else if (new Date().getSeconds() == 0) {
+            setCounterString(time?.end ? "Pause!" : "Unterricht!");
+          } else {
+            setCounterString("");
+          }
+        }
       });
-      if (new Date().getSeconds() > 49) {
-        setCounterString(60 - new Date().getSeconds() + "");
-      } else if (new Date().getSeconds() == 0) {
-        setCounterString("Pause!");
-      } else {
-        setCounterString("");
-      }
     }, 1000);
 
     return () => {

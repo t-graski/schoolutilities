@@ -38,6 +38,7 @@ const ProtectedRoute = ({ router, children }) => {
         appRoutes.LOGIN_REDIRECT,
         appRoutes.PREMIUM_PLANS,
         appRoutes.BOT_OVERVIEW,
+        appRoutes.SMART_BOARD,
       ];
 
       /**

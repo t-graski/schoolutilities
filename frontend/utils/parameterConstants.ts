@@ -153,5 +153,6 @@ export const appRoutes = {
   SCHOOL_SELECT: "/school/select",
   DASHBOARD: "/dashboard",
   PREMIUM_PLANS: "/premium/plans",
-  BOT_OVERVIEW: "/bot"
+  BOT_OVERVIEW: "/bot",
+  SMART_BOARD: "/smart-board",
 };
