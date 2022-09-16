@@ -120,8 +120,8 @@ const SchoolBoardLayout = styled("div", {
 });
 
 const scaleUp = keyframes({
-  "0%": { fontSize: "0rem" },
-  "15%": { fontSize: "9rem" },
+  "0%": { fontSize: "0rem", opacity: 0 },
+  "15%": { fontSize: "9rem", opacity: 1 },
   "85%": { fontSize: "15rem", opacity: 1 },
   "95%": { fontSize: "40rem" },
   "100%": { fontSize: "40rem", opacity: 0 },
