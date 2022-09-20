@@ -1,4 +1,5 @@
 import {
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Post,
@@ -6,13 +7,16 @@ import {
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User } from 'src/entities/user.entity';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { UserService } from './user.service';
 
 @Controller('api/user')
 @UseGuards(RolesGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
@@ -61,12 +65,9 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
-  async getProfile(@Res() response, @Req() request) {
+  async getProfile(@Req() request): Promise<User> {
     const jwt = request.headers.authorization.split(' ')[1];
-    const result = await this.userService.getProfile(jwt);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    return await this.userService.getProfile(jwt);
   }
 
   @UseGuards(JwtAuthGuard)

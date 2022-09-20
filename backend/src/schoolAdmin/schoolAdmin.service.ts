@@ -1,28 +1,29 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
-import { regex } from 'src/regex';
-import { nanoid } from 'nanoid';
-import validator from 'validator';
-import { PrismaClient } from '@prisma/client';
-import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
-import { v4 as uuidv4 } from 'uuid';
-import { Role, RoleOrder } from '../roles/role.enum';
 import {
   AddClass,
+  AddDepartment,
+  AddJoinCode,
   AddSchool,
+  JoinSchool,
+  RemoveJoinCode,
   ReturnMessage,
   UpdateClass,
-  AddDepartment,
   UpdateDepartment,
-  AddJoinCode,
-  RemoveJoinCode,
   UpdateJoinCode,
-  JoinSchool,
   UserPermissions,
 } from 'src/types/SchoolAdmin';
-import { DatabaseService } from 'src/database/database.service';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { ID_STARTERS, LENGTHS, RETURN_DATA } from 'src/misc/parameterConstants';
+
 import { AuthService } from 'src/auth/auth.service';
+import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
+import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
+import { nanoid } from 'nanoid';
+import { regex } from 'src/regex';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();

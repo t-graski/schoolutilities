@@ -1,25 +1,28 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateCourse, ReturnMessage } from 'src/types/Course';
-import { PrismaClient } from '@prisma/client';
-import validator from 'validator';
+import * as fs from 'fs';
+import * as moment from 'moment';
+
+import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import {
+  ERROR_CODES,
+  ID_STARTERS,
   LENGTHS,
   RETURN_DATA,
-  ID_STARTERS,
-  ERROR_CODES,
 } from 'src/misc/parameterConstants';
-import { v4 as uuidv4 } from 'uuid';
+import { GetGradeDto, GetValuationDto, ValuationDto } from 'src/dto/grades';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ReturnMessage, UpdateCourse } from 'src/types/Course';
+
+import { AddCourseDto } from 'src/dto/addCourse';
 import { AuthService } from 'src/auth/auth.service';
+import { CourseDto } from 'src/dto/course';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
-import * as moment from 'moment';
-import { CourseDto } from 'src/dto/course';
-import { CourseEvent, GetEventsDto } from 'src/dto/events';
-import { AddCourseDto } from 'src/dto/addCourse';
+import { PrismaClient } from '@prisma/client';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
-import * as fs from 'fs';
-import { GetGradeDto, GetValuationDto, ValuationDto } from 'src/dto/grades';
 import { Request } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
+
 let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -71,6 +74,8 @@ export class CourseService {
           },
         },
       });
+
+      
 
       if (persons) {
         for (const person of persons) {

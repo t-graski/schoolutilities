@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { PASSWORD, RETURN_DATA } from 'src/misc/parameterConstants';
+
 import { AuthService } from 'src/auth/auth.service';
-import { DatabaseService } from 'src/database/database.service';
-import { RETURN_DATA, PASSWORD } from 'src/misc/parameterConstants';
-import validator from 'validator';
-import { nanoid } from 'nanoid';
-import { MailService } from 'src/mail/mail.service';
-import { ReturnMessage } from 'src/types/Database';
-import { HelperService } from 'src/helper/helper.service';
 import { Cron } from '@nestjs/schedule';
+import { DatabaseService } from 'src/database/database.service';
+import { HelperService } from 'src/helper/helper.service';
+import { MailService } from 'src/mail/mail.service';
+import { PrismaClient } from '@prisma/client';
+import { ReturnMessage } from 'src/types/Database';
+import { User } from 'src/entities/user.entity';
+import { nanoid } from 'nanoid';
+import validator from 'validator';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
@@ -62,12 +64,12 @@ export class UserService {
     }
   }
 
-  async getProfile(token: string): Promise<ReturnMessage> {
+  async getProfile(token: string): Promise<User> {
     const jwt = await this.authService.decodeJWT(token);
     const personUUID = jwt.personUUID;
 
     if (!validator.isUUID(personUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
+      throw new BadRequestException("Invalid personUUID");
     }
 
     try {
@@ -75,46 +77,48 @@ export class UserService {
         where: {
           personUUID,
         },
+        include: {
+          attendingCourses: true,
+          personRoles: true,
+        }
       });
 
-      const userSettings = await prisma.personSettings.findFirst({
-        where: {
-          personId: user.personId,
-        },
-      });
+      // const userSettings = await prisma.personSettings.findFirst({
+      //   where: {
+      //     personId: user.personId,
+      //   },
+      // });
 
-      if (!userSettings) {
-        await this.helper.createOrResetDefaultSettings(user.personId);
-      }
+      // if (!userSettings) {
+      //   await this.helper.createOrResetDefaultSettings(user.personId);
+      // }
 
-      const userItem = {
-        userUUID: user.personUUID,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        fullName: user.firstName + ' ' + user.lastName,
-        birthday: new Date(user.birthDate).toISOString().split('T')[0],
-        email: user.email,
-        emailVerified: user.emailVerified,
-        creationDate: user.creationDate,
-        userSettings: {
-          language: userSettings.language,
-          timeZone: userSettings.timeZone,
-          dateTimeFormat: userSettings.dateTimeFormat,
-          receiveUpdateEmails: userSettings.receiveUpdateEmails,
-          avatarUUID: userSettings.avatarUUID,
-          phoneNumber: userSettings.phoneNumber,
-          themeMode: userSettings.themeMode,
-          theme: userSettings.theme,
-        },
-      };
+      // const userItem = {
+      //   userUUID: user.personUUID,
+      //   firstName: user.firstName,
+      //   lastName: user.lastName,
+      //   fullName: user.firstName + ' ' + user.lastName,
+      //   birthday: new Date(user.birthDate).toISOString().split('T')[0],
+      //   email: user.email,
+      //   emailVerified: user.emailVerified,
+      //   creationDate: user.creationDate,
+      //   userSettings: {
+      //     language: userSettings.language,
+      //     timeZone: userSettings.timeZone,
+      //     dateTimeFormat: userSettings.dateTimeFormat,
+      //     receiveUpdateEmails: userSettings.receiveUpdateEmails,
+      //     avatarUUID: userSettings.avatarUUID,
+      //     phoneNumber: userSettings.phoneNumber,
+      //     themeMode: userSettings.themeMode,
+      //     theme: userSettings.theme,
+      //   },
+      // };
 
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: userItem,
-      };
+      return new User({...user})
     } catch (err) {
       console.log(err);
-      return RETURN_DATA.DATABASE_ERROR;
+      
+      throw new UnauthorizedException("Invalid personUUID");
     }
   }
 

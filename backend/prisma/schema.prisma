@@ -9,8 +9,8 @@ datasource db {
 
 model coursePersons {
   courseId Int     @map("course_id")
+  courses  courses @relation(fields: [courseId], references: [courseId])
   personId Int     @map("person_id")
-  courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
   persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
 
   @@unique([courseId, personId], name: "coursePersonId")
@@ -88,7 +88,7 @@ model persons {
   creationDate  DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
   lastLogin     DateTime @map("last_login") @db.Timestamp(0)
 
-  attendingCourses courses[]        @relation(references: [courseId])
+  attendingCourses courses[]
   loginTokens      loginTokens[]
   personRoles      personRoles[]
   registerTokens   registerTokens[]
@@ -205,7 +205,7 @@ model courses {
 
   schools  schools   @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkCourseschool")
   subjects subjects  @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
-  members  persons[] @relation(references: [personId])
+  members  persons[]
 
   coursePersons  coursePersons[]
   courseClasses  courseClasses[]

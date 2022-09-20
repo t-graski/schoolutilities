@@ -1,14 +1,14 @@
-import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
   IsString,
   Length,
 } from 'class-validator';
+
 import { IsArrayUnique } from 'src/decorators/IsArrayUnique';
 import { IsCustomUUID } from 'src/decorators/IsCustomUUID';
-import { IsUserUUIDExist } from 'src/decorators/IsUserUUIDExist';
 import { IsNameAvailable } from '../decorators/IsNameAvailable';
+import { IsUserUUIDExist } from 'src/decorators/IsUserUUIDExist';
 
 export class AddCourseDto {
   @IsNotEmpty()
@@ -42,4 +42,6 @@ export class AddCourseDto {
     each: true,
   })
   classes: string[];
+
+  
 }
