@@ -1,17 +1,20 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import * as moment from 'moment-timezone';
+
 import {
   ERROR_CODES,
-  PASSWORD,
   ID_STARTERS,
+  PASSWORD,
   RETURN_DATA,
 } from 'src/misc/parameterConstants';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
+
+import { JwtService } from '@nestjs/jwt';
+import { PrismaClient } from '@prisma/client';
 import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
-import validator from 'validator';
-import { v4 as uuidv4 } from 'uuid';
-import * as moment from 'moment-timezone';
 import { Role } from 'src/roles/role.enum';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
+
 //import parameter constants
 
 const prisma = new PrismaClient();
@@ -23,12 +26,12 @@ export class HelperService {
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personUUID: userUUID,
+            userUUID,
           },
         });
-        return user.personId;
+        return user.userId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -40,12 +43,12 @@ export class HelperService {
   async getUserUUIDById(userId: number): Promise<string> {
     if (userId) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personId: userId,
+            userId,
           },
         });
-        return user.personUUID;
+        return user.userUUID;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -74,29 +77,29 @@ export class HelperService {
   async getElementDueDate(elementId: number): Promise<any> {
     const element = await prisma.courseElements.findFirst({
       where: {
-        elementId: elementId,
+        courseElementId: elementId,
       },
     });
-    if (element.typeId == 3) {
+    if (element.courseElementTypeId == 3) {
       const fileSubmissionSettings =
-        await prisma.fileSubmissionSettings.findFirst({
+        await prisma.courseFileSubmissionSettings.findFirst({
           where: {
-            courseElementId: elementId,
+            courseFileSubmissionElementId: elementId,
           },
         });
-      return fileSubmissionSettings.dueTime;
+      return fileSubmissionSettings.courseFileSubmissionDueTimestamp;
     }
   }
 
   async getUserIdByEmail(email: string): Promise<number> {
     if (email && validator.isEmail(email)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            email: email,
+            userEmail: email,
           },
         });
-        return user.personId;
+        return user.userId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -108,9 +111,9 @@ export class HelperService {
   async getUserById(userId: number): Promise<any> {
     if (userId) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personId: userId,
+            userId,
           },
         });
         return user;
@@ -125,9 +128,9 @@ export class HelperService {
   async getUserByUUID(userUUID: string): Promise<any> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personUUID: userUUID,
+            userUUID,
           },
         });
         return user;
@@ -142,9 +145,9 @@ export class HelperService {
   async getUserByEmail(email: string): Promise<any> {
     if (email && validator.isEmail(email)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            email: email,
+            userEmail: email,
           },
         });
         return user;
@@ -164,9 +167,9 @@ export class HelperService {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       userId = await this.getUserIdByUUID(userUUID);
       try {
-        const schools = await prisma.schoolPersons.findMany({
+        const schools = await prisma.schoolUserRoles.findMany({
           where: {
-            personId: userId,
+            userId,
           },
           select: {
             schoolId: true,
@@ -333,41 +336,41 @@ export class HelperService {
       switch (typeId) {
         //HEADLINE
         case 1:
-          let headlineOptions = await prisma.headlineSettings.findFirst({
+          let headlineOptions = await prisma.courseElementHeadlineSettings.findFirst({
             where: {
-              courseElementId: Number(elementId),
+              courseElementHeadlineElementId: Number(elementId),
             },
           });
           options = {
-            label: headlineOptions.label,
+            label: headlineOptions.courseElementHeadlineLabel,
           };
           break;
         //TEXT
         case 2:
-          let textOptions = await prisma.textSettings.findFirst({
+          let textOptions = await prisma.courseElementTextSettings.findFirst({
             where: {
               courseElementId: Number(elementId),
             },
           });
           options = {
-            text: textOptions.text,
+            text: textOptions.courseElementTextText,
           };
           break;
         //FILE SUBMISSION
         case 3:
-          let fileOptions = await prisma.fileSubmissionSettings.findFirst({
+          let fileOptions = await prisma.courseFileSubmissionSettings.findFirst({
             where: {
-              courseElementId: Number(elementId),
+              courseElementsCourseElementId: Number(elementId),
             },
           });
           options = {
-            name: fileOptions.name,
-            description: fileOptions.description,
-            dueDate: fileOptions.dueTime,
-            submitLater: fileOptions.submitLater,
-            submitLaterDate: fileOptions.submitLaterTime,
-            maxFileSize: fileOptions.maxFileSize,
-            allowedFileTypes: fileOptions.allowedFileTypes,
+            name: fileOptions.courseFileSubmissionName,
+            description: fileOptions.courseFileSubmissionDescription,
+            dueDate: fileOptions.courseFileSubmissionDueTimestamp,
+            submitLater: fileOptions.courseFileSubmissionSubmitLater,
+            submitLaterDate: fileOptions.courseFileSubmissionSubmitLaterTimestamp,
+            maxFileSize: fileOptions.courseFileSubmissionMaxFileSize,
+            allowedFileTypes: fileOptions.courseFileSubmissionAllowedFileTypes,
           };
       }
       return options;
@@ -383,10 +386,10 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementUUID: elementUUID,
+            courseElementUUID: elementUUID,
           },
         });
-        return element.elementId;
+        return element.courseElementsCourseElementId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -400,10 +403,10 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementId: elementId,
+            courseElementId: elementId,
           },
         });
-        return element.courseId;
+        return element.courseElementCourseId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -417,10 +420,10 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementId: elementId,
+            courseElementId: elementId,
           },
         });
-        return element.elementUUID;
+        return element.courseElementUUID;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -439,7 +442,7 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementUUID: elementUUID,
+            courseElementUUID: elementUUID,
           },
         });
         return element !== null;
@@ -456,18 +459,26 @@ export class HelperService {
       try {
         const elementId = await prisma.courseElements.create({
           data: {
-            elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
-            typeId: element.typeId,
-            parentId: element.parentId,
-            visible: element.visible,
-            elementOrder: element.elementOrder,
-            personCreationId: element.personCreationId,
-            courseId: element.courseId,
+            courseElementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+            courseElementTypeId: element.typeId,
+            courseElementParentId: element.parentId,
+            courseElementIsVisible: element.visible,
+            courseElementOrder: element.elementOrder,
+            users: {
+              connect: {
+                userId: element.personCreationId,
+              },
+            },
+            courses: {
+              connect: {
+                courseId: element.courseId,
+              },
+            },
           },
         });
         this.createElementOptions(
           element.options,
-          elementId.elementId,
+          elementId.courseElementCourseId,
           element.typeId,
         );
       } catch (err) {
