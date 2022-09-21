@@ -70,7 +70,7 @@ const StyledList = styled(NavigationMenuPrimitive.List, {
 const itemStyles = {
   padding: "8px 12px",
   borderRadius: 4,
-  
+
   fontSize: 15,
   color: "$fontPrimary",
   lineHeight: 1,
@@ -101,7 +101,7 @@ const StyledCaret = styled(CaretDownIcon, {
   top: 1,
 
   color: "$fontPrimary",
-  
+
   "[data-state=open] &": { transform: "rotate(-180deg)" },
   "@media (prefers-reduced-motion: no-preference)": {
     transition: "transform 250ms ease",
@@ -171,7 +171,7 @@ const StyledArrow = styled("div", {
   position: "relative",
   top: "70%",
   transform: "rotate(45deg)",
-  
+
   width: 10,
   height: 10,
   borderTopLeftRadius: 2,
@@ -251,8 +251,7 @@ const ContentList = styled("ul", {
   },
 });
 
-const ListItem = styled("li", {
-});
+const ListItem = styled("li", {});
 
 const LinkTitle = styled("div", {
   marginBottom: 5,
@@ -393,6 +392,12 @@ export const NavigationMenuPart = () => {
               <ContentListItem
                 title="Create course"
                 href="/school/select?redirect=/course/create"
+              >
+                Create a course and start teaching your students.
+              </ContentListItem>
+              <ContentListItem
+                title="Create timetable item"
+                href={`/school/${schoolUUID}/timetable/create`}
               >
                 Create a course and start teaching your students.
               </ContentListItem>

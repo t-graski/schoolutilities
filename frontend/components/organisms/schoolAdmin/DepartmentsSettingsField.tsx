@@ -24,7 +24,6 @@ const SchoolDetailLayout = styled("form", {
   flexDirection: "column",
   gap: "20px",
   justifySelf: "center",
-  marginTop: "12vh",
   width: "100%",
   padding: "40px 60px",
 

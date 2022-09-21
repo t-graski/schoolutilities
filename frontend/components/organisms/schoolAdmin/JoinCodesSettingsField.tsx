@@ -24,7 +24,6 @@ const SchoolDetailLayout = styled("form", {
   justifySelf: "center",
   width: "100%",
   padding: "40px 60px",
-  marginTop: "12vh",
 
   overflowY: "scroll",
 });

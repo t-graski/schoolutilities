@@ -71,15 +71,14 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const ClassesSettingsField: React.FC<Props> = ({
-  queryClient,
-}) => {
+export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
-  const [schoolClassName, setSchoolClassName] = React.useState("");
-  const [schoolClassNameValid, setSchoolClassNameValid] = React.useState(false);
-  const [departmentUUID, setDepartmentUUId] = React.useState("");
-  const [schoolClassId, setSchoolClassId] = React.useState("");
+  const [offDayName, setOffDayName] = React.useState("");
+  const [offDayNameValid, setOffDayNameValid] = React.useState(false);
+  const [startDate, setStartDate] = React.useState("");
+  const [endDate, setEndDate] = React.useState("");
+  const [offDayId, setOffDayId] = React.useState("");
   const [error, setError] = React.useState("");
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
@@ -88,10 +87,6 @@ export const ClassesSettingsField: React.FC<Props> = ({
     ["classes", schoolUUID],
     () => fetchSchoolClasses(schoolUUID)
   );
-  const { data: departments, status: departmentsStatus } = useQuery(
-    ["departments", schoolUUID],
-    () => fetchSchoolDepartments(schoolUUID)
-  );
 
   const addClassMutation = useMutation(addSchoolClass, {
     onMutate: async () => {
@@ -99,10 +94,10 @@ export const ClassesSettingsField: React.FC<Props> = ({
 
       let entry = {
         classUUID: "newEntry",
-        className: schoolClassName,
-        departmentUUID,
+        className: offDayName,
+        departmentUUID: startDate,
         departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
+          (department) => department.departmentUUID === startDate
         ).departmentName,
       };
 
@@ -117,9 +112,9 @@ export const ClassesSettingsField: React.FC<Props> = ({
       let entry = {
         classUUID: newEntry.classUUID,
         className: newEntry.className,
-        departmentUUID,
+        departmentUUID: startDate,
         departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
+          (department) => department.departmentUUID === startDate
         ).departmentName,
       };
 
@@ -143,7 +138,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
       await queryClient.cancelQueries(["classes", schoolUUID]);
 
       queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.classUUID !== schoolClassId)
+        old.filter((currElement) => currElement.classUUID !== offDayId)
       );
     },
     onError: (err: any) => {
@@ -156,9 +151,9 @@ export const ClassesSettingsField: React.FC<Props> = ({
       let entry = {
         classUUID: response.classUUID,
         className: response.className,
-        departmentUUID,
+        departmentUUID: startDate,
         departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
+          (department) => department.departmentUUID === startDate
         ).departmentName,
       };
 
@@ -174,20 +169,20 @@ export const ClassesSettingsField: React.FC<Props> = ({
   });
 
   function savePopUpInput() {
-    if (schoolClassId == "") {
+    if (offDayId == "") {
       addClassMutation.mutate({
         classUUID: "newEntry",
-        className: schoolClassName,
-        departmentUUID,
+        className: offDayName,
+        departmentUUID: startDate,
         departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
+          (department) => department.departmentUUID === startDate
         ).departmentName,
       });
     } else {
       editClassMutation.mutate({
-        classUUID: schoolClassId,
-        className: schoolClassName,
-        departmentUUID,
+        classUUID: offDayId,
+        className: offDayName,
+        departmentUUID: startDate,
       });
     }
     setEditPopUpIsVisible(false);
@@ -198,78 +193,83 @@ export const ClassesSettingsField: React.FC<Props> = ({
       <SchoolDetailLayout>
         {editPopUpIsVisible && (
           <SettingsPopUp
-            headline={schoolClassId == "" ? "Add new class" : "Edit class"}
-            inputValid={schoolClassNameValid}
-            saveLabel={schoolClassId == "" ? "Add" : "Save"}
+            headline={offDayId == "" ? "Add new off day" : "Edit off day"}
+            inputValid={offDayNameValid}
+            saveLabel={offDayId == "" ? "Add" : "Save"}
             saveFunction={savePopUpInput}
             closeFunction={() => {
               setEditPopUpIsVisible(false);
-              setSchoolClassName("");
-              setSchoolClassNameValid(false);
+              setOffDayName("");
+              setOffDayNameValid(false);
             }}
           >
             <StyledInputField>
               <InputField
-                label="Name"
+                label="Off day name"
                 inputType="text"
-                value={schoolClassName}
+                value={offDayName}
                 onChange={(event) => {
-                  setSchoolClassName(event);
+                  setOffDayName(event);
                   if (regex.name.test(event)) {
-                    setSchoolClassNameValid(true);
+                    setOffDayNameValid(true);
                   } else {
-                    setSchoolClassNameValid(false);
+                    setOffDayNameValid(false);
                   }
                 }}
                 regex={regex.schoolName}
-                setValidInput={setSchoolClassNameValid}
+                setValidInput={setOffDayNameValid}
                 min="2"
                 max="30"
               />
               <Spacer size="verySmall" />
-              <Select
-                selectValue={departmentUUID}
-                selectOptions={departments.map((department) => {
-                  return {
-                    value: department.departmentUUID,
-                    label: department.departmentName,
-                  };
-                })}
+              <InputField
+                label="Off day begin"
+                value={startDate}
+                inputType={"date"}
                 onChange={(event) => {
-                  setDepartmentUUId(event);
+                  setStartDate(event);
                 }}
-              ></Select>
+              ></InputField>
+              <Spacer size="verySmall" />
+              <InputField
+                label="Off day end"
+                value={endDate}
+                inputType={"date"}
+                onChange={(event) => {
+                  setEndDate(event);
+                }}
+              ></InputField>
             </StyledInputField>
           </SettingsPopUp>
         )}
         {deletePopUpIsVisible && (
           <SettingsPopUp
-            headline={`Remove ${schoolClassName}`}
+            headline={`Remove ${offDayName}`}
             inputValid={true}
             saveLabel="Confirm"
             saveFunction={() => {
-              deleteClassMutation.mutate(schoolClassId);
+              deleteClassMutation.mutate(offDayId);
               setDeletePopUpIsVisible(false);
             }}
             closeFunction={() => {
               setDeletePopUpIsVisible(false);
-              setSchoolClassName("");
-              setSchoolClassNameValid(false);
+              setOffDayName("");
+              setOffDayNameValid(false);
             }}
           >
             <StyledDeleteText>
               This action can&apos;t be undone and will permanently remove the
-              class {schoolClassName}.
+              class {offDayName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}
         <SettingsHeader
-          headline="Classes"
+          headline="Off Days"
           addFunction={() => {
-            setSchoolClassName("");
-            setSchoolClassId("");
+            setOffDayName("");
+            setOffDayId("");
             setEditPopUpIsVisible(true);
-            setDepartmentUUId(departments[0].departmentUUID);
+            setStartDate("");
           }}
         ></SettingsHeader>
         {error}
@@ -282,15 +282,15 @@ export const ClassesSettingsField: React.FC<Props> = ({
               >
                 <SettingsEntry
                   editFunction={() => {
-                    setSchoolClassName(entry.className);
-                    setSchoolClassId(entry.classUUID);
-                    setDepartmentUUId(entry.departmentUUID);
+                    setOffDayName(entry.className);
+                    setOffDayId(entry.classUUID);
+                    setStartDate(entry.departmentUUID);
                     setEditPopUpIsVisible(true);
-                    setSchoolClassNameValid(true);
+                    setOffDayNameValid(true);
                   }}
                   deleteFunction={() => {
-                    setSchoolClassId(entry.classUUID);
-                    setSchoolClassName(entry.className);
+                    setOffDayId(entry.classUUID);
+                    setOffDayName(entry.className);
                     setDeletePopUpIsVisible(true);
                   }}
                   highlighted={

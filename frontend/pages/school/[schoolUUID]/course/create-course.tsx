@@ -51,7 +51,6 @@ export default function CreateCourse() {
           <title>Course Setup - SchoolUtilities</title>
         </Head>
         <Navbar></Navbar>
-        <Spacer size="small"></Spacer>
         <CreateCourseLayout>
           <CourseCreateProgressSite
             steps={progressSteps}

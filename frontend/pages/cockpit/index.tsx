@@ -49,7 +49,6 @@ export default function Home() {
             content="https://i.imgur.com/KJ63K3r.png"
           ></meta>
         </Head>
-        <Spacer size="medium"></Spacer>
         <Navbar />
         <StyledHeadline>
           You&apos;ve just received some superpowers
