@@ -17,21 +17,31 @@ type Props = {
       id: string;
     }[];
   }[];
+  timeTableRows: number;
+  startTime: string;
 };
 
-const TimeTableColumnGrid = styled("div", {
-  display: "grid",
-  gridTemplateRows: "repeat(111, 1fr)",
-  height: "100%",
-  width: "100%",
-});
+export const TimeTableColumn: React.FC<Props> = ({
+  dayTimeTable,
+  timeTableRows,
+  startTime,
+}) => {
+  const TimeTableColumnGrid = styled("div", {
+    display: "grid",
+    gridTemplateRows: `repeat(${timeTableRows}, 1fr)`,
+    height: "100%",
+    width: "100%",
+  });
 
-export const TimeTableColumn: React.FC<Props> = ({ dayTimeTable }) => {
   return (
     <>
       <TimeTableColumnGrid>
         {dayTimeTable.map((lesson, index) => (
-          <TimeTableItem key={index} item={lesson}></TimeTableItem>
+          <TimeTableItem
+            key={index}
+            item={lesson}
+            startTime={startTime}
+          ></TimeTableItem>
         ))}
       </TimeTableColumnGrid>
     </>

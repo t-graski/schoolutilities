@@ -16,11 +16,12 @@ type Props = {
       id: string;
     }[];
   };
+  startTime: string;
 };
 
-export const TimeTableItem: React.FC<Props> = ({ item }) => {
-  let startPoint = getRowFromTime(item.startTime);
-  let endPoint = getRowFromTime(item.endTime);
+export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
+  let startPoint = getRowFromTime(item.startTime, startTime);
+  let endPoint = getRowFromTime(item.endTime, startTime);
 
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
@@ -66,9 +67,13 @@ export const TimeTableItem: React.FC<Props> = ({ item }) => {
   );
 };
 
-function getRowFromTime(time: string) {
-  let hour = parseInt(time.split(":")[0]) - 8;
-  let minute = parseInt(time.split(":")[1]);
+function getRowFromTime(time: string, startTime: string) {
+  let hour = parseInt(time.split(":")[0]) - parseInt(startTime.split(":")[0]);
+  let minute = parseInt(time.split(":")[1]) - parseInt(startTime.split(":")[1]);
+  if(minute < 0) {
+    hour--;
+    minute = 60 + minute;
+  }
   let row = Math.floor(1 + hour * 12 + minute / 5);
-  return row;
+  return row < 1 ? 1 : row;
 }

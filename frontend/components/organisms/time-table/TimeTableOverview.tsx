@@ -4,6 +4,8 @@ import { styled } from "../../../stitches.config";
 import { TimeTableTime } from "../../molecules/TimeTableTime";
 
 type Props = {
+  startTime: string;
+  endTime: string;
   weekTimeTable?: {
     day: string;
     date: string;
@@ -69,6 +71,8 @@ const TimeTableDayHeaderTitle = styled("span", {});
 const TimeTableDayHeaderDate = styled("span", {});
 
 export const TimeTableOverview: React.FC<Props> = ({
+  startTime,
+  endTime,
   weekTimeTable = [
     {
       day: "Monday",
@@ -400,6 +404,8 @@ export const TimeTableOverview: React.FC<Props> = ({
     zIndex: 1,
   });
 
+  const timeTableRows = calculate5MinuteRows(startTime, endTime);
+
   return (
     <>
       <TimeTableLayout>
@@ -416,7 +422,10 @@ export const TimeTableOverview: React.FC<Props> = ({
           })}
         </TimeTableInformationGrid>
         <TimeTableGrid>
-          <TimeTableTime></TimeTableTime>
+          <TimeTableTime
+            timeTableRows={timeTableRows}
+            startTime={startTime}
+          ></TimeTableTime>
           {weekTimeTable.map((dayTimeTable, index) => {
             return (
               <TimeTableDay key={index}>
@@ -425,6 +434,8 @@ export const TimeTableOverview: React.FC<Props> = ({
                 )}
                 <TimeTableColumn
                   dayTimeTable={dayTimeTable.dayTimeTable}
+                  timeTableRows={timeTableRows}
+                  startTime={startTime}
                 ></TimeTableColumn>
               </TimeTableDay>
             );
@@ -437,7 +448,17 @@ export const TimeTableOverview: React.FC<Props> = ({
 
 function calculateTopDistance(date: Date) {
   return (
-    (date.getHours() - 20 + date.getMinutes() / 60 + date.getSeconds() / 3600) /
+    (date.getHours() - 8 + date.getMinutes() / 60 + date.getSeconds() / 3600) /
     9.25
   );
+}
+
+function calculate5MinuteRows(startTime: string, endTime: string) {
+  const start = startTime.split(":");
+  const end = endTime.split(":");
+
+  const startMinutes = parseInt(start[0]) * 60 + parseInt(start[1]);
+  const endMinutes = parseInt(end[0]) * 60 + parseInt(end[1]);
+
+  return (endMinutes - startMinutes) / 5;
 }
