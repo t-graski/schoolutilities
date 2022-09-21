@@ -22,6 +22,7 @@ const NavbarLayout = styled("div", {
   alignItems: "center",
   width: "100vw",
   padding: "0 50px",
+  height: "11vh",
 
   color: "$fontPrimary",
 });

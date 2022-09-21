@@ -272,6 +272,11 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={`/school/${currentSchool}/timetable`} passHref>
+                  <StyledLink>Timetable</StyledLink>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenu>
                 <DropdownMenuTriggerItem>
                   <Link href={`/school/${currentSchool}/course`} passHref>
