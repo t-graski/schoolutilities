@@ -96,7 +96,6 @@ model courses {
   schools                    schools                      @relation(fields: [courseSchoolId], references: [schoolId], onUpdate: Restrict, map: "fk_courses_school_id")
   schoolSubjects             schoolSubjects               @relation(fields: [courseSubjectId], references: [schoolSubjectId])
   courseClasses              courseClasses[]
-  courseElementTextSettings  courseElementTextSettings[]
   courseElements             courseElements[]
   courseFileSubmissionGrades courseFileSubmissionGrades[]
   courseUsers                courseUsers[]
@@ -157,6 +156,7 @@ model courseElements {
   courseElementHeadlineSettings  courseElementHeadlineSettings[]
   courseFileSubmissionSettings   courseFileSubmissionSettings[]
   courseFileSubmissions          courseFileSubmissions[]
+  courseElementTextSettings      courseElementTextSettings[]
 
   @@unique([courseElementUUID], map: "course_element_uuid_UNIQUE")
   @@index([courseElementCourseId], map: "fk_course_elements_course_id")
@@ -193,10 +193,10 @@ model courseElementHeadlineSettings {
 }
 
 model courseElementTextSettings {
-  courseElementTextSettingId Int     @id @default(autoincrement()) @map("course_element_text_setting_id")
-  courseElementId            Int     @map("course_element_id")
-  courseElementTextText      String  @map("course_element_text_text") @db.Text
-  courses                    courses @relation(fields: [courseElementId], references: [courseId])
+  courseElementTextSettingId Int            @id @default(autoincrement()) @map("course_element_text_setting_id")
+  courseElementId            Int            @map("course_element_id")
+  courseElementTextText      String         @map("course_element_text_text") @db.Text
+  courses                    courseElements @relation(fields: [courseElementId], references: [courseElementId])
 
   @@index([courseElementId], map: "fk_course_element_text_setting_course_element_id")
   @@map("course_element_text_settings")

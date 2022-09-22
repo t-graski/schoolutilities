@@ -1,22 +1,25 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateCourse, ReturnMessage } from 'src/types/Course';
-import { PrismaClient } from '@prisma/client';
-import validator from 'validator';
+import * as fs from 'fs';
+import * as moment from 'moment';
+
+import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import {
-  RETURN_DATA,
-  ID_STARTERS,
   ERROR_CODES,
+  ID_STARTERS,
+  RETURN_DATA,
 } from 'src/misc/parameterConstants';
-import { v4 as uuidv4 } from 'uuid';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ReturnMessage, UpdateCourse } from 'src/types/Course';
+
+import { AddCourseDto } from 'src/dto/addCourse';
 import { AuthService } from 'src/auth/auth.service';
+import { CourseDto } from 'src/dto/course';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
-import * as moment from 'moment';
-import { CourseDto } from 'src/dto/course';
-import { CourseEvent, GetEventsDto } from 'src/dto/events';
-import { AddCourseDto } from 'src/dto/addCourse';
+import { PrismaClient } from '@prisma/client';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
-import * as fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
+
 let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -902,27 +905,35 @@ export class CourseService {
         }
       } else {
         let parentId = 0;
-        let courseElement = {
-          elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
-          courseId: Number(courseId),
-          typeId: Number(element.options.type),
-          parentId: element.parentUUID
-            ? await this.helper.getElementIdByUUID(element.parentUUID)
-            : 0,
-          visible: Boolean(element.options.visible),
-          elementOrder: element.elementOrder,
-          personCreationId: Number(userId),
-        };
 
         let createdElement = await prisma.courseElements.create({
-          data: courseElement,
+          data: {
+            courseElementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+            courses: {
+              connect: {
+                courseId: Number(courseId),
+              },
+            },
+            courseElementTypeId: Number(element.options.type),
+            courseElementParentId: element.parentUUID
+              ? await this.helper.getElementIdByUUID(element.parentUUID)
+              : 0,
+            courseElementIsVisible: Boolean(element.options.visible),
+            courseElementOrder: element.elementOrder,
+            courseElementWeight: 0,
+            users: {
+              connect: {
+                userId: Number(userId),
+              },
+            },
+          }
         });
 
-        parentId = createdElement.elementId;
+        parentId = createdElement.courseElementId;
 
         await this.helper.createElementOptions(
           element.options,
-          createdElement.elementId,
+          createdElement.courseElementId,
           Number(element.options.type),
         );
 
@@ -931,11 +942,11 @@ export class CourseService {
             if (child.elementUUID) {
               if (await this.helper.elementExists(child.elementUUID)) {
                 let currentChild = {
-                  elementUUID: child.elementUUID,
-                  elementId: await this.helper.getElementIdByUUID(
+                  courseElementUUID: child.elementUUID,
+                  courseElementId: await this.helper.getElementIdByUUID(
                     child.elementUUID,
                   ),
-                  parentId: createdElement.elementId,
+                  parentId: createdElement.courseElementId,
                   elementOrder: child.elementOrder,
                   elementOptions: child.options,
                 };
@@ -964,7 +975,7 @@ export class CourseService {
                 if (updateNeeded) {
                   await prisma.courseElements.update({
                     where: {
-                      elementId: Number(currentChild.elementId),
+                      courseElementId: Number(currentChild.courseElementId),
                     },
                     data: currentChild,
                   });
@@ -972,28 +983,45 @@ export class CourseService {
 
                 await this.helper.updateElementOptions(
                   currentChild.elementOptions,
-                  currentChild.elementId,
+                  currentChild.courseElementId,
                   Number(currentChild.elementOptions.type),
                 );
               }
             } else {
               let courseElement = {
-                elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+                courseElementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
                 courseId: Number(courseId),
-                typeId: Number(child.options.type),
-                parentId: parentId,
-                visible: Boolean(child.options.visible),
-                elementOrder: child.elementOrder,
-                personCreationId: Number(userId),
+                courseElementTypeId: Number(child.options.type),
+                courseElementParentId: parentId,
+                courseElementIsVisible: Boolean(child.options.visible),
+                courseElementOrder: child.elementOrder,
+                courseElementCreatorId: Number(userId),
               };
 
               let createdElement = await prisma.courseElements.create({
-                data: courseElement,
+                data: {
+                  courseElementUUID: courseElement.courseElementUUID,
+                  courses: {
+                    connect: {
+                      courseId: courseElement.courseId,
+                    },
+                  },
+                  courseElementTypeId: courseElement.courseElementTypeId,
+                  courseElementParentId: courseElement.courseElementParentId,
+                  courseElementIsVisible: courseElement.courseElementIsVisible,
+                  courseElementOrder: courseElement.courseElementOrder,
+                  courseElementWeight: 0,
+                  users: {
+                    connect: {
+                      userId: courseElement.courseElementCreatorId,
+                    },
+                  },
+                }
               });
 
               await this.helper.createElementOptions(
                 child.options,
-                createdElement.elementId,
+                createdElement.courseElementCourseId,
                 Number(child.options.type),
               );
             }
@@ -1010,39 +1038,38 @@ export class CourseService {
 
     const currentElements = await prisma.courseElements.findMany({
       where: {
-        courseId: Number(courseId),
+        courseElementCourseId: Number(courseId),
       },
       select: {
-        elementId: true,
-        elementUUID: true,
-        typeId: true,
-        parentId: true,
-        visible: true,
-        creationDate: true,
-        personCreationId: true,
+        courseElementId: true,
+        courseElementUUID: true,
+        courseElementTypeId: true,
+        courseElementParentId: true,
+        courseElementIsVisible: true,
+        courseElementCreatorId: true,
       },
     });
 
     const elementsWithOptions = [];
 
     for (const element of currentElements) {
-      if (element.elementUUID) {
+      if (element.courseElementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId,
-          element.typeId,
+          element.courseElementId,
+          element.courseElementTypeId,
         );
 
         let parentUUID = '0';
-        if (element.parentId != 0) {
-          parentUUID = await this.helper.getElementUUIDById(element.parentId);
+        if (element.courseElementParentId != 0) {
+          parentUUID = await this.helper.getElementUUIDById(element.courseElementParentId);
         }
 
         elementsWithOptions.push({
-          elementUUID: element.elementUUID,
+          elementUUID: element.courseElementUUID,
           parentUUID: parentUUID,
           options: {
-            type: Number(element.typeId),
-            visible: Boolean(element.visible),
+            type: Number(element.courseElementTypeId),
+            visible: Boolean(element.courseElementIsVisible),
             ...elementOptions,
           },
         });
@@ -1091,49 +1118,24 @@ export class CourseService {
 
     const settings = await prisma.courseElements.findFirst({
       where: {
-        elementId: elementId,
+        courseElementId: elementId,
       },
-      select: {
-        personCreationId: true,
-        elementUUID: true,
-        creationDate: true,
-        visible: true,
-        courseId: true,
-        typeId: true,
-        course: {
-          select: {
-            courseUUID: true,
-          },
-        },
-        fileSubmissionSettings: {
-          select: {
-            name: true,
-            description: true,
-            dueTime: true,
-            submitLater: true,
-            submitLaterTime: true,
-            maxFileSize: true,
-            allowedFileTypes: true,
-          },
-        },
-        textSettings: {
-          select: {
-            text: true,
-          },
-        },
-      },
+      include: {
+        courseFileSubmissionSettings: true,
+        courseElementTextSettings: true,
+      }
     });
 
-    const creator = await this.helper.getUserById(settings.personCreationId);
+    const creator = await this.helper.getUserById(settings.courseElementCreatorId);
     const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
       userId,
       schoolId,
     );
 
-    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+    const hasSubmitted = await prisma.courseFileSubmissions.findFirst({
       where: {
-        courseElementId: Number(elementId),
-        personId: Number(userId),
+        courseFileSubmissionElementId: Number(elementId),
+        userId: Number(userId),
       },
     });
 
