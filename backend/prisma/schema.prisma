@@ -163,7 +163,6 @@ model courseElements {
   courseFileSubmissions          courseFileSubmissions[]
   coursesCourseId                Int
   usersUserId                    Int
-  courseElementsCourseElementId  Int
 
   @@index([courseElementCourseId], map: "fk_course_elements_course_id")
   @@index([courseElementCreatorId], map: "fk_course_elements_creator_id")
