@@ -321,6 +321,7 @@ model schoolUserRoles {
   users        users       @relation(fields: [userId], references: [userId])
 
   @@id([userId, schoolRoleId, schoolId])
+  @@unique([userId, schoolId], name: "user_school_unique", map: "userSchoolUnique")
   @@index([schoolId], map: "fk_school_user_role_school_id")
   @@index([schoolRoleId], map: "fk_school_user_school_role_id")
   @@index([userId], map: "fk_school_user_role_user_id")
@@ -370,7 +371,7 @@ model userEmailChangeTokens {
 model userLoginTokens {
   userLoginTokenId                Int      @id @default(autoincrement()) @map("user_login_token_id")
   userId                          Int      @map("user_id")
-  refreshToken                    Int      @map("refresh_token") @db.Int
+  refreshToken                    String   @map("refresh_token")
   userLoginTokenCreationTimestamp DateTime @default(now()) @map("user_login_token_creation_timestamp") @db.Timestamp(0)
   userLoginTokenExpireTimestamp   DateTime @default(now()) @map("user_login_token_expire_timestamp") @db.Timestamp(0)
   users                           users    @relation(fields: [userId], references: [userId])

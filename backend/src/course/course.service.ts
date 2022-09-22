@@ -3,7 +3,6 @@ import { UpdateCourse, ReturnMessage } from 'src/types/Course';
 import { PrismaClient } from '@prisma/client';
 import validator from 'validator';
 import {
-  LENGTHS,
   RETURN_DATA,
   ID_STARTERS,
   ERROR_CODES,
@@ -48,7 +47,7 @@ export class CourseService {
       };
     }
 
-    const [schoolId, personId] = await Promise.all([
+    const [schoolId, userId] = await Promise.all([
       this.helper.getSchoolIdByUUID(schoolUUID),
       this.helper.getUserIdByUUID(personUUID),
     ]);
@@ -57,14 +56,26 @@ export class CourseService {
       const courseData = await prisma.courses.create({
         data: {
           courseUUID: `${ID_STARTERS.COURSE}${uuidv4()}`,
-          name,
+          courseName: name,
           courseDescription,
-          schoolId: Number(schoolId),
-          subjectId: 0,
-          personCreationId: Number(personId),
-          coursePersons: {
+          schools: {
+            connect: {
+              schoolId: Number(schoolId),
+            }
+          },
+          schoolSubjects: {
+            connect: {
+              schoolSubjectId: Number(1),
+            }
+          },
+          users: {
+            connect: {
+              userId: Number(userId),
+            }
+          },
+          courseUsers: {
             create: {
-              personId,
+              userId,
             },
           },
         },
@@ -78,18 +89,18 @@ export class CourseService {
 
           const personId = await (
             await this.authService.getPersonIdByUUID(person)
-          ).personId;
+          ).userId;
 
-          await prisma.coursePersons.create({
+          await prisma.courseUsers.create({
             data: {
               courses: {
                 connect: {
                   courseId: Number(courseData.courseId),
                 },
               },
-              persons: {
+              users: {
                 connect: {
-                  personId: Number(personId),
+                  userId: Number(personId),
                 },
               },
             },
@@ -112,7 +123,7 @@ export class CourseService {
               },
               schoolClasses: {
                 connect: {
-                  classId: Number(schoolId),
+                  schoolClassId: Number(schoolId),
                 },
               },
             },
@@ -121,9 +132,9 @@ export class CourseService {
       }
 
       delete courseData.courseId;
-      delete courseData.schoolId;
-      delete courseData.subjectId;
-      delete courseData.personCreationId;
+      delete courseData.courseSchoolId;
+      delete courseData.courseSubjectId;
+      delete courseData.courseCreatorId;
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -159,7 +170,7 @@ export class CourseService {
         },
         select: {
           courseId: true,
-          name: true,
+          courseName: true,
         },
       });
     } catch (err) {
@@ -193,9 +204,9 @@ export class CourseService {
     const patchCourse = await prisma.courses.update({
       where: { courseId: Number(courseId) },
       data: {
-        name: courseName,
+        courseName: courseName,
         courseDescription: courseDescription,
-        subjectId: Number(subjectId),
+        courseSubjectId: Number(subjectId),
       },
     });
 
@@ -212,16 +223,16 @@ export class CourseService {
         const userId = await this.helper.getUserIdByUUID(user);
 
         if (!courseUsersIds.includes(userId)) {
-          await prisma.coursePersons.create({
+          await prisma.courseUsers.create({
             data: {
               courses: {
                 connect: {
                   courseId: Number(courseId),
                 },
               },
-              persons: {
+              users: {
                 connect: {
-                  personId: Number(userId),
+                  userId,
                 },
               },
             },
@@ -229,11 +240,11 @@ export class CourseService {
         }
 
         if (courseUsersIds.includes(userId) && !persons.includes(user)) {
-          await prisma.coursePersons.delete({
+          await prisma.courseUsers.delete({
             where: {
-              coursePersonId: {
+              courseId_userId: {
                 courseId: Number(courseId),
-                personId: Number(userId),
+                userId,
               },
             },
           });
@@ -264,7 +275,7 @@ export class CourseService {
               },
               schoolClasses: {
                 connect: {
-                  classId: Number(classId),
+                  schoolClassId: Number(classId),
                 },
               },
             },
@@ -277,7 +288,7 @@ export class CourseService {
         ) {
           await prisma.courseClasses.delete({
             where: {
-              courseClassId: {
+              courseId_classId: {
                 courseId: Number(courseId),
                 classId: Number(classId),
               },
@@ -290,11 +301,11 @@ export class CourseService {
     delete patchCourse.courseId;
 
     const schoolUUID = await this.helper.getSchoolUUIDById(
-      patchCourse.schoolId,
+      patchCourse.courseSchoolId,
     );
 
     const personCreationUUID = await this.helper.getUserUUIDById(
-      patchCourse.personCreationId,
+      patchCourse.courseCreatorId,
     );
 
     if (patchCourse) {
@@ -302,10 +313,10 @@ export class CourseService {
         status: HttpStatus.OK,
         data: {
           courseUUID: patchCourse.courseUUID,
-          name: patchCourse.name,
+          courseName: patchCourse.courseName,
           courseDescription: patchCourse.courseDescription,
           schoolUUID: schoolUUID,
-          creationDate: patchCourse.creationDate,
+          courseCreationTimestamp: patchCourse.courseCreationTimestamp,
           personCreationUUID: personCreationUUID,
         },
       };
@@ -343,11 +354,11 @@ export class CourseService {
     const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
 
     if (isTeacher || isAdmin) {
-      const courseUser = await prisma.coursePersons.findUnique({
+      const courseUser = await prisma.courseUsers.findUnique({
         where: {
-          coursePersonId: {
+          courseId_userId: {
             courseId: Number(courseId),
-            personId: Number(userId),
+            userId,
           },
         },
       });
@@ -359,11 +370,11 @@ export class CourseService {
         };
       }
 
-      const deleteCourseUser = await prisma.coursePersons.delete({
+      const deleteCourseUser = await prisma.courseUsers.delete({
         where: {
-          coursePersonId: {
+          courseId_userId: {
             courseId: Number(courseId),
-            personId: Number(userId),
+            userId,
           },
         },
       });
@@ -412,11 +423,11 @@ export class CourseService {
     const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
 
     if (isTeacher || isAdmin) {
-      const courseUser = await prisma.coursePersons.findUnique({
+      const courseUser = await prisma.courseUsers.findUnique({
         where: {
-          coursePersonId: {
+          courseId_userId: {
             courseId: Number(courseId),
-            personId: Number(userId),
+            userId,
           },
         },
       });
@@ -429,10 +440,10 @@ export class CourseService {
       }
 
       try {
-        await prisma.coursePersons.create({
+        await prisma.courseUsers.create({
           data: {
             courseId: Number(courseId),
-            personId: Number(userId),
+            userId: Number(userId),
           },
         });
       } catch (err) {
@@ -475,41 +486,41 @@ export class CourseService {
     try {
       const courses = await prisma.courses.findMany({
         where: {
-          schoolId: Number(schoolId),
+          courseSchoolId: Number(schoolId),
         },
         select: {
           courseId: true,
           courseUUID: true,
-          name: true,
+          courseName: true,
           courseDescription: true,
-          schoolId: true,
-          creationDate: true,
-          personCreationId: true,
+          courseSchoolId: true,
+          courseCreationTimestamp: true,
+          courseCreatorId: true,
         },
       });
 
       for (let course of courses) {
-        const creator = await prisma.persons.findUnique({
+        const creator = await prisma.users.findUnique({
           where: {
-            personId: Number(course.personCreationId),
+            userId: Number(course.courseCreatorId),
           },
           select: {
-            personUUID: true,
-            firstName: true,
-            lastName: true,
+            userUUID: true,
+            userFirstname: true,
+            userLastname: true,
           },
         });
 
         const courseDataItem = {
           courseUUID: course.courseUUID,
-          courseName: course.name,
+          courseName: course.courseName,
           courseDescription: course.courseDescription,
-          creationDate: course.creationDate,
+          courseCreationTimestamp: course.courseCreationTimestamp,
           canEdit: isTeacherOrHigher,
           creator: {
-            personUUID: creator.personUUID,
-            firstName: creator.firstName,
-            lastName: creator.lastName,
+            userUUID: creator.userUUID,
+            firstName: creator.userFirstname,
+            lastName: creator.userLastname,
           },
         };
         if (await this.helper.userIsInCourse(personId, course.courseId)) {
@@ -554,48 +565,48 @@ export class CourseService {
         },
         select: {
           courseUUID: true,
-          name: true,
+          courseName: true,
           courseDescription: true,
-          schoolId: true,
-          creationDate: true,
-          personCreationId: true,
+          courseSchoolId: true,
+          courseCreationTimestamp: true,
+          courseCreatorId: true,
         },
       });
 
       if (!(await this.helper.userIsInCourse(personId, courseId)))
         return RETURN_DATA.FORBIDDEN;
 
-      const creator = await prisma.persons.findUnique({
+      const creator = await prisma.users.findUnique({
         where: {
-          personId: Number(course.personCreationId),
+          userId: Number(course.courseCreatorId),
         },
         select: {
-          personUUID: true,
-          firstName: true,
-          lastName: true,
+          userUUID: true,
+          userFirstname: true,
+          userLastname: true,
         },
       });
 
-      const persons = await prisma.coursePersons.findMany({
+      const persons = await prisma.courseUsers.findMany({
         where: {
           courseId: Number(courseId),
         },
         select: {
-          personId: true,
+          userId: true,
         },
       });
 
       const personsData = [];
 
       for (let person of persons) {
-        const personData = await prisma.persons.findUnique({
+        const personData = await prisma.users.findUnique({
           where: {
-            personId: Number(person.personId),
+            userId: Number(person.userId),
           },
           select: {
-            personUUID: true,
-            firstName: true,
-            lastName: true,
+            userUUID: true,
+            userFirstname: true,
+            userLastname: true,
           },
         });
         personsData.push(personData);
@@ -616,11 +627,11 @@ export class CourseService {
         for (let schoolClass of classes) {
           const classData = await prisma.schoolClasses.findUnique({
             where: {
-              classId: Number(schoolClass.classId),
+              schoolClassId: Number(schoolClass.classId),
             },
             select: {
-              classUUID: true,
-              className: true,
+              schoolClassUUID: true,
+              schoolClassName: true,
             },
           });
           classesData.push(classData);
@@ -629,13 +640,13 @@ export class CourseService {
 
       const courseDataItem = {
         courseUUID: course.courseUUID,
-        courseName: course.name,
+        courseName: course.courseName,
         courseDescription: course.courseDescription,
-        creationDate: course.creationDate,
+        courseCreationTimestamp: course.courseCreationTimestamp,
         creator: {
-          personUUID: creator.personUUID,
-          firstName: creator.firstName,
-          lastName: creator.lastName,
+          userUUID: creator.userUUID,
+          firstName: creator.userFirstname,
+          lastName: creator.userLastname,
         },
         persons: personsData,
         classes: classesData,
@@ -694,39 +705,39 @@ export class CourseService {
 
     const currentElements = await prisma.courseElements.findMany({
       where: {
-        courseId: Number(courseId),
+        courseElementCourseId: Number(courseId),
       },
       select: {
-        elementId: true,
-        elementUUID: true,
-        typeId: true,
-        parentId: true,
-        visible: true,
-        elementOrder: true,
-        creationDate: true,
-        personCreationId: true,
+        courseElementId: true,
+        courseElementUUID: true,
+        courseElementTypeId: true,
+        courseElementParentId: true,
+        courseElementIsVisible: true,
+        courseElementOrder: true,
+        courseElementCreationTimestamp: true,
+        courseElementCreatorId: true,
       },
     });
 
     const elementsWithOptions = [];
 
     for (let element of currentElements) {
-      if (element.elementUUID) {
+      if (element.courseElementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId,
-          element.typeId,
+          element.courseElementId,
+          element.courseElementTypeId,
         );
 
         elementsWithOptions.push({
-          elementUUID: element.elementUUID,
-          elementId: element.elementId,
-          parentId: element.parentId,
-          elementOrder: element.elementOrder,
-          creationDate: element.creationDate,
-          personCreationId: element.personCreationId,
+          courseElementUUID: element.courseElementUUID,
+          courseElementId: element.courseElementId,
+          courseElementParentId: element.courseElementParentId,
+          courseElementOrder: element.courseElementOrder,
+          courseElementCreationTimestamp: element.courseElementCreationTimestamp,
+          courseElementCreatorId: element.courseElementCreatorId,
           elementOptions: {
-            type: element.typeId.toString(),
-            visible: element.visible.toString(),
+            type: element.courseElementTypeId.toString(),
+            visible: element.courseElementIsVisible.toString(),
             ...elementOptions,
           },
         });
@@ -773,12 +784,12 @@ export class CourseService {
             if (updateNeeded) {
               const elementUpdate = await prisma.courseElements.update({
                 where: {
-                  elementId: Number(currentElement.elementId),
+                  courseElementId: Number(currentElement.elementId),
                 },
                 data: {
-                  parentId: Number(currentElement.parentId),
-                  visible: Boolean(currentElement.elementOptions.visible),
-                  elementOrder: Number(currentElement.elementOrder),
+                  courseElementParentId: Number(currentElement.parentId),
+                  courseElementIsVisible: Boolean(currentElement.elementOptions.visible),
+                  courseElementOrder: Number(currentElement.elementOrder),
                 },
               });
 
@@ -828,12 +839,12 @@ export class CourseService {
                     if (updateNeeded) {
                       await prisma.courseElements.update({
                         where: {
-                          elementId: Number(currentChild.elementId),
+                          courseElementId: Number(currentChild.elementId),
                         },
                         data: {
-                          parentId: Number(currentChild.parentId),
-                          visible: Boolean(currentChild.elementOptions.visible),
-                          elementOrder: Number(currentChild.elementOrder),
+                          courseElementParentId: Number(currentChild.parentId),
+                          courseElementIsVisible: Boolean(currentChild.elementOptions.visible),
+                          courseElementOrder: Number(currentChild.elementOrder),
                         },
                       });
 
@@ -858,12 +869,29 @@ export class CourseService {
                   };
 
                   let createdElement = await prisma.courseElements.create({
-                    data: courseElement,
+                    data: {
+                      courseElementUUID: courseElement.elementUUID,
+                      courses: {
+                        connect: {
+                          courseId: courseElement.courseId,
+                        },
+                      },
+                      courseElementTypeId: courseElement.typeId,
+                      courseElementParentId: courseElement.parentId,
+                      courseElementIsVisible: courseElement.visible,
+                      courseElementOrder: courseElement.elementOrder,
+                      courseElementWeight: 0,
+                      users: {
+                        connect: {
+                          userId: courseElement.personCreationId,
+                        },
+                      },
+                    }
                   });
 
                   await this.helper.createElementOptions(
                     child.options,
-                    createdElement.elementId,
+                    createdElement.courseElementId,
                     Number(child.options.type),
                   );
                   return RETURN_DATA.SUCCESS;

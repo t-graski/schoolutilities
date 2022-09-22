@@ -60,7 +60,11 @@ export class RefreshTokenService {
   async insertRefreshToken(refreshToken: string, personId: number) {
     return await prisma.userLoginTokens.create({
       data: {
-        personId,
+        users: {
+          connect: {
+            userId: personId,
+          },
+        },
         refreshToken,
       },
     });
@@ -79,7 +83,7 @@ export class RefreshTokenService {
   // }
 
   async deleteRefreshToken(refreshToken: string) {
-    return await prisma.loginTokens.deleteMany({
+    return await prisma.userLoginTokens.deleteMany({
       where: {
         refreshToken,
       },
