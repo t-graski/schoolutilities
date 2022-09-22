@@ -11,12 +11,12 @@ export class AssetsService {
 
   async getFileName(fileUUID: string): Promise<any> {
     try {
-      const file = await prisma.fileSubmissions.findFirst({
+      const file = await prisma.courseFileSubmissions.findFirst({
         where: {
-          fileName: fileUUID,
+          courseFileSubmissionFileName: fileUUID,
         }
       })
-      return file.originalName;
+      return file.courseFileSubmissionOriginalName;
     } catch {
       return null;
     }

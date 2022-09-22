@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 @Injectable()
 export class RefreshTokenService {
   connection: any;
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   // async getTokenData1(refreshToken: string, personId): Promise<DatabaseUpdate> {
   //   return new Promise((resolve, reject) => {
@@ -25,21 +25,21 @@ export class RefreshTokenService {
   // }
 
   async getTokenData(refreshToken: string, personUUID: string) {
-    return await prisma.loginTokens.findFirst({
+    return await prisma.userLoginTokens.findFirst({
       where: {
         refreshToken,
-        personId: await this.getPersonId(personUUID),
+        userId: await this.getPersonId(personUUID),
       },
     });
   }
 
   async getPersonId(personUUID: string): Promise<number> {
-    const person = await prisma.persons.findFirst({
+    const person = await prisma.users.findFirst({
       where: {
-        personUUID,
+        userUUID: personUUID,
       },
     });
-    return person.personId;
+    return person.userId;
   }
 
   // async insertRefreshToken(
@@ -58,7 +58,7 @@ export class RefreshTokenService {
   // }
 
   async insertRefreshToken(refreshToken: string, personId: number) {
-    return await prisma.loginTokens.create({
+    return await prisma.userLoginTokens.create({
       data: {
         personId,
         refreshToken,

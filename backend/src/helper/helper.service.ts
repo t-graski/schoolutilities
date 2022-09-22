@@ -355,7 +355,7 @@ export class HelperService {
         case 3:
           let fileOptions = await prisma.courseFileSubmissionSettings.findFirst({
             where: {
-              courseElementsCourseElementId: Number(elementId),
+              courseFileSubmissionElementId: Number(elementId),
             },
           });
           options = {
@@ -384,7 +384,7 @@ export class HelperService {
             courseElementUUID: elementUUID,
           },
         });
-        return element.courseElementsCourseElementId;
+        return element.courseElementId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -458,8 +458,8 @@ export class HelperService {
             courseElementTypeId: element.typeId,
             courseElementParentId: element.parentId,
             courseElementIsVisible: element.visible,
-            courseElementOrder: element.elementOrder,
             courseElementWeight: 0,
+            courseElementOrder: element.elementOrder,
             users: {
               connect: {
                 userId: element.personCreationId,
@@ -472,6 +472,7 @@ export class HelperService {
             },
           },
         });
+
         this.createElementOptions(
           element.options,
           elementId.courseElementCourseId,
@@ -495,39 +496,39 @@ export class HelperService {
         switch (typeId) {
           //HEADLINE
           case 1:
-            await prisma.headlineSettings.update({
+            await prisma.courseElementHeadlineSettings.update({
               where: {
-                courseElementId: elementId,
+                courseElementHeadlineId: elementId,
               },
               data: {
-                label: options.label,
+                courseElementHeadlineLabel: options.label,
               },
             });
             break;
           //TEXT
           case 2:
-            await prisma.textSettings.update({
+            await prisma.courseElementTextSettings.update({
               where: {
-                courseElementId: elementId,
+                courseElementTextSettingId: elementId,
               },
               data: {
-                text: options.text,
+                courseElementTextText: options.text,
               },
             });
             break;
           // FILE SUBMISSION
           case 3:
-            await prisma.fileSubmissionSettings.update({
+            await prisma.courseFileSubmissionSettings.update({
               where: {
-                courseElementId: elementId,
+                courseFileSubmissionSettingId: elementId,
               },
               data: {
-                name: options.name,
-                description: options.description,
-                dueTime: options.dueTime,
-                submitLater: options.submitLater,
-                submitLaterTime: options.submitLaterTime,
-                maxFileSize: options.maxFileSize,
+                courseFileSubmissionName: options.name,
+                courseFileSubmissionDescription: options.description,
+                courseFileSubmissionDueTimestamp: options.dueTime,
+                courseFileSubmissionSubmitLater: options.submitLater,
+                courseFileSubmissionSubmitLaterTimestamp: options.submitLaterTime,
+                courseFileSubmissionMaxFileSize: options.maxFileSize,
               },
             });
             break;
@@ -556,34 +557,34 @@ export class HelperService {
         switch (typeId) {
           //HEADLINE
           case 1:
-            await prisma.headlineSettings.create({
+            await prisma.courseElementHeadlineSettings.create({
               data: {
-                label: options.label,
-                courseElementId: elementId,
+                courseElementHeadlineLabel: options.label,
+                courseElementHeadlineElementId: elementId,
               },
             });
             break;
           //TEXT
           case 2:
-            await prisma.textSettings.create({
+            await prisma.courseElementTextSettings.create({
               data: {
-                text: options.text,
+                courseElementTextText: options.text,
                 courseElementId: elementId,
               },
             });
             break;
           // FILE SUBMISSION
           case 3:
-            await prisma.fileSubmissionSettings.create({
+            await prisma.courseFileSubmissionSettings.create({
               data: {
-                courseElementId: elementId,
-                name: options.name,
-                description: options.description,
-                dueTime: options.dueTime,
-                submitLater: options.submitLater,
-                submitLaterTime: options.submitLaterTime,
-                maxFileSize: options.maxFileSize,
-                allowedFileTypes: options.allowedFileTypes,
+                courseFileSubmissionElementId: elementId,
+                courseFileSubmissionName: options.name,
+                courseFileSubmissionDescription: options.description,
+                courseFileSubmissionDueTimestamp: options.dueTime,
+                courseFileSubmissionSubmitLater: options.submitLater,
+                courseFileSubmissionSubmitLaterTimestamp: options.submitLaterTime,
+                courseFileSubmissionMaxFileSize: options.maxFileSize,
+                courseFileSubmissionAllowedFileTypes: options.allowedFileTypes,
               },
             });
         }
@@ -602,7 +603,7 @@ export class HelperService {
       try {
         await prisma.courseElements.delete({
           where: {
-            elementId: elementId,
+            courseElementId: elementId,
           },
         });
         await this.deleteElementOptions(elementId, Number(typeId));
@@ -620,25 +621,25 @@ export class HelperService {
         switch (typeId) {
           //HEADLINE
           case 1:
-            await prisma.headlineSettings.delete({
+            await prisma.courseElementHeadlineSettings.delete({
               where: {
-                courseElementId: elementId,
+                courseElementHeadlineId: elementId,
               },
             });
             break;
           //TEXT
           case 2:
-            await prisma.textSettings.delete({
+            await prisma.courseElementTextSettings.delete({
               where: {
-                courseElementId: elementId,
+                courseElementTextSettingId: elementId,
               },
             });
             break;
           // FILE SUBMISSION
           case 3:
-            await prisma.fileSubmissionSettings.delete({
+            await prisma.courseFileSubmissionSettings.delete({
               where: {
-                courseElementId: elementId,
+                courseFileSubmissionSettingId: elementId,
               },
             });
         }
@@ -655,10 +656,10 @@ export class HelperService {
       try {
         const classId = await prisma.schoolClasses.findFirst({
           where: {
-            classUUID: classUUID,
+            schoolClassUUID: classUUID,
           },
         });
-        return classId.classId;
+        return classId.schoolClassId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -670,10 +671,10 @@ export class HelperService {
   async userIsInCourse(userId: number, courseId: number): Promise<any> {
     if (userId && courseId) {
       try {
-        const userInCourse = await prisma.coursePersons.findFirst({
+        const userInCourse = await prisma.courseUsers.findFirst({
           where: {
-            personId: userId,
-            courseId: courseId,
+            userId,
+            courseId,
           },
         });
         return userInCourse !== null;
@@ -726,23 +727,23 @@ export class HelperService {
       };
 
       try {
-        const personSettings = await prisma.personSettings.findFirst({
+        const personSettings = await prisma.userSettings.findFirst({
           where: {
-            personId,
+            userId: personId,
           },
         });
 
         if (personSettings) {
-          await prisma.personSettings.update({
+          await prisma.userSettings.update({
             where: {
-              personId,
+              userId: personId,
             },
             data: defaultSettings,
           });
         } else {
-          await prisma.personSettings.create({
+          await prisma.userSettings.create({
             data: {
-              personId,
+              userId: personId,
               ...defaultSettings,
             },
           });

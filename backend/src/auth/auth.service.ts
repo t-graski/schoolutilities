@@ -6,16 +6,12 @@ import { MailService } from 'src/mail/mail.service';
 import {
   LoginUserData,
   RegisterUserData,
-  UserData,
-  UserRole,
-  UserRoleData,
 } from 'src/types/User';
 import { jwtConstants } from './constants';
 import { RefreshTokenService } from './refreshToken/refreshToken.service';
 import { PrismaClient } from '@prisma/client';
 import { RETURN_DATA } from 'src/misc/parameterConstants';
 import { Role } from 'src/roles/role.enum';
-import { DecodedJWT } from 'src/types/SchoolAdmin';
 import { HelperService } from 'src/helper/helper.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -51,12 +47,10 @@ export class AuthService {
     const requesterRoles = await this.helper.getUserRoleBySchool(requesterId, schoolId);
     const required = [1, 2];
     if (required.includes(requesterRoles) || (requesterId == userId)) {
-      const roles = await prisma.personRoles.findUnique({
+      const roles = await prisma.schoolUserRoles.findUnique({
         where: {
-          schoolPersonId: {
-            personId: Number(userId),
-            schoolId: Number(schoolId),
-          },
+          userId: Number(userId),
+          schoolId: Number(schoolId),
         },
         select: {
           schoolId: true,
