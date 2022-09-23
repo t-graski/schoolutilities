@@ -19,6 +19,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class HelperService {
+  [x: string]: any;
   constructor(private readonly jwtService: JwtService) { }
 
   async getUserIdByUUID(userUUID: string): Promise<number> {
