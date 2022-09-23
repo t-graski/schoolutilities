@@ -20,16 +20,16 @@ model courseClasses {
 }
 
 model departments {
-  deparmentId            Int             @id @default(autoincrement()) @map("deparment_id")
-  deparmentUUID          String          @map("deparment_uuid") @db.VarChar(255)
-  deparmentName          String          @map("deparment_name") @db.VarChar(255)
-  schoolId               Int             @map("school_id")
-  deparmentIsVisible     Boolean         @map("deparment_is_visible")
-  deparmentChildsVisible Boolean         @map("deparment_childs_visible")
-  schools                schools         @relation(fields: [schoolId], references: [schoolId])
-  schoolClasses          schoolClasses[]
+  departmentId            Int             @id @default(autoincrement()) @map("department_id")
+  departmentUUID          String          @map("department_uuid") @db.VarChar(255)
+  departmentName          String          @map("department_name") @db.VarChar(255)
+  schoolId                Int             @map("school_id")
+  departmentIsVisible     Boolean         @map("department_is_visible")
+  departmentChildsVisible Boolean         @map("department_childs_visible")
+  schools                 schools         @relation(fields: [schoolId], references: [schoolId])
+  schoolClasses           schoolClasses[]
 
-  @@unique([deparmentUUID], map: "deparment_uuid_UNIQUE")
+  @@unique([departmentUUID], map: "department_uuid_UNIQUE")
   @@index([schoolId], map: "fk_departments_school_id")
 }
 
@@ -45,6 +45,7 @@ model updateEmailReceivers {
   updateEmailReceiverEmail String @map("update_email_receiver_email") @db.VarChar(255)
   users                    users  @relation(fields: [userId], references: [userId])
 
+  @@unique([userId], map: "user_id_UNIQUE")
   @@index([userId], map: "fk_update_email_receiver_user_id")
   @@map("update_email_receivers")
 }
@@ -53,8 +54,8 @@ model schoolClasses {
   schoolClassId           Int              @id @default(autoincrement()) @map("school_class_id")
   schoolClassUUID         String           @map("school_class_uuid") @db.VarChar(255)
   schoolClassDepartmentId Int              @map("school_class_department_id")
-  schoolClassName         Int              @map("school_class_name")
-  departments             departments      @relation(fields: [schoolClassDepartmentId], references: [deparmentId])
+  schoolClassName         String           @map("school_class_name") @db.VarChar(255)
+  departments             departments      @relation(fields: [schoolClassDepartmentId], references: [departmentId])
   courseClasses           courseClasses[]
   schoolSubjects          schoolSubjects[]
 
@@ -117,6 +118,7 @@ model schoolJoinCodes {
   schools                         schools   @relation(fields: [schoolId], references: [schoolId])
   users                           users     @relation(fields: [schoolJoinCodeCreatorId], references: [userId])
 
+  @@unique([schoolJoinCode], map: "school_join_code_UNIQUE")
   @@index([schoolJoinCodeCreatorId], map: "fk_school_join_code_creator_id")
   @@index([schoolId], map: "fk_school_join_code_school_id")
   @@map("school_join_codes")
@@ -337,6 +339,7 @@ model schoolUsers {
   users        users   @relation(fields: [schoolUserId], references: [userId])
 
   @@id([schoolUserId, schoolId])
+  @@unique([schoolUserId, schoolId], name: "user_school_unique", map: "userSchoolUnique")
   @@index([schoolId], map: "fk_school_users_school_id")
   @@index([schoolUserId], map: "fk_school_users_user_id")
   @@map("school_users")
@@ -366,6 +369,7 @@ model userEmailChangeTokens {
   emailChangeTokenExpireTimestamp   DateTime @default(now()) @map("email_change_token_expire_timestamp") @db.Timestamp(0)
   users                             users    @relation(fields: [userId], references: [userId])
 
+  @@unique([emailChangeToken], map: "email_change_token")
   @@index([userId], map: "fk_user_email_change_tokens_user_id")
   @@map("user_email_change_tokens")
 }
@@ -384,7 +388,7 @@ model userLoginTokens {
 }
 
 model userPasswordResetTokens {
-  userPasswordResetToken_id               Int      @id @default(autoincrement())
+  userPasswordResetTokenId                Int      @id @default(autoincrement()) @map("user_password_reset_token_id")
   userId                                  Int      @map("user_id")
   userPasswordResetToken                  String   @map("user_password_reset_token") @db.VarChar(255)
   userPasswordResetTokenCreationTimestamp DateTime @default(now()) @map("user_password_reset_token_creation_timestamp") @db.Timestamp(0)
@@ -396,17 +400,17 @@ model userPasswordResetTokens {
 }
 
 model userPublicProfileSettings {
-  userPublicProfileSettingId                   Int     @id @default(autoincrement()) @map("user_public_profile_setting_id")
-  userId                                       Int     @map("user_id")
-  userPublicProfileDisplayName                 String  @map("user_public_profile_display_name") @db.VarChar(255)
-  userPublicProfileSettingPublicEmail          String  @map("user_public_profile_setting_public_email") @db.VarChar(255)
-  userPublicProfileSettingBiography            String  @map("user_public_profile_setting_biography") @db.Text
-  userPublicProfileSettingLocation             String  @map("user_public_profile_setting_location") @db.VarChar(255)
-  userPublicProfileSettingPreferredLanguiageId Int     @map("user_public_profile_setting_preferred_languiage_id") @db.Int
-  userPublicProfileSettingShowAge              Boolean @map("user_public_profile_setting_show_age")
-  userPublicProfileSettingShowJoinDate         Boolean @map("user_public_profile_setting_show_join_date")
-  userPublicProfileSettingShowBadges           Boolean @map("user_public_profile_setting_show_badges")
-  users                                        users   @relation(fields: [userId], references: [userId])
+  userPublicProfileSettingId                  Int     @id @default(autoincrement()) @map("user_public_profile_setting_id")
+  userId                                      Int     @map("user_id")
+  userPublicProfileDisplayName                String  @map("user_public_profile_display_name") @db.VarChar(255)
+  userPublicProfileSettingPublicEmail         String  @map("user_public_profile_setting_public_email") @db.VarChar(255)
+  userPublicProfileSettingBiography           String  @map("user_public_profile_setting_biography") @db.Text
+  userPublicProfileSettingLocation            String  @map("user_public_profile_setting_location") @db.VarChar(255)
+  userPublicProfileSettingPreferredLanguageId Int     @map("user_public_profile_setting_preferred_language_id") @db.Int
+  userPublicProfileSettingShowAge             Boolean @map("user_public_profile_setting_show_age")
+  userPublicProfileSettingShowJoinDate        Boolean @map("user_public_profile_setting_show_join_date")
+  userPublicProfileSettingShowBadges          Boolean @map("user_public_profile_setting_show_badges")
+  users                                       users   @relation(fields: [userId], references: [userId])
 
   @@index([userId], map: "fk_user_public_profile_setting_user_id")
   @@map("user_public_profile_settings")
@@ -425,7 +429,7 @@ model userRegisterTokens {
 model userSettings {
   userSettingId                  Int     @id @default(autoincrement()) @map("user_setting_id")
   userId                         Int     @map("user_id")
-  userSettingLanguageId          Int     @map("user_setting_language_id") @db.Int
+  userSettingLanguageId          String  @map("user_setting_language_id") @db.VarChar(255)
   userSettingTimeZone            String  @map("user_setting_time_zone") @db.VarChar(255)
   userSettingDateTimeFormat      String  @map("user_setting_date_time_format") @db.VarChar(255)
   userSettingReceiveUpdateEmails Boolean @map("user_setting_receive_update_emails")
@@ -447,7 +451,7 @@ model users {
   userBirthDate              DateTime                     @map("user_birth_date") @db.Date
   userEmail                  String                       @map("user_email") @db.VarChar(255)
   userPassword               String                       @map("user_password") @db.VarChar(255)
-  userEmailVerified          Boolean                      @map("user_email_verified")
+  userEmailVerified          Boolean                      @default(false) @map("user_email_verified")
   userCreationTimestamp      DateTime                     @default(now()) @map("user_creation_timestamp") @db.Timestamp(0)
   userLastLoginTimestamp     DateTime?                    @default(now()) @map("user_last_login_timestamp") @db.Timestamp(0)
   articles                   articles[]

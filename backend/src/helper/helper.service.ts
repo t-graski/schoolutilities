@@ -716,14 +716,14 @@ export class HelperService {
   async createOrResetDefaultSettings(personId: number): Promise<any> {
     if (personId) {
       const defaultSettings = {
-        language: 'en',
-        timeZone: 'Europe/London',
-        dateTimeFormat: 'en-US',
-        receiveUpdateEmails: false,
-        avatarUUID: '',
-        phoneNumber: '',
-        themeMode: 0,
-        theme: -1,
+        userSettingLanguageId: 'en',
+        userSettingTimeZone: 'Europe/London',
+        userSettingDateTimeFormat: 'en-US',
+        userSettingReceiveUpdateEmails: false,
+        userSettingAvatarUUID: '',
+        userSettingPhoneNumber: '',
+        userSettingThemeMode: 0,
+        userSettingTheme: -1,
       };
 
       try {
@@ -736,7 +736,7 @@ export class HelperService {
         if (personSettings) {
           await prisma.userSettings.update({
             where: {
-              userId: personId,
+              userSettingId: personId,
             },
             data: defaultSettings,
           });
@@ -762,8 +762,12 @@ export class HelperService {
         const user = await this.getUserById(personId);
         await prisma.updateEmailReceivers.create({
           data: {
-            personId,
-            email: user.email,
+            updateEmailReceiverEmail: user.email,
+            users: {
+              connect: {
+                userId: personId,
+              },
+            },
           },
         });
       } catch {
@@ -780,7 +784,7 @@ export class HelperService {
       try {
         await prisma.updateEmailReceivers.delete({
           where: {
-            personId,
+            userId: personId,
           },
         });
       } catch {
@@ -835,17 +839,17 @@ export class HelperService {
   async createDefaultPublicProfileSettings(userId: number): Promise<any> {
     if (userId) {
       try {
-        await prisma.publicProfileSettings.create({
+        await prisma.userPublicProfileSettings.create({
           data: {
-            personId: userId,
-            displayName: await this.getUserUUIDById(userId),
-            publicEmail: '',
-            biography: '',
-            location: '',
-            preferredLanguage: '',
-            showAge: false,
-            showJoinDate: true,
-            showBadges: true,
+            userId,
+            userPublicProfileDisplayName: await this.getUserUUIDById(userId),
+            userPublicProfileSettingPublicEmail: '',
+            userPublicProfileSettingBiography: '',
+            userPublicProfileSettingLocation: '',
+            userPublicProfileSettingPreferredLanguageId: '',
+            userPublicProfileSettingShowAge: false,
+            userPublicProfileSettingShowJoinDate: true,
+            userPublicProfileSettingShowBadges: true,
           },
         });
       } catch {
@@ -869,12 +873,12 @@ export class HelperService {
   async emailIsRegisteredAndVerified(email: string): Promise<any> {
     if (email) {
       try {
-        const user = await prisma.persons.findUnique({
+        const user = await prisma.users.findUnique({
           where: {
-            email,
+            userEmail: email,
           },
         });
-        if (user && Boolean(user.emailVerified)) {
+        if (user && Boolean(user.userEmailVerified)) {
           return user;
         } else {
           return false;
@@ -890,13 +894,13 @@ export class HelperService {
   async getUserIdByPasswordResetToken(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.passwordResetTokens.findFirst({
+        const user = await prisma.userPasswordResetTokens.findFirst({
           where: {
-            token,
+            userPasswordResetToken: token,
           },
         });
         if (user) {
-          return user.personId;
+          return user.userId;
         } else {
           return false;
         }
@@ -911,14 +915,14 @@ export class HelperService {
   async passwordResetTokenIsValidAndNotExpired(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.passwordResetTokens.findFirst({
+        const user = await prisma.userPasswordResetTokens.findFirst({
           where: {
-            token,
+            userPasswordResetToken: token,
           },
         });
         if (user) {
           const now = new Date();
-          const tokenExpireDate = new Date(user.expireDate);
+          const tokenExpireDate = new Date(user.userPasswordResetTokenExpireTimestamp);
           if (now < tokenExpireDate) {
             return true;
           } else {
@@ -942,9 +946,9 @@ export class HelperService {
   async deletePasswordResetToken(token: string): Promise<any> {
     if (token) {
       try {
-        await prisma.passwordResetTokens.delete({
+        await prisma.userPasswordResetTokens.delete({
           where: {
-            token,
+            userPasswordResetTokenId: token,
           },
         });
       } catch {
@@ -958,14 +962,14 @@ export class HelperService {
   async emailChangeTokenIsValidAndNotExpired(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.emailChangeTokens.findFirst({
+        const user = await prisma.userEmailChangeTokens.findFirst({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
         if (user) {
           const now = new Date();
-          const tokenExpireDate = new Date(user.expireDate);
+          const tokenExpireDate = new Date(user.emailChangeTokenExpireTimestamp);
           if (now < tokenExpireDate) {
             return true;
           } else {
@@ -989,13 +993,13 @@ export class HelperService {
   async getUserIdByEmailChangeToken(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.emailChangeTokens.findFirst({
+        const user = await prisma.userEmailChangeTokens.findFirst({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
         if (user) {
-          return user.personId;
+          return user.userId;
         } else {
           return false;
         }
@@ -1010,13 +1014,13 @@ export class HelperService {
   async getEmailByChangeToken(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.emailChangeTokens.findFirst({
+        const user = await prisma.userEmailChangeTokens.findFirst({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
         if (user) {
-          return user.email;
+          return user.emailChangeTokenNewEmail;
         } else {
           return false;
         }
@@ -1031,9 +1035,9 @@ export class HelperService {
   async deleteEmailChangeToken(token: string): Promise<any> {
     if (token) {
       try {
-        await prisma.emailChangeTokens.delete({
+        await prisma.userEmailChangeTokens.delete({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
       } catch {
@@ -1061,13 +1065,13 @@ export class HelperService {
   async getUserRoleBySchool(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findFirst({
+        const userRole = await prisma.schoolUserRoles.findFirst({
           where: {
-            personId: userId,
-            schoolId: schoolId,
+            userId,
+            schoolId,
           },
         });
-        return userRole.roleId;
+        return userRole.schoolRoleId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -1079,15 +1083,15 @@ export class HelperService {
   async isTeacher(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findUnique({
+        const userRole = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
-        if (Object.keys(Role)[userRole.roleId] === 'Teacher') {
+        if (Object.keys(Role)[userRole.schoolRoleId] === 'Teacher') {
           return true;
         } else {
           return false;
@@ -1103,16 +1107,16 @@ export class HelperService {
   async isAdmin(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findUnique({
+        const userRole = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
 
-        if (Object.keys(Role)[userRole.roleId] === 'Admin') {
+        if (Object.keys(Role)[userRole.schoolRoleId] === 'Admin') {
           return true;
         } else {
           return false;
@@ -1128,18 +1132,18 @@ export class HelperService {
   async isTeacherOrHigher(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findUnique({
+        const userRole = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
 
         if (
-          Object.keys(Role)[userRole.roleId] === 'Teacher' ||
-          Object.keys(Role)[userRole.roleId] === 'Admin'
+          Object.keys(Role)[userRole.schoolRoleId] === 'Teacher' ||
+          Object.keys(Role)[userRole.schoolRoleId] === 'Admin'
         ) {
           return true;
         } else {
@@ -1156,11 +1160,11 @@ export class HelperService {
   async userIdInSchool(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const user = await prisma.schoolPersons.findUnique({
+        const user = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
@@ -1185,7 +1189,7 @@ export class HelperService {
             courseId,
           },
         });
-        return course.schoolId;
+        return course.courseSchoolId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -1196,18 +1200,18 @@ export class HelperService {
   async getCourseUsers(courseId: number): Promise<any> {
     if (courseId) {
       try {
-        const courseUsers = await prisma.coursePersons.findMany({
+        const courseUsers = await prisma.courseUsers.findMany({
           where: {
-            courseId: courseId,
+            courseId,
           },
         });
 
         const users = [];
 
         for (const user of courseUsers) {
-          const userData = await prisma.persons.findUnique({
+          const userData = await prisma.users.findUnique({
             where: {
-              personId: user.personId,
+              userId: user.userId,
             },
           });
           users.push(userData);
