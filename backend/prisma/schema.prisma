@@ -213,6 +213,7 @@ model courseFileSubmissionGrades {
   courses                                    courses  @relation(fields: [courseElementId], references: [courseId])
   users                                      users?   @relation(fields: [userId], references: [userId])
 
+  @@unique([courseElementId, userId], map: "course_element_id_UNIQUE")
   @@index([courseElementId], map: "fk_course_file_submission_grade_course_element_id")
   @@index([courseFileSubmissionGradeCreatorId], map: "fk_course_file_submission_grade_creator_id")
   @@index([userId], map: "fk_course_file_submission_grade_user_id")
@@ -223,7 +224,7 @@ model courseFileSubmissionSettings {
   courseFileSubmissionSettingId            Int            @id @default(autoincrement()) @map("course_file_submission_setting_id")
   courseFileSubmissionElementId            Int            @map("course_file_submission_element_id")
   courseFileSubmissionName                 String         @map("course_file_submission_name") @db.Text
-  courseFileSubmissionDescription          Int            @map("course_file_submission_description")
+  courseFileSubmissionDescription          String         @map("course_file_submission_description")
   courseFileSubmissionDueTimestamp         DateTime?      @map("course_file_submission_due_timestamp") @db.Timestamp(0)
   courseFileSubmissionSubmitLater          Boolean        @map("course_file_submission_submit_later")
   courseFileSubmissionSubmitLaterTimestamp DateTime?      @map("course_file_submission_submit_later_timestamp") @db.Timestamp(0)
@@ -248,6 +249,7 @@ model courseFileSubmissions {
   courseElements                      courseElements @relation(fields: [courseFileSubmissionElementId], references: [courseElementId])
   users                               users          @relation(fields: [userId], references: [userId])
 
+  @@unique([courseFileSubmissionElementId, userId], map: "course_file_submission_element_id_UNIQUE")
   @@index([courseFileSubmissionElementId], map: "fk_course_file_submission_element_id")
   @@index([userId], map: "fk_course_file_submission_user_id")
   @@map("course_file_submissions")

@@ -1121,6 +1121,7 @@ export class CourseService {
         courseElementId: elementId,
       },
       include: {
+        courses: true,
         courseFileSubmissionSettings: true,
         courseElementTextSettings: true,
       }
@@ -1141,19 +1142,19 @@ export class CourseService {
 
     let evaluation;
 
-    let evaluationData = await prisma.submissionGrades.findUnique({
+    let evaluationData = await prisma.courseFileSubmissionGrades.findUnique({
       where: {
-        submissionGradePersonId: {
+        courseElementId_userId: {
           courseElementId: Number(elementId),
-          personId: userId,
-        }
+          userId: Number(userId),
+        },
       }
     })
 
     if (evaluationData) {
       evaluation = {
-        grade: evaluationData.grade,
-        notes: evaluationData.notes,
+        grade: evaluationData.courseFileSubmissionGrade,
+        notes: evaluationData.courseFileSubmissionGradeNotes,
       }
     } else {
       evaluation = {
@@ -1163,10 +1164,10 @@ export class CourseService {
     }
 
     const elementItem = {
-      elementUUID: settings.elementUUID,
-      courseUUID: settings.course!.courseUUID,
-      visible: Boolean(settings.visible),
-      creationDate: settings.creationDate,
+      courseElementUUID: settings.courseElementUUID,
+      courseUUID: settings.courses!.courseUUID,
+      courseElementIsVisible: Boolean(settings.courseElementIsVisible),
+      courseElementCreationTimestamp: settings.courseElementCreationTimestamp,
       canEdit: isTeacherOrHigher,
       ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
@@ -1177,8 +1178,8 @@ export class CourseService {
         fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
-        type: settings.typeId,
-        ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
+        type: settings.courseElementTypeId,
+        ...(settings.courseElementTextSettings || settings.courseFileSubmissionSettings),
       },
     };
 
@@ -1213,10 +1214,10 @@ export class CourseService {
     const dueDate = await this.helper.getElementDueDate(elementId);
     const isSubmittedInTime = moment(new Date(Date.now())).isAfter(dueDate);
 
-    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+    const hasSubmitted = await prisma.courseFileSubmissions.findFirst({
       where: {
-        personId: Number(userId),
-        courseElementId: Number(elementId),
+        userId: Number(userId),
+        courseFileSubmissionElementId: Number(elementId),
       },
     });
 
@@ -1230,17 +1231,26 @@ export class CourseService {
     console.log(file);
 
     try {
-      await prisma.fileSubmissions.create({
+      await prisma.courseFileSubmissions.create({
         data: {
-          courseElementId: Number(elementId),
-          fileName: file.filename,
-          originalName: file.originalname,
-          fileSize: file.size,
-          fileType: file.mimetype,
-          personId: Number(userId),
-          submitedLate: !isSubmittedInTime,
-        },
+          courseFileSubmissionFileName: file.filename,
+          courseFileSubmissionOriginalName: file.originalname,
+          courseFileSubmissionFileSize: file.size,
+          courseFileSubmissionFileType: file.mimetype,
+          courseFileSubmissionIsSubmittedLate: !isSubmittedInTime,
+          users: {
+            connect: {
+              userId: Number(userId),
+            },
+          },
+          courseElements: {
+            connect: {
+              courseElementId: Number(elementId),
+            },
+          },
+        }
       });
+
       return RETURN_DATA.SUCCESS;
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
@@ -1260,9 +1270,9 @@ export class CourseService {
       };
     }
 
-    const submissions = await prisma.fileSubmissions.findMany({
+    const submissions = await prisma.courseFileSubmissions.findMany({
       where: {
-        courseElementId: Number(elementId),
+        courseFileSubmissionElementId: Number(elementId),
       },
     });
 
@@ -1279,20 +1289,20 @@ export class CourseService {
       };
 
       const userSubmission = submissions.find((submission) => {
-        return submission.personId === user.personId;
+        return submission.userId === user.personId;
       });
 
       let submissionItem = {} as any;
 
       if (userSubmission) {
-        submissionItem.fileName = userSubmission.fileName;
-        submissionItem.fileSize = userSubmission.fileSize;
-        submissionItem.fileType = userSubmission.fileType;
-        submissionItem.submittedLate = userSubmission.submitedLate;
+        submissionItem.courseFileSubmissionFileName = userSubmission.courseFileSubmissionFileName;
+        submissionItem.courseFileSubmissionFileSize = userSubmission.courseFileSubmissionFileSize;
+        submissionItem.courseFileSubmissionFileType = userSubmission.courseFileSubmissionFileType;
+        submissionItem.courseFileSubmissionIsSubmittedLate = userSubmission.courseFileSubmissionIsSubmittedLate;
         // submissionItem.notes = userSubmission.notes;
         // submissionItem.grade = userSubmission.grade;
-        submissionItem.submissionDate = userSubmission.submissionTime;
-        submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.fileName}`;
+        submissionItem.courseFileSubmissionUploadTimestamp = userSubmission.courseFileSubmissionUploadTimestamp;
+        submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.courseFileSubmissionFileName}`;
       } else {
         submissionItem = null;
       }
@@ -1317,53 +1327,53 @@ export class CourseService {
       },
       select: {
         schoolUUID: true,
-        name: true,
+        schoolName: true,
         courses: {
           where: {
-            coursePersons: {
+            courseUsers: {
               some: {
-                personId: Number(userId),
+                userId: Number(userId),
               },
             },
           },
           select: {
             courseUUID: true,
-            name: true,
+            courseName: true,
             courseElements: {
               where: {
-                typeId: {
+                courseElementTypeId: {
                   equals: 3,
                 },
                 AND: {
-                  visible: true,
+                  courseElementIsVisible: true,
                 },
               },
               select: {
-                elementUUID: true,
-                creationDate: true,
-                elementOrder: true,
-                visible: true,
-                fileSubmissionSettings: {
+                courseElementUUID: true,
+                courseElementCreationTimestamp: true,
+                courseElementOrder: true,
+                courseElementIsVisible: true,
+                courseFileSubmissionSettings: {
                   where: {
-                    dueTime: {
+                    courseFileSubmissionDueTimestamp: {
                       lte: moment(new Date(Date.now()))
                         .add(days, 'days')
                         .toDate(),
                     },
                     AND: {
-                      dueTime: {
+                      courseFileSubmissionDueTimestamp: {
                         gte: moment(new Date(Date.now())).toDate(),
                       },
                     },
                   },
                   select: {
-                    name: true,
-                    description: true,
-                    dueTime: true,
-                    submitLater: true,
-                    submitLaterTime: true,
-                    maxFileSize: true,
-                    allowedFileTypes: true,
+                    courseFileSubmissionName: true,
+                    courseFileSubmissionDescription: true,
+                    courseFileSubmissionDueTimestamp: true,
+                    courseFileSubmissionSubmitLater: true,
+                    courseFileSubmissionSubmitLaterTimestamp: true,
+                    courseFileSubmissionMaxFileSize: true,
+                    courseFileSubmissionAllowedFileTypes: true,
                   },
                 },
               },
@@ -1378,22 +1388,22 @@ export class CourseService {
     for (const course of courses.courses) {
       if (course.courseElements.length != 0) {
         for (const element of course.courseElements) {
-          if (element.fileSubmissionSettings.length != 0) {
+          if (element.courseFileSubmissionSettings.length != 0) {
             eventItems.push({
               schoolUUID: courses.schoolUUID,
-              schoolName: courses.name,
+              schoolName: courses.schoolName,
               courseUUID: course.courseUUID,
-              courseName: course.name,
-              elementUUID: element.elementUUID,
-              elementName: element.fileSubmissionSettings[0].name,
-              description: element.fileSubmissionSettings[0].description,
-              dueDate: element.fileSubmissionSettings[0].dueTime,
-              submitLater: element.fileSubmissionSettings[0].submitLater,
-              submitLaterDate:
-                element.fileSubmissionSettings[0].submitLaterTime,
-              maxFileSize: element.fileSubmissionSettings[0].maxFileSize,
-              allowedFileTypes:
-                element.fileSubmissionSettings[0].allowedFileTypes,
+              courseName: course.courseName,
+              courseElementUUID: element.courseElementUUID,
+              courseFileSubmissionName: element.courseFileSubmissionSettings[0].courseFileSubmissionName,
+              courseFileSubmissionDescription: element.courseFileSubmissionSettings[0].courseFileSubmissionDescription,
+              courseFileSubmissionDueTimestamp: element.courseFileSubmissionSettings[0].courseFileSubmissionDueTimestamp,
+              courseFileSubmissionSubmitLater: element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLater,
+              courseFileSubmissionSubmitLaterTimestamp:
+                element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLaterTimestamp,
+              courseFileSubmissionMaxFileSize: element.courseFileSubmissionSettings[0].courseFileSubmissionMaxFileSize,
+              courseFileSubmissionAllowedFileTypes:
+                element.courseFileSubmissionSettings[0].courseFileSubmissionAllowedFileTypes,
             });
           }
         }
@@ -1411,11 +1421,11 @@ export class CourseService {
     const userId = await this.helper.getUserIdfromJWT(jwt);
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
     try {
-      await prisma.fileSubmissions.delete({
+      await prisma.courseFileSubmissions.delete({
         where: {
-          fileSubmissionPersonId: {
-            courseElementId: Number(elementId),
-            personId: Number(userId),
+          courseFileSubmissionElementId_userId: {
+            courseFileSubmissionElementId: Number(elementId),
+            userId: Number(userId),
           },
         },
       });
@@ -1431,12 +1441,12 @@ export class CourseService {
 
     const files = await prisma.courseElements.findFirst({
       where: {
-        elementUUID,
+        courseElementUUID: elementUUID,
       },
       select: {
-        fileSubmissions: {
+        courseFileSubmissions: {
           select: {
-            fileName: true,
+            courseFileSubmissionFileName: true,
           },
         },
       },
@@ -1444,12 +1454,12 @@ export class CourseService {
 
     const zipFolder = zip.folder(elementUUID);
 
-    files.fileSubmissions.forEach((file) => {
-      console.log(`${process.env.FILE_PATH}${file.fileName}`);
+    files.courseFileSubmissions.forEach((file) => {
+      console.log(`${process.env.FILE_PATH}${file.courseFileSubmissionFileName}`);
 
       zipFolder.file(
-        file.fileName,
-        fs.readFileSync(`${process.env.FILE_PATH}${file.fileName}`),
+        file.courseFileSubmissionFileName,
+        fs.readFileSync(`${process.env.FILE_PATH}${file.courseFileSubmissionFileName}`),
       );
     });
 
@@ -1460,7 +1470,7 @@ export class CourseService {
   }
 }
 
-export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
+export async function findOneByUUID(courseUUID: string): Promise<CourseDto | any> {
   try {
     const course = await prisma.courses.findFirst({
       where: {
@@ -1475,7 +1485,7 @@ export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
 export async function findOneByName(
   courseName: string,
   schoolUUID,
-): Promise<CourseDto> {
+): Promise<CourseDto | any> {
   try {
     const courseUUID = await prisma.schools.findFirst({
       where: {
@@ -1485,16 +1495,16 @@ export async function findOneByName(
         schoolId: true,
         courses: {
           where: {
-            name: courseName,
+            courseName,
           },
           select: {
             courseId: true,
-            schoolId: true,
+            courseSchoolId: true,
             courseUUID: true,
-            name: true,
+            courseName: true,
             courseDescription: true,
-            creationDate: true,
-            personCreationId: true,
+            courseCreationTimestamp: true,
+            courseCreatorId: true,
           },
         },
       },
