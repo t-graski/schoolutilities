@@ -3,8 +3,6 @@ import * as moment from 'moment-timezone';
 import {
   ERROR_CODES,
   ID_STARTERS,
-  PASSWORD,
-  RETURN_DATA,
 } from 'src/misc/parameterConstants';
 import { Injectable, NotFoundException, Param } from '@nestjs/common';
 

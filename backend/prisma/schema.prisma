@@ -406,7 +406,7 @@ model userPublicProfileSettings {
   userPublicProfileSettingPublicEmail         String  @map("user_public_profile_setting_public_email") @db.VarChar(255)
   userPublicProfileSettingBiography           String  @map("user_public_profile_setting_biography") @db.Text
   userPublicProfileSettingLocation            String  @map("user_public_profile_setting_location") @db.VarChar(255)
-  userPublicProfileSettingPreferredLanguageId Int     @map("user_public_profile_setting_preferred_language_id") @db.Int
+  userPublicProfileSettingPreferredLanguageId String     @map("user_public_profile_setting_preferred_language_id") @db.VarChar(255)
   userPublicProfileSettingShowAge             Boolean @map("user_public_profile_setting_show_age")
   userPublicProfileSettingShowJoinDate        Boolean @map("user_public_profile_setting_show_join_date")
   userPublicProfileSettingShowBadges          Boolean @map("user_public_profile_setting_show_badges")
