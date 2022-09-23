@@ -51,13 +51,14 @@ model updateEmailReceivers {
 }
 
 model schoolClasses {
-  schoolClassId           Int              @id @default(autoincrement()) @map("school_class_id")
-  schoolClassUUID         String           @map("school_class_uuid") @db.VarChar(255)
-  schoolClassDepartmentId Int              @map("school_class_department_id")
-  schoolClassName         String           @map("school_class_name") @db.VarChar(255)
-  departments             departments      @relation(fields: [schoolClassDepartmentId], references: [departmentId])
+  schoolClassId           Int                @id @default(autoincrement()) @map("school_class_id")
+  schoolClassUUID         String             @map("school_class_uuid") @db.VarChar(255)
+  schoolClassDepartmentId Int                @map("school_class_department_id")
+  schoolClassName         String             @map("school_class_name") @db.VarChar(255)
+  departments             departments        @relation(fields: [schoolClassDepartmentId], references: [departmentId])
   courseClasses           courseClasses[]
   schoolSubjects          schoolSubjects[]
+  timeTableElement        timeTableElement[]
 
   @@unique([schoolClassUUID], map: "school_class_uuid_UNIQUE")
   @@index([schoolClassDepartmentId], map: "fk_school_class_department_id")
@@ -306,11 +307,12 @@ model schoolRoles {
 }
 
 model schoolSubjects {
-  schoolSubjectId      Int           @id @default(autoincrement()) @map("school_subject_id")
-  schoolSubjectName    String        @map("school_subject_name") @db.VarChar(255)
-  schoolSubjectClassId Int           @map("school_subject_class_id")
-  schoolClasses        schoolClasses @relation(fields: [schoolSubjectClassId], references: [schoolClassId])
+  schoolSubjectId      Int                @id @default(autoincrement()) @map("school_subject_id")
+  schoolSubjectName    String             @map("school_subject_name") @db.VarChar(255)
+  schoolSubjectClassId Int                @map("school_subject_class_id")
+  schoolClasses        schoolClasses      @relation(fields: [schoolSubjectClassId], references: [schoolClassId])
   courses              courses[]
+  timeTableElement     timeTableElement[]
 
   @@index([schoolSubjectClassId], map: "fk_school_subject_class_id")
   @@map("school_subjects")
@@ -406,7 +408,7 @@ model userPublicProfileSettings {
   userPublicProfileSettingPublicEmail         String  @map("user_public_profile_setting_public_email") @db.VarChar(255)
   userPublicProfileSettingBiography           String  @map("user_public_profile_setting_biography") @db.Text
   userPublicProfileSettingLocation            String  @map("user_public_profile_setting_location") @db.VarChar(255)
-  userPublicProfileSettingPreferredLanguageId String     @map("user_public_profile_setting_preferred_language_id") @db.VarChar(255)
+  userPublicProfileSettingPreferredLanguageId String  @map("user_public_profile_setting_preferred_language_id") @db.VarChar(255)
   userPublicProfileSettingShowAge             Boolean @map("user_public_profile_setting_show_age")
   userPublicProfileSettingShowJoinDate        Boolean @map("user_public_profile_setting_show_join_date")
   userPublicProfileSettingShowBadges          Boolean @map("user_public_profile_setting_show_badges")
@@ -443,6 +445,26 @@ model userSettings {
   @@map("user_settings")
 }
 
+model timeTableElement {
+  timeTableElementId        Int            @id @default(autoincrement()) @map("time_table_element_id")
+  timeTableElementSubjectId Int            @map("time_table_element_subject_id")
+  timeTableElementTeacherId Int            @map("time_table_element_teacher_id")
+  timeTableElementRoomId    Int            @map("time_table_element_room_id")
+  timeTableElementClassId   Int            @map("time_table_element_class_id")
+  timeTableElementStartTime DateTime?      @map("time_table_element_start")
+  timeTableElementEndTime   DateTime?      @map("time_table_element_end")
+  timeTableElementDay       Int            @map("time_table_element_day")
+  schoolSubjects            schoolSubjects @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
+  users                     users          @relation(fields: [timeTableElementTeacherId], references: [userId])
+  schoolClasses             schoolClasses  @relation(fields: [timeTableElementClassId], references: [schoolClassId])
+
+  @@unique([timeTableElementClassId, timeTableElementDay, timeTableElementTeacherId, timeTableElementStartTime], map: "time_table_element_class_id_day_start_end_UNIQUE")
+  @@index([timeTableElementClassId], map: "fk_time_table_element_class_id")
+  @@index([timeTableElementSubjectId], map: "fk_time_table_element_subject_id")
+  @@index([timeTableElementTeacherId], map: "fk_time_table_element_teacher_id")
+  @@map("time_table_elements")
+}
+
 model users {
   userId                     Int                          @id @default(autoincrement()) @map("user_id")
   userUUID                   String                       @map("user_uuid") @db.VarChar(255)
@@ -473,6 +495,7 @@ model users {
   userPublicProfileSettings  userPublicProfileSettings[]
   userRegisterTokens         userRegisterTokens[]
   userSettings               userSettings[]
+  timeTableElement           timeTableElement[]
 
   @@unique([userUUID], map: "user_email")
   @@unique([userEmail], map: "user_uuid")
