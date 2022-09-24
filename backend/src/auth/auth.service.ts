@@ -30,9 +30,9 @@ export class AuthService {
 
   async getUserDataByEmailAndPassword(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
-    const { password, ...result } = userDbData;
+    const { userPassword, ...result } = userDbData;
 
-    if (bcrypt.compareSync(userData.password, password)) {
+    if (bcrypt.compareSync(userData.password, userPassword)) {
       return result;
     }
     return null;
@@ -248,7 +248,7 @@ async function generateRegisterToken(
       data: {
         users: {
           connect: {
-            userId: Number(userId['personId']),
+            userId: Number(userId['userId']),
           },
         },
         userRegisterToken: generatedToken,

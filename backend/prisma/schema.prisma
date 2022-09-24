@@ -379,7 +379,7 @@ model userEmailChangeTokens {
 model userLoginTokens {
   userLoginTokenId                Int      @id @default(autoincrement()) @map("user_login_token_id")
   userId                          Int      @map("user_id")
-  refreshToken                    String   @map("refresh_token")
+  refreshToken                    String   @map("refresh_token") @db.VarChar(3000)
   userLoginTokenCreationTimestamp DateTime @default(now()) @map("user_login_token_creation_timestamp") @db.Timestamp(0)
   userLoginTokenExpireTimestamp   DateTime @default(now()) @map("user_login_token_expire_timestamp") @db.Timestamp(0)
   users                           users    @relation(fields: [userId], references: [userId])
@@ -397,6 +397,7 @@ model userPasswordResetTokens {
   userPasswordResetTokenExpireTimestamp   DateTime @default(now()) @map("user_password_reset_token_expire_timestamp") @db.Timestamp(0)
   users                                   users    @relation(fields: [userId], references: [userId])
 
+  @@unique([userPasswordResetToken], map: "user_password_reset_token_UNIQUE")
   @@index([userId], map: "fk_user_password_reset_token_user_id")
   @@map("user_password_reset_tokens")
 }
@@ -414,6 +415,7 @@ model userPublicProfileSettings {
   userPublicProfileSettingShowBadges          Boolean @map("user_public_profile_setting_show_badges")
   users                                       users   @relation(fields: [userId], references: [userId])
 
+  @@unique([userId], map: "user_public_profile_setting_user_id")
   @@index([userId], map: "fk_user_public_profile_setting_user_id")
   @@map("user_public_profile_settings")
 }
@@ -441,6 +443,7 @@ model userSettings {
   userSettingTheme               Int     @map("user_setting_theme") @db.Int
   users                          users   @relation(fields: [userId], references: [userId])
 
+  @@unique([userId], map: "user_setting_user_id")
   @@index([userId], map: "fk_user_setting_user_id")
   @@map("user_settings")
 }

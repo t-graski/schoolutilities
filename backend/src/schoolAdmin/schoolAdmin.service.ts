@@ -625,7 +625,7 @@ export class SchoolAdminService {
         where: {
           schoolUserId_schoolId: {
             schoolId: schoolId,
-            userId: personId,
+            schoolUserId: personId,
           }
         },
       });

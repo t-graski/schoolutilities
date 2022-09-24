@@ -947,7 +947,7 @@ export class HelperService {
       try {
         await prisma.userPasswordResetTokens.delete({
           where: {
-            userPasswordResetTokenId: token,
+            userPasswordResetToken: token,
           },
         });
       } catch {

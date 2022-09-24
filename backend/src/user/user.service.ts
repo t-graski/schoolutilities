@@ -27,12 +27,12 @@ export class UserService {
   async getSchools(token: string): Promise<ReturnMessage> {
     const jwt = await this.authService.decodeJWT(token);
     const personUUID = jwt.personUUID;
-    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
+    const userId = await this.databaseService.getPersonIdByUUID(personUUID);
 
     try {
-      const userSchools = await prisma.schoolPersons.findMany({
+      const userSchools = await prisma.schoolUsers.findMany({
         where: {
-          personId: Number(personId),
+          schoolUserId: userId,
         },
         select: {
           schoolId: true,
@@ -71,40 +71,40 @@ export class UserService {
     }
 
     try {
-      const user = await prisma.persons.findFirst({
+      const user = await prisma.users.findFirst({
         where: {
-          personUUID,
+          userUUID: personUUID,
         },
       });
 
-      const userSettings = await prisma.personSettings.findFirst({
+      const userSettings = await prisma.userSettings.findFirst({
         where: {
-          personId: user.personId,
+          userId: user.userId,
         },
       });
 
       if (!userSettings) {
-        await this.helper.createOrResetDefaultSettings(user.personId);
+        await this.helper.createOrResetDefaultSettings(user.userId);
       }
 
       const userItem = {
-        userUUID: user.personUUID,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        fullName: user.firstName + ' ' + user.lastName,
-        birthday: new Date(user.birthDate).toISOString().split('T')[0],
-        email: user.email,
-        emailVerified: user.emailVerified,
-        creationDate: user.creationDate,
+        userUUID: user.userUUID,
+        userFirstname: user.userFirstname,
+        userLastname: user.userLastname,
+        userFullname: user.userFirstname + ' ' + user.userLastname,
+        userBirthDate: new Date(user.userBirthDate).toISOString().split('T')[0],
+        userEmail: user.userEmail,
+        userEmailVerified: user.userEmailVerified,
+        userCreationTimestamp: user.userCreationTimestamp,
         userSettings: {
-          language: userSettings.language,
-          timeZone: userSettings.timeZone,
-          dateTimeFormat: userSettings.dateTimeFormat,
-          receiveUpdateEmails: userSettings.receiveUpdateEmails,
-          avatarUUID: userSettings.avatarUUID,
-          phoneNumber: userSettings.phoneNumber,
-          themeMode: userSettings.themeMode,
-          theme: userSettings.theme,
+          userSettingLanguage: userSettings.userSettingLanguageId,
+          userSettingTimeZone: userSettings.userSettingTimeZone,
+          userSettingDateTimeFormat: userSettings.userSettingDateTimeFormat,
+          userSettingReceiveUpdateEmails: userSettings.userSettingReceiveUpdateEmails,
+          userSettingAvatarUUID: userSettings.userSettingAvatarUUID,
+          userSettingPhoneNumber: userSettings.userSettingPhoneNumber,
+          userSettingThemeMode: userSettings.userSettingThemeMode,
+          userSettingTheme: userSettings.userSettingTheme,
         },
       };
 
@@ -151,9 +151,9 @@ export class UserService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    let userSettings = await prisma.personSettings.findFirst({
+    let userSettings = await prisma.userSettings.findFirst({
       where: {
-        personId: userId,
+        userId,
       },
     });
 
@@ -161,30 +161,30 @@ export class UserService {
       await this.helper.createOrResetDefaultSettings(userId);
     }
 
-    if (!userSettings.receiveUpdateEmails && receiveUpdateEmails) {
+    if (!userSettings.userSettingReceiveUpdateEmails && receiveUpdateEmails) {
       await this.helper.addUserToUpdateEmailList(userId);
     }
 
-    if (userSettings.receiveUpdateEmails && !receiveUpdateEmails) {
+    if (userSettings.userSettingReceiveUpdateEmails && !receiveUpdateEmails) {
       await this.helper.removeUserFromUpdateEmailList(userId);
     }
 
     if (themeMode == 0) theme = -1;
     if (theme != -1) themeMode = 0;
 
-    await prisma.personSettings.update({
+    await prisma.userSettings.update({
       where: {
-        personId: Number(userId),
+        userId,
       },
       data: {
-        language: language,
-        timeZone: timeZone,
-        dateTimeFormat: dateTimeFormat,
-        receiveUpdateEmails: receiveUpdateEmails,
-        avatarUUID: avatarUUID,
-        phoneNumber: phoneNumber,
-        themeMode: themeMode,
-        theme: theme,
+        userSettingLanguageId: language,
+        userSettingTimeZone: timeZone,
+        userSettingDateTimeFormat: dateTimeFormat,
+        userSettingReceiveUpdateEmails: receiveUpdateEmails,
+        userSettingAvatarUUID: avatarUUID,
+        userSettingPhoneNumber: phoneNumber,
+        userSettingThemeMode: themeMode,
+        userSettingTheme: theme,
       },
     });
     return RETURN_DATA.SUCCESS;
@@ -204,9 +204,9 @@ export class UserService {
     const token = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(token);
 
-    const userSettings = await prisma.publicProfileSettings.findFirst({
+    const userSettings = await prisma.userPublicProfileSettings.findFirst({
       where: {
-        personId: userId,
+        userId,
       },
     });
 
@@ -214,19 +214,19 @@ export class UserService {
       await this.helper.createDefaultPublicProfileSettings(userId);
     }
 
-    await prisma.publicProfileSettings.update({
+    await prisma.userPublicProfileSettings.update({
       where: {
-        personId: userId,
+        userId,
       },
       data: {
-        displayName: displayName,
-        publicEmail: publicEmail,
-        biography: biography,
-        location: location,
-        preferredLanguage: preferredLanguage,
-        showAge: showAge,
-        showJoinDate: showJoinDate,
-        showBadges: showBadges,
+        userPublicProfileDisplayName: displayName,
+        userPublicProfileSettingPublicEmail: publicEmail,
+        userPublicProfileSettingBiography: biography,
+        userPublicProfileSettingLocation: location,
+        userPublicProfileSettingPreferredLanguageId: preferredLanguage,
+        userPublicProfileSettingShowAge: showAge,
+        userPublicProfileSettingShowJoinDate: showJoinDate,
+        userPublicProfileSettingShowBadges: showBadges,
       },
     });
 
@@ -238,21 +238,21 @@ export class UserService {
     const userId = await this.helper.getUserIdfromJWT(jwt);
 
     try {
-      let user = await prisma.persons.findFirst({
+      let user = await prisma.users.findFirst({
         where: {
-          personId: userId,
+          userId,
         },
       });
 
-      let userSettings = await prisma.publicProfileSettings.findFirst({
+      let userSettings = await prisma.userPublicProfileSettings.findFirst({
         where: {
-          personId: userId,
+          userId,
         },
       });
 
-      let userBadges = await prisma.personBadges.findMany({
+      let userBadges = await prisma.userBadges.findMany({
         where: {
-          personId: userId,
+          userId,
         },
       });
 
@@ -263,20 +263,20 @@ export class UserService {
       let badges;
 
       let userItem = {
-        userUUID: user.personUUID,
-        displayName: userSettings.displayName,
-        birthday: userSettings.showAge
-          ? new Date(user.birthDate).toISOString().split('T')[0]
+        userUUID: user.userUUID,
+        userPublicProfileDisplayName: userSettings.userPublicProfileDisplayName,
+        userBirthDate: userSettings.userPublicProfileSettingShowAge
+          ? new Date(user.userBirthDate).toISOString().split('T')[0]
           : '',
-        email: userSettings.publicEmail,
-        biography: userSettings.biography,
-        location: userSettings.location,
-        preferredLanguage: userSettings.preferredLanguage,
-        age: userSettings.showAge
-          ? this.helper.calculateAge(user.birthDate)
+        userPublicProfileSettingPublicEmail: userSettings.userPublicProfileSettingPublicEmail,
+        userPublicProfileSettingBiography: userSettings.userPublicProfileSettingBiography,
+        userPublicProfileSettingLocation: userSettings.userPublicProfileSettingLocation,
+        userPublicProfileSettingPreferredLanguage: userSettings.userPublicProfileSettingPreferredLanguageId,
+        userPublicProfileAge: userSettings.userPublicProfileSettingShowAge
+          ? this.helper.calculateAge(user.userBirthDate)
           : '',
-        joinDate: userSettings.showJoinDate ? user.creationDate : 0,
-        badges: userSettings.showBadges ? badges : [],
+        userPublicProfileJoinDate: userSettings.userPublicProfileSettingShowJoinDate ? user.userCreationTimestamp : 0,
+        userPublicProfileBadges: userSettings.userPublicProfileSettingShowBadges ? badges : [],
       };
 
       return {
@@ -302,11 +302,11 @@ export class UserService {
     const token = this.helper.generatePasswordResetToken();
     const userId = await this.helper.getUserIdByEmail(email);
 
-    await prisma.passwordResetTokens.create({
+    await prisma.userPasswordResetTokens.create({
       data: {
-        personId: userId,
-        token,
-        expireDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        userId,
+        userPasswordResetToken: token,
+        userPasswordResetTokenExpireTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
       },
     });
 
@@ -344,12 +344,12 @@ export class UserService {
     }
 
     try {
-      await prisma.persons.update({
+      await prisma.users.update({
         where: {
-          personId: userId,
+          userId: userId,
         },
         data: {
-          password: encryptedPassword,
+          userPassword: encryptedPassword,
         },
       });
 
@@ -363,9 +363,9 @@ export class UserService {
 
   @Cron('0 0 * * *')
   async deleteExpiredPasswordResetTokens() {
-    await prisma.passwordResetTokens.deleteMany({
+    await prisma.userPasswordResetTokens.deleteMany({
       where: {
-        expireDate: {
+        userPasswordResetTokenExpireTimestamp: {
           lt: new Date(),
         },
       },
@@ -391,17 +391,17 @@ export class UserService {
 
     try {
       const token = this.helper.generateEmailChangeToken();
-      await prisma.emailChangeTokens.create({
+      await prisma.userEmailChangeTokens.create({
         data: {
-          persons: {
+          users: {
             connect: {
-              personId: userId,
+              userId,
             },
           },
-          email,
-          verified: false,
-          token,
-          expireDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          emailChangeTokenNewEmail: email,
+          emailChangeTokenVerified: false,
+          emailChangeToken: token,
+          emailChangeTokenExpireTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
         },
       });
 
@@ -439,12 +439,12 @@ export class UserService {
     const email = await this.helper.getEmailByChangeToken(token);
 
     try {
-      await prisma.persons.update({
+      await prisma.users.update({
         where: {
-          personId: userId,
+          userId,
         },
         data: {
-          email,
+          userEmail: email,
         },
       });
       return RETURN_DATA.SUCCESS;
@@ -455,9 +455,9 @@ export class UserService {
 
   @Cron('0 1 * * *')
   async deleteExpiredEmailChangeTokens() {
-    await prisma.emailChangeTokens.deleteMany({
+    await prisma.userEmailChangeTokens.deleteMany({
       where: {
-        expireDate: {
+        emailChangeTokenExpireTimestamp: {
           lt: new Date(),
         },
       },
@@ -467,11 +467,11 @@ export class UserService {
   // @Cron('40 * * * * *')
   // ! TODO
   async checkAndUpdateBadges() {
-    let allUsers = await prisma.persons.findMany({
+    let allUsers = await prisma.users.findMany({
       select: {
-        personId: true,
-        personUUID: true,
-        creationDate: true,
+        userId: true,
+        userUUID: true,
+        userCreationTimestamp: true,
       },
     });
     for (let user of allUsers) {
@@ -485,9 +485,9 @@ export class UserService {
 
 export async function findOneByUUID(userUUID: string): Promise<any> { //!TODO change to person
   try {
-    const user = await prisma.persons.findFirst({
+    const user = await prisma.users.findFirst({
       where: {
-        personUUID: userUUID,
+        userUUID,
       },
     });
     return user ? user : null;
