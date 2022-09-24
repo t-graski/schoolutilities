@@ -144,6 +144,8 @@ export class CourseService {
         data: courseData,
       };
     } catch (err) {
+      console.log(err);
+
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

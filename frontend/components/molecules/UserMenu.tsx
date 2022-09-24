@@ -256,7 +256,7 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
               <SvgRoundUser />
             </IconLayout>
             <StyledUserName>
-              {userInfo && userInfo.firstName ? userInfo.firstName : "Profile"}
+              {userInfo && userInfo.userFirstname ? userInfo.userFirstname : "Profile"}
             </StyledUserName>
             <ArrowLayout open={open}>
               <ChevronRightIcon />

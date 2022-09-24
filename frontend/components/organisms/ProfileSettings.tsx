@@ -302,7 +302,7 @@ const DialogTitle = StyledTitle;
 const DialogDescription = StyledDescription;
 const DialogClose = DialogPrimitive.Close;
 
-export const ProfileSettings: React.FC<Props> = ({}) => {
+export const ProfileSettings: React.FC<Props> = ({ }) => {
   const router = useRouter();
   const [passwordResetSucessfull, setPasswordResetSucessfull] = useState(false);
   const { data: userInfo, status: userInfoStatus } = useQuery(
@@ -365,7 +365,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
     year: "numeric",
     month: "long",
     day: "2-digit",
-  }).format(new Date(userInfo.creationDate));
+  }).format(new Date(userInfo.userCreationTimestamp));
 
   return (
     <>
@@ -375,7 +375,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
             <SvgUser />
           </ProfileImageLayout>
           <ProfileName>
-            {userInfo.firstName} {userInfo.lastName}
+            {userInfo.userFirstname} {userInfo.userLastname}
           </ProfileName>
           <ProfileNavigationLinks>
             <SpecialLinkLayout>
@@ -431,8 +431,8 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 inputType="text"
                 label="Date of Birth"
                 showLabel={false}
-                value={new Date(userInfo.birthday).toLocaleDateString()}
-                onChange={(e) => {}}
+                value={new Date(userInfo.userBirthDate).toLocaleDateString()}
+                onChange={(e) => { }}
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
@@ -442,7 +442,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                   <Button
                     onClick={async () => {
                       try {
-                        await requestPasswordReset(userInfo.email);
+                        await requestPasswordReset(userInfo.userEmail);
                         setPasswordResetSucessfull(true);
                       } catch (e) {
                         setPasswordResetSucessfull(false);
@@ -479,8 +479,8 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 inputType="email"
                 label="Email"
                 showLabel={false}
-                value={userInfo.email}
-                onChange={(e) => {}}
+                value={userInfo.userEmail}
+                onChange={(e) => { }}
               />
               <Spacer size="verySmall"></Spacer>
               <InputLabel>User Since</InputLabel>
@@ -489,7 +489,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 label="User Since"
                 showLabel={false}
                 value={longDateCreationDate}
-                onChange={(e) => {}}
+                onChange={(e) => { }}
                 editable={false}
               />
             </ProfileDataColumn>
@@ -521,7 +521,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     <Button
                       backgroundColor={"primary"}
                       color={"primary"}
-                      onClick={() => {}}
+                      onClick={() => { }}
                     >
                       JOIN A SCHOOL
                     </Button>
@@ -533,7 +533,7 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                     <Button
                       backgroundColor={"secondary"}
                       color={"primary"}
-                      onClick={() => {}}
+                      onClick={() => { }}
                     >
                       CREATE A SCHOOL
                     </Button>

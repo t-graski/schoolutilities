@@ -48,9 +48,9 @@ export class UserService {
 
         schools.push({
           schoolUUID: schoolData.schoolUUID,
-          schoolName: schoolData.name,
-          language: this.parseLanguage(schoolData.languageId),
-          timezone: schoolData.timezone,
+          schoolName: schoolData.schoolName,
+          schoolLanguage: this.parseLanguage(schoolData.schoolLanguageId),
+          schoolTimezone: schoolData.schoolTimezone,
         });
       }
       return {

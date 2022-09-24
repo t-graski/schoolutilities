@@ -460,7 +460,7 @@ export async function fetchCourseElement(courseElementUUID) {
 
 export async function fetchUserInfo() {
   const token = await getAccessToken();
-  
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
     {
@@ -469,7 +469,7 @@ export async function fetchUserInfo() {
       },
     }
   );
-  
+
   if (response.status !== 200) {
     throw new Error(formatErrorMessage(response));
   }
