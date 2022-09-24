@@ -55,43 +55,43 @@ export class SchoolAdminService {
       const school = await prisma.schools.create({
         data: {
           schoolUUID: `${ID_STARTERS.SCHOOL}${uuidv4()}`,
-          name,
-          description,
-          personCreationId: Number(personId),
-          languages: {
+          schoolName: name,
+          schoolDescription: description,
+          users: {
             connect: {
-              languageId: Number(languageId),
+              userId: Number(personId),
             },
           },
-          timezone,
+          schoolLanguageId: Number(languageId),
+          schoolTimezone: timezone,
         },
       });
 
-      await prisma.schoolPersons.create({
+      await prisma.schoolUsers.create({
         data: {
           schools: {
             connect: {
               schoolId: Number(school.schoolId),
             },
           },
-          persons: {
+          users: {
             connect: {
-              personId: Number(personId),
+              userId: Number(personId),
             },
           },
         },
       });
 
-      await prisma.personRoles.create({
+      await prisma.schoolUserRoles.create({
         data: {
-          roles: {
+          schoolRoles: {
             connect: {
-              roleId: 1,
+              schoolRoleId: 1,
             },
           },
-          persons: {
+          users: {
             connect: {
-              personId: Number(personId),
+              userId: Number(personId),
             },
           },
           schools: {
@@ -106,10 +106,10 @@ export class SchoolAdminService {
         status: RETURN_DATA.SUCCESS.status,
         data: {
           schoolUUID: school.schoolUUID,
-          schoolName: school.name,
-          description,
-          languageId: school.languageId == 1 ? 'de' : 'en',
-          timezone: school.timezone,
+          schoolName: school.schoolName,
+          schoolDescription: school.schoolDescription,
+          languageId: school.schoolLanguageId == 1 ? 'de' : 'en',
+          timezone: school.schoolTimezone,
         },
       };
     } catch (err) {
@@ -132,8 +132,10 @@ export class SchoolAdminService {
 
     const isNotAvailable = await prisma.schoolClasses.findFirst({
       where: {
-        departmentId: Number(departmentId),
-        className: className,
+        schoolClassDepartmentId: Number(departmentId),
+        AND: {
+          schoolClassName: className,
+        }
       },
     });
 
@@ -144,18 +146,18 @@ export class SchoolAdminService {
     try {
       const schoolClass = await prisma.schoolClasses.create({
         data: {
-          classUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
+          schoolClassUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
           departments: {
             connect: {
               departmentId: Number(departmentId),
             },
           },
-          className: className,
+          schoolClassName: className,
         },
       });
 
-      delete schoolClass.departmentId;
-      delete schoolClass.classId;
+      delete schoolClass.schoolClassDepartmentId;
+      delete schoolClass.schoolClassId;
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -175,7 +177,7 @@ export class SchoolAdminService {
 
     const schoolClass = await prisma.schoolClasses.findUnique({
       where: {
-        classId: Number(classId),
+        schoolClassId: Number(classId),
       },
     });
 
@@ -186,7 +188,7 @@ export class SchoolAdminService {
     try {
       await prisma.schoolClasses.delete({
         where: {
-          classId: Number(classId),
+          schoolClassId: Number(classId),
         },
       });
     } catch (err) {
@@ -218,10 +220,10 @@ export class SchoolAdminService {
     try {
       const schoolClass = await prisma.schoolClasses.update({
         where: {
-          classId: Number(classId),
+          schoolClassId: Number(classId),
         },
         data: {
-          className: className,
+          schoolClassName: className,
           departments: {
             connect: {
               departmentId: Number(departmentId),
@@ -230,8 +232,8 @@ export class SchoolAdminService {
         },
       });
 
-      delete schoolClass.departmentId;
-      delete schoolClass.classId;
+      delete schoolClass.schoolClassDepartmentId;
+      delete schoolClass.schoolClassId;
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -259,7 +261,7 @@ export class SchoolAdminService {
       for (const department of departments.data) {
         const departmentClasses = await prisma.schoolClasses.findMany({
           where: {
-            departmentId: department.departmentId,
+            schoolClassDepartmentId: department.departmentId,
           },
         });
 
@@ -267,8 +269,8 @@ export class SchoolAdminService {
           return {
             departmentUUID: department.departmentUUID,
             departmentName: department.name,
-            classUUID: departmentClass.classUUID,
-            className: departmentClass.className,
+            classUUID: departmentClass.schoolClassUUID,
+            className: departmentClass.schoolClassName,
           };
         });
 
@@ -298,12 +300,12 @@ export class SchoolAdminService {
       });
 
       const departmentsWithoutIds = departments.map((department) => {
-        const { departmentUUID, name, isVisible, childsVisible } = department;
+        const { departmentUUID, departmentName, departmentIsVisible, departmentChildsVisible } = department;
         return {
           departmentUUID: departmentUUID,
-          departmentName: name,
-          isVisible: isVisible,
-          childsVisible: childsVisible,
+          departmentName: departmentName,
+          isVisible: departmentIsVisible,
+          childsVisible: departmentChildsVisible,
         };
       });
 
@@ -332,7 +334,7 @@ export class SchoolAdminService {
     const isNotAvailable = await prisma.departments.findFirst({
       where: {
         schoolId: Number(schoolId),
-        name: departmentName,
+        departmentName: departmentName,
       },
     });
 
@@ -344,14 +346,14 @@ export class SchoolAdminService {
       const department = await prisma.departments.create({
         data: {
           departmentUUID: `${ID_STARTERS.DEPARTMENT}${uuidv4()}`,
-          name: departmentName,
+          departmentName: departmentName,
           schools: {
             connect: {
               schoolId: Number(schoolId),
             },
           },
-          isVisible: this.toBoolean(isVisible),
-          childsVisible: this.toBoolean(childsVisible),
+          departmentIsVisible: this.toBoolean(isVisible),
+          departmentChildsVisible: this.toBoolean(childsVisible),
         },
       });
 
@@ -385,7 +387,7 @@ export class SchoolAdminService {
       const isNotAvailable = await prisma.departments.findFirst({
         where: {
           schoolId: Number(department.schoolId),
-          name: department.name,
+          departmentName: department.name,
         },
       });
       if (isNotAvailable) {
@@ -473,9 +475,9 @@ export class SchoolAdminService {
           departmentId: Number(departmentId),
         },
         data: {
-          name: departmentName,
-          isVisible: this.toBoolean(isVisible),
-          childsVisible: this.toBoolean(childsVisible),
+          departmentName,
+          departmentIsVisible: this.toBoolean(isVisible),
+          departmentChildsVisible: this.toBoolean(childsVisible),
         },
       });
     } catch (err) {
@@ -502,9 +504,9 @@ export class SchoolAdminService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const person = await prisma.persons.findFirst({
+    const person = await prisma.users.findFirst({
       where: {
-        personUUID: personUUID,
+        userUUID: personUUID,
       },
     });
 
@@ -522,11 +524,11 @@ export class SchoolAdminService {
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
 
     try {
-      await prisma.schoolPersons.create({
+      await prisma.schoolUsers.create({
         data: {
-          persons: {
+          users: {
             connect: {
-              personId: personId,
+              userId: personId,
             },
           },
           schools: {
@@ -537,16 +539,16 @@ export class SchoolAdminService {
         },
       });
 
-      await prisma.personRoles.create({
+      await prisma.schoolUserRoles.create({
         data: {
-          persons: {
+          users: {
             connect: {
-              personId: personId,
+              userId: personId,
             },
           },
-          roles: {
+          schoolRoles: {
             connect: {
-              roleId: 3,
+              schoolRoleId: 3,
             },
           },
           schools: {
@@ -581,9 +583,9 @@ export class SchoolAdminService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const person = await prisma.persons.findUnique({
+    const person = await prisma.users.findUnique({
       where: {
-        personUUID: personUUID,
+        userUUID: personUUID,
       },
     });
 
@@ -606,10 +608,10 @@ export class SchoolAdminService {
       return RETURN_DATA.LAST_USER;
     }
 
-    const isOnlyUser = await prisma.schoolPersons.findMany({
+    const isOnlyUser = await prisma.schoolUsers.findMany({
       where: {
         schools: {
-          schoolId: schoolId,
+          schoolId,
         },
       },
     });
@@ -619,12 +621,12 @@ export class SchoolAdminService {
     if (isOnlyUserArray.length == 1) return RETURN_DATA.LAST_USER;
 
     try {
-      await prisma.schoolPersons.delete({
+      await prisma.schoolUsers.delete({
         where: {
-          schoolPersonId: {
-            personId: personId,
+          schoolUserId_schoolId: {
             schoolId: schoolId,
-          },
+            schoolUserId: personId,
+          }
         },
       });
     } catch (err) {
@@ -654,11 +656,11 @@ export class SchoolAdminService {
     const nameIsNotAvailable = await prisma.schoolJoinCodes.findFirst({
       where: {
         schoolId: Number(schoolId),
-        joinCodeName: joinCodeName,
+        schoolJoinCodeName: joinCodeName,
       },
     });
 
-    if (nameIsNotAvailable && nameIsNotAvailable.joinCodeName !== '') {
+    if (nameIsNotAvailable && nameIsNotAvailable.schoolJoinCodeName !== '') {
       return RETURN_DATA.ALREADY_EXISTS;
     }
 
@@ -681,12 +683,12 @@ export class SchoolAdminService {
               schoolId: Number(schoolId),
             },
           },
-          joinCodeName: joinCodeName,
-          joinCode,
-          expireDate: new Date(expireDate),
-          persons: {
+          schoolJoinCodeName: joinCodeName,
+          schoolJoinCode: joinCode,
+          schoolJoinCodeExpireTimestamp: new Date(expireDate),
+          users: {
             connect: {
-              personId: Number(personId),
+              userId: Number(personId),
             },
           },
         },
@@ -694,7 +696,7 @@ export class SchoolAdminService {
 
       delete joinCodeData.schoolJoinCodeId;
       delete joinCodeData.schoolId;
-      delete joinCodeData.personCreationId;
+      delete joinCodeData.schoolJoinCodeCreatorId;
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -714,7 +716,7 @@ export class SchoolAdminService {
 
     const joinCodeData = await prisma.schoolJoinCodes.findUnique({
       where: {
-        joinCode: joinCode,
+        schoolJoinCode: joinCode,
       },
     });
 
@@ -725,7 +727,7 @@ export class SchoolAdminService {
     try {
       await prisma.schoolJoinCodes.delete({
         where: {
-          joinCode: joinCode,
+          schoolJoinCode: joinCode,
         },
       });
     } catch (err) {
@@ -750,7 +752,7 @@ export class SchoolAdminService {
 
     const joinCodeData = await prisma.schoolJoinCodes.findUnique({
       where: {
-        joinCode,
+        schoolJoinCode: joinCode,
       },
     });
 
@@ -761,11 +763,11 @@ export class SchoolAdminService {
     try {
       await prisma.schoolJoinCodes.update({
         where: {
-          joinCode,
+          schoolJoinCode: joinCode,
         },
         data: {
-          joinCodeName,
-          expireDate: new Date(expireDate),
+          schoolJoinCodeName: joinCodeName,
+          schoolJoinCodeExpireTimestamp: new Date(expireDate),
         },
       });
     } catch (err) {
@@ -789,10 +791,10 @@ export class SchoolAdminService {
         schoolId: Number(schoolId),
       },
       select: {
-        joinCodeName: true,
-        expireDate: true,
-        joinCode: true,
-        personCreationId: true,
+        schoolJoinCodeName: true,
+        schoolJoinCodeExpireTimestamp: true,
+        schoolJoinCode: true,
+        schoolJoinCodeCreatorId: true,
       },
     });
 
@@ -800,16 +802,16 @@ export class SchoolAdminService {
 
     for (const joinCode of joinCodes) {
       const person = await this.databaseService.getPersonById(
-        joinCode.personCreationId,
+        joinCode.schoolJoinCodeCreatorId,
       );
 
       joinCodesData.push({
-        joinCodeName: joinCode.joinCodeName,
-        expireDate: joinCode.expireDate,
-        joinCode: joinCode.joinCode,
-        personUUID: person.personUUID,
-        firstName: person.firstName,
-        lastName: person.lastName,
+        schoolJoinCodeName: joinCode.schoolJoinCodeName,
+        schoolJoinCodeExpireTimestamp: joinCode.schoolJoinCodeExpireTimestamp,
+        schoolJoinCode: joinCode.schoolJoinCode,
+        userUUID: person.personUUID,
+        userFirstname: person.firstName,
+        userLastname: person.lastName,
       });
     }
 
@@ -826,7 +828,7 @@ export class SchoolAdminService {
     let joinCode = nanoid().slice(8);
     const joinCodeExists = await prisma.schoolJoinCodes.findUnique({
       where: {
-        joinCode: joinCode,
+        schoolJoinCode: joinCode,
       },
     });
 
@@ -834,7 +836,7 @@ export class SchoolAdminService {
     while (
       await !prisma.schoolJoinCodes.findUnique({
         where: {
-          joinCode: joinCode,
+          schoolJoinCode: joinCode,
         },
       })
     ) {
@@ -867,19 +869,19 @@ export class SchoolAdminService {
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 
     try {
-      const persons = await prisma.schoolPersons.findMany({
+      const persons = await prisma.schoolUsers.findMany({
         where: {
           schoolId: Number(schoolId),
         },
         select: {
-          personId: true,
+          schoolUserId: true,
         },
       });
 
       const personsData = [];
       for (const person of persons) {
         const personData = await this.databaseService.getPersonById(
-          person.personId,
+          person.schoolUserId,
         );
 
         const personRole =
@@ -920,29 +922,29 @@ export class SchoolAdminService {
         schoolId: Number(schoolId),
       },
       select: {
-        name: true,
+        schoolName: true,
         schoolUUID: true,
-        description: true,
-        creationDate: true,
-        timezone: true,
-        personCreationId: true,
+        schoolDescription: true,
+        schoolCreationTimestamp: true,
+        schoolTimezone: true,
+        schoolCreatorId: true,
       },
     });
 
     if (!school) return RETURN_DATA.NOT_FOUND;
 
     const creator = await this.databaseService.getPersonById(
-      school.personCreationId,
+      school.schoolCreatorId,
     );
 
     const schoolDataItem = {
-      schoolName: school.name,
+      schoolName: school.schoolName,
       schoolUUID: school.schoolUUID,
-      description: school.description,
-      timezone: school.timezone,
-      creationDate: school.creationDate,
+      schoolDescription: school.schoolDescription,
+      schoolTimezone: school.schoolTimezone,
+      schoolCreationTimestamp: school.schoolCreationTimestamp,
       creator: {
-        personUUID: creator.personUUID,
+        userUUID: creator.personUUID,
         firstName: creator.firstName,
         lastName: creator.lastName,
       },
@@ -969,31 +971,31 @@ export class SchoolAdminService {
         schoolId: Number(schoolId),
       },
       select: {
-        name: true,
+        schoolName: true,
         schoolUUID: true,
-        description: true,
-        creationDate: true,
-        timezone: true,
-        personCreationId: true,
+        schoolDescription: true,
+        schoolCreationTimestamp: true,
+        schoolTimezone: true,
+        schoolCreatorId: true,
       },
     });
 
     if (!school) return RETURN_DATA.NOT_FOUND;
 
     const creator = await this.databaseService.getPersonById(
-      school.personCreationId,
+      school.schoolCreatorId,
     );
 
     const schoolData = {};
 
     const schoolDataItem = {
-      schoolName: school.name,
+      schoolName: school.schoolName,
       schoolUUID: school.schoolUUID,
-      description: school.description,
-      timezone: school.timezone,
-      creationDate: school.creationDate,
+      schoolDescription: school.schoolDescription,
+      schoolTimezone: school.schoolTimezone,
+      schoolCreationTimestamp: school.schoolCreationTimestamp,
       creator: {
-        personUUID: creator.personUUID,
+        userUUID: creator.personUUID,
         firstName: creator.firstName,
         lastName: creator.lastName,
       },
@@ -1001,19 +1003,19 @@ export class SchoolAdminService {
 
     schoolData[schoolUUID] = schoolDataItem;
 
-    const persons = await prisma.schoolPersons.findMany({
+    const persons = await prisma.schoolUsers.findMany({
       where: {
         schoolId: Number(schoolId),
       },
       select: {
-        personId: true,
+        schoolUserId: true,
       },
     });
 
     const personsData = [];
     for (const person of persons) {
       const personData = await this.databaseService.getPersonById(
-        person.personId,
+        person.schoolUserId,
       );
 
       const personRole = await this.databaseService.getPersonRolesByPersonUUID(
@@ -1040,25 +1042,25 @@ export class SchoolAdminService {
       select: {
         departmentId: true,
         departmentUUID: true,
-        name: true,
+        departmentName: true,
       },
     });
 
     for (const department of departments) {
       const departmentDataItem = {
         departmentUUID: department.departmentUUID,
-        name: department.name,
+        departmentName: department.departmentName,
         classes: [],
       };
 
       const classes = await prisma.schoolClasses.findMany({
         where: {
-          departmentId: Number(department.departmentId),
+          schoolClassDepartmentId: Number(department.departmentId),
         },
         select: {
-          classId: true,
-          classUUID: true,
-          className: true,
+          schoolClassId: true,
+          schoolClassUUID: true,
+          schoolClassName: true,
         },
       });
 
@@ -1066,8 +1068,8 @@ export class SchoolAdminService {
 
       for (const classItem of classes) {
         const classDataItem = {
-          classUUID: classItem.classUUID,
-          className: classItem.className,
+          classUUID: classItem.schoolClassUUID,
+          className: classItem.schoolClassName,
         };
 
         departmentDataItem.classes.push(classDataItem);
@@ -1081,48 +1083,48 @@ export class SchoolAdminService {
 
     const courses = await prisma.courses.findMany({
       where: {
-        schoolId: Number(schoolId),
+        courseSchoolId: Number(schoolId),
       },
       select: {
         courseId: true,
         courseUUID: true,
-        name: true,
+        courseName: true,
         courseDescription: true,
-        creationDate: true,
-        personCreationId: true,
+        courseCreationTimestamp: true,
+        courseCreatorId: true,
       },
     });
 
     for (const course of courses) {
       const creator = await this.databaseService.getPersonById(
-        course.personCreationId,
+        course.courseCreatorId,
       );
 
       const courseDataItem = {
-        courseName: course.name,
+        courseName: course.courseName,
         courseUUID: course.courseUUID,
-        description: course.courseDescription,
-        creationDate: course.creationDate,
+        courseDescription: course.courseDescription,
+        courseCreationTimestamp: course.courseCreationTimestamp,
         creator: {
-          personUUID: creator.personUUID,
+          userUUID: creator.personUUID,
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
         persons: [],
       };
 
-      const coursePersons = await prisma.coursePersons.findMany({
+      const coursePersons = await prisma.courseUsers.findMany({
         where: {
           courseId: Number(course.courseId),
         },
         select: {
-          personId: true,
+          userId: true,
         },
       });
 
       for (const coursePerson of coursePersons) {
         const coursePersonData = await this.databaseService.getPersonById(
-          coursePerson.personId,
+          coursePerson.userId,
         );
 
         const coursePersonItem = {
@@ -1150,15 +1152,15 @@ export class SchoolAdminService {
     try {
       const personId = await this.helper.getUserIdByUUID(personUUID);
       const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
-      await prisma.personRoles.update({
+      await prisma.schoolUserRoles.update({
         where: {
-          schoolPersonId: {
-            personId,
-            schoolId,
+          user_school_unique: {
+            userId: Number(personId),
+            schoolId: Number(schoolId),
           },
         },
         data: {
-          roleId: Number(roleId),
+          schoolRoleId: Number(roleId),
         },
       });
       return RETURN_DATA.SUCCESS;

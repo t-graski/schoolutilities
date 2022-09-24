@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly helper: HelperService) {}
+  constructor(private readonly helper: HelperService) { }
 
   async createArticle(request): Promise<ReturnMessage> {
     const {
@@ -30,13 +30,17 @@ export class ArticleService {
       const article = await prisma.articles.create({
         data: {
           articleUUID: `${ID_STARTERS.ARTICLE}${uuidv4()}`,
-          headline,
-          catchPhrase,
-          content,
-          type,
-          isPublic,
-          publishDate: isPublic ? new Date() : new Date(946684800),
-          personCreationId: userId,
+          articleHeadline: headline,
+          articleCatchPhrase: catchPhrase,
+          articleContent: content,
+          articleType: type,
+          articleIsPublic: isPublic,
+          articlePublishTimestamp: isPublic ? new Date() : new Date(946684800),
+          users: {
+            connect: {
+              userId,
+            },
+          },
         },
       });
       return {
@@ -74,12 +78,12 @@ export class ArticleService {
           articleUUID,
         },
         data: {
-          headline,
-          catchPhrase,
-          content,
-          type,
-          isPublic,
-          publishDate: isPublic ? new Date() : new Date(946684800),
+          articleHeadline: headline,
+          articleCatchPhrase: catchPhrase,
+          articleContent: content,
+          articleType: type,
+          articleIsPublic: isPublic,
+          articlePublishTimestamp: isPublic ? new Date() : new Date(946684800),
         },
       });
     } catch (error) {
@@ -97,8 +101,8 @@ export class ArticleService {
           articleUUID,
         },
         data: {
-          isPublic: true,
-          publishDate: new Date(),
+          articleIsPublic: true,
+          articlePublishTimestamp: new Date(),
         },
       });
     } catch (error) {
@@ -115,25 +119,25 @@ export class ArticleService {
         },
       });
 
-      const creator = await this.helper.getUserById(article.personCreationId);
+      const creator = await this.helper.getUserById(article.articleCreatorId);
 
       const articleItem = {
         articleUUID: article.articleUUID,
-        headline: article.headline,
-        catchPhrase: article.catchPhrase,
-        content: article.content,
+        articleHeadline: article.articleHeadline,
+        articleCatchPhrase: article.articleCatchPhrase,
+        articleContent: article.articleContent,
         type: {
-          articleTypeId: article.type,
-          articleTypeName: await this.helper.translateArticleType(article.type),
+          articleTypeId: article.articleType,
+          articleTypeName: await this.helper.translateArticleType(article.articleType),
         },
-        isPublic: article.isPublic,
-        publishDate: article.publishDate,
-        creationDate: article.creationDate,
+        articleIsPublic: article.articleIsPublic,
+        articlePublishTimestamp: article.articlePublishTimestamp,
+        articleCreationTimestamp: article.articleCreationTimestamp,
         creator: {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(article.content),
+        readingTime: await this.helper.computeReadingTime(article.articleContent),
       };
 
       return {
@@ -148,7 +152,7 @@ export class ArticleService {
   async getAllArticles(request): Promise<ReturnMessage> {
     const articles = await prisma.articles.findMany({
       where: {
-        creationDate: {
+        articleCreationTimestamp: {
           gt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
         },
       },
@@ -157,25 +161,25 @@ export class ArticleService {
     const articleItems = [];
 
     for (const article of articles) {
-      const creator = await this.helper.getUserById(article.personCreationId);
+      const creator = await this.helper.getUserById(article.articleCreatorId);
 
       const articleItem = {
         articleUUID: article.articleUUID,
-        headline: article.headline,
-        catchPhrase: article.catchPhrase,
-        content: article.content,
+        articleHeadline: article.articleHeadline,
+        articleCatchPhrase: article.articleCatchPhrase,
+        articleContent: article.articleContent,
         type: {
-          articleTypeId: article.type,
-          articleTypeName: await this.helper.translateArticleType(article.type),
+          articleType: article.articleType,
+          articleTypeName: await this.helper.translateArticleType(article.articleType),
         },
-        isPublic: article.isPublic,
-        publishDate: article.publishDate,
-        creationDate: article.creationDate,
+        articleIsPublic: article.articleIsPublic,
+        articlePublishTimestamp: article.articlePublishTimestamp,
+        articleCreationTimestamp: article.articleCreationTimestamp,
         creator: {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(article.content),
+        readingTime: await this.helper.computeReadingTime(article.articleContent),
       };
 
       articleItems.push(articleItem);
@@ -197,7 +201,7 @@ export class ArticleService {
     try {
       const article = await prisma.articles.findFirst({
         where: {
-          isPublic,
+          articleIsPublic: isPublic,
         },
       });
       return {

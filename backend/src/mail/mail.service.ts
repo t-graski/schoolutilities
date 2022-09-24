@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer');
 
 @Injectable()
 export class MailService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService) { }
   async sendMail(message) {
     const transporter = nodemailer.createTransport({
       name: 'Schoolutilities Noreply',
@@ -25,7 +25,7 @@ export class MailService {
     try {
       await transporter.sendMail(message);
       this.logMailSend(message);
-    } catch {}
+    } catch { }
   }
 
   async logMailSend(message) {
@@ -34,29 +34,33 @@ export class MailService {
     const personId = await this.databaseService.getUserIdByEmail(receiver);
 
     try {
-      await prisma.emailLog.create({
+      await prisma.logEmails.create({
         data: {
-          emailUUID: `${ID_STARTERS.EMAIL}${uuidv4()}`,
-          personId: personId['personId'],
-          emailSubject: subject,
-          emailReceiver: receiver,
+          logEmailUUID: `${ID_STARTERS.EMAIL}${uuidv4()}`,
+          users: {
+            connect: {
+              userId: personId['personId'],
+            },
+          },
+          logEmailSubject: subject,
+          logEmailReceiver: receiver,
         },
       });
-    } catch (error) {}
+    } catch (error) { }
   }
 
   async getMailsSentToUser(userEmail: string): Promise<ReturnMessage> {
     const personId = await this.databaseService.getUserIdByEmail(userEmail);
     if (!personId) return RETURN_DATA.NOT_FOUND;
     try {
-      const mails = await prisma.emailLog.findMany({
+      const mails = await prisma.logEmails.findMany({
         where: {
-          personId: personId['personId'],
+          userId: personId['personId'],
         },
         select: {
-          emailUUID: true,
-          emailDate: true,
-          emailSubject: true,
+          logEmailUUID: true,
+          logEmailTimestamp: true,
+          logEmailSubject: true,
         },
       });
       return {

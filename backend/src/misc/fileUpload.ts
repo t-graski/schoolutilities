@@ -42,21 +42,21 @@ export const editFileName = (req, file, callback) => {
 async function getElementIdByUUID(uuid: string) {
   const element = await prisma.courseElements.findFirst({
     where: {
-      elementUUID: uuid,
+      courseElementUUID: uuid,
     },
   });
-  return element.elementId;
+  return element.courseElementId;
 }
 
 async function getAllowedExtensions(elementId: number) {
-  const extensions = await prisma.fileSubmissionSettings.findFirst({
+  const extensions = await prisma.courseFileSubmissionSettings.findFirst({
     where: {
-      courseElementId: elementId,
+      courseFileSubmissionElementId: elementId,
     },
     select: {
-      allowedFileTypes: true,
+      courseFileSubmissionAllowedFileTypes: true,
     },
   });
   console.log(elementId);
-  return extensions.allowedFileTypes;
+  return extensions.courseFileSubmissionAllowedFileTypes;
 }

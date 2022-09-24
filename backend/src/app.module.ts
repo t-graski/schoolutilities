@@ -15,6 +15,7 @@ import { HelperModule } from './helper/helper.module';
 import { ArticleService } from './article/article.service';
 import { ArticleController } from './article/article.controller';
 import { ArticleModule } from './article/article.module';
+import { TimetableModule } from './timetable/timetable.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ArticleModule } from './article/article.module';
     StatusModule,
     HelperModule,
     ArticleModule,
+    TimetableModule,
   ],
   controllers: [AppController, ArticleController],
   providers: [AppService, ArticleService],

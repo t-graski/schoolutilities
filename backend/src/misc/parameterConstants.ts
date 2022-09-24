@@ -150,6 +150,7 @@ export const ID_STARTERS = {
   EMAIL: 8,
   COURSE_ELEMENT: 9,
   ARTICLE: 'A',
+  TIME_TABLE_ELEMENT: 'T',
 };
 
 export const ERROR_CODES = {
