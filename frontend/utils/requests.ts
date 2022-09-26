@@ -107,7 +107,7 @@ export async function fetchSchoolClasses(schoolUUID) {
   return response.json();
 }
 
-export async function fetchSchoolPersons(schoolUUID) {
+export async function fetchSchoolUsers(schoolUUID) {
   const accessToken = await getAccessToken();
 
   const response = await fetch(

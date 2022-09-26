@@ -22,6 +22,7 @@ import {
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
 import { HelperService } from 'src/helper/helper.service';
+import { log } from 'console';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
@@ -788,7 +789,7 @@ export class SchoolAdminService {
 
     const joinCodes = await prisma.schoolJoinCodes.findMany({
       where: {
-        schoolId: Number(schoolId),
+        schoolId,
       },
       select: {
         schoolJoinCodeName: true,
@@ -869,40 +870,42 @@ export class SchoolAdminService {
     const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
 
     try {
-      const persons = await prisma.schoolUsers.findMany({
+      const users = await prisma.schoolUsers.findMany({
         where: {
           schoolId: Number(schoolId),
         },
-        select: {
-          schoolUserId: true,
-        },
+        include: {
+          schools: true,
+          users: {
+            include: {
+              schoolUserRoles: {
+                include: {
+                  schoolRoles: true,
+                }
+              }
+            }
+          }
+        }
       });
 
-      const personsData = [];
-      for (const person of persons) {
-        const personData = await this.databaseService.getPersonById(
-          person.schoolUserId,
-        );
+      const usersData = [];
 
-        const personRole =
-          await this.databaseService.getPersonRolesByPersonUUID(
-            personData.personUUID,
-          );
-
-        personsData.push({
-          personUUID: personData.personUUID,
-          firstName: personData.firstName,
-          lastName: personData.lastName,
-          roleName: personRole[0].roleName,
-          roleId: personRole[0].roleId,
-        });
+      for (const user of users) {
+        usersData.push({
+          userUUID: user.users.userUUID,
+          userFirstname: user.users.userFirstname,
+          userLastname: user.users.userLastname,
+          schoolRoleName: user.users.schoolUserRoles[0].schoolRoles.schoolRoleName,
+          schoolRoleId: user.users.schoolUserRoles[0].schoolRoleId,
+        })
       }
+
+
       return {
         status: RETURN_DATA.SUCCESS.status,
-        data: personsData,
+        data: usersData,
       };
     } catch (err) {
-      console.log(err);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

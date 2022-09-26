@@ -78,7 +78,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [schoolClassName, setSchoolClassName] = React.useState("");
   const [schoolClassNameValid, setSchoolClassNameValid] = React.useState(false);
-  const [departmentUUID, setDepartmentUUId] = React.useState("");
+  const [departmentUUID, setDepartmentUUID] = React.useState("");
   const [schoolClassId, setSchoolClassId] = React.useState("");
   const [error, setError] = React.useState("");
   const router = useRouter();
@@ -122,6 +122,8 @@ export const ClassesSettingsField: React.FC<Props> = ({
           (department) => department.departmentUUID === departmentUUID
         ).departmentName,
       };
+
+      console.log(entry);
 
       queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
         old.map((currEntry) =>
@@ -236,7 +238,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
                   };
                 })}
                 onChange={(event) => {
-                  setDepartmentUUId(event);
+                  setDepartmentUUID(event);
                 }}
               ></Select>
             </StyledInputField>
@@ -269,7 +271,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
             setSchoolClassName("");
             setSchoolClassId("");
             setEditPopUpIsVisible(true);
-            setDepartmentUUId(departments[0].departmentUUID);
+            setDepartmentUUID(departments[0].departmentUUID);
           }}
         ></SettingsHeader>
         {error}
@@ -284,7 +286,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
                   editFunction={() => {
                     setSchoolClassName(entry.className);
                     setSchoolClassId(entry.classUUID);
-                    setDepartmentUUId(entry.departmentUUID);
+                    setDepartmentUUID(entry.departmentUUID);
                     setEditPopUpIsVisible(true);
                     setSchoolClassNameValid(true);
                   }}
@@ -302,9 +304,8 @@ export const ClassesSettingsField: React.FC<Props> = ({
                   <>
                     <SettingsEntryName>{entry.className}</SettingsEntryName>
                     <Link
-                      href={`/school/${
-                        router.query.schoolUUID as string
-                      }/edit?departmentUUID=${entry.departmentUUID}`}
+                      href={`/school/${router.query.schoolUUID as string
+                        }/edit?departmentUUID=${entry.departmentUUID}`}
                       passHref
                     >
                       <SettingsEntryLink>

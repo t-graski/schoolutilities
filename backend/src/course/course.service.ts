@@ -152,30 +152,13 @@ export class CourseService {
 
   async removeCourse(
     payload: RemoveCourseDto,
-    request,
   ): Promise<ReturnMessage> {
     const { courseUUID } = payload;
-
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-
-    const course = await prisma.courses.findUnique({
-      where: {
-        courseId,
-      },
-    });
-
-    if (!course) {
-      return RETURN_DATA.NOT_FOUND;
-    }
 
     try {
       await prisma.courses.delete({
         where: {
-          courseId: Number(courseId),
-        },
-        select: {
-          courseId: true,
-          courseName: true,
+          courseUUID,
         },
       });
     } catch (err) {
@@ -488,6 +471,7 @@ export class CourseService {
     );
 
     const courseData = [];
+
     try {
       const courses = await prisma.courses.findMany({
         where: {
@@ -528,6 +512,7 @@ export class CourseService {
             lastName: creator.userLastname,
           },
         };
+        
         if (await this.helper.userIsInCourse(personId, course.courseId)) {
           courseData.push(courseDataItem);
         }

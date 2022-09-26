@@ -56,7 +56,7 @@ export class CourseController {
     @Req() request,
     @Res() response,
   ) {
-    const result = await this.courseService.removeCourse(removeCourse, request);
+    const result = await this.courseService.removeCourse(removeCourse);
     return response.status(result.status).json(result?.message);
   }
 

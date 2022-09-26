@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   deleteSchoolPerson,
   editSchoolPerson,
-  fetchSchoolPersons,
+  fetchSchoolUsers,
 } from "../../../utils/requests";
 
 type Props = {
@@ -82,24 +82,24 @@ export const PersonsSettingsField: React.FC<Props> = ({
 }) => {
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
-  const [personName, setPersonName] = React.useState("");
-  const [roleId, setRoleId] = React.useState("");
-  const [personUUID, setPersonUUID] = React.useState("");
+  const [userName, setUserName] = React.useState("");
+  const [schoolRoleId, setSchoolRoleId] = React.useState("");
+  const [userUUID, setUserUUID] = React.useState("");
   const [error, setError] = React.useState("");
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const { data: persons, status: personsStatus } = useQuery(
-    ["persons", schoolUUID],
-    async () => fetchSchoolPersons(schoolUUID)
+  const { data: users, status: usersStatus } = useQuery(
+    ["users", schoolUUID],
+    async () => fetchSchoolUsers(schoolUUID)
   );
 
   const deletePersonMutation = useMutation(deleteSchoolPerson, {
     onSuccess: async () => {
-      await queryClient.cancelQueries(["persons", schoolUUID]);
+      await queryClient.cancelQueries(["users", schoolUUID]);
 
-      queryClient.setQueryData(["persons", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.personUUID !== personUUID)
+      queryClient.setQueryData(["users", schoolUUID], (old: any) =>
+        old.filter((currElement) => currElement.userUUID !== userUUID)
       );
     },
     onError: (err: any) => {
@@ -109,18 +109,18 @@ export const PersonsSettingsField: React.FC<Props> = ({
 
   const editPersonMutation = useMutation(editSchoolPerson, {
     onSuccess: async () => {
-      await queryClient.cancelQueries(["persons", schoolUUID]);
+      await queryClient.cancelQueries(["users", schoolUUID]);
 
-      queryClient.setQueryData(["persons", schoolUUID], (old: any) =>
+      queryClient.setQueryData(["users", schoolUUID], (old: any) =>
         old.map((currEntry) =>
-          currEntry.personUUID === personUUID
+          currEntry.userUUID === userUUID
             ? {
-                ...currEntry,
-                roleId: roleId,
-                roleName: RoleOrder.find(
-                  (role) => role.value === Number(roleId)
-                ).label,
-              }
+              ...currEntry,
+              schoolRoleId: schoolRoleId,
+              schoolRoleName: RoleOrder.find(
+                (role) => role.value === Number(schoolRoleId)
+              ).label,
+            }
             : currEntry
         )
       );
@@ -132,16 +132,16 @@ export const PersonsSettingsField: React.FC<Props> = ({
       <SchoolDetailLayout>
         {deletePopUpIsVisible && (
           <SettingsPopUp
-            headline={`Remove ${personName}`}
+            headline={`Remove ${userName}`}
             inputValid={true}
             saveLabel="Confirm"
             saveFunction={() => {
-              deletePersonMutation.mutate({ schoolUUID, personUUID });
+              deletePersonMutation.mutate({ schoolUUID, userUUID });
               setDeletePopUpIsVisible(false);
             }}
             closeFunction={() => {
               setDeletePopUpIsVisible(false);
-              setPersonName("");
+              setUserName("");
             }}
           >
             <StyledDeleteText>
@@ -152,65 +152,65 @@ export const PersonsSettingsField: React.FC<Props> = ({
         )}
         {editPopUpIsVisible && (
           <SettingsPopUp
-            headline={"Edit person role"}
+            headline={"Edit user role"}
             inputValid={true}
             saveLabel={"Save"}
             saveFunction={() => {
               editPersonMutation.mutate({
                 schoolUUID,
-                personUUID,
-                roleId,
+                userUUID,
+                schoolRoleId,
               });
               setEditPopUpIsVisible(false);
             }}
             closeFunction={() => {
               setEditPopUpIsVisible(false);
-              setPersonName("");
+              setUserName("");
             }}
           >
             <StyledInputField>
               <Select
-                selectValue={roleId}
+                selectValue={schoolRoleId}
                 selectOptions={RoleOrder}
                 onChange={(event) => {
-                  setRoleId(event);
+                  setSchoolRoleId(event);
                 }}
               ></Select>
             </StyledInputField>
           </SettingsPopUp>
         )}
-        <SettingsHeader headline="Persons"></SettingsHeader>
+        <SettingsHeader headline="Users"></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {personsStatus == "success" && persons.length > 0 ? (
-            persons.map((entry, index) => (
+          {usersStatus == "success" && users.length > 0 ? (
+            users.map((entry, index) => (
               <SettingsEntryLayout
-                key={entry.personUUID}
-                data-key={entry.personUUID}
+                key={entry.userUUID}
+                data-key={entry.userUUID}
               >
                 <SettingsEntry
                   deleteFunction={() => {
-                    setPersonUUID(entry.personUUID);
-                    setPersonName(entry.firstName + " " + entry.lastName);
+                    setUserUUID(entry.userUUID);
+                    setUserName(entry.userFirstname + " " + entry.userLastname);
                     setDeletePopUpIsVisible(true);
                   }}
                   editFunction={() => {
-                    setPersonUUID(entry.personUUID);
-                    setRoleId(entry.roleId);
-                    setPersonName(entry.firstName + " " + entry.lastName);
+                    setUserUUID(entry.userUUID);
+                    setSchoolRoleId(entry.roleId);
+                    setUserName(entry.userFirstname + " " + entry.userLastname);
                     setEditPopUpIsVisible(true);
                   }}
                   highlighted={
                     router.query &&
-                    router.query.personUUID &&
-                    entry.personUUID == router.query.personUUID
+                    router.query.userUUID &&
+                    entry.uerUUID == router.query.userUUID
                   }
                 >
                   <>
                     <SettingsEntryName>
-                      {entry.firstName} {entry.lastName}
+                      {entry.userFirstname} {entry.userLastname}
                     </SettingsEntryName>
-                    <PersonRoleName>{entry.roleName}</PersonRoleName>
+                    <PersonRoleName>{entry.schoolRoleName}</PersonRoleName>
                   </>
                 </SettingsEntry>
               </SettingsEntryLayout>
