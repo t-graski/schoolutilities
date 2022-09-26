@@ -23,7 +23,7 @@ export class TimetableService {
 
         payload.timetableDay.forEach(async (day) => {
             day.timeTableElements.forEach(async (element) => {
-                prisma.timeTableElement.create({
+                await prisma.timeTableElement.create({
                     data: {
                         timeTableElementUUID: `${ID_STARTERS.TIME_TABLE_ELEMENT}${uuidv4()}`,
                         schoolSubjects: {
@@ -39,18 +39,21 @@ export class TimetableService {
                         },
                         timeTableElementStartTime: new Date(element.timeTableElementStartTime),
                         timeTableElementEndTime: new Date(element.timeTableElementEndTime),
-                        users: {
-                            connect: {
-                                userUUID: element.timeTableElementTeachers
-                            },
-                        },
                         timeTableElementDay: day.timeTableDay,
-
-                    }
-                })
-            }
-            )
-        })
+                        timetableElementTeachers: {
+                            create: [{
+                                userId: 3,
+                                // users: {
+                                //     connect: [{
+                                //         userUUID: element.timeTableElementTeachers,
+                                //     }],
+                                // },
+                            }],
+                        },
+                    },
+                });
+            });
+        });
 
         return RETURN_DATA.SUCCESS
     }
