@@ -22,6 +22,7 @@ import {
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
 import { HelperService } from 'src/helper/helper.service';
+import { log } from 'console';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
@@ -788,7 +789,7 @@ export class SchoolAdminService {
 
     const joinCodes = await prisma.schoolJoinCodes.findMany({
       where: {
-        schoolId: Number(schoolId),
+        schoolId,
       },
       select: {
         schoolJoinCodeName: true,

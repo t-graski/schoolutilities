@@ -75,7 +75,7 @@ const StyledDeleteText = styled("p", {
   color: "$fontPrimary",
 });
 
-export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
+export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [joinCodeName, setJoinCodeName] = React.useState("");
@@ -114,7 +114,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
       await queryClient.cancelQueries(["joinCodes", schoolUUID]);
 
       queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.joinCode !== joinCodeId)
+        old.filter((currElement) => currElement.schoolJoinCode !== joinCodeId)
       );
     },
     onError: (err: any) => {
@@ -125,13 +125,13 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
   const editJoinCodeMutation = useMutation(editJoinCode, {
     onSuccess: async () => {
       let entry = {
-        joinCode: joinCodeId,
-        joinCodeName: joinCodeName,
+        schoolJoinCode: joinCodeId,
+        schoolJoinCodeName: joinCodeName,
       };
 
       queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) =>
         old.map((currEntry) =>
-          currEntry.joinCode === joinCodeId ? entry : currEntry
+          currEntry.schoolJoinCode === joinCodeId ? entry : currEntry
         )
       );
     },
@@ -144,13 +144,13 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
     if (joinCodeId == "") {
       addJoinCodeMutation.mutate({
         schoolUUID,
-        joinCodeName,
+        schoolJoinCodeName: joinCodeName,
         expireDate: "2022-10-22 14:00:00",
       });
     } else {
       editJoinCodeMutation.mutate({
-        joinCode: joinCodeId,
-        joinCodeName,
+        schoolJoinCode: joinCodeId,
+        schoolJoinCodeName: joinCodeName,
         expireDate: "2022-10-22 14:00:00",
       });
     }
@@ -224,17 +224,17 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
           {joinCodesStatus == "success" && joinCodes.length > 0 ? (
             joinCodes.map((entry, index) => (
               <SettingsEntryLayout
-                key={entry.joinCode}
-                data-key={entry.joinCode}
+                key={entry.schoolJoinCode}
+                data-key={entry.schoolJoinCode}
               >
                 <SettingsEntry
                   editFunction={() => {
-                    setJoinCodeName(entry.joinCodeName);
-                    setJoinCodeId(entry.joinCode);
+                    setJoinCodeName(entry.schoolJoinCodeName);
+                    setJoinCodeId(entry.schoolJoinCode);
                     setEditPopUpIsVisible(true);
                   }}
                   deleteFunction={() => {
-                    setJoinCodeId(entry.joinCode);
+                    setJoinCodeId(entry.schoolJoinCode);
                     setDeletePopUpIsVisible(true);
                   }}
                   highlighted={

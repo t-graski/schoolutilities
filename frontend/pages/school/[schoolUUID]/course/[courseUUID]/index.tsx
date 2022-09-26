@@ -120,8 +120,6 @@ export default function Features() {
     (currCourse) => currCourse.courseUUID === courseUUID
   );
 
-  console.log(courses);
-
   return (
     <>
       <Head>
