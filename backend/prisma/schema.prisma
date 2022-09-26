@@ -460,8 +460,6 @@ model timeTableElement {
   schoolSubjects            schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
   schoolClasses             schoolClasses              @relation(fields: [timeTableElementClassId], references: [schoolClassId])
   timetableElementTeachers  timetableElementTeachers[]
-  users                     users?                     @relation(fields: [usersUserId], references: [userId])
-  usersUserId               Int?
 
   @@unique([timeTableElementUUID], map: "time_table_element_uuid_UNIQUE")
   @@index([timeTableElementClassId], map: "fk_time_table_element_class_id")
@@ -511,7 +509,6 @@ model users {
   userPublicProfileSettings  userPublicProfileSettings[]
   userRegisterTokens         userRegisterTokens[]
   userSettings               userSettings[]
-  timeTableElement           timeTableElement[]
   timetableElementTeachers   timetableElementTeachers[]
 
   @@unique([userUUID], map: "user_email")
