@@ -11,7 +11,7 @@ export class TimeTableDay {
     timeTableElements: TimeTableElement[]
 }
 
-export class TimeTableElement { 
+export class TimeTableElement {
     @IsNotEmpty()
     @IsString()
     timeTableElementName: string;
@@ -28,9 +28,9 @@ export class TimeTableElement {
     @IsNumber()
     timetableElementSubjectId: number;
     @IsNotEmpty()
-    @IsCustomUUID({each: true})
-    timeTableElementTeachers: string;
+    @IsCustomUUID({ each: true })
+    timeTableElementTeachers: string[];
     @IsNotEmpty()
-    @IsCustomUUID({each: true})
-    timeTableElementClasses: string;
+    @IsCustomUUID({ each: true })
+    timeTableElementClasses: string[];
 }

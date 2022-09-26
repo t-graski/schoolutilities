@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -22,7 +22,7 @@ model courseClasses {
 model departments {
   departmentId            Int             @id @default(autoincrement()) @map("department_id")
   departmentUUID          String          @map("department_uuid") @db.VarChar(255)
-  departmentName          String          @map("department_name") @db.VarChar(255)
+  departmentName          String          @map("department_name") @db.VarChar(50)
   schoolId                Int             @map("school_id")
   departmentIsVisible     Boolean         @map("department_is_visible")
   departmentChildsVisible Boolean         @map("department_childs_visible")
@@ -35,14 +35,14 @@ model departments {
 
 model languages {
   languageId   Int    @id @default(autoincrement()) @map("language_id")
-  languageName String @map("language_name") @db.VarChar(255)
-  languageTag  String @map("language_tag") @db.VarChar(255)
+  languageName String @map("language_name") @db.VarChar(50)
+  languageTag  String @map("language_tag") @db.VarChar(50)
 }
 
 model updateEmailReceivers {
   updateEmailReceiverId    Int    @id @default(autoincrement()) @map("update_email_receiver_id")
   userId                   Int    @map("user_id")
-  updateEmailReceiverEmail String @map("update_email_receiver_email") @db.VarChar(255)
+  updateEmailReceiverEmail String @map("update_email_receiver_email") @db.VarChar(100)
   users                    users  @relation(fields: [userId], references: [userId])
 
   @@unique([userId], map: "user_id_UNIQUE")
@@ -51,14 +51,14 @@ model updateEmailReceivers {
 }
 
 model schoolClasses {
-  schoolClassId           Int                @id @default(autoincrement()) @map("school_class_id")
-  schoolClassUUID         String             @map("school_class_uuid") @db.VarChar(255)
-  schoolClassDepartmentId Int                @map("school_class_department_id")
-  schoolClassName         String             @map("school_class_name") @db.VarChar(255)
-  departments             departments        @relation(fields: [schoolClassDepartmentId], references: [departmentId])
+  schoolClassId           Int                       @id @default(autoincrement()) @map("school_class_id")
+  schoolClassUUID         String                    @map("school_class_uuid") @db.VarChar(255)
+  schoolClassDepartmentId Int                       @map("school_class_department_id")
+  schoolClassName         String                    @map("school_class_name") @db.VarChar(50)
+  departments             departments               @relation(fields: [schoolClassDepartmentId], references: [departmentId])
   courseClasses           courseClasses[]
   schoolSubjects          schoolSubjects[]
-  timeTableElement        timeTableElement[]
+  timeTableElementClasses timeTableElementClasses[]
 
   @@unique([schoolClassUUID], map: "school_class_uuid_UNIQUE")
   @@index([schoolClassDepartmentId], map: "fk_school_class_department_id")
@@ -68,10 +68,10 @@ model schoolClasses {
 model schools {
   schoolId                Int               @id @default(autoincrement()) @map("school_id")
   schoolUUID              String            @map("school_uuid") @db.VarChar(255)
-  schoolName              String            @map("school_name") @db.VarChar(255)
+  schoolName              String            @map("school_name") @db.VarChar(50)
   schoolDescription       String            @map("school_description") @db.Text
   schoolLanguageId        Int               @map("school_language_id")
-  schoolTimezone          String            @map("school_timezone") @db.VarChar(255)
+  schoolTimezone          String            @map("school_timezone") @db.VarChar(50)
   schoolCreationTimestamp DateTime          @default(now()) @map("school_creation_timestamp") @db.Timestamp(0)
   schoolCreatorId         Int               @map("school_creator_id")
   users                   users             @relation(fields: [schoolCreatorId], references: [userId])
@@ -88,7 +88,7 @@ model schools {
 model courses {
   courseId                   Int                          @id @default(autoincrement()) @map("course_id")
   courseUUID                 String                       @map("course_uuid") @db.VarChar(255)
-  courseName                 String                       @map("course_name") @db.VarChar(255)
+  courseName                 String                       @map("course_name") @db.VarChar(50)
   courseDescription          String                       @map("course_description") @db.Text
   courseSchoolId             Int                          @map("course_school_id")
   courseSubjectId            Int                          @map("course_subject_id")
@@ -111,9 +111,9 @@ model courses {
 model schoolJoinCodes {
   schoolJoinCodeId                Int       @id @default(autoincrement()) @map("school_join_code_id")
   schoolId                        Int       @map("school_id")
-  schoolJoinCode                  String    @map("school_join_code") @db.VarChar(255)
+  schoolJoinCode                  String    @map("school_join_code") @db.VarChar(50)
   schoolJoinCodeExpireTimestamp   DateTime? @map("school_join_code_expire_timestamp") @db.Timestamp(0)
-  schoolJoinCodeName              String    @map("school_join_code_name") @db.VarChar(255)
+  schoolJoinCodeName              String    @map("school_join_code_name") @db.VarChar(50)
   schoolJoinCodeCreatorId         Int       @map("school_join_code_creator_id")
   schoolJoinCodeCreationTimestamp DateTime  @default(now()) @map("school_join_code_creation_timestamp") @db.Timestamp(0)
   schools                         schools   @relation(fields: [schoolId], references: [schoolId])
@@ -131,7 +131,7 @@ model courseFiles {
   courseFileName            String   @map("course_file_name") @db.VarChar(255)
   courseFileUploadTimestamp DateTime @default(now()) @map("course_file_upload_timestamp") @db.Timestamp(0)
   courseFileSize            BigInt   @map("course_file_size") @db.BigInt
-  courseFileType            String   @map("course_file_type") @db.VarChar(255)
+  courseFileType            String   @map("course_file_type") @db.VarChar(50)
 
   @@unique([courseFileUUID], map: "course_file_uuid_UNIQUE")
   @@map("course_files")
@@ -140,7 +140,7 @@ model courseFiles {
 model timezones {
   timezoneId   Int    @id @default(autoincrement()) @map("timezone_id")
   timezoneUUID String @map("timezone_uuid") @db.VarChar(255)
-  timezoneName String @map("timezone_name") @db.VarChar(255)
+  timezoneName String @map("timezone_name") @db.VarChar(50)
 }
 
 model courseElements {
@@ -188,7 +188,7 @@ model articles {
 model courseElementHeadlineSettings {
   courseElementHeadlineId        Int            @id @default(autoincrement()) @map("course_element_headline_id")
   courseElementHeadlineElementId Int            @map("course_element_headline_element_id")
-  courseElementHeadlineLabel     String         @map("course_element_headline_label") @db.VarChar(255)
+  courseElementHeadlineLabel     String         @map("course_element_headline_label") @db.VarChar(50)
   courseElements                 courseElements @relation(fields: [courseElementHeadlineElementId], references: [courseElementId])
 
   @@index([courseElementHeadlineElementId], map: "fk_course_element_headline_element_id")
@@ -210,7 +210,7 @@ model courseFileSubmissionGrades {
   courseElementId                            Int      @map("course_element_id")
   userId                                     Int      @map("user_id")
   courseFileSubmissionGrade                  Int      @map("course_file_submission_grade")
-  courseFileSubmissionGradeNotes             String   @map("course_file_submission_grade_notes") @db.VarChar(255)
+  courseFileSubmissionGradeNotes             String   @map("course_file_submission_grade_notes") @db.VarChar(50)
   courseFileSubmissionGradeCreationTimestamp DateTime @default(now()) @map("course_file_submission_grade_creation_timestamp") @db.Timestamp(0)
   courseFileSubmissionGradeCreatorId         Int      @map("course_file_submission_grade_creator_id")
   courses                                    courses  @relation(fields: [courseElementId], references: [courseId])
@@ -246,7 +246,7 @@ model courseFileSubmissions {
   courseFileSubmissionFileName        String         @map("course_file_submission_file_name") @db.VarChar(255)
   courseFileSubmissionOriginalName    String         @map("course_file_submission_original_name") @db.VarChar(255)
   courseFileSubmissionFileSize        Int            @map("course_file_submission_file_size")
-  courseFileSubmissionFileType        String         @map("course_file_submission_file_type") @db.VarChar(255)
+  courseFileSubmissionFileType        String         @map("course_file_submission_file_type") @db.VarChar(50)
   courseFileSubmissionUploadTimestamp DateTime       @default(now()) @map("course_file_submission_upload_timestamp") @db.Timestamp(0)
   courseFileSubmissionIsSubmittedLate Boolean        @map("course_file_submission_is_submitted_late")
   courseElements                      courseElements @relation(fields: [courseFileSubmissionElementId], references: [courseElementId])
@@ -289,7 +289,7 @@ model logRequests {
   logRequestIpAddress     String   @map("log_request_ip_address") @db.VarChar(255)
   logRequestTimestamp     DateTime @default(now()) @map("log_request_timestamp") @db.Timestamp(0)
   logRequestMethod        String   @map("log_request_method") @db.VarChar(255)
-  logRequestPath          String   @map("log_request_path") @db.VarChar(3000)
+  logRequestPath          String   @map("log_request_path") @db.VarChar(1000)
   logRequestStatusCode    Int      @map("log_request_status_code") @db.Int
   logRequestContentLength Int      @map("log_request_content_length") @db.Int
   logRequestUserAgent     String   @map("log_request_user_agent") @db.VarChar(255)
@@ -300,7 +300,7 @@ model logRequests {
 
 model schoolRoles {
   schoolRoleId    Int               @id @default(autoincrement()) @map("school_role_id")
-  schoolRoleName  String            @map("school_role_name") @db.VarChar(255)
+  schoolRoleName  String            @map("school_role_name") @db.VarChar(50)
   schoolUserRoles schoolUserRoles[]
 
   @@map("school_roles")
@@ -308,7 +308,7 @@ model schoolRoles {
 
 model schoolSubjects {
   schoolSubjectId      Int                @id @default(autoincrement()) @map("school_subject_id")
-  schoolSubjectName    String             @map("school_subject_name") @db.VarChar(255)
+  schoolSubjectName    String             @map("school_subject_name") @db.VarChar(50)
   schoolSubjectClassId Int                @map("school_subject_class_id")
   schoolClasses        schoolClasses      @relation(fields: [schoolSubjectClassId], references: [schoolClassId])
   courses              courses[]
@@ -379,7 +379,7 @@ model userEmailChangeTokens {
 model userLoginTokens {
   userLoginTokenId                Int      @id @default(autoincrement()) @map("user_login_token_id")
   userId                          Int      @map("user_id")
-  refreshToken                    String   @map("refresh_token") @db.VarChar(3000)
+  refreshToken                    String   @map("refresh_token") @db.VarChar(1000)
   userLoginTokenCreationTimestamp DateTime @default(now()) @map("user_login_token_creation_timestamp") @db.Timestamp(0)
   userLoginTokenExpireTimestamp   DateTime @default(now()) @map("user_login_token_expire_timestamp") @db.Timestamp(0)
   users                           users    @relation(fields: [userId], references: [userId])
@@ -449,25 +449,27 @@ model userSettings {
 }
 
 model timeTableElement {
-  timeTableElementId        Int                        @id @default(autoincrement()) @map("time_table_element_id")
-  timeTableElementUUID      String                     @map("time_table_element_uuid") @db.VarChar(255)
-  timeTableElementSubjectId Int                        @map("time_table_element_subject_id")
-  timeTableElementRoomId    Int                        @map("time_table_element_room_id")
-  timeTableElementClassId   Int                        @map("time_table_element_class_id")
-  timeTableElementStartTime DateTime?                  @map("time_table_element_start")
-  timeTableElementEndTime   DateTime?                  @map("time_table_element_end")
-  timeTableElementDay       String                     @map("time_table_element_day") @db.VarChar(255)
-  schoolSubjects            schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
-  schoolClasses             schoolClasses              @relation(fields: [timeTableElementClassId], references: [schoolClassId])
-  timetableElementTeachers  timetableElementTeachers[]
+  timeTableElementId                Int                        @id @default(autoincrement()) @map("time_table_element_id")
+  timeTableElementUUID              String                     @map("time_table_element_uuid") @db.VarChar(255)
+  timeTableElementSubjectId         Int                        @map("time_table_element_subject_id")
+  timeTableElementRoomId            Int                        @map("time_table_element_room_id")
+  timeTableElementStartTime         DateTime?                  @map("time_table_element_start")
+  timeTableElementEndTime           DateTime?                  @map("time_table_element_end")
+  timeTableElementDay               String                     @map("time_table_element_day") @db.VarChar(255)
+  timeTableElementCreationTimestamp DateTime                   @default(now()) @map("time_table_element_creation_timestamp") @db.Timestamp(0)
+  timeTableElementCreatorId         Int                        @map("time_table_element_creator_id")
+  schoolSubjects                    schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
+  users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
+  timetableElementTeachers          timeTableElementTeachers[]
+  timeTableElementClasses           timeTableElementClasses[]
 
   @@unique([timeTableElementUUID], map: "time_table_element_uuid_UNIQUE")
-  @@index([timeTableElementClassId], map: "fk_time_table_element_class_id")
   @@index([timeTableElementSubjectId], map: "fk_time_table_element_subject_id")
+  @@index([timeTableElementCreatorId], map: "fk_time_table_element_creator_id")
   @@map("time_table_elements")
 }
 
-model timetableElementTeachers {
+model timeTableElementTeachers {
   timeTableElementId Int              @map("time_table_element_id")
   userId             Int              @map("user_id")
   timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
@@ -476,14 +478,26 @@ model timetableElementTeachers {
   @@unique([timeTableElementId, userId], map: "time_table_element_id_user_id_UNIQUE")
   @@index([timeTableElementId], map: "fk_time_table_element_id")
   @@index([userId], map: "fk_user_id")
-  @@map("timetable_element_teachers")
+  @@map("time_table_element_teachers")
+}
+
+model timeTableElementClasses {
+  timeTableElementId Int              @map("time_table_element_id")
+  schoolClassId      Int              @map("school_class_id")
+  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  schoolClasses      schoolClasses    @relation(fields: [schoolClassId], references: [schoolClassId])
+
+  @@unique([timeTableElementId, schoolClassId], map: "time_table_element_id_school_class_id")
+  @@index([timeTableElementId], map: "fk_time_table_element_id")
+  @@index([schoolClassId], map: "fk_school_class_id")
+  @@map("time_table_element_classes")
 }
 
 model users {
   userId                     Int                          @id @default(autoincrement()) @map("user_id")
-  userUUID                   String                       @map("user_uuid") @db.VarChar(255)
-  userFirstname              String                       @map("user_firstname") @db.VarChar(255)
-  userLastname               String                       @map("user_lastname") @db.VarChar(255)
+  userUUID                   String                       @unique() @map("user_uuid") @db.VarChar(255)
+  userFirstname              String                       @map("user_firstname") @db.VarChar(50)
+  userLastname               String                       @map("user_lastname") @db.VarChar(50)
   userBirthDate              DateTime                     @map("user_birth_date") @db.Date
   userEmail                  String                       @map("user_email") @db.VarChar(255)
   userPassword               String                       @map("user_password") @db.VarChar(255)
@@ -509,8 +523,9 @@ model users {
   userPublicProfileSettings  userPublicProfileSettings[]
   userRegisterTokens         userRegisterTokens[]
   userSettings               userSettings[]
-  timetableElementTeachers   timetableElementTeachers[]
+  timetableElementTeachers   timeTableElementTeachers[]
+  timeTableElement           timeTableElement[]
 
-  @@unique([userUUID], map: "user_email")
-  @@unique([userEmail], map: "user_uuid")
+  @@unique([userUUID], map: "user_uuid_UNIQUE")
+  @@unique([userEmail], map: "user_email_UNIQUE")
 }

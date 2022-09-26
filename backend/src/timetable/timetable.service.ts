@@ -19,7 +19,8 @@ export class TimetableService {
     ) { }
 
     async createTimetable(payload: AddTimeTableDto, request): Promise<ReturnMessage> {
-        let elements = []
+        const token = await this.helper.extractJWTToken(request);
+        const creatorUUID = await this.helper.getUserUUIDfromJWT(token);
 
         payload.timetableDay.forEach(async (day) => {
             day.timeTableElements.forEach(async (element) => {
@@ -32,23 +33,35 @@ export class TimetableService {
                             },
                         },
                         timeTableElementRoomId: 0,
-                        schoolClasses: {
-                            connect: {
-                                schoolClassUUID: element.timeTableElementClasses
-                            },
-                        },
                         timeTableElementStartTime: new Date(element.timeTableElementStartTime),
                         timeTableElementEndTime: new Date(element.timeTableElementEndTime),
                         timeTableElementDay: day.timeTableDay,
+                        users: {
+                            connect: {
+                                userUUID: creatorUUID,
+                            }
+                        },
                         timetableElementTeachers: {
-                            create: [{
-                                userId: 3,
-                                // users: {
-                                //     connect: [{
-                                //         userUUID: element.timeTableElementTeachers,
-                                //     }],
-                                // },
-                            }],
+                            create: element.timeTableElementTeachers.map((teacherUUID) => {
+                                return {
+                                    users: {
+                                        connect: {
+                                            userUUID: teacherUUID,
+                                        },
+                                    },
+                                }
+                            }),
+                        },
+                        timeTableElementClasses: {
+                            create: element.timeTableElementClasses.map((classUUID) => {
+                                return {
+                                    schoolClasses: {
+                                        connect: {
+                                            schoolClassUUID: classUUID,
+                                        },
+                                    },
+                                }
+                            }),
                         },
                     },
                 });
