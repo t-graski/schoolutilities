@@ -8,7 +8,7 @@ import { SearchSelect } from "../../atoms/input/SearchSelect";
 import SvgSchool from "../../atoms/svg/SvgSchool";
 import {
   fetchSchoolClasses,
-  fetchSchoolPersons,
+  fetchSchoolUsers,
 } from "../../../utils/requests";
 import { useQuery } from "react-query";
 
@@ -57,7 +57,7 @@ export const CourseCreateMembersField: React.FC<Props> = ({
   const { data: members, status: membersStatus } = useQuery(
     "members",
     async () => {
-      const currentMembers = await fetchSchoolPersons(
+      const currentMembers = await fetchSchoolUsers(
         router.query.schoolUUID as string
       );
       return currentMembers.map((member) => {
