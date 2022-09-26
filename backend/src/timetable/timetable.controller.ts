@@ -12,8 +12,8 @@ export class TimetableController {
   constructor(private readonly timetableService: TimetableService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Teacher)
-  @Post("/timetable")
+  //@Roles(Role.Teacher)
+  @Post("")
   async createTimetable(@Body() createTimetable: AddTimeTableDto, @Req() request, @Res() response) {
     const result = await this.timetableService.createTimetable(createTimetable, request);
     return response

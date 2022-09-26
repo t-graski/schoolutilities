@@ -21,8 +21,8 @@ export class TimetableService {
     async createTimetable(payload: AddTimeTableDto, request): Promise<ReturnMessage> {
         let elements = []
 
-        payload.timetableDay.forEach((day) => {
-            day.timeTableElements.forEach((element) => {
+        payload.timetableDay.forEach(async (day) => {
+            day.timeTableElements.forEach(async (element) => {
                 prisma.timeTableElement.create({
                     data: {
                         timeTableElementUUID: `${ID_STARTERS.TIME_TABLE_ELEMENT}${uuidv4()}`,
@@ -37,8 +37,8 @@ export class TimetableService {
                                 schoolClassUUID: element.timeTableElementClasses
                             },
                         },
-                        timeTableElementStartTime: element.timeTableElementStartTime,
-                        timeTableElementEndTime: element.timeTableElementEndTime,
+                        timeTableElementStartTime: new Date(element.timeTableElementStartTime),
+                        timeTableElementEndTime: new Date(element.timeTableElementEndTime),
                         users: {
                             connect: {
                                 userUUID: element.timeTableElementTeachers
