@@ -51,14 +51,16 @@ model updateEmailReceivers {
 }
 
 model schoolClasses {
-  schoolClassId           Int                       @id @default(autoincrement()) @map("school_class_id")
-  schoolClassUUID         String                    @map("school_class_uuid")
-  schoolClassDepartmentId Int                       @map("school_class_department_id")
-  schoolClassName         String                    @map("school_class_name")
-  departments             departments               @relation(fields: [schoolClassDepartmentId], references: [departmentId])
-  courseClasses           courseClasses[]
-  schoolSubjects          schoolSubjects[]
-  timeTableElementClasses timeTableElementClasses[]
+  schoolClassId                Int                            @id @default(autoincrement()) @map("school_class_id")
+  schoolClassUUID              String                         @map("school_class_uuid")
+  schoolClassDepartmentId      Int                            @map("school_class_department_id")
+  schoolClassName              String                         @map("school_class_name")
+  departments                  departments                    @relation(fields: [schoolClassDepartmentId], references: [departmentId])
+  courseClasses                courseClasses[]
+  schoolSubjects               schoolSubjects[]
+  timeTableElementClasses      timeTableElementClasses[]
+  timeTableElementEventClasses timeTableEventClasses[]
+  timeTableSubstitutionClasses timeTableSubstitutionClasses[]
 
   @@unique([schoolClassUUID], map: "school_class_uuid_UNIQUE")
   @@index([schoolClassDepartmentId], map: "fk_school_class_department_id")
@@ -460,13 +462,99 @@ model timeTableElement {
   timeTableElementCreatorId         Int                        @map("time_table_element_creator_id")
   schoolSubjects                    schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
   users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
-  timetableElementTeachers          timeTableElementTeachers[]
+  timetableTeachers                 timeTableElementTeachers[]
   timeTableElementClasses           timeTableElementClasses[]
+  timeTableElementEvents            timeTableEvents[]
+  timeTableSubstitutions            timeTableSubstitutions[]
 
   @@unique([timeTableElementUUID], map: "time_table_element_uuid_UNIQUE")
   @@index([timeTableElementSubjectId], map: "fk_time_table_element_subject_id")
   @@index([timeTableElementCreatorId], map: "fk_time_table_element_creator_id")
   @@map("time_table_elements")
+}
+
+model timeTableSubstitutions {
+  timeTableSubstitutionId                Int                             @id @default(autoincrement()) @map("time_table_substitution_id")
+  timeTableSubstitutionUUID              String                          @map("time_table_substitution_uuid")
+  timeTableSubstitutionSubjectId         Int                             @map("time_table_substitution_subject_id")
+  timeTableSubstitutionRoomId            Int                             @map("time_table_substitution_room_id")
+  timeTableSubstitutionCreationTimestamp DateTime                        @default(now()) @map("time_table_substitution_creation_timestamp") @db.Timestamp(0)
+  timeTableSubstitutionCreatorId         Int                             @map("time_table_substitution_creator_id")
+  timeTableSubstitutionElementId         Int                             @map("time_table_substitution_time_table_element_id")
+  timeTableSubstitutionTeachers          timeTableSubstitutionTeachers[]
+  timeTableSubstitutionClasses           timeTableSubstitutionClasses[]
+  users                                  users                           @relation(fields: [timeTableSubstitutionCreatorId], references: [userId])
+  timeTableElements                      timeTableElement                @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId])
+
+  @@unique([timeTableSubstitutionUUID], map: "time_tablesubstitution_uuid_UNIQUE")
+  @@index([timeTableSubstitutionSubjectId], map: "fk_time_table_substitution_subject_id")
+  @@index([timeTableSubstitutionCreatorId], map: "fk_time_table_substitution_creator_id")
+  @@index([timeTableSubstitutionElementId], map: "fk_time_table_substitution_time_table_element_id")
+  @@map("time_table_substitutions")
+}
+
+model timeTableSubstitutionTeachers {
+  timeTableSubstitutionId Int                    @map("time_table_substitution_id")
+  userId                  Int                    @map("user_id")
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  users                   users                  @relation(fields: [userId], references: [userId])
+
+  @@unique([timeTableSubstitutionId, userId], map: "time_table_substitution_teacher_UNIQUE")
+  @@index([timeTableSubstitutionId], map: "fk_time_table_substitution_teacher_time_table_substitution_id")
+  @@index([userId], map: "fk_time_table_substitution_teacher_user_id")
+  @@map("time_tablesubstitution_teachers")
+}
+
+model timeTableSubstitutionClasses {
+  timeTableSubstitutionId Int                    @map("time_table_substitution_id")
+  classId                 Int                    @map("class_id")
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  classes                 schoolClasses          @relation(fields: [classId], references: [schoolClassId])
+
+  @@unique([timeTableSubstitutionId, classId], map: "time_table_substitution_class_UNIQUE")
+  @@index([timeTableSubstitutionId], map: "fk_time_table_substitution_class_time_table_substitution_id")
+  @@index([classId], map: "fk_time_table_substitution_class_class_id")
+  @@map("time_table_substitution_classes")
+}
+
+model timeTableEvents {
+  timeTableEventId          Int                      @id @default(autoincrement()) @map("time_table_event_id")
+  timeTableEventUUID        String                   @map("time_table_event_uuid")
+  timeTableElementId        Int                      @map("time_table_id")
+  timeTableEventName        String                   @map("time_table_event_name")
+  timeTableEventDescription String                   @map("time_table_eventDescription")
+  timeTableEventIsAllDay    Boolean                  @map("time_table_event_is_all_day")
+  timeTableEventTeachers    timeTableEventTeachers[]
+  timeTableEventClasses     timeTableEventClasses[]
+  timeTableElement          timeTableElement         @relation(fields: [timeTableElementId], references: [timeTableElementId])
+
+  @@unique([timeTableEventUUID], map: "time_table_event_uuid_UNIQUE")
+  @@index([timeTableElementId], map: "fk_time_table_event_time_table_element_id")
+  @@map("time_table_events")
+}
+
+model timeTableEventTeachers {
+  timeTableEventId Int             @map("time_table_event_teacher_id")
+  userId           Int             @map("user_id")
+  timeTableEvents  timeTableEvents @relation(fields: [timeTableEventId], references: [timeTableEventId])
+  users            users           @relation(fields: [userId], references: [userId])
+
+  @@unique([timeTableEventId, userId], map: "time_table_event_teacher_UNIQUE")
+  @@index([timeTableEventId], map: "fk_time_table_event_teacher_time_table_element_event_id")
+  @@index([userId], map: "fk_time_table_event_teacher_user_id")
+  @@map("time_table_event_teachers")
+}
+
+model timeTableEventClasses {
+  timeTableEventId Int             @map("time_table_event_class_id")
+  classId          Int             @map("class_id")
+  timeTableEvents  timeTableEvents @relation(fields: [timeTableEventId], references: [timeTableEventId])
+  classes          schoolClasses   @relation(fields: [classId], references: [schoolClassId])
+
+  @@unique([timeTableEventId, classId], map: "time_table_event_class_UNIQUE")
+  @@index([timeTableEventId], map: "fk_time_table_event_class_time_table_element_event_id")
+  @@index([classId], map: "fk_time_table_event_class_class_id")
+  @@map("time_table_event_classes")
 }
 
 model timeTableElementTeachers {
@@ -494,37 +582,40 @@ model timeTableElementClasses {
 }
 
 model users {
-  userId                     Int                          @id @default(autoincrement()) @map("user_id")
-  userUUID                   String                       @unique() @map("user_uuid")
-  userFirstname              String                       @map("user_firstname")
-  userLastname               String                       @map("user_lastname")
-  userBirthDate              DateTime                     @map("user_birth_date") @db.Date
-  userEmail                  String                       @map("user_email")
-  userPassword               String                       @map("user_password")
-  userEmailVerified          Boolean                      @default(false) @map("user_email_verified")
-  userCreationTimestamp      DateTime                     @default(now()) @map("user_creation_timestamp") @db.Timestamp(0)
-  userLastLoginTimestamp     DateTime?                    @default(now()) @map("user_last_login_timestamp") @db.Timestamp(0)
-  articles                   articles[]
-  courseElements             courseElements[]
-  courseFileSubmissionGrades courseFileSubmissionGrades[]
-  courseFileSubmissions      courseFileSubmissions[]
-  courseUsers                courseUsers[]
-  courses                    courses[]
-  logEmails                  logEmails[]
-  schoolJoinCodes            schoolJoinCodes[]
-  schoolUserRoles            schoolUserRoles[]
-  schoolUsers                schoolUsers[]
-  schools                    schools[]
-  updateEmailReceivers       updateEmailReceivers[]
-  userBadges                 userBadges[]
-  userEmailChangeTokens      userEmailChangeTokens[]
-  userLoginTokens            userLoginTokens[]
-  userPasswordResetTokens    userPasswordResetTokens[]
-  userPublicProfileSettings  userPublicProfileSettings[]
-  userRegisterTokens         userRegisterTokens[]
-  userSettings               userSettings[]
-  timetableElementTeachers   timeTableElementTeachers[]
-  timeTableElement           timeTableElement[]
+  userId                        Int                             @id @default(autoincrement()) @map("user_id")
+  userUUID                      String                          @unique() @map("user_uuid")
+  userFirstname                 String                          @map("user_firstname")
+  userLastname                  String                          @map("user_lastname")
+  userBirthDate                 DateTime                        @map("user_birth_date") @db.Date
+  userEmail                     String                          @map("user_email")
+  userPassword                  String                          @map("user_password")
+  userEmailVerified             Boolean                         @default(false) @map("user_email_verified")
+  userCreationTimestamp         DateTime                        @default(now()) @map("user_creation_timestamp") @db.Timestamp(0)
+  userLastLoginTimestamp        DateTime?                       @default(now()) @map("user_last_login_timestamp") @db.Timestamp(0)
+  articles                      articles[]
+  courseElements                courseElements[]
+  courseFileSubmissionGrades    courseFileSubmissionGrades[]
+  courseFileSubmissions         courseFileSubmissions[]
+  courseUsers                   courseUsers[]
+  courses                       courses[]
+  logEmails                     logEmails[]
+  schoolJoinCodes               schoolJoinCodes[]
+  schoolUserRoles               schoolUserRoles[]
+  schoolUsers                   schoolUsers[]
+  schools                       schools[]
+  updateEmailReceivers          updateEmailReceivers[]
+  userBadges                    userBadges[]
+  userEmailChangeTokens         userEmailChangeTokens[]
+  userLoginTokens               userLoginTokens[]
+  userPasswordResetTokens       userPasswordResetTokens[]
+  userPublicProfileSettings     userPublicProfileSettings[]
+  userRegisterTokens            userRegisterTokens[]
+  userSettings                  userSettings[]
+  timetableElementTeachers      timeTableElementTeachers[]
+  timeTableElement              timeTableElement[]
+  timeTableElementEventTeachers timeTableEventTeachers[]
+  timeTableSubstitutionTeachers timeTableSubstitutionTeachers[]
+  timeTableSubstitutions        timeTableSubstitutions[]
 
   @@unique([userUUID], map: "user_uuid_UNIQUE")
   @@unique([userEmail], map: "user_email_UNIQUE")
