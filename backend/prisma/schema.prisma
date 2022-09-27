@@ -502,7 +502,7 @@ model timeTableSubstitutionTeachers {
   @@unique([timeTableSubstitutionId, userId], map: "time_table_substitution_teacher_UNIQUE")
   @@index([timeTableSubstitutionId], map: "fk_time_table_substitution_teacher_time_table_substitution_id")
   @@index([userId], map: "fk_time_table_substitution_teacher_user_id")
-  @@map("time_tablesubstitution_teachers")
+  @@map("time_table_substitution_teachers")
 }
 
 model timeTableSubstitutionClasses {
@@ -522,7 +522,7 @@ model timeTableEvents {
   timeTableEventUUID        String                   @map("time_table_event_uuid")
   timeTableElementId        Int                      @map("time_table_id")
   timeTableEventName        String                   @map("time_table_event_name")
-  timeTableEventDescription String                   @map("time_table_eventDescription")
+  timeTableEventDescription String                   @map("time_table_event_description")
   timeTableEventIsAllDay    Boolean                  @map("time_table_event_is_all_day")
   timeTableEventTeachers    timeTableEventTeachers[]
   timeTableEventClasses     timeTableEventClasses[]
