@@ -117,6 +117,11 @@ export class TimetableService {
                 })
             });
 
+            //sort elements by startttime
+            timeTableData.sort((a, b) => {
+                return a.timeTableElementStartTime - b.timeTableElementStartTime;
+            });
+
             const timeTableDays = timeTableData.reduce((r, a) => {
                 r[a.timeTableElementDay] = [...r[a.timeTableElementDay] || [], a];
                 return r;
