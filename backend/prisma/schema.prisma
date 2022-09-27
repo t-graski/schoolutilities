@@ -379,7 +379,7 @@ model userEmailChangeTokens {
 model userLoginTokens {
   userLoginTokenId                Int      @id @default(autoincrement()) @map("user_login_token_id")
   userId                          Int      @map("user_id")
-  refreshToken                    String   @map("refresh_token")
+  refreshToken                    String   @map("refresh_token") @db.VarChar(255)
   userLoginTokenCreationTimestamp DateTime @default(now()) @map("user_login_token_creation_timestamp") @db.Timestamp(0)
   userLoginTokenExpireTimestamp   DateTime @default(now()) @map("user_login_token_expire_timestamp") @db.Timestamp(0)
   users                           users    @relation(fields: [userId], references: [userId])

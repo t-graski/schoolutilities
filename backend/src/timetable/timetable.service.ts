@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
-import { AddTimeTableDto } from 'src/dto/addTimeTable';
+import { AddTimeTableDto, TimeTableDay, TimeTableElement } from 'src/dto/addTimeTable';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import { Role } from 'src/roles/role.enum';
@@ -69,5 +69,65 @@ export class TimetableService {
         });
 
         return RETURN_DATA.SUCCESS
+    }
+
+    async getTimetable(classUUID: string, request): Promise<ReturnMessage> {
+        const timeTableData = [];
+        try {
+            const timeTable = await prisma.timeTableElement.findMany({
+                where: {
+                    timeTableElementClasses: {
+                        some: {
+                            schoolClasses: {
+                                schoolClassUUID: classUUID,
+                            }
+                        }
+                    }
+                },
+                include: {
+                    schoolSubjects: true,
+                    timetableElementTeachers: {
+                        include: {
+                            users: true,
+                        },
+                    }
+                },
+            });
+
+            timeTable.forEach((element) => {
+                timeTableData.push({
+                    timeTableElementUUID: element.timeTableElementUUID,
+                    timeTableElementStartTime: element.timeTableElementStartTime,
+                    timeTableElementEndTime: element.timeTableElementEndTime,
+                    timeTableElementDay: element.timeTableElementDay,
+                    timeTableElementCreationTimestamp: element.timeTableElementCreationTimestamp,
+                    schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+                    timeTableElementTeachers: element.timetableElementTeachers.map((teacher) => {
+                        return {
+                            userUUID: teacher.users.userUUID,
+                            userFirstname: teacher.users.userFirstname,
+                            userLastname: teacher.users.userLastname,
+                            userBirthDate: teacher.users.userBirthDate,
+                            userEmail: teacher.users.userEmail,
+                            userEmailVerified: teacher.users.userEmailVerified,
+                            userCreationTimestamp: teacher.users.userCreationTimestamp,
+                            userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
+                        }
+                    }),
+                })
+            });
+
+            const timeTableDays = timeTableData.reduce((r, a) => {
+                r[a.timeTableElementDay] = [...r[a.timeTableElementDay] || [], a];
+                return r;
+            }, {});
+
+            return {
+                status: 200,
+                data: timeTableDays,
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
     }
 }

@@ -114,6 +114,8 @@ export class SchoolAdminService {
         },
       };
     } catch (err) {
+      console.log(err);
+
       return RETURN_DATA.DATABASE_ERROR;
     }
   }

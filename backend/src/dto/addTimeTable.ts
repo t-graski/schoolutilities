@@ -33,4 +33,8 @@ export class TimeTableElement {
     @IsNotEmpty()
     @IsCustomUUID({ each: true })
     timeTableElementClasses: string[];
+
+    constructor(partial: Partial<TimeTableElement>) {
+        Object.assign(this, partial);
+    }
 }
