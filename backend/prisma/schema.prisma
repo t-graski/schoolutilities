@@ -58,7 +58,6 @@ model schoolClasses {
   schoolClassName              String                         @map("school_class_name")
   departments                  departments                    @relation(fields: [schoolClassDepartmentId], references: [departmentId])
   courseClasses                courseClasses[]
-  schoolSubjects               schoolSubjects[]
   timeTableElementClasses      timeTableElementClasses[]
   timeTableEventClasses        timeTableEventClasses[]
   timeTableSubstitutionClasses timeTableSubstitutionClasses[]
@@ -84,6 +83,7 @@ model schools {
   schoolUserRoles         schoolUserRoles[]
   schoolUsers             schoolUsers[]
   schoolRooms             schoolRooms[]
+  schoolSubjects          schoolSubjects[]
 
   @@unique([schoolUUID], map: "school_uuid_UNIQUE")
   @@index([schoolCreatorId], map: "fk_school_creator_id")
@@ -311,14 +311,17 @@ model schoolRoles {
 }
 
 model schoolSubjects {
-  schoolSubjectId      Int                @id @default(autoincrement()) @map("school_subject_id")
-  schoolSubjectName    String             @map("school_subject_name")
-  schoolSubjectClassId Int                @map("school_subject_class_id")
-  schoolClasses        schoolClasses      @relation(fields: [schoolSubjectClassId], references: [schoolClassId])
-  courses              courses[]
-  timeTableElement     timeTableElement[]
+  schoolSubjectId           Int                @id @default(autoincrement()) @map("school_subject_id")
+  schoolSubjectUUID         String             @map("school_subject_uuid")
+  schoolSubjectName         String             @map("school_subject_name")
+  schoolSubjectAbbreviation String             @map("school_subject_abbreviation")
+  schoolId                  Int                @map("school_id")
+  school                    schools            @relation(fields: [schoolId], references: [schoolId])
+  courses                   courses[]
+  timeTableElement          timeTableElement[]
 
-  @@index([schoolSubjectClassId], map: "fk_school_subject_class_id")
+  @@unique([schoolSubjectUUID], map: "school_subject_uuid")
+  @@index([schoolId], map: "fk_school_subjects_school_id")
   @@map("school_subjects")
 }
 

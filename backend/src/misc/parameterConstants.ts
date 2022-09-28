@@ -154,6 +154,7 @@ export const ID_STARTERS = {
   SUBSTITUTION: 'S',
   EVENT: 'E',
   ROOM: 'R',
+  SUBJECT: 'SS'
 };
 
 export const ERROR_CODES = {

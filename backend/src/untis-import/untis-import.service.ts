@@ -30,7 +30,7 @@ export class UntisImportService {
             const departments = await this.untisRequest("getDepartments", response);
             const offDays = await this.untisRequest("getHolidays", response);
 
-            console.log(schoolSubjects.data.result);
+            // console.log(schoolSubjects.data.result);
 
 
             // for (const department of departments.data.result) {
@@ -71,6 +71,19 @@ export class UntisImportService {
             // await prisma.schoolRooms.createMany({
             //     data: schoolRoomData
             // })
+
+            const schoolSubjectData = schoolSubjects.data.result.map((subject) => {
+                return {
+                    schoolSubjectUUID: `${ID_STARTERS.SUBJECT}${uuidv4()}`,
+                    schoolSubjectName: subject.longName,
+                    schoolSubjectAbbreviation: subject.name,
+                    schoolId,
+                }
+            });
+
+            await prisma.schoolSubjects.createMany({
+                data: schoolSubjectData
+            });
         });
 
         return RETURN_DATA.SUCCESS;
