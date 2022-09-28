@@ -71,7 +71,8 @@ export class TimetableService {
         return RETURN_DATA.SUCCESS
     }
 
-    async getTimetable(classUUID: string, request): Promise<ReturnMessage> {
+    async getTimetable(classUUID: string, dateString: string, request): Promise<ReturnMessage> {
+        const date = new Date(dateString)
         const timeTableData = [];
         try {
             const timeTable = await prisma.timeTableElement.findMany({
@@ -90,8 +91,35 @@ export class TimetableService {
                         include: {
                             users: true,
                         },
-                    }, 
-                    timeTableSubstitutions: true,
+                    },
+                    timeTableSubstitutions: {
+                        include: {
+                            timeTableSubstitutionClasses: {
+                                include: {
+                                    classes: true,
+                                },
+                            },
+                            timeTableSubstitutionTeachers: {
+                                include: {
+                                    users: true,
+                                },
+                            }
+                        }
+                    },
+                    timeTableElementEvents: {
+                        include: {
+                            timeTableEventClasses: {
+                                include: {
+                                    classes: true,
+                                },
+                            },
+                            timeTableEventTeachers: {
+                                include: {
+                                    users: true,
+                                },
+                            },
+                        }
+                    }
                 },
             });
 
@@ -115,10 +143,44 @@ export class TimetableService {
                             userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                         }
                     }),
+                    substitution: checkForSubstitution(element),
+                    event: checkForEvent(element)
                 })
+
+
+
             });
 
-            //sort elements by startttime
+            function checkForEvent(element) {
+
+            }
+
+            function checkForSubstitution(element) {
+                if (element.timeTableSubstitutions.length > 0) {
+                    if (element.timeTableSubstitutions[0].timeTableSubstitutionDate >= date && element.timeTableSubstitutions[0].timeTableSubstitutionDate <= new Date(date.setDate(date.getDate() + 5))) {
+                        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                        let day = weekday[element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()]
+                        if (element.timeTableElementDay === day) { 
+                            return {
+                                timeTableSubstitutionUUID: element.timeTableSubstitutions[0].timeTableSubstitutionUUID,
+                                timeTableSubstitutionDate: element.timeTableSubstitutions[0].timeTableSubstitutionDate,
+                                timeTableSubstitutionStartTime: element.timeTableSubstitutions[0].timeTableSubstitutionStartTime,
+                                timeTableSubstitutionEndTime: element.timeTableSubstitutions[0].timeTableSubstitutionEndTime,
+                                timeTableSubstitutionClasses: element.timeTableSubstitutions[0].timeTableSubstitutionClasses.map((classUUID) => {
+                                    return classUUID.classes.schoolClassUUID
+                                }),
+                                timeTableSubstitutionTeachers: element.timeTableSubstitutions[0].timeTableSubstitutionTeachers.map((teacherUUID) => {
+                                    return teacherUUID.users.userUUID
+                                }),
+                                timeTableSubstitutionSubjectName: element.timeTableSubstitutions[0].timeTableSubstitutionSubjectName,
+                            }
+                        }
+                    }
+                }
+
+                return undefined
+            }
+
             timeTableData.sort((a, b) => {
                 return a.timeTableElementStartTime - b.timeTableElementStartTime;
             });
@@ -132,7 +194,8 @@ export class TimetableService {
                 status: 200,
                 data: timeTableDays,
             }
-        } catch {
+        } catch(error) {
+            console.log(error)
             return RETURN_DATA.DATABASE_ERROR;
         }
     }

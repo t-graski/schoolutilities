@@ -22,9 +22,9 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':classUUID')
-  async getTimetable(@Param('classUUID') classUUID: string, @Req() request, @Res() response) {
-    const result = await this.timetableService.getTimetable(classUUID, request);
+  @Get(':classUUID/:dateString')
+  async getTimetable(@Param('classUUID') classUUID: string, @Param('dateString') dateString: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getTimetable(classUUID, dateString, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
