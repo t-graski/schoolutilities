@@ -24,40 +24,53 @@ export class UntisImportService {
         const userUUID = await this.helper.getUserUUIDfromJWT(token);
 
         login.subscribe(async (response) => {
-            const teachers = await this.untisRequest("getTeachers", response);
             const schoolClasses = await this.untisRequest("getKlassen", response);
             const schoolSubjects = await this.untisRequest("getSubjects", response);
             const schoolRooms = await this.untisRequest("getRooms", response);
             const departments = await this.untisRequest("getDepartments", response);
             const offDays = await this.untisRequest("getHolidays", response);
 
-            console.log(schoolClasses.data.result);
+            console.log(schoolSubjects.data.result);
 
 
-            for (const department of departments.data.result) {
-                await prisma.departments.create({
-                    data: {
-                        departmentName: department.longName,
-                        departmentUUID: `${ID_STARTERS.DEPARTMENT}${uuidv4()}`,
-                        departmentAbbreviation: department.name,
-                        departmentChildsVisible: true,
-                        departmentIsVisible: true,
-                        schools: {
-                            connect: {
-                                schoolUUID,
-                            },
-                        },
-                        schoolClasses: {
-                            create: schoolClasses.data.result.filter((schoolClass) => schoolClass.did === department.id).map((schoolClass) => {
-                                return {
-                                    schoolClassUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
-                                    schoolClassName: schoolClass.name,
-                                }
-                            }),
-                        }
-                    }
-                })
-            };
+            // for (const department of departments.data.result) {
+            //     await prisma.departments.create({
+            //         data: {
+            //             departmentName: department.longName,
+            //             departmentUUID: `${ID_STARTERS.DEPARTMENT}${uuidv4()}`,
+            //             departmentAbbreviation: department.name,
+            //             departmentChildsVisible: true,
+            //             departmentIsVisible: true,
+            //             schools: {
+            //                 connect: {
+            //                     schoolUUID,
+            //                 },
+            //             },
+            //             schoolClasses: {
+            //                 create: schoolClasses.data.result.filter((schoolClass) => schoolClass.did === department.id).map((schoolClass) => {
+            //                     return {
+            //                         schoolClassUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
+            //                         schoolClassName: schoolClass.name,
+            //                     }
+            //                 }),
+            //             }
+            //         }
+            // })
+            // };
+
+            // const schoolRoomData = schoolRooms.data.result.map((room) => {
+            //     return {
+            //         schoolRoomUUID: `${ID_STARTERS.ROOM}${uuidv4()}`,
+            //         schoolRoomName: room.longName,
+            //         schoolRoomAbbreviation: room.name,
+            //         schoolRoomBuilding: room.building,
+            //         schoolId,
+            //     }
+            // });
+
+            // await prisma.schoolRooms.createMany({
+            //     data: schoolRoomData
+            // })
         });
 
         return RETURN_DATA.SUCCESS;

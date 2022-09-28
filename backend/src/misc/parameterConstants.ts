@@ -152,6 +152,8 @@ export const ID_STARTERS = {
   ARTICLE: 'A',
   TIME_TABLE_ELEMENT: 'T',
   SUBSTITUTION: 'S',
+  EVENT: 'E',
+  ROOM: 'R',
 };
 
 export const ERROR_CODES = {
