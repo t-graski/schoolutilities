@@ -23,6 +23,7 @@ model departments {
   departmentId            Int             @id @default(autoincrement()) @map("department_id")
   departmentUUID          String          @map("department_uuid")
   departmentName          String          @map("department_name")
+  departmentAbbreviation  String          @default("") @map("department_abbreviation")
   schoolId                Int             @map("school_id")
   departmentIsVisible     Boolean         @map("department_is_visible")
   departmentChildsVisible Boolean         @map("department_childs_visible")

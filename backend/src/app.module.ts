@@ -16,6 +16,7 @@ import { ArticleService } from './article/article.service';
 import { ArticleController } from './article/article.controller';
 import { ArticleModule } from './article/article.module';
 import { TimetableModule } from './timetable/timetable.module';
+import { UntisImportModule } from './untis-import/untis-import.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { TimetableModule } from './timetable/timetable.module';
     HelperModule,
     ArticleModule,
     TimetableModule,
+    UntisImportModule,
   ],
   controllers: [AppController, ArticleController],
   providers: [AppService, ArticleService],
