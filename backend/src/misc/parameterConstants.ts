@@ -151,6 +151,7 @@ export const ID_STARTERS = {
   COURSE_ELEMENT: 9,
   ARTICLE: 'A',
   TIME_TABLE_ELEMENT: 'T',
+  SUBSTITUTION: 'S',
 };
 
 export const ERROR_CODES = {

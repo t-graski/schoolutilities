@@ -106,7 +106,7 @@ export class TimetableService {
                             }
                         }
                     },
-                    timeTableElementEvents: {
+                    timeTableEvents: {
                         include: {
                             timeTableEventClasses: {
                                 include: {
@@ -143,8 +143,8 @@ export class TimetableService {
                             userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                         }
                     }),
+                    event: checkForEvent(element),
                     substitution: checkForSubstitution(element),
-                    event: checkForEvent(element)
                 })
 
 
@@ -152,15 +152,52 @@ export class TimetableService {
             });
 
             function checkForEvent(element) {
-
+                if (element.timeTableEvents.length > 0) {
+                    if (element.timeTableEvents[0].timeTableEventDate >= date && element.timeTableEvents[0].timeTableEventDate <= new Date(date.setDate(date.getDate() + 5))) {
+                        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                        let day = weekday[element.timeTableEvents[0].timeTableEventDate.getDay()]
+                        if (element.timeTableElementDay === day) {
+                            return {
+                                timeTableEventUUID: element.timeTableEvents[0].timeTableEventUUID,
+                                timeTableEventName: element.timeTableEvents[0].timeTableEventName,
+                                timeTableEventDate: element.timeTableEvents[0].timeTableEventDate,
+                                timeTableEventStartTime: element.timeTableEvents[0].timeTableEventStartTime,
+                                timeTableEventEndTime: element.timeTableEvents[0].timeTableEventEndTime,
+                                timeTableEventTeachers: element.timeTableEvents[0].timeTableEventTeachers.map((teacher) => {
+                                    return {
+                                        userUUID: teacher.users.userUUID,
+                                        userFirstname: teacher.users.userFirstname,
+                                        userLastname: teacher.users.userLastname,
+                                        userBirthDate: teacher.users.userBirthDate,
+                                        userEmail: teacher.users.userEmail,
+                                        userEmailVerified: teacher.users.userEmailVerified,
+                                        userCreationTimestamp: teacher.users.userCreationTimestamp,
+                                        userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
+                                    }
+                                }
+                                ),
+                                timeTableEventClasses: element.timeTableEvents[0].timeTableEventClasses.map((classs) => {
+                                    return {
+                                        schoolClassUUID: classs.classes.schoolClassUUID,
+                                        schoolClassName: classs.classes.schoolClassName,
+                                        schoolClassCreationTimestamp: classs.classes.schoolClassCreationTimestamp,
+                                    }
+                                }
+                                ),
+                            }
+                        }
+                    }
+                }
+                return undefined
             }
 
             function checkForSubstitution(element) {
                 if (element.timeTableSubstitutions.length > 0) {
+                    console.log(element.timeTableSubstitutions)
                     if (element.timeTableSubstitutions[0].timeTableSubstitutionDate >= date && element.timeTableSubstitutions[0].timeTableSubstitutionDate <= new Date(date.setDate(date.getDate() + 5))) {
                         const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                         let day = weekday[element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()]
-                        if (element.timeTableElementDay === day) { 
+                        if (element.timeTableElementDay === day) {
                             return {
                                 timeTableSubstitutionUUID: element.timeTableSubstitutions[0].timeTableSubstitutionUUID,
                                 timeTableSubstitutionDate: element.timeTableSubstitutions[0].timeTableSubstitutionDate,
@@ -194,7 +231,7 @@ export class TimetableService {
                 status: 200,
                 data: timeTableDays,
             }
-        } catch(error) {
+        } catch (error) {
             console.log(error)
             return RETURN_DATA.DATABASE_ERROR;
         }

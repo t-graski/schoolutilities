@@ -59,7 +59,7 @@ model schoolClasses {
   courseClasses                courseClasses[]
   schoolSubjects               schoolSubjects[]
   timeTableElementClasses      timeTableElementClasses[]
-  timeTableElementEventClasses timeTableEventClasses[]
+  timeTableEventClasses        timeTableEventClasses[]
   timeTableSubstitutionClasses timeTableSubstitutionClasses[]
 
   @@unique([schoolClassUUID], map: "school_class_uuid_UNIQUE")
@@ -464,7 +464,7 @@ model timeTableElement {
   users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
   timetableTeachers                 timeTableElementTeachers[]
   timeTableElementClasses           timeTableElementClasses[]
-  timeTableElementEvents            timeTableEvents[]
+  timeTableEvents                   timeTableEvents[]
   timeTableSubstitutions            timeTableSubstitutions[]
 
   @@unique([timeTableElementUUID], map: "time_table_element_uuid_UNIQUE")
@@ -481,6 +481,7 @@ model timeTableSubstitutions {
   timeTableSubstitutionCreationTimestamp DateTime                        @default(now()) @map("time_table_substitution_creation_timestamp") @db.Timestamp(0)
   timeTableSubstitutionCreatorId         Int                             @map("time_table_substitution_creator_id")
   timeTableSubstitutionElementId         Int                             @map("time_table_substitution_time_table_element_id")
+  timeTableSubstitutionDate              DateTime                        @map("time_table_substitution_date")
   timeTableSubstitutionTeachers          timeTableSubstitutionTeachers[]
   timeTableSubstitutionClasses           timeTableSubstitutionClasses[]
   users                                  users                           @relation(fields: [timeTableSubstitutionCreatorId], references: [userId])
@@ -524,6 +525,7 @@ model timeTableEvents {
   timeTableEventName        String                   @map("time_table_event_name")
   timeTableEventDescription String                   @map("time_table_event_description")
   timeTableEventIsAllDay    Boolean                  @map("time_table_event_is_all_day")
+  timeTableEventDate        DateTime                 @map("time_table_event_date")
   timeTableEventTeachers    timeTableEventTeachers[]
   timeTableEventClasses     timeTableEventClasses[]
   timeTableElement          timeTableElement         @relation(fields: [timeTableElementId], references: [timeTableElementId])
@@ -613,7 +615,7 @@ model users {
   userSettings                  userSettings[]
   timetableElementTeachers      timeTableElementTeachers[]
   timeTableElement              timeTableElement[]
-  timeTableElementEventTeachers timeTableEventTeachers[]
+  timeTableEventTeachers        timeTableEventTeachers[]
   timeTableSubstitutionTeachers timeTableSubstitutionTeachers[]
   timeTableSubstitutions        timeTableSubstitutions[]
 
