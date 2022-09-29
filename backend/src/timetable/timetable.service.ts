@@ -119,9 +119,12 @@ export class TimetableService {
                                 },
                             },
                         }
-                    }
+                    },
+                    timeTableOmitted: true,
                 },
             })
+
+            console.log(timeTable)
 
             const holidays = await prisma.schoolClasses.findUnique({
                 where: {
@@ -145,7 +148,7 @@ export class TimetableService {
                         }
                     }
                 }
-            });
+            })
 
             timeTable.forEach((element) => {
                 timeTableData.push({
@@ -153,7 +156,6 @@ export class TimetableService {
                     timeTableElementStartTime: element.timeTableElementStartTime,
                     timeTableElementEndTime: element.timeTableElementEndTime,
                     timeTableElementDay: element.timeTableElementDay,
-                    timeTableElementCreationTimestamp: element.timeTableElementCreationTimestamp,
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
                     timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
                         return {
