@@ -84,6 +84,7 @@ model schools {
   schoolUsers             schoolUsers[]
   schoolRooms             schoolRooms[]
   schoolSubjects          schoolSubjects[]
+  holidays                holidays[]
 
   @@unique([schoolUUID], map: "school_uuid_UNIQUE")
   @@index([schoolCreatorId], map: "fk_school_creator_id")
@@ -599,6 +600,18 @@ model timeTableElementClasses {
   @@index([timeTableElementId], map: "fk_time_table_element_id")
   @@index([schoolClassId], map: "fk_school_class_id")
   @@map("time_table_element_classes")
+}
+
+model holidays {
+  holidayId   Int      @id @default(autoincrement()) @map("holiday_id")
+  holidayUUID String   @map("holiday_uuid")
+  holidayName String   @map("holiday_name")
+  holidayDate DateTime @map("holiday_date")
+  schoolId    Int      @map("school_id")
+  schools     schools  @relation(fields: [schoolId], references: [schoolId])
+
+  @@unique([holidayUUID], map: "holiday_uuid_UNIQUE")
+  @@index([schoolId], map: "fk_holiday_school_id")
 }
 
 model users {
