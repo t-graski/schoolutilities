@@ -308,7 +308,7 @@ export class TimetableService {
 
             return {
                 status: 200,
-                data: timeTableDays,
+                data: timeTableDaysArray,
             }
         } catch (error) {
             console.log(error)
