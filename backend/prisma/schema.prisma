@@ -76,6 +76,7 @@ model schools {
   schoolTimezone          String            @map("school_timezone")
   schoolCreationTimestamp DateTime          @default(now()) @map("school_creation_timestamp") @db.Timestamp(0)
   schoolCreatorId         Int               @map("school_creator_id")
+  schoolCanUpload         Boolean           @default(false) @map("school_can_upload")
   users                   users             @relation(fields: [schoolCreatorId], references: [userId])
   courses                 courses[]
   departments             departments[]
