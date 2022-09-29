@@ -236,4 +236,62 @@ export class TimetableService {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
+
+    async addHoliday(holiday, request): Promise<ReturnMessage> {
+        const { schoolUUID, holidayName, holidayDate } = holiday;
+
+        try {
+            const holiday = await prisma.holidays.create({
+                data: {
+                    holidayUUID: `${ID_STARTERS.HOLIDAYS}${uuidv4()}`,
+                    holidayName,
+                    holidayDate: new Date(holidayDate),
+                    schools: {
+                        connect: {
+                            schoolUUID,
+                        },
+                    },
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: {
+                    holidayUUID: holiday.holidayUUID,
+                    holidayName: holiday.holidayName,
+                    holidayDate: holiday.holidayDate,
+                },
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+
+    }
+
+    async getHolidayOfSchool(schoolUUID: string): Promise<ReturnMessage> {
+        try {
+            const holidays = await prisma.schools.findUnique({
+                where: {
+                    schoolUUID,
+                },
+                include: {
+                    holidays: true,
+                }
+            });
+
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: {
+                    holidays: holidays.holidays.map((holiday) => {
+                        return {
+                            holidayUUID: holiday.holidayUUID,
+                            holidayName: holiday.holidayName,
+                            holidayDate: holiday.holidayDate,
+                        }
+                    }),
+                },
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
 }

@@ -152,6 +152,10 @@ export const ID_STARTERS = {
   ARTICLE: 'A',
   TIME_TABLE_ELEMENT: 'T',
   SUBSTITUTION: 'S',
+  EVENT: 'E',
+  ROOM: 'R',
+  SUBJECT: 'SS',
+  HOLIDAYS: 'H'
 };
 
 export const ERROR_CODES = {

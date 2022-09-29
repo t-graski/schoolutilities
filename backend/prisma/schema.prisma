@@ -58,7 +58,6 @@ model schoolClasses {
   schoolClassName              String                         @map("school_class_name")
   departments                  departments                    @relation(fields: [schoolClassDepartmentId], references: [departmentId])
   courseClasses                courseClasses[]
-  schoolSubjects               schoolSubjects[]
   timeTableElementClasses      timeTableElementClasses[]
   timeTableEventClasses        timeTableEventClasses[]
   timeTableSubstitutionClasses timeTableSubstitutionClasses[]
@@ -83,6 +82,9 @@ model schools {
   schoolJoinCodes         schoolJoinCodes[]
   schoolUserRoles         schoolUserRoles[]
   schoolUsers             schoolUsers[]
+  schoolRooms             schoolRooms[]
+  schoolSubjects          schoolSubjects[]
+  holidays                holidays[]
 
   @@unique([schoolUUID], map: "school_uuid_UNIQUE")
   @@index([schoolCreatorId], map: "fk_school_creator_id")
@@ -310,14 +312,17 @@ model schoolRoles {
 }
 
 model schoolSubjects {
-  schoolSubjectId      Int                @id @default(autoincrement()) @map("school_subject_id")
-  schoolSubjectName    String             @map("school_subject_name")
-  schoolSubjectClassId Int                @map("school_subject_class_id")
-  schoolClasses        schoolClasses      @relation(fields: [schoolSubjectClassId], references: [schoolClassId])
-  courses              courses[]
-  timeTableElement     timeTableElement[]
+  schoolSubjectId           Int                @id @default(autoincrement()) @map("school_subject_id")
+  schoolSubjectUUID         String             @map("school_subject_uuid")
+  schoolSubjectName         String             @map("school_subject_name")
+  schoolSubjectAbbreviation String             @map("school_subject_abbreviation")
+  schoolId                  Int                @map("school_id")
+  school                    schools            @relation(fields: [schoolId], references: [schoolId])
+  courses                   courses[]
+  timeTableElement          timeTableElement[]
 
-  @@index([schoolSubjectClassId], map: "fk_school_subject_class_id")
+  @@unique([schoolSubjectUUID], map: "school_subject_uuid")
+  @@index([schoolId], map: "fk_school_subjects_school_id")
   @@map("school_subjects")
 }
 
@@ -348,6 +353,19 @@ model schoolUsers {
   @@index([schoolId], map: "fk_school_users_school_id")
   @@index([schoolUserId], map: "fk_school_users_user_id")
   @@map("school_users")
+}
+
+model schoolRooms {
+  schoolRoomId           Int     @id @default(autoincrement()) @map("school_room_id")
+  schoolRoomUUID         String  @map("school_room_uuid")
+  schoolRoomName         String  @map("school_room_name")
+  schoolRoomAbbreviation String  @map("school_room_abbreviation")
+  schoolRoomBuilding     String  @map("school_room_building")
+  schoolId               Int     @map("school_id")
+  schools                schools @relation(fields: [schoolId], references: [schoolId])
+
+  @@index([schoolId], map: "fk_school_room_school_id")
+  @@map("school_rooms")
 }
 
 model userBadges {
@@ -582,6 +600,18 @@ model timeTableElementClasses {
   @@index([timeTableElementId], map: "fk_time_table_element_id")
   @@index([schoolClassId], map: "fk_school_class_id")
   @@map("time_table_element_classes")
+}
+
+model holidays {
+  holidayId   Int      @id @default(autoincrement()) @map("holiday_id")
+  holidayUUID String   @map("holiday_uuid")
+  holidayName String   @map("holiday_name")
+  holidayDate DateTime @map("holiday_date")
+  schoolId    Int      @map("school_id")
+  schools     schools  @relation(fields: [schoolId], references: [schoolId])
+
+  @@unique([holidayUUID], map: "holiday_uuid_UNIQUE")
+  @@index([schoolId], map: "fk_holiday_school_id")
 }
 
 model users {
