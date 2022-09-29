@@ -4,7 +4,7 @@ import type * as Stitches from "@stitches/react";
 import { InputFieldCore } from "./InputFieldCore";
 
 type Props = {
-  inputType: "text" | "date" | "email" | "number" | "datetime-local";
+  inputType: "text" | "date" | "email" | "number" | "datetime-local" | "time";
   value?: string;
   onChange: Function;
   icon?: any;
