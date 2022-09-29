@@ -2,18 +2,42 @@ import React from "react";
 import { styled } from "../../stitches.config";
 
 export type TimeTableItem = {
+  timeTableElementUUID?: string;
+  timeTableElementStartTime?: string;
+  timeTableElementEndTime?: string;
+  timeTableElementDay?: string;
+  timeTableElementCreationTimestamp?: string;
   schoolSubjectName?: string;
-  shortName?: string;
-  startTime: string;
-  endTime: string;
-  teachers?: {
-    name: string;
-    id: string;
+  startTime?: string;
+  endTime?: string;
+  timeTableElementTeachers?: {
+    userUUID: string;
+    userFirstname: string;
+    userLastname: string;
+    userBirthDate: string;
+    userEmail: string;
+    userEmailVerified: boolean;
+    userCreationTimestamp: string;
+    userLastLoginTimestamp: string;
   }[];
-  classes?: {
-    name: string;
-    id: string;
-  }[];
+  substitution?: {
+    timeTableSubstitutionUUID: string;
+    timeTableSubstitutionDate: string;
+    timeTableSubstitutionClasses: {
+      schoolClassUUID: string;
+      schoolClassName: string;
+    }[];
+    timeTableSubstitutionTeachers: {
+      userUUID: string;
+      userFirstname: string;
+      userLastname: string;
+      userBirthDate: string;
+      userEmail: string;
+      userEmailVerified: boolean;
+      userCreationTimestamp: string;
+      userLastLoginTimestamp: string;
+    }[];
+  };
 };
 
 type Props = {
@@ -21,31 +45,10 @@ type Props = {
   startTime: string;
 };
 
-/*{
-            "timeTableElementUUID": "T9ade3d0a-853d-491e-ab85-c187bf1a867d",
-            "timeTableElementStartTime": "2022-10-10T06:00:00.000Z",
-            "timeTableElementEndTime": "2022-10-10T06:50:00.000Z",
-            "timeTableElementDay": "Monday",
-            "timeTableElementCreationTimestamp": "2022-09-27T06:32:32.000Z",
-            "schoolSubjectName": "German",
-            "timeTableElementTeachers": [
-                {
-                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
-                    "userFirstname": "Tobias",
-                    "userLastname": "Graski",
-                    "userBirthDate": "2003-09-15T00:00:00.000Z",
-                    "userEmail": "graski.tobias@gmail.com",
-                    "userEmailVerified": false,
-                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
-                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
-                }
-            ]
-        } */
-
 export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
-  let startPoint = getRowFromTime(item.startTime, startTime);
-  let endPoint = getRowFromTime(item.endTime, startTime);
-
+  let startPoint = getRowFromTime(item.timeTableElementStartTime ?? item.startTime, startTime);
+  let endPoint = getRowFromTime(item.timeTableElementEndTime ?? item.endTime, startTime);
+  
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
     backgroundColor: "lightblue",
@@ -70,20 +73,16 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
         <TimeTableItemLayout>
           <div>{item.schoolSubjectName}</div>
           <div>
-            {item.startTime} - {item.endTime}
+            {getSmallTimeFormat(item.timeTableElementStartTime)} - {getSmallTimeFormat(item.timeTableElementEndTime)}
           </div>
 
-          {item.teachers.map((teacher, index) => (
-            <div key={index}>{teacher.name}</div>
-          ))}
-
-          {item.classes.map((classItem, index) => (
-            <div key={index}>{classItem.name}</div>
+          {item.timeTableElementTeachers.map((teacher, index) => (
+            <div key={index}>{teacher.userFirstname}</div>
           ))}
         </TimeTableItemLayout>
       ) : (
         <TimeTableItemLayout layout="time">
-          <div>{item.startTime}</div>
+          <div>{getSmallTimeFormat(item.startTime)}</div>
         </TimeTableItemLayout>
       )}
     </>
@@ -91,12 +90,24 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
 };
 
 function getRowFromTime(time: string, startTime: string) {
-  let hour = parseInt(time.split(":")[0]) - parseInt(startTime.split(":")[0]);
-  let minute = parseInt(time.split(":")[1]) - parseInt(startTime.split(":")[1]);
+  console.log(time);
+  let hour = new Date(time).getHours() - parseInt(startTime.split(":")[0]);
+  let minute = new Date(time).getMinutes() - parseInt(startTime.split(":")[1]);
   if (minute < 0) {
     hour--;
     minute = 60 + minute;
   }
+  console.log(new Date(time).getHours());
   let row = Math.floor(1 + hour * 12 + minute / 5);
   return row < 1 ? 1 : row;
+}
+
+function getSmallTimeFormat(time: string) {
+  let hour = new Date(time).getHours();
+  let minute = new Date(time).getMinutes();
+  return formatTime(hour) + ":" + formatTime(minute);
+}
+
+function formatTime(time: number) {
+  return time < 10 ? "0" + time : time;
 }

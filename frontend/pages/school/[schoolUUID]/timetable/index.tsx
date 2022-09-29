@@ -19,7 +19,7 @@ const TimeTableNavigationLayout = styled("div", {
 export default function ShowCourses() {
   const { data: timetable, status } = useQuery(
     ["timetable", "4f6aae61f-59f0-4abf-bc2b-92be34724b85"],
-    () => getTimeTableForClass("4f6aae61f-59f0-4abf-bc2b-92be34724b85")
+    () => getTimeTableForClass("4f6aae61f-59f0-4abf-bc2b-92be34724b85/2022-09-26")
   );
 
   if(status === "loading") {
@@ -62,6 +62,7 @@ export default function ShowCourses() {
         <TimeTableOverview
           startTime="08:00"
           endTime="17:15"
+          weekTimeTable={timetable}
         ></TimeTableOverview>
       </TimeTableNavigationLayout>
     </SiteLayout>

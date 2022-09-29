@@ -9,8 +9,8 @@ type Props = {
   endTime: string;
   weekTimeTable?: {
     day: string;
-    date: string;
-    dayTimeTable: TimeTableItem[];
+    date?: string;
+    timeTableElements: TimeTableItem[];
   }[];
 };
 
@@ -61,92 +61,7 @@ const TimeTableDayHeaderDate = styled("span", {});
 export const TimeTableOverview: React.FC<Props> = ({
   startTime,
   endTime,
-  weekTimeTable = {
-    "Monday": [
-        {
-            "timeTableElementUUID": "T9ade3d0a-853d-491e-ab85-c187bf1a867d",
-            "timeTableElementStartTime": "2022-10-10T06:00:00.000Z",
-            "timeTableElementEndTime": "2022-10-10T06:50:00.000Z",
-            "timeTableElementDay": "Monday",
-            "timeTableElementCreationTimestamp": "2022-09-27T06:32:32.000Z",
-            "schoolSubjectName": "German",
-            "timeTableElementTeachers": [
-                {
-                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
-                    "userFirstname": "Tobias",
-                    "userLastname": "Graski",
-                    "userBirthDate": "2003-09-15T00:00:00.000Z",
-                    "userEmail": "graski.tobias@gmail.com",
-                    "userEmailVerified": false,
-                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
-                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
-                }
-            ]
-        },
-        {
-            "timeTableElementUUID": "T474c1ea6-29f0-4455-b00a-b3bcc8d36eb2",
-            "timeTableElementStartTime": "2022-10-10T06:50:00.000Z",
-            "timeTableElementEndTime": "2022-10-10T07:45:00.000Z",
-            "timeTableElementDay": "Monday",
-            "timeTableElementCreationTimestamp": "2022-09-27T06:32:26.000Z",
-            "schoolSubjectName": "German",
-            "timeTableElementTeachers": [
-                {
-                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
-                    "userFirstname": "Tobias",
-                    "userLastname": "Graski",
-                    "userBirthDate": "2003-09-15T00:00:00.000Z",
-                    "userEmail": "graski.tobias@gmail.com",
-                    "userEmailVerified": false,
-                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
-                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
-                }
-            ]
-        },
-        {
-            "timeTableElementUUID": "T3fe985d4-4fac-4e2b-a798-b05b74d79f4f",
-            "timeTableElementStartTime": "2022-10-10T08:00:00.000Z",
-            "timeTableElementEndTime": "2022-10-10T08:50:00.000Z",
-            "timeTableElementDay": "Monday",
-            "timeTableElementCreationTimestamp": "2022-09-27T06:31:32.000Z",
-            "schoolSubjectName": "German",
-            "timeTableElementTeachers": [
-                {
-                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
-                    "userFirstname": "Tobias",
-                    "userLastname": "Graski",
-                    "userBirthDate": "2003-09-15T00:00:00.000Z",
-                    "userEmail": "graski.tobias@gmail.com",
-                    "userEmailVerified": false,
-                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
-                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
-                }
-            ]
-        }
-    ],
-    "Tuesday": [
-        {
-            "timeTableElementUUID": "T2a5981b8-98b8-4e09-9dac-2b471d478589",
-            "timeTableElementStartTime": "2022-10-10T06:00:00.000Z",
-            "timeTableElementEndTime": "2022-10-10T06:50:00.000Z",
-            "timeTableElementDay": "Tuesday",
-            "timeTableElementCreationTimestamp": "2022-09-27T06:54:00.000Z",
-            "schoolSubjectName": "German",
-            "timeTableElementTeachers": [
-                {
-                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
-                    "userFirstname": "Tobias",
-                    "userLastname": "Graski",
-                    "userBirthDate": "2003-09-15T00:00:00.000Z",
-                    "userEmail": "graski.tobias@gmail.com",
-                    "userEmailVerified": false,
-                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
-                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
-                }
-            ]
-        }
-    ]
-},
+  weekTimeTable,
 }) => {
   const [date, setDate] = useState(new Date());
 
@@ -202,7 +117,7 @@ export const TimeTableOverview: React.FC<Props> = ({
                   <TimeTableMarker></TimeTableMarker>
                 )}
                 <TimeTableColumn
-                  dayTimeTable={dayTimeTable.dayTimeTable}
+                  dayTimeTable={dayTimeTable.timeTableElements}
                   timeTableRows={timeTableRows}
                   startTime={startTime}
                 ></TimeTableColumn>
