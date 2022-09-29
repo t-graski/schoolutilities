@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
@@ -123,6 +123,30 @@ export class TimetableService {
                 },
             })
 
+            const holidays = await prisma.schoolClasses.findUnique({
+                where: {
+                    schoolClassUUID: classUUID,
+                },
+                include: {
+                    departments: {
+                        include: {
+                            schools: {
+                                include: {
+                                    holidays: {
+                                        where: {
+                                            holidayDate: {
+                                                gte: new Date(dateString),
+                                                lte: new Date(new Date(dateString).getTime() + 5 * 24 * 60 * 60 * 1000),
+                                            }
+                                        }
+                                    },
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
             timeTable.forEach((element) => {
                 timeTableData.push({
                     timeTableElementUUID: element.timeTableElementUUID,
@@ -182,7 +206,7 @@ export class TimetableService {
                                     }
                                 }
                                 ),
-                                
+
                             }
                         }
                     }
@@ -247,6 +271,13 @@ export class TimetableService {
             });
 
             timeTableDaysArray.forEach((element) => {
+                let holiday = checkForHoliday(element)
+
+                if (holiday !== undefined) {
+                    element.timeTableElements.length = 0
+                    element.timeTableElements.push(holiday)
+                }
+
                 let allDayEvent = element.timeTableElements.find((element) => {
                     return element.event !== undefined && element.event.timeTableEventIsAllDay === true
                 })
@@ -257,6 +288,23 @@ export class TimetableService {
                     })
                 }
             })
+
+            function checkForHoliday(element) {
+                const holiday = holidays.departments.schools.holidays.find((holiday) => {
+                    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                    let day = weekday[holiday.holidayDate.getDay() - 1]
+
+                    if (day === element.day) {
+                        return true
+                    }
+                })
+
+                if (holiday !== undefined) {
+                    return holiday
+                }
+
+                return undefined
+            }
 
             return {
                 status: 200,
