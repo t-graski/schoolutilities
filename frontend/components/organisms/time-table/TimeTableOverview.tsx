@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TimeTableColumn } from "../../molecules/TimeTableColumn";
 import { styled } from "../../../stitches.config";
 import { TimeTableTime } from "../../molecules/TimeTableTime";
+import { TimeTableItem } from "../../atoms/TimeTableItem";
 
 type Props = {
   startTime: string;
@@ -9,20 +10,7 @@ type Props = {
   weekTimeTable?: {
     day: string;
     date: string;
-    dayTimeTable: {
-      name: string;
-      shortName: string;
-      startTime: string;
-      endTime: string;
-      teachers: {
-        name: string;
-        id: string;
-      }[];
-      classes: {
-        name: string;
-        id: string;
-      }[];
-    }[];
+    dayTimeTable: TimeTableItem[];
   }[];
 };
 
@@ -73,311 +61,92 @@ const TimeTableDayHeaderDate = styled("span", {});
 export const TimeTableOverview: React.FC<Props> = ({
   startTime,
   endTime,
-  weekTimeTable = [
-    {
-      day: "Monday",
-      date: "2021-09-13",
-      dayTimeTable: [
+  weekTimeTable = {
+    "Monday": [
         {
-          name: "Math",
-          shortName: "Math",
-          startTime: "08:00",
-          endTime: "08:50",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
+            "timeTableElementUUID": "T9ade3d0a-853d-491e-ab85-c187bf1a867d",
+            "timeTableElementStartTime": "2022-10-10T06:00:00.000Z",
+            "timeTableElementEndTime": "2022-10-10T06:50:00.000Z",
+            "timeTableElementDay": "Monday",
+            "timeTableElementCreationTimestamp": "2022-09-27T06:32:32.000Z",
+            "schoolSubjectName": "German",
+            "timeTableElementTeachers": [
+                {
+                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
+                    "userFirstname": "Tobias",
+                    "userLastname": "Graski",
+                    "userBirthDate": "2003-09-15T00:00:00.000Z",
+                    "userEmail": "graski.tobias@gmail.com",
+                    "userEmailVerified": false,
+                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
+                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
+                }
+            ]
         },
         {
-          name: "English",
-          shortName: "English",
-          startTime: "08:55",
-          endTime: "09:45",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
+            "timeTableElementUUID": "T474c1ea6-29f0-4455-b00a-b3bcc8d36eb2",
+            "timeTableElementStartTime": "2022-10-10T06:50:00.000Z",
+            "timeTableElementEndTime": "2022-10-10T07:45:00.000Z",
+            "timeTableElementDay": "Monday",
+            "timeTableElementCreationTimestamp": "2022-09-27T06:32:26.000Z",
+            "schoolSubjectName": "German",
+            "timeTableElementTeachers": [
+                {
+                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
+                    "userFirstname": "Tobias",
+                    "userLastname": "Graski",
+                    "userBirthDate": "2003-09-15T00:00:00.000Z",
+                    "userEmail": "graski.tobias@gmail.com",
+                    "userEmailVerified": false,
+                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
+                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
+                }
+            ]
         },
         {
-          name: "History",
-          shortName: "History",
-          startTime: "16:30",
-          endTime: "17:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      day: "Tuesday",
-      date: "2021-09-14",
-      dayTimeTable: [
+            "timeTableElementUUID": "T3fe985d4-4fac-4e2b-a798-b05b74d79f4f",
+            "timeTableElementStartTime": "2022-10-10T08:00:00.000Z",
+            "timeTableElementEndTime": "2022-10-10T08:50:00.000Z",
+            "timeTableElementDay": "Monday",
+            "timeTableElementCreationTimestamp": "2022-09-27T06:31:32.000Z",
+            "schoolSubjectName": "German",
+            "timeTableElementTeachers": [
+                {
+                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
+                    "userFirstname": "Tobias",
+                    "userLastname": "Graski",
+                    "userBirthDate": "2003-09-15T00:00:00.000Z",
+                    "userEmail": "graski.tobias@gmail.com",
+                    "userEmailVerified": false,
+                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
+                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
+                }
+            ]
+        }
+    ],
+    "Tuesday": [
         {
-          name: "Math",
-          shortName: "Math",
-          startTime: "08:00",
-          endTime: "09:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "English",
-          shortName: "English",
-          startTime: "09:00",
-          endTime: "10:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "History",
-          shortName: "History",
-          startTime: "10:00",
-          endTime: "11:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-      ],
-    },
-
-    {
-      day: "Wednesday",
-      date: "2021-09-15",
-      dayTimeTable: [
-        {
-          name: "Math",
-          shortName: "Math",
-          startTime: "08:00",
-          endTime: "09:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "English",
-          shortName: "English",
-          startTime: "09:00",
-          endTime: "10:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "History",
-          shortName: "History",
-          startTime: "10:00",
-          endTime: "11:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-      ],
-    },
-
-    {
-      day: "Thursday",
-      date: "2021-09-16",
-      dayTimeTable: [
-        {
-          name: "Math",
-          shortName: "Math",
-          startTime: "08:00",
-          endTime: "09:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "English",
-          shortName: "English",
-          startTime: "09:00",
-          endTime: "10:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "History",
-          shortName: "History",
-          startTime: "10:00",
-          endTime: "11:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-      ],
-    },
-
-    {
-      day: "Friday",
-      date: "2021-09-17",
-      dayTimeTable: [
-        {
-          name: "Math",
-          shortName: "Math",
-          startTime: "08:00",
-          endTime: "09:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "English",
-          shortName: "English",
-          startTime: "09:00",
-          endTime: "10:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-        {
-          name: "History",
-          shortName: "History",
-          startTime: "10:00",
-          endTime: "11:00",
-          teachers: [
-            {
-              name: "John Doe",
-              id: "1",
-            },
-          ],
-          classes: [
-            {
-              name: "1A",
-              id: "1",
-            },
-          ],
-        },
-      ],
-    },
-  ],
+            "timeTableElementUUID": "T2a5981b8-98b8-4e09-9dac-2b471d478589",
+            "timeTableElementStartTime": "2022-10-10T06:00:00.000Z",
+            "timeTableElementEndTime": "2022-10-10T06:50:00.000Z",
+            "timeTableElementDay": "Tuesday",
+            "timeTableElementCreationTimestamp": "2022-09-27T06:54:00.000Z",
+            "schoolSubjectName": "German",
+            "timeTableElementTeachers": [
+                {
+                    "userUUID": "151d402f9-33fb-4b66-8599-29f17c448630",
+                    "userFirstname": "Tobias",
+                    "userLastname": "Graski",
+                    "userBirthDate": "2003-09-15T00:00:00.000Z",
+                    "userEmail": "graski.tobias@gmail.com",
+                    "userEmailVerified": false,
+                    "userCreationTimestamp": "2022-09-27T06:16:44.000Z",
+                    "userLastLoginTimestamp": "2022-09-28T08:26:20.000Z"
+                }
+            ]
+        }
+    ]
+},
 }) => {
   const [date, setDate] = useState(new Date());
 

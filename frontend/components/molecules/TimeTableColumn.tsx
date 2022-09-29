@@ -3,20 +3,7 @@ import { styled } from "../../stitches.config";
 import { TimeTableItem } from "../atoms/TimeTableItem";
 
 type Props = {
-  dayTimeTable: {
-    name: string;
-    shortName: string;
-    startTime: string;
-    endTime: string;
-    teachers: {
-      name: string;
-      id: string;
-    }[];
-    classes: {
-      name: string;
-      id: string;
-    }[];
-  }[];
+  dayTimeTable: TimeTableItem[];
   timeTableRows: number;
   startTime: string;
 };

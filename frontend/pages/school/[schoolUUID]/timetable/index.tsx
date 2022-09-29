@@ -8,6 +8,8 @@ import { SideDashboardBar } from "../../../../components/organisms/SideDashboard
 import SvgStudent from "../../../../components/atoms/svg/SvgStudent";
 import SvgClass from "../../../../components/atoms/svg/SvgClass";
 import SvgDepartment from "../../../../components/atoms/svg/SvgDepartment";
+import { useQuery } from "react-query";
+import { getTimeTableForClass } from "../../../../utils/requests";
 
 const TimeTableNavigationLayout = styled("div", {
   display: "grid",
@@ -15,6 +17,21 @@ const TimeTableNavigationLayout = styled("div", {
 });
 
 export default function ShowCourses() {
+  const { data: timetable, status } = useQuery(
+    ["timetable", "4f6aae61f-59f0-4abf-bc2b-92be34724b85"],
+    () => getTimeTableForClass("4f6aae61f-59f0-4abf-bc2b-92be34724b85")
+  );
+
+  if(status === "loading") {
+    return <div>Loading...</div>
+  }
+
+  if(status === "error") {
+    return <div>Error</div>
+  }
+
+  console.log(timetable);
+
   return (
     <SiteLayout>
       <Head>
