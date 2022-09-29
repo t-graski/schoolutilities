@@ -72,8 +72,8 @@ export class TimetableService {
     }
 
     async getTimetable(classUUID: string, dateString: string, request): Promise<ReturnMessage> {
-        const date = new Date(dateString)
-        const timeTableData = [];
+        const timeTableData = []
+
         try {
             const timeTable = await prisma.timeTableElement.findMany({
                 where: {
@@ -121,7 +121,7 @@ export class TimetableService {
                         }
                     }
                 },
-            });
+            })
 
             timeTable.forEach((element) => {
                 timeTableData.push({
@@ -143,17 +143,14 @@ export class TimetableService {
                             userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                         }
                     }),
-                    event: checkForEvent(element),
-                    substitution: checkForSubstitution(element),
+                    substitution: checkForSubstitution(element, new Date(dateString)),
+                    event: checkForEvent(element, new Date(dateString)),
                 })
-
-
-
             });
 
-            function checkForEvent(element) {
+            function checkForEvent(element, monday) {
                 if (element.timeTableEvents.length > 0) {
-                    if (element.timeTableEvents[0].timeTableEventDate >= date && element.timeTableEvents[0].timeTableEventDate <= new Date(date.setDate(date.getDate() + 5))) {
+                    if (element.timeTableEvents[0].timeTableEventDate >= monday && element.timeTableEvents[0].timeTableEventDate <= new Date(monday.setDate(monday.getDate() + 5))) {
                         const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                         let day = weekday[element.timeTableEvents[0].timeTableEventDate.getDay()]
                         if (element.timeTableElementDay === day) {
@@ -163,6 +160,7 @@ export class TimetableService {
                                 timeTableEventDate: element.timeTableEvents[0].timeTableEventDate,
                                 timeTableEventStartTime: element.timeTableEvents[0].timeTableEventStartTime,
                                 timeTableEventEndTime: element.timeTableEvents[0].timeTableEventEndTime,
+                                timeTableEventIsAllDay: element.timeTableEvents[0].timeTableEventIsAllDay,
                                 timeTableEventTeachers: element.timeTableEvents[0].timeTableEventTeachers.map((teacher) => {
                                     return {
                                         userUUID: teacher.users.userUUID,
@@ -184,17 +182,18 @@ export class TimetableService {
                                     }
                                 }
                                 ),
+                                
                             }
                         }
                     }
                 }
+
                 return undefined
             }
 
-            function checkForSubstitution(element) {
+            function checkForSubstitution(element, monday) {
                 if (element.timeTableSubstitutions.length > 0) {
-                    console.log(element.timeTableSubstitutions)
-                    if (element.timeTableSubstitutions[0].timeTableSubstitutionDate >= date && element.timeTableSubstitutions[0].timeTableSubstitutionDate <= new Date(date.setDate(date.getDate() + 5))) {
+                    if (element.timeTableSubstitutions[0].timeTableSubstitutionDate >= monday && element.timeTableSubstitutions[0].timeTableSubstitutionDate <= new Date(monday.setDate(monday.getDate() + 5))) {
                         const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                         let day = weekday[element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()]
                         if (element.timeTableElementDay === day) {
@@ -203,11 +202,24 @@ export class TimetableService {
                                 timeTableSubstitutionDate: element.timeTableSubstitutions[0].timeTableSubstitutionDate,
                                 timeTableSubstitutionStartTime: element.timeTableSubstitutions[0].timeTableSubstitutionStartTime,
                                 timeTableSubstitutionEndTime: element.timeTableSubstitutions[0].timeTableSubstitutionEndTime,
-                                timeTableSubstitutionClasses: element.timeTableSubstitutions[0].timeTableSubstitutionClasses.map((classUUID) => {
-                                    return classUUID.classes.schoolClassUUID
+                                timeTableSubstitutionClasses: element.timeTableSubstitutions[0].timeTableSubstitutionClasses.map((classes) => {
+                                    return {
+                                        schoolClassUUID: classes.classes.schoolClassUUID,
+                                        schoolClassName: classes.classes.schoolClassName,
+                                        schoolClassCreationTimestamp: classes.classes.schoolClassCreationTimestamp,
+                                    }
                                 }),
-                                timeTableSubstitutionTeachers: element.timeTableSubstitutions[0].timeTableSubstitutionTeachers.map((teacherUUID) => {
-                                    return teacherUUID.users.userUUID
+                                timeTableSubstitutionTeachers: element.timeTableSubstitutions[0].timeTableSubstitutionTeachers.map((teacher) => {
+                                    return {
+                                        userUUID: teacher.users.userUUID,
+                                        userFirstname: teacher.users.userFirstname,
+                                        userLastname: teacher.users.userLastname,
+                                        userBirthDate: teacher.users.userBirthDate,
+                                        userEmail: teacher.users.userEmail,
+                                        userEmailVerified: teacher.users.userEmailVerified,
+                                        userCreationTimestamp: teacher.users.userCreationTimestamp,
+                                        userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
+                                    }
                                 }),
                                 timeTableSubstitutionSubjectName: element.timeTableSubstitutions[0].timeTableSubstitutionSubjectName,
                             }
@@ -226,6 +238,25 @@ export class TimetableService {
                 r[a.timeTableElementDay] = [...r[a.timeTableElementDay] || [], a];
                 return r;
             }, {});
+
+            let timeTableDaysArray = Object.keys(timeTableDays).map((key) => {
+                return {
+                    day: key,
+                    timeTableElements: timeTableDays[key]
+                }
+            });
+
+            timeTableDaysArray.forEach((element) => {
+                let allDayEvent = element.timeTableElements.find((element) => {
+                    return element.event !== undefined && element.event.timeTableEventIsAllDay === true
+                })
+
+                if (allDayEvent !== undefined) {
+                    element.timeTableElements.forEach((element) => {
+                        element.event = allDayEvent.event
+                    })
+                }
+            })
 
             return {
                 status: 200,
