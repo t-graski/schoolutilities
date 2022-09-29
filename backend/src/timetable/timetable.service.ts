@@ -375,4 +375,34 @@ export class TimetableService {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
+
+    async addExam(exam, request): Promise<ReturnMessage> {
+        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription } = exam;
+
+        try {
+            const exam = await prisma.timeTableExam.create({
+                data: {
+                    timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
+                    timeTableExamRoomId,
+                    timeTableExamDescription,
+                    timeTableElements: {
+                        connect: {
+                            timeTableElementUUID,
+                        },
+                    },
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: {
+                    timeTableExamUUID: exam.timeTableExamUUID,
+                    timeTableExamRoomId: exam.timeTableExamRoomId,
+                    timeTableExamDescription: exam.timeTableExamDescription,
+                },
+            }
+        } catch (err) {
+            console.log(err)
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
 }

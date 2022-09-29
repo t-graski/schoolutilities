@@ -486,6 +486,7 @@ model timeTableElement {
   timeTableEvents                   timeTableEvents[]
   timeTableSubstitutions            timeTableSubstitutions[]
   timeTableOmitted                  timeTableOmitted[]
+  timeTableExam                     timeTableExam[]
 
   @@unique([timeTableElementUUID], map: "time_table_element_uuid_UNIQUE")
   @@index([timeTableElementSubjectId], map: "fk_time_table_element_subject_id")
@@ -494,17 +495,28 @@ model timeTableElement {
 }
 
 model timeTableOmitted {
-  timeTableOmittedId            Int      @id @default(autoincrement()) @map("time_table_omitted_id")
-  timeTableElementId            Int      @map("time_table_element_id")
-  timeTableElementIsOmitted     Boolean  @map("time_table_element_is_omitted")
-  timeTableElementOmittedReason String   @map("time_table_element_omitted_reason")
-  timeTableElementOmittedDate   DateTime @map("time_table_element_omitted_date")
-
-  timeTableElement timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableOmittedId            Int              @id @default(autoincrement()) @map("time_table_omitted_id")
+  timeTableElementId            Int              @map("time_table_element_id")
+  timeTableElementIsOmitted     Boolean          @map("time_table_element_is_omitted")
+  timeTableElementOmittedReason String           @map("time_table_element_omitted_reason")
+  timeTableElementOmittedDate   DateTime         @map("time_table_element_omitted_date")
+  timeTableElement              timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
 
   @@unique([timeTableElementId, timeTableElementOmittedDate], map: "time_table_element_id_UNIQUE")
   @@index([timeTableElementId], map: "fk_time_table_element_id")
   @@map("time_table_omitted")
+}
+
+model timeTableExam {
+  timeTableExamId          Int              @id @default(autoincrement()) @map("time_table_exam_id")
+  timeTableExamUUID        String           @map("time_table_exam_uuid")
+  timeTableElementId       Int              @map("time_table_element_id")
+  timeTableExamRoomId      Int              @map("time_table_exam_room_id")
+  timeTableExamDescription String           @map("time_table_exam_description")
+  timeTableElements        timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+
+  @@unique([timeTableExamUUID], map: "time_table_exam_uuid_UNIQUE")
+  @@map("time_table_exams")
 }
 
 model timeTableSubstitutions {

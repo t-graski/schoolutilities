@@ -155,7 +155,8 @@ export const ID_STARTERS = {
   EVENT: 'E',
   ROOM: 'R',
   SUBJECT: 'SS',
-  HOLIDAYS: 'H'
+  HOLIDAYS: 'H',
+  EXAM: 'X',
 };
 
 export const ERROR_CODES = {
