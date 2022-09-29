@@ -22,6 +22,9 @@ export class TimeTableElement {
     @IsDate()
     timeTableElementStartTime: Date;
     @IsNotEmpty()
+    @IsNumber()
+    timeTableRoomId: number;
+    @IsNotEmpty()
     @IsDate()
     timeTableElementEndTime: Date;
     @IsNotEmpty()

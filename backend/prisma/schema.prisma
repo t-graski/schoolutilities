@@ -356,13 +356,14 @@ model schoolUsers {
 }
 
 model schoolRooms {
-  schoolRoomId           Int     @id @default(autoincrement()) @map("school_room_id")
-  schoolRoomUUID         String  @map("school_room_uuid")
-  schoolRoomName         String  @map("school_room_name")
-  schoolRoomAbbreviation String  @map("school_room_abbreviation")
-  schoolRoomBuilding     String  @map("school_room_building")
-  schoolId               Int     @map("school_id")
-  schools                schools @relation(fields: [schoolId], references: [schoolId])
+  schoolRoomId           Int                @id @default(autoincrement()) @map("school_room_id")
+  schoolRoomUUID         String             @map("school_room_uuid")
+  schoolRoomName         String             @map("school_room_name")
+  schoolRoomAbbreviation String             @map("school_room_abbreviation")
+  schoolRoomBuilding     String             @map("school_room_building")
+  schoolId               Int                @map("school_id")
+  schools                schools            @relation(fields: [schoolId], references: [schoolId])
+  timeTableElement       timeTableElement[]
 
   @@index([schoolId], map: "fk_school_room_school_id")
   @@map("school_rooms")
@@ -481,6 +482,7 @@ model timeTableElement {
   timeTableElementCreatorId         Int                        @map("time_table_element_creator_id")
   schoolSubjects                    schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
   users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
+  schoolRoom                        schoolRooms                @relation(fields: [timeTableElementRoomId], references: [schoolRoomId])
   timetableTeachers                 timeTableElementTeachers[]
   timeTableElementClasses           timeTableElementClasses[]
   timeTableEvents                   timeTableEvents[]
@@ -491,6 +493,7 @@ model timeTableElement {
   @@unique([timeTableElementUUID], map: "time_table_element_uuid_UNIQUE")
   @@index([timeTableElementSubjectId], map: "fk_time_table_element_subject_id")
   @@index([timeTableElementCreatorId], map: "fk_time_table_element_creator_id")
+  @@index([timeTableElementRoomId], map: "fk_time_table_element_room_id")
   @@map("time_table_elements")
 }
 
@@ -630,12 +633,13 @@ model timeTableElementClasses {
 }
 
 model holidays {
-  holidayId   Int      @id @default(autoincrement()) @map("holiday_id")
-  holidayUUID String   @map("holiday_uuid")
-  holidayName String   @map("holiday_name")
-  holidayDate DateTime @map("holiday_date")
-  schoolId    Int      @map("school_id")
-  schools     schools  @relation(fields: [schoolId], references: [schoolId])
+  holidayId        Int      @id @default(autoincrement()) @map("holiday_id")
+  holidayUUID      String   @map("holiday_uuid")
+  holidayName      String   @map("holiday_name")
+  holidayStartDate DateTime @map("holiday_start_date")
+  holidayEndDate   DateTime @map("holiday_end_date")
+  schoolId         Int      @map("school_id")
+  schools          schools  @relation(fields: [schoolId], references: [schoolId])
 
   @@unique([holidayUUID], map: "holiday_uuid_UNIQUE")
   @@index([schoolId], map: "fk_holiday_school_id")

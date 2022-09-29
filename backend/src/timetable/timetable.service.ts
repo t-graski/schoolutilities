@@ -32,7 +32,11 @@ export class TimetableService {
                                 schoolSubjectId: element.timetableElementSubjectId
                             },
                         },
-                        timeTableElementRoomId: 0,
+                        schoolRoom: {
+                            connect: {
+                                schoolRoomId: element.timeTableRoomId
+                            }
+                        },
                         timeTableElementStartTime: new Date(element.timeTableElementStartTime),
                         timeTableElementEndTime: new Date(element.timeTableElementEndTime),
                         timeTableElementDay: day.timeTableDay,
@@ -372,7 +376,8 @@ export class TimetableService {
                         return {
                             holidayUUID: holiday.holidayUUID,
                             holidayName: holiday.holidayName,
-                            holidayDate: holiday.holidayDate,
+                            holidayStartDate: holiday.holidayStartDate,
+                            holidayEndDate: holiday.holidayEndDate,
                         }
                     }),
                 },
