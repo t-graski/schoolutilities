@@ -124,8 +124,6 @@ export class TimetableService {
                 },
             })
 
-            console.log(timeTable)
-
             const holidays = await prisma.schoolClasses.findUnique({
                 where: {
                     schoolClassUUID: classUUID,
@@ -151,6 +149,7 @@ export class TimetableService {
             })
 
             timeTable.forEach((element) => {
+                console.log(element.timeTableOmitted)
                 timeTableData.push({
                     timeTableElementUUID: element.timeTableElementUUID,
                     timeTableElementStartTime: element.timeTableElementStartTime,
@@ -171,8 +170,12 @@ export class TimetableService {
                     }),
                     substitution: checkForSubstitution(element, new Date(dateString)),
                     event: checkForEvent(element, new Date(dateString)),
+                    omitted: element.timeTableOmitted.length > 0 ? {
+                        timeTableOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
+                        timeTableOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
+                    } : undefined,
                 })
-            });
+            })
 
             function checkForEvent(element, monday) {
                 if (element.timeTableEvents.length > 0) {
@@ -277,7 +280,11 @@ export class TimetableService {
 
                 if (holiday !== undefined) {
                     element.timeTableElements.length = 0
-                    element.timeTableElements.push(holiday)
+                    element.timeTableElements.push({
+                        holidayUUID: holiday.holidayUUID,
+                        holidayName: holiday.holidayName,
+                        holidayDate: holiday.holidayDate,
+                    })
                 }
 
                 let allDayEvent = element.timeTableElements.find((element) => {
