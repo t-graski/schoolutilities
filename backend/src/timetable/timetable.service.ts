@@ -149,7 +149,6 @@ export class TimetableService {
             })
 
             timeTable.forEach((element) => {
-                console.log(element.timeTableOmitted)
                 timeTableData.push({
                     timeTableElementUUID: element.timeTableElementUUID,
                     timeTableElementStartTime: element.timeTableElementStartTime,
