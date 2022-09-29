@@ -23,7 +23,7 @@ export const TimeTableTime: React.FC<Props> = ({
     height: "100%",
     width: "100%",
   });
-
+  console.log(getTimeFromRow(1, startTime));
   return (
     <>
       <TimeTableColumnGrid>
@@ -49,7 +49,7 @@ function getTimeFromRow(row: number, startTime: string) {
     hour++;
     minute -= 60;
   }
-  let time = `${formatTime(hour)}:${formatTime(minute)}`;
+  let time = new Date(new Date().setHours(hour, minute)).toISOString();
   return time;
 }
 
