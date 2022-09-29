@@ -21,6 +21,22 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Post('holiday')
+  async addHoliday(@Body() holiday, @Req() request, @Res() response) {
+    const result = await this.timetableService.addHoliday(holiday, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Get('holiday/:schoolUUID')
+  async getHoliday(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getHolidayOfSchool(schoolUUID);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get(':classUUID/:dateString')
   async getTimetable(@Param('classUUID') classUUID: string, @Param('dateString') dateString: string, @Req() request, @Res() response) {
