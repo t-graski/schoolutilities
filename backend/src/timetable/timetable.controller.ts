@@ -37,6 +37,14 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Post('/exam')
+  async addExam(@Body() exam, @Req() request, @Res() response) {
+    const result = await this.timetableService.addExam(exam, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get(':classUUID/:dateString')
   async getTimetable(@Param('classUUID') classUUID: string, @Param('dateString') dateString: string, @Req() request, @Res() response) {

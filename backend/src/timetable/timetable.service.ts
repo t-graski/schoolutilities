@@ -119,7 +119,8 @@ export class TimetableService {
                                 },
                             },
                         }
-                    }
+                    },
+                    timeTableOmitted: true,
                 },
             })
 
@@ -145,7 +146,7 @@ export class TimetableService {
                         }
                     }
                 }
-            });
+            })
 
             timeTable.forEach((element) => {
                 timeTableData.push({
@@ -153,7 +154,6 @@ export class TimetableService {
                     timeTableElementStartTime: element.timeTableElementStartTime,
                     timeTableElementEndTime: element.timeTableElementEndTime,
                     timeTableElementDay: element.timeTableElementDay,
-                    timeTableElementCreationTimestamp: element.timeTableElementCreationTimestamp,
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
                     timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
                         return {
@@ -169,8 +169,12 @@ export class TimetableService {
                     }),
                     substitution: checkForSubstitution(element, new Date(dateString)),
                     event: checkForEvent(element, new Date(dateString)),
+                    omitted: element.timeTableOmitted.length > 0 ? {
+                        timeTableOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
+                        timeTableOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
+                    } : undefined,
                 })
-            });
+            })
 
             function checkForEvent(element, monday) {
                 if (element.timeTableEvents.length > 0) {
@@ -275,7 +279,11 @@ export class TimetableService {
 
                 if (holiday !== undefined) {
                     element.timeTableElements.length = 0
-                    element.timeTableElements.push(holiday)
+                    element.timeTableElements.push({
+                        holidayUUID: holiday.holidayUUID,
+                        holidayName: holiday.holidayName,
+                        holidayDate: holiday.holidayDate,
+                    })
                 }
 
                 let allDayEvent = element.timeTableElements.find((element) => {
@@ -370,6 +378,36 @@ export class TimetableService {
                 },
             }
         } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async addExam(exam, request): Promise<ReturnMessage> {
+        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription } = exam;
+
+        try {
+            const exam = await prisma.timeTableExam.create({
+                data: {
+                    timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
+                    timeTableExamRoomId,
+                    timeTableExamDescription,
+                    timeTableElements: {
+                        connect: {
+                            timeTableElementUUID,
+                        },
+                    },
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: {
+                    timeTableExamUUID: exam.timeTableExamUUID,
+                    timeTableExamRoomId: exam.timeTableExamRoomId,
+                    timeTableExamDescription: exam.timeTableExamDescription,
+                },
+            }
+        } catch (err) {
+            console.log(err)
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
