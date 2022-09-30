@@ -97,6 +97,7 @@ export class TimetableService {
                             users: true,
                         },
                     },
+                    schoolRoom: true,
                     timeTableSubstitutions: {
                         include: {
                             timeTableSubstitutionClasses: {
@@ -165,6 +166,7 @@ export class TimetableService {
                     timeTableElementStartTime: new Date(new Date(dateString).setHours(element.timeTableElementStartTime.getHours(), element.timeTableElementStartTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
                     timeTableElementEndTime: new Date(new Date(dateString).setHours(element.timeTableElementEndTime.getHours(), element.timeTableElementEndTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
                     timeTableElementDay: element.timeTableElementDay,
+                    timeTableElementRoom: element.schoolRoom,
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
                     timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
                         return {
@@ -337,7 +339,7 @@ export class TimetableService {
                     })
                 }
             })
-            
+
             timeTableDaysArray.sort((a, b) => {
                 return weekday.indexOf(a.day) - weekday.indexOf(b.day)
             })
