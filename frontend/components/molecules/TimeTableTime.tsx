@@ -23,7 +23,7 @@ export const TimeTableTime: React.FC<Props> = ({
     height: "100%",
     width: "100%",
   });
-  console.log(getTimeFromRow(1, startTime));
+
   return (
     <>
       <TimeTableColumnGrid>
@@ -31,8 +31,8 @@ export const TimeTableTime: React.FC<Props> = ({
           <TimeTableItem
             key={index}
             item={{
-              startTime: getTimeFromRow(i, startTime),
-              endTime: getTimeFromRow(i + 1, startTime),
+              timeTableElementStartTime: getTimeFromRow(i, startTime),
+              timeTableElementEndTime: getTimeFromRow(i + 1, startTime),
             }}
             startTime={startTime}
           ></TimeTableItem>

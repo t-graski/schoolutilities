@@ -2,33 +2,33 @@ import React, { useEffect, useState } from "react";
 import { TimeTableColumn } from "../../molecules/TimeTableColumn";
 import { styled } from "../../../stitches.config";
 import { TimeTableTime } from "../../molecules/TimeTableTime";
-import { TimeTableItem } from "../../atoms/TimeTableItem";
+import { TimeTableItemType } from "../../atoms/TimeTableItem";
+import { useQuery } from "react-query";
+import { getTimeTableForClass } from "../../../utils/requests";
 
 type Props = {
   startTime: string;
   endTime: string;
-  weekTimeTable?: {
-    day: string;
-    date?: string;
-    timeTableElements: TimeTableItem[];
-  }[];
+  startDate: string;
+  schoolClassUUID: string;
 };
 
 const TimeTableGrid = styled("div", {
   display: "grid",
   gridTemplateColumns: "1fr repeat(5, 3fr)",
   gridTemplateRows: "1fr",
-  gridGap: "1rem",
+  gridGap: "$2x",
   backgroundColor: "$gray100",
   borderRadius: "0.5rem",
   width: "100%",
+  padding: "0 $2x",
 });
 
 const TimeTableInformationGrid = styled("div", {
   display: "grid",
   gridTemplateColumns: "1fr repeat(5, 3fr)",
   gridTemplateRows: "1fr",
-  gridGap: "1rem",
+  gridGap: "$2x",
   backgroundColor: "$gray100",
   borderRadius: "0.5rem",
   width: "100%",
@@ -51,7 +51,7 @@ const TimeTableDayHeader = styled("div", {
 const TimeTableLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
-  height: "89vh",
+  height: "81vh",
   overflowX: "auto",
 });
 
@@ -61,16 +61,14 @@ const TimeTableDayHeaderDate = styled("span", {});
 export const TimeTableOverview: React.FC<Props> = ({
   startTime,
   endTime,
-  weekTimeTable,
+  startDate,
+  schoolClassUUID,
 }) => {
   const [date, setDate] = useState(new Date());
-
-  console.log(calculateTopDistance(date));
 
   useEffect(() => {
     let startInterval = setInterval(() => {
       setDate(new Date());
-      console.log("interval");
     }, 15000);
 
     return () => {
@@ -78,18 +76,33 @@ export const TimeTableOverview: React.FC<Props> = ({
     };
   }, []);
 
+  const { data: weekTimeTable, status } = useQuery(
+    ["timetable", schoolClassUUID, startDate],
+    () => getTimeTableForClass(schoolClassUUID + "/" + startDate)
+  );
+  console.log(weekTimeTable);
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "error") {
+    return <div>Error</div>;
+  }
+
   const TimeTableMarker = styled("div", {
     position: "absolute",
     width: "100%",
     height: "2px",
     backgroundColor: "red",
-    top: calculateTopDistance(date) * 100 + "%",
-    display: calculateTopDistance(date) < 1 ? "block" : "none",
+    top: calculateTopDistance(date, startTime, endTime) * 100 + "%",
+    display:
+      calculateTopDistance(date, startTime, endTime) < 1 ? "block" : "none",
     zIndex: 1,
   });
 
   const timeTableRows = calculate5MinuteRows(startTime, endTime);
-
+  console.log(date.toDateString());
   return (
     <>
       <TimeTableLayout>
@@ -113,9 +126,10 @@ export const TimeTableOverview: React.FC<Props> = ({
           {weekTimeTable.map((dayTimeTable, index) => {
             return (
               <TimeTableDay key={index}>
-                {date.getDay() == index + 1 && (
-                  <TimeTableMarker></TimeTableMarker>
-                )}
+                {date.toDateString() ==
+                  new Date(
+                    dayTimeTable.timeTableElements[0].timeTableElementStartTime
+                  ).toDateString() && <TimeTableMarker></TimeTableMarker>}
                 <TimeTableColumn
                   dayTimeTable={dayTimeTable.timeTableElements}
                   timeTableRows={timeTableRows}
@@ -130,11 +144,20 @@ export const TimeTableOverview: React.FC<Props> = ({
   );
 };
 
-function calculateTopDistance(date: Date) {
+function calculateTopDistance(date: Date, startTime, endTime) {
+  console.log(getHoursFromDate(new Date(startTime)));
   return (
-    (date.getHours() - 8 + date.getMinutes() / 60 + date.getSeconds() / 3600) /
-    9.25
+    (getHoursFromDate(date) - getHoursFromTime(startTime)) /
+    (getHoursFromTime(endTime) - getHoursFromTime(startTime))
   );
+}
+
+function getHoursFromDate(date) {
+  return date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
+}
+
+function getHoursFromTime(time) {
+  return parseInt(time.split(":")[0]) + parseInt(time.split(":")[1]) / 60;
 }
 
 function calculate5MinuteRows(startTime: string, endTime: string) {

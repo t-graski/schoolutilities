@@ -1,0 +1,95 @@
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { styled } from "../../../stitches.config";
+import { fetchSchoolClasses } from "../../../utils/requests";
+import { SearchSelect } from "../../atoms/input/SearchSelect";
+import SvgRightArrow from "../../atoms/svg/SvgRightArrow";
+
+type Props = {
+  startDate: string;
+  setStartDate: (startDate: string) => void;
+};
+
+const TimeTableWeekSelectionLayout = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  height: "8vh",
+  padding: "$1x",
+  alignItems: "center",
+  gap: "$1x",
+  backgroundColor: "$backgroundTertiary",
+  borderRadius: "15px",
+});
+
+const TimeTableArrowLayout = styled("button", {
+  display: "flex",
+  width: 20,
+  height: 20,
+  backgroundColor: "transparent",
+  border: "none",
+  cursor: "pointer",
+  padding: 2.5,
+
+  variants: {
+    direction: {
+      left: {
+        transform: "rotate(180deg)",
+      },
+      right: {},
+    },
+  },
+});
+
+export const TimeTableWeekSelection: React.FC<Props> = ({
+  startDate,
+  setStartDate,
+}) => {
+  let date = new Date(startDate);
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().setDate(date.getDate() + 6)).toISOString()
+  );
+
+  let options = {
+    month: "2-digit",
+    day: "2-digit",
+  };
+
+  return (
+    <>
+      <TimeTableWeekSelectionLayout>
+        <TimeTableArrowLayout
+          direction={"left"}
+          onClick={() => {
+            setStartDate(
+              new Date(date.setDate(date.getDate() - 7)).toISOString()
+            );
+            setEndDate(
+              new Date(date.setDate(date.getDate() + 7)).toISOString()
+            );
+          }}
+        >
+          <SvgRightArrow></SvgRightArrow>
+        </TimeTableArrowLayout>
+        {/*@ts-ignore */}
+        {new Intl.DateTimeFormat("default", options).format(
+          new Date(date)
+        )} - {/*@ts-ignore */}
+        {new Intl.DateTimeFormat("default", options).format(new Date(endDate))}
+        <TimeTableArrowLayout
+          direction={"right"}
+          onClick={() => {
+            setStartDate(
+              new Date(date.setDate(date.getDate() + 7)).toISOString()
+            );
+            setEndDate(
+              new Date(date.setDate(date.getDate() + 7)).toISOString()
+            );
+          }}
+        >
+          <SvgRightArrow></SvgRightArrow>
+        </TimeTableArrowLayout>
+      </TimeTableWeekSelectionLayout>
+    </>
+  );
+};
