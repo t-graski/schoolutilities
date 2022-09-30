@@ -7,8 +7,6 @@ import { useQuery } from "react-query";
 import { getTimeTableForClass } from "../../../utils/requests";
 
 type Props = {
-  startTime: string;
-  endTime: string;
   startDate: string;
   schoolClassUUID: string;
 };
@@ -32,6 +30,7 @@ const TimeTableInformationGrid = styled("div", {
   backgroundColor: "$gray100",
   borderRadius: "0.5rem",
   width: "100%",
+  padding: "0 $2x",
 });
 
 const TimeTableDay = styled("div", {
@@ -59,8 +58,6 @@ const TimeTableDayHeaderTitle = styled("span", {});
 const TimeTableDayHeaderDate = styled("span", {});
 
 export const TimeTableOverview: React.FC<Props> = ({
-  startTime,
-  endTime,
   startDate,
   schoolClassUUID,
 }) => {
@@ -90,6 +87,8 @@ export const TimeTableOverview: React.FC<Props> = ({
     return <div>Error</div>;
   }
 
+  let { startTime, endTime } = getStartEndTime(weekTimeTable);
+
   const TimeTableMarker = styled("div", {
     position: "absolute",
     width: "100%",
@@ -112,7 +111,7 @@ export const TimeTableOverview: React.FC<Props> = ({
             return (
               <TimeTableDayHeader key={index}>
                 <TimeTableDayHeaderTitle>
-                  {dayTimeTable.day} - {dayTimeTable.date}
+                  {dayTimeTable.day}  {dayTimeTable.date}
                 </TimeTableDayHeaderTitle>
               </TimeTableDayHeader>
             );
@@ -128,7 +127,7 @@ export const TimeTableOverview: React.FC<Props> = ({
               <TimeTableDay key={index}>
                 {date.toDateString() ==
                   new Date(
-                    dayTimeTable.timeTableElements[0].timeTableElementStartTime
+                    dayTimeTable.timeTableElements[0]?.timeTableElementStartTime
                   ).toDateString() && <TimeTableMarker></TimeTableMarker>}
                 <TimeTableColumn
                   dayTimeTable={dayTimeTable.timeTableElements}
@@ -145,7 +144,6 @@ export const TimeTableOverview: React.FC<Props> = ({
 };
 
 function calculateTopDistance(date: Date, startTime, endTime) {
-  console.log(getHoursFromDate(new Date(startTime)));
   return (
     (getHoursFromDate(date) - getHoursFromTime(startTime)) /
     (getHoursFromTime(endTime) - getHoursFromTime(startTime))
@@ -168,4 +166,59 @@ function calculate5MinuteRows(startTime: string, endTime: string) {
   const endMinutes = parseInt(end[0]) * 60 + parseInt(end[1]);
 
   return (endMinutes - startMinutes) / 5;
+}
+
+function getStartEndTime(timeTable) {
+  let startTime = getDateFromTime("12:00");
+  let endTime = getDateFromTime("13:00");
+
+  const minDate = new Date(
+    Math.min.apply(
+      null,
+      timeTable.flatMap((dayTimeTable) =>
+        dayTimeTable.timeTableElements.map((timeTableElement) => {
+          const date = new Date(timeTableElement.timeTableElementStartTime);
+
+          date.setFullYear(new Date().getFullYear());
+          date.setMonth(new Date().getMonth());
+          date.setDate(new Date().getDate());
+
+          return date;
+        })
+      )
+    )
+  );
+  const maxDate = new Date(
+    Math.max.apply(
+      null,
+      timeTable.flatMap((dayTimeTable) =>
+        dayTimeTable.timeTableElements.map((timeTableElement) => {
+          const date = new Date(timeTableElement.timeTableElementEndTime);
+
+          date.setFullYear(new Date().getFullYear());
+          date.setMonth(new Date().getMonth());
+          date.setDate(new Date().getDate());
+
+          return date;
+        })
+      )
+    )
+  );
+
+  return {
+    startTime: getTimeFromDate(minDate),
+    endTime: getTimeFromDate(maxDate),
+  };
+}
+
+function getTimeFromDate(date: Date) {
+  return (
+    date.getHours().toString().padStart(2, "0") +
+    ":" +
+    date.getMinutes().toString().padStart(2, "0")
+  );
+}
+
+function getDateFromTime(time) {
+  return new Date("2021-03-01T" + time + ":00.000Z");
 }

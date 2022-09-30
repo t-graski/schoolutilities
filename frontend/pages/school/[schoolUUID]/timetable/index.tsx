@@ -12,6 +12,12 @@ const TimeTableNavigationLayout = styled("div", {
   gridTemplateColumns: "1fr",
 });
 
+const TimeTableSelectionLayout = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr 15fr",
+  gridGap: "$2x",
+});
+
 export default function ShowCourses() {
   const [schoolClassUUID, setSchoolClassUUID] = useState(
     "4e31c3c28-10c8-42e4-9411-0255fd66e44b"
@@ -25,16 +31,17 @@ export default function ShowCourses() {
       </Head>
       <Navbar></Navbar>
       <TimeTableNavigationLayout>
-        <TimeTableItemSelection
-          schoolClassUUID={schoolClassUUID}
-          setSchoolClassUUID={setSchoolClassUUID}
-          startDate={startDate}
-          setStartDate={setStartDate}
-        ></TimeTableItemSelection>
+        <TimeTableSelectionLayout>
+          <TimeTableItemSelection
+            schoolClassUUID={schoolClassUUID}
+            setSchoolClassUUID={setSchoolClassUUID}
+            startDate={startDate}
+            setStartDate={setStartDate}
+          ></TimeTableItemSelection>
+        </TimeTableSelectionLayout>
+
         <TimeTableOverview
-          startTime="08:00"
-          endTime="17:15"
-          startDate={startDate.split("T")[0]}
+          startDate={startDate}
           schoolClassUUID={schoolClassUUID}
         ></TimeTableOverview>
       </TimeTableNavigationLayout>

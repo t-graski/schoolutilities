@@ -62,7 +62,9 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
           direction={"left"}
           onClick={() => {
             setStartDate(
-              new Date(date.setDate(date.getDate() - 7)).toISOString()
+              new Date(date.setDate(date.getDate() - 7))
+                .toISOString()
+                .split("T")[0]
             );
             setEndDate(
               new Date(date.setDate(date.getDate() + 7)).toISOString()
@@ -80,7 +82,9 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
           direction={"right"}
           onClick={() => {
             setStartDate(
-              new Date(date.setDate(date.getDate() + 7)).toISOString()
+              new Date(date.setDate(date.getDate() + 7))
+                .toISOString()
+                .split("T")[0]
             );
             setEndDate(
               new Date(date.setDate(date.getDate() + 7)).toISOString()

@@ -20,6 +20,7 @@ const TimeTableSelectionLayout = styled("div", {
   padding: "$1x",
   alignItems: "center",
   gap: "$4x",
+  gridColumn: "2 / 3",
 });
 
 export const TimeTableItemSelection: React.FC<Props> = ({

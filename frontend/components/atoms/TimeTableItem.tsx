@@ -54,7 +54,6 @@ const TimeTableSubjectName = styled("span", {
 export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   let startPoint = getRowFromTime(item.timeTableElementStartTime, startTime);
   let endPoint = getRowFromTime(item.timeTableElementEndTime, startTime);
-console.log(item);
   let now = new Date();
   let endTime = new Date(item.timeTableElementEndTime);
   let isBeforeNow = endTime < now;
