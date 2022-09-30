@@ -189,7 +189,6 @@ export class TimetableService {
             function checkForExam(element, monday) {
                 if (element.timeTableExam.length > 0) {
                     if (element.timeTableExam[0].timeTableExamDate >= monday && element.timeTableExam[0].timeTableExamDate <= new Date(monday.getTime() + 86400000 * 4)) {
-                        console.log(2)
                         let day = weekday[element.timeTableExam[0].timeTableExamDate.getDay()]
                         if (element.timeTableElementDay === day) {
                             return {
@@ -268,7 +267,6 @@ export class TimetableService {
                         }
                     }
                 }
-
                 return undefined
             }
 
