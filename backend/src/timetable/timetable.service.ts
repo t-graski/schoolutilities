@@ -164,11 +164,7 @@ export class TimetableService {
                             userUUID: teacher.users.userUUID,
                             userFirstname: teacher.users.userFirstname,
                             userLastname: teacher.users.userLastname,
-                            userBirthDate: teacher.users.userBirthDate,
                             userEmail: teacher.users.userEmail,
-                            userEmailVerified: teacher.users.userEmailVerified,
-                            userCreationTimestamp: teacher.users.userCreationTimestamp,
-                            userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                         }
                     }),
                     substitution: checkForSubstitution(element, new Date(dateString)),
@@ -190,7 +186,6 @@ export class TimetableService {
                             return {
                                 timeTableEventUUID: element.timeTableEvents[0].timeTableEventUUID,
                                 timeTableEventName: element.timeTableEvents[0].timeTableEventName,
-                                timeTableEventDate: element.timeTableEvents[0].timeTableEventDate,
                                 timeTableEventStartTime: element.timeTableEvents[0].timeTableEventStartTime,
                                 timeTableEventEndTime: element.timeTableEvents[0].timeTableEventEndTime,
                                 timeTableEventIsAllDay: element.timeTableEvents[0].timeTableEventIsAllDay,
@@ -199,11 +194,7 @@ export class TimetableService {
                                         userUUID: teacher.users.userUUID,
                                         userFirstname: teacher.users.userFirstname,
                                         userLastname: teacher.users.userLastname,
-                                        userBirthDate: teacher.users.userBirthDate,
                                         userEmail: teacher.users.userEmail,
-                                        userEmailVerified: teacher.users.userEmailVerified,
-                                        userCreationTimestamp: teacher.users.userCreationTimestamp,
-                                        userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                                     }
                                 }
                                 ),
@@ -211,11 +202,9 @@ export class TimetableService {
                                     return {
                                         schoolClassUUID: classs.classes.schoolClassUUID,
                                         schoolClassName: classs.classes.schoolClassName,
-                                        schoolClassCreationTimestamp: classs.classes.schoolClassCreationTimestamp,
                                     }
                                 }
                                 ),
-
                             }
                         }
                     }
@@ -232,7 +221,6 @@ export class TimetableService {
                         if (element.timeTableElementDay === day) {
                             return {
                                 timeTableSubstitutionUUID: element.timeTableSubstitutions[0].timeTableSubstitutionUUID,
-                                timeTableSubstitutionDate: element.timeTableSubstitutions[0].timeTableSubstitutionDate,
                                 timeTableSubstitutionStartTime: element.timeTableSubstitutions[0].timeTableSubstitutionStartTime,
                                 timeTableSubstitutionEndTime: element.timeTableSubstitutions[0].timeTableSubstitutionEndTime,
                                 timeTableSubstitutionClasses: element.timeTableSubstitutions[0].timeTableSubstitutionClasses.map((classes) => {
@@ -247,11 +235,7 @@ export class TimetableService {
                                         userUUID: teacher.users.userUUID,
                                         userFirstname: teacher.users.userFirstname,
                                         userLastname: teacher.users.userLastname,
-                                        userBirthDate: teacher.users.userBirthDate,
                                         userEmail: teacher.users.userEmail,
-                                        userEmailVerified: teacher.users.userEmailVerified,
-                                        userCreationTimestamp: teacher.users.userCreationTimestamp,
-                                        userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                                     }
                                 }),
                                 timeTableSubstitutionSubjectName: element.timeTableSubstitutions[0].timeTableSubstitutionSubjectName,
