@@ -151,11 +151,12 @@ export class TimetableService {
                 }
             })
 
+            let i = 0
             timeTable.forEach((element) => {
                 timeTableData.push({
                     timeTableElementUUID: element.timeTableElementUUID,
-                    timeTableElementStartTime: element.timeTableElementStartTime,
-                    timeTableElementEndTime: element.timeTableElementEndTime,
+                    timeTableElementStartTime: new Date(new Date(dateString).setHours(element.timeTableElementStartTime.getHours(), element.timeTableElementStartTime.getMinutes(), 0, 0) + 86400000 * i).toISOString(),
+                    timeTableElementEndTime: new Date(new Date(dateString).setHours(element.timeTableElementEndTime.getHours(), element.timeTableElementEndTime.getMinutes(), 0, 0) + 86400000 * i).toISOString(),
                     timeTableElementDay: element.timeTableElementDay,
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
                     timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
@@ -177,6 +178,7 @@ export class TimetableService {
                         timeTableOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
                     } : undefined,
                 })
+                i++
             })
 
             function checkForEvent(element, monday) {
@@ -317,6 +319,13 @@ export class TimetableService {
 
                 return undefined
             }
+
+            timeTableDaysArray.forEach((element) => {
+                element.timeTableElements.sort((a, b) => {
+                    //sort by starttime
+                    return a.timeTableElementStartTime - b.timeTableElementStartTime;
+                });
+            }) 
 
             return {
                 status: 200,
