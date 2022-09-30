@@ -365,6 +365,7 @@ model schoolRooms {
   schoolId               Int                @map("school_id")
   schools                schools            @relation(fields: [schoolId], references: [schoolId])
   timeTableElement       timeTableElement[]
+  timeTableExam          timeTableExam[]
 
   @@index([schoolId], map: "fk_school_room_school_id")
   @@map("school_rooms")
@@ -517,9 +518,13 @@ model timeTableExam {
   timeTableElementId       Int              @map("time_table_element_id")
   timeTableExamRoomId      Int              @map("time_table_exam_room_id")
   timeTableExamDescription String           @map("time_table_exam_description")
+  timeTableExamDate        DateTime         @map("time_table_exam_date")
   timeTableElements        timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  schoolRooms              schoolRooms      @relation(fields: [timeTableExamRoomId], references: [schoolRoomId])
 
   @@unique([timeTableExamUUID], map: "time_table_exam_uuid_UNIQUE")
+  @@index([timeTableElementId], map: "fk_time_table_element_id")
+  @@index([timeTableExamRoomId], map: "fk_time_table_exam_room_id")
   @@map("time_table_exams")
 }
 

@@ -77,6 +77,7 @@ export class TimetableService {
 
     async getTimetable(classUUID: string, dateString: string, request): Promise<ReturnMessage> {
         const timeTableData = []
+        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
         try {
             const timeTable = await prisma.timeTableElement.findMany({
@@ -125,6 +126,11 @@ export class TimetableService {
                         }
                     },
                     timeTableOmitted: true,
+                    timeTableExam: {
+                        include: {
+                            schoolRooms: true,
+                        }
+                    }
                 },
             })
 
@@ -170,12 +176,31 @@ export class TimetableService {
                     }),
                     substitution: checkForSubstitution(element, new Date(dateString)),
                     event: checkForEvent(element, new Date(dateString)),
+                    exam: checkForExam(element, new Date(dateString)),
                     omitted: element.timeTableOmitted.length > 0 ? {
                         timeTableOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
                         timeTableOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
                     } : undefined,
                 })
             })
+
+            function checkForExam(element, monday) {
+                if (element.timeTableExam.length > 0) {
+                    if (element.timeTableExam[0].timeTableExamDate >= monday && element.timeTableExam[0].timeTableExamDate <= new Date(monday.getTime() + 86400000 * 4)) {
+                        console.log(2)
+                        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                        let day = weekday[element.timeTableExam[0].timeTableExamDate.getDay()]
+                        if (element.timeTableElementDay === day) {
+                            return {
+                                timeTableExamUUID: element.timeTableExam[0].timeTableExamUUID,
+                                timeTableExamDate: element.timeTableExam[0].timeTableExamDate,
+                                timeTableExamRoom: element.timeTableExam[0].schoolRooms.schoolRoomName,
+                                timeTableExamDescription: element.timeTableExam[0].timeTableExamDescription,
+                            }
+                        }
+                    }
+                }
+            }
 
             function checkForEvent(element, monday) {
                 if (element.timeTableEvents.length > 0) {
@@ -381,14 +406,19 @@ export class TimetableService {
     }
 
     async addExam(exam, request): Promise<ReturnMessage> {
-        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription } = exam;
+        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription, timeTableExamDate } = exam;
 
         try {
             const exam = await prisma.timeTableExam.create({
                 data: {
                     timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
-                    timeTableExamRoomId,
+                    schoolRooms: {
+                        connect: {
+                            schoolRoomId: timeTableExamRoomId,
+                        },
+                    },
                     timeTableExamDescription,
+                    timeTableExamDate,
                     timeTableElements: {
                         connect: {
                             timeTableElementUUID,
