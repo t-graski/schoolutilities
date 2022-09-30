@@ -32,7 +32,11 @@ export class TimetableService {
                                 schoolSubjectId: element.timetableElementSubjectId
                             },
                         },
-                        timeTableElementRoomId: 0,
+                        schoolRoom: {
+                            connect: {
+                                schoolRoomId: element.timeTableRoomId
+                            },
+                        },
                         timeTableElementStartTime: new Date(element.timeTableElementStartTime),
                         timeTableElementEndTime: new Date(element.timeTableElementEndTime),
                         timeTableElementDay: day.timeTableDay,
@@ -325,14 +329,15 @@ export class TimetableService {
     }
 
     async addHoliday(holiday, request): Promise<ReturnMessage> {
-        const { schoolUUID, holidayName, holidayDate } = holiday;
+        const { schoolUUID, holidayName, holidayStartDate, holidayEndDate } = holiday;
 
         try {
             const holiday = await prisma.holidays.create({
                 data: {
                     holidayUUID: `${ID_STARTERS.HOLIDAYS}${uuidv4()}`,
                     holidayName,
-                    holidayDate: new Date(holidayDate),
+                    holidayStartDate: new Date(holidayStartDate),
+                    holidayEndDate: new Date(holidayEndDate),
                     schools: {
                         connect: {
                             schoolUUID,
@@ -345,7 +350,8 @@ export class TimetableService {
                 data: {
                     holidayUUID: holiday.holidayUUID,
                     holidayName: holiday.holidayName,
-                    holidayDate: holiday.holidayDate,
+                    holidayStartDate: holiday.holidayStartDate,
+                    holidayEndDate: holiday.holidayEndDate,
                 },
             }
         } catch {
@@ -372,7 +378,8 @@ export class TimetableService {
                         return {
                             holidayUUID: holiday.holidayUUID,
                             holidayName: holiday.holidayName,
-                            holidayDate: holiday.holidayDate,
+                            holidayStartDate: holiday.holidayStartDate,
+                            holidayEndDate: holiday.holidayEndDate,
                         }
                     }),
                 },
