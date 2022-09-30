@@ -32,11 +32,7 @@ export class TimetableService {
                                 schoolSubjectId: element.timetableElementSubjectId
                             },
                         },
-                        schoolRoom: {
-                            connect: {
-                                schoolRoomId: element.timeTableRoomId
-                            }
-                        },
+                        timeTableElementRoomId: 0,
                         timeTableElementStartTime: new Date(element.timeTableElementStartTime),
                         timeTableElementEndTime: new Date(element.timeTableElementEndTime),
                         timeTableElementDay: day.timeTableDay,
@@ -139,9 +135,8 @@ export class TimetableService {
                                 include: {
                                     holidays: {
                                         where: {
-                                            holidayDate: {
+                                            holidayStartDate: {
                                                 gte: new Date(dateString),
-                                                lte: new Date(new Date(dateString).getTime() + 5 * 24 * 60 * 60 * 1000),
                                             }
                                         }
                                     },
@@ -286,7 +281,8 @@ export class TimetableService {
                     element.timeTableElements.push({
                         holidayUUID: holiday.holidayUUID,
                         holidayName: holiday.holidayName,
-                        holidayDate: holiday.holidayDate,
+                        holidayStartDate: holiday.holidayStartDate,
+                        holidayEndDate: holiday.holidayEndDate,
                     })
                 }
 
@@ -304,7 +300,7 @@ export class TimetableService {
             function checkForHoliday(element) {
                 const holiday = holidays.departments.schools.holidays.find((holiday) => {
                     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-                    let day = weekday[holiday.holidayDate.getDay() - 1]
+                    let day = weekday[holiday.holidayStartDate.getDay() - 1]
 
                     if (day === element.day) {
                         return true
@@ -376,8 +372,7 @@ export class TimetableService {
                         return {
                             holidayUUID: holiday.holidayUUID,
                             holidayName: holiday.holidayName,
-                            holidayStartDate: holiday.holidayStartDate,
-                            holidayEndDate: holiday.holidayEndDate,
+                            holidayDate: holiday.holidayDate,
                         }
                     }),
                 },
