@@ -188,7 +188,6 @@ export class TimetableService {
                 if (element.timeTableExam.length > 0) {
                     if (element.timeTableExam[0].timeTableExamDate >= monday && element.timeTableExam[0].timeTableExamDate <= new Date(monday.getTime() + 86400000 * 4)) {
                         console.log(2)
-                        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                         let day = weekday[element.timeTableExam[0].timeTableExamDate.getDay()]
                         if (element.timeTableElementDay === day) {
                             return {
@@ -205,7 +204,6 @@ export class TimetableService {
             function checkForEvent(element, monday) {
                 if (element.timeTableEvents.length > 0) {
                     if (element.timeTableEvents[0].timeTableEventDate >= monday && element.timeTableEvents[0].timeTableEventDate <= new Date(monday.setDate(monday.getDate() + 5))) {
-                        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                         let day = weekday[element.timeTableEvents[0].timeTableEventDate.getDay()]
                         if (element.timeTableElementDay === day) {
                             return {
@@ -314,7 +312,6 @@ export class TimetableService {
 
             function checkForHoliday(element) {
                 const holiday = holidays.departments.schools.holidays.find((holiday) => {
-                    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                     let day = weekday[holiday.holidayStartDate.getDay() - 1]
 
                     if (day === element.day) {
@@ -329,8 +326,19 @@ export class TimetableService {
                 return undefined
             }
 
+            const schoolDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+            schoolDays.forEach((day) => {
+                if (timeTableDaysArray.find((element) => {
+                    return element.day === day
+                }) === undefined) {
+                    timeTableDaysArray.push({
+                        day: day,
+                        timeTableElements: []
+                    })
+                }
+            })
+            
             timeTableDaysArray.sort((a, b) => {
-                const weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
                 return weekday.indexOf(a.day) - weekday.indexOf(b.day)
             })
 
