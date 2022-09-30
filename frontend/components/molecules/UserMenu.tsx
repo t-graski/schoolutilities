@@ -210,6 +210,7 @@ const StyledLink = styled("a", {
 
 export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
   const { theme, setTheme } = useTheme();
+  const [language, setLanguage] = useState("en");
   const [open, setOpen] = useState(false);
 
   const [currentSchool, setCurrentSchool] = useState(getSelectedSchool());
@@ -413,16 +414,16 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                 </DropdownMenuTriggerItem>
                 <DropdownMenuContent sideOffset={2} alignOffset={-5}>
                   <DropdownMenuRadioGroup
-                    value={theme}
-                    onValueChange={setTheme}
+                    value={language}
+                    onValueChange={setLanguage}
                   >
-                    <DropdownMenuRadioItem value="english">
+                    <DropdownMenuRadioItem value="en">
                       <DropdownMenuItemIndicator>
                         <DotFilledIcon />
                       </DropdownMenuItemIndicator>
                       English
                     </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="german">
+                    <DropdownMenuRadioItem value="de">
                       <DropdownMenuItemIndicator>
                         <DotFilledIcon />
                       </DropdownMenuItemIndicator>

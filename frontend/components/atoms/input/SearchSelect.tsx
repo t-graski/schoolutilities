@@ -13,6 +13,7 @@ type Props = {
   onChange: Function;
   icon?: any;
   editable?: boolean;
+  isSmall?: boolean;
 };
 
 const InputFieldLayout = styled("div", {
@@ -57,6 +58,7 @@ const StyledSelect = styled(Select, {
   border: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
+  borderRadius: "15px",
 
   fontWeight: "bold",
   color: "$fontPrimary",
@@ -67,6 +69,18 @@ const StyledSelect = styled(Select, {
 
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$fontPrimary",
+  },
+
+  variants: {
+    isSmall: {
+      true: {
+        fontSize: "1rem",
+        lineHeight: "1.2rem",
+        width: "fit-content",
+        minWidth: "200px",
+        padding: "0",
+      },
+    },
   },
 });
 
@@ -201,10 +215,11 @@ export const SearchSelect: React.FC<Props> = ({
   onChange,
   icon,
   editable = true,
+  isSmall = false,
 }) => {
   return (
     <>
-      <InputFieldCore icon={icon} showLabel={false}>
+      <InputFieldCore icon={icon} showLabel={false} isSmall={isSmall}>
         <StyledSelect
           styles={selectStyled}
           options={selectOptions}
@@ -217,6 +232,7 @@ export const SearchSelect: React.FC<Props> = ({
           onChange={(value) => {
             onChange(value);
           }}
+          isSmall={isSmall}
         ></StyledSelect>
       </InputFieldCore>
     </>
