@@ -304,12 +304,12 @@ export class TimetableService {
                 return undefined
             }
 
-            timeTableDaysArray.forEach((element) => {
-                element.timeTableElements.sort((a, b) => {
-                    //sort by starttime
-                    return a.timeTableElementStartTime - b.timeTableElementStartTime;
-                });
-            }) 
+            timeTableDaysArray.sort((a, b) => {
+                const weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+                return weekday.indexOf(a.day) - weekday.indexOf(b.day)
+            })
+
+            console.log(timeTableDaysArray)
 
             return {
                 status: 200,
