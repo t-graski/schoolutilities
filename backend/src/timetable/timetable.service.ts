@@ -151,12 +151,13 @@ export class TimetableService {
                 }
             })
 
-            let i = 0
             timeTable.forEach((element) => {
+                const weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+
                 timeTableData.push({
                     timeTableElementUUID: element.timeTableElementUUID,
-                    timeTableElementStartTime: new Date(new Date(dateString).setHours(element.timeTableElementStartTime.getHours(), element.timeTableElementStartTime.getMinutes(), 0, 0) + 86400000 * i).toISOString(),
-                    timeTableElementEndTime: new Date(new Date(dateString).setHours(element.timeTableElementEndTime.getHours(), element.timeTableElementEndTime.getMinutes(), 0, 0) + 86400000 * i).toISOString(),
+                    timeTableElementStartTime: new Date(new Date(dateString).setHours(element.timeTableElementStartTime.getHours(), element.timeTableElementStartTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
+                    timeTableElementEndTime: new Date(new Date(dateString).setHours(element.timeTableElementEndTime.getHours(), element.timeTableElementEndTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
                     timeTableElementDay: element.timeTableElementDay,
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
                     timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
@@ -174,7 +175,6 @@ export class TimetableService {
                         timeTableOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
                     } : undefined,
                 })
-                i++
             })
 
             function checkForEvent(element, monday) {
@@ -308,8 +308,6 @@ export class TimetableService {
                 const weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
                 return weekday.indexOf(a.day) - weekday.indexOf(b.day)
             })
-
-            console.log(timeTableDaysArray)
 
             return {
                 status: 200,
