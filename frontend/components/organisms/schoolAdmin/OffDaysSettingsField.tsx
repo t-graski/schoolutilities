@@ -126,21 +126,18 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
     },
   });
 
-  const deleteClassMutation = useMutation(
-    () => deleteOffDay(offDayId),
-    {
-      onSuccess: async () => {
-        await queryClient.cancelQueries(["offDays", schoolUUID]);
+  const deleteClassMutation = useMutation(() => deleteOffDay(offDayId), {
+    onSuccess: async () => {
+      await queryClient.cancelQueries(["offDays", schoolUUID]);
 
-        queryClient.setQueryData(["offDays", schoolUUID], (old: any) =>
-          old.filter((currElement) => currElement.holidayUUID !== offDayId)
-        );
-      },
-      onError: (err: any) => {
-        setError(err.message);
-      },
-    }
-  );
+      queryClient.setQueryData(["offDays", schoolUUID], (old: any) =>
+        old.filter((currElement) => currElement.holidayUUID !== offDayId)
+      );
+    },
+    onError: (err: any) => {
+      setError(err.message);
+    },
+  });
 
   const editClassMutation = useMutation(editOffDay, {
     onSuccess: async (response) => {
@@ -223,7 +220,7 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
               <Spacer size="verySmall" />
               <InputField
                 label="Off day begin"
-                value={startDate}
+                value={startDate.split("T")[0]}
                 inputType={"date"}
                 onChange={(event) => {
                   setStartDate(event);
@@ -232,7 +229,7 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
               <Spacer size="verySmall" />
               <InputField
                 label="Off day end"
-                value={endDate}
+                value={endDate.split("T")[0]}
                 inputType={"date"}
                 onChange={(event) => {
                   setEndDate(event);
@@ -302,7 +299,7 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
                       {new Intl.DateTimeFormat("default", options).format(
                         new Date(entry.holidayStartDate)
                       )}{" "}
-                      -{" "}
+                      - {/*@ts-ignore */}
                       {new Intl.DateTimeFormat("default", options).format(
                         new Date(entry.holidayEndDate)
                       )}
