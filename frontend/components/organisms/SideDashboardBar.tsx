@@ -5,6 +5,7 @@ import { styled } from "../../stitches.config";
 type Props = {
   items: {
     name: string;
+    value: string;
     icon?: any;
     href: string;
   }[];
@@ -17,7 +18,7 @@ const SideDashboardBarLayout = styled("div", {
   justifySelf: "center",
   width: "100%",
   minWidth: "100px",
-  maxWidth: "400px",
+  maxWidth: "300px",
   padding: "20px",
   overflowY: "scroll",
   height: "auto",
@@ -90,7 +91,7 @@ export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {
             <Link href={item.href} key={item.name} passHref>
               <SideDashboardBarItemLink
                 href={item.href}
-                highlighted={active.toLowerCase() == item.name.toLowerCase()}
+                highlighted={active.toLowerCase() == item.value.toLowerCase()}
               >
                 <IconLayout>
                   <Icon />

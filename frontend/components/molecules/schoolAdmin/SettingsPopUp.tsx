@@ -84,6 +84,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   width: "90vw",
   maxWidth: "600px",
   maxHeight: "85vh",
+  zIndex: 1,
   padding: 25,
   "@media (prefers-reduced-motion: no-preference)": {
     animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,

@@ -64,31 +64,37 @@ export default function CreateSchool() {
           items={[
             {
               name: "Departments",
+              value: "departments",
               href: `/school/${schoolUUID}/edit?tab=departments`,
               icon: SvgDepartment,
             },
             {
               name: "Classes",
+              value: "classes",
               href: `/school/${schoolUUID}/edit?tab=classes`,
               icon: SvgClass,
             },
             {
               name: "Persons",
+              value: "persons",
               href: `/school/${schoolUUID}/edit?tab=persons`,
               icon: SvgStudent,
             },
             {
               name: "Invite Codes",
+              value: "join-codes",
               href: `/school/${schoolUUID}/edit?tab=join-codes`,
               icon: SvgTeacher,
             },
             {
               name: "Off Days",
+              value: "off-days",
               href: `/school/${schoolUUID}/edit?tab=off-days`,
               icon: SvgTeacher,
             },
             {
               name: "School Years",
+              value: "school-years",
               href: `/school/${schoolUUID}/edit?tab=school-years`,
               icon: SvgTeacher,
             }

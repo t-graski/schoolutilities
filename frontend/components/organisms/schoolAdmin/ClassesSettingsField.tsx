@@ -71,9 +71,7 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 });
 
-export const ClassesSettingsField: React.FC<Props> = ({
-  queryClient,
-}) => {
+export const ClassesSettingsField: React.FC<Props> = ({ queryClient }) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [schoolClassName, setSchoolClassName] = React.useState("");
@@ -92,6 +90,9 @@ export const ClassesSettingsField: React.FC<Props> = ({
     ["departments", schoolUUID],
     () => fetchSchoolDepartments(schoolUUID)
   );
+
+  console.log(classes);
+  console.log(departments);
 
   const addClassMutation = useMutation(addSchoolClass, {
     onMutate: async () => {
@@ -276,7 +277,8 @@ export const ClassesSettingsField: React.FC<Props> = ({
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {classesStatus == "success" && classes.length > 0 ? (
+          {classesStatus == "success" &&
+            classes.length > 0 &&
             classes.map((entry) => (
               <SettingsEntryLayout
                 key={entry.classUUID}
@@ -304,23 +306,42 @@ export const ClassesSettingsField: React.FC<Props> = ({
                   <>
                     <SettingsEntryName>{entry.className}</SettingsEntryName>
                     <Link
-                      href={`/school/${router.query.schoolUUID as string
-                        }/edit?departmentUUID=${entry.departmentUUID}`}
+                      href={`/school/${
+                        router.query.schoolUUID as string
+                      }/edit?departmentUUID=${entry.departmentUUID}`}
                       passHref
                     >
                       <SettingsEntryLink>
-                        <DepartmentName>{entry.departmentName}</DepartmentName>
+                        <DepartmentName>
+                          {
+                            departments.find(
+                              (department) =>
+                                department.departmentUUID ===
+                                entry.departmentUUID
+                            ).departmentName
+                          }
+                        </DepartmentName>
                       </SettingsEntryLink>
                     </Link>
                   </>
                 </SettingsEntry>
               </SettingsEntryLayout>
-            ))
-          ) : (
+            ))}
+          {classesStatus == "success" && classes.length <= 0 && (
+            <>
+              There are no classes yet. Add a new class by clicking the button
+            </>
+          )}
+          {classesStatus == "loading" && (
             <>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
+            </>
+          )}
+          {classesStatus == "error" && (
+            <>
+              While loading the classes an error occured. Please try again later
             </>
           )}
         </SettingsEntriesLayout>

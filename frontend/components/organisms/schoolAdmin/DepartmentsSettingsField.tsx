@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
-import { LoadingAnimation } from "../../molecules/LoadingAnimation";
 import { regex } from "../../../utils/regex";
 import Skeleton from "react-loading-skeleton";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -259,7 +258,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
         <LoadingLayout>
           {error && <StyledError>{error}</StyledError>}
           <SettingsEntriesLayout>
-            {departmentsStatus == "success" && departments.length > 0 ? (
+            {departmentsStatus == "success" &&
+              departments.length > 0 &&
               departments.map((entry, index) => (
                 <SettingsEntryLayout
                   key={entry.departmentUUID}
@@ -297,12 +297,20 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                     </Link>
                   </SettingsEntry>
                 </SettingsEntryLayout>
-              ))
-            ) : (
+              ))}
+            {departmentsStatus == "success" && departments.length <= 0 && (
+              <>There are no departments yet. Add one by clicking the button</>
+            )}
+            {departmentsStatus == "loading" && (
               <>
                 <Skeleton width="100%" height={80}></Skeleton>
                 <Skeleton width="100%" height={80}></Skeleton>
                 <Skeleton width="100%" height={80}></Skeleton>
+              </>
+            )}
+            {departmentsStatus == "error" && (
+              <>
+                While loading the departments an error occured. Please try again
               </>
             )}
           </SettingsEntriesLayout>

@@ -516,3 +516,91 @@ export async function getTimeTableForClass(classUUID) {
 
   return response.json();
 }
+
+export async function fetchOffDays(schoolUUID){
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday/${schoolUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function addOffDay(data){
+  console.log(data);
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+  
+  return response.json();
+}
+
+export async function deleteOffDay(data){
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function editOffDay(data){
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}

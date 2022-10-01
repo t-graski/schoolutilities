@@ -75,7 +75,7 @@ const StyledDeleteText = styled("p", {
   color: "$fontPrimary",
 });
 
-export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
+export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [joinCodeName, setJoinCodeName] = React.useState("");
@@ -145,13 +145,13 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
       addJoinCodeMutation.mutate({
         schoolUUID,
         schoolJoinCodeName: joinCodeName,
-        expireDate: "2022-10-22 14:00:00",
+        schoolJoinCodeExpireTimestamp: "2023-10-22 14:00:00",
       });
     } else {
       editJoinCodeMutation.mutate({
         schoolJoinCode: joinCodeId,
         schoolJoinCodeName: joinCodeName,
-        expireDate: "2022-10-22 14:00:00",
+        schoolJoinCodeExpireTimestamp: "2023-10-22 14:00:00",
       });
     }
     setEditPopUpIsVisible(false);
@@ -221,7 +221,8 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
         ></SettingsHeader>
         {error && <StyledError>{error}</StyledError>}
         <SettingsEntriesLayout>
-          {joinCodesStatus == "success" && joinCodes.length > 0 ? (
+          {joinCodesStatus == "success" &&
+            joinCodes.length > 0 &&
             joinCodes.map((entry, index) => (
               <SettingsEntryLayout
                 key={entry.schoolJoinCode}
@@ -247,13 +248,23 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
                   <DepartmentName>{entry.joinCodeName}</DepartmentName>
                 </SettingsEntry>
               </SettingsEntryLayout>
-            ))
-          ) : (
+            ))}
+          {joinCodesStatus == "success" && joinCodes.length <= 0 && (
+            <>
+              There are no invite codes yet. Click on the plus button to add one.
+            </>
+          )}
+          {joinCodesStatus == "loading" && (
             <>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={80}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
+            </>
+          )}
+          {joinCodesStatus == "error" && (
+            <>
+              While loading the invite codes an error occured. Please try again.
             </>
           )}
         </SettingsEntriesLayout>

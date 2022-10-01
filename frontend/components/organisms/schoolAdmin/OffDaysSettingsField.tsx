@@ -1,7 +1,6 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
-import Link from "next/link";
 import { regex } from "../../../utils/regex";
 import { useRouter } from "next/router";
 import { Spacer } from "../../atoms/Spacer";
@@ -9,14 +8,15 @@ import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import Skeleton from "react-loading-skeleton";
-import { Select } from "../../atoms/input/Select";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
+  addOffDay,
   addSchoolClass,
+  deleteOffDay,
   deleteSchoolClass,
+  editOffDay,
   editSchoolClass,
-  fetchSchoolClasses,
-  fetchSchoolDepartments,
+  fetchOffDays,
 } from "../../../utils/requests";
 
 type Props = {
@@ -50,7 +50,7 @@ const SettingsEntryName = styled("p", {
   color: "$fontPrimary",
 });
 
-const DepartmentName = styled("p", {
+const OffDayDate = styled("p", {
   fontSize: "1rem",
   color: "$fontPrimary",
 });
@@ -58,11 +58,6 @@ const DepartmentName = styled("p", {
 const StyledInputField = styled("div", {
   marginTop: "15px",
   marginBottom: "15px",
-});
-
-const SettingsEntryLink = styled("a", {
-  textDecoration: "none",
-  cursor: "pointer",
 });
 
 const StyledDeleteText = styled("p", {
@@ -83,25 +78,23 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const { data: classes, status: classesStatus } = useQuery(
-    ["classes", schoolUUID],
-    () => fetchSchoolClasses(schoolUUID)
+  const { data: offDays, status: offDaysStatus } = useQuery(
+    ["offDays", schoolUUID],
+    () => fetchOffDays(schoolUUID)
   );
 
-  const addClassMutation = useMutation(addSchoolClass, {
+  const addOffDayMutation = useMutation(addOffDay, {
     onMutate: async () => {
-      await queryClient.cancelQueries(["classes", schoolUUID]);
+      await queryClient.cancelQueries(["offDays", schoolUUID]);
 
       let entry = {
-        classUUID: "newEntry",
-        className: offDayName,
-        departmentUUID: startDate,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === startDate
-        ).departmentName,
+        holidayUUID: "newEntry",
+        holidayName: offDayName,
+        holidayStartDate: startDate,
+        holidayEndDate: endDate,
       };
 
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) => [
+      queryClient.setQueryData(["offDays", schoolUUID], (old: any) => [
         ...old,
         entry,
       ]);
@@ -110,35 +103,35 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
     },
     onSuccess: (newEntry) => {
       let entry = {
-        classUUID: newEntry.classUUID,
-        className: newEntry.className,
-        departmentUUID: startDate,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === startDate
-        ).departmentName,
+        holidayUUID: newEntry.holidayUUID,
+        holidayName: newEntry.holidayName,
+        holidayStartDate: startDate,
+        holidayEndDate: endDate,
       };
 
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
+      console.log(newEntry);
+
+      queryClient.setQueryData(["offDays", schoolUUID], (old: any) =>
         old.map((currEntry) =>
-          currEntry.classUUID === "newEntry" ? entry : currEntry
+          currEntry.holidayUUID === "newEntry" ? entry : currEntry
         )
       );
     },
     onError: (err: any) => {
       setError(err.message);
 
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.filter((currEntry) => currEntry.classUUID !== "newEntry")
+      queryClient.setQueryData(["offDays", schoolUUID], (old: any) =>
+        old.filter((currEntry) => currEntry.holidayUUID !== "newEntry")
       );
     },
   });
 
-  const deleteClassMutation = useMutation(deleteSchoolClass, {
+  const deleteClassMutation = useMutation(deleteOffDay, {
     onSuccess: async () => {
-      await queryClient.cancelQueries(["classes", schoolUUID]);
+      await queryClient.cancelQueries(["offDays", schoolUUID]);
 
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.classUUID !== offDayId)
+      queryClient.setQueryData(["offDays", schoolUUID], (old: any) =>
+        old.filter((currElement) => currElement.holidayUUID !== offDayId)
       );
     },
     onError: (err: any) => {
@@ -146,20 +139,18 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
     },
   });
 
-  const editClassMutation = useMutation(editSchoolClass, {
+  const editClassMutation = useMutation(editOffDay, {
     onSuccess: async (response) => {
       let entry = {
-        classUUID: response.classUUID,
-        className: response.className,
-        departmentUUID: startDate,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === startDate
-        ).departmentName,
+        holidayUUID: response.holidayUUID,
+        holidayName: response.holidayName,
+        holidayStartDate: response.holidayStartDate,
+        holidayEndDate: response.holidayEndDate,
       };
 
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
+      queryClient.setQueryData(["offDays", schoolUUID], (old: any) =>
         old.map((currEntry) =>
-          currEntry.classUUID === response.classUUID ? entry : currEntry
+          currEntry.holidayUUID === response.holidayUUID ? entry : currEntry
         )
       );
     },
@@ -170,23 +161,28 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
 
   function savePopUpInput() {
     if (offDayId == "") {
-      addClassMutation.mutate({
-        classUUID: "newEntry",
-        className: offDayName,
-        departmentUUID: startDate,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === startDate
-        ).departmentName,
+      addOffDayMutation.mutate({
+        schoolUUID,
+        holidayName: offDayName,
+        holidayStartDate: startDate,
+        holidayEndDate: endDate,
       });
     } else {
       editClassMutation.mutate({
-        classUUID: offDayId,
-        className: offDayName,
-        departmentUUID: startDate,
+        holidayUUID: offDayId,
+        holidayName: offDayName,
+        holidayStartDate: startDate,
+        holidayEndDate: endDate,
       });
     }
     setEditPopUpIsVisible(false);
   }
+
+  let options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
 
   return (
     <>
@@ -259,7 +255,7 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
           >
             <StyledDeleteText>
               This action can&apos;t be undone and will permanently remove the
-              class {offDayName}.
+              off day {offDayName}.
             </StyledDeleteText>
           </SettingsPopUp>
         )}
@@ -274,53 +270,50 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {classesStatus == "success" && classes.length > 0 ? (
-            classes.map((entry) => (
+          {offDaysStatus == "success" &&
+            offDays.length > 0 &&
+            offDays.map((entry) => (
               <SettingsEntryLayout
-                key={entry.classUUID}
-                data-key={entry.classUUID}
+                key={entry.holidayUUID}
+                data-key={entry.holidayUUID}
               >
                 <SettingsEntry
                   editFunction={() => {
-                    setOffDayName(entry.className);
-                    setOffDayId(entry.classUUID);
-                    setStartDate(entry.departmentUUID);
+                    setOffDayName(entry.holidayName);
+                    setOffDayId(entry.holidayUUID);
+                    setStartDate(entry.holidayStartDate);
+                    setEndDate(entry.holidayEndDate);
                     setEditPopUpIsVisible(true);
                     setOffDayNameValid(true);
                   }}
                   deleteFunction={() => {
-                    setOffDayId(entry.classUUID);
-                    setOffDayName(entry.className);
+                    setOffDayId(entry.holidayUUID);
+                    setOffDayName(entry.holidayName);
                     setDeletePopUpIsVisible(true);
                   }}
-                  highlighted={
-                    router.query &&
-                    router.query.departmentUUID &&
-                    entry.departmentUUID == router.query.departmentUUID
-                  }
                 >
                   <>
-                    <SettingsEntryName>{entry.className}</SettingsEntryName>
-                    <Link
-                      href={`/school/${
-                        router.query.schoolUUID as string
-                      }/edit?departmentUUID=${entry.departmentUUID}`}
-                      passHref
-                    >
-                      <SettingsEntryLink>
-                        <DepartmentName>{entry.departmentName}</DepartmentName>
-                      </SettingsEntryLink>
-                    </Link>
+                    <SettingsEntryName>{entry.holidayName}</SettingsEntryName>
+                    <OffDayDate>
+                      {/*@ts-ignore */}
+                      {new Intl.DateTimeFormat("default", options).format(new Date(entry.holidayStartDate))} - {new Intl.DateTimeFormat("default", options).format(new Date(entry.holidayEndDate))}
+                    </OffDayDate>
                   </>
                 </SettingsEntry>
               </SettingsEntryLayout>
-            ))
-          ) : (
+            ))}
+          {offDaysStatus == "success" && offDays.length <= 0 && (
+            <>There are no off days yet. Add one by clicking the plus button.</>
+          )}
+          {offDaysStatus == "loading" && (
             <>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
             </>
+          )}
+          {offDaysStatus == "error" && (
+            <>While loading the off days an error occured. Please try again.</>
           )}
         </SettingsEntriesLayout>
       </SchoolDetailLayout>
