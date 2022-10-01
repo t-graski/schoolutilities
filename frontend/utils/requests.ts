@@ -561,18 +561,17 @@ export async function addOffDay(data){
   return response.json();
 }
 
-export async function deleteOffDay(data){
+export async function deleteOffDay(holidayUUID){
   const accessToken = await getAccessToken();
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday/${holidayUUID}`,
     {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(data),
     }
   );
 
@@ -587,7 +586,7 @@ export async function editOffDay(data){
   const accessToken = await getAccessToken();
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday/${data.holidayUUID}`,
     {
       method: "PUT",
       headers: {

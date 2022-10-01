@@ -46,8 +46,12 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
   setStartDate,
 }) => {
   let date = new Date(startDate);
+  let currentEndDate = new Date(date);
+  currentEndDate.setFullYear(currentEndDate.getFullYear());
+  currentEndDate.setMonth(currentEndDate.getMonth());
+  currentEndDate.setDate(currentEndDate.getDate() + 6);
   const [endDate, setEndDate] = useState(
-    new Date(new Date().setDate(date.getDate() + 6)).toISOString()
+    new Date(currentEndDate).toISOString()
   );
 
   let options = {
