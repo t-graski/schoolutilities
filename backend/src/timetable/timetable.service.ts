@@ -381,7 +381,6 @@ export class TimetableService {
         } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
-
     }
 
     async getHolidayOfSchool(schoolUUID: string): Promise<ReturnMessage> {
@@ -397,16 +396,14 @@ export class TimetableService {
 
             return {
                 status: RETURN_DATA.SUCCESS.status,
-                data: {
-                    holidays: holidays.holidays.map((holiday) => {
-                        return {
-                            holidayUUID: holiday.holidayUUID,
-                            holidayName: holiday.holidayName,
-                            holidayStartDate: holiday.holidayStartDate,
-                            holidayEndDate: holiday.holidayEndDate,
-                        }
-                    }),
-                },
+                data: holidays.holidays.map((holiday) => {
+                    return {
+                        holidayUUID: holiday.holidayUUID,
+                        holidayName: holiday.holidayName,
+                        holidayStartDate: holiday.holidayStartDate,
+                        holidayEndDate: holiday.holidayEndDate,
+                    }
+                }),
             }
         } catch {
             return RETURN_DATA.DATABASE_ERROR;
