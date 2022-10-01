@@ -86,9 +86,9 @@ export class TimetableService {
                         some: {
                             schoolClasses: {
                                 schoolClassUUID: classUUID,
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
                 include: {
                     schoolSubjects: true,
@@ -109,8 +109,8 @@ export class TimetableService {
                                 include: {
                                     users: true,
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
                     timeTableEvents: {
                         include: {
@@ -124,16 +124,16 @@ export class TimetableService {
                                     users: true,
                                 },
                             },
-                        }
+                        },
                     },
                     timeTableOmitted: true,
                     timeTableExam: {
                         include: {
                             schoolRooms: true,
-                        }
-                    }
+                        },
+                    },
                 },
-            })
+            });
 
             const holidays = await prisma.schoolClasses.findUnique({
                 where: {

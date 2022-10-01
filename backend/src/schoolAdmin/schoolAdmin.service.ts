@@ -640,15 +640,15 @@ export class SchoolAdminService {
   }
 
   async addJoinCode(body: AddJoinCode, token: string): Promise<ReturnMessage> {
-    const { schoolUUID, expireDate, joinCodeName = '' } = body;
+    const { schoolUUID, schoolJoinCodeExpireTimestamp, schoolJoinCodeName = '' } = body;
     const jwt = await this.authService.decodeJWT(token);
     const personUUID = jwt.personUUID;
 
     if (
       !validator.isUUID(schoolUUID.slice(1), 4) ||
-      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME) ||
+      !validator.isLength(schoolJoinCodeName, LENGTHS.JOIN_CODE_NAME) ||
       !validator.isUUID(personUUID.slice(1), 4) ||
-      !(new Date(expireDate).getTime() > 0)
+      !(new Date(schoolJoinCodeExpireTimestamp).getTime() > 0)
     ) {
       return RETURN_DATA.INVALID_INPUT;
     }
@@ -659,7 +659,7 @@ export class SchoolAdminService {
     const nameIsNotAvailable = await prisma.schoolJoinCodes.findFirst({
       where: {
         schoolId: Number(schoolId),
-        schoolJoinCodeName: joinCodeName,
+        schoolJoinCodeName,
       },
     });
 
@@ -686,9 +686,9 @@ export class SchoolAdminService {
               schoolId: Number(schoolId),
             },
           },
-          schoolJoinCodeName: joinCodeName,
+          schoolJoinCodeName,
           schoolJoinCode: joinCode,
-          schoolJoinCodeExpireTimestamp: new Date(expireDate),
+          schoolJoinCodeExpireTimestamp: new Date(schoolJoinCodeExpireTimestamp),
           users: {
             connect: {
               userId: Number(personId),
