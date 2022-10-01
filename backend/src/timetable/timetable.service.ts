@@ -413,6 +413,50 @@ export class TimetableService {
         }
     }
 
+    async removeHoliday(holidayUUID: string): Promise<ReturnMessage> {
+        try {
+            const holiday = await prisma.holidays.delete({
+                where: {
+                    holidayUUID,
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: holiday,
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async updateHoliday(holidayUUID: string, holiday: any): Promise<ReturnMessage> {
+        const { holidayName, holidayStartDate, holidayEndDate } = holiday;
+
+        try {
+            const updatedHoliday = await prisma.holidays.update({
+                where: {
+                    holidayUUID,
+                },
+                data: {
+                    holidayName,
+                    holidayStartDate: new Date(holidayStartDate),
+                    holidayEndDate: new Date(holidayEndDate),
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: {
+                    holidayUUID: updatedHoliday.holidayUUID,
+                    holidayName: updatedHoliday.holidayName,
+                    holidayStartDate: updatedHoliday.holidayStartDate,
+                    holidayEndDate: updatedHoliday.holidayEndDate,
+                },
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
     async addExam(exam, request): Promise<ReturnMessage> {
         const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription, timeTableExamDate } = exam;
 
