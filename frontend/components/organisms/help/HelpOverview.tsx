@@ -18,13 +18,11 @@ const HelpOverviewLayout = styled("div", {
   justifyContent: "center",
   gap: "50px",
   width: "100vw",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   padding: "10vh 10vw",
 });
 
 const HelpOverview: React.FC<Props> = ({ items }) => {
-
-
   return (
     <>
       <HelpOverviewLayout>

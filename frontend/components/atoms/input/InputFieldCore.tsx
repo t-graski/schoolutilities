@@ -18,7 +18,7 @@ const InputFieldLayout = styled("div", {
   padding: "10.3px 20px",
   gap: "20px",
 
-  background: "$backgroundTertiary",
+  background: "$neutral-300",
 
   variants: {
     editable: {
@@ -35,7 +35,7 @@ const InputFieldLayout = styled("div", {
         width: "fit-content",
       },
       false: {},
-    }
+    },
   },
 });
 
@@ -44,7 +44,7 @@ const ImageLayout = styled("div", {
   width: "30px",
   height: "30px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const InputFieldLabel = styled("div", {});
@@ -61,11 +61,9 @@ export const InputFieldCore: React.FC<Props> = ({
   showLabel = true,
   isSmall = false,
 }) => {
-
   const Icon = icon;
 
   return (
-
     <>
       {label && showLabel && (
         <>

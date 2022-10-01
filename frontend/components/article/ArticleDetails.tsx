@@ -19,9 +19,9 @@ const ComponentAlignment = styled("div", {
 const ComponentLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
-  backgroundColor: "$backgroundTertiary",
-  color: "$fontPrimary",
-  fontFamily: "$fontPrimary",
+  backgroundColor: "$neutral-300",
+  color: "$neutral-500",
+  fontFamily: "$neutral-500",
   fontSize: "1.2rem",
   lineHeight: "1.5",
   fontWeight: "normal",

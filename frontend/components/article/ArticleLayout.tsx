@@ -6,9 +6,9 @@ export type Props = {};
 const ComponentLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
-  backgroundColor: "$backgroundPrimary",
-  color: "$fontPrimary",
-  fontFamily: "$fontPrimary",
+  backgroundColor: "$neutral-100",
+  color: "$neutral-500",
+  fontFamily: "$neutral-500",
   fontSize: "1.2rem",
   lineHeight: "1.5",
   fontWeight: "normal",

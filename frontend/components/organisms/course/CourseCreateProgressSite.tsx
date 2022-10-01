@@ -44,7 +44,7 @@ const SuccessLayout = styled("div", {
   width: "100%",
   padding: "0 10vw",
   gap: "40px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledHeadline = styled("h1", {
@@ -64,10 +64,10 @@ const SuccessImageLayout = styled("div", {
   variants: {
     color: {
       success: {
-        color: "$specialPrimary",
+        color: "$warning",
       },
       error: {
-        color: "$specialTertiary",
+        color: "$error",
       },
     },
   },
@@ -78,19 +78,19 @@ const SuccessDescription = styled("p", {
 });
 
 const StyledLink = styled("a", {
-  color: "$specialPrimary",
+  color: "$warning",
   fontSize: "1.2rem",
   fontWeight: "bold",
   padding: "20px",
-  border: "2px solid $specialPrimary",
+  border: "2px solid $warning",
   borderRadius: "25px",
   textDecoration: "none",
   cursor: "pointer",
   transition: "all 0.2s",
 
   "&:hover": {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
 });
 

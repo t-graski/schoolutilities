@@ -18,7 +18,7 @@ export const ContentLayout = styled("div", {
 
 const StyledDeleteText = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   marginTop: "15px",
 });
 

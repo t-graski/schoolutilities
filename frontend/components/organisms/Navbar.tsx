@@ -24,13 +24,13 @@ const NavbarLayout = styled("div", {
   padding: "0 50px",
   height: "11vh",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const LogoLayout = styled("div", {
   width: "130px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const NavLinksLayout = styled("div", {
@@ -47,7 +47,7 @@ const SpecialLinkLayout = styled("div", {
   flexDirection: "column",
   alignItems: "center",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   "@mobileOnly": {
     display: "none",
@@ -62,7 +62,7 @@ const StyledOpenButton = styled("button", {
   backgroundColor: "transparent",
   border: "none",
   outline: "none",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   display: "none",
 
   "@mobileOnly": {

@@ -19,8 +19,8 @@ const FooterLayout = styled("footer", {
   gap: "40px",
   padding: "4vh 5vw",
 
-  backgroundColor: "$backgroundQuaternary",
-  color: "$fontPrimary",
+  backgroundColor: "$primary-200",
+  color: "$neutral-500",
 });
 
 const FooterContentLayout = styled("div", {
@@ -42,7 +42,7 @@ const LogoLayout = styled("div", {
   width: "150px",
   height: "98px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const LinkLayout = styled("div", {
@@ -70,12 +70,12 @@ const StyledLink = styled("a", {
 
   fontSize: "1.1rem",
   textDecoration: "none",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   cursor: "pointer",
   transition: "color 0.2s ease-in-out",
 
   "&:hover": {
-    color: "$specialPrimary",
+    color: "$warning",
   },
 });
 
@@ -85,7 +85,7 @@ const FooterSpacer = styled("div", {
   width: "100%",
   maxWidth: "1200px",
 
-  backgroundColor: "$fontPrimary",
+  backgroundColor: "$neutral-500",
 });
 
 const StyledRightText = styled("div", {

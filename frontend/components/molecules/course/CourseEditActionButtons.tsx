@@ -30,14 +30,14 @@ const IconLayout = styled("div", {
   width: 50,
   height: 50,
   padding: "12px",
-  backgroundColor: "$backgroundPrimary",
-  color: "$fontPrimary",
+  backgroundColor: "$neutral-100",
+  color: "$neutral-500",
   borderRadius: "50%",
   transition: "all 0.2s",
 
   "&:hover": {
-    backgroundColor: "$fontPrimary",
-    color: "$backgroundPrimary",
+    backgroundColor: "$neutral-500",
+    color: "$neutral-100",
   },
 });
 
@@ -52,7 +52,7 @@ const contentShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
   position: "fixed",
   opacity: 0.8,
   inset: 0,
@@ -62,7 +62,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   borderRadius: 6,
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
@@ -92,14 +92,14 @@ function Content({ children, ...props }) {
 const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
   fontWeight: "$medium",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 17,
   marginBottom: 10,
 });
 
 const StyledDescription = styled(DialogPrimitive.Description, {
   margin: "10px 0 20px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 15,
   lineHeight: 1.5,
 });
@@ -121,15 +121,15 @@ const IconButton = styled("button", {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   position: "absolute",
   top: 10,
   right: 10,
   cursor: "pointer",
   transition: "all 0.2s ease-in-out",
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
-  "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
+  "&:focus": { boxShadow: `0 0 0 2px $warning` },
 });
 
 const SelectedLayout = styled("div", {
@@ -153,15 +153,15 @@ const AddButton = styled("button", {
   width: "fit-content",
   transition: "all 0.2s",
 
-  backgroundColor: "$specialSecondary",
-  color: "$fontPrimary",
-  boxShadow: `0 2px 10px $specialPrimary`,
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  backgroundColor: "$primary-400",
+  color: "$neutral-500",
+  boxShadow: `0 2px 10px $warning`,
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
   "&:focus": { boxShadow: `0 0 0 2px black` },
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
   "&:disabled:hover": {
-    backgroundColor: "$specialSecondary",
-    color: "$fontPrimary",
+    backgroundColor: "$primary-400",
+    color: "$neutral-500",
   },
 });
 

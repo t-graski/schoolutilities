@@ -33,7 +33,7 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
   borderRadius: 15,
   padding: 8,
 
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
   "@media (prefers-reduced-motion: no-preference)": {
@@ -65,16 +65,16 @@ const itemStyles = {
   fontSize: "1.05rem",
   all: "unset",
   lineHeight: 1,
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   "&[data-disabled]": {
-    color: "$fontPrimary",
+    color: "$neutral-500",
     pointerEvents: "none",
   },
 
   "&:focus": {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
 };
 
@@ -96,8 +96,8 @@ const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
   ...itemStyles,
 
   '&[data-state="open"]': {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
 });
 
@@ -106,14 +106,14 @@ const StyledLabel = styled(DropdownMenuPrimitive.Label, {
 
   fontSize: 12,
   lineHeight: "25px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
   margin: 5,
 
-  backgroundColor: "$fontPrimary",
+  backgroundColor: "$neutral-500",
 });
 
 const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
@@ -131,7 +131,7 @@ const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
 
   right: 0,
 
-  fill: "$fontPrimary",
+  fill: "$neutral-500",
 });
 
 // Exports
@@ -161,7 +161,7 @@ const contentShow = keyframes({
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
   position: "fixed",
 
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
   opacity: 0.8,
   inset: 0,
 
@@ -181,7 +181,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   maxHeight: "85vh",
   padding: 25,
 
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
   transform: "translate(-50%, -50%)",
@@ -206,14 +206,14 @@ const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
 
   fontWeight: "$medium",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 17,
 });
 
 const StyledDescription = styled(DialogPrimitive.Description, {
   margin: "10px 0 20px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 15,
   lineHeight: 1.5,
 });
@@ -238,14 +238,14 @@ const IconButton = styled("button", {
   alignItems: "center",
   justifyContent: "center",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   cursor: "pointer",
   transition: "all 0.2s ease-in-out",
   all: "unset",
   fontFamily: "inherit",
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
-  "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
+  "&:focus": { boxShadow: `0 0 0 2px $warning` },
 });
 
 const ElementSelectionLayout = styled("div", {
@@ -266,20 +266,20 @@ const SelectionLayout = styled("div", {
 
 const Element = styled("div", {
   padding: "10px 20px",
-  border: "1px solid $fontPrimary",
+  border: "1px solid $neutral-500",
   borderRadius: 15,
 
   transition: "all 0.2s",
   cursor: "pointer",
   fontSize: "1rem",
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
 
   variants: {
     highlighted: {
       true: {
-        backgroundColor: "$fontPrimary",
-        color: "$backgroundPrimary",
+        backgroundColor: "$neutral-500",
+        color: "$neutral-100",
       },
     },
   },
@@ -306,19 +306,19 @@ const AddButton = styled("button", {
   fontWeight: "$medium",
   cursor: "pointer",
   transition: "all 0.2s",
-  backgroundColor: "$specialSecondary",
-  color: "$fontPrimary",
-  boxShadow: `0 2px 10px $specialPrimary`,
+  backgroundColor: "$primary-400",
+  color: "$neutral-500",
+  boxShadow: `0 2px 10px $warning`,
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
 
   "&:focus": { boxShadow: `0 0 0 2px black` },
 
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 
   "&:disabled:hover": {
-    backgroundColor: "$specialSecondary",
-    color: "$fontPrimary",
+    backgroundColor: "$primary-400",
+    color: "$neutral-500",
   },
 });
 

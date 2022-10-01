@@ -42,14 +42,14 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledDeleteText = styled("p", {
   marginTop: "15px",
 
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const RoleOrder = [
@@ -74,7 +74,7 @@ const StyledInputField = styled("div", {
 
 const PersonRoleName = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const PersonsSettingsField: React.FC<Props> = ({ queryClient }) => {

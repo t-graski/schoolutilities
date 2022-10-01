@@ -40,8 +40,8 @@ const LoadWrapp = styled("div", {
 });
 
 const LoadLayout = styled("div", {
-    display: "flex",
-    gap: "10px",
+  display: "flex",
+  gap: "10px",
 });
 
 const LoadLine = styled("div", {
@@ -49,7 +49,7 @@ const LoadLine = styled("div", {
   width: "15px",
   height: "15px",
   borderRadius: "15px",
-  backgroundColor: "$specialPrimary",
+  backgroundColor: "$warning",
 
   "&:nth-child(1)": {
     animation: `${loadingAnimation} 0.6s 0.1s infinite ease-in-out`,

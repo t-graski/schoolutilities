@@ -47,12 +47,12 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const DepartmentName = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledInputField = styled("div", {
@@ -67,7 +67,7 @@ const SettingsEntryLink = styled("a", {
 
 const StyledDeleteText = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   marginTop: "15px",
 });
 

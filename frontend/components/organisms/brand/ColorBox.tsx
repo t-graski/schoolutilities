@@ -28,7 +28,7 @@ const StyledH2 = styled("h2", {
 const StyledColorBoxBackground = styled("div", {
   width: "100%",
   height: "100%",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   padding: "10vh 10vw",
 });
 

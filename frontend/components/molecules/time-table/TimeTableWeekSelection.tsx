@@ -18,8 +18,9 @@ const TimeTableWeekSelectionLayout = styled("div", {
   padding: "$1x",
   alignItems: "center",
   gap: "$1x",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$primary-200",
   borderRadius: "15px",
+  color: "$primary-400",
 });
 
 const TimeTableArrowLayout = styled("button", {
@@ -30,6 +31,7 @@ const TimeTableArrowLayout = styled("button", {
   border: "none",
   cursor: "pointer",
   padding: 2.5,
+  color: "$primary-400",
 
   variants: {
     direction: {

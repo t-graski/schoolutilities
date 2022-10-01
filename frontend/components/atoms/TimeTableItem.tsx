@@ -61,12 +61,14 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
 
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
-    backgroundColor: isBeforeNow ? "LightGray" : "LightBlue",
+    backgroundColor: isBeforeNow ? "$primary-200" : "$primary-300",
     color: "black",
     gridColumn: "100%",
     borderRadius: "10px",
     padding: "$3x",
     gap: "$2x",
+    border: "3px solid $primary-400",
+    boxSizing: "border-box",
     gridColumn: `${
       item.overlapStart * overlapColumns + 1
     } / span ${overlapColumns}`,
@@ -79,8 +81,9 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           flexDirection: "row",
           justifyContent: "flex-end",
           backgroundColor: "transparent",
-          color: "$fontPrimary",
+          color: "$neutral-500",
           padding: "0",
+          border: "none",
         },
         small: {
           padding: "0",

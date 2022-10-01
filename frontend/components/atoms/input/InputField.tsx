@@ -27,16 +27,16 @@ const StyledInputField = styled("input", {
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
 
-  fontFamily: "$fontPrimary",
+  fontFamily: "$neutral-500",
   fontWeight: "bold",
-  background: "$backgroundTertiary",
+  background: "$neutral-300",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
   },
 
   variants: {
@@ -114,7 +114,12 @@ export const InputField: React.FC<Props> = ({
 
   return (
     <>
-      <InputFieldCore icon={icon} required={required} label={label} showLabel={showLabel}>
+      <InputFieldCore
+        icon={icon}
+        required={required}
+        label={label}
+        showLabel={showLabel}
+      >
         <StyledLabel>
           <StyledInputField
             type={inputType}

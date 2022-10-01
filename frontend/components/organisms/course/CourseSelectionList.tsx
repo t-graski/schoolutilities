@@ -35,11 +35,11 @@ const CourseLayout = styled("div", {
   padding: "10px 35px",
   borderRadius: "35px",
 
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   transition: "all 200ms ease-in-out",
   cursor: "pointer",
   placeSelf: "center",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   "&:hover": {
     opacity: "0.8",

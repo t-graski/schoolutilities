@@ -66,7 +66,7 @@ const DownloadButton = styled("a", {
   justifyContent: "center",
   alignItems: "center",
   gap: "10px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
 });
 
@@ -76,24 +76,27 @@ export const SingleLogo: React.FC<Props> = ({
   imageBg,
   orientation = "horizontal",
 }) => {
-
   const Icon = icon;
 
   return (
     <div>
       <SingleLogoLayout imageBg={imageBg}>
-        <LogoSizer orientation={orientation}>
-          {icon && <Icon />}
-        </LogoSizer>
+        <LogoSizer orientation={orientation}>{icon && <Icon />}</LogoSizer>
       </SingleLogoLayout>
       <DownloadButtonsLayout>
-        <DownloadButton href={`/images/downloads/${logoName}.svg`} download={`${logoName}.svg`}>
+        <DownloadButton
+          href={`/images/downloads/${logoName}.svg`}
+          download={`${logoName}.svg`}
+        >
           <DownloadSizer>
             <SvgDownload />
           </DownloadSizer>
           SVG
         </DownloadButton>
-        <DownloadButton href={`/images/downloads/${logoName}.png`} download={`${logoName}.png`}>
+        <DownloadButton
+          href={`/images/downloads/${logoName}.png`}
+          download={`${logoName}.png`}
+        >
           <DownloadSizer>
             <SvgDownload />
           </DownloadSizer>

@@ -12,7 +12,7 @@ const AddIconLayout = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$specialPrimary",
+  backgroundColor: "$warning",
   cursor: "pointer",
 
   "@mobileOnly": {
@@ -23,7 +23,7 @@ const AddIconLayout = styled("div", {
 
 const AddIconPlus = styled("p", {
   fontSize: "80px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   "@mobileOnly": {
     fontSize: "60px",

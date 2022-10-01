@@ -42,7 +42,7 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledInputField = styled("div", {
@@ -53,26 +53,26 @@ const StyledInputField = styled("div", {
 const StyledError = styled("p", {
   marginTop: "15px",
   marginBottom: "15px",
-  border: "solid 2px $specialTertiary",
+  border: "solid 2px $error",
   padding: "20px",
   width: "fit-content",
   borderRadius: "25px",
 
-  color: "$specialTertiary",
+  color: "$error",
   fontSize: "1.5rem",
   fontWeight: "$bold",
 });
 
 const DepartmentName = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledDeleteText = styled("p", {
   marginTop: "15px",
 
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
@@ -251,7 +251,8 @@ export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
             ))}
           {joinCodesStatus == "success" && joinCodes.length <= 0 && (
             <>
-              There are no invite codes yet. Click on the plus button to add one.
+              There are no invite codes yet. Click on the plus button to add
+              one.
             </>
           )}
           {joinCodesStatus == "loading" && (

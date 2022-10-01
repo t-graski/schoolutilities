@@ -41,7 +41,7 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
   borderRadius: 15,
   padding: 8,
   boxShadow:
@@ -62,7 +62,7 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
 const itemStyles = {
   all: "unset",
   lineHeight: 1,
-  color: "$fontPrimary",
+  color: "$neutral-500",
   borderRadius: 5,
   display: "flex",
   alignItems: "center",
@@ -76,13 +76,13 @@ const itemStyles = {
   cursor: "pointer",
 
   "&[data-disabled]": {
-    color: "$fontPrimary",
+    color: "$neutral-500",
     pointerEvents: "none",
   },
 
   "&:focus": {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
 };
 
@@ -95,8 +95,8 @@ const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
 });
 const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
   '&[data-state="open"]': {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
   ...itemStyles,
 });
@@ -105,12 +105,12 @@ const StyledLabel = styled(DropdownMenuPrimitive.Label, {
   paddingLeft: 25,
   fontSize: 12,
   lineHeight: "25px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
-  backgroundColor: "$fontPrimary",
+  backgroundColor: "$neutral-500",
   margin: 5,
 });
 
@@ -124,7 +124,7 @@ const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
 });
 
 const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
-  fill: "$fontPrimary",
+  fill: "$neutral-500",
   position: "relative",
   right: 40,
 });
@@ -150,11 +150,11 @@ const RightSlot = styled("div", {
   marginLeft: "auto",
   paddingLeft: 20,
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
-  ":focus > &": { color: "$fontPrimary" },
+  ":focus > &": { color: "$neutral-500" },
 
-  "[data-disabled] &": { color: "$fontPrimary" },
+  "[data-disabled] &": { color: "$neutral-500" },
 });
 
 const IconLayout = styled("div", {
@@ -164,7 +164,7 @@ const IconLayout = styled("div", {
   padding: "5px",
   borderRadius: "100%",
 
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
 });
 
 const UserMenuLayout = styled("div", {
@@ -204,7 +204,7 @@ const StyledLink = styled("a", {
   width: "100%",
   justifyContent: "space-between",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
 });
 
@@ -244,7 +244,6 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
   );
 
   if (schoolsStatus === "success" && !currentSchool) {
-
     setCurrentSchool(schools[0].schoolUUID);
   }
 
@@ -257,7 +256,9 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
               <SvgRoundUser />
             </IconLayout>
             <StyledUserName>
-              {userInfo && userInfo.userFirstname ? userInfo.userFirstname : "Profile"}
+              {userInfo && userInfo.userFirstname
+                ? userInfo.userFirstname
+                : "Profile"}
             </StyledUserName>
             <ArrowLayout open={open}>
               <ChevronRightIcon />

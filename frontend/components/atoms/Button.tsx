@@ -22,20 +22,20 @@ export const Button = styled("button", {
   variants: {
     backgroundColor: {
       primary: {
-        backgroundColor: "$specialSecondary",
+        backgroundColor: "$primary-400",
       },
       secondary: {
-        backgroundColor: "$backgroundTertiary",
+        backgroundColor: "$neutral-300",
       },
       tertiary: {
-        backgroundColor: "$specialPrimary",
+        backgroundColor: "$warning",
       },
     },
     color: {
       primary: {
-        color: "$fontPrimary",
+        color: "$neutral-500",
         [`.${lightTheme} &`]: {
-          color: "$fontSecondary",
+          color: "$neutral-400",
         },
       },
     },
@@ -48,7 +48,7 @@ export const Button = styled("button", {
       },
       normal: {
         fontWeight: "normal",
-      }
+      },
     },
     isDisabled: {
       true: {

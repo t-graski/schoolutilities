@@ -30,7 +30,7 @@ const StyledTabs = styled(TabsPrimitive.Root, {
   display: "flex",
   flexDirection: "column",
   width: "100%",
-  boxShadow: `0 2px 10px $fontPrimary`,
+  boxShadow: `0 2px 10px $neutral-500`,
 });
 
 const StyledList = styled(TabsPrimitive.List, {
@@ -41,7 +41,7 @@ const StyledList = styled(TabsPrimitive.List, {
 const StyledTrigger = styled(TabsPrimitive.Trigger, {
   all: "unset",
   fontFamily: "inherit",
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   padding: "0 20px",
   height: 45,
   flex: 1,
@@ -50,32 +50,32 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   justifyContent: "center",
   fontSize: 15,
   lineHeight: 1,
-  color: "$fontPrimary",
+  color: "$neutral-500",
   cursor: "pointer",
   userSelect: "none",
-  borderBottom: "$fontPrimary solid 3px",
+  borderBottom: "$neutral-500 solid 3px",
   "&:first-child": { borderTopLeftRadius: 6 },
   "&:last-child": { borderTopRightRadius: 6 },
-  "&:hover": { color: "$fontPrimary" },
+  "&:hover": { color: "$neutral-500" },
   '&[data-state="active"]': {
-    color: "$specialPrimary",
-    borderBottom: "$specialPrimary solid 3px",
+    color: "$warning",
+    borderBottom: "$warning solid 3px",
   },
   "&:focus": {
     position: "relative",
-    color: "$specialPrimary",
-    borderBottom: "$specialPrimary solid 3px",
+    color: "$warning",
+    borderBottom: "$warning solid 3px",
   },
 });
 
 const StyledContent = styled(TabsPrimitive.Content, {
   flexGrow: 1,
   padding: 20,
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   borderBottomLeftRadius: 6,
   borderBottomRightRadius: 6,
   outline: "none",
-  "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
+  "&:focus": { boxShadow: `0 0 0 2px $neutral-500` },
 });
 
 // Exports

@@ -17,8 +17,8 @@ const NavbarLayout = styled("div", {
   alignItems: "center",
   justifyContent: "space-between",
   padding: "10px",
-  backgroundColor: "$backgroundSecondary",
-  color: "$fontPrimary",
+  backgroundColor: "$neutral-400",
+  color: "$neutral-500",
   position: "fixed",
   top: 0,
   left: 0,
@@ -40,7 +40,7 @@ const NavbarLayout = styled("div", {
 
 const NavbarHeaderLink = styled("a", {
   display: "flex",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   alignItems: "center",
   fontSize: "1.6rem",
@@ -58,7 +58,7 @@ const NavbarLogoText = styled("span", {
   marginLeft: "1vw",
   transition: "all 200ms",
   "&:hover": {
-    color: "$specialPrimary",
+    color: "$warning",
   },
   variants: {
     isOnMain: {
@@ -90,14 +90,14 @@ const StyledLinkList = styled("ul", {
 });
 
 const StyledLink = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   fontSize: "1.2rem",
   padding: "10px",
   textTransform: "uppercase",
   transition: "all 200ms",
   "&:hover": {
-    color: "$specialPrimary",
+    color: "$warning",
   },
 });
 
@@ -106,8 +106,8 @@ const AccountButton = styled("button", {
   width: "fix-content",
   padding: "10px",
   alignItems: "center",
-  backgroundColor: "$specialPrimary",
-  color: "$fontSecondary",
+  backgroundColor: "$warning",
+  color: "$neutral-400",
   border: "none",
   borderRadius: "7px",
   cursor: "pointer",
@@ -120,7 +120,7 @@ const AccountButton = styled("button", {
 });
 
 const AccountButtonText = styled("p", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontWeight: "$bold",
   fontSize: "0.9rem",
 });
@@ -157,7 +157,7 @@ const AccountButtonIconLayout = styled("div", {
   borderRadius: "50%",
   width: "30px",
   height: "30px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledAccountLink = styled("a", {

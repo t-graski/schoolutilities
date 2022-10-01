@@ -17,12 +17,12 @@ const SettingsEntryLayout = styled("div", {
   alignItems: "center",
   padding: "20px",
   justifyContent: "space-between",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   borderRadius: "20px",
   variants: {
     highlighted: {
       true: {
-        border: "4px solid $specialPrimary",
+        border: "4px solid $warning",
       },
       false: {},
     },
@@ -42,7 +42,7 @@ const SettingsEntryEditIcon = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$specialSecondary",
+  backgroundColor: "$primary-400",
   cursor: "pointer",
 });
 
@@ -53,10 +53,10 @@ const SettingsEntryDeleteIcon = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$specialTertiary",
+  backgroundColor: "$error",
   cursor: "pointer",
   padding: "10px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const SettingsEntry: React.FC<Props> = ({

@@ -25,7 +25,7 @@ const SideDashboardBarLayout = styled("div", {
   position: "sticky",
   top: "0",
   left: "0",
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
   scrollbarWidth: "none",
 
   "&::-webkit-scrollbar": {
@@ -48,7 +48,7 @@ const SideDashboardBarItemLink = styled("a", {
   padding: "15px 0",
 
   transition: "all 0.2s ease-in-out",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
 
   "&:hover": {
@@ -78,7 +78,7 @@ const IconLayout = styled("div", {
 const SideDashboardBarItemName = styled("p", {
   fontSize: "1rem",
   fontWeight: "$bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {

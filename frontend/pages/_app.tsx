@@ -18,7 +18,7 @@ const globalStyles = globalCss({
     fontFamily: "Poppins, sans-serif",
     fontWeight: "$regular",
     overflowX: "hidden",
-    backgroundColor: "$backgroundPrimary",
+    backgroundColor: "$primary-100",
     minHeight: "100vh",
   },
   ".nestable-item.is-dragging:before": {
@@ -30,7 +30,7 @@ const globalStyles = globalCss({
 
     width: "100%",
     height: "100%",
-    border: "1px dashed $fontPrimary !important",
+    border: "1px dashed $neutral-500 !important",
     borderRadius: "15px !important",
 
     backgroundColor: "transparent !important",
@@ -48,7 +48,7 @@ function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     hotjar.initialize(2700632, 6);
   }, []);
-  
+
   const router = useRouter();
   const queryClient = new QueryClient();
 

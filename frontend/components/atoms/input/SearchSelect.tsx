@@ -19,7 +19,7 @@ type Props = {
 const InputFieldLayout = styled("div", {
   display: "flex",
   alignItems: "center",
-  background: "$backgroundTertiary",
+  background: "$neutral-300",
   width: "100%",
   borderRadius: "15px",
   border: "none",
@@ -42,7 +42,7 @@ const ImageLayout = styled("div", {
   width: "30px",
   height: "30px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   variants: {
     cursor: {
@@ -61,14 +61,14 @@ const StyledSelect = styled(Select, {
   borderRadius: "15px",
 
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   background: "transparent",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
   },
 
   variants: {
@@ -87,7 +87,7 @@ const StyledSelect = styled(Select, {
 const selectStyled = {
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "$colors$fontPrimary" : "$fontPrimary",
+    color: state.isSelected ? "$colors$neutral-500" : "$neutral-500",
     backgroundColor: styles.theme.colors.backgroundTertiary,
   }),
   control: (provided, state) => ({

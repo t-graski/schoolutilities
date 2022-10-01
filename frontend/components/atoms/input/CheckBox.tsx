@@ -16,7 +16,7 @@ const FieldLayout = styled("div", {
 
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   all: "unset",
-  
+
   width: 25,
   height: 25,
   display: "flex",
@@ -25,15 +25,15 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   borderRadius: 4,
 
   cursor: "pointer",
-  boxShadow: `0 2px 10px $backgroundSecondary`,
-  backgroundColor: "$backgroundTertiary",
+  boxShadow: `0 2px 10px $neutral-400`,
+  backgroundColor: "$neutral-300",
 
-  "&:hover": { backgroundColor: "$backgroundTertiary" },
-  "&:focus": { boxShadow: `0 0 0 2px $fontPrimary` },
+  "&:hover": { backgroundColor: "$neutral-300" },
+  "&:focus": { boxShadow: `0 0 0 2px $neutral-500` },
 });
 
 const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 // Exports

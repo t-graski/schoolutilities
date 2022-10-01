@@ -22,7 +22,7 @@ const FooterLayout = styled("footer", {
   bottom: "0",
   left: "0",
   backgroundColor: "$fontTertiary",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const FooterNavbar = styled("nav", {
@@ -44,14 +44,14 @@ const FooterListElement = styled("li", {
 });
 
 const FooterLink = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   margin: "0 4vw",
   fontSize: "1.5rem",
   textTransform: "uppercase",
   transition: "all 200ms",
   "&:hover": {
-    color: "$specialPrimary",
+    color: "$warning",
   },
 });
 

@@ -11,7 +11,7 @@ const ImprintLayout = styled("div", {
   width: "100%",
   padding: "0 15vw",
   minHeight: "80vh",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const MainContentText = styled("p", {
