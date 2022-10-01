@@ -355,6 +355,8 @@ export class TimetableService {
     async addHoliday(holiday, request): Promise<ReturnMessage> {
         const { schoolUUID, holidayName, holidayStartDate, holidayEndDate } = holiday;
 
+        if (holidayStartDate > holidayEndDate) return RETURN_DATA.INVALID_INPUT;
+
         try {
             const holiday = await prisma.holidays.create({
                 data: {
@@ -428,6 +430,8 @@ export class TimetableService {
 
     async updateHoliday(holidayUUID: string, holiday: any): Promise<ReturnMessage> {
         const { holidayName, holidayStartDate, holidayEndDate } = holiday;
+
+        if (holidayStartDate > holidayEndDate) return RETURN_DATA.INVALID_INPUT;
 
         try {
             const updatedHoliday = await prisma.holidays.update({
