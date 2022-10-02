@@ -4,7 +4,6 @@ import { TimetableController } from './timetable.controller';
 import { RolesGuard } from 'src/roles/roles.guard';
 
 @Module({
-  imports: [RolesGuard],
   controllers: [TimetableController],
   providers: [TimetableService],
   exports: [TimetableService],
@@ -15,4 +14,4 @@ imports: [DatabaseModule, RolesGuard],
   providers: [SchoolAdminService],
   exports: [SchoolAdminService],
 */
-export class TimetableModule {}
+export class TimetableModule { }
