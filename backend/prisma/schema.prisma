@@ -68,24 +68,26 @@ model schoolClasses {
 }
 
 model schools {
-  schoolId                Int               @id @default(autoincrement()) @map("school_id")
-  schoolUUID              String            @map("school_uuid")
-  schoolName              String            @map("school_name")
-  schoolDescription       String            @map("school_description") @db.Text
-  schoolLanguageId        Int               @map("school_language_id")
-  schoolTimezone          String            @map("school_timezone")
-  schoolCreationTimestamp DateTime          @default(now()) @map("school_creation_timestamp") @db.Timestamp(0)
-  schoolCreatorId         Int               @map("school_creator_id")
-  schoolCanUpload         Boolean           @default(false) @map("school_can_upload")
-  users                   users             @relation(fields: [schoolCreatorId], references: [userId])
-  courses                 courses[]
-  departments             departments[]
-  schoolJoinCodes         schoolJoinCodes[]
-  schoolUserRoles         schoolUserRoles[]
-  schoolUsers             schoolUsers[]
-  schoolRooms             schoolRooms[]
-  schoolSubjects          schoolSubjects[]
-  holidays                holidays[]
+  schoolId                  Int                         @id @default(autoincrement()) @map("school_id")
+  schoolUUID                String                      @map("school_uuid")
+  schoolName                String                      @map("school_name")
+  schoolDescription         String                      @map("school_description") @db.Text
+  schoolLanguageId          Int                         @map("school_language_id")
+  schoolTimezone            String                      @map("school_timezone")
+  schoolCreationTimestamp   DateTime                    @default(now()) @map("school_creation_timestamp") @db.Timestamp(0)
+  schoolCreatorId           Int                         @map("school_creator_id")
+  schoolCanUpload           Boolean                     @default(false) @map("school_can_upload")
+  users                     users                       @relation(fields: [schoolCreatorId], references: [userId])
+  courses                   courses[]
+  departments               departments[]
+  schoolJoinCodes           schoolJoinCodes[]
+  schoolUserRoles           schoolUserRoles[]
+  schoolUsers               schoolUsers[]
+  schoolRooms               schoolRooms[]
+  schoolSubjects            schoolSubjects[]
+  holidays                  holidays[]
+  timeTableGrid             timeTableGrid[]
+  timeTableGridSpecialBreak timeTableGridSpecialBreak[]
 
   @@unique([schoolUUID], map: "school_uuid_UNIQUE")
   @@index([schoolCreatorId], map: "fk_school_creator_id")
@@ -649,6 +651,34 @@ model holidays {
 
   @@unique([holidayUUID], map: "holiday_uuid_UNIQUE")
   @@index([schoolId], map: "fk_holiday_school_id")
+}
+
+model timeTableGrid {
+  timeTableGridId             Int                       @id @default(autoincrement()) @map("time_table_grid_id")
+  timeTableGridStartTime      DateTime                  @map("time_table_grid_start_date")
+  timeTableGridBreakDuration  Int                       @map("time_table_grid_break_duration")
+  timeTableGridMaxLessons     Int                       @map("time_table_grid_max_lessons")
+  schoolId                    Int                       @map("school_id")
+  schools                     schools                   @relation(fields: [schoolId], references: [schoolId])
+  timeTableGridSpecialBreakId Int                       @map("time_table_special_break_id")
+  timeTableGridSpecialBreak   timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
+
+  @@unique([timeTableGridId], map: "time_table_grid_uuid_UNIQUE")
+  @@index([schoolId], map: "fk_time_table_grid_school_id")
+  @@index([timeTableGridSpecialBreakId], map: "fk_time_table_special_break_id")
+  @@map("time_table_grid")
+}
+
+model timeTableGridSpecialBreak {
+  timeTableGridSpecialBreakId       Int             @id @default(autoincrement()) @map("time_table_grid_special_break_id")
+  timeTableGridSpecialBreakElement  Int             @map("time_table_grid_special_break_element")
+  timeTableGridSpecialBreakDuration Int             @map("time_table_grid_special_break_duration")
+  schoolId                          Int             @map("school_id")
+  schools                           schools         @relation(fields: [schoolId], references: [schoolId])
+  timeTableGrid                     timeTableGrid[]
+
+  @@index([schoolId], map: "fk_time_table_grid_special_break_school_id")
+  @@map("time_table_grid_special_break")
 }
 
 model users {

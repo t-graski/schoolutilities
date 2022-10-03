@@ -78,6 +78,7 @@ export class TimetableService {
     async getTimetable(classUUID: string, dateString: string, request): Promise<ReturnMessage> {
         const timeTableData = []
         const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        const schoolDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
         try {
             const timeTable = await prisma.timeTableElement.findMany({
@@ -148,6 +149,7 @@ export class TimetableService {
                                         where: {
                                             holidayStartDate: {
                                                 gte: new Date(dateString),
+                                                lte: new Date(new Date(dateString).setDate(new Date(dateString).getDate() + 5)),
                                             }
                                         }
                                     },
@@ -166,7 +168,12 @@ export class TimetableService {
                     timeTableElementStartTime: new Date(new Date(dateString).setHours(element.timeTableElementStartTime.getHours(), element.timeTableElementStartTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
                     timeTableElementEndTime: new Date(new Date(dateString).setHours(element.timeTableElementEndTime.getHours(), element.timeTableElementEndTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
                     timeTableElementDay: element.timeTableElementDay,
-                    timeTableElementRoom: element.schoolRoom,
+                    timeTableElementRoom: {
+                        schoolRoomUUID: element.schoolRoom.schoolRoomUUID,
+                        schoolRoomName: element.schoolRoom.schoolRoomName,
+                        schoolRoomAbbreviation: element.schoolRoom.schoolRoomAbbreviation,
+                        schoolRoomBuilding: element.schoolRoom.schoolRoomBuilding,
+                    },
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
                     timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
                         return {
@@ -284,20 +291,19 @@ export class TimetableService {
                     day: key,
                     timeTableElements: timeTableDays[key]
                 }
-            });
+            })
 
             timeTableDaysArray.forEach((element) => {
-                let holiday = checkForHoliday(element)
-
-                if (holiday !== undefined) {
-                    element.timeTableElements.length = 0
-                    element.timeTableElements.push({
-                        holidayUUID: holiday.holidayUUID,
-                        holidayName: holiday.holidayName,
-                        holidayStartDate: holiday.holidayStartDate,
-                        holidayEndDate: holiday.holidayEndDate,
-                    })
-                }
+                const elementDate = new Date(dateString).setDate(new Date(dateString).getDate() + schoolDays.indexOf(element.day))
+                holidays.departments.schools.holidays.forEach((holiday) => {
+                    if (new Date(elementDate) >= holiday.holidayStartDate && new Date(elementDate) <= holiday.holidayEndDate) {
+                        element.timeTableElements.length = 0
+                        element.timeTableElements.push({
+                            holidayUUID: holiday.holidayUUID,
+                            holidayName: holiday.holidayName,
+                        })
+                    }
+                })
 
                 let allDayEvent = element.timeTableElements.find((element) => {
                     return element.event !== undefined && element.event.timeTableEventIsAllDay === true
@@ -310,23 +316,6 @@ export class TimetableService {
                 }
             })
 
-            function checkForHoliday(element) {
-                const holiday = holidays.departments.schools.holidays.find((holiday) => {
-                    let day = weekday[holiday.holidayStartDate.getDay() - 1]
-
-                    if (day === element.day) {
-                        return true
-                    }
-                })
-
-                if (holiday !== undefined) {
-                    return holiday
-                }
-
-                return undefined
-            }
-
-            const schoolDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
             schoolDays.forEach((day) => {
                 if (timeTableDaysArray.find((element) => {
                     return element.day === day
@@ -345,6 +334,43 @@ export class TimetableService {
             return {
                 status: 200,
                 data: timeTableDaysArray,
+            }
+        } catch (error) {
+            console.log(error)
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async getTimeTableGrid(schoolUUID: string, request) {
+        try {
+            const timeTableGrid = await prisma.schools.findUnique({
+                where: {
+                    schoolUUID,
+                },
+                include: {
+                    timeTableGrid: {
+                        include: {
+                            timeTableGridSpecialBreak: true,
+                        }
+                    }
+                }
+            })
+
+            const timeTableGridData = {
+                timeTableGridUUID: timeTableGrid.timeTableGrid[0].timeTableGridBreakDuration,
+                timeTableGridSpecialBreakStartTime: timeTableGrid[0].timeTableGridSpecialBreakStartTime,
+                timeTableGridMaxLessons: timeTableGrid[0].timeTableGridMaxLessons,
+                timeTableGridBreakDuration: timeTableGrid.timeTableGrid[0].timeTableGridBreakDuration,
+                timeTableGridSpecialBreak: {
+                    timeTableGridSpecialBreakUUID: timeTableGrid.timeTableGrid[0].timeTableGridSpecialBreak[0].timeTableGridSpecialBreakUUID,
+                    timeTableGridSpecialBreakElement: timeTableGrid.timeTableGrid[0].timeTableGridSpecialBreak[0].timeTableGridSpecialBreakElement,
+                    timeTableGridBreakDuration: timeTableGrid.timeTableGrid[0].timeTableGridSpecialBreak[0].timeTableGridBreakDuration,
+                }
+            }
+
+            return {
+                status: 200,
+                data: timeTableGrid,
             }
         } catch (error) {
             console.log(error)
