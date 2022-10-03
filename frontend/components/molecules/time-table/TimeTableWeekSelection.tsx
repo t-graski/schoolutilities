@@ -18,8 +18,9 @@ const TimeTableWeekSelectionLayout = styled("div", {
   padding: "$1x",
   alignItems: "center",
   gap: "$1x",
-  backgroundColor: "$primary-200",
+  backgroundColor: "$neutral-100",
   borderRadius: "15px",
+  minWidth: "180px",
   color: "$primary-400",
 });
 
@@ -48,13 +49,18 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
   setStartDate,
 }) => {
   let date = new Date(startDate);
-  let currentEndDate = new Date(date);
-  currentEndDate.setFullYear(currentEndDate.getFullYear());
-  currentEndDate.setMonth(currentEndDate.getMonth());
-  currentEndDate.setDate(currentEndDate.getDate() + 6);
+
   const [endDate, setEndDate] = useState(
-    new Date(currentEndDate).toISOString()
+    new Date().toISOString().split("T")[0]
   );
+
+  useEffect(() => {
+    let currentEndDate = new Date(date);
+    currentEndDate.setFullYear(currentEndDate.getFullYear());
+    currentEndDate.setMonth(currentEndDate.getMonth());
+    currentEndDate.setDate(currentEndDate.getDate() + 6);
+    setEndDate(new Date(currentEndDate).toISOString());
+  }, [date, startDate]);
 
   let options = {
     month: "2-digit",
@@ -67,33 +73,50 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
         <TimeTableArrowLayout
           direction={"left"}
           onClick={() => {
+            let dayCounter = 6;
+            if (
+              new Date(new Date().setDate(date.getDate() - 7)).getMonth() !=
+              new Date(endDate).getMonth()
+            ) {
+              dayCounter = 7;
+            }
             setStartDate(
-              new Date(date.setDate(date.getDate() - 7))
+              new Date(date.setDate(date.getDate() - dayCounter))
                 .toISOString()
                 .split("T")[0]
             );
             setEndDate(
-              new Date(date.setDate(date.getDate() + 7)).toISOString()
+              new Date(date.setDate(date.getDate() + dayCounter)).toISOString()
             );
           }}
         >
           <SvgRightArrow></SvgRightArrow>
         </TimeTableArrowLayout>
         {/*@ts-ignore */}
-        {new Intl.DateTimeFormat("default", options).format(
-          new Date(date)
-        )} - {/*@ts-ignore */}
-        {new Intl.DateTimeFormat("default", options).format(new Date(endDate))}
+        {startDate &&
+          new Intl.DateTimeFormat("default", options).format(
+            new Date(date)
+          )}{" "}
+        - {/*@ts-ignore */}
+        {startDate &&
+          new Intl.DateTimeFormat("default", options).format(new Date(endDate))}
         <TimeTableArrowLayout
           direction={"right"}
           onClick={() => {
+            let dayCounter = 6;
+            if (
+              new Date(new Date().setDate(date.getDate() + 6)).getMonth() !=
+              new Date(endDate).getMonth()
+            ) {
+              dayCounter = 7;
+            }
             setStartDate(
-              new Date(date.setDate(date.getDate() + 7))
+              new Date(date.setDate(date.getDate() + dayCounter))
                 .toISOString()
                 .split("T")[0]
             );
             setEndDate(
-              new Date(date.setDate(date.getDate() + 7)).toISOString()
+              new Date(date.setDate(date.getDate() + dayCounter)).toISOString()
             );
           }}
         >
@@ -103,3 +126,10 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
     </>
   );
 };
+
+export function getCurrentWeekMonday() {
+  let date = new Date();
+  let day = date.getDay();
+  let diff = date.getDate() - day + (day == 0 ? -6 : 1);
+  return new Date(date.setDate(diff)).toISOString().split("T")[0];
+}

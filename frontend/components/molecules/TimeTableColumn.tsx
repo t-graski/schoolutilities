@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "../../stitches.config";
+import { TimeTableHoliday } from "../atoms/TimeTableHoliday";
 import { TimeTableItemType, TimeTableItem } from "../atoms/TimeTableItem";
 
 type Props = {
@@ -55,13 +56,19 @@ export const TimeTableColumn: React.FC<Props> = ({
   return (
     <>
       <TimeTableColumnGrid>
-        {dayTimeTable.map((lesson, index) => (
-          <TimeTableItem
-            key={index}
-            item={lesson}
-            startTime={startTime}
-          ></TimeTableItem>
-        ))}
+        {dayTimeTable[0]?.timeTableElementEndTime &&
+          dayTimeTable.map((lesson, index) => (
+            <TimeTableItem
+              key={index}
+              item={lesson}
+              startTime={startTime}
+            ></TimeTableItem>
+          ))}
+        {dayTimeTable[0]?.holidayUUID && (
+          <TimeTableHoliday
+            holidayName={dayTimeTable[0].holidayName}
+          ></TimeTableHoliday>
+        )}
       </TimeTableColumnGrid>
     </>
   );

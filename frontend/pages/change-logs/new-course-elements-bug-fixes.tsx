@@ -51,7 +51,7 @@ export default function Article() {
           ></Headline>
           <p>
             It is now possible to create assignments in your course by clicking{" "}
-            <Link href="/course/create-course" passHref>
+            <Link href="/course/create" passHref>
               <StyledLink>here</StyledLink>
             </Link>
             .

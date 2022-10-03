@@ -53,13 +53,53 @@ export const TimeTableItemSelection: React.FC<Props> = ({
               label: element.className,
             };
           })}
-          onChange={(element) => setSchoolClassUUID(element?.value)}
+          onChange={(element) => {
+            if (element && element.value) {
+              router.push({
+                pathname: `/school/[schoolUUID]/timetable/week/[startDate]/class/[schoolClassUUID]`,
+                query: {
+                  schoolUUID,
+                  startDate,
+                  schoolClassUUID: element.value,
+                },
+              });
+            } else {
+              router.push({
+                pathname: `/school/[schoolUUID]/timetable/week/[startDate]`,
+                query: { schoolUUID, startDate },
+              });
+            }
+            setSchoolClassUUID(element?.value);
+          }}
+          selectValue={
+            schoolClassUUID
+              ? {
+                  value: schoolClassUUID,
+                  label: classes.find(
+                    (element) => element.classUUID === schoolClassUUID
+                  )?.className,
+                }
+              : {}
+          }
           selectMultiValues={false}
           isSmall={true}
         ></SearchSelect>
         <TimeTableWeekSelection
           startDate={startDate}
-          setStartDate={setStartDate}
+          setStartDate={(value) => {
+            if (schoolClassUUID) {
+              router.push({
+                pathname: `/school/[schoolUUID]/timetable/week/[startDate]/class/[schoolClassUUID]`,
+                query: { schoolUUID, startDate: value, schoolClassUUID },
+              });
+            } else {
+              router.push({
+                pathname: `/school/[schoolUUID]/timetable/week/[startDate]`,
+                query: { schoolUUID, startDate: value },
+              });
+            }
+            setStartDate(value);
+          }}
         ></TimeTableWeekSelection>
       </TimeTableSelectionLayout>
     </>

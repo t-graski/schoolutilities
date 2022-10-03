@@ -1,13 +1,14 @@
 import Head from "next/head";
-const Navbar = dynamic(() => import("../../../../components/organisms/Navbar"));
-import { SiteLayout } from "../../../../components/atoms/SiteLayout";
+const Navbar = dynamic(
+  () => import("../../../../../../../../components/organisms/Navbar")
+);
+import { SiteLayout } from "../../../../../../../../components/atoms/SiteLayout";
 import dynamic from "next/dynamic";
+import { TimeTableOverview } from "../../../../../../../../components/organisms/time-table/TimeTableOverview";
 import { styled } from "@stitches/react";
-import { useState } from "react";
-import { TimeTableItemSelection } from "../../../../components/organisms/time-table/TimeTableItemSelection";
-import { getCurrentWeekMonday } from "../../../../components/molecules/time-table/TimeTableWeekSelection";
+import { useEffect, useState } from "react";
+import { TimeTableItemSelection } from "../../../../../../../../components/organisms/time-table/TimeTableItemSelection";
 import { useRouter } from "next/router";
-import { isSSR } from "../../../../utils/isSSR";
 
 const TimeTableNavigationLayout = styled("div", {
   display: "grid",
@@ -22,13 +23,13 @@ const TimeTableSelectionLayout = styled("div", {
 
 export default function ShowCourses() {
   const router = useRouter();
-  const { schoolUUID } = router.query;
   const [schoolClassUUID, setSchoolClassUUID] = useState("");
-  const [startDate, setStartDate] = useState(getCurrentWeekMonday());
+  const [startDate, setStartDate] = useState("");
 
-  if (!isSSR() && startDate && schoolUUID) {
-    router.push(`/school/${schoolUUID}/timetable/week/${startDate}/`);
-  }
+  useEffect(() => {
+    setStartDate(router.query.startDate as string);
+    setSchoolClassUUID(router.query.schoolClassUUID as string);
+  }, [router.query.schoolClassUUID, router.query.startDate]);
 
   return (
     <SiteLayout>
@@ -45,6 +46,11 @@ export default function ShowCourses() {
             setStartDate={setStartDate}
           ></TimeTableItemSelection>
         </TimeTableSelectionLayout>
+
+        <TimeTableOverview
+          startDate={startDate}
+          schoolClassUUID={schoolClassUUID}
+        ></TimeTableOverview>
       </TimeTableNavigationLayout>
     </SiteLayout>
   );

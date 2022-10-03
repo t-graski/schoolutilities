@@ -3,13 +3,19 @@ import { styled } from "../../stitches.config";
 
 export type TimeTableItemType = {
   timeTableElementUUID?: string;
-  timeTableElementStartTime: string;
-  timeTableElementEndTime: string;
+  timeTableElementStartTime?: string;
+  timeTableElementEndTime?: string;
   //- timeTableElementDay?: string;
   //- timeTableElementCreationTimestamp?: string;
   overlaps?: number;
   overlapStart?: number;
+  omitted?: {
+    timeTableOmittedDate: string;
+    timeTableOmittedReason: string;
+  };
   schoolSubjectName?: string;
+  holidayUUID?: string;
+  holidayName?: string;
   timeTableElementTeachers?: {
     userUUID: string;
     userFirstname: string;
@@ -61,13 +67,12 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
 
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
-    backgroundColor: isBeforeNow ? "$primary-200" : "$primary-300",
-    color: "black",
-    gridColumn: "100%",
+    backgroundColor: isBeforeNow ? "$primary-100" : "$primary-300",
+    color: isBeforeNow ? "$neutral-300" : "$neutral-500",
     borderRadius: "10px",
-    padding: "$3x",
+    padding: "$2x",
     gap: "$2x",
-    border: "3px solid $primary-400",
+    border: isBeforeNow ? "3px solid $primary-200" : "3px solid $primary-400",
     boxSizing: "border-box",
     gridColumn: `${
       item.overlapStart * overlapColumns + 1
@@ -90,6 +95,16 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           wordBreak: "break-word",
         },
         big: {},
+        omitted: {
+          textDecoration: "line-through",
+        },
+      },
+      state: {
+        omitted: {
+          textDecoration: "line-through",
+          borderColor: "$error",
+        },
+        normal: {},
       },
     },
   });
@@ -97,7 +112,10 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   return (
     <>
       {item?.schoolSubjectName ? (
-        <TimeTableItemLayout layout={item.overlaps > 1 ? "small" : "big"}>
+        <TimeTableItemLayout
+          layout={item.overlaps > 1 ? "small" : "big"}
+          state={item?.omitted ? "omitted" : "normal"}
+        >
           <TimeTableSubjectName>{item.schoolSubjectName}</TimeTableSubjectName>
           <div>
             {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}

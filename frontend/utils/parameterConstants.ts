@@ -146,7 +146,7 @@ export const appRoutes = {
     "/school/[schoolUUID]/course/[courseUUID]/elements",
   SCHOOL_DETAILS_COURSE_DETAILS_SUBMISSION_DETAILS:
     "/school/[schoolUUID]/course/[courseUUID]/submission/[submissionUUID]",
-  SCHOOL_DETAILS_CREATE_COURSE: "/school/[schoolUUID]/course/create-course",
+  SCHOOL_DETAILS_CREATE_COURSE: "/school/[schoolUUID]/course/create",
   SCHOOL_DETAILS_EDIT: "/school/[schoolUUID]/edit",
   SCHOOL_CREATE: "/school/create",
   SCHOOL_JOIN: "/school/join",

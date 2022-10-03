@@ -50,7 +50,7 @@ export default function Article() {
           ></Headline>
           <p>
             It is now possible to create courses in your school by clicking{" "}
-            <Link href="/course/create-course" passHref>
+            <Link href="/course/create" passHref>
               <StyledLink>here</StyledLink>
             </Link>
             . You can give it a name, a description, add singular users or a

@@ -88,26 +88,26 @@ const selectStyled = {
   option: (provided, state) => ({
     ...provided,
     color: state.isSelected ? "$colors$neutral-500" : "$neutral-500",
-    backgroundColor: styles.theme.colors.backgroundTertiary,
-  }),
+    backgroundColor: styles.theme.colors["neutral-300"],
+  }), 
   control: (provided, state) => ({
     ...provided,
     border: "none",
     borderBottom: "solid 1px transparent",
     background: "transparent",
-    color: styles.theme.colors.fontPrimary,
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
     ["&:focus"]: {
-      borderBottom: `solid 1px ${styles.theme.colors.fontPrimary}`,
+      borderBottom: `solid 1px ${styles.theme.colors["neutral-500"]}`,
     },
   }),
 
   menu: (provided, state) => ({
     ...provided,
-    background: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    background: styles.theme.colors["neutral-300"],
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
@@ -116,56 +116,56 @@ const selectStyled = {
 
   singleValue: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
   }),
 
   indicatorSeparator: (provided, state) => ({
     ...provided,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    backgroundColor: styles.theme.colors["neutral-300"],
   }),
 
   dropdownIndicator: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
 
     "&:hover": {
-      backgroundColor: styles.theme.colors.backgroundTertiary,
+      backgroundColor: styles.theme.colors["neutral-300"],
     },
 
     "&:active": {
-      backgroundColor: styles.theme.colors.backgroundTertiary,
+      backgroundColor: styles.theme.colors["neutral-300"],
     },
 
     "&:focus": {
-      backgroundColor: styles.theme.colors.backgroundTertiary,
+      backgroundColor: styles.theme.colors["neutral-300"],
     },
   }),
 
   clearIndicator: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
   }),
 
   container: (provided, state) => ({
     ...provided,
-    background: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    background: styles.theme.colors["neutral-300"],
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
 
     ["&:focus"]: {
-      borderBottom: `solid 1px ${styles.theme.colors.fontPrimary}`,
+      borderBottom: `solid 1px ${styles.theme.colors["neutral-500"]}`,
     },
   }),
 
   menuList: (provided, state) => ({
     ...provided,
-    background: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    background: styles.theme.colors["neutral-300"],
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
@@ -184,8 +184,8 @@ const selectStyled = {
 
   multiValue: (provided, state) => ({
     ...provided,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    backgroundColor: styles.theme.colors["neutral-300"],
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
@@ -193,17 +193,17 @@ const selectStyled = {
 
   multiValueLabel: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
     padding: "8px",
     borderRadius: "5px",
-    border: `solid 1px ${styles.theme.colors.fontPrimary}`,
+    border: `solid 1px ${styles.theme.colors["neutral-500"]}`,
   }),
 
   multiValueRemove: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
     cursor: "pointer",
   }),
 };

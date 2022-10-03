@@ -391,13 +391,13 @@ export const NavigationMenuPart = () => {
               </ContentListItem>
               <ContentListItem
                 title="Create course"
-                href="/school/select?redirect=/course/create-course"
+                href={schoolUUID ? `/school/${schoolUUID}/course/create` : "/school/select?redirect=/course/create"}
               >
                 Create a course and start teaching your students.
               </ContentListItem>
               <ContentListItem
                 title="Create timetable item"
-                href={`/school/${schoolUUID}/timetable/create`}
+                href={schoolUUID ? `/school/${schoolUUID}/timetable/create` : "/school/select?redirect=/timetable/create"}
               >
                 Create a course and start teaching your students.
               </ContentListItem>

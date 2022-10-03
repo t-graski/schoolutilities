@@ -77,7 +77,6 @@ export const TimeTableOverview: React.FC<Props> = ({
     ["timetable", schoolClassUUID, startDate],
     () => getTimeTableForClass(schoolClassUUID + "/" + startDate)
   );
-  console.log(weekTimeTable);
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -101,7 +100,7 @@ export const TimeTableOverview: React.FC<Props> = ({
   });
 
   const timeTableRows = calculate5MinuteRows(startTime, endTime);
-  console.log(date.toDateString());
+  console.log(weekTimeTable);
   return (
     <>
       <TimeTableLayout>
