@@ -42,7 +42,7 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledInputField = styled("div", {
@@ -53,29 +53,29 @@ const StyledInputField = styled("div", {
 const StyledError = styled("p", {
   marginTop: "15px",
   marginBottom: "15px",
-  border: "solid 2px $specialTertiary",
+  border: "solid 2px $error",
   padding: "20px",
   width: "fit-content",
   borderRadius: "25px",
 
-  color: "$specialTertiary",
+  color: "$error",
   fontSize: "1.5rem",
   fontWeight: "$bold",
 });
 
 const DepartmentName = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledDeleteText = styled("p", {
   marginTop: "15px",
 
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
-export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
+export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [joinCodeName, setJoinCodeName] = React.useState("");
@@ -145,13 +145,13 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
       addJoinCodeMutation.mutate({
         schoolUUID,
         schoolJoinCodeName: joinCodeName,
-        expireDate: "2022-10-22 14:00:00",
+        schoolJoinCodeExpireTimestamp: "2023-10-22 14:00:00",
       });
     } else {
       editJoinCodeMutation.mutate({
         schoolJoinCode: joinCodeId,
         schoolJoinCodeName: joinCodeName,
-        expireDate: "2022-10-22 14:00:00",
+        schoolJoinCodeExpireTimestamp: "2023-10-22 14:00:00",
       });
     }
     setEditPopUpIsVisible(false);
@@ -221,7 +221,8 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
         ></SettingsHeader>
         {error && <StyledError>{error}</StyledError>}
         <SettingsEntriesLayout>
-          {joinCodesStatus == "success" && joinCodes.length > 0 ? (
+          {joinCodesStatus == "success" &&
+            joinCodes.length > 0 &&
             joinCodes.map((entry, index) => (
               <SettingsEntryLayout
                 key={entry.schoolJoinCode}
@@ -247,13 +248,24 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ }) => {
                   <DepartmentName>{entry.joinCodeName}</DepartmentName>
                 </SettingsEntry>
               </SettingsEntryLayout>
-            ))
-          ) : (
+            ))}
+          {joinCodesStatus == "success" && joinCodes.length <= 0 && (
+            <>
+              There are no invite codes yet. Click on the plus button to add
+              one.
+            </>
+          )}
+          {joinCodesStatus == "loading" && (
             <>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={80}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
+            </>
+          )}
+          {joinCodesStatus == "error" && (
+            <>
+              While loading the invite codes an error occured. Please try again.
             </>
           )}
         </SettingsEntriesLayout>

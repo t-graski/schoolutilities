@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsOptional,
@@ -15,19 +15,23 @@ export class AddCourseDto {
   @IsString()
   @Length(2, 100)
   @IsNameAvailable()
+  @ApiProperty()
   name: string;
 
   @IsOptional()
   @IsString()
   @Length(2, 1000)
+  @ApiProperty()
   courseDescription: string;
 
   @IsNotEmpty()
   @IsCustomUUID()
+  @ApiProperty()
   schoolUUID: string;
 
   @IsOptional()
   @IsArrayUnique()
+  @ApiProperty()
   @IsCustomUUID({
     each: true,
   })
@@ -38,6 +42,7 @@ export class AddCourseDto {
 
   @IsOptional()
   @IsArrayUnique()
+  @ApiProperty()
   @IsCustomUUID({
     each: true,
   })

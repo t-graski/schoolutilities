@@ -18,7 +18,7 @@ const LoginLayout = styled("form", {
   display: "flex",
   flexDirection: "column",
   gap: "20px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledInfo = styled("div", {
@@ -28,7 +28,7 @@ const StyledInfo = styled("div", {
   marginBottom: "20px",
 
   fontSize: "1.5rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontWeight: "bold",
 });
 
@@ -46,7 +46,7 @@ const LoginButtonLayout = styled("div", {
 });
 
 const StyledLink = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   transition: "all 0.2s",
   cursor: "pointer",
@@ -138,9 +138,9 @@ export const LoginField: React.FC<Props> = ({}) => {
 
     fontSize: "1rem",
     cursor: "pointer",
-    color: "$fontPrimary",
+    color: "$neutral-500",
     fontWeight: "bold",
-    backgroundColor: "$specialSecondary",
+    backgroundColor: "$primary-400",
 
     ":hover": {
       backgroundColor: "$backgroundColor",

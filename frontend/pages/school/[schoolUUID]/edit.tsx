@@ -17,6 +17,9 @@ import dynamic from "next/dynamic";
 import { logout } from "../../../utils/authHelper";
 import { SideDashboardBar } from "../../../components/organisms/SideDashboardBar";
 import { OffDaysSettingsField } from "../../../components/organisms/schoolAdmin/OffDaysSettingsField";
+import SvgInvitation from "../../../components/atoms/svg/SvgInvitation";
+import SvgCalendar from "../../../components/atoms/svg/SvgCalendar";
+import SvgSuitcase from "../../../components/atoms/svg/SvgSuitcase";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -64,33 +67,39 @@ export default function CreateSchool() {
           items={[
             {
               name: "Departments",
+              value: "departments",
               href: `/school/${schoolUUID}/edit?tab=departments`,
               icon: SvgDepartment,
             },
             {
               name: "Classes",
+              value: "classes",
               href: `/school/${schoolUUID}/edit?tab=classes`,
               icon: SvgClass,
             },
             {
               name: "Persons",
+              value: "persons",
               href: `/school/${schoolUUID}/edit?tab=persons`,
               icon: SvgStudent,
             },
             {
               name: "Invite Codes",
+              value: "join-codes",
               href: `/school/${schoolUUID}/edit?tab=join-codes`,
-              icon: SvgTeacher,
+              icon: SvgInvitation,
             },
             {
               name: "Off Days",
+              value: "off-days",
               href: `/school/${schoolUUID}/edit?tab=off-days`,
-              icon: SvgTeacher,
+              icon: SvgCalendar,
             },
             {
               name: "School Years",
+              value: "school-years",
               href: `/school/${schoolUUID}/edit?tab=school-years`,
-              icon: SvgTeacher,
+              icon: SvgSuitcase,
             }
           ]}
           active={urlParam}

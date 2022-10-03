@@ -77,6 +77,7 @@ export class TimetableService {
 
     async getTimetable(classUUID: string, dateString: string, request): Promise<ReturnMessage> {
         const timeTableData = []
+        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
         try {
             const timeTable = await prisma.timeTableElement.findMany({
@@ -85,9 +86,9 @@ export class TimetableService {
                         some: {
                             schoolClasses: {
                                 schoolClassUUID: classUUID,
-                            }
-                        }
-                    }
+                            },
+                        },
+                    },
                 },
                 include: {
                     schoolSubjects: true,
@@ -96,6 +97,7 @@ export class TimetableService {
                             users: true,
                         },
                     },
+                    schoolRoom: true,
                     timeTableSubstitutions: {
                         include: {
                             timeTableSubstitutionClasses: {
@@ -107,8 +109,8 @@ export class TimetableService {
                                 include: {
                                     users: true,
                                 },
-                            }
-                        }
+                            },
+                        },
                     },
                     timeTableEvents: {
                         include: {
@@ -122,11 +124,16 @@ export class TimetableService {
                                     users: true,
                                 },
                             },
-                        }
+                        },
                     },
                     timeTableOmitted: true,
+                    timeTableExam: {
+                        include: {
+                            schoolRooms: true,
+                        },
+                    },
                 },
-            })
+            });
 
             const holidays = await prisma.schoolClasses.findUnique({
                 where: {
@@ -152,26 +159,26 @@ export class TimetableService {
             })
 
             timeTable.forEach((element) => {
+                const weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+
                 timeTableData.push({
                     timeTableElementUUID: element.timeTableElementUUID,
-                    timeTableElementStartTime: element.timeTableElementStartTime,
-                    timeTableElementEndTime: element.timeTableElementEndTime,
+                    timeTableElementStartTime: new Date(new Date(dateString).setHours(element.timeTableElementStartTime.getHours(), element.timeTableElementStartTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
+                    timeTableElementEndTime: new Date(new Date(dateString).setHours(element.timeTableElementEndTime.getHours(), element.timeTableElementEndTime.getMinutes(), 0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
                     timeTableElementDay: element.timeTableElementDay,
+                    timeTableElementRoom: element.schoolRoom,
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
                     timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
                         return {
                             userUUID: teacher.users.userUUID,
                             userFirstname: teacher.users.userFirstname,
                             userLastname: teacher.users.userLastname,
-                            userBirthDate: teacher.users.userBirthDate,
                             userEmail: teacher.users.userEmail,
-                            userEmailVerified: teacher.users.userEmailVerified,
-                            userCreationTimestamp: teacher.users.userCreationTimestamp,
-                            userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                         }
                     }),
                     substitution: checkForSubstitution(element, new Date(dateString)),
                     event: checkForEvent(element, new Date(dateString)),
+                    exam: checkForExam(element, new Date(dateString)),
                     omitted: element.timeTableOmitted.length > 0 ? {
                         timeTableOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
                         timeTableOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
@@ -179,16 +186,30 @@ export class TimetableService {
                 })
             })
 
+            function checkForExam(element, monday) {
+                if (element.timeTableExam.length > 0) {
+                    if (element.timeTableExam[0].timeTableExamDate >= monday && element.timeTableExam[0].timeTableExamDate <= new Date(monday.getTime() + 86400000 * 4)) {
+                        let day = weekday[element.timeTableExam[0].timeTableExamDate.getDay()]
+                        if (element.timeTableElementDay === day) {
+                            return {
+                                timeTableExamUUID: element.timeTableExam[0].timeTableExamUUID,
+                                timeTableExamDate: element.timeTableExam[0].timeTableExamDate,
+                                timeTableExamRoom: element.timeTableExam[0].schoolRooms.schoolRoomName,
+                                timeTableExamDescription: element.timeTableExam[0].timeTableExamDescription,
+                            }
+                        }
+                    }
+                }
+            }
+
             function checkForEvent(element, monday) {
                 if (element.timeTableEvents.length > 0) {
                     if (element.timeTableEvents[0].timeTableEventDate >= monday && element.timeTableEvents[0].timeTableEventDate <= new Date(monday.setDate(monday.getDate() + 5))) {
-                        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                         let day = weekday[element.timeTableEvents[0].timeTableEventDate.getDay()]
                         if (element.timeTableElementDay === day) {
                             return {
                                 timeTableEventUUID: element.timeTableEvents[0].timeTableEventUUID,
                                 timeTableEventName: element.timeTableEvents[0].timeTableEventName,
-                                timeTableEventDate: element.timeTableEvents[0].timeTableEventDate,
                                 timeTableEventStartTime: element.timeTableEvents[0].timeTableEventStartTime,
                                 timeTableEventEndTime: element.timeTableEvents[0].timeTableEventEndTime,
                                 timeTableEventIsAllDay: element.timeTableEvents[0].timeTableEventIsAllDay,
@@ -197,11 +218,7 @@ export class TimetableService {
                                         userUUID: teacher.users.userUUID,
                                         userFirstname: teacher.users.userFirstname,
                                         userLastname: teacher.users.userLastname,
-                                        userBirthDate: teacher.users.userBirthDate,
                                         userEmail: teacher.users.userEmail,
-                                        userEmailVerified: teacher.users.userEmailVerified,
-                                        userCreationTimestamp: teacher.users.userCreationTimestamp,
-                                        userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                                     }
                                 }
                                 ),
@@ -209,11 +226,9 @@ export class TimetableService {
                                     return {
                                         schoolClassUUID: classs.classes.schoolClassUUID,
                                         schoolClassName: classs.classes.schoolClassName,
-                                        schoolClassCreationTimestamp: classs.classes.schoolClassCreationTimestamp,
                                     }
                                 }
                                 ),
-
                             }
                         }
                     }
@@ -230,7 +245,6 @@ export class TimetableService {
                         if (element.timeTableElementDay === day) {
                             return {
                                 timeTableSubstitutionUUID: element.timeTableSubstitutions[0].timeTableSubstitutionUUID,
-                                timeTableSubstitutionDate: element.timeTableSubstitutions[0].timeTableSubstitutionDate,
                                 timeTableSubstitutionStartTime: element.timeTableSubstitutions[0].timeTableSubstitutionStartTime,
                                 timeTableSubstitutionEndTime: element.timeTableSubstitutions[0].timeTableSubstitutionEndTime,
                                 timeTableSubstitutionClasses: element.timeTableSubstitutions[0].timeTableSubstitutionClasses.map((classes) => {
@@ -245,11 +259,7 @@ export class TimetableService {
                                         userUUID: teacher.users.userUUID,
                                         userFirstname: teacher.users.userFirstname,
                                         userLastname: teacher.users.userLastname,
-                                        userBirthDate: teacher.users.userBirthDate,
                                         userEmail: teacher.users.userEmail,
-                                        userEmailVerified: teacher.users.userEmailVerified,
-                                        userCreationTimestamp: teacher.users.userCreationTimestamp,
-                                        userLastLoginTimestamp: teacher.users.userLastLoginTimestamp,
                                     }
                                 }),
                                 timeTableSubstitutionSubjectName: element.timeTableSubstitutions[0].timeTableSubstitutionSubjectName,
@@ -257,7 +267,6 @@ export class TimetableService {
                         }
                     }
                 }
-
                 return undefined
             }
 
@@ -303,7 +312,6 @@ export class TimetableService {
 
             function checkForHoliday(element) {
                 const holiday = holidays.departments.schools.holidays.find((holiday) => {
-                    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                     let day = weekday[holiday.holidayStartDate.getDay() - 1]
 
                     if (day === element.day) {
@@ -318,6 +326,22 @@ export class TimetableService {
                 return undefined
             }
 
+            const schoolDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+            schoolDays.forEach((day) => {
+                if (timeTableDaysArray.find((element) => {
+                    return element.day === day
+                }) === undefined) {
+                    timeTableDaysArray.push({
+                        day: day,
+                        timeTableElements: []
+                    })
+                }
+            })
+
+            timeTableDaysArray.sort((a, b) => {
+                return weekday.indexOf(a.day) - weekday.indexOf(b.day)
+            })
+
             return {
                 status: 200,
                 data: timeTableDaysArray,
@@ -330,6 +354,8 @@ export class TimetableService {
 
     async addHoliday(holiday, request): Promise<ReturnMessage> {
         const { schoolUUID, holidayName, holidayStartDate, holidayEndDate } = holiday;
+
+        if (holidayStartDate > holidayEndDate) return RETURN_DATA.INVALID_INPUT;
 
         try {
             const holiday = await prisma.holidays.create({
@@ -357,7 +383,6 @@ export class TimetableService {
         } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
-
     }
 
     async getHolidayOfSchool(schoolUUID: string): Promise<ReturnMessage> {
@@ -373,15 +398,59 @@ export class TimetableService {
 
             return {
                 status: RETURN_DATA.SUCCESS.status,
+                data: holidays.holidays.map((holiday) => {
+                    return {
+                        holidayUUID: holiday.holidayUUID,
+                        holidayName: holiday.holidayName,
+                        holidayStartDate: holiday.holidayStartDate,
+                        holidayEndDate: holiday.holidayEndDate,
+                    }
+                }),
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async removeHoliday(holidayUUID: string): Promise<ReturnMessage> {
+        try {
+            const holiday = await prisma.holidays.delete({
+                where: {
+                    holidayUUID,
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: holiday,
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async updateHoliday(holidayUUID: string, holiday: any): Promise<ReturnMessage> {
+        const { holidayName, holidayStartDate, holidayEndDate } = holiday;
+
+        if (holidayStartDate > holidayEndDate) return RETURN_DATA.INVALID_INPUT;
+
+        try {
+            const updatedHoliday = await prisma.holidays.update({
+                where: {
+                    holidayUUID,
+                },
                 data: {
-                    holidays: holidays.holidays.map((holiday) => {
-                        return {
-                            holidayUUID: holiday.holidayUUID,
-                            holidayName: holiday.holidayName,
-                            holidayStartDate: holiday.holidayStartDate,
-                            holidayEndDate: holiday.holidayEndDate,
-                        }
-                    }),
+                    holidayName,
+                    holidayStartDate: new Date(holidayStartDate),
+                    holidayEndDate: new Date(holidayEndDate),
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: {
+                    holidayUUID: updatedHoliday.holidayUUID,
+                    holidayName: updatedHoliday.holidayName,
+                    holidayStartDate: updatedHoliday.holidayStartDate,
+                    holidayEndDate: updatedHoliday.holidayEndDate,
                 },
             }
         } catch {
@@ -390,14 +459,19 @@ export class TimetableService {
     }
 
     async addExam(exam, request): Promise<ReturnMessage> {
-        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription } = exam;
+        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription, timeTableExamDate } = exam;
 
         try {
             const exam = await prisma.timeTableExam.create({
                 data: {
                     timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
-                    timeTableExamRoomId,
+                    schoolRooms: {
+                        connect: {
+                            schoolRoomId: timeTableExamRoomId,
+                        },
+                    },
                     timeTableExamDescription,
+                    timeTableExamDate,
                     timeTableElements: {
                         connect: {
                             timeTableElementUUID,

@@ -17,7 +17,7 @@ const MainContentLayout = styled("div", {
   width: "100%",
   marginTop: "140px",
   minHeight: "85vh",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const MainHeader = styled("h1", {
@@ -42,8 +42,8 @@ const StyledLink = styled("a", {
   borderRadius: "30px",
   width: "100%",
   height: "100%",
-  backgroundColor: "$specialSecondary",
-  color: "$fontPrimary",
+  backgroundColor: "$primary-400",
+  color: "$neutral-500",
   display: "flex",
   textDecoration: "none",
   alignItems: "center",

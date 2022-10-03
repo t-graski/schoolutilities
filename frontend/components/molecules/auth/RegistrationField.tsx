@@ -23,12 +23,12 @@ const RegistrationLayout = styled("form", {
 });
 
 const StyledAreement = styled("div", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   width: "fit-content",
 });
 
 const StyledLInk = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const SuccessLayout = styled("div", {
@@ -38,7 +38,7 @@ const SuccessLayout = styled("div", {
   justifyContent: "center",
   width: "100%",
   gap: "40px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledHeadline = styled("h1", {
@@ -58,10 +58,10 @@ const SuccessImageLayout = styled("div", {
   variants: {
     color: {
       success: {
-        color: "$specialPrimary",
+        color: "$warning",
       },
       error: {
-        color: "$specialTertiary",
+        color: "$error",
       },
     },
   },
@@ -72,23 +72,23 @@ const SuccessDescription = styled("p", {
 });
 
 const StyledLink = styled("a", {
-  color: "$specialPrimary",
+  color: "$warning",
   fontSize: "1.2rem",
   fontWeight: "bold",
   padding: "20px",
-  border: "2px solid $specialPrimary",
+  border: "2px solid $warning",
   borderRadius: "25px",
   textDecoration: "none",
   cursor: "pointer",
   transition: "all 0.2s",
 
   "&:hover": {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
 });
 
-export const RegistrationField: React.FC<Props> = ({ }) => {
+export const RegistrationField: React.FC<Props> = ({}) => {
   const [firstName, setFirstName] = React.useState("");
   const [firstNameValid, setFirstNameValid] = React.useState(false);
   const [lastName, setLastName] = React.useState("");
@@ -221,9 +221,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
             setValidInput={setPasswordConfirmationValid}
             errorMessage="Please enter a valid password"
           ></PasswordInput>
-          <CheckBox
-            onChange={setTermsAccepted}
-          >
+          <CheckBox onChange={setTermsAccepted}>
             <StyledAreement>
               I agree to all{" "}
               <StyledLInk href="/data-policy" target="_blank">
@@ -238,7 +236,9 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
               handleSubmit();
             }}
             disabled={isDisabled}
-          >Sign up</Button>
+          >
+            Sign up
+          </Button>
           <Link href="/auth?tab=login">
             <a>
               <Button
@@ -247,7 +247,9 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
                 onClick={() => {
                   handleSubmit();
                 }}
-              >Log in instead</Button>
+              >
+                Log in instead
+              </Button>
             </a>
           </Link>
         </RegistrationLayout>
@@ -257,13 +259,7 @@ export const RegistrationField: React.FC<Props> = ({ }) => {
           <SuccessLayout>
             <StyledHeadline>{signUpInfo}</StyledHeadline>
             <SuccessImageLayout color={signUpWorking ? "success" : "error"}>
-              {
-                signUpWorking ? (
-                  <SvgQuality />
-                ) : (
-                  <SvgWarning />
-                )
-              }
+              {signUpWorking ? <SvgQuality /> : <SvgWarning />}
             </SuccessImageLayout>
             <SuccessDescription>
               {signUpWorking

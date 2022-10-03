@@ -67,10 +67,10 @@ const LinkLabel = styled("p", {
   variants: {
     color: {
       primary: {
-        color: "$fontPrimary",
+        color: "$neutral-500",
       },
       secondary: {
-        color: "$backgroundTertiary",
+        color: "$neutral-300",
       },
       special: {
         fontWeight: "normal",
@@ -88,7 +88,7 @@ const SpecialLinkLayout = styled("div", {
   flexDirection: "column",
   alignItems: "center",
   width: "33.33vw",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   maxWidth: "350px",
   "&[data-size='small']": {
     justifyContent: "center",
@@ -125,10 +125,10 @@ const SvgIconLayout = styled("div", {
   variants: {
     color: {
       highlighted: {
-        color: "$backgroundTertiary",
+        color: "$neutral-300",
       },
       normal: {
-        color: "$fontPrimary",
+        color: "$neutral-500",
       },
     },
   },
@@ -149,9 +149,9 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
     width: "calc(33.33vw-40px)",
     padding: "24px",
     borderRadius: "$normal",
-    backgroundColor: "$backgroundTertiary",
+    backgroundColor: "$neutral-300",
     cursor: "pointer",
-    color: "$fontPrimary",
+    color: "$neutral-500",
     textDecoration: "none",
     "&[data-size='small']": {
       justifyContent: "center",
@@ -161,16 +161,14 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
       color: {
         primary: {},
         secondary: {
-          backgroundColor: "$fontPrimary",
+          backgroundColor: "$neutral-500",
         },
         special: {
-          backgroundColor: "$specialPrimary",
+          backgroundColor: "$warning",
         },
       },
     },
   });
-
-  
 
   return (
     <>

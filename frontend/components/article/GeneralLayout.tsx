@@ -9,7 +9,7 @@ const ComponentLayout = styled("div", {
   flexDirection: "column",
   minHeight: "60vh",
   alignItems: "center",
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   width: "100%",
 });
 

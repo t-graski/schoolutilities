@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { Role } from 'src/roles/role.enum';
@@ -32,6 +32,22 @@ export class TimetableController {
   @Get('holiday/:schoolUUID')
   async getHoliday(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getHolidayOfSchool(schoolUUID);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Delete('holiday/:holidayUUID')
+  async removeHoliday(@Param('holidayUUID') holidayUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeHoliday(holidayUUID);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Put('holiday/:holidayUUID')
+  async updateHoliday(@Param('holidayUUID') holidayUUID: string, @Body() holiday, @Req() request, @Res() response) {
+    const result = await this.timetableService.updateHoliday(holidayUUID, holiday);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

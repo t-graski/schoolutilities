@@ -19,7 +19,7 @@ const GeneralListItemLayout = styled("div", {
   justifyContent: "center",
   width: "100%",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const IconLayout = styled("div", {
@@ -27,7 +27,7 @@ const IconLayout = styled("div", {
   width: "120px",
   height: "150px",
 
-  color: "$specialSecondary",
+  color: "$primary-400",
 });
 
 const TitleLayout = styled("div", {

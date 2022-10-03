@@ -42,9 +42,9 @@ const ProfileImageLayout = styled("div", {
   borderRadius: "50%",
   margin: "0 30%",
   marginBottom: "20px",
-  border: "$fontPrimary solid 2px",
+  border: "$neutral-500 solid 2px",
   padding: "7%",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const ProfileName = styled("div", {
@@ -53,7 +53,7 @@ const ProfileName = styled("div", {
   fontWeight: "$bold",
   fontSize: "1.5rem",
   textAlign: "center",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const ProfileNavigationLinks = styled("div", {});
@@ -82,7 +82,7 @@ const SpecialLinkLayout = styled("div", {
   flexDirection: "column",
   alignItems: "center",
   width: "100%",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   "@mobileOnly": {
     padding: "15px 0",
@@ -98,9 +98,9 @@ const LinkLayout = styled("a", {
   width: "100%",
   padding: "24px",
   borderRadius: "$normal",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   cursor: "pointer",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   "&[data-size='small']": {
     justifyContent: "center",
@@ -110,10 +110,10 @@ const LinkLayout = styled("a", {
     color: {
       primary: {},
       secondary: {
-        backgroundColor: "$fontPrimary",
+        backgroundColor: "$neutral-500",
       },
       special: {
-        backgroundColor: "$specialPrimary",
+        backgroundColor: "$warning",
       },
     },
   },
@@ -124,10 +124,10 @@ const LinkLabel = styled("p", {
   variants: {
     color: {
       primary: {
-        color: "$fontPrimary",
+        color: "$neutral-500",
       },
       secondary: {
-        color: "$backgroundTertiary",
+        color: "$neutral-300",
       },
       special: {
         fontWeight: "normal",
@@ -150,7 +150,7 @@ const ProfileDataColumn = styled("div", {
 const InputLabel = styled("p", {
   fontWeight: "$medium",
   fontSize: "1.8rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   margin: "0",
   marginBottom: "10px",
   textAlign: "left",
@@ -160,7 +160,7 @@ const InputLabel = styled("p", {
 const StatusInfo = styled("p", {
   fontWeight: "$medium",
   fontSize: "1.8rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   margin: "0",
   marginBottom: "10px",
   textAlign: "left",
@@ -186,7 +186,7 @@ const SchoolLayout = styled("div", {
   width: "100%",
   padding: "22px 20px",
   borderRadius: "20px",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   transition: "all 100ms ease-in-out",
   // boxShadow: "0px 0px 10px rgba(255, 255, 255, 0.1)",
   "&:hover": {
@@ -200,7 +200,7 @@ const SchoolName = styled("p", {
   fontWeight: "bold",
   marginBottom: "10px",
   margin: 0,
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const NoSchoolsText = styled("p", {
@@ -208,20 +208,20 @@ const NoSchoolsText = styled("p", {
   fontWeight: "bold",
   marginBottom: "10px",
   margin: 0,
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
   fontWeight: "$medium",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 17,
   marginBottom: 10,
 });
 
 const StyledDescription = styled(DialogPrimitive.Description, {
   margin: "10px 0 20px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 15,
   lineHeight: 1.5,
 });
@@ -237,7 +237,7 @@ const contentShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
   position: "fixed",
   opacity: 0.8,
   inset: 0,
@@ -247,7 +247,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   borderRadius: 6,
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
@@ -274,15 +274,15 @@ const IconButton = styled("button", {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   position: "absolute",
   top: 10,
   right: 10,
   cursor: "pointer",
   transition: "all 0.2s ease-in-out",
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
-  "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
+  "&:focus": { boxShadow: `0 0 0 2px $warning` },
 });
 
 function Content({ children, ...props }) {
@@ -302,7 +302,7 @@ const DialogTitle = StyledTitle;
 const DialogDescription = StyledDescription;
 const DialogClose = DialogPrimitive.Close;
 
-export const ProfileSettings: React.FC<Props> = ({ }) => {
+export const ProfileSettings: React.FC<Props> = ({}) => {
   const router = useRouter();
   const [passwordResetSucessfull, setPasswordResetSucessfull] = useState(false);
   const { data: userInfo, status: userInfoStatus } = useQuery(
@@ -432,7 +432,7 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 label="Date of Birth"
                 showLabel={false}
                 value={new Date(userInfo.userBirthDate).toLocaleDateString()}
-                onChange={(e) => { }}
+                onChange={(e) => {}}
                 editable={false}
               />
               <Spacer size="verySmall"></Spacer>
@@ -480,7 +480,7 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 label="Email"
                 showLabel={false}
                 value={userInfo.userEmail}
-                onChange={(e) => { }}
+                onChange={(e) => {}}
               />
               <Spacer size="verySmall"></Spacer>
               <InputLabel>User Since</InputLabel>
@@ -489,7 +489,7 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                 label="User Since"
                 showLabel={false}
                 value={longDateCreationDate}
-                onChange={(e) => { }}
+                onChange={(e) => {}}
                 editable={false}
               />
             </ProfileDataColumn>
@@ -521,7 +521,7 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                     <Button
                       backgroundColor={"primary"}
                       color={"primary"}
-                      onClick={() => { }}
+                      onClick={() => {}}
                     >
                       JOIN A SCHOOL
                     </Button>
@@ -533,7 +533,7 @@ export const ProfileSettings: React.FC<Props> = ({ }) => {
                     <Button
                       backgroundColor={"secondary"}
                       color={"primary"}
-                      onClick={() => { }}
+                      onClick={() => {}}
                     >
                       CREATE A SCHOOL
                     </Button>

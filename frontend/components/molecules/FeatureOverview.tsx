@@ -15,13 +15,13 @@ const FeatureLayout = styled("div", {
   gridGap: "2vw",
   padding: "3vw",
   alignItems: "center",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const IconBackground = styled("div", {
   padding: "3.2vw",
   borderRadius: "50%",
-  backgroundColor: "$specialSecondary",
+  backgroundColor: "$primary-400",
   margin: "3vw",
   gridColumn: "1 / span 1",
   gridRow: 1,

@@ -42,14 +42,14 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledDeleteText = styled("p", {
   marginTop: "15px",
 
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const RoleOrder = [
@@ -74,12 +74,10 @@ const StyledInputField = styled("div", {
 
 const PersonRoleName = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
-export const PersonsSettingsField: React.FC<Props> = ({
-  queryClient,
-}) => {
+export const PersonsSettingsField: React.FC<Props> = ({ queryClient }) => {
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [userName, setUserName] = React.useState("");
@@ -115,12 +113,12 @@ export const PersonsSettingsField: React.FC<Props> = ({
         old.map((currEntry) =>
           currEntry.userUUID === userUUID
             ? {
-              ...currEntry,
-              schoolRoleId: schoolRoleId,
-              schoolRoleName: RoleOrder.find(
-                (role) => role.value === Number(schoolRoleId)
-              ).label,
-            }
+                ...currEntry,
+                schoolRoleId: schoolRoleId,
+                schoolRoleName: RoleOrder.find(
+                  (role) => role.value === Number(schoolRoleId)
+                ).label,
+              }
             : currEntry
         )
       );
@@ -182,7 +180,7 @@ export const PersonsSettingsField: React.FC<Props> = ({
         <SettingsHeader headline="Users"></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {usersStatus == "success" && users.length > 0 ? (
+          {usersStatus == "success" &&
             users.map((entry, index) => (
               <SettingsEntryLayout
                 key={entry.userUUID}
@@ -214,13 +212,18 @@ export const PersonsSettingsField: React.FC<Props> = ({
                   </>
                 </SettingsEntry>
               </SettingsEntryLayout>
-            ))
-          ) : (
+            ))}
+          {usersStatus == "loading" && (
             <>
               <Skeleton width="100%" height={80}></Skeleton>
               <Skeleton width="100%" height={60}></Skeleton>
               <Skeleton width="100%" height={80}></Skeleton>
               <Skeleton width="100%" height={80}></Skeleton>
+            </>
+          )}
+          {usersStatus == "error" && (
+            <>
+              While loading the users an error occured. Please try again later.
             </>
           )}
         </SettingsEntriesLayout>

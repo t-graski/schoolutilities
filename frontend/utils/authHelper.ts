@@ -47,7 +47,7 @@ export async function getUserData(): Promise<any> {
       }
     );
     const responseJson = await userDataResponse.json();
-    if (responseJson.firstName) {
+    if (responseJson.userFirstname) {
       cookie.set("userProfile", JSON.stringify(responseJson), {
         expires: 1,
       });

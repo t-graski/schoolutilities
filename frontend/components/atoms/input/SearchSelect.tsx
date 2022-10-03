@@ -13,12 +13,13 @@ type Props = {
   onChange: Function;
   icon?: any;
   editable?: boolean;
+  isSmall?: boolean;
 };
 
 const InputFieldLayout = styled("div", {
   display: "flex",
   alignItems: "center",
-  background: "$backgroundTertiary",
+  background: "$neutral-300",
   width: "100%",
   borderRadius: "15px",
   border: "none",
@@ -41,7 +42,7 @@ const ImageLayout = styled("div", {
   width: "30px",
   height: "30px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   variants: {
     cursor: {
@@ -57,23 +58,36 @@ const StyledSelect = styled(Select, {
   border: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
+  borderRadius: "15px",
 
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   background: "transparent",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
+  },
+
+  variants: {
+    isSmall: {
+      true: {
+        fontSize: "1rem",
+        lineHeight: "1.2rem",
+        width: "fit-content",
+        minWidth: "200px",
+        padding: "0",
+      },
+    },
   },
 });
 
 const selectStyled = {
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "$colors$fontPrimary" : "$fontPrimary",
+    color: state.isSelected ? "$colors$neutral-500" : "$neutral-500",
     backgroundColor: styles.theme.colors.backgroundTertiary,
   }),
   control: (provided, state) => ({
@@ -201,10 +215,11 @@ export const SearchSelect: React.FC<Props> = ({
   onChange,
   icon,
   editable = true,
+  isSmall = false,
 }) => {
   return (
     <>
-      <InputFieldCore icon={icon} showLabel={false}>
+      <InputFieldCore icon={icon} showLabel={false} isSmall={isSmall}>
         <StyledSelect
           styles={selectStyled}
           options={selectOptions}
@@ -217,6 +232,7 @@ export const SearchSelect: React.FC<Props> = ({
           onChange={(value) => {
             onChange(value);
           }}
+          isSmall={isSmall}
         ></StyledSelect>
       </InputFieldCore>
     </>

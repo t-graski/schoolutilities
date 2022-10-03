@@ -21,7 +21,7 @@ const StyledTextArea = styled("textarea", {
   maxHeight: "50vh",
   borderBottom: "solid 1px transparent",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   resize: "vertical",
   fontWeight: "bold",
   outline: "none",
@@ -29,7 +29,7 @@ const StyledTextArea = styled("textarea", {
   lineHeight: "1.5rem",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
   },
 });
 
@@ -41,10 +41,14 @@ export const TextField: React.FC<Props> = ({
   label = "",
   showLabel = true,
 }) => {
-
   return (
     <>
-      <InputFieldCore icon={icon} required={required} label={label} showLabel={showLabel}>
+      <InputFieldCore
+        icon={icon}
+        required={required}
+        label={label}
+        showLabel={showLabel}
+      >
         <StyledTextArea
           placeholder={label}
           onChange={(e) => onChange(e.target.value)}

@@ -16,7 +16,7 @@ const Header = styled("h1", {
 
   fontSize: "4.5rem",
   fontWeight: "$bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textAlign: "center",
 
   variants: {

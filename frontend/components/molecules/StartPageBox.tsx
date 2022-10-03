@@ -18,7 +18,7 @@ const StartPageBoxLayout = styled("div", {
   flexDirection: "column",
   justifyContent: "center",
   width: "40vw",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   paddingLeft: "8vw",
 
   "@mobileOnly": {
@@ -50,7 +50,7 @@ const StyledLink = styled("a", {
   fontSize: "1.5rem",
   fontWeight: "$bold",
   margin: "0",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   cursor: "pointer",
 });
@@ -89,7 +89,8 @@ export const StartPageBox: React.FC<Props> = ({
         </StartPageBoxTitle>
         <StartPageBoxDescription>
           {description}
-          <br /><br />
+          <br />
+          <br />
           {boldDescription && (
             <BoldDescription>{boldDescription}</BoldDescription>
           )}

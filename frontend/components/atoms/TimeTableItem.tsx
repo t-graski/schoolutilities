@@ -1,28 +1,29 @@
 import React from "react";
 import { styled } from "../../stitches.config";
 
-export type TimeTableItem = {
+export type TimeTableItemType = {
   timeTableElementUUID?: string;
-  timeTableElementStartTime?: string;
-  timeTableElementEndTime?: string;
-  timeTableElementDay?: string;
-  timeTableElementCreationTimestamp?: string;
+  timeTableElementStartTime: string;
+  timeTableElementEndTime: string;
+  //- timeTableElementDay?: string;
+  //- timeTableElementCreationTimestamp?: string;
+  overlaps?: number;
+  overlapStart?: number;
   schoolSubjectName?: string;
-  startTime?: string;
-  endTime?: string;
   timeTableElementTeachers?: {
     userUUID: string;
     userFirstname: string;
     userLastname: string;
-    userBirthDate: string;
+    //- userBirthDate: string;
     userEmail: string;
-    userEmailVerified: boolean;
-    userCreationTimestamp: string;
-    userLastLoginTimestamp: string;
+    //- userEmailVerified: boolean;
+    //- userCreationTimestamp: string;
+    //- userLastLoginTimestamp: string;
   }[];
   substitution?: {
     timeTableSubstitutionUUID: string;
-    timeTableSubstitutionDate: string;
+    //- timeTableSubstitutionDate: string;
+    //+ timeTableSubstitutionSubjectName: string;
     timeTableSubstitutionClasses: {
       schoolClassUUID: string;
       schoolClassName: string;
@@ -31,29 +32,47 @@ export type TimeTableItem = {
       userUUID: string;
       userFirstname: string;
       userLastname: string;
-      userBirthDate: string;
+      //- userBirthDate: string;
       userEmail: string;
-      userEmailVerified: boolean;
-      userCreationTimestamp: string;
-      userLastLoginTimestamp: string;
+      //- userEmailVerified: boolean;
+      //- userCreationTimestamp: string;
+      //- userLastLoginTimestamp: string;
     }[];
   };
 };
 
 type Props = {
-  item: TimeTableItem;
+  item: TimeTableItemType;
   startTime: string;
 };
 
+const TimeTableSubjectName = styled("span", {
+  fontSize: "1.1rem",
+  fontWeight: "bold",
+});
+
 export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
-  let startPoint = getRowFromTime(item.timeTableElementStartTime ?? item.startTime, startTime);
-  let endPoint = getRowFromTime(item.timeTableElementEndTime ?? item.endTime, startTime);
-  
+  let startPoint = getRowFromTime(item.timeTableElementStartTime, startTime);
+  let endPoint = getRowFromTime(item.timeTableElementEndTime, startTime);
+  let now = new Date();
+  let endTime = new Date(item.timeTableElementEndTime);
+  let isBeforeNow = endTime < now;
+  let overlapColumns = item.overlaps ? 24 / item.overlaps : 24;
+
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
-    backgroundColor: "lightblue",
+    backgroundColor: isBeforeNow ? "$primary-200" : "$primary-300",
     color: "black",
     gridColumn: "100%",
+    borderRadius: "10px",
+    padding: "$3x",
+    gap: "$2x",
+    border: "3px solid $primary-400",
+    boxSizing: "border-box",
+    gridColumn: `${
+      item.overlapStart * overlapColumns + 1
+    } / span ${overlapColumns}`,
+    overflowX: "hidden",
 
     variants: {
       layout: {
@@ -62,18 +81,27 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           flexDirection: "row",
           justifyContent: "flex-end",
           backgroundColor: "transparent",
-          color: "$fontPrimary",
+          color: "$neutral-500",
+          padding: "0",
+          border: "none",
         },
+        small: {
+          padding: "0",
+          wordBreak: "break-word",
+        },
+        big: {},
       },
     },
   });
+
   return (
     <>
       {item?.schoolSubjectName ? (
-        <TimeTableItemLayout>
-          <div>{item.schoolSubjectName}</div>
+        <TimeTableItemLayout layout={item.overlaps > 1 ? "small" : "big"}>
+          <TimeTableSubjectName>{item.schoolSubjectName}</TimeTableSubjectName>
           <div>
-            {getSmallTimeFormat(item.timeTableElementStartTime)} - {getSmallTimeFormat(item.timeTableElementEndTime)}
+            {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}
+            {getSmallTimeFormat(item.timeTableElementEndTime)}
           </div>
 
           {item.timeTableElementTeachers.map((teacher, index) => (
@@ -82,7 +110,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
         </TimeTableItemLayout>
       ) : (
         <TimeTableItemLayout layout="time">
-          <div>{getSmallTimeFormat(item.startTime)}</div>
+          <div>{getSmallTimeFormat(item.timeTableElementStartTime)}</div>
         </TimeTableItemLayout>
       )}
     </>
@@ -90,14 +118,12 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
 };
 
 function getRowFromTime(time: string, startTime: string) {
-  console.log(time);
   let hour = new Date(time).getHours() - parseInt(startTime.split(":")[0]);
   let minute = new Date(time).getMinutes() - parseInt(startTime.split(":")[1]);
   if (minute < 0) {
     hour--;
     minute = 60 + minute;
   }
-  console.log(new Date(time).getHours());
   let row = Math.floor(1 + hour * 12 + minute / 5);
   return row < 1 ? 1 : row;
 }

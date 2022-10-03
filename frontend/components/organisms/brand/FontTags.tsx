@@ -21,7 +21,7 @@ const TagLayout = styled("div", {
   justifyContent: "center",
   padding: "10px",
   borderRadius: "5000px",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
 
   variants: {
     fontStyle: {

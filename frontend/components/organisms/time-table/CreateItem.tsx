@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
-import { TimeTableItem } from "../../atoms/TimeTableItem";
+import { TimeTableItemType } from "../../atoms/TimeTableItem";
 
 type Props = {};
 
@@ -16,7 +16,7 @@ const InputFieldLayout = styled("div", {
 });
 
 export const CreateItem: React.FC<Props> = ({}) => {
-  const [itemConfig, setItemConfig] = useState<TimeTableItem>({
+  const [itemConfig, setItemConfig] = useState<TimeTableItemType>({
     schoolSubjectName: "",
     shortName: "",
     startTime: "",

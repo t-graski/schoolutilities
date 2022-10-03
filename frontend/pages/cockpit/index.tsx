@@ -17,7 +17,7 @@ const MainContent = styled("div", {
 const StyledHeadline = styled("h1", {
   fontSize: "2.5rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textAlign: "center",
   margin: "0",
   lineHeight: "4.5rem",

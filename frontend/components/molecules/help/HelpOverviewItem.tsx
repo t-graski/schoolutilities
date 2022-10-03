@@ -18,7 +18,7 @@ const GeneralListItemLayout = styled("a", {
   justifyContent: "center",
   width: "22%",
   padding: "8px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   boxShadow: "0px 0px 10px rgba(206, 206, 206, 0.3)",
   cursor: "pointer",
   borderRadius: "10px",
@@ -35,7 +35,7 @@ const IconLayout = styled("div", {
   width: "100px",
   height: "100px",
   padding: "10px",
-  color: "$specialSecondary",
+  color: "$primary-400",
 });
 
 const TitleLayout = styled("div", {
@@ -57,16 +57,13 @@ export const HelpOverviewItem: React.FC<Props> = ({
   description,
   icon,
 }) => {
-
   const Icon = icon;
 
   return (
     <>
       <Link href={href} passHref>
         <GeneralListItemLayout>
-          <IconLayout>
-            {icon && <Icon />}
-          </IconLayout>
+          <IconLayout>{icon && <Icon />}</IconLayout>
           <TitleLayout>{title}</TitleLayout>
           <Separator width={"ultraSmall"} alignment={"center"}></Separator>
           <DescriptionLayout>{description}</DescriptionLayout>
