@@ -21,11 +21,11 @@ import { CourseService } from './course.service';
 import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
-import { AddCourseDto } from 'src/dto/addCourse';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
 import { Response } from 'express';
+import { AddCourseDTO } from 'src/entity/course/course';
 
 @Controller('api/course')
 export class CourseController {
@@ -38,14 +38,10 @@ export class CourseController {
   @Roles(Role.Teacher)
   @Post('/addCourse')
   async addCourse(
-    @Body() addCourse: AddCourseDto,
+    @Body() addCourse: AddCourseDTO,
     @Req() request,
-    @Res() response,
   ) {
-    const result = await this.courseService.addCourse(addCourse, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    return this.courseService.addCourse(addCourse, request);
   }
 
   @UseGuards(JwtAuthGuard)

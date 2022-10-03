@@ -45,7 +45,7 @@ export class TimetableService {
                                 userUUID: creatorUUID,
                             }
                         },
-                        timetableTeachers: {
+                        timeTableTeachers: {
                             create: element.timeTableElementTeachers.map((teacherUUID) => {
                                 return {
                                     users: {
@@ -93,7 +93,7 @@ export class TimetableService {
                 },
                 include: {
                     schoolSubjects: true,
-                    timetableTeachers: {
+                    timeTableTeachers: {
                         include: {
                             users: true,
                         },
@@ -175,7 +175,7 @@ export class TimetableService {
                         schoolRoomBuilding: element.schoolRoom.schoolRoomBuilding,
                     },
                     schoolSubjectName: element.schoolSubjects.schoolSubjectName,
-                    timeTableElementTeachers: element.timetableTeachers.map((teacher) => {
+                    timeTableElementTeachers: element.timeTableTeachers.map((teacher) => {
                         return {
                             userUUID: teacher.users.userUUID,
                             userFirstname: teacher.users.userFirstname,

@@ -7,10 +7,9 @@ import {
   ID_STARTERS,
   RETURN_DATA,
 } from 'src/misc/parameterConstants';
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException, NotAcceptableException, InternalServerErrorException } from '@nestjs/common';
 import { ReturnMessage, UpdateCourse } from 'src/types/Course';
 
-import { AddCourseDto } from 'src/dto/addCourse';
 import { AuthService } from 'src/auth/auth.service';
 import { CourseDto } from 'src/dto/course';
 import { DatabaseService } from 'src/database/database.service';
@@ -19,6 +18,7 @@ import { PrismaClient } from '@prisma/client';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { v4 as uuidv4 } from 'uuid';
 import validator from 'validator';
+import { AddCourseDTO, Course } from 'src/entity/course/course';
 
 let JSZip = require('jszip');
 // import { GetEventsDto } from 'src/dto/getEvents';
@@ -35,8 +35,8 @@ export class CourseService {
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
   ) { }
-  async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } = payload;
+  async addCourse(payload: AddCourseDTO, request): Promise<Course> {
+    const { courseName, courseDescription, schoolUUID, users, classes } = payload;
 
     let personUUID;
 
@@ -44,10 +44,7 @@ export class CourseService {
       const token = await this.helper.extractJWTToken(request);
       personUUID = await this.helper.getUserUUIDfromJWT(token);
     } catch (err) {
-      return {
-        status: HttpStatus.NOT_ACCEPTABLE,
-        message: err.message,
-      };
+      throw new NotAcceptableException("Couldn't get user from token");
     }
 
     const [schoolId, userId] = await Promise.all([
@@ -59,7 +56,7 @@ export class CourseService {
       const courseData = await prisma.courses.create({
         data: {
           courseUUID: `${ID_STARTERS.COURSE}${uuidv4()}`,
-          courseName: name,
+          courseName,
           courseDescription,
           schools: {
             connect: {
@@ -84,14 +81,14 @@ export class CourseService {
         },
       });
 
-      if (persons) {
-        for (const person of persons) {
-          if (!validator.isUUID(person.slice(1), 4)) {
-            return RETURN_DATA.INVALID_INPUT;
+      if (users) {
+        for (const user of users) {
+          if (!validator.isUUID(user.slice(1), 4)) {
+            throw new NotAcceptableException('Invalid user UUID');
           }
 
           const personId = await (
-            await this.authService.getPersonIdByUUID(person)
+            await this.authService.getPersonIdByUUID(user)
           ).userId;
 
           await prisma.courseUsers.create({
@@ -139,14 +136,11 @@ export class CourseService {
       delete courseData.courseSubjectId;
       delete courseData.courseCreatorId;
 
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: courseData,
-      };
+      return courseData;
     } catch (err) {
       console.log(err);
 
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException('Database error');
     }
   }
 
@@ -512,7 +506,7 @@ export class CourseService {
             lastName: creator.userLastname,
           },
         };
-        
+
         if (await this.helper.userIsInCourse(personId, course.courseId)) {
           courseData.push(courseDataItem);
         }
