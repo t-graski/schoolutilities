@@ -57,10 +57,11 @@ export const CourseCreateMembersField: React.FC<Props> = ({
       const currentMembers = await fetchSchoolUsers(
         router.query.schoolUUID as string
       );
+      console.log(currentMembers);
       return currentMembers.map((member) => {
         return {
-          value: member.personUUID,
-          label: `${member.lastName} ${member.firstName}`,
+          value: member.userUUID,
+          label: `${member.userLastname} ${member.userFirstname}`,
         };
       });
     }

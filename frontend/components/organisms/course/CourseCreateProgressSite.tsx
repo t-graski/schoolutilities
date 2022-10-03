@@ -7,6 +7,7 @@ import cookie from "js-cookie";
 import { Progressbar } from "../../molecules/Progressbar";
 import { Spacer } from "../../atoms/Spacer";
 import { getAccessToken } from "../../../utils/authHelper";
+import { useCourseControllerAddCourse } from "../../../default/default";
 
 type Props = {
   steps: {
@@ -118,6 +119,8 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
     cookie.set("activeStep", activeStep);
   }
 
+  const mutation = useCourseControllerAddCourse();
+
   async function saveInputs() {
     let accessToken = await getAccessToken();
     console.log(inputData);
@@ -158,6 +161,40 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
         });
       }
     }
+    // mutation.mutate(
+    //   {
+    //     data: {
+    //       name: inputData.courseName,
+    //       schoolUUID: router.query.schoolUUID as string,
+    //       courseDescription: inputData.courseDescription,
+    //       classes: inputData.classes.map(
+    //         (schoolClass): string => schoolClass.value
+    //       ),
+    //       persons: inputData.members.map((person): string => person.value),
+    //     },
+    //   },
+    //   {
+    //     onSuccess: (data) => {
+    //       setStatusInfo({
+    //         statusHeadline: "Your Course was successfully created",
+    //         statusDescription:
+    //           "You can now manage your course, create classes and add users to your course.",
+    //         statusIcon: "SvgQuality",
+    //         statusColor: "success",
+    //         linkVisibility: true,
+    //       });
+    //     },
+    //     onError: (error) => {
+    //       setStatusInfo({
+    //         statusHeadline: "There was an error creating the course",
+    //         statusDescription: "Please try again later",
+    //         statusIcon: "SvgWarning",
+    //         statusColor: "error",
+    //         linkVisibility: false,
+    //       });
+    //     },
+    //   }
+    // );
   }
 
   return (

@@ -68,7 +68,7 @@ export class CourseService {
           },
           schoolSubjects: {
             connect: {
-              schoolSubjectId: Number(1),
+              schoolSubjectId: Number(1400),
             }
           },
           users: {

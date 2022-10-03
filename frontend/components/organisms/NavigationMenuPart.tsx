@@ -391,7 +391,7 @@ export const NavigationMenuPart = () => {
               </ContentListItem>
               <ContentListItem
                 title="Create course"
-                href="/school/select?redirect=/course/create"
+                href="/school/select?redirect=/course/create-course"
               >
                 Create a course and start teaching your students.
               </ContentListItem>
