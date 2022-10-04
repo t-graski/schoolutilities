@@ -1,3 +1,5 @@
+import { User } from "../user/user";
+
 export type Article = {
     articleUUID: string;
     articleHeadline: string;
@@ -7,7 +9,7 @@ export type Article = {
     articleIsPublic: boolean;
     articlePublishTimestamp: Date;
     articleCreationTimestamp: Date;
-    // creator: User;
+    creator: User;
 }
 
 export class AddArticleDTO {

@@ -1,3 +1,9 @@
+import { FileSubmissionSetting } from "../file-submission-setting/fileSubmissionSetting";
+import { FileSubmission } from "../file-submission/fileSubmission";
+import { HeadlineSetting } from "../headline-setting/headlineSetting";
+import { TextSetting } from "../text-setting/textSetting";
+import { User } from "../user/user";
+
 export type CourseElement = {
     courseElementUUID: string;
     courseElementTypeId: number;
@@ -5,12 +11,12 @@ export type CourseElement = {
     courseElementIsVisible: boolean;
     courseElementWeight: number;
     courseElementOrder: number;
-    // creator: User;
+    creator: User;
     courseElementCreationTimestamp: Date;
-    // courseFileSubmissionSettings: CourseFileSubmissionSetting[];
-    // courseElementHeadlineSettings: CourseElementHeadlineSetting[];
-    // courseElementTextSettings: CourseElementTextSetting[];
-    // courseFileSubmissions: CourseFileSubmission[];
+    courseFileSubmissionSettings?: FileSubmissionSetting[];
+    courseElementHeadlineSettings?: HeadlineSetting[];
+    courseElementTextSettings?: TextSetting[];
+    courseFileSubmissions?: FileSubmission[];
 }
 
 export class AddCourseElementDTO {

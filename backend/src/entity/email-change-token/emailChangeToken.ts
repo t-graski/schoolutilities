@@ -1,5 +1,7 @@
+import { User } from "../user/user";
+
 export type EmailChangeToken = {
-    // user: User;
+    user: User;
     emailChangeToken: string;
     emailChangeTokenNewEmail: string;
     emailChangeTokenVerified: boolean;

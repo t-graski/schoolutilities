@@ -1,11 +1,14 @@
+import { School } from "../school/school";
+import { SchoolClass } from "../schoolClass/schoolClass";
+
 export type Department = {
     departmentUUID: string;
     departmentName: string;
     departmentAbbreviation: string;
-    // school: School;
+    school: School;
     departmentIsVisible: boolean;
     departmentChildsVisible: boolean;
-    // schoolClasses?: schoolClasses;    
+    schoolClasses?: SchoolClass[];
 }
 
 export class AddDepartmentDto {
@@ -14,7 +17,7 @@ export class AddDepartmentDto {
     schoolUUID: string;
     departmentIsVisible: boolean;
     departmentChildsVisible: boolean;
-    // schoolClasses?: schoolClasses;
+    schoolClasses?: SchoolClass[];
 }
 
 export class UpdateDepartmentDto {
@@ -23,7 +26,7 @@ export class UpdateDepartmentDto {
     departmentAbbreviation?: string;
     departmentIsVisible?: boolean;
     departmentChildsVisible?: boolean;
-    // schoolClasses?: schoolClasses;
+    schoolClasses?: SchoolClass[];
 }
 
 export class DeleteDepartmentDto {
