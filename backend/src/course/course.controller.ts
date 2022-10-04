@@ -25,45 +25,35 @@ import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
 import { Response } from 'express';
-import { AddCourseDTO } from 'src/entity/course/course';
+import { AddCourseDTO, Course, DeleteCourseDTO, UpdateCourseDTO } from 'src/entity/course/course';
+import { ClassSerializerInterceptor } from '@nestjs/common/serializer';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/course')
 export class CourseController {
   constructor(
     private readonly courseService: CourseService,
-    private readonly helper: HelperService,
   ) { }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
-  @Post('/addCourse')
-  async addCourse(
-    @Body() addCourse: AddCourseDTO,
-    @Req() request,
-  ) {
-    return this.courseService.addCourse(addCourse, request);
+  @Post('')
+  async addCourse(@Body() course: AddCourseDTO, @Req() request): Promise<Course> {
+    return this.courseService.addCourse(course, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
-  @Delete('/removeCourse')
-  async removeCourse(
-    @Body() removeCourse: RemoveCourseDto,
-    @Req() request,
-    @Res() response,
-  ) {
-    const result = await this.courseService.removeCourse(removeCourse);
-    return response.status(result.status).json(result?.message);
+  @Delete('')
+  async removeCourse(@Body() course: DeleteCourseDTO): Promise<Course> {
+    return this.courseService.removeCourse(course);
   }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
-  @Put('/updateCourse')
-  async updateCourse(@Req() request, @Res() response) {
-    const result = await this.courseService.updateCourse(request.body);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Put('')
+  async updateCourse(@Body() course: UpdateCourseDTO, @Req() request): Promise<Course> {
+    return this.courseService.updateCourse(course);
   }
 
   @UseGuards(JwtAuthGuard)

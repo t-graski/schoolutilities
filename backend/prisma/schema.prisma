@@ -269,7 +269,7 @@ model courseFileSubmissions {
 model courseUsers {
   courseId Int     @map("course_id")
   userId   Int     @map("user_id")
-  courses  courses @relation(fields: [courseId], references: [courseId])
+  courses  courses @relation(fields: [courseId], references: [courseId], onDelete: Cascade)
   users    users   @relation(fields: [userId], references: [userId])
 
   @@id([courseId, userId])

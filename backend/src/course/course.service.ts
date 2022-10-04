@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as moment from 'moment';
-
 import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import {
   ERROR_CODES,
@@ -9,7 +8,6 @@ import {
 } from 'src/misc/parameterConstants';
 import { HttpStatus, Injectable, NotFoundException, NotAcceptableException, InternalServerErrorException } from '@nestjs/common';
 import { ReturnMessage, UpdateCourse } from 'src/types/Course';
-
 import { AuthService } from 'src/auth/auth.service';
 import { CourseDto } from 'src/dto/course';
 import { DatabaseService } from 'src/database/database.service';
@@ -18,10 +16,9 @@ import { PrismaClient } from '@prisma/client';
 import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { v4 as uuidv4 } from 'uuid';
 import validator from 'validator';
-import { AddCourseDTO, Course } from 'src/entity/course/course';
-
+import { AddCourseDTO, Course, DeleteCourseDTO, UpdateCourseDTO } from 'src/entity/course/course';
+import { Request } from 'express';
 let JSZip = require('jszip');
-// import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -29,28 +26,24 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class CourseService {
-  connection: any;
   constructor(
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
   ) { }
-  async addCourse(payload: AddCourseDTO, request): Promise<Course> {
-    const { courseName, courseDescription, schoolUUID, users, classes } = payload;
 
-    let personUUID;
+  async addCourse(payload: AddCourseDTO, request: Request): Promise<Course> {
+    const { courseName, courseDescription, schoolUUID, users, courseClasses } = payload;
+
+    let userUUID;
 
     try {
       const token = await this.helper.extractJWTToken(request);
-      personUUID = await this.helper.getUserUUIDfromJWT(token);
+      userUUID = await this.helper.getUserUUIDfromJWT(token);
+      users.push(userUUID);
     } catch (err) {
       throw new NotAcceptableException("Couldn't get user from token");
     }
-
-    const [schoolId, userId] = await Promise.all([
-      this.helper.getSchoolIdByUUID(schoolUUID),
-      this.helper.getUserIdByUUID(personUUID),
-    ]);
 
     try {
       const courseData = await prisma.courses.create({
@@ -60,7 +53,7 @@ export class CourseService {
           courseDescription,
           schools: {
             connect: {
-              schoolId: Number(schoolId),
+              schoolUUID,
             }
           },
           schoolSubjects: {
@@ -70,243 +63,175 @@ export class CourseService {
           },
           users: {
             connect: {
-              userId: Number(userId),
+              userUUID,
             }
           },
           courseUsers: {
-            create: {
-              userId,
-            },
+            create: users.map((userUUID) => {
+              return {
+                users: {
+                  connect: {
+                    userUUID
+                  }
+                }
+              }
+            })
           },
-        },
+          courseClasses: {
+            create: courseClasses.map((classUUID) => {
+              return {
+                schoolClasses: {
+                  connect: {
+                    classUUID
+                  }
+                }
+              }
+            })
+          }
+        }
       });
 
-      if (users) {
-        for (const user of users) {
-          if (!validator.isUUID(user.slice(1), 4)) {
-            throw new NotAcceptableException('Invalid user UUID');
-          }
-
-          const personId = await (
-            await this.authService.getPersonIdByUUID(user)
-          ).userId;
-
-          await prisma.courseUsers.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseData.courseId),
-                },
-              },
-              users: {
-                connect: {
-                  userId: Number(personId),
-                },
-              },
-            },
-          });
-        }
-      }
-
-      if (classes) {
-        for (const schoolClass of classes) {
-          const schoolId = await this.databaseService.getClassIdByUUID(
-            schoolClass,
-          );
-
-          await prisma.courseClasses.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseData.courseId),
-                },
-              },
-              schoolClasses: {
-                connect: {
-                  schoolClassId: Number(schoolId),
-                },
-              },
-            },
-          });
-        }
-      }
-
-      delete courseData.courseId;
-      delete courseData.courseSchoolId;
-      delete courseData.courseSubjectId;
-      delete courseData.courseCreatorId;
-
-      return courseData;
+      return new Course(courseData)
     } catch (err) {
-      console.log(err);
-
       throw new InternalServerErrorException('Database error');
     }
   }
 
   async removeCourse(
-    payload: RemoveCourseDto,
-  ): Promise<ReturnMessage> {
+    payload: DeleteCourseDTO,
+  ): Promise<Course> {
     const { courseUUID } = payload;
 
     try {
-      await prisma.courses.delete({
+      const course = await prisma.courses.delete({
         where: {
           courseUUID,
         },
       });
+      return new Course(course);
     } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException('Database error');
     }
-    return RETURN_DATA.SUCCESS;
   }
 
-  async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
-    const {
-      courseUUID,
-      courseName,
-      courseDescription,
-      subjectId = 0,
-      classes,
-      persons,
-    } = body;
+  async updateCourse(payload: UpdateCourseDTO): Promise<Course> {
+    const { courseUUID, courseName, courseDescription, users, courseClasses, schoolSubjectUUID } = payload;
 
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-
-    const course = await prisma.courses.findUnique({
-      where: {
-        courseId: Number(courseId),
-      },
-    });
-
-    if (!course) {
-      throw new NotFoundException('Course not found: ' + courseUUID);
-    }
-
-    const patchCourse = await prisma.courses.update({
-      where: { courseId: Number(courseId) },
-      data: {
-        courseName: courseName,
-        courseDescription: courseDescription,
-        courseSubjectId: Number(subjectId),
-      },
-    });
-
-    if (persons) {
-      const courseUsers = await this.helper.getCourseUsers(courseId);
-      const courseUsersIds = courseUsers.map(
-        (courseUser) => courseUser.personId,
-      );
-      for (let user of persons) {
-        if (!validator.isUUID(user.slice(1), 4)) {
-          return RETURN_DATA.INVALID_INPUT;
-        }
-
-        const userId = await this.helper.getUserIdByUUID(user);
-
-        if (!courseUsersIds.includes(userId)) {
-          await prisma.courseUsers.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseId),
-                },
-              },
-              users: {
-                connect: {
-                  userId,
-                },
-              },
-            },
-          });
-        }
-
-        if (courseUsersIds.includes(userId) && !persons.includes(user)) {
-          await prisma.courseUsers.delete({
-            where: {
-              courseId_userId: {
-                courseId: Number(courseId),
-                userId,
-              },
-            },
-          });
-        }
-      }
-    }
-
-    if (classes) {
-      const courseClasses = await this.helper.getCourseClasses(courseId);
-      const courseClassesIds = courseClasses.map(
-        (courseClass) => courseClass.classId,
-      );
-
-      for (const schoolClass of classes) {
-        if (!validator.isUUID(schoolClass.slice(1), 4)) {
-          return RETURN_DATA.INVALID_INPUT;
-        }
-
-        const classId = await this.helper.getClassIdByUUID(schoolClass);
-
-        if (!courseClassesIds.includes(classId)) {
-          await prisma.courseClasses.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseId),
-                },
-              },
-              schoolClasses: {
-                connect: {
-                  schoolClassId: Number(classId),
-                },
-              },
-            },
-          });
-        }
-
-        if (
-          courseClassesIds.includes(classId) &&
-          !classes.includes(schoolClass)
-        ) {
-          await prisma.courseClasses.delete({
-            where: {
-              courseId_classId: {
-                courseId: Number(courseId),
-                classId: Number(classId),
-              },
-            },
-          });
-        }
-      }
-    }
-
-    delete patchCourse.courseId;
-
-    const schoolUUID = await this.helper.getSchoolUUIDById(
-      patchCourse.courseSchoolId,
-    );
-
-    const personCreationUUID = await this.helper.getUserUUIDById(
-      patchCourse.courseCreatorId,
-    );
-
-    if (patchCourse) {
-      return {
-        status: HttpStatus.OK,
+    try {
+      const updateCourse = await prisma.courses.update({
+        where: { courseUUID },
         data: {
-          courseUUID: patchCourse.courseUUID,
-          courseName: patchCourse.courseName,
-          courseDescription: patchCourse.courseDescription,
-          schoolUUID: schoolUUID,
-          courseCreationTimestamp: patchCourse.courseCreationTimestamp,
-          personCreationUUID: personCreationUUID,
+          courseName,
+          courseDescription,
+          schoolSubjects: {
+            connect: {
+              schoolSubjectUUID
+            }
+          }
         },
-      };
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Course not updated',
-      };
+      });
+
+      if (users) {
+        const courseUser = await prisma.courseUsers.findMany({
+          where: {
+            courses: {
+              courseUUID
+            }
+          },
+          include: {
+            courses: true,
+            users: true,
+          }
+        });
+
+        for (let user of users) {
+          if (!courseUser.find((courseUser) => courseUser.users.userUUID === user)) {
+            await prisma.courseUsers.create({
+              data: {
+                courses: {
+                  connect: {
+                    courseUUID
+                  }
+                },
+                users: {
+                  connect: {
+                    userUUID: user
+                  }
+                }
+              }
+            });
+          }
+
+          if (courseUser.find((courseUser) => courseUser.users.userUUID === user)) {
+            await prisma.courseUsers.deleteMany({
+              where: {
+                courses: {
+                  courseUUID
+                },
+                users: {
+                  userUUID: user
+                }
+              }
+            });
+          }
+        }
+      }
+
+      if (courseClasses) {
+
+        const courseClassesData = await prisma.courseClasses.findMany({
+          where: {
+            courses: {
+              courseUUID
+            },
+          },
+          include: {
+            courses: true,
+            schoolClasses: true,
+          }
+        });
+
+        for (const courseClass of courseClasses) {
+          if (!courseClassesData.find((courseClassData) => courseClassData.schoolClasses.schoolClassUUID === courseClass)) {
+            await prisma.courseClasses.create({
+              data: {
+                courses: {
+                  connect: {
+                    courseUUID
+                  },
+                },
+                schoolClasses: {
+                  connect: {
+                    schoolClassUUID: courseClass
+                  },
+                },
+              },
+            });
+
+            //check if uuid exists in data but in not schoolclasses
+            //if yes delete it
+
+            if (courseClassesData.find((courseClassData) => courseClassData.schoolClasses.schoolClassUUID === courseClass)) {
+              await prisma.courseClasses.deleteMany({
+                where: {
+                  courses: {
+                    courseUUID
+                  },
+                  schoolClasses: {
+                    schoolClassUUID: courseClass
+                  }
+                }
+              });
+            }
+          }
+        }
+
+      }
+      return new Course(updateCourse);
+    } catch (err) {
+      console.log(err);
+
+      throw new InternalServerErrorException('Database error');
     }
   }
 
