@@ -21,7 +21,6 @@ export class Course {
 
     @Exclude()
     courseCreatorId: number;
-
     courseUUID: string;
     courseName: string;
     courseDescription: string;
@@ -113,4 +112,28 @@ export class DeleteCourseDTO {
 
 export class GetCourseDTO {
     courseUUID: string;
+}
+
+export class AddCourseUserDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsCustomUUID()
+    courseUUID: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsCustomUUID()
+    userUUID: string;
+}
+
+export class RemoveCourseUserDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsCustomUUID()
+    courseUUID: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsCustomUUID()
+    userUUID: string;
 }

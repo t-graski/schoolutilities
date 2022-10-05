@@ -25,8 +25,9 @@ import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
 import { Response } from 'express';
-import { AddCourseDTO, Course, DeleteCourseDTO, UpdateCourseDTO } from 'src/entity/course/course';
+import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, UpdateCourseDTO } from 'src/entity/course/course';
 import { ClassSerializerInterceptor } from '@nestjs/common/serializer';
+import { CourseUser } from 'src/entity/course-user/courseUser';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/course')
@@ -57,14 +58,13 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/addUser')
-  async addUser(@Req() request, @Res() response) {
-    const result = await this.courseService.addUser(request);
-    return response.status(result.status).json(result?.message);
+  @Post('/user')
+  async addUser(@Body() course: AddCourseUserDTO, @Req() request): Promise<CourseUser> {
+    return this.courseService.addUser(course, request);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('/removeUser')
+  @Delete('/user')
   async removeUser(@Req() request, @Res() response) {
     const result = await this.courseService.removeUser(request);
     return response.status(result.status).json(result?.message);

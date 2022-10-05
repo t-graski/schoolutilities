@@ -6,8 +6,15 @@ import { FileSubmissionGrade } from "../file-submission-grade/fileSubmissionGrad
 import { FileSubmission } from "../file-submission/fileSubmission";
 import { School } from "../school/school";
 import { UserSetting } from "../user-setting/userSetting";
+import { Exclude } from 'class-transformer';
 
-export type User = {
+export class User {
+    @Exclude()
+    userId: number;
+
+    @Exclude()
+    userPassword: string;
+
     userUUID: string;
     userFirstname: string;
     userLastname: string;
@@ -22,7 +29,11 @@ export type User = {
     fileSubmissions?: FileSubmission[];
     courses?: Course[];
     schools?: School[];
-    userSettings: UserSetting;
+    userSettings?: UserSetting;
     // timeTableTeachers: TimeTableTeacher[];
-    timeTableElements: TimeTableElement[];
+    timeTableElements?: TimeTableElement[];
+
+    constructor(partial: Partial<User>) {
+        Object.assign(this, partial);
+    }
 }
