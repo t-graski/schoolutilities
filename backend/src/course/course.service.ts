@@ -15,7 +15,7 @@ import { HelperService } from 'src/helper/helper.service';
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import validator from 'validator';
-import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, UpdateCourseDTO } from 'src/entity/course/course';
+import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
 import { Request } from 'express';
 import { CourseUser } from 'src/entity/course-user/courseUser';
 import { User } from 'src/entity/user/user';
@@ -191,73 +191,28 @@ export class CourseService {
     }
   }
 
-  async removeUser(request): Promise<ReturnMessage> {
-    const jwt = await this.helper.extractJWTToken(request);
-    const requesterId = await this.helper.getUserIdfromJWT(jwt);
-    const { courseUUID, userUUID, schoolUUID } = request.body;
-    const userId = await this.helper.getUserIdByUUID(userUUID);
-    const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
+  async removeUser(payload: RemoveCourseUserDTO): Promise<CourseUser> {
+    const { courseUUID, userUUID } = payload;
 
-    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'You are not part of this school',
-      };
-    }
-
-    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'User is not part of this school',
-      };
-    }
-
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-    const isTeacher = await this.helper.isTeacher(requesterId, schoolId);
-    const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
-
-    if (isTeacher || isAdmin) {
-      const courseUser = await prisma.courseUsers.findUnique({
+    try {
+      const courseUser = await prisma.courseUsers.deleteMany({
         where: {
-          courseId_userId: {
-            courseId: Number(courseId),
-            userId,
+          users: {
+            userUUID,
+          },
+          courses: {
+            courseUUID,
           },
         },
       });
+      console.log(courseUser);
 
-      if (!courseUser) {
-        return {
-          status: HttpStatus.NOT_FOUND,
-          message: 'User not found',
-        };
-      }
-
-      const deleteCourseUser = await prisma.courseUsers.delete({
-        where: {
-          courseId_userId: {
-            courseId: Number(courseId),
-            userId,
-          },
-        },
-      });
-
-      if (deleteCourseUser) {
-        return {
-          status: HttpStatus.OK,
-          message: 'User deleted successfully',
-        };
-      } else {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'User not deleted',
-        };
-      }
+      return new CourseUser(courseUser);
+    } catch {
+      throw new InternalServerErrorException('Database error');
     }
-    return {
-      status: HttpStatus.UNAUTHORIZED,
-      message: 'Unauthorized',
-    };
+
+
   }
 
   async addUser(payload: AddCourseUserDTO, request: Request): Promise<CourseUser> {
