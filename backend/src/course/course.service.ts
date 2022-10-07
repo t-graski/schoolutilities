@@ -191,7 +191,7 @@ export class CourseService {
     }
   }
 
-  async removeUser(payload: RemoveCourseUserDTO): Promise<CourseUser> {
+  async removeUser(payload: RemoveCourseUserDTO): Promise<any> {
     const { courseUUID, userUUID } = payload;
 
     try {
@@ -206,8 +206,8 @@ export class CourseService {
         },
       });
       console.log(courseUser);
-
-      return new CourseUser(courseUser);
+      return courseUser;
+      // return new CourseUser(courseUser);
     } catch {
       throw new InternalServerErrorException('Database error');
     }

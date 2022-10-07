@@ -66,8 +66,7 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Delete('/user')
   async removeUser(@Req() request, @Res() response) {
-    const result = await this.courseService.removeUser(request);
-    return response.status(result.status).json(result?.message);
+    return this.courseService.removeUser(request);
   }
 
   @UseGuards(JwtAuthGuard)
