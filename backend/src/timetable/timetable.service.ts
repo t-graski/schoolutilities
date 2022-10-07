@@ -378,6 +378,55 @@ export class TimetableService {
         }
     }
 
+    async getTimeTableElement(timeTableElementUUID: string, request): Promise<ReturnMessage> {
+        try {
+            const element = await prisma.timeTableElement.findUnique({
+                where: {
+                    timeTableElementUUID,
+                },
+                include: {
+                    schoolSubjects: true,
+                    timeTableTeachers: {
+                        include: {
+                            users: true,
+                        },
+                    },
+                    schoolRoom: true,
+                }
+            })
+
+            const timeTableElementData = {
+                timeTableElementUUID: element.timeTableElementUUID,
+                timeTableElementStartTime: element.timeTableElementStartTime,
+                timeTableElementEndTime: element.timeTableElementEndTime,  
+                timeTableElementDay: element.timeTableElementDay,
+                timeTableElementRoom: {
+                    schoolRoomUUID: element.schoolRoom.schoolRoomUUID,
+                    schoolRoomName: element.schoolRoom.schoolRoomName,
+                    schoolRoomAbbreviation: element.schoolRoom.schoolRoomAbbreviation,
+                    schoolRoomBuilding: element.schoolRoom.schoolRoomBuilding,
+                },
+                schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+                timeTableElementTeachers: element.timeTableTeachers.map((teacher) => {
+                    return {
+                        userUUID: teacher.users.userUUID,
+                        userFirstname: teacher.users.userFirstname,
+                        userLastname: teacher.users.userLastname,
+                        userEmail: teacher.users.userEmail,
+                    }
+                })
+            }
+
+            return {
+                status: 200,
+                data: timeTableElementData,
+            }
+        } catch (error) {
+            console.log(error)
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
     async addHoliday(holiday, request): Promise<ReturnMessage> {
         const { schoolUUID, holidayName, holidayStartDate, holidayEndDate } = holiday;
 

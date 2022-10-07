@@ -1,8 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
-import { Role } from 'src/roles/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
@@ -16,6 +14,14 @@ export class TimetableController {
   @Post("")
   async createTimetable(@Body() createTimetable: AddTimeTableDto, @Req() request, @Res() response) {
     const result = await this.timetableService.createTimetable(createTimetable, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Get('/timeTableElement/:timeTableElementUUID')
+  async getTimeTableElement(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getTimeTableElement(timeTableElementUUID, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
