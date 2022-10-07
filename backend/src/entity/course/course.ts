@@ -5,7 +5,7 @@ import { IsCustomUUID } from "src/decorators/IsCustomUUID";
 import { CourseElement } from "../course-element/courseElement";
 import { FileSubmissionGrade } from "../file-submission-grade/fileSubmissionGrade";
 import { School } from "../school/school";
-import { SchoolClass } from "../schoolClass/schoolClass";
+import { SchoolClass } from "../school-class/schoolClass";
 import { SchoolSubject } from "../subject/schoolSubject";
 import { User } from "../user/user";
 
@@ -28,7 +28,9 @@ export class Course {
     schoolSubject?: SchoolSubject;
     courseCreationTimestamp: Date;
     creator?: User;
-    schoolClasses?: SchoolClass[];
+    canEdit?: boolean;
+    courseUsers?: User[];
+    courseClasses?: SchoolClass[];
     courseElements?: CourseElement[];
     courseFileSubmmissionGrades?: FileSubmissionGrade[];
 
@@ -112,6 +114,10 @@ export class DeleteCourseDTO {
 
 export class GetCourseDTO {
     courseUUID: string;
+}
+
+export class GetCoursesDTO {
+    schoolUUID: string;
 }
 
 export class AddCourseUserDTO {

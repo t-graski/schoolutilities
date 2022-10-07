@@ -1,5 +1,5 @@
 import { School } from "../school/school";
-import { SchoolClass } from "../schoolClass/schoolClass";
+import { SchoolClass } from "../school-class/schoolClass";
 
 export type Department = {
     departmentUUID: string;

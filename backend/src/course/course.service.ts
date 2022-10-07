@@ -14,11 +14,11 @@ import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
-import validator from 'validator';
 import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
 import { Request } from 'express';
 import { CourseUser } from 'src/entity/course-user/courseUser';
 import { User } from 'src/entity/user/user';
+import { SchoolClass } from 'src/entity/school-class/schoolClass'
 let JSZip = require('jszip');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -33,6 +33,13 @@ export class CourseService {
     private readonly helper: HelperService,
   ) { }
 
+  /**
+   * Creates a new course
+   * @param payload the required data to create a course
+   * @param request 
+   * @returns the created course
+   * @throws {@link InternalServerErrorException} if the database request fails
+   */
   async addCourse(payload: AddCourseDTO, request: Request): Promise<Course> {
     const { courseName, courseDescription, schoolUUID, users, courseClasses } = payload;
 
@@ -191,7 +198,7 @@ export class CourseService {
     }
   }
 
-  async removeUser(payload: RemoveCourseUserDTO): Promise<any> {
+  async removeUser(payload: RemoveCourseUserDTO): Promise<number> {
     const { courseUUID, userUUID } = payload;
 
     try {
@@ -205,9 +212,7 @@ export class CourseService {
           },
         },
       });
-      console.log(courseUser);
-      return courseUser;
-      // return new CourseUser(courseUser);
+      return courseUser.count;
     } catch {
       throw new InternalServerErrorException('Database error');
     }
@@ -241,210 +246,96 @@ export class CourseService {
       });
       return new CourseUser(courseUser);
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException('Database error');
     }
   }
 
-  async getAllCourses(
-    schoolUUID: string,
-    token: string,
-  ): Promise<ReturnMessage> {
-    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const jwt = await this.authService.decodeJWT(token);
-    const personUUID = jwt.personUUID;
-
-    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
-      personId,
-      schoolId,
-    );
-
-    const courseData = [];
-
+  async getAllCourses(schoolUUID: string, request: Request): Promise<Course[]> {
     try {
+      const token = await this.helper.extractJWTToken(request);
+      const userUUID = await this.helper.getUserUUIDfromJWT(token);
       const courses = await prisma.courses.findMany({
         where: {
-          courseSchoolId: Number(schoolId),
+          schools: {
+            schoolUUID
+          },
         },
-        select: {
-          courseId: true,
-          courseUUID: true,
-          courseName: true,
-          courseDescription: true,
-          courseSchoolId: true,
-          courseCreationTimestamp: true,
-          courseCreatorId: true,
-        },
+        include: {
+          users: true
+        }
       });
 
-      for (let course of courses) {
-        const creator = await prisma.users.findUnique({
+      return Promise.all(courses.map(async (course) => {
+        const { users, ...rest } = course;
+        const userRole = await prisma.schoolUserRoles.findFirst({
           where: {
-            userId: Number(course.courseCreatorId),
-          },
-          select: {
-            userUUID: true,
-            userFirstname: true,
-            userLastname: true,
-          },
-        });
-
-        const courseDataItem = {
-          courseUUID: course.courseUUID,
-          courseName: course.courseName,
-          courseDescription: course.courseDescription,
-          courseCreationTimestamp: course.courseCreationTimestamp,
-          canEdit: isTeacherOrHigher,
-          creator: {
-            userUUID: creator.userUUID,
-            firstName: creator.userFirstname,
-            lastName: creator.userLastname,
-          },
-        };
-
-        if (await this.helper.userIsInCourse(personId, course.courseId)) {
-          courseData.push(courseDataItem);
-        }
-      }
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: courseData,
-      };
-    } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
+            users: {
+              userUUID
+            },
+            schools: {
+              schoolUUID,
+            }
+          }
+        })
+        return new Course({ ...rest, canEdit: userRole.schoolRoleId == 1 ? true : false, creator: new User(users) })
+      }));
+    } catch {
+      throw new InternalServerErrorException('Database error');
     }
   }
 
-  async getCourseInfo(
-    courseUUID: string,
-    token: string,
-  ): Promise<ReturnMessage> {
-    if (!validator.isUUID(courseUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const jwt = await this.authService.decodeJWT(token);
-    const personUUID = jwt.personUUID;
-
-    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
-    const courseId = await this.databaseService.getCourseUUIDById(courseUUID);
-    const schoolId = await this.helper.getSchoolIdByCourseId(courseId);
-
-    const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
-      personId,
-      schoolId,
-    );
-
-    const courseData = {} as any;
+  async getCourseInfo(courseUUID: string, request: Request,): Promise<Course> {
 
     try {
+      const token = await this.helper.extractJWTToken(request);
+      const userUUID = await this.helper.getUserUUIDfromJWT(token);
       const course = await prisma.courses.findUnique({
         where: {
-          courseId: Number(courseId),
+          courseUUID,
         },
-        select: {
-          courseUUID: true,
-          courseName: true,
-          courseDescription: true,
-          courseSchoolId: true,
-          courseCreationTimestamp: true,
-          courseCreatorId: true,
-        },
-      });
-
-      if (!(await this.helper.userIsInCourse(personId, courseId)))
-        return RETURN_DATA.FORBIDDEN;
-
-      const creator = await prisma.users.findUnique({
-        where: {
-          userId: Number(course.courseCreatorId),
-        },
-        select: {
-          userUUID: true,
-          userFirstname: true,
-          userLastname: true,
-        },
-      });
-
-      const persons = await prisma.courseUsers.findMany({
-        where: {
-          courseId: Number(courseId),
-        },
-        select: {
-          userId: true,
-        },
-      });
-
-      const personsData = [];
-
-      for (let person of persons) {
-        const personData = await prisma.users.findUnique({
-          where: {
-            userId: Number(person.userId),
+        include: {
+          users: true,
+          courseUsers: {
+            include: {
+              users: true,
+            }
           },
-          select: {
-            userUUID: true,
-            userFirstname: true,
-            userLastname: true,
+          courseClasses: {
+            include: {
+              schoolClasses: true,
+            }
           },
-        });
-        personsData.push(personData);
-      }
-
-      const classes = await prisma.courseClasses.findMany({
-        where: {
-          courseId: Number(courseId),
-        },
-        select: {
-          classId: true,
-        },
-      });
-
-      const classesData = [];
-
-      if (classes) {
-        for (let schoolClass of classes) {
-          const classData = await prisma.schoolClasses.findUnique({
-            where: {
-              schoolClassId: Number(schoolClass.classId),
-            },
-            select: {
-              schoolClassUUID: true,
-              schoolClassName: true,
-            },
-          });
-          classesData.push(classData);
+          schools: true,
         }
-      }
+      });
 
-      const courseDataItem = {
-        courseUUID: course.courseUUID,
-        courseName: course.courseName,
-        courseDescription: course.courseDescription,
-        courseCreationTimestamp: course.courseCreationTimestamp,
-        creator: {
-          userUUID: creator.userUUID,
-          firstName: creator.userFirstname,
-          lastName: creator.userLastname,
-        },
-        persons: personsData,
-        classes: classesData,
-        canEdit: isTeacherOrHigher,
-      };
+      const { users, courseClasses, courseUsers, schools, ...rest } = course;
+      const userRole = await prisma.schoolUserRoles.findFirst({
+        where: {
+          users: {
+            userUUID
+          },
+          schools: {
+            schoolUUID: course.schools.schoolUUID,
+          }
+        }
+      });
 
-      courseData[courseDataItem.courseUUID] = courseDataItem;
+      return new Course({
+        ...rest,
+        canEdit: userRole.schoolRoleId == 1 ? true : false,
+        creator: new User(users),
+        courseUsers: courseUsers.map((courseUser) => {
+          return new User(courseUser.users);
+        }),
+        courseClasses: courseClasses.map((courseClass) => {
+          return new SchoolClass(courseClass.schoolClasses);
+        }),
+      });
+    } catch (err) {
+      console.log(err);
 
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: courseData,
-      };
-    } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException('Database error');
     }
   }
 

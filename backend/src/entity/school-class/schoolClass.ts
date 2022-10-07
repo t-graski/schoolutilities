@@ -1,6 +1,12 @@
+import { Exclude } from "class-transformer";
 import { Department } from "../department/department";
 
-export type SchoolClass = {
+export class SchoolClass {
+    @Exclude()
+    schoolClassId: number;
+
+    @Exclude()
+    schoolClassDepartmentId: number;
     schoolClassUUID: string;
     schoolClassName: string;
     schoolClassDepartment: Department;
@@ -8,6 +14,10 @@ export type SchoolClass = {
     // timeTableElementClasses?: timeTableElementClasses;
     // timeTableEventClasses?: timeTableEventClasses;
     // timeTableSubstitutionClasses?: timeTableSubstitutionClasses;
+
+    constructor(partial: Partial<SchoolClass>) {
+        Object.assign(this, partial);
+    }
 }
 
 export class AddSchoolClassDto {

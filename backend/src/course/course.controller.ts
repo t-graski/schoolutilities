@@ -18,14 +18,12 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { editFileName, fileFilter } from 'src/misc/fileUpload';
 import { CourseService } from './course.service';
-import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
-import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
-import { Response } from 'express';
-import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, UpdateCourseDTO } from 'src/entity/course/course';
+import { Request, Response } from 'express';
+import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, GetCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
 import { ClassSerializerInterceptor } from '@nestjs/common/serializer';
 import { CourseUser } from 'src/entity/course-user/courseUser';
 
@@ -65,36 +63,22 @@ export class CourseController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('/user')
-  async removeUser(@Req() request, @Res() response) {
-    return this.courseService.removeUser(request);
+  async removeUser(@Body() course: RemoveCourseUserDTO, @Req() request): Promise<number> {
+    return this.courseService.removeUser(course);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/getCourses/:schoolUUID')
   @Roles(Role.Student)
-  async getCourses(@Param() params, @Req() request, @Res() response) {
-    const token = request.headers.authorization.split(' ')[1];
-    const result = await this.courseService.getAllCourses(
-      params.schoolUUID,
-      token,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Get('/courses/:schoolUUID')
+  async getCourses(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<Course[]> {
+    return this.courseService.getAllCourses(schoolUUID, request);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/getCourseInfo/:courseUUID')
+  @Get('/info/:courseUUID')
   @Roles(Role.Student)
-  async getCourseInfo(@Param() params, @Req() request, @Res() response) {
-    const token = request.headers.authorization.split(' ')[1];
-    const result = await this.courseService.getCourseInfo(
-      params.courseUUID,
-      token,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async getCourseInfo(@Param('courseUUID') course: string, @Req() request: Request) {
+    return this.courseService.getCourseInfo(course, request);
   }
 
   @UseGuards(JwtAuthGuard)

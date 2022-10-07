@@ -1,5 +1,5 @@
 import { SchoolRoom } from "../school-room/schoolRoom";
-import { SchoolClass } from "../schoolClass/schoolClass";
+import { SchoolClass } from "../school-class/schoolClass";
 import { SchoolSubject } from "../subject/schoolSubject";
 
 export type TimeTableElement = {
