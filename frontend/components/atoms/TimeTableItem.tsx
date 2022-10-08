@@ -1,5 +1,11 @@
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import React from "react";
 import { styled } from "../../stitches.config";
+import { PopUp } from "../molecules/PopUp";
+const TimeTableItemDetail = dynamic(
+  () => import("../molecules/time-table/TimeTableItemDetail")
+);
 
 export type TimeTableItemType = {
   timeTableElementUUID?: string;
@@ -64,6 +70,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   let endTime = new Date(item.timeTableElementEndTime);
   let isBeforeNow = endTime < now;
   let overlapColumns = item.overlaps ? 24 / item.overlaps : 24;
+  const router = useRouter();
 
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
@@ -78,6 +85,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
       item.overlapStart * overlapColumns + 1
     } / span ${overlapColumns}`,
     overflowX: "hidden",
+    cursor: "pointer",
 
     variants: {
       layout: {
@@ -112,20 +120,41 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   return (
     <>
       {item?.schoolSubjectName ? (
-        <TimeTableItemLayout
-          layout={item.overlaps > 1 ? "small" : "big"}
-          state={item?.omitted ? "omitted" : "normal"}
-        >
-          <TimeTableSubjectName>{item.schoolSubjectName}</TimeTableSubjectName>
-          <div>
-            {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}
-            {getSmallTimeFormat(item.timeTableElementEndTime)}
-          </div>
+        <PopUp
+          onOpenChange={(open) => {
+              console.log(open);
+            if (open) {
+              router.push({
+                query: { ...router.query, detail: item.timeTableElementUUID },
+              });
+            } else {
+              router.push({
+                query: { ...router.query, detail: null },
+              });
+            }
+          }}
+          defaultOpen={router.query?.detail === item.timeTableElementUUID}
+          openButton={
+            <TimeTableItemLayout
+              layout={item.overlaps > 1 ? "small" : "big"}
+              state={item?.omitted ? "omitted" : "normal"}
+            >
+              <TimeTableSubjectName>
+                {item.schoolSubjectName}
+              </TimeTableSubjectName>
+              <div>
+                {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}
+                {getSmallTimeFormat(item.timeTableElementEndTime)}
+              </div>
 
-          {item.timeTableElementTeachers.map((teacher, index) => (
-            <div key={index}>{teacher.userFirstname}</div>
-          ))}
-        </TimeTableItemLayout>
+              {item.timeTableElementTeachers.map((teacher, index) => (
+                <div key={index}>{teacher.userFirstname}</div>
+              ))}
+            </TimeTableItemLayout>
+          }
+        >
+          <TimeTableItemDetail item={item}></TimeTableItemDetail>
+        </PopUp>
       ) : (
         <TimeTableItemLayout layout="time">
           <div>{getSmallTimeFormat(item.timeTableElementStartTime)}</div>

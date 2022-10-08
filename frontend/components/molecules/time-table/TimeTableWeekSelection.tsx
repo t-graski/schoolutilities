@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -14,6 +15,7 @@ type Props = {
 const TimeTableWeekSelectionLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
+  justifyContent: "space-between",
   height: "8vh",
   padding: "$1x",
   alignItems: "center",
@@ -73,21 +75,10 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
         <TimeTableArrowLayout
           direction={"left"}
           onClick={() => {
-            let dayCounter = 6;
-            if (
-              new Date(new Date().setDate(date.getDate() - 7)).getMonth() !=
-              new Date(endDate).getMonth()
-            ) {
-              dayCounter = 7;
-            }
             setStartDate(
-              new Date(date.setDate(date.getDate() - dayCounter))
-                .toISOString()
-                .split("T")[0]
+              moment(startDate).subtract(1, "w").format("YYYY-MM-DD")
             );
-            setEndDate(
-              new Date(date.setDate(date.getDate() + dayCounter)).toISOString()
-            );
+            setEndDate(moment(endDate).subtract(1, "w").format("YYYY-MM-DD"));
           }}
         >
           <SvgRightArrow></SvgRightArrow>
@@ -103,21 +94,8 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
         <TimeTableArrowLayout
           direction={"right"}
           onClick={() => {
-            let dayCounter = 6;
-            if (
-              new Date(new Date().setDate(date.getDate() + 6)).getMonth() !=
-              new Date(endDate).getMonth()
-            ) {
-              dayCounter = 7;
-            }
-            setStartDate(
-              new Date(date.setDate(date.getDate() + dayCounter))
-                .toISOString()
-                .split("T")[0]
-            );
-            setEndDate(
-              new Date(date.setDate(date.getDate() + dayCounter)).toISOString()
-            );
+            setStartDate(moment(startDate).add(1, "w").format("YYYY-MM-DD"));
+            setEndDate(moment(endDate).add(1, "w").format("YYYY-MM-DD"));
           }}
         >
           <SvgRightArrow></SvgRightArrow>

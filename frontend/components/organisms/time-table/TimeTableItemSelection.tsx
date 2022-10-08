@@ -79,7 +79,7 @@ export const TimeTableItemSelection: React.FC<Props> = ({
                     (element) => element.classUUID === schoolClassUUID
                   )?.className,
                 }
-              : {}
+              : undefined
           }
           selectMultiValues={false}
           isSmall={true}

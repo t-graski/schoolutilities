@@ -29,7 +29,7 @@ import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, UpdateCourseDT
 import { ClassSerializerInterceptor } from '@nestjs/common/serializer';
 import { CourseUser } from 'src/entity/course-user/courseUser';
 
-@UseInterceptors(ClassSerializerInterceptor)
+// @UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/course')
 export class CourseController {
   constructor(
