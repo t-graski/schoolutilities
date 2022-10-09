@@ -62,8 +62,8 @@ function App({ Component, pageProps }: AppProps) {
           defaultTheme="system"
         >
           <SkeletonTheme
-            baseColor="var(--colors-backgroundSecondary)"
-            highlightColor="var(--colors-skeletonSecondary)"
+            baseColor="var(--colors-neutral-300)"
+            highlightColor="var(--colors-primary-100)"
             duration={1.3}
           >
             <Script

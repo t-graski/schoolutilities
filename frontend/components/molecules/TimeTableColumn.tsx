@@ -18,14 +18,15 @@ export const TimeTableColumn: React.FC<Props> = ({
     display: "grid",
     gridTemplateRows: `repeat(${timeTableRows}, 1fr)`,
     gridTemplateColumns: "repeat(24,1fr)",
+    gridGap: "4px",
     height: "100%",
     width: "100%",
   });
 
-  dayTimeTable.map((element) => {
+  dayTimeTable.forEach((element) => {
     // check if the element overlaps with an other element
     let overlaps = 0;
-    dayTimeTable.map((element2) => {
+    dayTimeTable.forEach((element2) => {
       if (
         element.timeTableElementStartTime < element2.timeTableElementEndTime &&
         element.timeTableElementEndTime > element2.timeTableElementStartTime

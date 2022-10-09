@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React from "react";
+import Skeleton from "react-loading-skeleton";
 import { styled } from "../../stitches.config";
 import { PopUp } from "../molecules/PopUp";
 const TimeTableItemDetail = dynamic(
@@ -97,9 +98,10 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           color: "$neutral-500",
           padding: "0",
           border: "none",
+          cursor: "default",
         },
         small: {
-          padding: "0",
+          padding: "$1x",
           wordBreak: "break-word",
         },
         big: {},
@@ -117,12 +119,21 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     },
   });
 
+  const SkeletonLayout = styled("div", {
+    gridRow: `${startPoint} / ${endPoint}`,
+    borderRadius: "10px",
+    boxSizing: "border-box",
+    gridColumn: `${
+      item.overlapStart * overlapColumns + 1
+    } / span ${overlapColumns}`,
+  });
+  console.log(item);
   return (
     <>
-      {item?.schoolSubjectName ? (
+      {item.schoolSubjectName && item.schoolSubjectName != "" && (
         <PopUp
           onOpenChange={(open) => {
-              console.log(open);
+            console.log(open);
             if (open) {
               router.push({
                 query: { ...router.query, detail: item.timeTableElementUUID },
@@ -155,7 +166,13 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
         >
           <TimeTableItemDetail item={item}></TimeTableItemDetail>
         </PopUp>
-      ) : (
+      )}
+      {item.timeTableElementUUID == "" && (
+        <SkeletonLayout>
+          <Skeleton width={"100%"} height={"100%"} />
+        </SkeletonLayout>
+      )}
+      {!item.schoolSubjectName && (
         <TimeTableItemLayout layout="time">
           <div>{getSmallTimeFormat(item.timeTableElementStartTime)}</div>
         </TimeTableItemLayout>
