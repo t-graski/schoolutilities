@@ -68,26 +68,25 @@ model schoolClasses {
 }
 
 model schools {
-  schoolId                  Int                         @id @default(autoincrement()) @map("school_id")
-  schoolUUID                String                      @map("school_uuid")
-  schoolName                String                      @map("school_name")
-  schoolDescription         String                      @map("school_description") @db.Text
-  schoolLanguageId          Int                         @map("school_language_id")
-  schoolTimezone            String                      @map("school_timezone")
-  schoolCreationTimestamp   DateTime                    @default(now()) @map("school_creation_timestamp") @db.Timestamp(0)
-  schoolCreatorId           Int                         @map("school_creator_id")
-  schoolCanUpload           Boolean                     @default(false) @map("school_can_upload")
-  users                     users                       @relation(fields: [schoolCreatorId], references: [userId])
-  courses                   courses[]
-  departments               departments[]
-  schoolJoinCodes           schoolJoinCodes[]
-  schoolUserRoles           schoolUserRoles[]
-  schoolUsers               schoolUsers[]
-  schoolRooms               schoolRooms[]
-  schoolSubjects            schoolSubjects[]
-  holidays                  holidays[]
-  timeTableGrid             timeTableGrid[]
-  timeTableGridSpecialBreak timeTableGridSpecialBreak[]
+  schoolId                Int               @id @default(autoincrement()) @map("school_id")
+  schoolUUID              String            @map("school_uuid")
+  schoolName              String            @map("school_name")
+  schoolDescription       String            @map("school_description") @db.Text
+  schoolLanguageId        Int               @map("school_language_id")
+  schoolTimezone          String            @map("school_timezone")
+  schoolCreationTimestamp DateTime          @default(now()) @map("school_creation_timestamp") @db.Timestamp(0)
+  schoolCreatorId         Int               @map("school_creator_id")
+  schoolCanUpload         Boolean           @default(false) @map("school_can_upload")
+  users                   users             @relation(fields: [schoolCreatorId], references: [userId])
+  courses                 courses[]
+  departments             departments[]
+  schoolJoinCodes         schoolJoinCodes[]
+  schoolUserRoles         schoolUserRoles[]
+  schoolUsers             schoolUsers[]
+  schoolRooms             schoolRooms[]
+  schoolSubjects          schoolSubjects[]
+  holidays                holidays[]
+  timeTableGrid           timeTableGrid[]
 
   @@unique([schoolUUID], map: "school_uuid_UNIQUE")
   @@index([schoolCreatorId], map: "fk_school_creator_id")
@@ -315,14 +314,15 @@ model schoolRoles {
 }
 
 model schoolSubjects {
-  schoolSubjectId           Int                @id @default(autoincrement()) @map("school_subject_id")
-  schoolSubjectUUID         String             @map("school_subject_uuid")
-  schoolSubjectName         String             @map("school_subject_name")
-  schoolSubjectAbbreviation String             @map("school_subject_abbreviation")
-  schoolId                  Int                @map("school_id")
-  school                    schools            @relation(fields: [schoolId], references: [schoolId])
+  schoolSubjectId           Int                      @id @default(autoincrement()) @map("school_subject_id")
+  schoolSubjectUUID         String                   @map("school_subject_uuid")
+  schoolSubjectName         String                   @map("school_subject_name")
+  schoolSubjectAbbreviation String                   @map("school_subject_abbreviation")
+  schoolId                  Int                      @map("school_id")
+  school                    schools                  @relation(fields: [schoolId], references: [schoolId])
   courses                   courses[]
   timeTableElement          timeTableElement[]
+  timeTableSubstitutions    timeTableSubstitutions[]
 
   @@unique([schoolSubjectUUID], map: "school_subject_uuid")
   @@index([schoolId], map: "fk_school_subjects_school_id")
@@ -359,16 +359,18 @@ model schoolUsers {
 }
 
 model schoolRooms {
-  schoolRoomId           Int                @id @default(autoincrement()) @map("school_room_id")
-  schoolRoomUUID         String             @map("school_room_uuid")
-  schoolRoomName         String             @map("school_room_name")
-  schoolRoomAbbreviation String             @map("school_room_abbreviation")
-  schoolRoomBuilding     String             @map("school_room_building")
-  schoolId               Int                @map("school_id")
-  schools                schools            @relation(fields: [schoolId], references: [schoolId])
+  schoolRoomId           Int                      @id @default(autoincrement()) @map("school_room_id")
+  schoolRoomUUID         String                   @map("school_room_uuid")
+  schoolRoomName         String                   @map("school_room_name")
+  schoolRoomAbbreviation String                   @map("school_room_abbreviation")
+  schoolRoomBuilding     String                   @map("school_room_building")
+  schoolId               Int                      @map("school_id")
+  schools                schools                  @relation(fields: [schoolId], references: [schoolId])
   timeTableElement       timeTableElement[]
   timeTableExam          timeTableExam[]
+  timeTableSubstitutions timeTableSubstitutions[]
 
+  @@unique([schoolRoomUUID], map: "school_room_uuid")
   @@index([schoolId], map: "fk_school_room_school_id")
   @@map("school_rooms")
 }
@@ -541,6 +543,8 @@ model timeTableSubstitutions {
   timeTableSubstitutionDate              DateTime                        @map("time_table_substitution_date")
   timeTableSubstitutionTeachers          timeTableSubstitutionTeachers[]
   timeTableSubstitutionClasses           timeTableSubstitutionClasses[]
+  schoolSubjects                         schoolSubjects                  @relation(fields: [timeTableSubstitutionSubjectId], references: [schoolSubjectId])
+  schoolRooms                            schoolRooms                     @relation(fields: [timeTableSubstitutionRoomId], references: [schoolRoomId])
   users                                  users                           @relation(fields: [timeTableSubstitutionCreatorId], references: [userId])
   timeTableElements                      timeTableElement                @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId])
 
@@ -548,6 +552,7 @@ model timeTableSubstitutions {
   @@index([timeTableSubstitutionSubjectId], map: "fk_time_table_substitution_subject_id")
   @@index([timeTableSubstitutionCreatorId], map: "fk_time_table_substitution_creator_id")
   @@index([timeTableSubstitutionElementId], map: "fk_time_table_substitution_time_table_element_id")
+  @@index([timeTableSubstitutionRoomId], map: "fk_time_table_substitution_room_id")
   @@map("time_table_substitutions")
 }
 
@@ -654,14 +659,15 @@ model holidays {
 }
 
 model timeTableGrid {
-  timeTableGridId             Int                       @id @default(autoincrement()) @map("time_table_grid_id")
-  timeTableGridStartTime      DateTime                  @map("time_table_grid_start_date")
-  timeTableGridBreakDuration  Int                       @map("time_table_grid_break_duration")
-  timeTableGridMaxLessons     Int                       @map("time_table_grid_max_lessons")
-  schoolId                    Int                       @map("school_id")
-  schools                     schools                   @relation(fields: [schoolId], references: [schoolId])
-  timeTableGridSpecialBreakId Int                       @map("time_table_special_break_id")
-  timeTableGridSpecialBreak   timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
+  timeTableGridId              Int                       @id @default(autoincrement()) @map("time_table_grid_id")
+  timeTableGridStartTime       DateTime                  @map("time_table_grid_start_date")
+  timeTableGridElementDuration Int                       @map("time_table_grid_element_duration")
+  timeTableGridBreakDuration   Int                       @map("time_table_grid_break_duration")
+  timeTableGridMaxLessons      Int                       @map("time_table_grid_max_lessons")
+  schoolId                     Int                       @map("school_id")
+  schools                      schools                   @relation(fields: [schoolId], references: [schoolId])
+  timeTableGridSpecialBreakId  Int                       @map("time_table_special_break_id")
+  timeTableGridSpecialBreak    timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
 
   @@unique([timeTableGridId], map: "time_table_grid_uuid_UNIQUE")
   @@index([schoolId], map: "fk_time_table_grid_school_id")
@@ -673,11 +679,8 @@ model timeTableGridSpecialBreak {
   timeTableGridSpecialBreakId       Int             @id @default(autoincrement()) @map("time_table_grid_special_break_id")
   timeTableGridSpecialBreakElement  Int             @map("time_table_grid_special_break_element")
   timeTableGridSpecialBreakDuration Int             @map("time_table_grid_special_break_duration")
-  schoolId                          Int             @map("school_id")
-  schools                           schools         @relation(fields: [schoolId], references: [schoolId])
   timeTableGrid                     timeTableGrid[]
 
-  @@index([schoolId], map: "fk_time_table_grid_special_break_school_id")
   @@map("time_table_grid_special_break")
 }
 

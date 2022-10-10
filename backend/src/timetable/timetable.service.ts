@@ -398,7 +398,7 @@ export class TimetableService {
             const timeTableElementData = {
                 timeTableElementUUID: element.timeTableElementUUID,
                 timeTableElementStartTime: element.timeTableElementStartTime,
-                timeTableElementEndTime: element.timeTableElementEndTime,  
+                timeTableElementEndTime: element.timeTableElementEndTime,
                 timeTableElementDay: element.timeTableElementDay,
                 timeTableElementRoom: {
                     schoolRoomUUID: element.schoolRoom.schoolRoomUUID,
@@ -420,6 +420,40 @@ export class TimetableService {
             return {
                 status: 200,
                 data: timeTableElementData,
+            }
+        } catch (error) {
+            console.log(error)
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async addTimeTableGrid(body: any, request): Promise<ReturnMessage> {
+        const { schoolUUID, timeTableGridMaxLessons, timeTableGridElementDuration, timeTableGridBreakDuration, timeTableGridSpecialBreakElement, timeTableGridStartTime, timeTableGridSpecialBreakDuration } = body
+
+        try {
+            const timeTableGrid = await prisma.timeTableGrid.create({
+                data: {
+                    timeTableGridStartTime: new Date(timeTableGridStartTime),
+                    timeTableGridElementDuration,
+                    timeTableGridMaxLessons,
+                    timeTableGridBreakDuration,
+                    schools: {
+                        connect: {
+                            schoolUUID,
+                        }
+                    },
+                    timeTableGridSpecialBreak: {
+                        create: {
+                            timeTableGridSpecialBreakElement,
+                            timeTableGridSpecialBreakDuration,
+                        }
+                    },
+                }
+            })
+
+            return {
+                status: 200,
+                data: timeTableGrid,
             }
         } catch (error) {
             console.log(error)
@@ -529,6 +563,76 @@ export class TimetableService {
                 },
             }
         } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async addSubstitution(substitutions: any, request): Promise<ReturnMessage> {
+        const jwt = await this.helper.extractJWTToken(request);
+        const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+        const { timeTableElementUUID, timeTableSubstitutionDate, timeTableSubstitutionTeachers, schoolRoomUUID, schoolSubject, schoolClasses } = substitutions;
+        console.log(substitutions)
+
+        try {
+            const substitution = await prisma.timeTableSubstitutions.create({
+                data: {
+                    timeTableSubstitutionUUID: `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
+                    timeTableSubstitutionDate,
+                    timeTableElements: {
+                        connect: {
+                            timeTableElementUUID,
+                        }
+                    },
+                    schoolRooms: {
+                        connect: {
+                            schoolRoomUUID,
+                        }
+                    },
+                    users: {
+                        connect: {
+                            userUUID,
+                        }
+                    },
+                    schoolSubjects: {
+                        connect: {
+                            schoolSubjectUUID: schoolSubject,
+                        }
+                    },
+                    timeTableSubstitutionClasses: {
+                        create: schoolClasses.map((subject) => {
+                            return {
+                                schoolClasses: {
+                                    connect: {
+                                        schoolSubjectUUID: subject,
+                                    }
+                                }
+                            }
+                        })
+                    },
+                }
+            })
+
+            if(timeTableSubstitutionTeachers.length > 0) {
+                await prisma.timeTableSubstitutionTeachers.createMany({
+                    data: timeTableSubstitutionTeachers.map((teacher) => {
+                        return {
+                            timeTableSubstitutionUUID: substitution.timeTableSubstitutionUUID,
+                            users: {
+                                connect: {
+                                    userUUID: teacher,
+                                }
+                            }
+                        }
+                    })
+                })
+            }
+
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: substitution,
+            }
+        } catch (error) {
+            console.log(error)
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
