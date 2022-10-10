@@ -1,6 +1,6 @@
 import { School } from "../school/school";
 
-export type JoinCode = {
+export class JoinCode {
     joinCode: string;
     joinCodeName?: string;
     joinCodeExpireTimestamp?: Date;

@@ -1,4 +1,4 @@
-export type Language = {
+export class Language {
     languageUUID: string;
     languageName: string;
     languageTag: string;

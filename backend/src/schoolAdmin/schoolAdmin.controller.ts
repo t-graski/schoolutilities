@@ -8,67 +8,77 @@ import {
   Put,
   UseGuards,
   Param,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  Body,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AddSchoolDTO, School } from 'src/entity/school/school';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
+import { Request } from 'express'
+import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('SchoolAdmin')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('/api/schoolAdmin')
 @UseGuards(RolesGuard)
 export class SchoolAdminController {
   constructor(private readonly schoolAdminService: SchoolAdminService) { }
 
+  @ApiOperation({ summary: 'Create a new school' })
+  @ApiCreatedResponse({ type: School })
+  @ApiBody({ type: AddSchoolDTO })
   @UseGuards(JwtAuthGuard)
   // @Roles(Role.Student)
-  @Post('/addSchoolConfig')
-  async addSchoolConfig(@Req() request, @Res() response) {
-    const jwt = request.headers.authorization.split(' ')[1];
-    const result = await this.schoolAdminService.addSchoolConfig(
-      request.body,
-      jwt,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Post('/school')
+  async addSchoolConfig(@Body() school: AddSchoolDTO, @Req() request: Request): Promise<School> {
+    return this.schoolAdminService.addSchoolConfig(school, request);
   }
 
+  @ApiOperation({ summary: 'Add a department to a school' })
+  @ApiCreatedResponse({ type: Department })
+  @ApiBody({ type: AddDepartmentDTO })
   @UseGuards(JwtAuthGuard)
   @Post('/department')
   // @Roles(Role.Admin)
-  async addDepartment(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.addDepartment(request.body);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async addDepartment(@Body() department: AddDepartmentDTO, @Req() request): Promise<Department> {
+    return this.schoolAdminService.addDepartment(department, request);
   }
 
+  @ApiOperation({ summary: 'Add multiple departments to a school' })
+  @ApiCreatedResponse({ type: [Department] })
+  @ApiBody({ type: [AddSchoolDTO] })
   @UseGuards(JwtAuthGuard)
   @Post('/departments')
   // @Roles(Role.Admin)
-  async addDepartments(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.addDepartments(request.body);
-    return response.status(result.status).json(result?.message);
+  async addDepartments(@Body() departments: AddDepartmentDTO[], @Req() request): Promise<Department[]> {
+    return this.schoolAdminService.addDepartments(departments, request);
   }
 
+  @ApiOperation({ summary: 'Remove department from school' })
+  @ApiOkResponse({ type: Number })
+  @ApiBody({ type: DeleteDepartmentDTO })
   @UseGuards(JwtAuthGuard)
   @Delete('/department')
   // @Roles(Role.Admin)
-  async removeDepartment(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.removeDepartment(request.body);
-    return response
-      .setHeader('Access-Control-Allow-Origin', '*')
-      .status(result.status)
-      .json(result?.message);
+  async removeDepartment(@Body() department: DeleteDepartmentDTO, @Req() request): Promise<number> {
+    return this.schoolAdminService.removeDepartment(department);
+
   }
 
+  @ApiOperation({ summary: 'Update department in school' })
+  @ApiOkResponse({ type: Department })
+  @ApiBody({ type: UpdateDepartmentDTO })
   @UseGuards(JwtAuthGuard)
   @Put('/department')
   // @Roles(Role.Admin)
-  async updateDepartment(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.updateDepartment(request.body);
-    return response.status(result.status).json(result?.message);
+  async updateDepartment(@Body() department: UpdateDepartmentDTO, @Req() request, @Res() response): Promise<Department> {
+    return this.schoolAdminService.updateDepartment(department);
   }
 
   @UseGuards(JwtAuthGuard)

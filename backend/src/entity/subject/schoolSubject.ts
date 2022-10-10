@@ -1,4 +1,4 @@
-export type SchoolSubject = {
+export class SchoolSubject {
     schoolSubjectUUID: string;
     schoolSubjectName: string;
     schoolSubjectAbbreviation: string;
