@@ -113,6 +113,11 @@ export class TimetableService {
                             },
                         },
                     },
+                    timeTableElementClasses: {
+                        include: {
+                            schoolClasses: true,
+                        },
+                    },
                     timeTableEvents: {
                         include: {
                             timeTableEventClasses: {
@@ -184,6 +189,12 @@ export class TimetableService {
                             userFirstname: teacher.users.userFirstname,
                             userLastname: teacher.users.userLastname,
                             userEmail: teacher.users.userEmail,
+                        }
+                    }),
+                    timeTableElementClasses: element.timeTableElementClasses.map((classElement) => {
+                        return {
+                            schoolClassUUID: classElement.schoolClasses.schoolClassUUID,
+                            schoolClassName: classElement.schoolClasses.schoolClassName,
                         }
                     }),
                     substitution: checkForSubstitution(element, new Date(dateString)),
