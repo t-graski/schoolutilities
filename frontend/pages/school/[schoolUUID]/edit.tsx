@@ -11,10 +11,8 @@ import { JoinCodesSettingsField } from "../../../components/organisms/schoolAdmi
 import SvgDepartment from "../../../components/atoms/svg/SvgDepartment";
 import SvgClass from "../../../components/atoms/svg/SvgClass";
 import SvgStudent from "../../../components/atoms/svg/SvgStudent";
-import SvgTeacher from "../../../components/atoms/svg/SvgTeacher";
 import { useQueryClient } from "react-query";
 import dynamic from "next/dynamic";
-import { logout } from "../../../utils/authHelper";
 import { SideDashboardBar } from "../../../components/organisms/SideDashboardBar";
 import { OffDaysSettingsField } from "../../../components/organisms/schoolAdmin/OffDaysSettingsField";
 import SvgInvitation from "../../../components/atoms/svg/SvgInvitation";

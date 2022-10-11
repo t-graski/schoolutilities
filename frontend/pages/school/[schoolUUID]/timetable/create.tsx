@@ -7,7 +7,7 @@ import { Headline } from "../../../../components/atoms/Headline";
 import { Separator } from "../../../../components/atoms/Separator";
 import { ContentLayout } from "../../../../utils/styles";
 import dynamic from "next/dynamic";
-import { CreateItem } from "../../../../components/organisms/time-table/CreateItem";
+import { ChangeCreateItem } from "../../../../components/organisms/time-table/CreateItem";
 
 export default function CreateCourse() {
   return (
@@ -19,7 +19,7 @@ export default function CreateCourse() {
       <ContentLayout>
         <Headline label="Create timetable item"></Headline>
         <Separator width="small" alignment="center" />
-        <CreateItem></CreateItem>
+        <ChangeCreateItem></ChangeCreateItem>
       </ContentLayout>
       <Footer></Footer>
     </>

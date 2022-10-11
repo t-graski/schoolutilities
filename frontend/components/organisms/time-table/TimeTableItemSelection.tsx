@@ -56,8 +56,9 @@ export const TimeTableItemSelection: React.FC<Props> = ({
           onChange={(element) => {
             if (element && element.value) {
               router.push({
-                pathname: `/school/[schoolUUID]/timetable/week/[startDate]/class/[schoolClassUUID]`,
+                pathname: router.pathname,
                 query: {
+                  ...router.query,
                   schoolUUID,
                   startDate,
                   schoolClassUUID: element.value,
@@ -65,7 +66,8 @@ export const TimeTableItemSelection: React.FC<Props> = ({
               });
             } else {
               router.push({
-                pathname: `/school/[schoolUUID]/timetable/week/[startDate]`,
+                ...router.query,
+                pathname: router.pathname,
                 query: { schoolUUID, startDate },
               });
             }
@@ -89,12 +91,12 @@ export const TimeTableItemSelection: React.FC<Props> = ({
           setStartDate={(value) => {
             if (schoolClassUUID) {
               router.push({
-                pathname: `/school/[schoolUUID]/timetable/week/[startDate]/class/[schoolClassUUID]`,
+                pathname: `/school/[schoolUUID]/planner`,
                 query: { schoolUUID, startDate: value, schoolClassUUID },
               });
             } else {
               router.push({
-                pathname: `/school/[schoolUUID]/timetable/week/[startDate]`,
+                pathname: `/school/[schoolUUID]/planner`,
                 query: { schoolUUID, startDate: value },
               });
             }

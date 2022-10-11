@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { styled } from "../../stitches.config";
 import { PopUp } from "../molecules/PopUp";
@@ -12,8 +12,6 @@ export type TimeTableItemType = {
   timeTableElementUUID?: string;
   timeTableElementStartTime?: string;
   timeTableElementEndTime?: string;
-  //- timeTableElementDay?: string;
-  //- timeTableElementCreationTimestamp?: string;
   overlaps?: number;
   overlapStart?: number;
   omitted?: {
@@ -27,16 +25,10 @@ export type TimeTableItemType = {
     userUUID: string;
     userFirstname: string;
     userLastname: string;
-    //- userBirthDate: string;
     userEmail: string;
-    //- userEmailVerified: boolean;
-    //- userCreationTimestamp: string;
-    //- userLastLoginTimestamp: string;
   }[];
   substitution?: {
     timeTableSubstitutionUUID: string;
-    //- timeTableSubstitutionDate: string;
-    //+ timeTableSubstitutionSubjectName: string;
     timeTableSubstitutionClasses: {
       schoolClassUUID: string;
       schoolClassName: string;
@@ -45,11 +37,7 @@ export type TimeTableItemType = {
       userUUID: string;
       userFirstname: string;
       userLastname: string;
-      //- userBirthDate: string;
       userEmail: string;
-      //- userEmailVerified: boolean;
-      //- userCreationTimestamp: string;
-      //- userLastLoginTimestamp: string;
     }[];
   };
 };
@@ -65,9 +53,20 @@ const TimeTableSubjectName = styled("span", {
 });
 
 export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
+  const [now, setDate] = useState(new Date());
+
+  useEffect(() => {
+    let startInterval = setInterval(() => {
+      setDate(new Date());
+    }, 45000);
+
+    return () => {
+      clearInterval(startInterval);
+    };
+  }, []);
+
   let startPoint = getRowFromTime(item.timeTableElementStartTime, startTime);
   let endPoint = getRowFromTime(item.timeTableElementEndTime, startTime);
-  let now = new Date();
   let endTime = new Date(item.timeTableElementEndTime);
   let isBeforeNow = endTime < now;
   let overlapColumns = item.overlaps ? 24 / item.overlaps : 24;

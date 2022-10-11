@@ -83,13 +83,14 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
         >
           <SvgRightArrow></SvgRightArrow>
         </TimeTableArrowLayout>
-        {/*@ts-ignore */}
         {startDate &&
+          //@ts-ignore
           new Intl.DateTimeFormat("default", options).format(
             new Date(date)
           )}{" "}
         - {/*@ts-ignore */}
         {startDate &&
+          //@ts-ignore
           new Intl.DateTimeFormat("default", options).format(new Date(endDate))}
         <TimeTableArrowLayout
           direction={"right"}
