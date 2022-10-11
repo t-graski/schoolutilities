@@ -23,7 +23,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { HelperService } from 'src/helper/helper.service';
 import { AddSchoolDTO, School } from 'src/entity/school/school';
 import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
-import { SchoolClass } from 'src/entity/school-class/schoolClass';
+import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
@@ -86,133 +86,61 @@ export class SchoolAdminService {
     }
   }
 
-  async addClass(body: AddClass): Promise<ReturnMessage> {
-    const { departmentUUID, className } = body;
-    if (
-      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
-      !validator.isUUID(departmentUUID.slice(1), 4)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const departmentId = await this.databaseService.getDepartmentIdByUUID(
-      departmentUUID,
-    );
-
-    const isNotAvailable = await prisma.schoolClasses.findFirst({
-      where: {
-        schoolClassDepartmentId: Number(departmentId),
-        AND: {
-          schoolClassName: className,
-        }
-      },
-    });
-
-    if (isNotAvailable) {
-      return RETURN_DATA.ALREADY_EXISTS;
-    }
+  async addClass(payload: AddSchoolClassDTO): Promise<SchoolClass> {
+    const { schoolClassDepartmentUUID, schoolClassName } = payload;
 
     try {
       const schoolClass = await prisma.schoolClasses.create({
         data: {
           schoolClassUUID: `${ID_STARTERS.CLASS}${uuidv4()}`,
+          schoolClassName,
           departments: {
             connect: {
-              departmentId: Number(departmentId),
+              departmentUUID: schoolClassDepartmentUUID,
             },
-          },
-          schoolClassName: className,
+          }
         },
       });
-
-      delete schoolClass.schoolClassDepartmentId;
-      delete schoolClass.schoolClassId;
-
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: schoolClass,
-      };
-    } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
+      return new SchoolClass(schoolClass);
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
   }
 
-  async removeClass(classUUID: string): Promise<ReturnMessage> {
-    if (!validator.isUUID(classUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const classId = await this.databaseService.getClassIdByUUID(classUUID);
-
-    const schoolClass = await prisma.schoolClasses.findUnique({
-      where: {
-        schoolClassId: Number(classId),
-      },
-    });
-
-    if (!schoolClass) {
-      return RETURN_DATA.NOT_FOUND;
-    }
-
+  async removeClass(payload: DeleteSchoolClassDTO): Promise<number> {
+    const { schoolClassUUID } = payload;
     try {
       await prisma.schoolClasses.delete({
         where: {
-          schoolClassId: Number(classId),
+          schoolClassUUID,
         },
       });
-    } catch (err) {
-      // Foreign key constraint failed
-      if (err.code === 'P2003') {
-        return RETURN_DATA.REFERENCE_ERROR;
-      } else {
-        return RETURN_DATA.DATABASE_ERROR;
-      }
+      return 200;
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
-    return RETURN_DATA.SUCCESS;
   }
 
-  async updateClass(body: UpdateClass): Promise<ReturnMessage> {
-    const { className, classUUID, departmentUUID } = body;
-    if (
-      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
-      !validator.isUUID(classUUID.slice(1), 4) ||
-      !validator.isUUID(departmentUUID.slice(1), 4)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const classId = await this.databaseService.getClassIdByUUID(classUUID);
-    const departmentId = await this.databaseService.getDepartmentIdByUUID(
-      departmentUUID,
-    );
+  async updateClass(payload: UpdateSchoolClassDTO): Promise<SchoolClass> {
+    const { schoolClassUUID, schoolClassDepartmentUUID, schoolClassName } = payload;
 
     try {
       const schoolClass = await prisma.schoolClasses.update({
         where: {
-          schoolClassId: Number(classId),
+          schoolClassUUID,
         },
         data: {
-          schoolClassName: className,
+          schoolClassName,
           departments: {
             connect: {
-              departmentId: Number(departmentId),
+              departmentUUID: schoolClassDepartmentUUID,
             },
           },
         },
       });
-
-      delete schoolClass.schoolClassDepartmentId;
-      delete schoolClass.schoolClassId;
-
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: schoolClass,
-      };
-    } catch (err) {
-      if (err.code === 'P2002') {
-        return RETURN_DATA.ALREADY_EXISTS;
-      }
-      return RETURN_DATA.DATABASE_ERROR;
+      return new SchoolClass(schoolClass);
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -254,36 +182,19 @@ export class SchoolAdminService {
     }
   }
 
-  async getDepartments(schoolUUID: string): Promise<ReturnMessage> {
-    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-
+  async getDepartments(schoolUUID: string): Promise<Department[]> {
     try {
       const departments = await prisma.departments.findMany({
         where: {
-          schoolId: Number(schoolId),
+          schools: {
+            schoolUUID
+          },
         },
-      });
+      })
 
-      const departmentsWithoutIds = departments.map((department) => {
-        const { departmentUUID, departmentName, departmentIsVisible, departmentChildsVisible } = department;
-        return {
-          departmentUUID: departmentUUID,
-          departmentName: departmentName,
-          isVisible: departmentIsVisible,
-          childsVisible: departmentChildsVisible,
-        };
-      });
-
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: departmentsWithoutIds,
-      };
-    } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
+      return departments.map((department) => new Department(department));
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
   }
 

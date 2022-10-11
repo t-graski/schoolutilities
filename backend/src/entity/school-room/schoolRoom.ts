@@ -1,4 +1,4 @@
-export type SchoolRoom = {
+export class SchoolRoom {
     schoolRoomUUID: string;
     schoolRoomName: string;
     schoolRoomAbbreviation: string;

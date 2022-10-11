@@ -7,7 +7,6 @@ import { JoinCode } from "../join-code/joinCode";
 import { Language } from "../language/language";
 import { SchoolRoom } from "../school-room/schoolRoom";
 import { SchoolSubject } from "../subject/schoolSubject";
-import { Timezone } from "../timezone/timezone";
 import { User } from "../user/user";
 
 export class School {
@@ -91,7 +90,10 @@ export class School {
     })
     schoolUsers: User[];
 
-    @ApiProperty()
+    @ApiProperty({
+        description: 'The school rooms of a school',
+        type: [SchoolRoom],
+    })
     schoolRooms?: SchoolRoom[];
 
     @ApiProperty({
