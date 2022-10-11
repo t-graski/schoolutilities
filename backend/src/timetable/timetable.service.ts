@@ -174,7 +174,10 @@ export class TimetableService {
                         schoolRoomAbbreviation: element.schoolRoom.schoolRoomAbbreviation,
                         schoolRoomBuilding: element.schoolRoom.schoolRoomBuilding,
                     },
-                    schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+                    schoolSubject: {
+                        schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+                        schoolSubjectAbbreviation: element.schoolSubjects.schoolSubjectAbbreviation,
+                    },
                     timeTableElementTeachers: element.timeTableTeachers.map((teacher) => {
                         return {
                             userUUID: teacher.users.userUUID,
@@ -612,7 +615,7 @@ export class TimetableService {
                 }
             })
 
-            if(timeTableSubstitutionTeachers.length > 0) {
+            if (timeTableSubstitutionTeachers.length > 0) {
                 await prisma.timeTableSubstitutionTeachers.createMany({
                     data: timeTableSubstitutionTeachers.map((teacher) => {
                         return {
