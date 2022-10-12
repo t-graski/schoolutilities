@@ -1,9 +1,12 @@
+import { TimeTableElement } from "src/dto/addTimeTable";
+import { Course } from "../course/course";
+
 export class SchoolSubject {
     schoolSubjectUUID: string;
     schoolSubjectName: string;
     schoolSubjectAbbreviation: string;
-    // courses?: SchoolCourse[];
-    // timeTableElements: TimeTableElement[]
+    courses?: Course[];
+    timeTableElements?: TimeTableElement[]
 }
 
 export class AddSchoolSubjectDTO {

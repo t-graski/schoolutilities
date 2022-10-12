@@ -3,8 +3,11 @@ import { PrismaClient } from '@prisma/client';
 import { HelperService } from '../helper/helper.service';
 import { v4 as uuidv4 } from 'uuid';
 import { RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
-import validator from 'validator';
 import { ReturnMessage } from 'src/types/SchoolAdmin';
+import { AddArticleDTO, Article, DeleteArticleDTO, UpdateArticleDTO } from 'src/entity/article/article';
+import { Request } from 'express';
+import { InternalServerErrorException } from '@nestjs/common/exceptions';
+import { User } from 'src/entity/user/user';
 
 const prisma = new PrismaClient();
 
@@ -12,84 +15,70 @@ const prisma = new PrismaClient();
 export class ArticleService {
   constructor(private readonly helper: HelperService) { }
 
-  async createArticle(request): Promise<ReturnMessage> {
-    const {
-      headline,
-      catchPhrase = '',
-      content,
-      type,
-      isPublic,
-    } = request.body;
+  async createArticle(payload: AddArticleDTO, request: Request): Promise<Article> {
+    const { articleHeadline, articleCatchPhrase, articleContent, articleType, articleIsPublic } = payload;
 
-    const userUUID = await this.helper.getUserUUIDfromJWT(
-      await this.helper.extractJWTToken(request),
-    );
-    const userId = await this.helper.getUserIdByUUID(userUUID);
+    const userUUID = await this.helper.getUserUUIDfromJWT(await this.helper.extractJWTToken(request));
 
     try {
       const article = await prisma.articles.create({
         data: {
           articleUUID: `${ID_STARTERS.ARTICLE}${uuidv4()}`,
-          articleHeadline: headline,
-          articleCatchPhrase: catchPhrase,
-          articleContent: content,
-          articleType: type,
-          articleIsPublic: isPublic,
-          articlePublishTimestamp: isPublic ? new Date() : new Date(946684800),
+          articleHeadline,
+          articleCatchPhrase,
+          articleContent,
+          articleType,
+          articleIsPublic,
+          articlePublishTimestamp: articleIsPublic ? new Date() : new Date(946684800),
           users: {
             connect: {
-              userId,
+              userUUID,
             },
           },
         },
       });
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: article,
-      };
+      return new Article(article);
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException("Database error");
     }
   }
 
-  async deleteArticle(request): Promise<ReturnMessage> {
-    const { articleUUID } = request.body;
-    const articleId = await this.helper.getArticleIdByUUID(articleUUID);
+  async deleteArticle(payload: DeleteArticleDTO, request: Request): Promise<number> {
+    const { articleUUID } = payload;
 
     try {
       await prisma.articles.delete({
         where: {
-          articleId,
+          articleUUID,
         },
       });
+      return 200;
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException("Database error");
     }
-    return RETURN_DATA.SUCCESS;
   }
 
-  async editArticle(request): Promise<ReturnMessage> {
-    const { articleUUID, headline, catchPhrase, content, type, isPublic } =
-      request.body;
+  async editArticle(payload: UpdateArticleDTO, request: Request): Promise<Article> {
+    const { articleUUID, articleHeadline, articleCatchPhrase, articleContent, articleType, articleIsPublic } = payload;
 
     try {
-      await prisma.articles.update({
+      const article = await prisma.articles.update({
         where: {
           articleUUID,
         },
         data: {
-          articleHeadline: headline,
-          articleCatchPhrase: catchPhrase,
-          articleContent: content,
-          articleType: type,
-          articleIsPublic: isPublic,
-          articlePublishTimestamp: isPublic ? new Date() : new Date(946684800),
+          articleHeadline,
+          articleCatchPhrase,
+          articleContent,
+          articleType,
+          articleIsPublic,
+          articlePublishTimestamp: articleIsPublic ? new Date() : new Date(946684800),
         },
       });
+      return new Article(article);
     } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException("Database error");
     }
-    return RETURN_DATA.SUCCESS;
   }
 
   async publishArticle(request): Promise<ReturnMessage> {
@@ -111,88 +100,58 @@ export class ArticleService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getArticle(request, articleUUID): Promise<ReturnMessage> {
+  async getArticle(articleUUID: string, request: Request): Promise<Article> {
     try {
       const article = await prisma.articles.findFirst({
         where: {
           articleUUID,
         },
+        include: {
+          users: true,
+        }
       });
 
-      const creator = await this.helper.getUserById(article.articleCreatorId);
-
-      const articleItem = {
-        articleUUID: article.articleUUID,
-        articleHeadline: article.articleHeadline,
-        articleCatchPhrase: article.articleCatchPhrase,
-        articleContent: article.articleContent,
-        type: {
-          articleTypeId: article.articleType,
-          articleTypeName: await this.helper.translateArticleType(article.articleType),
-        },
-        articleIsPublic: article.articleIsPublic,
-        articlePublishTimestamp: article.articlePublishTimestamp,
-        articleCreationTimestamp: article.articleCreationTimestamp,
-        creator: {
-          firstName: creator.firstName,
-          lastName: creator.lastName,
-        },
-        readingTime: await this.helper.computeReadingTime(article.articleContent),
-      };
-
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: articleItem,
-      };
-    } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
-    }
-  }
-
-  async getAllArticles(request): Promise<ReturnMessage> {
-    const articles = await prisma.articles.findMany({
-      where: {
-        articleCreationTimestamp: {
-          gt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
-        },
-      },
-    });
-
-    const articleItems = [];
-
-    for (const article of articles) {
-      const creator = await this.helper.getUserById(article.articleCreatorId);
-
-      const articleItem = {
-        articleUUID: article.articleUUID,
-        articleHeadline: article.articleHeadline,
-        articleCatchPhrase: article.articleCatchPhrase,
-        articleContent: article.articleContent,
-        type: {
+      return new Article({
+        articleType: {
           articleType: article.articleType,
           articleTypeName: await this.helper.translateArticleType(article.articleType),
         },
-        articleIsPublic: article.articleIsPublic,
-        articlePublishTimestamp: article.articlePublishTimestamp,
-        articleCreationTimestamp: article.articleCreationTimestamp,
-        creator: {
-          firstName: creator.firstName,
-          lastName: creator.lastName,
-        },
+        creator: new User(article.users),
         readingTime: await this.helper.computeReadingTime(article.articleContent),
-      };
-
-      articleItems.push(articleItem);
+        ...article,
+      })
+    } catch (error) {
+      throw new InternalServerErrorException("Database error");
     }
+  }
 
-    articleItems.sort((a, b) => {
-      return b.creationDate.getTime() - a.creationDate.getTime();
-    });
+  async getAllArticles(page, limit, request): Promise<Article[] | Article> {
+    try {
+      const articles = await prisma.articles.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+        include: {
+          users: true,
+        }
+      });
 
-    return {
-      status: RETURN_DATA.SUCCESS.status,
-      data: articleItems,
-    };
+      const articleData: Article[] = [];
+
+      for (const article of articles) {
+        articleData.push(new Article({
+          articleType: {
+            articleType: article.articleType,
+            articleTypeName: await this.helper.translateArticleType(article.articleType),
+          },
+          creator: new User(article.users),
+          readingTime: await this.helper.computeReadingTime(article.articleContent),
+          ...article,
+        }));
+      }
+      return articleData;
+    } catch {
+      throw new InternalServerErrorException("Database error");
+    }
   }
 
   async getArticleAvailability(request): Promise<ReturnMessage> {

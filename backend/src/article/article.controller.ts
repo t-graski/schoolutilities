@@ -8,64 +8,70 @@ import {
   UseGuards,
   Param,
   Post,
+  Body,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AddArticleDTO, Article, DeleteArticleDTO, UpdateArticleDTO } from 'src/entity/article/article';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { ArticleService } from './article.service';
 
+@ApiBearerAuth()
+@ApiTags('articles')
+@UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(RolesGuard)
 @Controller('api/articles')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) { }
 
+  @ApiOperation({ summary: 'Create an article' })
+  @ApiCreatedResponse({ type: Article })
+  @ApiBody({ type: AddArticleDTO })
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
   @Post('/create')
-  async createArticle(@Req() request, @Res() response) {
-    const result = await this.articleService.createArticle(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async createArticle(@Body() article: AddArticleDTO, @Req() request: Request): Promise<Article> {
+    return this.articleService.createArticle(article, request);
   }
 
+  @ApiOperation({ summary: 'Delete an article' })
+  @ApiBody({ type: DeleteArticleDTO })
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
   @Delete('/delete')
-  async deleteArticle(@Req() request, @Res() response) {
-    const result = await this.articleService.deleteArticle(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async deleteArticle(@Body() article: DeleteArticleDTO, @Req() request: Request): Promise<number> {
+    return this.articleService.deleteArticle(article, request);
   }
 
+  @ApiOperation({ summary: 'Edit an article' })
+  @ApiOkResponse({ type: Article })
+  @ApiBody({ type: UpdateArticleDTO })
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
   @Put('/edit')
-  async editArticle(@Req() request, @Res() response) {
-    const result = await this.articleService.editArticle(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async editArticle(@Body() article: UpdateArticleDTO, @Req() request: Request): Promise<Article> {
+    return this.articleService.editArticle(article, request);
   }
 
+  @ApiOperation({ summary: 'Get one article' })
+  @ApiParam({ name: 'articleUUID', type: String })
+  @ApiOkResponse({ type: Article })
   @Get('/article/:articleUUID')
-  async getArticle(@Param() params, @Req() request, @Res() response) {
-    const result = await this.articleService.getArticle(
-      request,
-      params.articleUUID,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async getArticle(@Param('articleUUID') articleUUID: string, @Req() request: Request): Promise<Article> {
+    return this.articleService.getArticle(articleUUID, request);
   }
 
-  @Get('/articles')
-  async getArticles(@Req() request, @Res() response) {
-    const result = await this.articleService.getAllArticles(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @ApiOperation({ summary: 'Get all articles' })
+  @ApiOkResponse({ type: [Article] })
+  @ApiParam({ name: 'page', type: Number })
+  @ApiParam({ name: 'limit', type: Number })
+  @Get('/articles/:page/:limit')
+  async getArticles(@Param('page') page: number, @Param('limit') limit: number, @Req() request): Promise<Article[] | Article> {
+    return this.articleService.getAllArticles(page, limit, request);
   }
 }
