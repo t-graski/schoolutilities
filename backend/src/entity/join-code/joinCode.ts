@@ -1,12 +1,17 @@
 import { School } from "../school/school";
+import { User } from "../user/user";
 
 export class JoinCode {
-    joinCode: string;
-    joinCodeName?: string;
-    joinCodeExpireTimestamp?: Date;
-    // creator: User;
-    joinCodeCreationTimestamp: Date;
+    schoolJoinCode: string;
+    schoolJoinCodeName?: string;
+    schoolJoinCodeExpireTimestamp?: Date;
+    creator: User;
+    schoolJoinCodeCreationTimestamp: Date;
     school: School;
+
+    constructor(partial: Partial<JoinCode>) {
+        Object.assign(this, partial);
+    }
 }
 
 export class AddJoinCodeDTO {

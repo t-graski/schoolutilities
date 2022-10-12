@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Body,
+  CacheInterceptor,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddSchoolDTO, School, UpdateSchoolDTO } from 'src/entity/school/school';
@@ -22,6 +23,7 @@ import { Request } from 'express'
 import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
+import { AddJoinCodeDTO, JoinCode } from 'src/entity/join-code/joinCode';
 
 @ApiBearerAuth()
 @ApiTags('SchoolAdmin')
@@ -126,22 +128,15 @@ export class SchoolAdminController {
   @UseGuards(JwtAuthGuard)
   @Get('/classes/:schoolUUID')
   // @Roles(Role.Student)
-  async getClasses(@Param() params, @Res() response) {
-    const result = await this.schoolAdminService.getClasses(params.schoolUUID);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async getClasses(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<SchoolClass[] | SchoolClass> {
+    return this.schoolAdminService.getClasses(schoolUUID, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/joinCode')
   // @Roles(Role.Admin)
-  async addJoinCode(@Req() request, @Res() response) {
-    const jwt = request.headers.authorization.split(' ')[1];
-    const result = await this.schoolAdminService.addJoinCode(request.body, jwt);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async addJoinCode(@Body() joinCode: AddJoinCodeDTO, @Req() request): Promise<JoinCode> {
+    return this.schoolAdminService.addJoinCode(joinCode, request);
   }
 
   @UseGuards(JwtAuthGuard)

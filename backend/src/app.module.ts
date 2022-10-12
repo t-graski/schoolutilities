@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheInterceptor, CacheModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -17,9 +17,13 @@ import { ArticleController } from './article/article.controller';
 import { ArticleModule } from './article/article.module';
 import { TimetableModule } from './timetable/timetable.module';
 import { UntisImportModule } from './untis-import/untis-import.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal: true,
+    }),
     AuthModule,
     UsersModule,
     SchoolAdminModule,
@@ -36,6 +40,9 @@ import { UntisImportModule } from './untis-import/untis-import.module';
     UntisImportModule,
   ],
   controllers: [AppController, ArticleController],
-  providers: [AppService, ArticleService],
+  providers: [AppService, ArticleService, {
+    provide: APP_INTERCEPTOR,
+    useClass: CacheInterceptor,
+  }],
 })
-export class AppModule {}
+export class AppModule { }

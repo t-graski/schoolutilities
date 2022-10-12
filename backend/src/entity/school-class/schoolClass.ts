@@ -11,7 +11,7 @@ export class SchoolClass {
     schoolClassDepartmentId: number;
     schoolClassUUID: string;
     schoolClassName: string;
-    schoolClassDepartment: Department;
+    departments: Department;
     // courseClasses?: courseClasses;
     // timeTableElementClasses?: timeTableElementClasses;
     // timeTableEventClasses?: timeTableEventClasses;
