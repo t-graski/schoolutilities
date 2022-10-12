@@ -32,6 +32,7 @@ export class User {
     userSettings?: UserSetting;
     // timeTableTeachers: TimeTableTeacher[];
     timeTableElements?: TimeTableElement[];
+    schoolRoleName?: string;
 
     constructor(partial: Partial<User>) {
         Object.assign(this, partial);

@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { Injectable, HttpStatus, InternalServerErrorException, BadRequestException, Catch } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { nanoid } from 'nanoid';
 import validator from 'validator';
@@ -24,7 +24,7 @@ import { HelperService } from 'src/helper/helper.service';
 import { AddSchoolDTO, School } from 'src/entity/school/school';
 import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
-import { AddJoinCodeDTO, JoinCode } from 'src/entity/join-code/joinCode';
+import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
 import { User } from 'src/entity/user/user';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -301,151 +301,103 @@ export class SchoolAdminService {
     }
   }
 
-  async joinSchool(joinCode: string, token: string): Promise<ReturnMessage> {
-    const jwt = await this.authService.decodeJWT(token);
+  async joinSchool(payload: JoinSchoolDTO, request: Request): Promise<School> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+    const { joinCode } = payload;
 
-    const personUUID = jwt.personUUID;
-    const schoolUUID = await this.databaseService.getSchoolUUIDByJoinCode(
-      joinCode,
-    );
-
-    if (
-      !validator.isUUID(personUUID.slice(1), 4) ||
-      !validator.isUUID(schoolUUID.slice(1), 4)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const person = await prisma.users.findFirst({
+    const joinCodeSchool = await prisma.schoolJoinCodes.findUnique({
       where: {
-        userUUID: personUUID,
+        schoolJoinCode: joinCode,
       },
-    });
-
-    const school = await prisma.schools.findFirst({
-      where: {
-        schoolUUID: schoolUUID,
-      },
-    });
-
-    if (!school || !person) {
-      return RETURN_DATA.NOT_FOUND;
-    }
-
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
-
-    try {
-      await prisma.schoolUsers.create({
-        data: {
-          users: {
-            connect: {
-              userId: personId,
-            },
-          },
-          schools: {
-            connect: {
-              schoolId: schoolId,
-            },
-          },
-        },
-      });
-
-      await prisma.schoolUserRoles.create({
-        data: {
-          users: {
-            connect: {
-              userId: personId,
-            },
-          },
-          schoolRoles: {
-            connect: {
-              schoolRoleId: 3,
-            },
-          },
-          schools: {
-            connect: {
-              schoolId: schoolId,
-            },
-          },
-        },
-      });
-    } catch (err) {
-      if (err.code === 'P2002') {
-        return RETURN_DATA.ALREADY_EXISTS;
+      include: {
+        schools: true,
       }
+    });
 
-      return RETURN_DATA.DATABASE_ERROR;
-    }
-
-    return {
-      status: RETURN_DATA.SUCCESS.status,
-      data: {
-        schoolUUID: schoolUUID,
-      },
+    if (joinCodeSchool) {
+      const schoolUUID = joinCodeSchool.schools.schoolUUID;
+      const school = await prisma.schools.update({
+        where: {
+          schoolUUID: schoolUUID,
+        },
+        data: {
+          schoolUserRoles: {
+            create: {
+              users: {
+                connect: {
+                  userUUID,
+                },
+              },
+              schoolRoles: {
+                connect: {
+                  schoolRoleId: 1,
+                },
+              }
+            },
+          },
+          schoolUsers: {
+            create: {
+              users: {
+                connect: {
+                  userUUID,
+                },
+              }
+            }
+          },
+        },
+      });
+      return new School(school);
+    } else {
+      throw new BadRequestException("Invalid join code");
     };
   }
 
-  async leaveSchool(body: JoinSchool): Promise<ReturnMessage> {
-    const { personUUID, schoolUUID } = body;
-    if (
-      !validator.isUUID(personUUID.slice(1), 4) ||
-      !validator.isUUID(schoolUUID.slice(1), 4)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const person = await prisma.users.findUnique({
-      where: {
-        userUUID: personUUID,
-      },
-    });
-
-    const school = await prisma.schools.findFirst({
-      where: {
-        schoolUUID: schoolUUID,
-      },
-    });
-
-    if (!school || !person) {
-      return RETURN_DATA.NOT_FOUND;
-    }
-
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-    const personId = await this.databaseService.getPersonIdByUUID(personUUID);
-    const role = await this.databaseService.getUserRoles(personId.toString());
-
-    const roleEntry = role.find((entry) => entry.schoolId === schoolId);
-    if (roleEntry.roleId === 1) {
-      return RETURN_DATA.LAST_USER;
-    }
-
-    const isOnlyUser = await prisma.schoolUsers.findMany({
-      where: {
-        schools: {
-          schoolId,
-        },
-      },
-    });
-
-    const isOnlyUserArray = isOnlyUser.map((entry) => entry.schoolId);
-
-    if (isOnlyUserArray.length == 1) return RETURN_DATA.LAST_USER;
+  async leaveSchool(payload: LeaveSchoolDTO, request: Request): Promise<number> {
+    const { schoolUUID } = payload;
 
     try {
-      await prisma.schoolUsers.delete({
+      const jwt = await this.helper.extractJWTToken(request);
+      const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+
+      const schoolUsers = await prisma.schoolUsers.findMany({
         where: {
-          schoolUserId_schoolId: {
-            schoolId: schoolId,
-            schoolUserId: personId,
-          }
+          schools: {
+            schoolUUID,
+          },
         },
       });
-    } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
-    }
 
-    return RETURN_DATA.SUCCESS;
+      if (schoolUsers.length === 1) {
+        throw new BadRequestException("You are the last user in this school. You can't leave the school");
+      }
+
+      await prisma.schoolUsers.deleteMany({
+        where: {
+          users: {
+            userUUID,
+          },
+          schools: {
+            schoolUUID,
+          },
+        },
+      });
+
+      await prisma.schoolUserRoles.deleteMany({
+        where: {
+          users: {
+            userUUID,
+          },
+          schools: {
+            schoolUUID,
+          },
+        },
+      });
+
+      return 200;
+    } catch {
+      throw new InternalServerErrorException("Database error");
+    }
   }
 
   async addJoinCode(payload: AddJoinCodeDTO, request: Request): Promise<JoinCode> {
@@ -496,22 +448,8 @@ export class SchoolAdminService {
     }
   }
 
-  async removeJoinCode(body: RemoveJoinCode): Promise<ReturnMessage> {
-    const { joinCode } = body;
-
-    if (!joinCode) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const joinCodeData = await prisma.schoolJoinCodes.findUnique({
-      where: {
-        schoolJoinCode: joinCode,
-      },
-    });
-
-    if (!joinCodeData) {
-      return RETURN_DATA.NOT_FOUND;
-    }
+  async removeJoinCode(payload: DeleteJoinCodeDTO, request: Request): Promise<number> {
+    const { joinCode } = payload;
 
     try {
       await prisma.schoolJoinCodes.delete({
@@ -519,98 +457,57 @@ export class SchoolAdminService {
           schoolJoinCode: joinCode,
         },
       });
-    } catch (err) {
-      // Foreign key constraint failed
-      if (err.code === 'P2003') {
-        return RETURN_DATA.REFERENCE_ERROR;
-      } else {
-        return RETURN_DATA.DATABASE_ERROR;
-      }
+      return 200;
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
-    return RETURN_DATA.SUCCESS;
   }
 
-  async updateJoinCode(body: UpdateJoinCode): Promise<ReturnMessage> {
-    const { joinCode, expireDate, joinCodeName = '' } = body;
-    if (
-      !(new Date(expireDate).getTime() > 0) ||
-      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const joinCodeData = await prisma.schoolJoinCodes.findUnique({
-      where: {
-        schoolJoinCode: joinCode,
-      },
-    });
-
-    if (!joinCodeData) {
-      return RETURN_DATA.NOT_FOUND;
-    }
+  async updateJoinCode(payload: UpdateJoinCodeDTO, request: Request): Promise<JoinCode> {
+    const { joinCode, joinCodeExpireTimestamp, joinCodeName } = payload;
 
     try {
-      await prisma.schoolJoinCodes.update({
+      const schoolJoinCode = await prisma.schoolJoinCodes.update({
         where: {
           schoolJoinCode: joinCode,
         },
         data: {
           schoolJoinCodeName: joinCodeName,
-          schoolJoinCodeExpireTimestamp: new Date(expireDate),
+          schoolJoinCodeExpireTimestamp: new Date(joinCodeExpireTimestamp),
         },
+        include: {
+          users: true,
+        }
       });
-    } catch (err) {
-      if (err.code === 'P2002') {
-        return RETURN_DATA.ALREADY_EXISTS;
-      }
-      return RETURN_DATA.DATABASE_ERROR;
+      return new JoinCode({
+        ...schoolJoinCode,
+        creator: new User(schoolJoinCode.users),
+      });
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
-    return RETURN_DATA.SUCCESS;
   }
 
-  async getAllJoinCodes(schoolUUID: string): Promise<ReturnMessage> {
-    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-
-    const joinCodes = await prisma.schoolJoinCodes.findMany({
-      where: {
-        schoolId,
-      },
-      select: {
-        schoolJoinCodeName: true,
-        schoolJoinCodeExpireTimestamp: true,
-        schoolJoinCode: true,
-        schoolJoinCodeCreatorId: true,
-      },
-    });
-
-    const joinCodesData = [];
-
-    for (const joinCode of joinCodes) {
-      const person = await this.databaseService.getPersonById(
-        joinCode.schoolJoinCodeCreatorId,
-      );
-
-      joinCodesData.push({
-        schoolJoinCodeName: joinCode.schoolJoinCodeName,
-        schoolJoinCodeExpireTimestamp: joinCode.schoolJoinCodeExpireTimestamp,
-        schoolJoinCode: joinCode.schoolJoinCode,
-        userUUID: person.personUUID,
-        userFirstname: person.firstName,
-        userLastname: person.lastName,
+  async getAllJoinCodes(schoolUUID: string, request: Request): Promise<JoinCode[] | JoinCode> {
+    try {
+      const joinCodes = await prisma.schoolJoinCodes.findMany({
+        where: {
+          schools: {
+            schoolUUID,
+          },
+        },
+        include: {
+          users: true,
+        }
       });
-    }
 
-    if (!joinCodes) {
-      return RETURN_DATA.NOT_FOUND;
+      return joinCodes.map((joinCode) => new JoinCode({
+        ...joinCode,
+        creator: new User(joinCode.users),
+      }));
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
-    return {
-      status: HttpStatus.OK,
-      data: joinCodesData,
-    };
   }
 
   async generateJoinCode(): Promise<string> {
@@ -650,17 +547,13 @@ export class SchoolAdminService {
     };
   }
 
-  async getPersonsOfSchool(schoolUUID: string): Promise<ReturnMessage> {
-    if (!validator.isUUID(schoolUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
-    const schoolId = await this.databaseService.getSchoolIdByUUID(schoolUUID);
-
+  async getUsersOfSchool(schoolUUID: string, request: Request): Promise<User[]> {
     try {
       const users = await prisma.schoolUsers.findMany({
         where: {
-          schoolId: Number(schoolId),
+          schools: {
+            schoolUUID,
+          }
         },
         include: {
           schools: true,
@@ -676,25 +569,12 @@ export class SchoolAdminService {
         }
       });
 
-      const usersData = [];
-
-      for (const user of users) {
-        usersData.push({
-          userUUID: user.users.userUUID,
-          userFirstname: user.users.userFirstname,
-          userLastname: user.users.userLastname,
-          schoolRoleName: user.users.schoolUserRoles[0].schoolRoles.schoolRoleName,
-          schoolRoleId: user.users.schoolUserRoles[0].schoolRoleId,
-        })
-      }
-
-
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: usersData,
-      };
-    } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
+      return users.map((user) => new User({
+        ...user.users,
+        schoolRoleName: user.users.schoolUserRoles[0].schoolRoles.schoolRoleName,
+      }));
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
   }
 

@@ -23,7 +23,8 @@ import { Request } from 'express'
 import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
-import { AddJoinCodeDTO, JoinCode } from 'src/entity/join-code/joinCode';
+import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
+import { User } from 'src/entity/user/user';
 
 @ApiBearerAuth()
 @ApiTags('SchoolAdmin')
@@ -135,70 +136,50 @@ export class SchoolAdminController {
   @UseGuards(JwtAuthGuard)
   @Post('/joinCode')
   // @Roles(Role.Admin)
-  async addJoinCode(@Body() joinCode: AddJoinCodeDTO, @Req() request): Promise<JoinCode> {
+  async addJoinCode(@Body() joinCode: AddJoinCodeDTO, @Req() request: Request): Promise<JoinCode> {
     return this.schoolAdminService.addJoinCode(joinCode, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('/joinCode')
   // @Roles(Role.Admin)
-  async removeJoinCode(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.removeJoinCode(request.body);
-    return response.status(result.status).json(result?.message);
+  async removeJoinCode(@Body() joinCode: DeleteJoinCodeDTO, @Req() request: Request): Promise<number> {
+    return this.schoolAdminService.removeJoinCode(joinCode, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('/joinCode')
   // @Roles(Role.Admin)
-  async updateJoinCode(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.updateJoinCode(request.body);
-    return response.status(result.status).json(result?.message);
+  async updateJoinCode(@Body() joinCode: UpdateJoinCodeDTO, @Req() request: Request): Promise<JoinCode> {
+    return this.schoolAdminService.updateJoinCode(joinCode, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/joinCode/:schoolUUID')
   // @Roles(Role.Admin)
-  async getJoinCodes(@Param() params, @Res() response) {
-    const result = await this.schoolAdminService.getAllJoinCodes(
-      params.schoolUUID,
-    );
-    return response.status(result.status).json(result?.data);
+  async getJoinCodes(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<JoinCode[] | JoinCode> {
+    return this.schoolAdminService.getAllJoinCodes(schoolUUID, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/joinSchool')
   // @Roles(Role.Verified)
-  async joinSchool(@Req() request, @Res() response) {
-    const token = request.headers.authorization.split(' ')[1];
-    const result = await this.schoolAdminService.joinSchool(
-      request.body.joinCode,
-      token,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async joinSchool(@Body() joinSchool: JoinSchoolDTO, @Req() request: Request): Promise<School> {
+    return this.schoolAdminService.joinSchool(joinSchool, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/leaveSchool')
   // @Roles(Role.Student)
-  async leaveSchool(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.leaveSchool(request.body);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async leaveSchool(@Body() leaveSchool: LeaveSchoolDTO, @Req() request: Request): Promise<number> {
+    return this.schoolAdminService.leaveSchool(leaveSchool, request);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/getPersons/:schoolUUID')
+  @Get('/users/:schoolUUID')
   // @Roles(Role.Student)
-  async getPersonsOfSchool(@Param() params, @Res() response) {
-    const result = await this.schoolAdminService.getPersonsOfSchool(
-      params.schoolUUID,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async getUsersOfSchool(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<User[]> {
+    return this.schoolAdminService.getUsersOfSchool(schoolUUID, request);
   }
 
   @UseGuards(JwtAuthGuard)

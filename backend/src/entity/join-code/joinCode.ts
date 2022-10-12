@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
 import { School } from "../school/school";
 import { User } from "../user/user";
 
@@ -32,4 +34,18 @@ export class DeleteJoinCodeDTO {
 
 export class GetJoinCodeDTO {
     joinCode: string;
+}
+
+export class JoinSchoolDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    joinCode: string;
+}
+
+export class LeaveSchoolDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    schoolUUID: string;
 }
