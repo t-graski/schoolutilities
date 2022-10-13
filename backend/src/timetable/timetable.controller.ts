@@ -86,7 +86,7 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':classUUID/:dateString')
+  @Get('/timetable/:classUUID/:dateString')
   async getTimetable(@Param('classUUID') classUUID: string, @Param('dateString') dateString: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getTimetable(classUUID, dateString, request);
     return response

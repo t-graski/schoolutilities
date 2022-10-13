@@ -693,7 +693,10 @@ export class TimetableService {
                     schoolSubjectUUID: subjectUUID,
                 }
             });
-            return subject;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
         } catch {
             throw new InternalServerErrorException('Database error');
         }
@@ -715,7 +718,10 @@ export class TimetableService {
                     },
                 }
             })
-            return subject;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
         } catch (err) {
             throw new InternalServerErrorException('Database error');
         }
@@ -734,7 +740,10 @@ export class TimetableService {
                     schoolSubjectAbbreviation,
                 }
             })
-            return subject;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
         } catch (err) {
             throw new InternalServerErrorException('Database error');
         }
@@ -748,7 +757,10 @@ export class TimetableService {
                     schoolSubjectUUID: subjectUUID,
                 }
             })
-            return subject;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
         } catch (err) {
             throw new InternalServerErrorException('Database error');
         }
@@ -761,7 +773,10 @@ export class TimetableService {
                     schoolRoomUUID: roomUUID,
                 }
             });
-            return room;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            }
         } catch {
             throw new InternalServerErrorException('Database error');
         }
@@ -776,7 +791,10 @@ export class TimetableService {
                     },
                 }
             });
-            return rooms;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: rooms,
+            }
         } catch {
             throw new InternalServerErrorException('Database error');
         }
@@ -799,7 +817,10 @@ export class TimetableService {
                     },
                 }
             })
-            return room;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            }
         } catch (err) {
             throw new InternalServerErrorException('Database error');
         }
@@ -819,7 +840,10 @@ export class TimetableService {
                     schoolRoomBuilding,
                 }
             })
-            return room;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            }
         } catch (err) {
             throw new InternalServerErrorException('Database error');
         }
@@ -832,7 +856,10 @@ export class TimetableService {
                     schoolRoomUUID: roomUUID,
                 }
             })
-            return room;
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            };
         } catch (err) {
             throw new InternalServerErrorException('Database error');
         }
