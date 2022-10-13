@@ -741,13 +741,11 @@ export class TimetableService {
     }
 
 
-    async removeSubject(subject, request): Promise<any> {
-        const { schoolSubjectUUID } = subject;
-
+    async removeSubject(subjectUUID, request): Promise<any> {
         try {
             const subject = await prisma.schoolSubjects.delete({
                 where: {
-                    schoolSubjectUUID,
+                    schoolSubjectUUID: subjectUUID,
                 }
             })
             return subject;
@@ -827,13 +825,11 @@ export class TimetableService {
         }
     }
 
-    async removeRoom(room, request): Promise<any> {
-        const { schoolRoomUUID } = room;
-
+    async removeRoom(roomUUID, request): Promise<any> {
         try {
             const room = await prisma.schoolRooms.delete({
                 where: {
-                    schoolRoomUUID,
+                    schoolRoomUUID: roomUUID,
                 }
             })
             return room;

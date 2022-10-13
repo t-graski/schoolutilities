@@ -123,9 +123,9 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('subject')
-  async removeSubject(@Body() subject, @Req() request, @Res() response) {
-    const result = await this.timetableService.removeSubject(subject, request);
+  @Delete('subject/:subjectUUID')
+  async removeSubject(@Param('subjectUUID') subjectUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeSubject(subjectUUID, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
@@ -169,9 +169,9 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('room')
-  async removeRoom(@Body() room, @Req() request, @Res() response) {
-    const result = await this.timetableService.removeRoom(room, request);
+  @Delete('room/:roomUUID')
+  async removeRoom(@Param('roomUUID') roomUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeRoom(roomUUID, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
