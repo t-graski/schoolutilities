@@ -7,6 +7,7 @@ import { FileSubmission } from "../file-submission/fileSubmission";
 import { School } from "../school/school";
 import { UserSetting } from "../user-setting/userSetting";
 import { Exclude } from 'class-transformer';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class User {
     @Exclude()
@@ -15,23 +16,59 @@ export class User {
     @Exclude()
     userPassword: string;
 
+
+    @ApiProperty()
     userUUID: string;
+
+    @ApiProperty()
     userFirstname: string;
+
+    @ApiProperty()
     userLastname: string;
+
+    @ApiProperty()
     userBirthDate: Date;
+
+    @ApiProperty()
     userEmail: string;
+
+    @ApiProperty()
     userEmailVerified: boolean;
+
+    @ApiProperty()
     userCreationTimestamp: Date;
+
+    @ApiProperty()
     userLastLoginTimestamp: Date;
+
+    @ApiProperty()
     articles?: Article[];
+
+    @ApiProperty()
     courseElements?: CourseElement[];
+
+    @ApiProperty()
     fileSubmissionGrades?: FileSubmissionGrade[];
+
+    @ApiProperty()
     fileSubmissions?: FileSubmission[];
+
+    @ApiProperty()
     courses?: Course[];
+
+    @ApiProperty()
     schools?: School[];
+
+    @ApiProperty()
     userSettings?: UserSetting;
+
+
     // timeTableTeachers: TimeTableTeacher[];
+
+    @ApiProperty()
     timeTableElements?: TimeTableElement[];
+
+    @ApiProperty()
     schoolRoleName?: string;
 
     constructor(partial: Partial<User>) {

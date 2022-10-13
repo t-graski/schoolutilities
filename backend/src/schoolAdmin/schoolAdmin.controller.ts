@@ -21,7 +21,7 @@ import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 import { Request } from 'express'
 import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
 import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
 import { User } from 'src/entity/user/user';
@@ -127,6 +127,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.updateClass(schoolClass);
   }
 
+  @ApiOperation({ summary: 'Get all classes of a school' })
+  @ApiOkResponse({ type: [SchoolClass] })
+  @ApiParam({ name: 'schoolUUID', type: String })
   @UseGuards(JwtAuthGuard)
   @Get('/classes/:schoolUUID')
   // @Roles(Role.Student)
@@ -134,6 +137,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.getClasses(schoolUUID, request);
   }
 
+  @ApiOperation({ summary: 'Add a join code to a school' })
+  @ApiCreatedResponse({ type: JoinCode })
+  @ApiBody({ type: AddJoinCodeDTO })
   @UseGuards(JwtAuthGuard)
   @Post('/joinCode')
   // @Roles(Role.Admin)
@@ -141,6 +147,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.addJoinCode(joinCode, request);
   }
 
+  @ApiOperation({ summary: 'Remove a join code from a school' })
+  @ApiOkResponse({ type: Number })
+  @ApiBody({ type: DeleteJoinCodeDTO })
   @UseGuards(JwtAuthGuard)
   @Delete('/joinCode')
   // @Roles(Role.Admin)
@@ -148,6 +157,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.removeJoinCode(joinCode, request);
   }
 
+  @ApiOperation({ summary: 'Update a join code in a school' })
+  @ApiOkResponse({ type: JoinCode })
+  @ApiBody({ type: UpdateJoinCodeDTO })
   @UseGuards(JwtAuthGuard)
   @Put('/joinCode')
   // @Roles(Role.Admin)
@@ -155,6 +167,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.updateJoinCode(joinCode, request);
   }
 
+  @ApiOperation({ summary: 'Get all join codes of a school' })
+  @ApiOkResponse({ type: [JoinCode] })
+  @ApiParam({ name: 'schoolUUID', type: String })
   @UseGuards(JwtAuthGuard)
   @Get('/joinCode/:schoolUUID')
   // @Roles(Role.Admin)
@@ -162,6 +177,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.getAllJoinCodes(schoolUUID, request);
   }
 
+  @ApiOperation({ summary: 'Add a user to a school' })
+  @ApiCreatedResponse({ type: School })
+  @ApiBody({ type: JoinSchoolDTO })
   @UseGuards(JwtAuthGuard)
   @Post('/joinSchool')
   // @Roles(Role.Verified)
@@ -169,6 +187,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.joinSchool(joinSchool, request);
   }
 
+  @ApiOperation({ summary: 'Remove a user from a school' })
+  @ApiOkResponse({ type: Number })
+  @ApiBody({ type: LeaveSchoolDTO })
   @UseGuards(JwtAuthGuard)
   @Post('/leaveSchool')
   // @Roles(Role.Student)
@@ -176,6 +197,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.leaveSchool(leaveSchool, request);
   }
 
+  @ApiOperation({ summary: 'Get all users of a school' })
+  @ApiOkResponse({ type: [User] })
+  @ApiParam({ name: 'schoolUUID', type: String })
   @UseGuards(JwtAuthGuard)
   @Get('/users/:schoolUUID')
   // @Roles(Role.Student)
@@ -183,6 +207,9 @@ export class SchoolAdminController {
     return this.schoolAdminService.getUsersOfSchool(schoolUUID, request);
   }
 
+  @ApiOperation({ summary: 'Get permissions of a user' })
+  @ApiOkResponse({ type: [UserRole] })
+  @ApiParam({ name: 'userUUID', type: String })
   @UseGuards(JwtAuthGuard)
   @Get('/permissions/:userUUID')
   async getUserPermissions(@Param('userUUID') userUUID: string, @Req() request: Request): Promise<UserRole[] | UserRole> {
@@ -196,6 +223,7 @@ export class SchoolAdminController {
    * @param request 
    * @returns 
    */
+  @ApiOperation({ deprecated: true })
   @UseGuards(JwtAuthGuard)
   @Get('/information/:schoolUUID')
   async getSchoolInformation(@Param() params, @Res() response, @Req() request) {
@@ -216,6 +244,7 @@ export class SchoolAdminController {
    * @param request 
    * @returns 
    */
+  @ApiOperation({ deprecated: true })
   @UseGuards(JwtAuthGuard)
   @Get('/detailedInformation/:schoolUUID')
   async getDetailedSchoolInformation(
@@ -233,6 +262,9 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @ApiOperation({ summary: 'Update role of user' })
+  @ApiOkResponse({ type: UserRole })
+  @ApiBody({ type: UpdateRoleDTO })
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Admin)
   @Put('/role')
