@@ -4,7 +4,6 @@ import {
   Delete,
   Put,
   Req,
-  Res,
   UseGuards,
   Param,
   Post,
@@ -29,35 +28,6 @@ import { ArticleService } from './article.service';
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) { }
 
-  @ApiOperation({ summary: 'Create an article' })
-  @ApiCreatedResponse({ type: Article })
-  @ApiBody({ type: AddArticleDTO })
-  @Roles(Role.Supervisor)
-  @UseGuards(JwtAuthGuard)
-  @Post('/create')
-  async createArticle(@Body() article: AddArticleDTO, @Req() request: Request): Promise<Article> {
-    return this.articleService.createArticle(article, request);
-  }
-
-  @ApiOperation({ summary: 'Delete an article' })
-  @ApiBody({ type: DeleteArticleDTO })
-  @Roles(Role.Supervisor)
-  @UseGuards(JwtAuthGuard)
-  @Delete('/delete')
-  async deleteArticle(@Body() article: DeleteArticleDTO, @Req() request: Request): Promise<number> {
-    return this.articleService.deleteArticle(article, request);
-  }
-
-  @ApiOperation({ summary: 'Edit an article' })
-  @ApiOkResponse({ type: Article })
-  @ApiBody({ type: UpdateArticleDTO })
-  @Roles(Role.Supervisor)
-  @UseGuards(JwtAuthGuard)
-  @Put('/edit')
-  async editArticle(@Body() article: UpdateArticleDTO, @Req() request: Request): Promise<Article> {
-    return this.articleService.editArticle(article, request);
-  }
-
   @ApiOperation({ summary: 'Get one article' })
   @ApiParam({ name: 'articleUUID', type: String })
   @ApiOkResponse({ type: Article })
@@ -73,5 +43,34 @@ export class ArticleController {
   @Get('/articles/:page/:limit')
   async getArticles(@Param('page') page: number, @Param('limit') limit: number, @Req() request): Promise<Article[] | Article> {
     return this.articleService.getAllArticles(page, limit, request);
+  }
+
+  @ApiOperation({ summary: 'Create an article' })
+  @ApiCreatedResponse({ type: Article })
+  @ApiBody({ type: AddArticleDTO })
+  @Roles(Role.Supervisor)
+  @UseGuards(JwtAuthGuard)
+  @Post('/create')
+  async createArticle(@Body() article: AddArticleDTO, @Req() request: Request): Promise<Article> {
+    return this.articleService.createArticle(article, request);
+  }
+
+  @ApiOperation({ summary: 'Edit an article' })
+  @ApiOkResponse({ type: Article })
+  @ApiBody({ type: UpdateArticleDTO })
+  @Roles(Role.Supervisor)
+  @UseGuards(JwtAuthGuard)
+  @Put('/edit')
+  async editArticle(@Body() article: UpdateArticleDTO, @Req() request: Request): Promise<Article> {
+    return this.articleService.editArticle(article, request);
+  }
+
+  @ApiOperation({ summary: 'Delete an article' })
+  @ApiBody({ type: DeleteArticleDTO })
+  @Roles(Role.Supervisor)
+  @UseGuards(JwtAuthGuard)
+  @Delete('/delete')
+  async deleteArticle(@Body() article: DeleteArticleDTO, @Req() request: Request): Promise<number> {
+    return this.articleService.deleteArticle(article, request);
   }
 }

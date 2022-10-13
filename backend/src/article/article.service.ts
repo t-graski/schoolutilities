@@ -81,6 +81,11 @@ export class ArticleService {
     }
   }
 
+  /**
+   * @deprecated
+   * @param request 
+   * @returns 
+   */
   async publishArticle(request): Promise<ReturnMessage> {
     const { articleUUID } = request;
 
@@ -154,6 +159,11 @@ export class ArticleService {
     }
   }
 
+  /**
+   * @deprecated
+   * @param request 
+   * @returns 
+   */
   async getArticleAvailability(request): Promise<ReturnMessage> {
     const { isPublic } = request;
 
