@@ -16,7 +16,7 @@ const TimeTableGrid = styled("div", {
   display: "grid",
   gridTemplateColumns: "1fr repeat(5, 3fr)",
   gridTemplateRows: "1fr",
-  gridGap: "$1x",
+  gridGap: "4px",
   backgroundColor: "$gray100",
   borderRadius: "0.5rem",
   width: "100%",

@@ -18,7 +18,7 @@ export const TimeTableColumn: React.FC<Props> = ({
     display: "grid",
     gridTemplateRows: `repeat(${timeTableRows}, 1fr)`,
     gridTemplateColumns: "repeat(24,1fr)",
-    gridGap: "4px",
+    gridGap: "2px",
     height: "100%",
     width: "100%",
   });

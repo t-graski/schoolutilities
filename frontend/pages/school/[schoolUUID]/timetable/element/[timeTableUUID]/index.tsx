@@ -7,7 +7,7 @@ import { Headline } from "../../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../../components/atoms/Separator";
 import { ContentLayout } from "../../../../../../utils/styles";
 import dynamic from "next/dynamic";
-import { ChangeCreateItem } from "../../../../../../components/organisms/time-table/CreateItem";
+import { ChangeCreateItem } from "../../../../../../components/organisms/time-table/ChangeCreateItem";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { getTimeTableElement } from "../../../../../../utils/requests/timeTable";

@@ -18,7 +18,11 @@ export type TimeTableItemType = {
     timeTableOmittedDate: string;
     timeTableOmittedReason: string;
   };
-  schoolSubjectName?: string;
+  schoolSubject?: {
+    schoolSubjectUUID: string;
+    schoolSubjectName: string;
+    schoolSubjectAbbreviation: string;
+  };
   holidayUUID?: string;
   holidayName?: string;
   timeTableElementTeachers?: {
@@ -48,8 +52,13 @@ type Props = {
 };
 
 const TimeTableSubjectName = styled("span", {
+  display: "block",
   fontSize: "1.1rem",
   fontWeight: "bold",
+});
+
+const TimeTableTime = styled("span", {
+  fontSize: "0.9rem",
 });
 
 export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
@@ -77,7 +86,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     backgroundColor: isBeforeNow ? "$primary-100" : "$primary-300",
     color: isBeforeNow ? "$neutral-300" : "$neutral-500",
     borderRadius: "10px",
-    padding: "$2x",
+    padding: "$1x",
     gap: "$2x",
     border: isBeforeNow ? "3px solid $primary-200" : "3px solid $primary-400",
     boxSizing: "border-box",
@@ -98,6 +107,9 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           padding: "0",
           border: "none",
           cursor: "default",
+          gridColumn: "1 / span 24",
+          lineHeight: "1rem",
+          borderRadius: "0",
         },
         small: {
           padding: "$1x",
@@ -129,7 +141,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   console.log(item);
   return (
     <>
-      {item.schoolSubjectName && item.schoolSubjectName != "" && (
+      {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
         <PopUp
           onOpenChange={(open) => {
             console.log(open);
@@ -150,12 +162,12 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
               state={item?.omitted ? "omitted" : "normal"}
             >
               <TimeTableSubjectName>
-                {item.schoolSubjectName}
+                {item.schoolSubject.schoolSubjectAbbreviation}
               </TimeTableSubjectName>
-              <div>
+              <TimeTableTime>
                 {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}
                 {getSmallTimeFormat(item.timeTableElementEndTime)}
-              </div>
+              </TimeTableTime>
 
               {item.timeTableElementTeachers.map((teacher, index) => (
                 <div key={index}>{teacher.userFirstname}</div>
@@ -168,12 +180,11 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
       )}
       {item.timeTableElementUUID == "" && (
         <SkeletonLayout>
-          <Skeleton width={"100%"} height={"100%"} />
+          <Skeleton width={"100%"} height={"65px"} />
         </SkeletonLayout>
       )}
-      {!item.schoolSubjectName && (
-        <TimeTableItemLayout layout="time">
-          <div>{getSmallTimeFormat(item.timeTableElementStartTime)}</div>
+      {!item.schoolSubject && item.timeTableElementUUID != "" && (
+        <TimeTableItemLayout layout="time">{getSmallTimeFormat(item.timeTableElementStartTime)}
         </TimeTableItemLayout>
       )}
     </>

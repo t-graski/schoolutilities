@@ -48,7 +48,7 @@ export const TimeTableItem: React.FC<Props> = ({ item }) => {
     <>
       <TimeTableItemLayout omitted={!!item?.omitted}>
         <HeaderLayout>
-          {item?.schoolSubjectName}{" "}
+          {item?.schoolSubject.schoolSubjectName}{" - "} {item.schoolSubject.schoolSubjectAbbreviation} {" "}
           <StyledButton
             onClick={() => {
               router.push(`/school/${schoolUUID}/timetable/element/${item?.timeTableElementUUID}`);

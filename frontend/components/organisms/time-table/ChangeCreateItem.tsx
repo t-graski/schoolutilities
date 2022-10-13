@@ -20,10 +20,13 @@ const InputFieldLayout = styled("div", {
 
 export const ChangeCreateItem: React.FC<Props> = ({}) => {
   const [itemConfig, setItemConfig] = useState<any>({
-    schoolSubjectName: "",
-    shortName: "",
-    startTime: "",
-    endTime: "",
+    timeTableElementStartTime: "",
+    timeTableElementEndTime: "",
+    schoolSubject: {
+      schoolSubjectUUID: "",
+      schoolSubjectName: "",
+      schoolSubjectAbbreviation: "",
+    },
     teachers: [],
     classes: [],
   });
