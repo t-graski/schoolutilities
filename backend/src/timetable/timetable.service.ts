@@ -584,6 +584,7 @@ export class TimetableService {
     async addSubstitution(substitutions: any, request): Promise<ReturnMessage> {
         const jwt = await this.helper.extractJWTToken(request);
         const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+        //add reason!
         const { timeTableElementUUID, timeTableSubstitutionDate, timeTableSubstitutionTeachers, schoolRoomUUID, schoolSubject, schoolClasses } = substitutions;
         console.log(substitutions)
 
