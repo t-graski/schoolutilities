@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
@@ -682,8 +682,77 @@ export class TimetableService {
                 },
             }
         } catch (err) {
-            console.log(err)
             return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async getSubject(subjectUUID: string, request): Promise<any> {
+        try {
+            const subject = await prisma.schoolSubjects.findUnique({
+                where: {
+                    schoolSubjectUUID: subjectUUID,
+                }
+            });
+            return subject;
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async addSubject(subject: any, request): Promise<any> {
+        const { schoolUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
+
+        try {
+            const subject = await prisma.schoolSubjects.create({
+                data: {
+                    schoolSubjectUUID: `${ID_STARTERS.SUBJECT}${uuidv4()}`,
+                    schoolSubjectName,
+                    schoolSubjectAbbreviation,
+                    school: {
+                        connect: {
+                            schoolUUID,
+                        },
+                    },
+                }
+            })
+            return subject;
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async updateSubject(subject: any, request): Promise<any> {
+        const { schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
+
+        try {
+            const subject = await prisma.schoolSubjects.update({
+                where: {
+                    schoolSubjectUUID,
+                },
+                data: {
+                    schoolSubjectName,
+                    schoolSubjectAbbreviation,
+                }
+            })
+            return subject;
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+
+    async removeSubject(subject, request): Promise<any> {
+        const { schoolSubjectUUID } = subject;
+
+        try {
+            const subject = await prisma.schoolSubjects.delete({
+                where: {
+                    schoolSubjectUUID,
+                }
+            })
+            return subject;
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
         }
     }
 }

@@ -93,4 +93,41 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  //crud for subject
+  @UseGuards(JwtAuthGuard)
+  @Get('subject/:subjectUUID')
+  async getSubject(@Param('subjectUUID') subjectUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getSubject(subjectUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('subject')
+  async addSubject(@Body() subject, @Req() request, @Res() response) {
+    const result = await this.timetableService.addSubject(subject, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('subject')
+  async updateSubject(@Body() subject, @Req() request, @Res() response) {
+    const result = await this.timetableService.updateSubject(subject, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('subject')
+  async removeSubject(@Body() subject, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeSubject(subject, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }
