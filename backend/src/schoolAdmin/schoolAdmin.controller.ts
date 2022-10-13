@@ -25,6 +25,7 @@ import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
 import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
 import { User } from 'src/entity/user/user';
+import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
 
 @ApiBearerAuth()
 @ApiTags('SchoolAdmin')
@@ -183,16 +184,18 @@ export class SchoolAdminController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/userPermissions')
-  async getUserPermissions(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.getUserPermissions(
-      request.body,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Get('/permissions/:userUUID')
+  async getUserPermissions(@Param('userUUID') userUUID: string, @Req() request: Request): Promise<UserRole[] | UserRole> {
+    return this.schoolAdminService.getUserPermissions(userUUID);
   }
 
+  /**
+   * @deprecated
+   * @param params 
+   * @param response 
+   * @param request 
+   * @returns 
+   */
   @UseGuards(JwtAuthGuard)
   @Get('/information/:schoolUUID')
   async getSchoolInformation(@Param() params, @Res() response, @Req() request) {
@@ -206,6 +209,13 @@ export class SchoolAdminController {
       .json(result?.data ? result.data : result.message);
   }
 
+  /**
+   * @deprecated
+   * @param params 
+   * @param response 
+   * @param request 
+   * @returns 
+   */
   @UseGuards(JwtAuthGuard)
   @Get('/detailedInformation/:schoolUUID')
   async getDetailedSchoolInformation(
@@ -226,10 +236,7 @@ export class SchoolAdminController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Admin)
   @Put('/role')
-  async updateRole(@Req() request, @Res() response) {
-    const result = await this.schoolAdminService.updateRole(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async updateRole(@Body() role: UpdateRoleDTO, @Req() request, @Res() response): Promise<UserRole> {
+    return this.schoolAdminService.updateRole(role, request);
   }
 }

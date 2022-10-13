@@ -3,10 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { nanoid } from 'nanoid';
 import { DatabaseService } from 'src/database/database.service';
 import { MailService } from 'src/mail/mail.service';
-import {
-  LoginUserData,
-  RegisterUserData,
-} from 'src/types/User';
 import { jwtConstants } from './constants';
 import { RefreshTokenService } from './refreshToken/refreshToken.service';
 import { PrismaClient } from '@prisma/client';
@@ -28,7 +24,7 @@ export class AuthService {
     private readonly helper: HelperService
   ) { }
 
-  async getUserDataByEmailAndPassword(userData: LoginUserData) {
+  async getUserDataByEmailAndPassword(userData) {
     const userDbData = await this.databaseService.getUserData(userData);
     const { userPassword, ...result } = userDbData;
 
@@ -219,7 +215,7 @@ export class AuthService {
     return this.jwtService.decode(jwt);
   }
 
-  async registerUser(body: RegisterUserData) {
+  async registerUser(body) {
     body.password = await bcrypt.hash(body.password, 10);
 
     const registerUser = await this.databaseService.registerUser(body);

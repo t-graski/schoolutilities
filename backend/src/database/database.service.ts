@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ReturnMessage } from 'src/types/Database';
-import { LoginUserData, RegisterUserData, UserData } from 'src/types/User';
 import {
   LENGTHS,
   RETURN_DATA,
@@ -21,7 +20,7 @@ require('dotenv').config();
 export class DatabaseService {
   constructor(private readonly helper: HelperService) { }
 
-  async registerUser(body: RegisterUserData): Promise<ReturnMessage> {
+  async registerUser(body): Promise<ReturnMessage> {
     const { email, password, firstName, lastName, birthDate } = body;
 
     if (
@@ -80,7 +79,7 @@ export class DatabaseService {
     return roles;
   }
 
-  async getUserData(body: LoginUserData): Promise<UserData | any> {
+  async getUserData(body): Promise<any> {
     const { email } = body;
     const user = await prisma.users.findUnique({
       where: {
@@ -119,7 +118,7 @@ export class DatabaseService {
     return user.userEmail;
   }
 
-  async getUserDataById(userId: number): Promise<UserData | any> {
+  async getUserDataById(userId: number): Promise<any> {
     const user = await prisma.users.findFirst({
       where: {
         userId,

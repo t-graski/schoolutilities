@@ -1,14 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import { DatabaseService } from 'src/database/database.service';
-import { RegisterUserData } from 'src/types/User';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CryptoJS = require('crypto-js');
 
 @Injectable()
 export class UsersService {
   constructor(private readonly databaseService: DatabaseService) { }
-  async registerUser(userData: RegisterUserData) {
+  async registerUser(userData) {
     const userOfEmail = await this.databaseService.getUserData(userData);
     // if (userOfEmail && userOfEmail.length > 0) {
     //   return 'exists';

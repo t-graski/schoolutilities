@@ -1,5 +1,4 @@
-import { Injectable, HttpStatus, InternalServerErrorException, BadRequestException, Catch } from '@nestjs/common';
-import { regex } from 'src/regex';
+import { Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import validator from 'validator';
 import { PrismaClient } from '@prisma/client';
@@ -7,16 +6,7 @@ import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
 import { Request } from 'express';
 import {
-  AddClass,
   ReturnMessage,
-  UpdateClass,
-  AddDepartment,
-  UpdateDepartment,
-  AddJoinCode,
-  RemoveJoinCode,
-  UpdateJoinCode,
-  JoinSchool,
-  UserPermissions,
 } from 'src/types/SchoolAdmin';
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
@@ -26,6 +16,8 @@ import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO 
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
 import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
 import { User } from 'src/entity/user/user';
+import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
+import { SchoolRole } from 'src/entity/school-role/schoolRole';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
@@ -531,20 +523,27 @@ export class SchoolAdminService {
     return joinCode;
   }
 
-  async getUserPermissions(body: UserPermissions): Promise<ReturnMessage> {
-    const { personUUID } = body;
-    if (!validator.isUUID(personUUID.slice(1), 4)) {
-      return RETURN_DATA.INVALID_INPUT;
+  async getUserPermissions(userUUID: string): Promise<UserRole[] | UserRole> {
+    try {
+      const schoolUserRoles = await prisma.schoolUserRoles.findMany({
+        where: {
+          users: {
+            userUUID,
+          },
+        },
+        include: {
+          schools: true,
+          schoolRoles: true,
+        }
+      });
+      return schoolUserRoles.map((schoolUserRole) => new UserRole({
+        ...schoolUserRole,
+        schools: new School(schoolUserRole.schools),
+        schoolRoles: new SchoolRole(schoolUserRole.schoolRoles),
+      }));
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
-
-    const personRoles = await this.databaseService.getPersonRolesByPersonUUID(
-      personUUID,
-    );
-
-    return {
-      status: HttpStatus.OK,
-      data: personRoles,
-    };
   }
 
   async getUsersOfSchool(schoolUUID: string, request: Request): Promise<User[]> {
@@ -817,27 +816,27 @@ export class SchoolAdminService {
     };
   }
 
-  async updateRole(request): Promise<ReturnMessage> {
-    const { personUUID, schoolUUID, roleId } = request.body;
+  async updateRole(payload: UpdateRoleDTO, request: Request): Promise<any> {
+    const { userUUID, schoolUUID, roleId } = payload;
 
     try {
-      const personId = await this.helper.getUserIdByUUID(personUUID);
-      const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
-      await prisma.schoolUserRoles.update({
+      const schoolRole = await prisma.schoolUserRoles.updateMany({
         where: {
-          user_school_unique: {
-            userId: Number(personId),
-            schoolId: Number(schoolId),
+          users: {
+            userUUID
           },
+          schools: {
+            schoolUUID
+          }
         },
         data: {
-          schoolRoleId: Number(roleId),
+          schoolRoleId: roleId,
         },
       });
-      return RETURN_DATA.SUCCESS;
-    } catch (error) {
-      console.log(error);
-      return RETURN_DATA.DATABASE_ERROR;
+      return schoolRole;
+      // return new SchoolRole(schoolRole);
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
   }
 
