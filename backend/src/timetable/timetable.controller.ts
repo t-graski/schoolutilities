@@ -130,4 +130,50 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  //crud for rooms
+  @UseGuards(JwtAuthGuard)
+  @Get('room/:roomUUID')
+  async getRoom(@Param('roomUUID') roomUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getRoom(roomUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('rooms/:schoolUUID')
+  async getRooms(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getRooms(schoolUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('room')
+  async addRoom(@Body() room, @Req() request, @Res() response) {
+    const result = await this.timetableService.addRoom(room, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('room')
+  async updateRoom(@Body() room, @Req() request, @Res() response) {
+    const result = await this.timetableService.updateRoom(room, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('room')
+  async removeRoom(@Body() room, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeRoom(room, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
 }

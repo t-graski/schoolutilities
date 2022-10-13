@@ -755,4 +755,90 @@ export class TimetableService {
             throw new InternalServerErrorException('Database error');
         }
     }
+
+    async getRoom(roomUUID: string, request): Promise<any> {
+        try {
+            const room = await prisma.schoolRooms.findUnique({
+                where: {
+                    schoolRoomUUID: roomUUID,
+                }
+            });
+            return room;
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async getRooms(schoolUUID: string, request): Promise<any> {
+        try {
+            const rooms = await prisma.schoolRooms.findMany({
+                where: {
+                    schools: {
+                        schoolUUID
+                    },
+                }
+            });
+            return rooms;
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async addRoom(room: any, request): Promise<any> {
+        const { schoolUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
+
+        try {
+            const room = await prisma.schoolRooms.create({
+                data: {
+                    schoolRoomUUID: `${ID_STARTERS.ROOM}${uuidv4()}`,
+                    schoolRoomName,
+                    schoolRoomAbbreviation,
+                    schoolRoomBuilding,
+                    schools: {
+                        connect: {
+                            schoolUUID,
+                        },
+                    },
+                }
+            })
+            return room;
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async updateRoom(room: any, request): Promise<any> {
+        const { schoolRoomUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
+
+        try {
+            const room = await prisma.schoolRooms.update({
+                where: {
+                    schoolRoomUUID,
+                },
+                data: {
+                    schoolRoomName,
+                    schoolRoomAbbreviation,
+                    schoolRoomBuilding,
+                }
+            })
+            return room;
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async removeRoom(room, request): Promise<any> {
+        const { schoolRoomUUID } = room;
+
+        try {
+            const room = await prisma.schoolRooms.delete({
+                where: {
+                    schoolRoomUUID,
+                }
+            })
+            return room;
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
 }
