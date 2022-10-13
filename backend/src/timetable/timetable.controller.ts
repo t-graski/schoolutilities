@@ -105,6 +105,15 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('subjects/:schoolUUID')
+  async getSubjects(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getSubjects(schoolUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('subject')
   async addSubject(@Body() subject, @Req() request, @Res() response) {
     const result = await this.timetableService.addSubject(subject, request);

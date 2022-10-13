@@ -702,6 +702,24 @@ export class TimetableService {
         }
     }
 
+    async getSubjects(schoolUUID: string, request): Promise<any> {
+        try {
+            const subjects = await prisma.schoolSubjects.findMany({
+                where: {
+                    school: {
+                        schoolUUID,
+                    }
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subjects,
+            }
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
     async addSubject(subject: any, request): Promise<any> {
         const { schoolUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
 
