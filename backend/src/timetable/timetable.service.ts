@@ -713,6 +713,24 @@ export class TimetableService {
             throw new InternalServerErrorException('Database error');
         }
     }
+    async getExamsOfSchool(schoolUUID: string, request: Request): Promise<Exam[]> {
+        try {
+            const exams = await prisma.timeTableExam.findMany({
+                where: {
+                    timeTableElements: {
+                        schoolSubjects: {
+                            school: {
+                                schoolUUID,
+                            }
+                        }
+                    }
+                }
+            })
+            return exams.map((exam) => new Exam(exam));
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
 
     async getExamsOfUser(request: Request): Promise<Exam[] | Exam> {
         const jwt = await this.helper.extractJWTToken(request);

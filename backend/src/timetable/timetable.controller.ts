@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
@@ -6,6 +6,7 @@ import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/timetable')
 @UseGuards(RolesGuard)
 export class TimetableController {
@@ -100,6 +101,12 @@ export class TimetableController {
   @Get('/exam')
   async getExams(@Req() request: Request): Promise<Exam[]> {
     return null;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/exams/:schoolUUID')
+  async getExamsOfSchool(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<Exam[]> {
+    return this.timetableService.getExamsOfSchool(schoolUUID, request);
   }
 
   @UseGuards(JwtAuthGuard)
