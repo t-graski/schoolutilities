@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpStatus, InternalServerErrorException } from '@nestjs/common';
 import { regex } from 'src/regex';
 import { nanoid } from 'nanoid';
 import validator from 'validator';
@@ -22,7 +22,16 @@ import {
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
 import { HelperService } from 'src/helper/helper.service';
-import { log } from 'console';
+import { AddSchoolDTO, School } from 'src/entity/school/school';
+// import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
+// import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
+// import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
+// import { User } from 'src/entity/user/user';
+// import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
+import { SchoolRole } from 'src/entity/school-role/schoolRole';
+import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
+import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
+import { Request } from 'express';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
@@ -1172,6 +1181,170 @@ export class SchoolAdminService {
     } catch (error) {
       console.log(error);
       return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async addSubject(payload: AddSchoolSubjectDTO, request: Request): Promise<SchoolSubject> {
+    const { schoolUUID, schoolSubjectName, schoolSubjectAbbreviation } = payload;
+
+    try {
+      const subject = await prisma.schoolSubjects.create({
+        data: {
+          schoolSubjectUUID: `${ID_STARTERS.SUBJECT}${uuidv4()}`,
+          schoolSubjectName,
+          schoolSubjectAbbreviation,
+          school: {
+            connect: {
+              schoolUUID,
+            },
+          },
+        }
+      })
+      return new SchoolSubject(subject);
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+  async getSubject(subjectUUID: string, request: Request): Promise<SchoolSubject> {
+    try {
+      const subject = await prisma.schoolSubjects.findUnique({
+        where: {
+          schoolSubjectUUID: subjectUUID,
+        }
+      });
+      return new SchoolSubject(subject);
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async getSubjects(schoolUUID: string, request: Request): Promise<SchoolSubject[]> {
+    try {
+      const subjects = await prisma.schoolSubjects.findMany({
+        where: {
+          school: {
+            schoolUUID,
+          }
+        }
+      });
+      return subjects.map(subject => new SchoolSubject(subject));
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async updateSubject(subject: UpdateSchoolSubjectDTO, request: Request): Promise<SchoolSubject> {
+    const { schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
+    try {
+      const subject = await prisma.schoolSubjects.update({
+        where: {
+          schoolSubjectUUID,
+        },
+        data: {
+          schoolSubjectName,
+          schoolSubjectAbbreviation,
+        }
+      })
+      return new SchoolSubject(subject);
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async removeSubject(subjectUUID: string, request: Request): Promise<number> {
+    try {
+      const subject = await prisma.schoolSubjects.delete({
+        where: {
+          schoolSubjectUUID: subjectUUID,
+        }
+      })
+      return 200;
+    } catch (err) {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async getRoom(roomUUID: string, request: Request): Promise<SchoolRoom> {
+    try {
+      const room = await prisma.schoolRooms.findUnique({
+        where: {
+          schoolRoomUUID: roomUUID,
+        }
+      });
+      return new SchoolRoom(room);
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async getRooms(schoolUUID: string, request: Request): Promise<SchoolRoom[]> {
+    try {
+      const rooms = await prisma.schoolRooms.findMany({
+        where: {
+          schools: {
+            schoolUUID
+          },
+        }
+      });
+      return rooms.map(room => new SchoolRoom(room));
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async addRoom(room: AddSchoolRoomDTO, request: Request): Promise<SchoolRoom> {
+    const { schoolUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
+
+    try {
+      const room = await prisma.schoolRooms.create({
+        data: {
+          schoolRoomUUID: `${ID_STARTERS.ROOM}${uuidv4()}`,
+          schoolRoomName,
+          schoolRoomAbbreviation,
+          schoolRoomBuilding,
+          schools: {
+            connect: {
+              schoolUUID,
+            },
+          },
+        }
+      })
+      return new SchoolRoom(room);
+    } catch (err) {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async updateRoom(room: UpdateSchoolRoomDTO, request: Request): Promise<SchoolRoom> {
+    const { schoolRoomUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
+
+    try {
+      const room = await prisma.schoolRooms.update({
+        where: {
+          schoolRoomUUID,
+        },
+        data: {
+          schoolRoomName,
+          schoolRoomAbbreviation,
+          schoolRoomBuilding,
+        }
+      })
+      return new SchoolRoom(room);
+    } catch (err) {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async removeRoom(roomUUID: string, request: Request): Promise<number> {
+    try {
+      const room = await prisma.schoolRooms.delete({
+        where: {
+          schoolRoomUUID: roomUUID,
+        }
+      })
+      return 200;
+    } catch (err) {
+      throw new InternalServerErrorException('Database error');
     }
   }
 
