@@ -34,6 +34,7 @@ import { UntisImportModule } from './untis-import/untis-import.module';
     ArticleModule,
     TimetableModule,
     UntisImportModule,
+    UserModule,
   ],
   controllers: [AppController, ArticleController],
   providers: [AppService, ArticleService],
