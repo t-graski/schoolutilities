@@ -18,6 +18,10 @@ import { OffDaysSettingsField } from "../../../components/organisms/schoolAdmin/
 import SvgInvitation from "../../../components/atoms/svg/SvgInvitation";
 import SvgCalendar from "../../../components/atoms/svg/SvgCalendar";
 import SvgSuitcase from "../../../components/atoms/svg/SvgSuitcase";
+import { SubjectsSettingsField } from "../../../components/organisms/schoolAdmin/SubjectsSettingsField";
+import { RoomsSettingsField } from "../../../components/organisms/schoolAdmin/RoomsSettingsField";
+import SvgEducation from "../../../components/atoms/svg/SvgEducation";
+import SvgBuilding from "../../../components/atoms/svg/SvgBuilding";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -43,12 +47,20 @@ export default function CreateSchool() {
     switch (urlParam) {
       case "classes":
         return <ClassesSettingsField queryClient={queryClient} />;
-      case "persons":
+      case "users":
         return <PersonsSettingsField queryClient={queryClient} />;
-        case "off-days":
-          return <OffDaysSettingsField queryClient={queryClient} />;
+      case "off-days":
+        return <OffDaysSettingsField queryClient={queryClient} />;
       case "join-codes":
         return <JoinCodesSettingsField />;
+      case "subjects":
+        return (
+          <SubjectsSettingsField
+            queryClient={queryClient}
+          ></SubjectsSettingsField>
+        );
+      case "rooms":
+        return <RoomsSettingsField queryClient={queryClient} />;
       default:
         return <DepartmentsSettingsField></DepartmentsSettingsField>;
     }
@@ -76,9 +88,9 @@ export default function CreateSchool() {
               icon: SvgClass,
             },
             {
-              name: "Persons",
-              value: "persons",
-              href: `/school/${schoolUUID}/edit?tab=persons`,
+              name: "Users",
+              value: "users",
+              href: `/school/${schoolUUID}/edit?tab=users`,
               icon: SvgStudent,
             },
             {
@@ -86,6 +98,18 @@ export default function CreateSchool() {
               value: "join-codes",
               href: `/school/${schoolUUID}/edit?tab=join-codes`,
               icon: SvgInvitation,
+            },
+            {
+              name: "Subjects",
+              value: "subjects",
+              href: `/school/${schoolUUID}/edit?tab=subjects`,
+              icon: SvgEducation,
+            },
+            {
+              name: "Rooms",
+              value: "rooms",
+              href: `/school/${schoolUUID}/edit?tab=rooms`,
+              icon: SvgBuilding,
             },
             {
               name: "Off Days",
@@ -98,7 +122,7 @@ export default function CreateSchool() {
               value: "school-years",
               href: `/school/${schoolUUID}/edit?tab=school-years`,
               icon: SvgSuitcase,
-            }
+            },
           ]}
           active={urlParam}
         ></SideDashboardBar>
