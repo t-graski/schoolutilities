@@ -650,7 +650,7 @@ export class TimetableService {
     }
 
     async addExam(exam, request): Promise<ReturnMessage> {
-        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription, timeTableExamDate } = exam;
+        const { timeTableElementUUID, schoolRoomUUID, timeTableExamDescription, timeTableExamDate } = exam;
 
         try {
             const exam = await prisma.timeTableExam.create({
@@ -658,7 +658,7 @@ export class TimetableService {
                     timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
                     schoolRooms: {
                         connect: {
-                            schoolRoomId: timeTableExamRoomId,
+                            schoolRoomUUID,
                         },
                     },
                     timeTableExamDescription,
@@ -761,7 +761,7 @@ export class TimetableService {
             }
         } catch (err) {
             console.log(err);
-            
+
             throw new InternalServerErrorException('Database error');
         }
     }
