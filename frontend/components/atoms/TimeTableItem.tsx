@@ -138,13 +138,14 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
       item.overlapStart * overlapColumns + 1
     } / span ${overlapColumns}`,
   });
-  
+
+  console.log(item);
+
   return (
     <>
       {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
         <PopUp
           onOpenChange={(open) => {
-            console.log(open);
             if (open) {
               router.push({
                 query: { ...router.query, detail: item.timeTableElementUUID },
@@ -178,13 +179,14 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           <TimeTableItemDetail item={item}></TimeTableItemDetail>
         </PopUp>
       )}
-      {item.timeTableElementUUID == "" && (
+      {!item.timeTableElementUUID && !!item.timeTableElementTeachers && (
         <SkeletonLayout>
           <Skeleton width={"100%"} height={"65px"} />
         </SkeletonLayout>
       )}
-      {!item.schoolSubject && item.timeTableElementUUID != "" && (
-        <TimeTableItemLayout layout="time">{getSmallTimeFormat(item.timeTableElementStartTime)}
+      {!item.schoolSubject && item.timeTableElementUUID != "" && !item.timeTableElementTeachers && (
+        <TimeTableItemLayout layout="time">
+          {getSmallTimeFormat(item.timeTableElementStartTime)}
         </TimeTableItemLayout>
       )}
     </>

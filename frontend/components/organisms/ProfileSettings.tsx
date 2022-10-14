@@ -304,7 +304,7 @@ const DialogClose = DialogPrimitive.Close;
 
 export const ProfileSettings: React.FC<Props> = ({}) => {
   const router = useRouter();
-  const [passwordResetSucessfull, setPasswordResetSucessfull] = useState(false);
+  const [passwordResetSucessfull, setPasswordResetSucessfull] = useState(0);
   const { data: userInfo, status: userInfoStatus } = useQuery(
     "userInfo",
     fetchUserInfo
@@ -441,11 +441,12 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 <DialogTrigger asChild>
                   <Button
                     onClick={async () => {
+                      setPasswordResetSucessfull(0);
                       try {
                         await requestPasswordReset(userInfo.userEmail);
-                        setPasswordResetSucessfull(true);
+                        setPasswordResetSucessfull(1);
                       } catch (e) {
-                        setPasswordResetSucessfull(false);
+                        setPasswordResetSucessfull(-1);
                       }
                     }}
                     backgroundColor="primary"
@@ -456,11 +457,10 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogTitle>
-                    {passwordResetSucessfull ? "You got an email" : "Error"}
+                    {passwordResetSucessfull == 0 ? "Loading" : passwordResetSucessfull == 1 ? "You got an email" : "Error"}
                   </DialogTitle>
                   <DialogDescription>
-                    {passwordResetSucessfull
-                      ? `We just sent you an email with a link to change your
+                    {passwordResetSucessfull == 0 ? "" : passwordResetSucessfull == 1 ? `We just sent you an email with a link to change your
                     password.`
                       : "Something went wrong. Please try again later."}
                   </DialogDescription>
