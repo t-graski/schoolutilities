@@ -478,6 +478,7 @@ export async function fetchUserInfo() {
 }
 
 export async function requestPasswordReset(email) {
+  console.log(email);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/requestPasswordReset`,
     {
@@ -500,7 +501,7 @@ export async function getTimeTableForClass(classUUID) {
   const accessToken = await getAccessToken();
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/${classUUID}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/timetable/${classUUID}`,
     {
       method: "GET",
       headers: {

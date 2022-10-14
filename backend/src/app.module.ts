@@ -18,6 +18,7 @@ import { ArticleModule } from './article/article.module';
 import { TimetableModule } from './timetable/timetable.module';
 import { UntisImportModule } from './untis-import/untis-import.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { PrismaService } from './prisma.service';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     ArticleModule,
     TimetableModule,
     UntisImportModule,
+    UserModule,
   ],
   controllers: [AppController, ArticleController],
   providers: [AppService, ArticleService, {

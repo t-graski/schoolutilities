@@ -1,11 +1,8 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { AuthService } from 'src/auth/auth.service';
-import { DatabaseService } from 'src/database/database.service';
-import { AddTimeTableDto, TimeTableDay, TimeTableElement } from 'src/dto/addTimeTable';
+import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
-import { Role } from 'src/roles/role.enum';
 import { ReturnMessage } from 'src/types/Course';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -113,6 +110,11 @@ export class TimetableService {
                             },
                         },
                     },
+                    timeTableElementClasses: {
+                        include: {
+                            schoolClasses: true,
+                        },
+                    },
                     timeTableEvents: {
                         include: {
                             timeTableEventClasses: {
@@ -174,13 +176,22 @@ export class TimetableService {
                         schoolRoomAbbreviation: element.schoolRoom.schoolRoomAbbreviation,
                         schoolRoomBuilding: element.schoolRoom.schoolRoomBuilding,
                     },
-                    schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+                    schoolSubject: {
+                        schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+                        schoolSubjectAbbreviation: element.schoolSubjects.schoolSubjectAbbreviation,
+                    },
                     timeTableElementTeachers: element.timeTableTeachers.map((teacher) => {
                         return {
                             userUUID: teacher.users.userUUID,
                             userFirstname: teacher.users.userFirstname,
                             userLastname: teacher.users.userLastname,
                             userEmail: teacher.users.userEmail,
+                        }
+                    }),
+                    timeTableElementClasses: element.timeTableElementClasses.map((classElement) => {
+                        return {
+                            schoolClassUUID: classElement.schoolClasses.schoolClassUUID,
+                            schoolClassName: classElement.schoolClasses.schoolClassName,
                         }
                     }),
                     substitution: checkForSubstitution(element, new Date(dateString)),
@@ -378,6 +389,89 @@ export class TimetableService {
         }
     }
 
+    async getTimeTableElement(timeTableElementUUID: string, request): Promise<ReturnMessage> {
+        try {
+            const element = await prisma.timeTableElement.findUnique({
+                where: {
+                    timeTableElementUUID,
+                },
+                include: {
+                    schoolSubjects: true,
+                    timeTableTeachers: {
+                        include: {
+                            users: true,
+                        },
+                    },
+                    schoolRoom: true,
+                }
+            })
+
+            const timeTableElementData = {
+                timeTableElementUUID: element.timeTableElementUUID,
+                timeTableElementStartTime: element.timeTableElementStartTime,
+                timeTableElementEndTime: element.timeTableElementEndTime,
+                timeTableElementDay: element.timeTableElementDay,
+                timeTableElementRoom: {
+                    schoolRoomUUID: element.schoolRoom.schoolRoomUUID,
+                    schoolRoomName: element.schoolRoom.schoolRoomName,
+                    schoolRoomAbbreviation: element.schoolRoom.schoolRoomAbbreviation,
+                    schoolRoomBuilding: element.schoolRoom.schoolRoomBuilding,
+                },
+                schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+                timeTableElementTeachers: element.timeTableTeachers.map((teacher) => {
+                    return {
+                        userUUID: teacher.users.userUUID,
+                        userFirstname: teacher.users.userFirstname,
+                        userLastname: teacher.users.userLastname,
+                        userEmail: teacher.users.userEmail,
+                    }
+                })
+            }
+
+            return {
+                status: 200,
+                data: timeTableElementData,
+            }
+        } catch (error) {
+            console.log(error)
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async addTimeTableGrid(body: any, request): Promise<ReturnMessage> {
+        const { schoolUUID, timeTableGridMaxLessons, timeTableGridElementDuration, timeTableGridBreakDuration, timeTableGridSpecialBreakElement, timeTableGridStartTime, timeTableGridSpecialBreakDuration } = body
+
+        try {
+            const timeTableGrid = await prisma.timeTableGrid.create({
+                data: {
+                    timeTableGridStartTime: new Date(timeTableGridStartTime),
+                    timeTableGridElementDuration,
+                    timeTableGridMaxLessons,
+                    timeTableGridBreakDuration,
+                    schools: {
+                        connect: {
+                            schoolUUID,
+                        }
+                    },
+                    timeTableGridSpecialBreak: {
+                        create: {
+                            timeTableGridSpecialBreakElement,
+                            timeTableGridSpecialBreakDuration,
+                        }
+                    },
+                }
+            })
+
+            return {
+                status: 200,
+                data: timeTableGrid,
+            }
+        } catch (error) {
+            console.log(error)
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
     async addHoliday(holiday, request): Promise<ReturnMessage> {
         const { schoolUUID, holidayName, holidayStartDate, holidayEndDate } = holiday;
 
@@ -484,8 +578,79 @@ export class TimetableService {
         }
     }
 
+    async addSubstitution(substitutions: any, request): Promise<ReturnMessage> {
+        const jwt = await this.helper.extractJWTToken(request);
+        const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+        //add reason!
+        const { timeTableElementUUID, timeTableSubstitutionDate, timeTableSubstitutionTeachers, schoolRoomUUID, schoolSubject, schoolClasses } = substitutions;
+        console.log(substitutions)
+
+        try {
+            const substitution = await prisma.timeTableSubstitutions.create({
+                data: {
+                    timeTableSubstitutionUUID: `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
+                    timeTableSubstitutionDate,
+                    timeTableElements: {
+                        connect: {
+                            timeTableElementUUID,
+                        }
+                    },
+                    schoolRooms: {
+                        connect: {
+                            schoolRoomUUID,
+                        }
+                    },
+                    users: {
+                        connect: {
+                            userUUID,
+                        }
+                    },
+                    schoolSubjects: {
+                        connect: {
+                            schoolSubjectUUID: schoolSubject,
+                        }
+                    },
+                    timeTableSubstitutionClasses: {
+                        create: schoolClasses.map((subject) => {
+                            return {
+                                schoolClasses: {
+                                    connect: {
+                                        schoolSubjectUUID: subject,
+                                    }
+                                }
+                            }
+                        })
+                    },
+                }
+            })
+
+            if (timeTableSubstitutionTeachers.length > 0) {
+                await prisma.timeTableSubstitutionTeachers.createMany({
+                    data: timeTableSubstitutionTeachers.map((teacher) => {
+                        return {
+                            timeTableSubstitutionUUID: substitution.timeTableSubstitutionUUID,
+                            users: {
+                                connect: {
+                                    userUUID: teacher,
+                                }
+                            }
+                        }
+                    })
+                })
+            }
+
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: substitution,
+            }
+        } catch (error) {
+            console.log(error)
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
     async addExam(exam, request): Promise<ReturnMessage> {
-        const { timeTableElementUUID, timeTableExamRoomId, timeTableExamDescription, timeTableExamDate } = exam;
+        const { timeTableElementUUID, schoolRoomUUID, timeTableExamDescription, timeTableExamDate } = exam;
 
         try {
             const exam = await prisma.timeTableExam.create({
@@ -493,7 +658,7 @@ export class TimetableService {
                     timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
                     schoolRooms: {
                         connect: {
-                            schoolRoomId: timeTableExamRoomId,
+                            schoolRoomUUID,
                         },
                     },
                     timeTableExamDescription,
@@ -514,8 +679,206 @@ export class TimetableService {
                 },
             }
         } catch (err) {
-            console.log(err)
             return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async getSubject(subjectUUID: string, request): Promise<any> {
+        try {
+            const subject = await prisma.schoolSubjects.findUnique({
+                where: {
+                    schoolSubjectUUID: subjectUUID,
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async getSubjects(schoolUUID: string, request): Promise<any> {
+        try {
+            const subjects = await prisma.schoolSubjects.findMany({
+                where: {
+                    school: {
+                        schoolUUID,
+                    }
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subjects,
+            }
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async addSubject(subject: any, request): Promise<any> {
+        const { schoolUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
+
+        try {
+            const subject = await prisma.schoolSubjects.create({
+                data: {
+                    schoolSubjectUUID: `${ID_STARTERS.SUBJECT}${uuidv4()}`,
+                    schoolSubjectName,
+                    schoolSubjectAbbreviation,
+                    school: {
+                        connect: {
+                            schoolUUID,
+                        },
+                    },
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async updateSubject(subject: any, request): Promise<any> {
+        const { schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
+        console.log(schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation);
+        try {
+            const subject = await prisma.schoolSubjects.update({
+                where: {
+                    schoolSubjectUUID,
+                },
+                data: {
+                    schoolSubjectName,
+                    schoolSubjectAbbreviation,
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
+        } catch (err) {
+            console.log(err);
+
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+
+    async removeSubject(subjectUUID, request): Promise<any> {
+        try {
+            const subject = await prisma.schoolSubjects.delete({
+                where: {
+                    schoolSubjectUUID: subjectUUID,
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: subject,
+            }
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async getRoom(roomUUID: string, request): Promise<any> {
+        try {
+            const room = await prisma.schoolRooms.findUnique({
+                where: {
+                    schoolRoomUUID: roomUUID,
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            }
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async getRooms(schoolUUID: string, request): Promise<any> {
+        try {
+            const rooms = await prisma.schoolRooms.findMany({
+                where: {
+                    schools: {
+                        schoolUUID
+                    },
+                }
+            });
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: rooms,
+            }
+        } catch {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async addRoom(room: any, request): Promise<any> {
+        const { schoolUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
+
+        try {
+            const room = await prisma.schoolRooms.create({
+                data: {
+                    schoolRoomUUID: `${ID_STARTERS.ROOM}${uuidv4()}`,
+                    schoolRoomName,
+                    schoolRoomAbbreviation,
+                    schoolRoomBuilding,
+                    schools: {
+                        connect: {
+                            schoolUUID,
+                        },
+                    },
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            }
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async updateRoom(room: any, request): Promise<any> {
+        const { schoolRoomUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
+
+        try {
+            const room = await prisma.schoolRooms.update({
+                where: {
+                    schoolRoomUUID,
+                },
+                data: {
+                    schoolRoomName,
+                    schoolRoomAbbreviation,
+                    schoolRoomBuilding,
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            }
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
+        }
+    }
+
+    async removeRoom(roomUUID, request): Promise<any> {
+        try {
+            const room = await prisma.schoolRooms.delete({
+                where: {
+                    schoolRoomUUID: roomUUID,
+                }
+            })
+            return {
+                status: RETURN_DATA.SUCCESS.status,
+                data: room,
+            };
+        } catch (err) {
+            throw new InternalServerErrorException('Database error');
         }
     }
 }

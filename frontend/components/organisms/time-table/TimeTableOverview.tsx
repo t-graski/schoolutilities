@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { TimeTableColumn } from "../../molecules/TimeTableColumn";
 import { styled } from "../../../stitches.config";
 import { TimeTableTime } from "../../molecules/TimeTableTime";
-import { TimeTableItemType } from "../../atoms/TimeTableItem";
 import { useQuery } from "react-query";
 import { getTimeTableForClass } from "../../../utils/requests";
+import { TimeTableMarker } from "../../atoms/TimeTableMarker";
+import { DEFAULT_TIMETABLE } from "../../../utils/parameterConstants";
 
 type Props = {
   startDate: string;
@@ -15,7 +16,7 @@ const TimeTableGrid = styled("div", {
   display: "grid",
   gridTemplateColumns: "1fr repeat(5, 3fr)",
   gridTemplateRows: "1fr",
-  gridGap: "$2x",
+  gridGap: "4px",
   backgroundColor: "$gray100",
   borderRadius: "0.5rem",
   width: "100%",
@@ -26,11 +27,11 @@ const TimeTableInformationGrid = styled("div", {
   display: "grid",
   gridTemplateColumns: "1fr repeat(5, 3fr)",
   gridTemplateRows: "1fr",
-  gridGap: "$2x",
+  gridGap: "$1x",
   backgroundColor: "$gray100",
   borderRadius: "0.5rem",
   width: "100%",
-  padding: "0 $2x",
+  padding: "$1x",
 });
 
 const TimeTableDay = styled("div", {
@@ -55,52 +56,68 @@ const TimeTableLayout = styled("div", {
 });
 
 const TimeTableDayHeaderTitle = styled("span", {});
-const TimeTableDayHeaderDate = styled("span", {});
 
 export const TimeTableOverview: React.FC<Props> = ({
   startDate,
   schoolClassUUID,
 }) => {
-  const [date, setDate] = useState(new Date());
-
-  useEffect(() => {
-    let startInterval = setInterval(() => {
-      setDate(new Date());
-    }, 15000);
-
-    return () => {
-      clearInterval(startInterval);
-    };
-  }, []);
-
   const { data: weekTimeTable, status } = useQuery(
     ["timetable", schoolClassUUID, startDate],
     () => getTimeTableForClass(schoolClassUUID + "/" + startDate)
   );
 
+  let { startTime, endTime } = getStartEndTime(
+    weekTimeTable ?? DEFAULT_TIMETABLE
+  );
+
+  const timeTableRows = calculate5MinuteRows(startTime, endTime);
+
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return (
+      <TimeTableLayout>
+        <TimeTableInformationGrid>
+          <div></div>
+          {DEFAULT_TIMETABLE.map((dayTimeTable, index) => {
+            return (
+              <TimeTableDayHeader key={index}>
+                <TimeTableDayHeaderTitle>
+                  {dayTimeTable.day}
+                </TimeTableDayHeaderTitle>
+              </TimeTableDayHeader>
+            );
+          })}
+        </TimeTableInformationGrid>
+        <TimeTableGrid>
+          <TimeTableTime
+            timeTableRows={timeTableRows}
+            startTime={startTime}
+          ></TimeTableTime>
+          {DEFAULT_TIMETABLE.map((dayTimeTable, index) => {
+            return (
+              <TimeTableDay key={index}>
+                <TimeTableMarker
+                  startTime={startTime}
+                  endTime={endTime}
+                  dayStartTime={
+                    dayTimeTable.timeTableElements[0]?.timeTableElementStartTime
+                  }
+                ></TimeTableMarker>
+                <TimeTableColumn
+                  dayTimeTable={dayTimeTable.timeTableElements}
+                  timeTableRows={timeTableRows}
+                  startTime={startTime}
+                ></TimeTableColumn>
+              </TimeTableDay>
+            );
+          })}
+        </TimeTableGrid>
+      </TimeTableLayout>
+    );
   }
 
   if (status === "error") {
     return <div>Error</div>;
   }
-
-  let { startTime, endTime } = getStartEndTime(weekTimeTable);
-
-  const TimeTableMarker = styled("div", {
-    position: "absolute",
-    width: "100%",
-    height: "2px",
-    backgroundColor: "red",
-    top: calculateTopDistance(date, startTime, endTime) * 100 + "%",
-    display:
-      calculateTopDistance(date, startTime, endTime) < 1 ? "block" : "none",
-    zIndex: 1,
-  });
-
-  const timeTableRows = calculate5MinuteRows(startTime, endTime);
-  console.log(weekTimeTable);
   return (
     <>
       <TimeTableLayout>
@@ -110,7 +127,7 @@ export const TimeTableOverview: React.FC<Props> = ({
             return (
               <TimeTableDayHeader key={index}>
                 <TimeTableDayHeaderTitle>
-                  {dayTimeTable.day}  {dayTimeTable.date}
+                  {dayTimeTable.day} {dayTimeTable.date}
                 </TimeTableDayHeaderTitle>
               </TimeTableDayHeader>
             );
@@ -124,10 +141,13 @@ export const TimeTableOverview: React.FC<Props> = ({
           {weekTimeTable.map((dayTimeTable, index) => {
             return (
               <TimeTableDay key={index}>
-                {date.toDateString() ==
-                  new Date(
+                <TimeTableMarker
+                  startTime={startTime}
+                  endTime={endTime}
+                  dayStartTime={
                     dayTimeTable.timeTableElements[0]?.timeTableElementStartTime
-                  ).toDateString() && <TimeTableMarker></TimeTableMarker>}
+                  }
+                ></TimeTableMarker>
                 <TimeTableColumn
                   dayTimeTable={dayTimeTable.timeTableElements}
                   timeTableRows={timeTableRows}
@@ -142,18 +162,18 @@ export const TimeTableOverview: React.FC<Props> = ({
   );
 };
 
-function calculateTopDistance(date: Date, startTime, endTime) {
+export function calculateTopDistance(date: Date, startTime, endTime) {
   return (
     (getHoursFromDate(date) - getHoursFromTime(startTime)) /
     (getHoursFromTime(endTime) - getHoursFromTime(startTime))
   );
 }
 
-function getHoursFromDate(date) {
+export function getHoursFromDate(date) {
   return date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
 }
 
-function getHoursFromTime(time) {
+export function getHoursFromTime(time) {
   return parseInt(time.split(":")[0]) + parseInt(time.split(":")[1]) / 60;
 }
 

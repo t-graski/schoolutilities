@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import { TimeTableItemType } from "../../atoms/TimeTableItem";
 
-type Props = {};
+type Props = {
+  timeTableElement: TimeTableItemType;
+  setTimeTableElement: React.Dispatch<React.SetStateAction<TimeTableItemType>>;
+};
 
 const InputFieldsLayout = styled("div", {
   display: "grid",
@@ -15,12 +18,15 @@ const InputFieldLayout = styled("div", {
   flexDirection: "column",
 });
 
-export const CreateItem: React.FC<Props> = ({}) => {
-  const [itemConfig, setItemConfig] = useState<TimeTableItemType>({
-    schoolSubjectName: "",
-    shortName: "",
-    startTime: "",
-    endTime: "",
+export const ChangeCreateItem: React.FC<Props> = ({}) => {
+  const [itemConfig, setItemConfig] = useState<any>({
+    timeTableElementStartTime: "",
+    timeTableElementEndTime: "",
+    schoolSubject: {
+      schoolSubjectUUID: "",
+      schoolSubjectName: "",
+      schoolSubjectAbbreviation: "",
+    },
     teachers: [],
     classes: [],
   });
@@ -37,19 +43,6 @@ export const CreateItem: React.FC<Props> = ({}) => {
               setItemConfig({
                 ...itemConfig,
                 schoolSubjectName: event,
-              });
-            }}
-          ></InputField>
-        </InputFieldLayout>
-        <InputFieldLayout>
-          <InputField
-            label="Short Name"
-            value={itemConfig.shortName}
-            inputType={"text"}
-            onChange={(event) => {
-              setItemConfig({
-                ...itemConfig,
-                shortName: event,
               });
             }}
           ></InputField>

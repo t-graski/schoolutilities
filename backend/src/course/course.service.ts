@@ -12,25 +12,23 @@ import { AuthService } from 'src/auth/auth.service';
 import { CourseDto } from 'src/dto/course';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
-import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
 import { Request } from 'express';
 import { CourseUser } from 'src/entity/course-user/courseUser';
 import { User } from 'src/entity/user/user';
 import { SchoolClass } from 'src/entity/school-class/schoolClass'
+import { PrismaService } from 'src/prisma.service';
 let JSZip = require('jszip');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
-const prisma = new PrismaClient();
 
 @Injectable()
 export class CourseService {
   constructor(
-    private readonly authService: AuthService,
-    private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
+    private readonly prisma: PrismaService,
   ) { }
 
   /**
@@ -54,7 +52,7 @@ export class CourseService {
     }
 
     try {
-      const courseData = await prisma.courses.create({
+      const courseData = await this.prisma.courses.create({
         data: {
           courseUUID: `${ID_STARTERS.COURSE}${uuidv4()}`,
           courseName,
@@ -111,7 +109,7 @@ export class CourseService {
     const { courseUUID } = payload;
 
     try {
-      const course = await prisma.courses.delete({
+      const course = await this.prisma.courses.delete({
         where: {
           courseUUID,
         },
@@ -126,7 +124,7 @@ export class CourseService {
     const { courseUUID, courseName, courseDescription, users, courseClasses, schoolSubjectUUID } = payload;
 
     try {
-      const updateCourse = await prisma.courses.update({
+      const updateCourse = await this.prisma.courses.update({
         where: { courseUUID },
         data: {
           courseName,
@@ -140,7 +138,7 @@ export class CourseService {
       });
 
       if (users) {
-        await prisma.courseUsers.deleteMany({
+        await this.prisma.courseUsers.deleteMany({
           where: {
             courses: {
               courseUUID,
@@ -149,7 +147,7 @@ export class CourseService {
         });
 
         for (const user of users) {
-          await prisma.courseUsers.create({
+          await this.prisma.courseUsers.create({
             data: {
               users: {
                 connect: {
@@ -167,7 +165,7 @@ export class CourseService {
       }
 
       if (courseClasses) {
-        await prisma.courseClasses.deleteMany({
+        await this.prisma.courseClasses.deleteMany({
           where: {
             courses: {
               courseUUID,
@@ -176,7 +174,7 @@ export class CourseService {
         });
 
         for (const courseClass of courseClasses) {
-          await prisma.courseClasses.create({
+          await this.prisma.courseClasses.create({
             data: {
               schoolClasses: {
                 connect: {
@@ -202,7 +200,7 @@ export class CourseService {
     const { courseUUID, userUUID } = payload;
 
     try {
-      const courseUser = await prisma.courseUsers.deleteMany({
+      const courseUser = await this.prisma.courseUsers.deleteMany({
         where: {
           users: {
             userUUID,
@@ -226,7 +224,7 @@ export class CourseService {
     const { courseUUID, userUUID } = payload;
 
     try {
-      const courseUser = await prisma.courseUsers.create({
+      const courseUser = await this.prisma.courseUsers.create({
         data: {
           users: {
             connect: {
@@ -254,7 +252,7 @@ export class CourseService {
     try {
       const token = await this.helper.extractJWTToken(request);
       const userUUID = await this.helper.getUserUUIDfromJWT(token);
-      const courses = await prisma.courses.findMany({
+      const courses = await this.prisma.courses.findMany({
         where: {
           schools: {
             schoolUUID
@@ -267,16 +265,17 @@ export class CourseService {
 
       return Promise.all(courses.map(async (course) => {
         const { users, ...rest } = course;
-        const userRole = await prisma.schoolUserRoles.findFirst({
+        const userRole = await this.prisma.schoolUserRoles.findFirst({
           where: {
             users: {
               userUUID
             },
             schools: {
-              schoolUUID,
+              schoolUUID
             }
           }
-        })
+        });
+
         return new Course({ ...rest, canEdit: userRole.schoolRoleId == 1 ? true : false, creator: new User(users) })
       }));
     } catch {
@@ -289,7 +288,7 @@ export class CourseService {
     try {
       const token = await this.helper.extractJWTToken(request);
       const userUUID = await this.helper.getUserUUIDfromJWT(token);
-      const course = await prisma.courses.findUnique({
+      const course = await this.prisma.courses.findUnique({
         where: {
           courseUUID,
         },
@@ -310,7 +309,7 @@ export class CourseService {
       });
 
       const { users, courseClasses, courseUsers, schools, ...rest } = course;
-      const userRole = await prisma.schoolUserRoles.findFirst({
+      const userRole = await this.prisma.schoolUserRoles.findFirst({
         where: {
           users: {
             userUUID
@@ -378,7 +377,7 @@ export class CourseService {
       element.elementOrder = elements.indexOf(element) + 1;
     }
 
-    const currentElements = await prisma.courseElements.findMany({
+    const currentElements = await this.prisma.courseElements.findMany({
       where: {
         courseElementCourseId: Number(courseId),
       },
@@ -457,7 +456,7 @@ export class CourseService {
             }
 
             if (updateNeeded) {
-              const elementUpdate = await prisma.courseElements.update({
+              const elementUpdate = await this.prisma.courseElements.update({
                 where: {
                   courseElementId: Number(currentElement.elementId),
                 },
@@ -512,7 +511,7 @@ export class CourseService {
                     }
 
                     if (updateNeeded) {
-                      await prisma.courseElements.update({
+                      await this.prisma.courseElements.update({
                         where: {
                           courseElementId: Number(currentChild.elementId),
                         },
@@ -543,7 +542,7 @@ export class CourseService {
                     personCreationId: Number(userId),
                   };
 
-                  let createdElement = await prisma.courseElements.create({
+                  let createdElement = await this.prisma.courseElements.create({
                     data: {
                       courseElementUUID: courseElement.elementUUID,
                       courses: {
@@ -578,7 +577,7 @@ export class CourseService {
       } else {
         let parentId = 0;
 
-        let createdElement = await prisma.courseElements.create({
+        let createdElement = await this.prisma.courseElements.create({
           data: {
             courseElementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
             courses: {
@@ -645,7 +644,7 @@ export class CourseService {
                 }
 
                 if (updateNeeded) {
-                  await prisma.courseElements.update({
+                  await this.prisma.courseElements.update({
                     where: {
                       courseElementId: Number(currentChild.courseElementId),
                     },
@@ -670,7 +669,7 @@ export class CourseService {
                 courseElementCreatorId: Number(userId),
               };
 
-              let createdElement = await prisma.courseElements.create({
+              let createdElement = await this.prisma.courseElements.create({
                 data: {
                   courseElementUUID: courseElement.courseElementUUID,
                   courses: {
@@ -708,7 +707,7 @@ export class CourseService {
   async getCourseElements(courseUUID): Promise<ReturnMessage> {
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
 
-    const currentElements = await prisma.courseElements.findMany({
+    const currentElements = await this.prisma.courseElements.findMany({
       where: {
         courseElementCourseId: Number(courseId),
       },
@@ -788,7 +787,7 @@ export class CourseService {
       };
     }
 
-    const settings = await prisma.courseElements.findFirst({
+    const settings = await this.prisma.courseElements.findFirst({
       where: {
         courseElementId: elementId,
       },
@@ -805,7 +804,7 @@ export class CourseService {
       schoolId,
     );
 
-    const hasSubmitted = await prisma.courseFileSubmissions.findFirst({
+    const hasSubmitted = await this.prisma.courseFileSubmissions.findFirst({
       where: {
         courseFileSubmissionElementId: Number(elementId),
         userId: Number(userId),
@@ -814,7 +813,7 @@ export class CourseService {
 
     let evaluation;
 
-    let evaluationData = await prisma.courseFileSubmissionGrades.findUnique({
+    let evaluationData = await this.prisma.courseFileSubmissionGrades.findUnique({
       where: {
         courseElementId_userId: {
           courseElementId: Number(elementId),
@@ -864,7 +863,7 @@ export class CourseService {
   async getCourseUUIDById(courseId: number): Promise<string> {
     if (courseId) {
       try {
-        const course = await prisma.courses.findFirst({
+        const course = await this.prisma.courses.findFirst({
           where: {
             courseId: courseId,
           },
@@ -886,7 +885,7 @@ export class CourseService {
     const dueDate = await this.helper.getElementDueDate(elementId);
     const isSubmittedInTime = moment(new Date(Date.now())).isAfter(dueDate);
 
-    const hasSubmitted = await prisma.courseFileSubmissions.findFirst({
+    const hasSubmitted = await this.prisma.courseFileSubmissions.findFirst({
       where: {
         userId: Number(userId),
         courseFileSubmissionElementId: Number(elementId),
@@ -903,7 +902,7 @@ export class CourseService {
     console.log(file);
 
     try {
-      await prisma.courseFileSubmissions.create({
+      await this.prisma.courseFileSubmissions.create({
         data: {
           courseFileSubmissionFileName: file.filename,
           courseFileSubmissionOriginalName: file.originalname,
@@ -942,7 +941,7 @@ export class CourseService {
       };
     }
 
-    const submissions = await prisma.courseFileSubmissions.findMany({
+    const submissions = await this.prisma.courseFileSubmissions.findMany({
       where: {
         courseFileSubmissionElementId: Number(elementId),
       },
@@ -993,7 +992,7 @@ export class CourseService {
     const jwt = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(jwt);
 
-    let courses = await prisma.schools.findFirst({
+    let courses = await this.prisma.schools.findFirst({
       where: {
         schoolUUID,
       },
@@ -1093,7 +1092,7 @@ export class CourseService {
     const userId = await this.helper.getUserIdfromJWT(jwt);
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
     try {
-      await prisma.courseFileSubmissions.delete({
+      await this.prisma.courseFileSubmissions.delete({
         where: {
           courseFileSubmissionElementId_userId: {
             courseFileSubmissionElementId: Number(elementId),
@@ -1111,7 +1110,7 @@ export class CourseService {
     const { elementUUID } = params;
     const zip = new JSZip();
 
-    const files = await prisma.courseElements.findFirst({
+    const files = await this.prisma.courseElements.findFirst({
       where: {
         courseElementUUID: elementUUID,
       },
@@ -1144,7 +1143,7 @@ export class CourseService {
 
 export async function findOneByUUID(courseUUID: string): Promise<CourseDto | any> {
   try {
-    const course = await prisma.courses.findFirst({
+    const course = await this.prisma.courses.findFirst({
       where: {
         courseUUID,
       },
@@ -1159,7 +1158,7 @@ export async function findOneByName(
   schoolUUID,
 ): Promise<CourseDto | any> {
   try {
-    const courseUUID = await prisma.schools.findFirst({
+    const courseUUID = await this.prisma.schools.findFirst({
       where: {
         schoolUUID,
       },
