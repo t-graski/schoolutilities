@@ -81,6 +81,10 @@ export class UpdateExamDTO {
     @IsNotEmpty()
     @IsDateString()
     timeTableExamDate: Date;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    timeTableExamRoomUUID: string;
 }
 
 export class DeleteExamDTO {

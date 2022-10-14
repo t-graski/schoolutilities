@@ -670,7 +670,7 @@ export class TimetableService {
     }
 
     async updateExam(payload: UpdateExamDTO, request: Request): Promise<Exam> {
-        const { timeTableExamUUID, timeTableExamDate, timeTableExamDescription } = payload;
+        const { timeTableExamUUID, timeTableExamDate, timeTableExamDescription, timeTableExamRoomUUID } = payload;
 
         try {
             const exam = await prisma.timeTableExam.update({
@@ -680,6 +680,11 @@ export class TimetableService {
                 data: {
                     timeTableExamDescription,
                     timeTableExamDate,
+                    schoolRooms: {
+                        connect: {
+                            schoolRoomUUID: timeTableExamRoomUUID,
+                        },
+                    }
                 }
             })
             return new Exam(exam);
