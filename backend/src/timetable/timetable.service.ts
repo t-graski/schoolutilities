@@ -747,7 +747,7 @@ export class TimetableService {
 
     async updateSubject(subject: any, request): Promise<any> {
         const { schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
-
+        console.log(schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation);
         try {
             const subject = await prisma.schoolSubjects.update({
                 where: {
@@ -763,6 +763,8 @@ export class TimetableService {
                 data: subject,
             }
         } catch (err) {
+            console.log(err);
+            
             throw new InternalServerErrorException('Database error');
         }
     }

@@ -20,8 +20,8 @@ export async function fetchData(url: string, method: string, statusCode: number,
   }
 
   const responseBody = await response.json();
-
-  return responseBody.data;
+  
+  return responseBody;
 }
 
 export function getErrorMessage(error) {
