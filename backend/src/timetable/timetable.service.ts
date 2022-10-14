@@ -737,10 +737,7 @@ export class TimetableService {
             })
             return exams.map((exam) => new Exam({
                 ...exam,
-                schoolRooms: new SchoolRoom({
-                    ...exam.schoolRooms,
-                    timeTableExamRoomUUID: exam.schoolRooms.schoolRoomUUID,
-                })
+                timeTableExamRoomUUID: exam.schoolRooms.schoolRoomUUID,
             }));
         } catch {
             throw new InternalServerErrorException('Database error');

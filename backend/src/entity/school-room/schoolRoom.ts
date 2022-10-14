@@ -17,9 +17,11 @@ export class SchoolRoom {
         example: 'e8b3b9c0-5b9e-11eb-ae93-0242ac130002',
         type: String,
     })
+    timeTableExamRoomUUID?: string;
+
+    @Exclude()
     schoolRoomUUID?: string;
 
-    timeTableExamRoomUUID?: string;
 
     @ApiProperty({
         description: 'The name of the school room',
@@ -46,7 +48,7 @@ export class SchoolRoom {
         description: 'The school of the school room',
         type: () => School,
     })
-    school: School;
+    school?: School;
     // timeTableElements: timeTableElement[];
     // timeTableExams: exam[];
 

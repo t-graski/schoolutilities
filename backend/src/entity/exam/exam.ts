@@ -13,6 +13,9 @@ export class Exam {
     @Exclude()
     timeTableExamRoomId: number;
 
+    @Exclude()
+    schoolRooms?: SchoolRoom;
+
     @ApiProperty({
         description: 'The UUID of the exam',
         example: 'e8b3b9c0-5b9e-11eb-ae93-0242ac130002',
@@ -35,10 +38,10 @@ export class Exam {
     timeTableExamDate: Date;
 
     @ApiProperty({
-        description: 'The room of the exam',
-        type: SchoolRoom,
+        description: 'The room uuid of the exam',
+        type: String,
     })
-    schoolRooms: SchoolRoom;
+    timeTableExamRoomUUID: string;
 
     // timeTableElements: timeTableelement
 
