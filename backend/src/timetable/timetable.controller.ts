@@ -18,7 +18,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('/timeTableElement/:timeTableElementUUID')
   async getTimeTableElement(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getTimeTableElement(timeTableElementUUID, request);
@@ -26,7 +26,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Post('holiday')
   async addHoliday(@Body() holiday, @Req() request, @Res() response) {
     const result = await this.timetableService.addHoliday(holiday, request);
@@ -34,7 +34,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('holiday/:schoolUUID')
   async getHoliday(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getHolidayOfSchool(schoolUUID);
@@ -42,7 +42,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Delete('holiday/:holidayUUID')
   async removeHoliday(@Param('holidayUUID') holidayUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.removeHoliday(holidayUUID);
@@ -50,7 +50,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Put('holiday/:holidayUUID')
   async updateHoliday(@Param('holidayUUID') holidayUUID: string, @Body() holiday, @Req() request, @Res() response) {
     const result = await this.timetableService.updateHoliday(holidayUUID, holiday);
@@ -58,7 +58,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @UseGuards(JwtAuthGuard)
   @Post('timeTableGrid')
   async addTimeTableGrid(@Body() timeTableGrid, @Req() request, @Res() response) {
@@ -67,7 +67,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Post('substitution')
   async addSubstitution(@Body() substitution, @Req() request, @Res() response) {
     const result = await this.timetableService.addSubstitution(substitution, request);
@@ -76,7 +76,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Post('/exam')
   async addExam(@Body() exam, @Req() request, @Res() response) {
     const result = await this.timetableService.addExam(exam, request);
@@ -84,7 +84,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
+  @UseGuards(JwtAuthGuard)
   @UseGuards(JwtAuthGuard)
   @Get('/timetable/:classUUID/:dateString')
   async getTimetable(@Param('classUUID') classUUID: string, @Param('dateString') dateString: string, @Req() request, @Res() response) {
@@ -94,7 +94,6 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  //crud for subject
   @UseGuards(JwtAuthGuard)
   @Get('subject/:subjectUUID')
   async getSubject(@Param('subjectUUID') subjectUUID: string, @Req() request, @Res() response) {
@@ -106,8 +105,8 @@ export class TimetableController {
 
   @UseGuards(JwtAuthGuard)
   @Get('subjects/:schoolUUID')
-  async getSubjects(@Param('schoolUUID') schoolUUID: string,@Req() request, @Res() response) {
-    const result = await this.timetableService.getSubjects(schoolUUID,request);
+  async getSubjects(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getSubjects(schoolUUID, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
@@ -149,7 +148,6 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  //crud for rooms
   @UseGuards(JwtAuthGuard)
   @Get('room/:roomUUID')
   async getRoom(@Param('roomUUID') roomUUID: string, @Req() request, @Res() response) {
