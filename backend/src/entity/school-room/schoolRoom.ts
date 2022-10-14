@@ -17,7 +17,9 @@ export class SchoolRoom {
         example: 'e8b3b9c0-5b9e-11eb-ae93-0242ac130002',
         type: String,
     })
-    schoolRoomUUID: string;
+    schoolRoomUUID?: string;
+
+    timeTableExamRoomUUID?: string;
 
     @ApiProperty({
         description: 'The name of the school room',
