@@ -1,11 +1,8 @@
-import { ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { AuthService } from 'src/auth/auth.service';
-import { DatabaseService } from 'src/database/database.service';
-import { AddTimeTableDto, TimeTableDay, TimeTableElement } from 'src/dto/addTimeTable';
+import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
-import { Role } from 'src/roles/role.enum';
 import { ReturnMessage } from 'src/types/Course';
 import { v4 as uuidv4 } from 'uuid';
 

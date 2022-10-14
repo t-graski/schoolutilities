@@ -98,12 +98,12 @@ model courses {
   courseName                 String                       @map("course_name")
   courseDescription          String                       @map("course_description") @db.Text
   courseSchoolId             Int                          @map("course_school_id")
-  courseSubjectId            Int                          @map("course_subject_id")
+  courseSubjectId            Int?                         @map("course_subject_id")
   courseCreationTimestamp    DateTime                     @default(now()) @map("course_creation_timestamp") @db.Timestamp(0)
   courseCreatorId            Int                          @map("course_creator_id")
   users                      users                        @relation(fields: [courseCreatorId], references: [userId], onUpdate: Restrict, map: "fk_courses_creator_id")
   schools                    schools                      @relation(fields: [courseSchoolId], references: [schoolId], onUpdate: Restrict, map: "fk_courses_school_id")
-  schoolSubjects             schoolSubjects               @relation(fields: [courseSubjectId], references: [schoolSubjectId])
+  schoolSubjects             schoolSubjects?              @relation(fields: [courseSubjectId], references: [schoolSubjectId], onDelete: SetNull, onUpdate: Restrict, map: "fk_courses_subject_id")
   courseClasses              courseClasses[]
   courseElements             courseElements[]
   courseFileSubmissionGrades courseFileSubmissionGrades[]

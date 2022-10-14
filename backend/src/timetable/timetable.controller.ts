@@ -106,12 +106,21 @@ export class TimetableController {
 
   @UseGuards(JwtAuthGuard)
   @Get('subjects/:schoolUUID')
-  async getSubjects(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
-    const result = await this.timetableService.getSubjects(schoolUUID, request);
+  async getSubjects(@Param('schoolUUID') schoolUUID: string,@Req() request, @Res() response) {
+    const result = await this.timetableService.getSubjects(schoolUUID,request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get('subjects/:schoolUUID/:page/:limit')
+  // async getSubjects(@Param('schoolUUID') schoolUUID: string, @Param('page') page: number, @Param('limit') limit: number, @Req() request, @Res() response) {
+  //   const result = await this.timetableService.getSubjects(schoolUUID, page, limit, request);
+  //   return response
+  //     .status(result.status)
+  //     .json(result?.data ? result.data : result.message);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Post('subject')

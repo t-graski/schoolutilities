@@ -196,7 +196,7 @@ export class DatabaseService {
   async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
     const school = await prisma.schools.findFirst({
       where: {
-        schoolUUID: schoolUUID,
+        schoolUUID,
       },
       select: {
         schoolId: true,
