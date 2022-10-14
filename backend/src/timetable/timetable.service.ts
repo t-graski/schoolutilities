@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, DeleteExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { SchoolRoom } from 'src/entity/school-room/schoolRoom';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import { ReturnMessage } from 'src/types/Course';
@@ -711,7 +712,7 @@ export class TimetableService {
             const exam = await prisma.timeTableExam.findUnique({
                 where: {
                     timeTableExamUUID: examUUID,
-                },
+                }
             })
             return new Exam(exam);
         } catch {
@@ -729,9 +730,15 @@ export class TimetableService {
                             }
                         }
                     }
+                },
+                include: {
+                    schoolRooms: true,
                 }
             })
-            return exams.map((exam) => new Exam(exam));
+            return exams.map((exam) => new Exam({
+                ...exam,
+                schoolRooms: new SchoolRoom(exam.schoolRooms)
+            }));
         } catch {
             throw new InternalServerErrorException('Database error');
         }

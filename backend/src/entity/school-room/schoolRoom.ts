@@ -1,9 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Exclude } from "class-transformer";
 import { IsNotEmpty, IsString } from "class-validator";
 import { IsCustomUUID } from "src/decorators/IsCustomUUID";
 import { School } from "../school/school";
 
 export class SchoolRoom {
+
+    @Exclude()
+    schoolRoomId: number;
+
+    @Exclude()
+    schoolId: number;
+
     @ApiProperty({
         description: 'The UUID of the school room',
         example: 'e8b3b9c0-5b9e-11eb-ae93-0242ac130002',
