@@ -1,6 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { Request } from 'express';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
+import { AddExamDTO, DeleteExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import { ReturnMessage } from 'src/types/Course';
@@ -11,9 +13,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TimetableService {
-    constructor(
-        private readonly helper: HelperService,
-    ) { }
+    constructor(private readonly helper: HelperService) { }
 
     async createTimetable(payload: AddTimeTableDto, request): Promise<ReturnMessage> {
         const token = await this.helper.extractJWTToken(request);
@@ -346,8 +346,7 @@ export class TimetableService {
                 status: 200,
                 data: timeTableDaysArray,
             }
-        } catch (error) {
-            console.log(error)
+        } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
@@ -383,8 +382,7 @@ export class TimetableService {
                 status: 200,
                 data: timeTableGrid,
             }
-        } catch (error) {
-            console.log(error)
+        } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
@@ -432,8 +430,7 @@ export class TimetableService {
                 status: 200,
                 data: timeTableElementData,
             }
-        } catch (error) {
-            console.log(error)
+        } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
@@ -466,8 +463,7 @@ export class TimetableService {
                 status: 200,
                 data: timeTableGrid,
             }
-        } catch (error) {
-            console.log(error)
+        } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
@@ -581,9 +577,7 @@ export class TimetableService {
     async addSubstitution(substitutions: any, request): Promise<ReturnMessage> {
         const jwt = await this.helper.extractJWTToken(request);
         const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
-        //add reason!
         const { timeTableElementUUID, timeTableSubstitutionDate, timeTableSubstitutionTeachers, schoolRoomUUID, schoolSubject, schoolClasses } = substitutions;
-        console.log(substitutions)
 
         try {
             const substitution = await prisma.timeTableSubstitutions.create({
@@ -643,14 +637,13 @@ export class TimetableService {
                 status: RETURN_DATA.SUCCESS.status,
                 data: substitution,
             }
-        } catch (error) {
-            console.log(error)
+        } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
 
-    async addExam(exam, request): Promise<ReturnMessage> {
-        const { timeTableElementUUID, schoolRoomUUID, timeTableExamDescription, timeTableExamDate } = exam;
+    async addExam(payload: AddExamDTO, request: Request): Promise<Exam> {
+        const { timeTableElementUUID, timeTableExamDate, timeTableExamDescription, timeTableExamRoomUUID } = payload;
 
         try {
             const exam = await prisma.timeTableExam.create({
@@ -658,7 +651,7 @@ export class TimetableService {
                     timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
                     schoolRooms: {
                         connect: {
-                            schoolRoomUUID,
+                            schoolRoomUUID: timeTableExamRoomUUID,
                         },
                     },
                     timeTableExamDescription,
@@ -670,214 +663,69 @@ export class TimetableService {
                     },
                 }
             })
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: {
-                    timeTableExamUUID: exam.timeTableExamUUID,
-                    timeTableExamRoomId: exam.timeTableExamRoomId,
-                    timeTableExamDescription: exam.timeTableExamDescription,
-                },
-            }
-        } catch (err) {
-            return RETURN_DATA.DATABASE_ERROR;
-        }
-    }
-
-    async getSubject(subjectUUID: string, request): Promise<any> {
-        try {
-            const subject = await prisma.schoolSubjects.findUnique({
-                where: {
-                    schoolSubjectUUID: subjectUUID,
-                }
-            });
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: subject,
-            }
+            return new Exam(exam);
         } catch {
             throw new InternalServerErrorException('Database error');
         }
     }
 
-    async getSubjects(schoolUUID: string, request): Promise<any> {
+    async updateExam(payload: UpdateExamDTO, request: Request): Promise<Exam> {
+        const { timeTableExamUUID, timeTableExamDate, timeTableExamDescription } = payload;
+
         try {
-            const subjects = await prisma.schoolSubjects.findMany({
+            const exam = await prisma.timeTableExam.update({
                 where: {
-                    school: {
-                        schoolUUID,
-                    }
-                }
-            });
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: subjects,
-            }
-        } catch {
-            throw new InternalServerErrorException('Database error');
-        }
-    }
-
-    async addSubject(subject: any, request): Promise<any> {
-        const { schoolUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
-
-        try {
-            const subject = await prisma.schoolSubjects.create({
-                data: {
-                    schoolSubjectUUID: `${ID_STARTERS.SUBJECT}${uuidv4()}`,
-                    schoolSubjectName,
-                    schoolSubjectAbbreviation,
-                    school: {
-                        connect: {
-                            schoolUUID,
-                        },
-                    },
-                }
-            })
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: subject,
-            }
-        } catch (err) {
-            throw new InternalServerErrorException('Database error');
-        }
-    }
-
-    async updateSubject(subject: any, request): Promise<any> {
-        const { schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation } = subject;
-        console.log(schoolSubjectUUID, schoolSubjectName, schoolSubjectAbbreviation);
-        try {
-            const subject = await prisma.schoolSubjects.update({
-                where: {
-                    schoolSubjectUUID,
+                    timeTableExamUUID,
                 },
                 data: {
-                    schoolSubjectName,
-                    schoolSubjectAbbreviation,
+                    timeTableExamDescription,
+                    timeTableExamDate,
                 }
             })
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: subject,
-            }
-        } catch (err) {
-            console.log(err);
-
-            throw new InternalServerErrorException('Database error');
-        }
-    }
-
-
-    async removeSubject(subjectUUID, request): Promise<any> {
-        try {
-            const subject = await prisma.schoolSubjects.delete({
-                where: {
-                    schoolSubjectUUID: subjectUUID,
-                }
-            })
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: subject,
-            }
-        } catch (err) {
-            throw new InternalServerErrorException('Database error');
-        }
-    }
-
-    async getRoom(roomUUID: string, request): Promise<any> {
-        try {
-            const room = await prisma.schoolRooms.findUnique({
-                where: {
-                    schoolRoomUUID: roomUUID,
-                }
-            });
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: room,
-            }
+            return new Exam(exam);
         } catch {
             throw new InternalServerErrorException('Database error');
         }
     }
 
-    async getRooms(schoolUUID: string, request): Promise<any> {
+    async deleteExam(examUUID: string, request: Request): Promise<number> {
         try {
-            const rooms = await prisma.schoolRooms.findMany({
+            await prisma.timeTableExam.delete({
                 where: {
-                    schools: {
-                        schoolUUID
-                    },
+                    timeTableExamUUID: examUUID,
                 }
-            });
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: rooms,
-            }
+            })
+            return 200;
         } catch {
             throw new InternalServerErrorException('Database error');
         }
     }
 
-    async addRoom(room: any, request): Promise<any> {
-        const { schoolUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
-
+    async getExam(examUUID: string, request: Request): Promise<Exam> {
         try {
-            const room = await prisma.schoolRooms.create({
-                data: {
-                    schoolRoomUUID: `${ID_STARTERS.ROOM}${uuidv4()}`,
-                    schoolRoomName,
-                    schoolRoomAbbreviation,
-                    schoolRoomBuilding,
-                    schools: {
-                        connect: {
-                            schoolUUID,
-                        },
-                    },
-                }
-            })
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: room,
-            }
-        } catch (err) {
-            throw new InternalServerErrorException('Database error');
-        }
-    }
-
-    async updateRoom(room: any, request): Promise<any> {
-        const { schoolRoomUUID, schoolRoomName, schoolRoomAbbreviation, schoolRoomBuilding } = room;
-
-        try {
-            const room = await prisma.schoolRooms.update({
+            const exam = await prisma.timeTableExam.findUnique({
                 where: {
-                    schoolRoomUUID,
+                    timeTableExamUUID: examUUID,
                 },
-                data: {
-                    schoolRoomName,
-                    schoolRoomAbbreviation,
-                    schoolRoomBuilding,
-                }
             })
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: room,
-            }
-        } catch (err) {
+            return new Exam(exam);
+        } catch {
             throw new InternalServerErrorException('Database error');
         }
     }
 
-    async removeRoom(roomUUID, request): Promise<any> {
+    async getExamsOfUser(request: Request): Promise<Exam[] | Exam> {
+        const jwt = await this.helper.extractJWTToken(request);
+        const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+
         try {
-            const room = await prisma.schoolRooms.delete({
+            const exams = await prisma.timeTableElementClasses.findMany({
                 where: {
-                    schoolRoomUUID: roomUUID,
+
                 }
             })
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: room,
-            };
-        } catch (err) {
+            return exams.map((exam) => new Exam(exam));
+        } catch {
             throw new InternalServerErrorException('Database error');
         }
     }

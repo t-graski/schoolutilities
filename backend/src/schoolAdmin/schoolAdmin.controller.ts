@@ -11,7 +11,6 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Body,
-  CacheInterceptor,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddSchoolDTO, School, UpdateSchoolDTO } from 'src/entity/school/school';
@@ -20,12 +19,14 @@ import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 import { Request } from 'express'
-import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
 import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
 import { User } from 'src/entity/user/user';
 import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
+import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
+import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
 
 @ApiBearerAuth()
 @ApiTags('SchoolAdmin')
@@ -214,6 +215,96 @@ export class SchoolAdminController {
   @Get('/permissions/:userUUID')
   async getUserPermissions(@Param('userUUID') userUUID: string, @Req() request: Request): Promise<UserRole[] | UserRole> {
     return this.schoolAdminService.getUserPermissions(userUUID);
+  }
+
+  @ApiOperation({ summary: 'Add a subject to a school' })
+  @ApiCreatedResponse({ type: SchoolSubject })
+  @ApiBody({ type: AddSchoolSubjectDTO })
+  @UseGuards(JwtAuthGuard)
+  @Post('/subject')
+  async addSubject(@Body() subject: AddSchoolSubjectDTO, @Req() request: Request): Promise<SchoolSubject> {
+    return this.schoolAdminService.addSubject(subject, request);
+  }
+
+  @ApiOperation({ summary: 'Get a subject of a school' })
+  @ApiOkResponse({ type: SchoolSubject })
+  @ApiParam({ name: 'subjectUUID', type: String })
+  @UseGuards(JwtAuthGuard)
+  @Get('/subject/:subjectUUID')
+  async getSubject(@Param('subjectUUID') subjectUUID: string, @Req() request): Promise<SchoolSubject> {
+    return this.schoolAdminService.getSubject(subjectUUID, request);
+  }
+
+  @ApiOperation({ summary: 'Get all subjects of a school' })
+  @ApiOkResponse({ type: [SchoolSubject] })
+  @ApiParam({ name: 'schoolUUID', type: String })
+  @UseGuards(JwtAuthGuard)
+  @Get('/subjects/:schoolUUID')
+  async getSubjects(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<SchoolSubject[]> {
+    return this.schoolAdminService.getSubjects(schoolUUID, request);
+  }
+
+  @ApiOperation({ summary: 'Update a subject of a school' })
+  @ApiOkResponse({ type: SchoolSubject })
+  @ApiBody({ type: UpdateSchoolSubjectDTO })
+  @UseGuards(JwtAuthGuard)
+  @Put('/subject')
+  async updateSubject(@Body() subject: UpdateSchoolSubjectDTO, @Req() request: Request): Promise<SchoolSubject> {
+    return this.schoolAdminService.updateSubject(subject, request);
+  }
+
+  @ApiOperation({ summary: 'Delete a subject of a school' })
+  @ApiOkResponse({ type: Number })
+  @ApiParam({ name: 'subjectUUID', type: String })
+  @UseGuards(JwtAuthGuard)
+  @Delete('/subject/:subjectUUID')
+  async removeSubject(@Param('subjectUUID') subjectUUID: string, @Req() request, @Res() response): Promise<number> {
+    return this.schoolAdminService.removeSubject(subjectUUID, request);
+  }
+
+  @ApiOperation({ summary: 'Get a room of a school' })
+  @ApiOkResponse({ type: SchoolRoom })
+  @ApiParam({ name: 'roomUUID', type: String })
+  @UseGuards(JwtAuthGuard)
+  @Get('/room/:roomUUID')
+  async getRoom(@Param('roomUUID') roomUUID: string, @Req() request: Request): Promise<SchoolRoom> {
+    return this.schoolAdminService.getRoom(roomUUID, request);
+  }
+
+  @ApiOperation({ summary: 'Get all rooms of a school' })
+  @ApiOkResponse({ type: [SchoolRoom] })
+  @ApiParam({ name: 'schoolUUID', type: String })
+  @UseGuards(JwtAuthGuard)
+  @Get('/rooms/:schoolUUID')
+  async getRooms(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<SchoolRoom[]> {
+    return this.schoolAdminService.getRooms(schoolUUID, request);
+  }
+
+  @ApiOperation({ summary: 'Add a room to a school' })
+  @ApiCreatedResponse({ type: SchoolRoom })
+  @ApiBody({ type: AddSchoolRoomDTO })
+  @UseGuards(JwtAuthGuard)
+  @Post('/room')
+  async addRoom(@Body() room: AddSchoolRoomDTO, @Req() request: Request): Promise<SchoolRoom> {
+    return this.schoolAdminService.addRoom(room, request);
+  }
+
+  @ApiOperation({ summary: 'Update a room of a school' })
+  @ApiOkResponse({ type: SchoolRoom })
+  @ApiBody({ type: UpdateSchoolRoomDTO })
+  @UseGuards(JwtAuthGuard)
+  @Put('room')
+  async updateRoom(@Body() room: UpdateSchoolRoomDTO, @Req() request: Request): Promise<SchoolRoom> {
+    return this.schoolAdminService.updateRoom(room, request);
+  }
+
+  @ApiOperation({ summary: 'Delete a room of a school' })
+  @ApiOkResponse({ type: Number })
+  @ApiParam({ name: 'roomUUID', type: String })
+  @UseGuards(JwtAuthGuard)
+  @Delete('room/:roomUUID')
+  async removeRoom(@Param('roomUUID') roomUUID: string, @Req() request: Request): Promise<number> {
+    return this.schoolAdminService.removeRoom(roomUUID, request);
   }
 
   /**

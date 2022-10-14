@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Course } from "../course/course";
 import { Department } from "../department/department";
@@ -9,61 +8,14 @@ import { SchoolRoom } from "../school-room/schoolRoom";
 import { SchoolSubject } from "../subject/schoolSubject";
 import { User } from "../user/user";
 
-export class School {
-    @Exclude()
-    schoolId: number;
-
-    @Exclude()
-    schoolCreatorId: number;
-
-    @ApiProperty({
-        description: 'The UUID of the school',
-        example: 'e8b3b9c0-5b9e-11eb-ae93-0242ac130002',
-        type: String,
-    })
+export class School  {
     schoolUUID: string;
-
-    @ApiProperty({
-        description: 'The name of the school',
-        example: 'HTL Leonding',
-        type: String,
-    })
     schoolName: string;
-
-    @ApiProperty({
-        description: 'The description of the school',
-        example: 'The HTL Leonding is a school in Leonding',
-        type: String,
-    })
     schoolDescription: string;
-
-    @ApiProperty({
-        description: 'The preffered language of the school',
-        type: Language,
-    })
     schoolLanguage: Language;
-
-    // @ApiProperty()
     // schoolTimezone: Timezone;
-
-    @ApiProperty({
-        description: 'The creation timestamp of the school',
-        example: '2021-01-20T12:00:00.000Z',
-        type: Date,
-    })
     schoolCreationTimestamp: Date;
-
-    @ApiProperty({
-        description: 'The creator of the school',
-        type: User,
-    })
-    schoolCreator: User;
-
-    @ApiProperty({
-        description: 'Decides if a school can upload files',
-        example: true,
-        type: Boolean,
-    })
+    // schoolCreator: User;
     schoolCanUpload: boolean;
 
     @ApiProperty({
@@ -92,7 +44,7 @@ export class School {
 
     @ApiProperty({
         description: 'The school rooms of a school',
-        type: [SchoolRoom],
+        type: () => [SchoolRoom],
     })
     schoolRooms?: SchoolRoom[];
 
@@ -133,17 +85,42 @@ export class AddSchoolDTO {
 }
 
 export class UpdateSchoolDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     schoolUUID: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     schoolName: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     schoolDescription: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNumber()
     schoolLanguageId: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     schoolTimezone: string;
 }
 
 export class DeleteSchoolDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     schoolUUID: string;
 }
 
 export class GetSchoolDTO {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     schoolUUID: string;
 }
