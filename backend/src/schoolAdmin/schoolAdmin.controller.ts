@@ -27,6 +27,7 @@ import { User } from 'src/entity/user/user';
 import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
 import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
 import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
+import { AddSchoolClassUserDTO, DeleteSchoolClassUserDTO } from 'src/entity/school-class-user/schoolClassUser';
 
 @ApiBearerAuth()
 @ApiTags('SchoolAdmin')
@@ -136,6 +137,26 @@ export class SchoolAdminController {
   // @Roles(Role.Student)
   async getClasses(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<SchoolClass[] | SchoolClass> {
     return this.schoolAdminService.getClasses(schoolUUID, request);
+  }
+
+  @ApiOperation({ summary: 'Add one or muliple users to a schoolclass' })
+  @ApiCreatedResponse({ type: SchoolClass })
+  @ApiBody({ type: AddSchoolClassUserDTO })
+  @UseGuards(JwtAuthGuard)
+  @Post('/class/users')
+  // @Roles(Role.Admin)
+  async addUsersToClass(@Body() courseClassUser: AddSchoolClassUserDTO, @Req() request: Request): Promise<SchoolClass> {
+    return this.schoolAdminService.addUsersToClass(courseClassUser, request);
+  }
+
+  @ApiOperation({ summary: 'Remove one or multiple users from a schoolclass' })
+  @ApiOkResponse({ type: Number })
+  @ApiBody({ type: DeleteSchoolClassUserDTO })
+  @UseGuards(JwtAuthGuard)
+  @Delete('/class/users')
+  // @Roles(Role.Admin)
+  async removeUsersFromClass(@Body() courseClassUser: DeleteSchoolClassUserDTO, @Req() request: Request): Promise<number> {
+    return this.schoolAdminService.removeUsersFromClass(courseClassUser, request);
   }
 
   @ApiOperation({ summary: 'Add a join code to a school' })

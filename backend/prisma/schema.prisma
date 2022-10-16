@@ -61,10 +61,23 @@ model schoolClasses {
   timeTableElementClasses      timeTableElementClasses[]
   timeTableEventClasses        timeTableEventClasses[]
   timeTableSubstitutionClasses timeTableSubstitutionClasses[]
+  schoolClassUsers             schoolClassUsers[]
 
   @@unique([schoolClassUUID], map: "school_class_uuid_UNIQUE")
   @@index([schoolClassDepartmentId], map: "fk_school_class_department_id")
   @@map("school_classes")
+}
+
+model schoolClassUsers {
+  schoolClassId Int           @map("school_class_id")
+  userId        Int           @map("user_id")
+  schoolClasses schoolClasses @relation(fields: [schoolClassId], references: [schoolClassId])
+  users         users         @relation(fields: [userId], references: [userId])
+
+  @@id([schoolClassId, userId])
+  @@index([userId], map: "fk_school_class_users_user_id")
+  @@index([schoolClassId], map: "fk_school_class_users_school_class_id")
+  @@map("school_class_users")
 }
 
 model schools {
@@ -719,6 +732,7 @@ model users {
   timeTableEventTeachers        timeTableEventTeachers[]
   timeTableSubstitutionTeachers timeTableSubstitutionTeachers[]
   timeTableSubstitutions        timeTableSubstitutions[]
+  schoolClassUsers              schoolClassUsers[]
 
   @@unique([userUUID], map: "user_uuid_UNIQUE")
   @@unique([userEmail], map: "user_email_UNIQUE")

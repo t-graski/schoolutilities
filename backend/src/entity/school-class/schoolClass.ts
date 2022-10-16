@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Exclude } from "class-transformer";
 import { IsNotEmpty, IsString } from "class-validator";
 import { Department } from "../department/department";
+import { User } from "../user/user";
 
 export class SchoolClass {
     @Exclude()
@@ -16,6 +17,7 @@ export class SchoolClass {
     // timeTableElementClasses?: timeTableElementClasses;
     // timeTableEventClasses?: timeTableEventClasses;
     // timeTableSubstitutionClasses?: timeTableSubstitutionClasses;
+    schoolClassUsers: User[];
 
     constructor(partial: Partial<SchoolClass>) {
         Object.assign(this, partial);

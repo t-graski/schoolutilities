@@ -20,6 +20,7 @@ import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
 import { SchoolRole } from 'src/entity/school-role/schoolRole';
 import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
 import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
+import { AddSchoolClassUserDTO, DeleteSchoolClassUserDTO } from 'src/entity/school-class-user/schoolClassUser';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();
@@ -159,6 +160,66 @@ export class SchoolAdminService {
         ...schoolClass,
         departments: new Department(schoolClass.departments),
       }));
+    } catch {
+      throw new InternalServerErrorException("Database error");
+    }
+  }
+
+  async addUsersToClass(payload: AddSchoolClassUserDTO, request: Request): Promise<SchoolClass> {
+    const { schoolClassUUID, users } = payload;
+
+    try {
+      const schoolClass = await prisma.schoolClasses.update({
+        where: {
+          schoolClassUUID,
+        },
+        data: {
+          schoolClassUsers: {
+            create: users.map((user) => {
+              return {
+                users: {
+                  connect: {
+                    userUUID: user,
+                  },
+                },
+              };
+            }),
+          },
+        },
+        include: {
+          schoolClassUsers: {
+            include: {
+              users: true,
+            }
+          },
+        }
+      });
+      return new SchoolClass({
+        ...schoolClass,
+        schoolClassUsers: schoolClass.schoolClassUsers.map((user) => new User(user.users)),
+      });
+    } catch {
+      throw new InternalServerErrorException("Database error");
+    }
+  }
+
+  async removeUsersFromClass(payload: DeleteSchoolClassUserDTO, request: Request): Promise<number> {
+    const { schoolClassUUID, users } = payload;
+
+    try {
+      await prisma.schoolClassUsers.deleteMany({
+        where: {
+          schoolClasses: {
+            schoolClassUUID,
+          },
+          users: {
+            userUUID: {
+              in: users,
+            },
+          },
+        },
+      });
+      return 200;
     } catch {
       throw new InternalServerErrorException("Database error");
     }
