@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "../../stitches.config";
 
 type Props = {
-  addFunction: Function;
+  addFunction?: Function;
 };
 
 const AddIconLayout = styled("div", {
@@ -12,7 +12,7 @@ const AddIconLayout = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$warning",
+  backgroundColor: "$primaryContainer",
   cursor: "pointer",
 
   "@mobileOnly": {
@@ -23,14 +23,14 @@ const AddIconLayout = styled("div", {
 
 const AddIconPlus = styled("p", {
   fontSize: "80px",
-  color: "$neutral-500",
+  color: "$onPrimaryContainer",
 
   "@mobileOnly": {
     fontSize: "60px",
   },
 });
 
-export const AddIcon: React.FC<Props> = ({ addFunction }) => {
+export const AddIcon: React.FC<Props> = ({ addFunction = () => {} }) => {
   return (
     <>
       <AddIconLayout onClick={() => addFunction()}>

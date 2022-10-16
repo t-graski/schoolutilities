@@ -74,10 +74,10 @@ const StyledSeparator = styled(SeparatorPrimitive.Root, {
     },
     color: {
       primary: {
-        backgroundColor: "$neutral-500",
+        backgroundColor: "$outlineVariant",
       },
       secondary: {
-        backgroundColor: "$neutral-300",
+        backgroundColor: "$outlineVariant",
       },
     },
   },

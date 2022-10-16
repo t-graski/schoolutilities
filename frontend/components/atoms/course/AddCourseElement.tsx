@@ -5,6 +5,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { elementsToChoose } from "./CourseComponentDetailViews";
 import { AddIcon } from "../AddIcon";
+import { PopUp } from "../../molecules/PopUp";
 
 type Props = { addNewEntry?: Function };
 
@@ -323,7 +324,6 @@ const AddButton = styled("button", {
 });
 
 export const AddCourseElement: React.FC<Props> = ({ addNewEntry }) => {
-  const [open, setOpen] = useState(false);
   const [choosenElementId, setChoosenElementId] = useState(-1);
   const [detailsConfig, setDetailsConfig] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(true);
@@ -338,63 +338,52 @@ export const AddCourseElement: React.FC<Props> = ({ addNewEntry }) => {
 
   return (
     <>
-      <AddIcon
-        addFunction={() => {
-          setOpen(true);
-        }}
-      ></AddIcon>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild></DialogTrigger>
-        <DialogContent>
-          <DialogTitle>Choose element to add</DialogTitle>
-          <DialogDescription>
-            Click on the element at the right side and then enter the details
-            for the element
-          </DialogDescription>
-          <ElementSelectionLayout>
-            <SelectionLayout>
-              {elementsToChoose.map((element) => (
-                <Element
-                  key={element.id}
-                  highlighted={element.id === choosenElementId}
-                  onClick={() => {
-                    setChoosenElementId(element.id);
-                    setDetailsConfig({});
-                  }}
-                >
-                  {element.name}
-                </Element>
-              ))}
-            </SelectionLayout>
-            <SelectedLayout>
-              {ChoosenElementDetailView && (
-                <>
-                  <ChoosenElementDetailView
-                    setDetailsConfig={setDetailsConfig}
-                    setButtonDisabled={setButtonDisabled}
-                  ></ChoosenElementDetailView>
-                  <DialogClose asChild>
-                    <AddButton
-                      aria-label="Close"
-                      onClick={() => {
-                        addNewEntry(choosenElement, detailsConfig);
-                      }}
-                      disabled={buttonDisabled}
-                    >
-                      Add element
-                    </AddButton>
-                  </DialogClose>
-                </>
-              )}
-            </SelectedLayout>
-          </ElementSelectionLayout>
-          <DialogClose asChild>
-            <IconButton>
-              <Cross2Icon />
-            </IconButton>
-          </DialogClose>
-        </DialogContent>
-      </Dialog>
+      <PopUp
+        openButton={<AddIcon></AddIcon>}
+      >
+        <DialogTitle>Choose element to add</DialogTitle>
+        <DialogDescription>
+          Click on the element at the right side and then enter the details for
+          the element
+        </DialogDescription>
+        <ElementSelectionLayout>
+          <SelectionLayout>
+            {elementsToChoose.map((element) => (
+              <Element
+                key={element.id}
+                highlighted={element.id === choosenElementId}
+                onClick={() => {
+                  setChoosenElementId(element.id);
+                  setDetailsConfig({});
+                }}
+              >
+                {element.name}
+              </Element>
+            ))}
+          </SelectionLayout>
+          <SelectedLayout>
+            {ChoosenElementDetailView && (
+              <>
+                <ChoosenElementDetailView
+                  setDetailsConfig={setDetailsConfig}
+                  setButtonDisabled={setButtonDisabled}
+                ></ChoosenElementDetailView>
+                <DialogClose asChild>
+                  <AddButton
+                    aria-label="Close"
+                    onClick={() => {
+                      addNewEntry(choosenElement, detailsConfig);
+                    }}
+                    disabled={buttonDisabled}
+                  >
+                    Add element
+                  </AddButton>
+                </DialogClose>
+              </>
+            )}
+          </SelectedLayout>
+        </ElementSelectionLayout>
+      </PopUp>
     </>
   );
 };

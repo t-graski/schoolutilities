@@ -79,7 +79,7 @@ const itemStyles = {
   userSelect: "none",
 
   "&:focus": { position: "relative", boxShadow: `0 0 0 2px ${violet.violet7}` },
-  "&:hover": { backgroundColor: "$neutral-400" },
+  "&:hover": { backgroundColor: "$surface", color: "$onSurface" },
 };
 
 const StyledTrigger = styled(NavigationMenuPrimitive.Trigger, {
@@ -200,7 +200,7 @@ const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   overflow: "hidden",
   height: "var(--radix-navigation-menu-viewport-height)",
 
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
 
@@ -279,7 +279,8 @@ const StyledA = styled("a", {
   textDecoration: "none",
 
   "&:hover": {
-    backgroundColor: "$neutral-300",
+    backgroundColor: "$surfaceVariant",
+    color: "$onSurfaceVariant",
   },
 });
 
@@ -391,13 +392,21 @@ export const NavigationMenuPart = () => {
               </ContentListItem>
               <ContentListItem
                 title="Create course"
-                href={schoolUUID ? `/school/${schoolUUID}/course/create` : "/school/select?redirect=/course/create"}
+                href={
+                  schoolUUID
+                    ? `/school/${schoolUUID}/course/create`
+                    : "/school/select?redirect=/course/create"
+                }
               >
                 Create a course and start teaching your students.
               </ContentListItem>
               <ContentListItem
                 title="Create timetable item"
-                href={schoolUUID ? `/school/${schoolUUID}/timetable/create` : "/school/select?redirect=/timetable/create"}
+                href={
+                  schoolUUID
+                    ? `/school/${schoolUUID}/timetable/create`
+                    : "/school/select?redirect=/timetable/create"
+                }
               >
                 Create a course and start teaching your students.
               </ContentListItem>

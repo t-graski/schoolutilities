@@ -30,7 +30,7 @@ const NavbarLayout = styled("div", {
 const LogoLayout = styled("div", {
   width: "130px",
 
-  color: "$neutral-500",
+  color: "$onBackground",
 });
 
 const NavLinksLayout = styled("div", {

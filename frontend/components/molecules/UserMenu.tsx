@@ -41,7 +41,7 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
-  backgroundColor: "$neutral-400",
+  backgroundColor: "$tertiaryContainer",
   borderRadius: 15,
   padding: 8,
   boxShadow:
@@ -62,7 +62,7 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
 const itemStyles = {
   all: "unset",
   lineHeight: 1,
-  color: "$neutral-500",
+  color: "$onSurfaceVariant",
   borderRadius: 5,
   display: "flex",
   alignItems: "center",
@@ -110,7 +110,7 @@ const StyledLabel = styled(DropdownMenuPrimitive.Label, {
 
 const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
-  backgroundColor: "$neutral-500",
+  backgroundColor: "$outline",
   margin: 5,
 });
 

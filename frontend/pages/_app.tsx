@@ -18,7 +18,7 @@ const globalStyles = globalCss({
     fontFamily: "Poppins, sans-serif",
     fontWeight: "$regular",
     overflowX: "hidden",
-    backgroundColor: "$primary-100",
+    backgroundColor: "$background",
     minHeight: "100vh",
   },
   ".nestable-item.is-dragging:before": {

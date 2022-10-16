@@ -14,37 +14,6 @@ type Props = {
   closeFunction: Function;
 };
 
-const PopUpLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  width: "100vw",
-  height: "100vh",
-  backgroundColor: "rgba(0,0,0,0.7)",
-  position: "absolute",
-  top: "0",
-  left: "0",
-  zIndex: "10",
-});
-
-const PopUpContentLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
-  width: "50%",
-  backgroundColor: "$neutral-100",
-  padding: "30px",
-  borderRadius: "20px",
-});
-
-const StyledPopUpHeadline = styled("h2", {
-  fontSize: "2.5rem",
-  fontWeight: "bold",
-  color: "$neutral-500",
-  margin: "0",
-});
-
 const PopUpButtonLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
@@ -73,7 +42,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surfaceVariant",
   borderRadius: 6,
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",

@@ -19,7 +19,7 @@ const FooterLayout = styled("footer", {
   gap: "40px",
   padding: "4vh 5vw",
 
-  backgroundColor: "$primary-200",
+  backgroundColor: "$surfaceVariant",
   color: "$neutral-500",
 });
 
@@ -42,7 +42,7 @@ const LogoLayout = styled("div", {
   width: "150px",
   height: "98px",
 
-  color: "$neutral-500",
+  color: "$onBackground",
 });
 
 const LinkLayout = styled("div", {

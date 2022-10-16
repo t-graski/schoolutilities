@@ -22,7 +22,7 @@ const contentShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: "$neutral-400",
+  backgroundColor: "$surfaceVariant",
   position: "fixed",
   opacity: 0.8,
   inset: 0,
@@ -32,7 +32,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surfaceVariant",
   borderRadius: 6,
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
@@ -87,7 +87,7 @@ const DialogContent = Content;
 const DialogClose = DialogPrimitive.Close;
 
 export const PopUp: React.FC<Props> = ({
-  onOpenChange,
+  onOpenChange = () => {},
   defaultOpen = false,
   openButton,
   children,
