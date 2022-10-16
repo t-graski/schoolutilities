@@ -40,6 +40,8 @@ export class Exam {
     })
     schoolRooms: SchoolRoom;
 
+    timeTableElement: any;
+
     // timeTableElements: timeTableelement
 
     constructor(partial: Partial<Exam>) {

@@ -1,8 +1,22 @@
 import { SchoolRoom } from "../school-room/schoolRoom";
 import { SchoolClass } from "../school-class/schoolClass";
 import { SchoolSubject } from "../subject/schoolSubject";
+import { Exclude } from "class-transformer";
+import { Exam } from "../exam/exam";
 
-export type TimeTableElement = {
+export class TimeTableElement {
+    @Exclude()
+    timeTableElementId: number;
+
+    @Exclude()
+    timeTableElementSubjectId: number;
+
+    @Exclude()
+    timeTableElementRoomId: number;
+
+    @Exclude()
+    timeTableElementCreatorId: number;
+
     timeTableElementUUID: string;
     timeTableElementSubject: SchoolSubject;
     timeTableElementRoom: SchoolRoom;
@@ -16,7 +30,11 @@ export type TimeTableElement = {
     // timeTableEvents?: TimeTableEvent[];
     // timeTableSubstitution?: TimeTableSubstitution[];
     // timeTableOmitted?: TimeTableOmitted[];
-    // timeTableExam?: TimeTableExam[];
+    timeTableExam?: Exam;
+
+    constructor(partial: Partial<TimeTableElement>) {
+        Object.assign(this, partial);
+    }
 }
 
 export class AddTimeTableElementDTO {

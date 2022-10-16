@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, DeleteExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { TimeTableElement } from 'src/entity/time-table-element/timeTableElement';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import { ReturnMessage } from 'src/types/Course';
@@ -714,17 +715,46 @@ export class TimetableService {
         }
     }
 
-    async getExamsOfUser(request: Request): Promise<Exam[] | Exam> {
+    async getExamsOfUser(request: Request): Promise<TimeTableElement[] | TimeTableElement> {
         const jwt = await this.helper.extractJWTToken(request);
         const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
 
         try {
-            const exams = await prisma.timeTableElementClasses.findMany({
+            const exams = await prisma.schoolClasses.findMany({
                 where: {
-
+                    schoolClassUsers: {
+                        some: {
+                            users: {
+                                userUUID,
+                            }
+                        },
+                    },
+                },
+                include: {
+                    timeTableElementClasses: {
+                        include: {
+                            timeTableElements: {
+                                include: {
+                                    timeTableExam: true,
+                                }
+                            }
+                        }
+                    }
                 }
             })
-            return exams.map((exam) => new Exam(exam));
+
+            return exams.map((exam) => {
+                return exam.timeTableElementClasses.map((element) => {
+                    return element.timeTableElements
+                })
+            }).flat().map((timeTableElement) => {
+                if (timeTableElement.timeTableExam.length > 0) {
+                    return new TimeTableElement({
+                        ...timeTableElement,
+                        timeTableExam: new Exam(timeTableElement.timeTableExam[0]),
+                    })
+                }
+            }).filter((element) => element !== undefined);
         } catch {
             throw new InternalServerErrorException('Database error');
         }
