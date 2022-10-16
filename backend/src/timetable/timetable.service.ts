@@ -1,8 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
-import { AddExamDTO, DeleteExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { TimeTableElement } from 'src/entity/time-table-element/timeTableElement';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
@@ -352,7 +353,7 @@ export class TimetableService {
         }
     }
 
-    async getTimeTableGrid(schoolUUID: string, request) {
+    async getTimeTableGrid(schoolUUID: string, request: Request): Promise<ReturnMessage> {
         try {
             const timeTableGrid = await prisma.schools.findUnique({
                 where: {
@@ -380,7 +381,7 @@ export class TimetableService {
             }
 
             return {
-                status: 200,
+                status: RETURN_DATA.SUCCESS.status,
                 data: timeTableGrid,
             }
         } catch {
@@ -469,10 +470,10 @@ export class TimetableService {
         }
     }
 
-    async addHoliday(holiday, request): Promise<ReturnMessage> {
+    async addHoliday(holiday, request): Promise<Holiday> {
         const { schoolUUID, holidayName, holidayStartDate, holidayEndDate } = holiday;
 
-        if (holidayStartDate > holidayEndDate) return RETURN_DATA.INVALID_INPUT;
+        if (holidayStartDate > holidayEndDate) throw new BadRequestException('Start date must be before end date');
 
         try {
             const holiday = await prisma.holidays.create({
@@ -488,23 +489,15 @@ export class TimetableService {
                     },
                 }
             });
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: {
-                    holidayUUID: holiday.holidayUUID,
-                    holidayName: holiday.holidayName,
-                    holidayStartDate: holiday.holidayStartDate,
-                    holidayEndDate: holiday.holidayEndDate,
-                },
-            }
+            return new Holiday(holiday);
         } catch {
-            return RETURN_DATA.DATABASE_ERROR;
+            throw new InternalServerErrorException('Database error');
         }
     }
 
-    async getHolidayOfSchool(schoolUUID: string): Promise<ReturnMessage> {
+    async getHolidayOfSchool(schoolUUID: string): Promise<Holiday[] | Holiday> {
         try {
-            const holidays = await prisma.schools.findUnique({
+            const school = await prisma.schools.findUnique({
                 where: {
                     schoolUUID,
                 },
@@ -513,45 +506,32 @@ export class TimetableService {
                 }
             });
 
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: holidays.holidays.map((holiday) => {
-                    return {
-                        holidayUUID: holiday.holidayUUID,
-                        holidayName: holiday.holidayName,
-                        holidayStartDate: holiday.holidayStartDate,
-                        holidayEndDate: holiday.holidayEndDate,
-                    }
-                }),
-            }
+            return school.holidays.map((holiday) => new Holiday(holiday));
         } catch {
-            return RETURN_DATA.DATABASE_ERROR;
+            throw new InternalServerErrorException('Database error')
         }
     }
 
-    async removeHoliday(holidayUUID: string): Promise<ReturnMessage> {
+    async removeHoliday(holidayUUID: string): Promise<number> {
         try {
-            const holiday = await prisma.holidays.delete({
+            await prisma.holidays.delete({
                 where: {
                     holidayUUID,
                 }
             });
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: holiday,
-            }
+            return 200;
         } catch {
-            return RETURN_DATA.DATABASE_ERROR;
+            throw new InternalServerErrorException('Database error')
         }
     }
 
-    async updateHoliday(holidayUUID: string, holiday: any): Promise<ReturnMessage> {
-        const { holidayName, holidayStartDate, holidayEndDate } = holiday;
+    async updateHoliday(payload: UpdateHolidayDTO, request: Request): Promise<Holiday> {
+        const { holidayUUID, holidayName, holidayStartDate, holidayEndDate } = payload;
 
-        if (holidayStartDate > holidayEndDate) return RETURN_DATA.INVALID_INPUT;
+        if (holidayStartDate > holidayEndDate) throw new BadRequestException('Start date must be before end date');
 
         try {
-            const updatedHoliday = await prisma.holidays.update({
+            const holiday = await prisma.holidays.update({
                 where: {
                     holidayUUID,
                 },
@@ -561,17 +541,9 @@ export class TimetableService {
                     holidayEndDate: new Date(holidayEndDate),
                 }
             });
-            return {
-                status: RETURN_DATA.SUCCESS.status,
-                data: {
-                    holidayUUID: updatedHoliday.holidayUUID,
-                    holidayName: updatedHoliday.holidayName,
-                    holidayStartDate: updatedHoliday.holidayStartDate,
-                    holidayEndDate: updatedHoliday.holidayEndDate,
-                },
-            }
+            return new Holiday(holiday);
         } catch {
-            return RETURN_DATA.DATABASE_ERROR;
+            throw new InternalServerErrorException('Database error');
         }
     }
 

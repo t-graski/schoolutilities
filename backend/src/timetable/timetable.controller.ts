@@ -1,8 +1,10 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { AddHolidayDTO, Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { TimeTableElement } from 'src/entity/time-table-element/timeTableElement';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
@@ -30,43 +32,57 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  @ApiOperation({ summary: 'Add a holiday to a school' })
+  @ApiCreatedResponse({ type: Holiday })
+  @ApiBody({ type: AddHolidayDTO })
   @UseGuards(JwtAuthGuard)
-  @Post('holiday')
-  async addHoliday(@Body() holiday, @Req() request, @Res() response) {
-    const result = await this.timetableService.addHoliday(holiday, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Post('/holiday')
+  async addHoliday(@Body() holiday: AddHolidayDTO, @Req() request): Promise<Holiday> {
+    return this.timetableService.addHoliday(holiday, request);
+
   }
+
+  @ApiOperation({ summary: 'Get all holidays of a school' })
+  @ApiOkResponse({ type: [Holiday] })
+  @ApiParam({ name: 'schoolUUID', type: String })
   @UseGuards(JwtAuthGuard)
-  @Get('holiday/:schoolUUID')
-  async getHoliday(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
-    const result = await this.timetableService.getHolidayOfSchool(schoolUUID);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Get('/holiday/:schoolUUID')
+  async getHoliday(@Param('schoolUUID') schoolUUID: string): Promise<Holiday[] | Holiday> {
+    return this.timetableService.getHolidayOfSchool(schoolUUID);
   }
+
+  @ApiOperation({ summary: 'Delete a holiday' })
+  @ApiParam({ name: 'holidayUUID', type: String })
+  @ApiOkResponse({ type: Number })
   @UseGuards(JwtAuthGuard)
-  @Delete('holiday/:holidayUUID')
-  async removeHoliday(@Param('holidayUUID') holidayUUID: string, @Req() request, @Res() response) {
-    const result = await this.timetableService.removeHoliday(holidayUUID);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Delete('/holiday/:holidayUUID')
+  async removeHoliday(@Param('holidayUUID') holidayUUID: string): Promise<number> {
+    return this.timetableService.removeHoliday(holidayUUID);
   }
+
+  @ApiOperation({ summary: 'Update a holiday of a school' })
+  @ApiBody({ type: UpdateHolidayDTO })
+  @ApiOkResponse({ type: Holiday })
   @UseGuards(JwtAuthGuard)
-  @Put('holiday/:holidayUUID')
-  async updateHoliday(@Param('holidayUUID') holidayUUID: string, @Body() holiday, @Req() request, @Res() response) {
-    const result = await this.timetableService.updateHoliday(holidayUUID, holiday);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @Put('/holiday/:holidayUUID')
+  async updateHoliday(@Body() holiday: UpdateHolidayDTO, request: Request): Promise<Holiday> {
+    return this.timetableService.updateHoliday(holiday, request);
   }
+
   @UseGuards(JwtAuthGuard)
-  @UseGuards(JwtAuthGuard)
-  @Post('timeTableGrid')
+  @Post('/grid')
   async addTimeTableGrid(@Body() timeTableGrid, @Req() request, @Res() response) {
     const result = await this.timetableService.addTimeTableGrid(timeTableGrid, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/grid/:schoolUUID')
+  async getTimeTableGrid(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getTimeTableGrid(schoolUUID, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
