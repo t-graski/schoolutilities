@@ -21,11 +21,6 @@ module.exports = {
         permanent: true,
       },
       {
-        source: "/profile",
-        destination: "/profile/settings",
-        permanent: true,
-      },
-      {
         source: "/faq",
         destination: "/help/faq",
         permanent: true,

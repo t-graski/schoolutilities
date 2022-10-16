@@ -110,7 +110,7 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('/exam/examUUID')
+  @Delete('/exam/:examUUID')
   async deleteExam(@Param('examUUID') examUUID: string, @Req() request: Request): Promise<number> {
     return this.timetableService.deleteExam(examUUID, request);
   }

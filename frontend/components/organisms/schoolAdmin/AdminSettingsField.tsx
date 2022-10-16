@@ -27,9 +27,9 @@ type Props = {
   };
   uuidKey: string;
   nameKey: string;
-  addElement: MutationFunction<unknown, void>;
-  editElement: MutationFunction<unknown, void>;
-  deleteElement: any;
+  addElement?: MutationFunction<unknown, void>;
+  editElement?: MutationFunction<unknown, void>;
+  deleteElement?: any;
   getAllElements: Function;
   getElementLink?: (schoolUUID: string, elementUUID: string) => string;
   isItemValid: (item: unknown) => boolean;
@@ -140,7 +140,6 @@ export const AdminSettingsField: React.FC<Props> = ({
     const currElements = await getAllElements(schoolUUID);
     console.log(currElements);
   }
-
 
   const addMutation = useMutation(addElement, {
     onMutate: async () => {
@@ -253,11 +252,13 @@ export const AdminSettingsField: React.FC<Props> = ({
         )}
         <SettingsHeader
           headline={texts.title}
-          addFunction={() => {
-            setItemConfig(defaultItemConfig);
-            setItemId("");
-            setEditPopUpIsVisible(true);
-          }}
+          {...(addElement && {
+            addFunction: () => {
+              setItemConfig(defaultItemConfig);
+              setItemId("");
+              setEditPopUpIsVisible(true);
+            },
+          })}
         ></SettingsHeader>
         <LoadingLayout>
           <SettingsEntriesLayout>
@@ -269,16 +270,20 @@ export const AdminSettingsField: React.FC<Props> = ({
                   data-key={entry[uuidKey]}
                 >
                   <SettingsEntry
-                    editFunction={() => {
-                      setItemConfig(entry);
-                      setItemId(entry[uuidKey]);
-                      setEditPopUpIsVisible(true);
-                    }}
-                    deleteFunction={() => {
-                      setDeletePopUpIsVisible(true);
-                      setItemId(entry[uuidKey]);
-                      setItemConfig(entry);
-                    }}
+                    {...(editElement && {
+                      editFunction: () => {
+                        setItemConfig(entry);
+                        setItemId(entry[uuidKey]);
+                        setEditPopUpIsVisible(true);
+                      },
+                    })}
+                    {...(deleteElement && {
+                      deleteFunction: () => {
+                        setDeletePopUpIsVisible(true);
+                        setItemId(entry[uuidKey]);
+                        setItemConfig(entry);
+                      },
+                    })}
                     highlighted={
                       router.query &&
                       router.query[uuidKey] &&

@@ -9,6 +9,7 @@ type Props = {
   orientation?: "horizontal" | "vertical";
   visible?: Stitches.VariantProps<typeof HrLayout>["visible"];
   hideOnMobile?: Stitches.VariantProps<typeof StyledSeparator>["hideOnMobile"];
+  color?: Stitches.VariantProps<typeof StyledSeparator>["color"];
 };
 
 const HrLayout = styled("div", {
@@ -71,6 +72,14 @@ const StyledSeparator = styled(SeparatorPrimitive.Root, {
       },
       false: {},
     },
+    color: {
+      primary: {
+        backgroundColor: "$neutral-500",
+      },
+      secondary: {
+        backgroundColor: "$neutral-300",
+      },
+    },
   },
 });
 
@@ -80,15 +89,16 @@ export const Separator: React.FC<Props> = ({
   orientation = "horizontal",
   visible = true,
   hideOnMobile = false,
+  color = "primary",
 }) => {
   return (
     <>
       <HrLayout alignment={alignment} visible={visible}>
         <StyledSeparator
           orientation={orientation}
-          css={{ margin: "0 15px" }}
           width={width}
           hideOnMobile={hideOnMobile}
+          color={color}
         />
       </HrLayout>
     </>

@@ -67,6 +67,7 @@ export const styles = {
       system: "Poppins",
     },
     radii: {
+      small: "10px",
       normal: "25px",
     },
   },

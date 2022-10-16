@@ -84,13 +84,15 @@ export const SettingsEntry: React.FC<Props> = ({
               />
             </SettingsEntryEditIcon>
           )}
-          <SettingsEntryDeleteIcon
-            onClick={() => {
-              deleteFunction();
-            }}
-          >
-            <SvgDelete />
-          </SettingsEntryDeleteIcon>
+          {deleteFunction && (
+            <SettingsEntryDeleteIcon
+              onClick={() => {
+                deleteFunction();
+              }}
+            >
+              <SvgDelete />
+            </SettingsEntryDeleteIcon>
+          )}
         </SettingsEntryIcons>
       </SettingsEntryLayout>
     </>
