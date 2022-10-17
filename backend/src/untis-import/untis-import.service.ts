@@ -1,12 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { Observable } from 'rxjs';
 import { HelperService } from 'src/helper/helper.service';
 import { RETURN_DATA, UNTIS_API_URL, ID_STARTERS } from 'src/misc/parameterConstants';
-import { ReturnMessage } from 'src/types/Course';
 import { firstValueFrom } from 'rxjs'
 import { v4 as uuidv4 } from 'uuid';
+import { ReturnMessage } from 'src/types/Database';
 
 const prisma = new PrismaClient();
 

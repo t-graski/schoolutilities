@@ -5,9 +5,6 @@ import { PrismaClient } from '@prisma/client';
 import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
 import { Request } from 'express';
-import {
-  ReturnMessage,
-} from 'src/types/SchoolAdmin';
 import { DatabaseService } from 'src/database/database.service';
 import { AuthService } from 'src/auth/auth.service';
 import { HelperService } from 'src/helper/helper.service';
@@ -21,6 +18,7 @@ import { SchoolRole } from 'src/entity/school-role/schoolRole';
 import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
 import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
 import { AddSchoolClassUserDTO, DeleteSchoolClassUserDTO } from 'src/entity/school-class-user/schoolClassUser';
+import { ReturnMessage } from 'src/types/Database';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const prisma = new PrismaClient();

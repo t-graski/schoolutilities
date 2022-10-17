@@ -1,13 +1,12 @@
 import { Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
-import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { TimeTableElement } from 'src/entity/time-table-element/timeTableElement';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
-import { ReturnMessage } from 'src/types/Course';
+import { ReturnMessage } from 'src/types/Database';
 import { v4 as uuidv4 } from 'uuid';
 
 require('dotenv').config();
@@ -17,7 +16,7 @@ const prisma = new PrismaClient();
 export class TimetableService {
     constructor(private readonly helper: HelperService) { }
 
-    async createTimetable(payload: AddTimeTableDto, request): Promise<ReturnMessage> {
+    async createTimetable(payload: any, request): Promise<ReturnMessage> {
         const token = await this.helper.extractJWTToken(request);
         const creatorUUID = await this.helper.getUserUUIDfromJWT(token);
 

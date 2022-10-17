@@ -1,4 +1,3 @@
-import { TimeTableElement } from "src/dto/addTimeTable";
 import { Article } from "../article/article";
 import { CourseElement } from "../course-element/courseElement";
 import { Course } from "../course/course";
@@ -8,6 +7,7 @@ import { School } from "../school/school";
 import { UserSetting } from "../user-setting/userSetting";
 import { Exclude } from 'class-transformer';
 import { ApiProperty } from "@nestjs/swagger";
+import { TimeTableElement } from "../time-table-element/timeTableElement";
 
 export class User {
     @Exclude()

@@ -1,9 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { ID_STARTERS, RETURN_DATA } from '../misc/parameterConstants';
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseService } from 'src/database/database.service';
-import { ReturnMessage } from 'src/types/Database';
+import { LogEmail } from 'src/entity/log/email';
 const prisma = new PrismaClient();
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const nodemailer = require('nodemailer');
@@ -31,7 +31,7 @@ export class MailService {
   async logMailSend(message) {
     const receiver = message.to;
     const subject = message.subject;
-    const personId = await this.databaseService.getUserIdByEmail(receiver);
+    const user = await this.databaseService.getUserIdByEmail(receiver);
 
     try {
       await prisma.logEmails.create({
@@ -39,36 +39,28 @@ export class MailService {
           logEmailUUID: `${ID_STARTERS.EMAIL}${uuidv4()}`,
           users: {
             connect: {
-              userId: personId['personId'],
+              userUUID: user.userUUID,
             },
           },
           logEmailSubject: subject,
           logEmailReceiver: receiver,
         },
       });
-    } catch (error) { }
+    } catch { }
   }
 
-  async getMailsSentToUser(userEmail: string): Promise<ReturnMessage> {
-    const personId = await this.databaseService.getUserIdByEmail(userEmail);
-    if (!personId) return RETURN_DATA.NOT_FOUND;
+  async getMailsSentToUser(userEmail: string): Promise<LogEmail[]> {
     try {
       const mails = await prisma.logEmails.findMany({
         where: {
-          userId: personId['personId'],
-        },
-        select: {
-          logEmailUUID: true,
-          logEmailTimestamp: true,
-          logEmailSubject: true,
+          users: {
+            userEmail,
+          }
         },
       });
-      return {
-        status: HttpStatus.OK,
-        data: mails,
-      };
-    } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
+      return mails.map(mail => new LogEmail(mail));
+    } catch {
+      throw new InternalServerErrorException("Database error");
     }
   }
 }

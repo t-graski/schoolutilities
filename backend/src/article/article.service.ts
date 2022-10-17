@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import { HelperService } from '../helper/helper.service';
 import { v4 as uuidv4 } from 'uuid';
 import { RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
-import { ReturnMessage } from 'src/types/SchoolAdmin';
 import { AddArticleDTO, Article, DeleteArticleDTO, UpdateArticleDTO } from 'src/entity/article/article';
 import { Request } from 'express';
 import { InternalServerErrorException } from '@nestjs/common/exceptions';
@@ -81,30 +80,6 @@ export class ArticleService {
     }
   }
 
-  /**
-   * @deprecated
-   * @param request 
-   * @returns 
-   */
-  async publishArticle(request): Promise<ReturnMessage> {
-    const { articleUUID } = request;
-
-    try {
-      await prisma.articles.update({
-        where: {
-          articleUUID,
-        },
-        data: {
-          articleIsPublic: true,
-          articlePublishTimestamp: new Date(),
-        },
-      });
-    } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
-    }
-    return RETURN_DATA.SUCCESS;
-  }
-
   async getArticle(articleUUID: string, request: Request): Promise<Article> {
     try {
       const article = await prisma.articles.findFirst({
@@ -156,29 +131,6 @@ export class ArticleService {
       return articleData;
     } catch {
       throw new InternalServerErrorException("Database error");
-    }
-  }
-
-  /**
-   * @deprecated
-   * @param request 
-   * @returns 
-   */
-  async getArticleAvailability(request): Promise<ReturnMessage> {
-    const { isPublic } = request;
-
-    try {
-      const article = await prisma.articles.findFirst({
-        where: {
-          articleIsPublic: isPublic,
-        },
-      });
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: article,
-      };
-    } catch (error) {
-      return RETURN_DATA.DATABASE_ERROR;
     }
   }
 }

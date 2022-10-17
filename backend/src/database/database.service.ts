@@ -8,10 +8,10 @@ import {
 } from 'src/misc/parameterConstants';
 import validator from 'validator';
 import { v4 as uuidv4 } from 'uuid';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { GetDepartments, UserPermissions } from 'src/types/SchoolAdmin';
+import { PrismaClient } from '@prisma/client';
 import { Role } from 'src/roles/role.enum';
 import { HelperService } from 'src/helper/helper.service';
+import { User } from 'src/entity/user/user';
 
 const prisma = new PrismaClient();
 require('dotenv').config();
@@ -94,16 +94,13 @@ export class DatabaseService {
     return user;
   }
 
-  async getUserIdByEmail(email: string): Promise<object> {
+  async getUserIdByEmail(email: string): Promise<User> {
     const user = await prisma.users.findUnique({
       where: {
         userEmail: email,
       },
-      select: {
-        userId: true,
-      },
     });
-    return user;
+    return new User(user);
   }
 
   async getPersonEmailByUUID(userUUID: string): Promise<string> {
@@ -311,7 +308,7 @@ export class DatabaseService {
     return schoolRoles;
   }
 
-  async getDepartments(body: GetDepartments): Promise<any> {
+  async getDepartments(body: any): Promise<any> {
     const { schoolUUID } = body;
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;

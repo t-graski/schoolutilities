@@ -1,26 +1,32 @@
 import {
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpStatus,
   Param,
-  Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AssetsService } from './assets.service';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import * as fs from 'fs';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
+import { Response } from 'express';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(RolesGuard)
 @Controller('/api/assets')
 export class AssetsController {
   constructor(private readonly assetsService: AssetsService) { }
 
+  @ApiOperation({ summary: 'Get a logo varient by it\'s name' })
+  @ApiParam({ name: 'logoname', type: String })
   @Get('/logos/:logoname')
-  async getLogo(@Param('logoname') logoname, @Res() response) {
+  async getLogo(@Param('logoname') logoname: string, @Res() response: Response): Promise<Observable<void>> {
     return of(
       response
         .status(HttpStatus.OK)
@@ -28,8 +34,10 @@ export class AssetsController {
     );
   }
 
+  @ApiOperation({ summary: 'Get an image by it\'s name' })
+  @ApiParam({ name: 'filename', type: String })
   @Get('/images/:filename')
-  async getImage(@Param('filename') filename, @Res() response) {
+  async getImage(@Param('filename') filename: string, @Res() response: Response): Promise<Observable<void>> {
     return of(
       response
         .status(HttpStatus.OK)
@@ -37,8 +45,10 @@ export class AssetsController {
     );
   }
 
+  @ApiOperation({ summary: 'Get a file submission by it\'s UUID' })
+  @ApiParam({ name: 'fileUUID', type: String })
   @Get('/submissions/:fileUUID')
-  async getSubmission(@Param('fileUUID') fileUUID, @Res() response) {
+  async getSubmission(@Param('fileUUID') fileUUID: string, @Res() response: Response): Promise<void> {
     const fileName = await this.assetsService.getFileName(fileUUID);
     return response
       .set('Content-Type', 'application/octet-stream')
@@ -47,9 +57,9 @@ export class AssetsController {
       .sendFile(`${fileUUID}`, { root: process.env.FILE_PATH });
   }
 
-  // @Roles(Role.Supervisor)
+  @ApiOperation({ summary: 'Get a list of all logos' })
   @Get('/list/logo')
-  async listLogos(@Res() response) {
+  async listLogos(@Res() response: Response): Promise<Response<any, Record<string, any>>> {
     const dir = process.env.LOGO_PATH;
     const files = fs.readdirSync(dir);
 
@@ -62,7 +72,6 @@ export class AssetsController {
         dateModified: fs.statSync(dir + file).mtime,
       });
     }
-
     return response.status(HttpStatus.OK).json(logos);
   }
 

@@ -1,4 +1,4 @@
-export type FileSubmissionGrade = {
+export class FileSubmissionGrade {
     fileSubmissionGrade: number;
     fileSubmissionNotes: string;
     // courseElement?: CourseElement;
