@@ -42,7 +42,9 @@ export class CourseService {
     try {
       const token = await this.helper.extractJWTToken(request);
       userUUID = await this.helper.getUserUUIDfromJWT(token);
-      users.push(userUUID);
+      if (!users.includes(userUUID)) {
+        users.push(userUUID);
+      }
     } catch (err) {
       throw new NotAcceptableException("Couldn't get user from token");
     }
@@ -84,7 +86,7 @@ export class CourseService {
               return {
                 schoolClasses: {
                   connect: {
-                    classUUID
+                    schoolClassUUID: classUUID
                   }
                 }
               }
@@ -95,6 +97,7 @@ export class CourseService {
 
       return new Course(courseData)
     } catch (err) {
+      console.log(err);
       throw new InternalServerErrorException('Database error');
     }
   }
