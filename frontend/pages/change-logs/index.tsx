@@ -14,7 +14,6 @@ export default function RegisterApproved({ entries }) {
         <title>Change-Logs - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="Change-Logs"></Headline>
       <Spacer size="verySmall"></Spacer>
       <Separator width="small" alignment="center" />

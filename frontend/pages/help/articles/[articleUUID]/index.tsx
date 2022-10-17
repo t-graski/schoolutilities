@@ -7,6 +7,7 @@ import { getAccessToken } from "../../../../utils/authHelper";
 import { Article } from "../../../../components/organisms/help/Article";
 import { ContentLayout } from "../../../../utils/styles";
 import dynamic from "next/dynamic";
+import { BackLink } from "../../../../components/molecules/BackLink";
 
 export default function ArticleOverview({ content }) {
   return (
@@ -16,6 +17,7 @@ export default function ArticleOverview({ content }) {
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
+        <BackLink href={"/help"} label={"Back to help"}></BackLink>
         <Article content={content}></Article>
         <Spacer size="small"></Spacer>
       </ContentLayout>
