@@ -8,7 +8,7 @@ const PlansLayout = styled("div", {
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
   gridGap: "20px",
-  padding: "20px",
+  padding: "20px 0",
   width: "100%",
   margin: "0 auto",
   justifyContent: "center",

@@ -173,6 +173,7 @@ export const PersonsSettingsField: React.FC<Props> = ({ queryClient }) => {
                 onChange={(event) => {
                   setSchoolRoleId(event);
                 }}
+                theme="surface"
               ></Select>
             </StyledInputField>
           </SettingsPopUp>

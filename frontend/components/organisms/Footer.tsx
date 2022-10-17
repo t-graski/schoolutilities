@@ -57,6 +57,7 @@ const LinkLayout = styled("div", {
 
 const LinkHeadline = styled("div", {
   marginBottom: "0.5vh",
+  padding: "$1x",
 
   fontSize: "1.3rem",
   fontWeight: "bold",
@@ -67,15 +68,19 @@ const StyledLink = styled("a", {
   display: "flex",
   alignItems: "center",
   gap: "15px",
+  padding: "$1x",
+  borderRadius: "$1x",
 
   fontSize: "1.1rem",
   textDecoration: "none",
-  color: "$neutral-500",
+  color: "$onBackground",
   cursor: "pointer",
+  backgroundColor: "$surfaceVariant",
   transition: "color 0.2s ease-in-out",
 
+
   "&:hover": {
-    color: "$warning",
+    backgroundColor: "$surface2",
   },
 });
 

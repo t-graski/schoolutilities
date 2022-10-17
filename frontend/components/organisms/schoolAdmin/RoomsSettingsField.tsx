@@ -37,7 +37,8 @@ const EditElementInputs: React.FC<{
           });
         }}
         min="2"
-        max="30"
+        max="30"        
+        theme="surface"
       />
       <Spacer size="verySmall" />
       <InputField
@@ -52,6 +53,7 @@ const EditElementInputs: React.FC<{
         }}
         min="2"
         max="30"
+        theme="surface"
       ></InputField>
       <Spacer size="verySmall" />
       <InputField
@@ -66,6 +68,7 @@ const EditElementInputs: React.FC<{
         }}
         min="2"
         max="30"
+        theme="surface"
       ></InputField>
     </StyledInputField>
   );

@@ -242,8 +242,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           <Link href="/auth?tab=login">
             <a>
               <Button
-                backgroundColor="secondary"
-                color="primary"
+                buttonType={"text"}
                 onClick={() => {
                   handleSubmit();
                 }}

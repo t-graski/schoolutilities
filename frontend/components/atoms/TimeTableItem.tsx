@@ -84,11 +84,11 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
     backgroundColor: isBeforeNow ? "$primary-100" : "$primary-300",
-    color: isBeforeNow ? "$neutral-300" : "$neutral-500",
+    color: isBeforeNow ? "$outline" : "$onBackground",
     borderRadius: "10px",
     padding: "$1x",
     gap: "$2x",
-    border: isBeforeNow ? "3px solid $primary-200" : "3px solid $primary-400",
+    border: isBeforeNow ? "3px solid $outline" : "3px solid $inversePrimary",
     boxSizing: "border-box",
     gridColumn: `${
       item.overlapStart * overlapColumns + 1
@@ -184,11 +184,13 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           <Skeleton width={"100%"} height={"65px"} />
         </SkeletonLayout>
       )}
-      {!item.schoolSubject && item.timeTableElementUUID != "" && !item.timeTableElementTeachers && (
-        <TimeTableItemLayout layout="time">
-          {getSmallTimeFormat(item.timeTableElementStartTime)}
-        </TimeTableItemLayout>
-      )}
+      {!item.schoolSubject &&
+        item.timeTableElementUUID != "" &&
+        !item.timeTableElementTeachers && (
+          <TimeTableItemLayout layout="time">
+            {getSmallTimeFormat(item.timeTableElementStartTime)}
+          </TimeTableItemLayout>
+        )}
     </>
   );
 };

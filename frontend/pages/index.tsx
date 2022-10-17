@@ -28,6 +28,8 @@ const ArtworkLayout = styled("div", {
   display: "block",
   width: "55vw",
   height: "calc(55vw/731*526)",
+
+  color: "$surface3",
 });
 
 export default function Home() {

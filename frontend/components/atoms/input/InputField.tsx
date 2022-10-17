@@ -18,6 +18,7 @@ type Props = {
   errorMessage?: string;
   min?: string;
   max?: string;
+  theme?: string;
 };
 
 const StyledInputField = styled("input", {
@@ -29,11 +30,11 @@ const StyledInputField = styled("input", {
 
   fontFamily: "$neutral-500",
   fontWeight: "bold",
-  background: "$neutral-300",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
-  color: "$neutral-500",
+  color: "$onSurfaceVariant",
+  backgroundColor: "transparent",
 
   ["&:focus"]: {
     borderBottom: "solid 1px $colors$neutral-500",
@@ -92,6 +93,7 @@ export const InputField: React.FC<Props> = ({
   errorMessage = "",
   min,
   max,
+  theme,
 }) => {
   const [isInputValid, setIsInputValid] = React.useState(null);
 
@@ -119,6 +121,7 @@ export const InputField: React.FC<Props> = ({
         required={required}
         label={label}
         showLabel={showLabel}
+        theme={theme}
       >
         <StyledLabel>
           <StyledInputField

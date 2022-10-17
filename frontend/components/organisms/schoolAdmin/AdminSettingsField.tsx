@@ -68,27 +68,9 @@ const SettingsEntryName = styled("p", {
   color: "$neutral-500",
 });
 
-const StyledInputField = styled("div", {
-  marginTop: "15px",
-  marginBottom: "15px",
-});
-
 const SettingsEntryLink = styled("a", {
   textDecoration: "none",
   cursor: "pointer",
-});
-
-const StyledError = styled("p", {
-  marginTop: "15px",
-  marginBottom: "15px",
-  border: "solid 2px $error",
-  padding: "20px",
-  width: "fit-content",
-  borderRadius: "25px",
-
-  color: "$error",
-  fontSize: "1.5rem",
-  fontWeight: "$bold",
 });
 
 const LoadingLayout = styled("div", {

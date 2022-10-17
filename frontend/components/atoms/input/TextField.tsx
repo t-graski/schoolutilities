@@ -18,7 +18,7 @@ const StyledTextArea = styled("textarea", {
   border: "none",
   padding: "0.5rem 0",
   minHeight: "50px",
-  maxHeight: "50vh",
+  maxHeight: "30vh",
   borderBottom: "solid 1px transparent",
 
   color: "$neutral-500",

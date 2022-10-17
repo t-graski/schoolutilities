@@ -1,9 +1,11 @@
-import React from "react";
-import dynamic from "next/dynamic";
-
-const SunEditor = dynamic(() => import("suneditor-react"), {
-  ssr: false,
-});
+import React, { useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { EditorMenuBar } from "./EditorMenuBar";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
+import Highlight from "@tiptap/extension-highlight";
+import Link from "@tiptap/extension-link";
 
 type Props = {
   value: string;
@@ -11,57 +13,24 @@ type Props = {
 };
 
 export const MarkdownEditor: React.FC<Props> = ({ saveContent, value }) => {
-  const options = {
-    toolbarContainer: "#toolbar_container",
-    showPathLabel: false,
-    charCounter: true,
-    maxCharCount: 720,
-    width: "auto",
-    maxWidth: "700px",
-    height: "auto",
-    minHeight: "100px",
-    maxHeight: "250px",
-    buttonList: [
-      ["undo", "redo", "font", "fontSize", "formatBlock"],
-      [
-        "bold",
-        "underline",
-        "italic",
-        "strike",
-        "subscript",
-        "superscript",
-        "removeFormat",
-      ],
-      [
-        "fontColor",
-        "hiliteColor",
-        "outdent",
-        "indent",
-        "align",
-        "horizontalRule",
-        "list",
-        "table",
-      ],
-      [
-        "link",
-        "image",
-        "video",
-        "fullScreen",
-        "showBlocks",
-        "codeView",
-        "preview",
-        "print",
-        "save",
-      ],
-    ],
-    callBackSave: function (contents, isChanged) {
-      saveContent(contents);
-    },
-  };
+  console.log("value", value);
+  const editor = useEditor({
+    extensions: [StarterKit, Highlight, TaskList, TaskItem, Link],
+    content: value,
+  });
+
+  useEffect(() => {
+    if (editor) {
+      editor.on("update", () => {
+        saveContent(editor.getHTML());
+      });
+    }
+  }, [editor]);
 
   return (
-    <>
-      <SunEditor setOptions={options} setContents={value} />
-    </>
+    <div className="editor">
+      {editor && <EditorMenuBar editor={editor} />}
+      <EditorContent className="editor__content" editor={editor} />
+    </div>
   );
 };

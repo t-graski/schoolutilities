@@ -29,7 +29,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     getContent();
-  });
+  }, []);
 
   const [items, setItems] = useState([]);
 
@@ -50,9 +50,9 @@ export default function Home() {
       setItems(
         getResponse.map((item) => {
           return {
-            name: item.headline,
+            name: item.articleHeadline,
             id: item.articleUUID,
-            description: item.catchPhrase,
+            description: item.articleCatchPhrase,
           };
         })
       );

@@ -41,7 +41,7 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
-  backgroundColor: "$tertiaryContainer",
+  backgroundColor: "$secondaryContainer",
   borderRadius: 15,
   padding: 8,
   boxShadow:
@@ -62,7 +62,7 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
 const itemStyles = {
   all: "unset",
   lineHeight: 1,
-  color: "$onSurfaceVariant",
+  color: "$onSecondaryContainer",
   borderRadius: 5,
   display: "flex",
   alignItems: "center",
@@ -176,7 +176,8 @@ const UserMenuLayout = styled("div", {
   justifyContent: "center",
   alignItems: "center",
 
-  backgroundColor: "#A2A8C3",
+  backgroundColor: "$primary",
+  color: "$onPrimary",
   cursor: "pointer",
 });
 

@@ -98,7 +98,7 @@ const LinkLayout = styled("a", {
   width: "100%",
   padding: "24px",
   borderRadius: "$normal",
-  backgroundColor: "$neutral-300",
+  backgroundColor: "$surface3",
   cursor: "pointer",
   color: "$neutral-500",
   textDecoration: "none",
@@ -110,10 +110,10 @@ const LinkLayout = styled("a", {
     color: {
       primary: {},
       secondary: {
-        backgroundColor: "$neutral-500",
+        backgroundColor: "$secondary",
       },
       special: {
-        backgroundColor: "$warning",
+        backgroundColor: "$primaryContainer",
       },
     },
   },
@@ -237,7 +237,7 @@ const contentShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: "$neutral-400",
+  backgroundColor: "$surface",
   position: "fixed",
   opacity: 0.8,
   inset: 0,
@@ -247,7 +247,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface4",
   borderRadius: 6,
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",

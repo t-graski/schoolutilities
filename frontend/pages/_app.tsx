@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../utils/skeleton.css";
+import "../utils/tapTapEditor.css";
 import { IdProvider } from "@radix-ui/react-id";
 
 const globalStyles = globalCss({
@@ -34,7 +35,7 @@ const globalStyles = globalCss({
     borderRadius: "15px !important",
 
     backgroundColor: "transparent !important",
-  },
+  }
 });
 
 import { SkeletonTheme } from "react-loading-skeleton";
@@ -62,8 +63,8 @@ function App({ Component, pageProps }: AppProps) {
           defaultTheme="system"
         >
           <SkeletonTheme
-            baseColor="var(--colors-neutral-300)"
-            highlightColor="var(--colors-primary-100)"
+            baseColor="var(--colors-surfaceVariant)"
+            highlightColor="var(--colors-outline)"
             duration={1.3}
           >
             <Script

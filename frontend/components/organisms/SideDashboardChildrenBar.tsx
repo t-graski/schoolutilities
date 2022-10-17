@@ -52,20 +52,22 @@ const SideDashboardBarItemLink = styled("a", {
   padding: "$2x",
 
   transition: "all 0.2s ease-in-out",
-  color: "$neutral-500",
+  color: "$onBackground",
   textDecoration: "none",
   borderRadius: "$small",
 
   "&:hover": {
     opacity: "1",
-    backgroundColor: "$neutral-400",
+    backgroundColor: "$surface4",
+    color: "$onSurface",
   },
 
   variants: {
     highlighted: {
       true: {
         opacity: "1",
-        backgroundColor: "$neutral-400",
+        backgroundColor: "$surface4",
+        color: "$onSurface",
       },
       false: {
         opacity: "0.7",

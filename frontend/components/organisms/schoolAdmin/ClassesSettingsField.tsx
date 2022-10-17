@@ -52,7 +52,7 @@ const SettingsEntryName = styled("p", {
 
 const DepartmentName = styled("p", {
   fontSize: "1rem",
-  color: "$neutral-500",
+  color: "$onSurface",
 });
 
 const StyledInputField = styled("div", {
@@ -90,9 +90,6 @@ export const ClassesSettingsField: React.FC<Props> = ({ queryClient }) => {
     ["departments", schoolUUID],
     () => fetchSchoolDepartments(schoolUUID)
   );
-
-  console.log(classes);
-  console.log(departments);
 
   const addClassMutation = useMutation(addSchoolClass, {
     onMutate: async () => {
@@ -228,6 +225,7 @@ export const ClassesSettingsField: React.FC<Props> = ({ queryClient }) => {
                 setValidInput={setSchoolClassNameValid}
                 min="2"
                 max="30"
+                theme="surface"
               />
               <Spacer size="verySmall" />
               <Select
@@ -241,6 +239,7 @@ export const ClassesSettingsField: React.FC<Props> = ({ queryClient }) => {
                 onChange={(event) => {
                   setDepartmentUUID(event);
                 }}
+                theme="surface"
               ></Select>
             </StyledInputField>
           </SettingsPopUp>

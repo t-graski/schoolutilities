@@ -48,7 +48,7 @@ const fadeOut = keyframes({
 
 const StyledMenu = styled(NavigationMenuPrimitive.Root, {
   position: "relative",
-  zIndex: 1,
+  zIndex: 2,
 
   display: "flex",
   justifyContent: "center",
@@ -79,7 +79,7 @@ const itemStyles = {
   userSelect: "none",
 
   "&:focus": { position: "relative", boxShadow: `0 0 0 2px ${violet.violet7}` },
-  "&:hover": { backgroundColor: "$surface", color: "$onSurface" },
+  "&:hover": { backgroundColor: "$surface2", color: "$onSurface" },
 };
 
 const StyledTrigger = styled(NavigationMenuPrimitive.Trigger, {
@@ -200,7 +200,7 @@ const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   overflow: "hidden",
   height: "var(--radix-navigation-menu-viewport-height)",
 
-  backgroundColor: "$surface",
+  backgroundColor: "$surface2",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
 
@@ -279,8 +279,8 @@ const StyledA = styled("a", {
   textDecoration: "none",
 
   "&:hover": {
-    backgroundColor: "$surfaceVariant",
-    color: "$onSurfaceVariant",
+    backgroundColor: "$surface",
+    color: "$onSurface",
   },
 });
 

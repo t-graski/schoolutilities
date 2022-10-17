@@ -216,6 +216,7 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
                 setValidInput={setOffDayNameValid}
                 min="2"
                 max="30"
+                theme="surface"
               />
               <Spacer size="verySmall" />
               <InputField
@@ -225,6 +226,7 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
                 onChange={(event) => {
                   setStartDate(event);
                 }}
+                theme="surface"
               ></InputField>
               <Spacer size="verySmall" />
               <InputField
@@ -234,6 +236,7 @@ export const OffDaysSettingsField: React.FC<Props> = ({ queryClient }) => {
                 onChange={(event) => {
                   setEndDate(event);
                 }}
+                theme="surface"
               ></InputField>
             </StyledInputField>
           </SettingsPopUp>

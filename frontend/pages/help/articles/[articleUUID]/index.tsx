@@ -16,7 +16,6 @@ export default function ArticleOverview({ content }) {
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
-        <Spacer size="medium"></Spacer>
         <Article content={content}></Article>
         <Spacer size="small"></Spacer>
       </ContentLayout>

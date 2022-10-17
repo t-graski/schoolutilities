@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly helper: HelperService) { }
+  constructor(private readonly helper: HelperService) {}
 
   async createArticle(request): Promise<ReturnMessage> {
     const {
@@ -128,7 +128,9 @@ export class ArticleService {
         articleContent: article.articleContent,
         type: {
           articleTypeId: article.articleType,
-          articleTypeName: await this.helper.translateArticleType(article.articleType),
+          articleTypeName: await this.helper.translateArticleType(
+            article.articleType,
+          ),
         },
         articleIsPublic: article.articleIsPublic,
         articlePublishTimestamp: article.articlePublishTimestamp,
@@ -137,7 +139,9 @@ export class ArticleService {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(article.articleContent),
+        readingTime: await this.helper.computeReadingTime(
+          article.articleContent,
+        ),
       };
 
       return {
@@ -170,7 +174,9 @@ export class ArticleService {
         articleContent: article.articleContent,
         type: {
           articleType: article.articleType,
-          articleTypeName: await this.helper.translateArticleType(article.articleType),
+          articleTypeName: await this.helper.translateArticleType(
+            article.articleType,
+          ),
         },
         articleIsPublic: article.articleIsPublic,
         articlePublishTimestamp: article.articlePublishTimestamp,
@@ -179,14 +185,19 @@ export class ArticleService {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(article.articleContent),
+        readingTime: await this.helper.computeReadingTime(
+          article.articleContent,
+        ),
       };
 
       articleItems.push(articleItem);
     }
 
     articleItems.sort((a, b) => {
-      return b.creationDate.getTime() - a.creationDate.getTime();
+      return (
+        b.articleCreationTimestamp.getTime() -
+        a.articleCreationTimestamp.getTime()
+      );
     });
 
     return {

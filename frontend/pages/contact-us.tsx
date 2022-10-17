@@ -27,9 +27,7 @@ export default function Features() {
         <title>Contact Us - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="Contact Us" fontSize="medium"></Headline>
-      <Separator width="small" alignment="center" />
       <ImprintLayout>
         <Spacer size="small"></Spacer>
         <MainContentText>

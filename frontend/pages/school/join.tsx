@@ -16,7 +16,6 @@ export default function RegisterApproved() {
       <Navbar></Navbar>
       <Spacer size="medium"></Spacer>
       <Headline label="Join a school"></Headline>
-      <Separator width="small" alignment="center" />
       <Spacer size="verySmall"></Spacer>
       <SchoolJoin></SchoolJoin>
       <Footer></Footer>

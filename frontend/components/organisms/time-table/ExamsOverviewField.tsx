@@ -54,6 +54,7 @@ const EditElementInputs: React.FC<{
         }}
         min="2"
         max="30"
+        theme="surface"
       />
       <Spacer size="verySmall" />
       <Select
@@ -75,6 +76,7 @@ const EditElementInputs: React.FC<{
             : []
         }
         selectValue={itemConfig.timeTableExamRoomUUID}
+        theme="surface"
       ></Select>
     </StyledInputField>
   );

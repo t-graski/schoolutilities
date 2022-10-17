@@ -31,4 +31,10 @@ export const dark = {
   onPrimary: colors.primary20,
   primaryContainer: colors.primary30,
   primary: colors.primary80,
+  // mapped surface colors
+  surface1: "#202529",
+  surface2: "#242a30",
+  surface3: "#272f37",
+  surface4: "#283139",
+  surface5: "#2a353e",
 };

@@ -138,9 +138,9 @@ export const LoginField: React.FC<Props> = ({}) => {
 
     fontSize: "1rem",
     cursor: "pointer",
-    color: "$neutral-500",
+    color: "$onPrimary",
     fontWeight: "bold",
-    backgroundColor: "$primary-400",
+    backgroundColor: "$primary",
 
     ":hover": {
       backgroundColor: "$backgroundColor",
@@ -182,7 +182,7 @@ export const LoginField: React.FC<Props> = ({}) => {
               value="Sign in"
             ></StyledSubmitButton>
             <Link href="/auth/password-reset" passHref>
-              <StyledLink>Reset Password</StyledLink>
+              <Button buttonType={"text"}>Reset Password</Button>
             </Link>
           </LoginButtonLayout>
         </LoginLayout>
@@ -192,8 +192,7 @@ export const LoginField: React.FC<Props> = ({}) => {
         {signUpInfo && (
           <ButtonLayout>
             <Button
-              backgroundColor="secondary"
-              color="primary"
+              buttonType={"filled"}
               onClick={() => {
                 setSignUpInfo("");
               }}

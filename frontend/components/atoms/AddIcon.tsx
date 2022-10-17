@@ -30,10 +30,10 @@ const AddIconPlus = styled("p", {
   },
 });
 
-export const AddIcon: React.FC<Props> = ({ addFunction = () => {} }) => {
+export const AddIcon: React.FC<Props> = ({ addFunction }) => {
   return (
     <>
-      <AddIconLayout onClick={() => addFunction()}>
+      <AddIconLayout {...(addFunction && { onClick: () => addFunction() })}>
         <AddIconPlus>+</AddIconPlus>
       </AddIconLayout>
     </>

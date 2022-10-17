@@ -58,6 +58,9 @@ export const styles = {
     radii: {
       small: "10px",
       normal: "25px",
+      "1x": "8px",
+      "2x": "16px",
+      "3x": "24px",
     },
   },
   media: {

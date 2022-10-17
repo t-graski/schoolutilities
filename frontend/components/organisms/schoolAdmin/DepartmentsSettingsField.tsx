@@ -43,7 +43,7 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$neutral-500",
+  color: "$onSurface",
 });
 
 const StyledInputField = styled("div", {
@@ -222,6 +222,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                 setValidInput={setDepartmentNameValid}
                 min="2"
                 max="30"
+                theme="surface"
               />
             </StyledInputField>
           </SettingsPopUp>

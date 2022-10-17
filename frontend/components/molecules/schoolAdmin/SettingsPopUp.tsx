@@ -139,8 +139,7 @@ export const SettingsPopUp: React.FC<Props> = ({
                 onClick={() => {
                   closeFunction();
                 }}
-                backgroundColor={"secondary"}
-                color={"primary"}
+                buttonType="text"
               >
                 Cancel
               </Button>

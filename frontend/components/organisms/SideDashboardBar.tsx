@@ -25,7 +25,7 @@ const SideDashboardBarLayout = styled("div", {
   position: "sticky",
   top: "0",
   left: "0",
-  backgroundColor: "$neutral-400",
+  backgroundColor: "$secondaryContainer",
   scrollbarWidth: "none",
 
   "&::-webkit-scrollbar": {

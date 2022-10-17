@@ -25,8 +25,8 @@ const PlanLayout = styled("div", {
   borderRadius: "40px",
   padding: "20px",
 
-  backgroundColor: "$neutral-300",
-  color: "$neutral-500",
+  backgroundColor: "$surface2",
+  color: "$onSurface",
 
   variants: {
     highlighted: {
@@ -49,10 +49,12 @@ const PlanName = styled("span", {
   variants: {
     highlighted: {
       true: {
-        backgroundColor: "$neutral-400",
+        backgroundColor: "$secondary",
+        color: "$onSecondary",
       },
       false: {
-        backgroundColor: "$neutral-100",
+        backgroundColor: "$secondaryContainer",
+        color: "$onSecondaryContainer",
       },
     },
   },
@@ -129,7 +131,7 @@ const PlanBenefitIconLayout = styled("div", {
   padding: "9px",
   borderRadius: "50%",
 
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface",
 
   variants: {
     included: {

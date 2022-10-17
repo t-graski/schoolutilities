@@ -31,4 +31,10 @@ export const light = {
   onPrimary: colors.primary100,
   primaryContainer: colors.primary90,
   primary: colors.primary40,
+  // mapped surface colors
+  surface1: "#eff4f9",
+  surface2: "#e8f0f7",
+  surface3: "#dde9f2",
+  surface4: "#dde9f2",
+  surface5: "#d8e6f0",
 };

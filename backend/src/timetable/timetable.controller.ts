@@ -6,7 +6,7 @@ import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
-@UseInterceptors(ClassSerializerInterceptor)
+// @UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/timetable')
 @UseGuards(RolesGuard)
 export class TimetableController {
@@ -81,19 +81,19 @@ export class TimetableController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/exam')
-  async addExam(@Body() exam: AddExamDTO, @Req() request: Request): Promise<Exam> {
+  async addExam(@Body() exam: AddExamDTO, @Req() request: Request) {
     return this.timetableService.addExam(exam, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('/exam')
-  async updateExam(@Body() exam: UpdateExamDTO, @Req() request: Request): Promise<Exam> {
+  async updateExam(@Body() exam: UpdateExamDTO, @Req() request: Request) {
     return this.timetableService.updateExam(exam, request);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/exam/:examUUID')
-  async getExam(@Param('examUUID') examUUID: string, @Req() request: Request): Promise<Exam> {
+  async getExam(@Param('examUUID') examUUID: string, @Req() request: Request) {
     return this.timetableService.getExam(examUUID, request);
   }
 
@@ -105,7 +105,7 @@ export class TimetableController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/exams/:schoolUUID')
-  async getExamsOfSchool(@Param('schoolUUID') schoolUUID: string, @Req() request: Request): Promise<Exam[]> {
+  async getExamsOfSchool(@Param('schoolUUID') schoolUUID: string, @Req() request: Request) {
     return this.timetableService.getExamsOfSchool(schoolUUID, request);
   }
 

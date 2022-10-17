@@ -61,5 +61,20 @@ export const Button = styled("button", {
         opacity: 0,
       },
     },
+    buttonType: {
+      filled: {
+        backgroundColor: "$primary",
+        color: "$onPrimary",
+      },
+      outlined: {
+        backgroundColor: "transparent",
+        color: "$onPrimaryContainer",
+        border: "1px solid $outline",
+      },
+      text: {
+        backgroundColor: "transparent",
+        color: "$onBackground",
+      },
+    },
   },
 });
