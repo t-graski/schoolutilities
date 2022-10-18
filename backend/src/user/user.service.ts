@@ -190,6 +190,23 @@ export class UserService {
     return RETURN_DATA.SUCCESS;
   }
 
+  async updateAppearance(request): Promise<ReturnMessage> {
+    let { theme } = request.body;
+
+    const token = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(token);
+
+    await prisma.userSettings.update({
+      where: {
+        userId,
+      },
+      data: {
+        userSettingTheme: theme,
+      },
+    });
+    return RETURN_DATA.SUCCESS;
+  }
+
   async updatePublicProfile(request): Promise<ReturnMessage> {
     let {
       displayName,
