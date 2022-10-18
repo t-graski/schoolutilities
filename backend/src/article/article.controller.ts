@@ -10,9 +10,11 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { of } from 'rxjs';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { editFileName, fileFilter } from 'src/misc/fileUpload';
 import { LENGTHS } from 'src/misc/parameterConstants';
@@ -89,5 +91,22 @@ export class ArticleController {
   async uploadFile(@Req() request, @Res() response, @UploadedFile() file) {
     const result = await this.articleService.uploadFile(file, request);
     return response.status(result.status).json(result?.message);
+  }
+
+  @Get('/files/:articleUUID')
+  async getArticleFiles(@Param('articleUUID') articleUUID: string, @Req() request, @Res() response) {
+    const result = await this.articleService.getArticleFiles(articleUUID);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @Get('/file/:fileUUID')
+  async getArticleFile(@Param('fileUUID') fileUUID: string, @Req() request, @Res() response) {
+    return of(
+      response
+        .status(HttpStatus.OK)
+        .sendFile(`${fileUUID}`, { root: process.env.LOGO_PATH }),
+    );
   }
 }

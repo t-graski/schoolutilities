@@ -247,4 +247,23 @@ export class ArticleService {
       throw new InternalServerErrorException('Database error');
     }
   }
+
+  async getArticleFiles(articleUUID: string): Promise<ReturnMessage> {
+    try {
+      const articleFiles = await prisma.articleFile.findMany({
+        where: {
+          articles: {
+            articleUUID
+          }
+        }
+      })
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: articleFiles,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
 }
