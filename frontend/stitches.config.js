@@ -45,12 +45,18 @@ export const styles = {
       6: "35px",
     },
     fontSizes: {
-      1: "12px",
-      2: "13px",
-      3: "15px",
-      4: "17px",
-      5: "19px",
-      6: "21px",
+      xxs: "0.75", // 12px
+      xs: '0.875rem', // 14px
+      s: '1rem', // 16px
+      m: '1.125rem', // 18px
+      l: '1.25rem', // 20px
+      xl: '1.5rem', // 24px
+      xxl: '1.75rem', // 32px
+      x3l: '2.5rem', // 40px
+      x4l: '3.25rem', // 52px
+      x5l: '4rem', // 64px
+      x6l: '4.75rem', // 76px
+      x7l: '5.5rem', // 88px
     },
     fonts: {
       system: "Poppins",

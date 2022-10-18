@@ -17,7 +17,7 @@ module.exports = {
       },
       {
         source: "/profile/settings",
-        destination: "/profile",
+        destination: "/profile/account",
         permanent: true,
       },
       {
