@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { HelperService } from '../helper/helper.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly helper: HelperService) {}
+  constructor(private readonly helper: HelperService) { }
 
   async createArticle(request): Promise<ReturnMessage> {
     const {
@@ -221,6 +221,49 @@ export class ArticleService {
       };
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async uploadFile(file, request): Promise<ReturnMessage> {
+    const { articleUUID } = request.body;
+    try {
+      const articleFile = await prisma.articleFile.create({
+        data: {
+          articleFileUUID: `${file.filename}`,
+          articleFileName: `${file.originalname}`,
+          articleFileSize: file.size,
+          articles: {
+            connect: {
+              articleUUID
+            }
+          }
+        }
+      })
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: articleFile,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async getArticleFiles(articleUUID: string): Promise<ReturnMessage> {
+    try {
+      const articleFiles = await prisma.articleFile.findMany({
+        where: {
+          articles: {
+            articleUUID
+          }
+        }
+      })
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: articleFiles,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
     }
   }
 }

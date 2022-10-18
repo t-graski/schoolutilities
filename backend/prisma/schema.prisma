@@ -61,10 +61,23 @@ model schoolClasses {
   timeTableElementClasses      timeTableElementClasses[]
   timeTableEventClasses        timeTableEventClasses[]
   timeTableSubstitutionClasses timeTableSubstitutionClasses[]
+  schoolClassUsers             schoolClassUsers[]
 
   @@unique([schoolClassUUID], map: "school_class_uuid_UNIQUE")
   @@index([schoolClassDepartmentId], map: "fk_school_class_department_id")
   @@map("school_classes")
+}
+
+model schoolClassUsers {
+  schoolClassId Int           @map("school_class_id")
+  userId        Int           @map("user_id")
+  schoolClasses schoolClasses @relation(fields: [schoolClassId], references: [schoolClassId])
+  users         users         @relation(fields: [userId], references: [userId])
+
+  @@id([schoolClassId, userId])
+  @@index([userId], map: "fk_school_class_users_user_id")
+  @@index([schoolClassId], map: "fk_school_class_users_school_class_id")
+  @@map("school_class_users")
 }
 
 model schools {
@@ -176,20 +189,35 @@ model courseElements {
 }
 
 model articles {
-  articleId                Int      @id @default(autoincrement()) @map("article_id")
-  articleUUID              String   @map("article_uuid")
-  articleHeadline          String   @map("article_headline") @db.Text
-  articleCatchPhrase       String   @map("article_catch_phrase") @db.Text
-  articleContent           String   @map("article_content") @db.Text
-  articleType              Int      @map("article_type")
-  articleIsPublic          Boolean  @map("article_is_public")
-  articlePublishTimestamp  DateTime @default(now()) @map("article_publish_timestamp") @db.Timestamp(0)
-  articleCreationTimestamp DateTime @default(now()) @map("article_creation_timestamp") @db.Timestamp(0)
-  articleCreatorId         Int      @map("article_creator_id")
-  users                    users    @relation(fields: [articleCreatorId], references: [userId])
+  articleId                Int           @id @default(autoincrement()) @map("article_id")
+  articleUUID              String        @map("article_uuid")
+  articleHeadline          String        @map("article_headline") @db.Text
+  articleCatchPhrase       String        @map("article_catch_phrase") @db.Text
+  articleContent           String        @map("article_content") @db.Text
+  articleType              Int           @map("article_type")
+  articleIsPublic          Boolean       @map("article_is_public")
+  articlePublishTimestamp  DateTime      @default(now()) @map("article_publish_timestamp") @db.Timestamp(0)
+  articleCreationTimestamp DateTime      @default(now()) @map("article_creation_timestamp") @db.Timestamp(0)
+  articleCreatorId         Int           @map("article_creator_id")
+  users                    users         @relation(fields: [articleCreatorId], references: [userId])
+  articleFile              articleFile[]
 
   @@unique([articleUUID], map: "article_uuid_UNIQUE")
   @@index([articleCreatorId], map: "fk_articles_creator_id")
+}
+
+model articleFile {
+  articleFileId              Int      @id @default(autoincrement()) @map("article_file_id")
+  articleFileUUID            String   @map("article_file_uuid")
+  articleFileArticleId       Int      @map("article_file_article_id")
+  articleFileName            String   @map("article_file_name")
+  articleFileUploadTimestamp DateTime @default(now()) @map("article_file_upload_timestamp") @db.Timestamp(0)
+  articleFileSize            BigInt   @map("article_file_size") @db.BigInt
+  articles                   articles @relation(fields: [articleFileArticleId], references: [articleId])
+
+  @@unique([articleFileUUID], map: "article_file_uuid_UNIQUE")
+  @@index([articleFileArticleId], map: "fk_article_file_article_id")
+  @@map("article_file")
 }
 
 model courseElementHeadlineSettings {
@@ -719,6 +747,7 @@ model users {
   timeTableEventTeachers        timeTableEventTeachers[]
   timeTableSubstitutionTeachers timeTableSubstitutionTeachers[]
   timeTableSubstitutions        timeTableSubstitutions[]
+  schoolClassUsers              schoolClassUsers[]
 
   @@unique([userUUID], map: "user_uuid_UNIQUE")
   @@unique([userEmail], map: "user_email_UNIQUE")
