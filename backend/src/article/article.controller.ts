@@ -8,8 +8,14 @@ import {
   UseGuards,
   Param,
   Post,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { editFileName, fileFilter } from 'src/misc/fileUpload';
+import { LENGTHS } from 'src/misc/parameterConstants';
 import { Role } from 'src/roles/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
@@ -18,7 +24,7 @@ import { ArticleService } from './article.service';
 @UseGuards(RolesGuard)
 @Controller('api/articles')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) { }
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
@@ -67,5 +73,21 @@ export class ArticleController {
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
+  }
+
+  @Post('/uploadFile')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: '../files',
+        filename: editFileName,
+      }),
+      fileFilter: fileFilter,
+      limits: { fileSize: LENGTHS.MAX_FILE_SIZE },
+    }),
+  )
+  async uploadFile(@Req() request, @Res() response, @UploadedFile() file) {
+    const result = await this.articleService.uploadFile(file, request);
+    return response.status(result.status).json(result?.message);
   }
 }
