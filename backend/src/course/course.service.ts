@@ -1,456 +1,253 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateCourse, ReturnMessage } from 'src/types/Course';
-import { PrismaClient } from '@prisma/client';
-import validator from 'validator';
+import * as fs from 'fs';
+import * as moment from 'moment';
+import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import {
-  LENGTHS,
-  RETURN_DATA,
-  ID_STARTERS,
   ERROR_CODES,
+  ID_STARTERS,
+  RETURN_DATA,
 } from 'src/misc/parameterConstants';
-import { v4 as uuidv4 } from 'uuid';
+import { HttpStatus, Injectable, NotAcceptableException, InternalServerErrorException } from '@nestjs/common';
+import { ReturnMessage } from 'src/types/Course';
 import { AuthService } from 'src/auth/auth.service';
+import { CourseDto } from 'src/dto/course';
 import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
-import * as moment from 'moment';
-import { CourseDto } from 'src/dto/course';
-import { CourseEvent, GetEventsDto } from 'src/dto/events';
-import { AddCourseDto } from 'src/dto/addCourse';
-import { RemoveCourseDto } from 'src/dto/removeCourse';
-import * as fs from 'fs';
+import { PrismaClient } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
+import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
+import { Request } from 'express';
+import { CourseUser } from 'src/entity/course-user/courseUser';
+import { User } from 'src/entity/user/user';
+import { PrismaService } from 'src/prisma.service';
 let JSZip = require('jszip');
-// import { GetEventsDto } from 'src/dto/getEvents';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
-const prisma = new PrismaClient();
 
 @Injectable()
 export class CourseService {
-  connection: any;
   constructor(
     private readonly authService: AuthService,
     private readonly databaseService: DatabaseService,
     private readonly helper: HelperService,
+    private readonly prisma: PrismaService,
   ) { }
-  async addCourse(payload: AddCourseDto, request): Promise<ReturnMessage> {
-    const { name, courseDescription, schoolUUID, persons, classes } = payload;
 
-    let personUUID;
+  async addCourse(payload: AddCourseDTO, request: Request): Promise<Course> {
+    const { courseName, courseDescription, schoolUUID, users, courseClasses } = payload;
+
+    let userUUID;
 
     try {
       const token = await this.helper.extractJWTToken(request);
-      personUUID = await this.helper.getUserUUIDfromJWT(token);
+      userUUID = await this.helper.getUserUUIDfromJWT(token);
+      if (!users.includes(userUUID)) {
+        users.push(userUUID);
+      }
     } catch (err) {
-      return {
-        status: HttpStatus.NOT_ACCEPTABLE,
-        message: err.message,
-      };
+      throw new NotAcceptableException("Couldn't get user from token");
     }
 
-    const [schoolId, personId] = await Promise.all([
-      this.helper.getSchoolIdByUUID(schoolUUID),
-      this.helper.getUserIdByUUID(personUUID),
-    ]);
-
     try {
-      const courseData = await prisma.courses.create({
+      const courseData = await this.prisma.courses.create({
         data: {
           courseUUID: `${ID_STARTERS.COURSE}${uuidv4()}`,
-          name,
+          courseName,
           courseDescription,
-          schoolId: Number(schoolId),
-          subjectId: 0,
-          personCreationId: Number(personId),
-          coursePersons: {
-            create: {
-              personId,
-            },
+          schools: {
+            connect: {
+              schoolUUID,
+            }
           },
-        },
+          schoolSubjects: {
+            connect: {
+              schoolSubjectId: Number(1400),
+            }
+          },
+          users: {
+            connect: {
+              userUUID,
+            }
+          },
+          courseUsers: {
+            create: users.map((userUUID) => {
+              return {
+                users: {
+                  connect: {
+                    userUUID
+                  }
+                }
+              }
+            })
+          },
+          courseClasses: {
+            create: courseClasses.map((classUUID) => {
+              return {
+                schoolClasses: {
+                  connect: {
+                    schoolClassUUID: classUUID
+                  }
+                }
+              }
+            })
+          }
+        }
       });
 
-      if (persons) {
-        for (const person of persons) {
-          if (!validator.isUUID(person.slice(1), 4)) {
-            return RETURN_DATA.INVALID_INPUT;
-          }
-
-          const personId = await (
-            await this.authService.getPersonIdByUUID(person)
-          ).personId;
-
-          await prisma.coursePersons.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseData.courseId),
-                },
-              },
-              persons: {
-                connect: {
-                  personId: Number(personId),
-                },
-              },
-            },
-          });
-        }
-      }
-
-      if (classes) {
-        for (const schoolClass of classes) {
-          const schoolId = await this.databaseService.getClassIdByUUID(
-            schoolClass,
-          );
-
-          await prisma.courseClasses.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseData.courseId),
-                },
-              },
-              schoolClasses: {
-                connect: {
-                  classId: Number(schoolId),
-                },
-              },
-            },
-          });
-        }
-      }
-
-      delete courseData.courseId;
-      delete courseData.schoolId;
-      delete courseData.subjectId;
-      delete courseData.personCreationId;
-
-      return {
-        status: RETURN_DATA.SUCCESS.status,
-        data: courseData,
-      };
+      return new Course(courseData)
     } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
+      console.log(err);
+      throw new InternalServerErrorException('Database error');
     }
   }
 
   async removeCourse(
-    payload: RemoveCourseDto,
-    request,
-  ): Promise<ReturnMessage> {
+    payload: DeleteCourseDTO,
+  ): Promise<Course> {
     const { courseUUID } = payload;
 
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-
-    const course = await prisma.courses.findUnique({
-      where: {
-        courseId,
-      },
-    });
-
-    if (!course) {
-      return RETURN_DATA.NOT_FOUND;
+    try {
+      const course = await this.prisma.courses.delete({
+        where: {
+          courseUUID,
+        },
+      });
+      return new Course(course);
+    } catch (err) {
+      throw new InternalServerErrorException('Database error');
     }
+  }
+
+  async updateCourse(payload: UpdateCourseDTO): Promise<Course> {
+    const { courseUUID, courseName, courseDescription, users, courseClasses, schoolSubjectUUID } = payload;
 
     try {
-      await prisma.courses.delete({
-        where: {
-          courseId: Number(courseId),
-        },
-        select: {
-          courseId: true,
-          name: true,
-        },
-      });
-    } catch (err) {
-      return RETURN_DATA.DATABASE_ERROR;
-    }
-    return RETURN_DATA.SUCCESS;
-  }
-
-  async updateCourse(body: UpdateCourse): Promise<ReturnMessage> {
-    const {
-      courseUUID,
-      courseName,
-      courseDescription,
-      subjectId = 0,
-      classes,
-      persons,
-    } = body;
-
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-
-    const course = await prisma.courses.findUnique({
-      where: {
-        courseId: Number(courseId),
-      },
-    });
-
-    if (!course) {
-      throw new NotFoundException('Course not found: ' + courseUUID);
-    }
-
-    const patchCourse = await prisma.courses.update({
-      where: { courseId: Number(courseId) },
-      data: {
-        name: courseName,
-        courseDescription: courseDescription,
-        subjectId: Number(subjectId),
-      },
-    });
-
-    if (persons) {
-      const courseUsers = await this.helper.getCourseUsers(courseId);
-      const courseUsersIds = courseUsers.map(
-        (courseUser) => courseUser.personId,
-      );
-      for (let user of persons) {
-        if (!validator.isUUID(user.slice(1), 4)) {
-          return RETURN_DATA.INVALID_INPUT;
-        }
-
-        const userId = await this.helper.getUserIdByUUID(user);
-
-        if (!courseUsersIds.includes(userId)) {
-          await prisma.coursePersons.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseId),
-                },
-              },
-              persons: {
-                connect: {
-                  personId: Number(userId),
-                },
-              },
-            },
-          });
-        }
-
-        if (courseUsersIds.includes(userId) && !persons.includes(user)) {
-          await prisma.coursePersons.delete({
-            where: {
-              coursePersonId: {
-                courseId: Number(courseId),
-                personId: Number(userId),
-              },
-            },
-          });
-        }
-      }
-    }
-
-    if (classes) {
-      const courseClasses = await this.helper.getCourseClasses(courseId);
-      const courseClassesIds = courseClasses.map(
-        (courseClass) => courseClass.classId,
-      );
-
-      for (const schoolClass of classes) {
-        if (!validator.isUUID(schoolClass.slice(1), 4)) {
-          return RETURN_DATA.INVALID_INPUT;
-        }
-
-        const classId = await this.helper.getClassIdByUUID(schoolClass);
-
-        if (!courseClassesIds.includes(classId)) {
-          await prisma.courseClasses.create({
-            data: {
-              courses: {
-                connect: {
-                  courseId: Number(courseId),
-                },
-              },
-              schoolClasses: {
-                connect: {
-                  classId: Number(classId),
-                },
-              },
-            },
-          });
-        }
-
-        if (
-          courseClassesIds.includes(classId) &&
-          !classes.includes(schoolClass)
-        ) {
-          await prisma.courseClasses.delete({
-            where: {
-              courseClassId: {
-                courseId: Number(courseId),
-                classId: Number(classId),
-              },
-            },
-          });
-        }
-      }
-    }
-
-    delete patchCourse.courseId;
-
-    const schoolUUID = await this.helper.getSchoolUUIDById(
-      patchCourse.schoolId,
-    );
-
-    const personCreationUUID = await this.helper.getUserUUIDById(
-      patchCourse.personCreationId,
-    );
-
-    if (patchCourse) {
-      return {
-        status: HttpStatus.OK,
+      const updateCourse = await this.prisma.courses.update({
+        where: { courseUUID },
         data: {
-          courseUUID: patchCourse.courseUUID,
-          name: patchCourse.name,
-          courseDescription: patchCourse.courseDescription,
-          schoolUUID: schoolUUID,
-          creationDate: patchCourse.creationDate,
-          personCreationUUID: personCreationUUID,
-        },
-      };
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'Course not updated',
-      };
-    }
-  }
-
-  async removeUser(request): Promise<ReturnMessage> {
-    const jwt = await this.helper.extractJWTToken(request);
-    const requesterId = await this.helper.getUserIdfromJWT(jwt);
-    const { courseUUID, userUUID, schoolUUID } = request.body;
-    const userId = await this.helper.getUserIdByUUID(userUUID);
-    const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
-
-    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'You are not part of this school',
-      };
-    }
-
-    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'User is not part of this school',
-      };
-    }
-
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-    const isTeacher = await this.helper.isTeacher(requesterId, schoolId);
-    const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
-
-    if (isTeacher || isAdmin) {
-      const courseUser = await prisma.coursePersons.findUnique({
-        where: {
-          coursePersonId: {
-            courseId: Number(courseId),
-            personId: Number(userId),
-          },
+          courseName,
+          courseDescription,
+          schoolSubjects: {
+            connect: {
+              schoolSubjectUUID
+            }
+          }
         },
       });
 
-      if (!courseUser) {
-        return {
-          status: HttpStatus.NOT_FOUND,
-          message: 'User not found',
-        };
-      }
-
-      const deleteCourseUser = await prisma.coursePersons.delete({
-        where: {
-          coursePersonId: {
-            courseId: Number(courseId),
-            personId: Number(userId),
-          },
-        },
-      });
-
-      if (deleteCourseUser) {
-        return {
-          status: HttpStatus.OK,
-          message: 'User deleted successfully',
-        };
-      } else {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'User not deleted',
-        };
-      }
-    }
-    return {
-      status: HttpStatus.UNAUTHORIZED,
-      message: 'Unauthorized',
-    };
-  }
-
-  async addUser(request): Promise<ReturnMessage> {
-    const jwt = await this.helper.extractJWTToken(request);
-    const requesterId = await this.helper.getUserIdfromJWT(jwt);
-    const { courseUUID, userUUID, schoolUUID } = request.body;
-    const userId = await this.helper.getUserIdByUUID(userUUID);
-    const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
-
-    if (!(await this.helper.userIdInSchool(requesterId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'You are not part of this school',
-      };
-    }
-
-    if (!(await this.helper.userIdInSchool(userId, schoolId))) {
-      return {
-        status: HttpStatus.UNAUTHORIZED,
-        message: 'User is not part of this school',
-      };
-    }
-
-    const courseId = await this.helper.getCourseIdByUUID(courseUUID);
-    const isTeacher = await this.helper.isTeacher(requesterId, schoolId);
-    const isAdmin = await this.helper.isAdmin(requesterId, schoolId);
-
-    if (isTeacher || isAdmin) {
-      const courseUser = await prisma.coursePersons.findUnique({
-        where: {
-          coursePersonId: {
-            courseId: Number(courseId),
-            personId: Number(userId),
-          },
-        },
-      });
-
-      if (courseUser) {
-        return {
-          status: HttpStatus.CONFLICT,
-          message: 'User already exists',
-        };
-      }
-
-      try {
-        await prisma.coursePersons.create({
-          data: {
-            courseId: Number(courseId),
-            personId: Number(userId),
+      if (users) {
+        await this.prisma.courseUsers.deleteMany({
+          where: {
+            courses: {
+              courseUUID,
+            },
           },
         });
-      } catch (err) {
-        return {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'User not added',
-        };
+
+        for (const user of users) {
+          await this.prisma.courseUsers.create({
+            data: {
+              users: {
+                connect: {
+                  userUUID: user,
+                }
+              },
+              courses: {
+                connect: {
+                  courseUUID,
+                }
+              }
+            }
+          });
+        }
       }
 
-      return {
-        status: HttpStatus.OK,
-        message: 'User added successfully',
-      };
+      if (courseClasses) {
+        await this.prisma.courseClasses.deleteMany({
+          where: {
+            courses: {
+              courseUUID,
+            },
+          },
+        });
+
+        for (const courseClass of courseClasses) {
+          await this.prisma.courseClasses.create({
+            data: {
+              schoolClasses: {
+                connect: {
+                  schoolClassUUID: courseClass,
+                }
+              },
+              courses: {
+                connect: {
+                  courseUUID,
+                }
+              }
+            }
+          });
+        }
+      }
+      return new Course(updateCourse);
+    } catch (err) {
+      throw new InternalServerErrorException('Database error');
     }
-    return {
-      status: HttpStatus.UNAUTHORIZED,
-      message: 'Unauthorized',
-    };
+  }
+
+  async removeUser(payload: RemoveCourseUserDTO): Promise<any> {
+    const { courseUUID, userUUID } = payload;
+
+    try {
+      const courseUser = await this.prisma.courseUsers.deleteMany({
+        where: {
+          users: {
+            userUUID,
+          },
+          courses: {
+            courseUUID,
+          },
+        },
+      });
+      console.log(courseUser);
+      return courseUser;
+      // return new CourseUser(courseUser);
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+
+
+  }
+
+  async addUser(payload: AddCourseUserDTO, request: Request): Promise<CourseUser> {
+    const jwt = await this.helper.extractJWTToken(request);
+    const requesterId = await this.helper.getUserIdfromJWT(jwt);
+    const { courseUUID, userUUID } = payload;
+
+    try {
+      const courseUser = await this.prisma.courseUsers.create({
+        data: {
+          users: {
+            connect: {
+              userUUID
+            }
+          },
+          courses: {
+            connect: {
+              courseUUID
+            }
+          },
+        },
+        include: {
+          users: true,
+          courses: true,
+        }
+      });
+      return new CourseUser(courseUser);
+    } catch (err) {
+      console.log(err);
+      throw new InternalServerErrorException('Database error');
+    }
   }
 
   async getAllCourses(
@@ -472,46 +269,48 @@ export class CourseService {
     );
 
     const courseData = [];
+
     try {
-      const courses = await prisma.courses.findMany({
+      const courses = await this.prisma.courses.findMany({
         where: {
-          schoolId: Number(schoolId),
+          courseSchoolId: Number(schoolId),
         },
         select: {
           courseId: true,
           courseUUID: true,
-          name: true,
+          courseName: true,
           courseDescription: true,
-          schoolId: true,
-          creationDate: true,
-          personCreationId: true,
+          courseSchoolId: true,
+          courseCreationTimestamp: true,
+          courseCreatorId: true,
         },
       });
 
       for (let course of courses) {
-        const creator = await prisma.persons.findUnique({
+        const creator = await this.prisma.users.findUnique({
           where: {
-            personId: Number(course.personCreationId),
+            userId: Number(course.courseCreatorId),
           },
           select: {
-            personUUID: true,
-            firstName: true,
-            lastName: true,
+            userUUID: true,
+            userFirstname: true,
+            userLastname: true,
           },
         });
 
         const courseDataItem = {
           courseUUID: course.courseUUID,
-          courseName: course.name,
+          courseName: course.courseName,
           courseDescription: course.courseDescription,
-          creationDate: course.creationDate,
+          courseCreationTimestamp: course.courseCreationTimestamp,
           canEdit: isTeacherOrHigher,
           creator: {
-            personUUID: creator.personUUID,
-            firstName: creator.firstName,
-            lastName: creator.lastName,
+            userUUID: creator.userUUID,
+            firstName: creator.userFirstname,
+            lastName: creator.userLastname,
           },
         };
+
         if (await this.helper.userIsInCourse(personId, course.courseId)) {
           courseData.push(courseDataItem);
         }
@@ -548,60 +347,60 @@ export class CourseService {
     const courseData = {} as any;
 
     try {
-      const course = await prisma.courses.findUnique({
+      const course = await this.prisma.courses.findUnique({
         where: {
           courseId: Number(courseId),
         },
         select: {
           courseUUID: true,
-          name: true,
+          courseName: true,
           courseDescription: true,
-          schoolId: true,
-          creationDate: true,
-          personCreationId: true,
+          courseSchoolId: true,
+          courseCreationTimestamp: true,
+          courseCreatorId: true,
         },
       });
 
       if (!(await this.helper.userIsInCourse(personId, courseId)))
         return RETURN_DATA.FORBIDDEN;
 
-      const creator = await prisma.persons.findUnique({
+      const creator = await this.prisma.users.findUnique({
         where: {
-          personId: Number(course.personCreationId),
+          userId: Number(course.courseCreatorId),
         },
         select: {
-          personUUID: true,
-          firstName: true,
-          lastName: true,
+          userUUID: true,
+          userFirstname: true,
+          userLastname: true,
         },
       });
 
-      const persons = await prisma.coursePersons.findMany({
+      const persons = await this.prisma.courseUsers.findMany({
         where: {
           courseId: Number(courseId),
         },
         select: {
-          personId: true,
+          userId: true,
         },
       });
 
       const personsData = [];
 
       for (let person of persons) {
-        const personData = await prisma.persons.findUnique({
+        const personData = await this.prisma.users.findUnique({
           where: {
-            personId: Number(person.personId),
+            userId: Number(person.userId),
           },
           select: {
-            personUUID: true,
-            firstName: true,
-            lastName: true,
+            userUUID: true,
+            userFirstname: true,
+            userLastname: true,
           },
         });
         personsData.push(personData);
       }
 
-      const classes = await prisma.courseClasses.findMany({
+      const classes = await this.prisma.courseClasses.findMany({
         where: {
           courseId: Number(courseId),
         },
@@ -614,13 +413,13 @@ export class CourseService {
 
       if (classes) {
         for (let schoolClass of classes) {
-          const classData = await prisma.schoolClasses.findUnique({
+          const classData = await this.prisma.schoolClasses.findUnique({
             where: {
-              classId: Number(schoolClass.classId),
+              schoolClassId: Number(schoolClass.classId),
             },
             select: {
-              classUUID: true,
-              className: true,
+              schoolClassUUID: true,
+              schoolClassName: true,
             },
           });
           classesData.push(classData);
@@ -629,13 +428,13 @@ export class CourseService {
 
       const courseDataItem = {
         courseUUID: course.courseUUID,
-        courseName: course.name,
+        courseName: course.courseName,
         courseDescription: course.courseDescription,
-        creationDate: course.creationDate,
+        courseCreationTimestamp: course.courseCreationTimestamp,
         creator: {
-          personUUID: creator.personUUID,
-          firstName: creator.firstName,
-          lastName: creator.lastName,
+          userUUID: creator.userUUID,
+          firstName: creator.userFirstname,
+          lastName: creator.userLastname,
         },
         persons: personsData,
         classes: classesData,
@@ -692,41 +491,41 @@ export class CourseService {
       element.elementOrder = elements.indexOf(element) + 1;
     }
 
-    const currentElements = await prisma.courseElements.findMany({
+    const currentElements = await this.prisma.courseElements.findMany({
       where: {
-        courseId: Number(courseId),
+        courseElementCourseId: Number(courseId),
       },
       select: {
-        elementId: true,
-        elementUUID: true,
-        typeId: true,
-        parentId: true,
-        visible: true,
-        elementOrder: true,
-        creationDate: true,
-        personCreationId: true,
+        courseElementId: true,
+        courseElementUUID: true,
+        courseElementTypeId: true,
+        courseElementParentId: true,
+        courseElementIsVisible: true,
+        courseElementOrder: true,
+        courseElementCreationTimestamp: true,
+        courseElementCreatorId: true,
       },
     });
 
     const elementsWithOptions = [];
 
     for (let element of currentElements) {
-      if (element.elementUUID) {
+      if (element.courseElementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId,
-          element.typeId,
+          element.courseElementId,
+          element.courseElementTypeId,
         );
 
         elementsWithOptions.push({
-          elementUUID: element.elementUUID,
-          elementId: element.elementId,
-          parentId: element.parentId,
-          elementOrder: element.elementOrder,
-          creationDate: element.creationDate,
-          personCreationId: element.personCreationId,
+          courseElementUUID: element.courseElementUUID,
+          courseElementId: element.courseElementId,
+          courseElementParentId: element.courseElementParentId,
+          courseElementOrder: element.courseElementOrder,
+          courseElementCreationTimestamp: element.courseElementCreationTimestamp,
+          courseElementCreatorId: element.courseElementCreatorId,
           elementOptions: {
-            type: element.typeId.toString(),
-            visible: element.visible.toString(),
+            type: element.courseElementTypeId.toString(),
+            visible: element.courseElementIsVisible.toString(),
             ...elementOptions,
           },
         });
@@ -771,14 +570,14 @@ export class CourseService {
             }
 
             if (updateNeeded) {
-              const elementUpdate = await prisma.courseElements.update({
+              const elementUpdate = await this.prisma.courseElements.update({
                 where: {
-                  elementId: Number(currentElement.elementId),
+                  courseElementId: Number(currentElement.elementId),
                 },
                 data: {
-                  parentId: Number(currentElement.parentId),
-                  visible: Boolean(currentElement.elementOptions.visible),
-                  elementOrder: Number(currentElement.elementOrder),
+                  courseElementParentId: Number(currentElement.parentId),
+                  courseElementIsVisible: Boolean(currentElement.elementOptions.visible),
+                  courseElementOrder: Number(currentElement.elementOrder),
                 },
               });
 
@@ -826,14 +625,14 @@ export class CourseService {
                     }
 
                     if (updateNeeded) {
-                      await prisma.courseElements.update({
+                      await this.prisma.courseElements.update({
                         where: {
-                          elementId: Number(currentChild.elementId),
+                          courseElementId: Number(currentChild.elementId),
                         },
                         data: {
-                          parentId: Number(currentChild.parentId),
-                          visible: Boolean(currentChild.elementOptions.visible),
-                          elementOrder: Number(currentChild.elementOrder),
+                          courseElementParentId: Number(currentChild.parentId),
+                          courseElementIsVisible: Boolean(currentChild.elementOptions.visible),
+                          courseElementOrder: Number(currentChild.elementOrder),
                         },
                       });
 
@@ -857,13 +656,30 @@ export class CourseService {
                     personCreationId: Number(userId),
                   };
 
-                  let createdElement = await prisma.courseElements.create({
-                    data: courseElement,
+                  let createdElement = await this.prisma.courseElements.create({
+                    data: {
+                      courseElementUUID: courseElement.elementUUID,
+                      courses: {
+                        connect: {
+                          courseId: courseElement.courseId,
+                        },
+                      },
+                      courseElementTypeId: courseElement.typeId,
+                      courseElementParentId: courseElement.parentId,
+                      courseElementIsVisible: courseElement.visible,
+                      courseElementOrder: courseElement.elementOrder,
+                      courseElementWeight: 0,
+                      users: {
+                        connect: {
+                          userId: courseElement.personCreationId,
+                        },
+                      },
+                    }
                   });
 
                   await this.helper.createElementOptions(
                     child.options,
-                    createdElement.elementId,
+                    createdElement.courseElementId,
                     Number(child.options.type),
                   );
                   return RETURN_DATA.SUCCESS;
@@ -874,27 +690,35 @@ export class CourseService {
         }
       } else {
         let parentId = 0;
-        let courseElement = {
-          elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
-          courseId: Number(courseId),
-          typeId: Number(element.options.type),
-          parentId: element.parentUUID
-            ? await this.helper.getElementIdByUUID(element.parentUUID)
-            : 0,
-          visible: Boolean(element.options.visible),
-          elementOrder: element.elementOrder,
-          personCreationId: Number(userId),
-        };
 
-        let createdElement = await prisma.courseElements.create({
-          data: courseElement,
+        let createdElement = await this.prisma.courseElements.create({
+          data: {
+            courseElementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+            courses: {
+              connect: {
+                courseId: Number(courseId),
+              },
+            },
+            courseElementTypeId: Number(element.options.type),
+            courseElementParentId: element.parentUUID
+              ? await this.helper.getElementIdByUUID(element.parentUUID)
+              : 0,
+            courseElementIsVisible: Boolean(element.options.visible),
+            courseElementOrder: element.elementOrder,
+            courseElementWeight: 0,
+            users: {
+              connect: {
+                userId: Number(userId),
+              },
+            },
+          }
         });
 
-        parentId = createdElement.elementId;
+        parentId = createdElement.courseElementId;
 
         await this.helper.createElementOptions(
           element.options,
-          createdElement.elementId,
+          createdElement.courseElementId,
           Number(element.options.type),
         );
 
@@ -903,11 +727,11 @@ export class CourseService {
             if (child.elementUUID) {
               if (await this.helper.elementExists(child.elementUUID)) {
                 let currentChild = {
-                  elementUUID: child.elementUUID,
-                  elementId: await this.helper.getElementIdByUUID(
+                  courseElementUUID: child.elementUUID,
+                  courseElementId: await this.helper.getElementIdByUUID(
                     child.elementUUID,
                   ),
-                  parentId: createdElement.elementId,
+                  parentId: createdElement.courseElementId,
                   elementOrder: child.elementOrder,
                   elementOptions: child.options,
                 };
@@ -934,9 +758,9 @@ export class CourseService {
                 }
 
                 if (updateNeeded) {
-                  await prisma.courseElements.update({
+                  await this.prisma.courseElements.update({
                     where: {
-                      elementId: Number(currentChild.elementId),
+                      courseElementId: Number(currentChild.courseElementId),
                     },
                     data: currentChild,
                   });
@@ -944,28 +768,45 @@ export class CourseService {
 
                 await this.helper.updateElementOptions(
                   currentChild.elementOptions,
-                  currentChild.elementId,
+                  currentChild.courseElementId,
                   Number(currentChild.elementOptions.type),
                 );
               }
             } else {
               let courseElement = {
-                elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+                courseElementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
                 courseId: Number(courseId),
-                typeId: Number(child.options.type),
-                parentId: parentId,
-                visible: Boolean(child.options.visible),
-                elementOrder: child.elementOrder,
-                personCreationId: Number(userId),
+                courseElementTypeId: Number(child.options.type),
+                courseElementParentId: parentId,
+                courseElementIsVisible: Boolean(child.options.visible),
+                courseElementOrder: child.elementOrder,
+                courseElementCreatorId: Number(userId),
               };
 
-              let createdElement = await prisma.courseElements.create({
-                data: courseElement,
+              let createdElement = await this.prisma.courseElements.create({
+                data: {
+                  courseElementUUID: courseElement.courseElementUUID,
+                  courses: {
+                    connect: {
+                      courseId: courseElement.courseId,
+                    },
+                  },
+                  courseElementTypeId: courseElement.courseElementTypeId,
+                  courseElementParentId: courseElement.courseElementParentId,
+                  courseElementIsVisible: courseElement.courseElementIsVisible,
+                  courseElementOrder: courseElement.courseElementOrder,
+                  courseElementWeight: 0,
+                  users: {
+                    connect: {
+                      userId: courseElement.courseElementCreatorId,
+                    },
+                  },
+                }
               });
 
               await this.helper.createElementOptions(
                 child.options,
-                createdElement.elementId,
+                createdElement.courseElementCourseId,
                 Number(child.options.type),
               );
             }
@@ -980,41 +821,40 @@ export class CourseService {
   async getCourseElements(courseUUID): Promise<ReturnMessage> {
     const courseId = await this.helper.getCourseIdByUUID(courseUUID);
 
-    const currentElements = await prisma.courseElements.findMany({
+    const currentElements = await this.prisma.courseElements.findMany({
       where: {
-        courseId: Number(courseId),
+        courseElementCourseId: Number(courseId),
       },
       select: {
-        elementId: true,
-        elementUUID: true,
-        typeId: true,
-        parentId: true,
-        visible: true,
-        creationDate: true,
-        personCreationId: true,
+        courseElementId: true,
+        courseElementUUID: true,
+        courseElementTypeId: true,
+        courseElementParentId: true,
+        courseElementIsVisible: true,
+        courseElementCreatorId: true,
       },
     });
 
     const elementsWithOptions = [];
 
     for (const element of currentElements) {
-      if (element.elementUUID) {
+      if (element.courseElementUUID) {
         const elementOptions = await this.helper.getElementOptions(
-          element.elementId,
-          element.typeId,
+          element.courseElementId,
+          element.courseElementTypeId,
         );
 
         let parentUUID = '0';
-        if (element.parentId != 0) {
-          parentUUID = await this.helper.getElementUUIDById(element.parentId);
+        if (element.courseElementParentId != 0) {
+          parentUUID = await this.helper.getElementUUIDById(element.courseElementParentId);
         }
 
         elementsWithOptions.push({
-          elementUUID: element.elementUUID,
+          elementUUID: element.courseElementUUID,
           parentUUID: parentUUID,
           options: {
-            type: Number(element.typeId),
-            visible: Boolean(element.visible),
+            type: Number(element.courseElementTypeId),
+            visible: Boolean(element.courseElementIsVisible),
             ...elementOptions,
           },
         });
@@ -1061,69 +901,45 @@ export class CourseService {
       };
     }
 
-    const settings = await prisma.courseElements.findFirst({
+    const settings = await this.prisma.courseElements.findFirst({
       where: {
-        elementId: elementId,
+        courseElementId: elementId,
       },
-      select: {
-        personCreationId: true,
-        elementUUID: true,
-        creationDate: true,
-        visible: true,
-        courseId: true,
-        typeId: true,
-        course: {
-          select: {
-            courseUUID: true,
-          },
-        },
-        fileSubmissionSettings: {
-          select: {
-            name: true,
-            description: true,
-            dueTime: true,
-            submitLater: true,
-            submitLaterTime: true,
-            maxFileSize: true,
-            allowedFileTypes: true,
-          },
-        },
-        textSettings: {
-          select: {
-            text: true,
-          },
-        },
-      },
+      include: {
+        courses: true,
+        courseFileSubmissionSettings: true,
+        courseElementTextSettings: true,
+      }
     });
 
-    const creator = await this.helper.getUserById(settings.personCreationId);
+    const creator = await this.helper.getUserById(settings.courseElementCreatorId);
     const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
       userId,
       schoolId,
     );
 
-    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+    const hasSubmitted = await this.prisma.courseFileSubmissions.findFirst({
       where: {
-        courseElementId: Number(elementId),
-        personId: Number(userId),
+        courseFileSubmissionElementId: Number(elementId),
+        userId: Number(userId),
       },
     });
 
     let evaluation;
 
-    let evaluationData = await prisma.submissionGrades.findUnique({
+    let evaluationData = await this.prisma.courseFileSubmissionGrades.findUnique({
       where: {
-        submissionGradePersonId: {
+        courseElementId_userId: {
           courseElementId: Number(elementId),
-          personId: userId,
-        }
+          userId: Number(userId),
+        },
       }
     })
 
     if (evaluationData) {
       evaluation = {
-        grade: evaluationData.grade,
-        notes: evaluationData.notes,
+        grade: evaluationData.courseFileSubmissionGrade,
+        notes: evaluationData.courseFileSubmissionGradeNotes,
       }
     } else {
       evaluation = {
@@ -1133,10 +949,10 @@ export class CourseService {
     }
 
     const elementItem = {
-      elementUUID: settings.elementUUID,
-      courseUUID: settings.course!.courseUUID,
-      visible: Boolean(settings.visible),
-      creationDate: settings.creationDate,
+      courseElementUUID: settings.courseElementUUID,
+      courseUUID: settings.courses!.courseUUID,
+      courseElementIsVisible: Boolean(settings.courseElementIsVisible),
+      courseElementCreationTimestamp: settings.courseElementCreationTimestamp,
       canEdit: isTeacherOrHigher,
       ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
@@ -1147,8 +963,8 @@ export class CourseService {
         fullName: `${creator.firstName} ${creator.lastName}`,
       },
       options: {
-        type: settings.typeId,
-        ...(settings.textSettings[0] || settings.fileSubmissionSettings[0]),
+        type: settings.courseElementTypeId,
+        ...(settings.courseElementTextSettings || settings.courseFileSubmissionSettings),
       },
     };
 
@@ -1161,7 +977,7 @@ export class CourseService {
   async getCourseUUIDById(courseId: number): Promise<string> {
     if (courseId) {
       try {
-        const course = await prisma.courses.findFirst({
+        const course = await this.prisma.courses.findFirst({
           where: {
             courseId: courseId,
           },
@@ -1183,10 +999,10 @@ export class CourseService {
     const dueDate = await this.helper.getElementDueDate(elementId);
     const isSubmittedInTime = moment(new Date(Date.now())).isAfter(dueDate);
 
-    const hasSubmitted = await prisma.fileSubmissions.findFirst({
+    const hasSubmitted = await this.prisma.courseFileSubmissions.findFirst({
       where: {
-        personId: Number(userId),
-        courseElementId: Number(elementId),
+        userId: Number(userId),
+        courseFileSubmissionElementId: Number(elementId),
       },
     });
 
@@ -1200,17 +1016,26 @@ export class CourseService {
     console.log(file);
 
     try {
-      await prisma.fileSubmissions.create({
+      await this.prisma.courseFileSubmissions.create({
         data: {
-          courseElementId: Number(elementId),
-          fileName: file.filename,
-          originalName: file.originalname,
-          fileSize: file.size,
-          fileType: file.mimetype,
-          personId: Number(userId),
-          submitedLate: !isSubmittedInTime,
-        },
+          courseFileSubmissionFileName: file.filename,
+          courseFileSubmissionOriginalName: file.originalname,
+          courseFileSubmissionFileSize: file.size,
+          courseFileSubmissionFileType: file.mimetype,
+          courseFileSubmissionIsSubmittedLate: !isSubmittedInTime,
+          users: {
+            connect: {
+              userId: Number(userId),
+            },
+          },
+          courseElements: {
+            connect: {
+              courseElementId: Number(elementId),
+            },
+          },
+        }
       });
+
       return RETURN_DATA.SUCCESS;
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
@@ -1230,9 +1055,9 @@ export class CourseService {
       };
     }
 
-    const submissions = await prisma.fileSubmissions.findMany({
+    const submissions = await this.prisma.courseFileSubmissions.findMany({
       where: {
-        courseElementId: Number(elementId),
+        courseFileSubmissionElementId: Number(elementId),
       },
     });
 
@@ -1249,20 +1074,20 @@ export class CourseService {
       };
 
       const userSubmission = submissions.find((submission) => {
-        return submission.personId === user.personId;
+        return submission.userId === user.personId;
       });
 
       let submissionItem = {} as any;
 
       if (userSubmission) {
-        submissionItem.fileName = userSubmission.fileName;
-        submissionItem.fileSize = userSubmission.fileSize;
-        submissionItem.fileType = userSubmission.fileType;
-        submissionItem.submittedLate = userSubmission.submitedLate;
+        submissionItem.courseFileSubmissionFileName = userSubmission.courseFileSubmissionFileName;
+        submissionItem.courseFileSubmissionFileSize = userSubmission.courseFileSubmissionFileSize;
+        submissionItem.courseFileSubmissionFileType = userSubmission.courseFileSubmissionFileType;
+        submissionItem.courseFileSubmissionIsSubmittedLate = userSubmission.courseFileSubmissionIsSubmittedLate;
         // submissionItem.notes = userSubmission.notes;
         // submissionItem.grade = userSubmission.grade;
-        submissionItem.submissionDate = userSubmission.submissionTime;
-        submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.fileName}`;
+        submissionItem.courseFileSubmissionUploadTimestamp = userSubmission.courseFileSubmissionUploadTimestamp;
+        submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.courseFileSubmissionFileName}`;
       } else {
         submissionItem = null;
       }
@@ -1281,59 +1106,59 @@ export class CourseService {
     const jwt = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(jwt);
 
-    let courses = await prisma.schools.findFirst({
+    let courses = await this.prisma.schools.findFirst({
       where: {
         schoolUUID,
       },
       select: {
         schoolUUID: true,
-        name: true,
+        schoolName: true,
         courses: {
           where: {
-            coursePersons: {
+            courseUsers: {
               some: {
-                personId: Number(userId),
+                userId: Number(userId),
               },
             },
           },
           select: {
             courseUUID: true,
-            name: true,
+            courseName: true,
             courseElements: {
               where: {
-                typeId: {
+                courseElementTypeId: {
                   equals: 3,
                 },
                 AND: {
-                  visible: true,
+                  courseElementIsVisible: true,
                 },
               },
               select: {
-                elementUUID: true,
-                creationDate: true,
-                elementOrder: true,
-                visible: true,
-                fileSubmissionSettings: {
+                courseElementUUID: true,
+                courseElementCreationTimestamp: true,
+                courseElementOrder: true,
+                courseElementIsVisible: true,
+                courseFileSubmissionSettings: {
                   where: {
-                    dueTime: {
+                    courseFileSubmissionDueTimestamp: {
                       lte: moment(new Date(Date.now()))
                         .add(days, 'days')
                         .toDate(),
                     },
                     AND: {
-                      dueTime: {
+                      courseFileSubmissionDueTimestamp: {
                         gte: moment(new Date(Date.now())).toDate(),
                       },
                     },
                   },
                   select: {
-                    name: true,
-                    description: true,
-                    dueTime: true,
-                    submitLater: true,
-                    submitLaterTime: true,
-                    maxFileSize: true,
-                    allowedFileTypes: true,
+                    courseFileSubmissionName: true,
+                    courseFileSubmissionDescription: true,
+                    courseFileSubmissionDueTimestamp: true,
+                    courseFileSubmissionSubmitLater: true,
+                    courseFileSubmissionSubmitLaterTimestamp: true,
+                    courseFileSubmissionMaxFileSize: true,
+                    courseFileSubmissionAllowedFileTypes: true,
                   },
                 },
               },
@@ -1348,22 +1173,22 @@ export class CourseService {
     for (const course of courses.courses) {
       if (course.courseElements.length != 0) {
         for (const element of course.courseElements) {
-          if (element.fileSubmissionSettings.length != 0) {
+          if (element.courseFileSubmissionSettings.length != 0) {
             eventItems.push({
               schoolUUID: courses.schoolUUID,
-              schoolName: courses.name,
+              schoolName: courses.schoolName,
               courseUUID: course.courseUUID,
-              courseName: course.name,
-              elementUUID: element.elementUUID,
-              elementName: element.fileSubmissionSettings[0].name,
-              description: element.fileSubmissionSettings[0].description,
-              dueDate: element.fileSubmissionSettings[0].dueTime,
-              submitLater: element.fileSubmissionSettings[0].submitLater,
-              submitLaterDate:
-                element.fileSubmissionSettings[0].submitLaterTime,
-              maxFileSize: element.fileSubmissionSettings[0].maxFileSize,
-              allowedFileTypes:
-                element.fileSubmissionSettings[0].allowedFileTypes,
+              courseName: course.courseName,
+              courseElementUUID: element.courseElementUUID,
+              courseFileSubmissionName: element.courseFileSubmissionSettings[0].courseFileSubmissionName,
+              courseFileSubmissionDescription: element.courseFileSubmissionSettings[0].courseFileSubmissionDescription,
+              courseFileSubmissionDueTimestamp: element.courseFileSubmissionSettings[0].courseFileSubmissionDueTimestamp,
+              courseFileSubmissionSubmitLater: element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLater,
+              courseFileSubmissionSubmitLaterTimestamp:
+                element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLaterTimestamp,
+              courseFileSubmissionMaxFileSize: element.courseFileSubmissionSettings[0].courseFileSubmissionMaxFileSize,
+              courseFileSubmissionAllowedFileTypes:
+                element.courseFileSubmissionSettings[0].courseFileSubmissionAllowedFileTypes,
             });
           }
         }
@@ -1381,11 +1206,11 @@ export class CourseService {
     const userId = await this.helper.getUserIdfromJWT(jwt);
     const elementId = await this.helper.getElementIdByUUID(elementUUID);
     try {
-      await prisma.fileSubmissions.delete({
+      await this.prisma.courseFileSubmissions.delete({
         where: {
-          fileSubmissionPersonId: {
-            courseElementId: Number(elementId),
-            personId: Number(userId),
+          courseFileSubmissionElementId_userId: {
+            courseFileSubmissionElementId: Number(elementId),
+            userId: Number(userId),
           },
         },
       });
@@ -1399,14 +1224,14 @@ export class CourseService {
     const { elementUUID } = params;
     const zip = new JSZip();
 
-    const files = await prisma.courseElements.findFirst({
+    const files = await this.prisma.courseElements.findFirst({
       where: {
-        elementUUID,
+        courseElementUUID: elementUUID,
       },
       select: {
-        fileSubmissions: {
+        courseFileSubmissions: {
           select: {
-            fileName: true,
+            courseFileSubmissionFileName: true,
           },
         },
       },
@@ -1414,12 +1239,12 @@ export class CourseService {
 
     const zipFolder = zip.folder(elementUUID);
 
-    files.fileSubmissions.forEach((file) => {
-      console.log(`${process.env.FILE_PATH}${file.fileName}`);
+    files.courseFileSubmissions.forEach((file) => {
+      console.log(`${process.env.FILE_PATH}${file.courseFileSubmissionFileName}`);
 
       zipFolder.file(
-        file.fileName,
-        fs.readFileSync(`${process.env.FILE_PATH}${file.fileName}`),
+        file.courseFileSubmissionFileName,
+        fs.readFileSync(`${process.env.FILE_PATH}${file.courseFileSubmissionFileName}`),
       );
     });
 
@@ -1430,9 +1255,9 @@ export class CourseService {
   }
 }
 
-export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
+export async function findOneByUUID(courseUUID: string): Promise<CourseDto | any> {
   try {
-    const course = await prisma.courses.findFirst({
+    const course = await this.prisma.courses.findFirst({
       where: {
         courseUUID,
       },
@@ -1445,9 +1270,9 @@ export async function findOneByUUID(courseUUID: string): Promise<CourseDto> {
 export async function findOneByName(
   courseName: string,
   schoolUUID,
-): Promise<CourseDto> {
+): Promise<CourseDto | any> {
   try {
-    const courseUUID = await prisma.schools.findFirst({
+    const courseUUID = await this.prisma.schools.findFirst({
       where: {
         schoolUUID,
       },
@@ -1455,16 +1280,16 @@ export async function findOneByName(
         schoolId: true,
         courses: {
           where: {
-            name: courseName,
+            courseName,
           },
           select: {
             courseId: true,
-            schoolId: true,
+            courseSchoolId: true,
             courseUUID: true,
-            name: true,
+            courseName: true,
             courseDescription: true,
-            creationDate: true,
-            personCreationId: true,
+            courseCreationTimestamp: true,
+            courseCreatorId: true,
           },
         },
       },

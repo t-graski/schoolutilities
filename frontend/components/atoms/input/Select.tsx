@@ -13,6 +13,7 @@ type Props = {
   required?: boolean;
   label?: string;
   showLabel?: boolean;
+  theme?: "surface" | "surfaceVariant";
 };
 
 const StyledSelectField = styled("select", {
@@ -22,15 +23,25 @@ const StyledSelectField = styled("select", {
   borderBottom: "solid 1px transparent",
 
   fontWeight: "bold",
-  background: "$backgroundTertiary",
   outline: "none",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
   },
+
+  variants: {
+    theme: {
+      surface: {
+        background: "$surface",
+      },
+      surfaceVariant: {
+        background: "$surfaceVariant",
+      },
+    }
+  }
 });
 
 const StyledOption = styled("option", {});
@@ -43,16 +54,23 @@ export const Select: React.FC<Props> = ({
   required = false,
   label = "",
   showLabel = true,
+  theme = "surfaceVariant",
 }) => {
-
   return (
     <>
-      <InputFieldCore icon={icon} required={required} label={label} showLabel={showLabel}>
+      <InputFieldCore
+        icon={icon}
+        required={required}
+        label={label}
+        showLabel={showLabel}
+        theme={theme}
+      >
         <StyledSelectField
           placeholder={label}
           onChange={(e) => onChange(e.target.value)}
           {...(required && { required: true })}
           value={selectValue}
+          theme={theme}
         >
           {selectOptions.map((option) => (
             <StyledOption key={option.value} value={option.value}>

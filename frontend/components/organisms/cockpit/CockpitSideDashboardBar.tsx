@@ -18,26 +18,31 @@ export const CockpitSideDashboardBar: React.FC<Props> = ({
         items={[
           {
             name: "Articles",
+            value: "articles",
             icon: SvgAlert,
             href: "/cockpit/articles",
           },
           {
             name: "Schools",
+            value: "schools",
             icon: SvgSchool,
             href: "/schools",
           },
           {
             name: "Departments",
+            value: "departments",
             icon: SvgDepartment,
             href: "/departments",
           },
           {
             name: "Users",
+            value: "users",
             icon: SvgUser,
             href: "/users",
           },
           {
             name: "Settings",
+            value: "settings",
             icon: SvgUser,
             href: "/settings",
           },

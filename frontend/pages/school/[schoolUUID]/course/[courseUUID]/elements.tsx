@@ -91,7 +91,6 @@ export default function Features() {
         <title>{courseName ? courseName : "Course"} - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <ContentLayout>
         <HeadlineLayout>
           <CourseHeaderLayout>
@@ -116,8 +115,7 @@ export default function Features() {
           </CourseHeaderLayout>
           <CourseHeaderLayout>
             <Button
-              backgroundColor={"secondary"}
-              color={"primary"}
+              buttonType={"text"}
               onClick={() => {
                 router.push(
                   `/school/${router.query.schoolUUID}/course/${router.query.courseUUID}`

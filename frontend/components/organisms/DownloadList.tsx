@@ -30,7 +30,7 @@ const SettingsEntriesLayout = styled("div", {
 
 const SettingsEntryLayout = styled("div", {
   width: "100%",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   borderRadius: "20px",
   padding: "20px 30px",
   display: "flex",
@@ -48,16 +48,16 @@ const SettingsDetailsLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledError = styled("p", {
-  color: "$specialTertiary",
+  color: "$error",
   fontSize: "1.5rem",
   fontWeight: "$bold",
   marginTop: "15px",
   marginBottom: "15px",
-  border: "solid 2px $specialTertiary",
+  border: "solid 2px $error",
   padding: "20px",
   width: "fit-content",
   borderRadius: "25px",
@@ -65,7 +65,7 @@ const StyledError = styled("p", {
 
 const SettingsEntryDescription = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const SvgIconLayout = styled("div", {

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../utils/skeleton.css";
+import "../utils/tapTapEditor.css";
 import { IdProvider } from "@radix-ui/react-id";
 
 const globalStyles = globalCss({
@@ -18,7 +19,7 @@ const globalStyles = globalCss({
     fontFamily: "Poppins, sans-serif",
     fontWeight: "$regular",
     overflowX: "hidden",
-    backgroundColor: "$backgroundPrimary",
+    backgroundColor: "$background",
     minHeight: "100vh",
   },
   ".nestable-item.is-dragging:before": {
@@ -30,11 +31,11 @@ const globalStyles = globalCss({
 
     width: "100%",
     height: "100%",
-    border: "1px dashed $fontPrimary !important",
+    border: "1px dashed $neutral-500 !important",
     borderRadius: "15px !important",
 
     backgroundColor: "transparent !important",
-  },
+  }
 });
 
 import { SkeletonTheme } from "react-loading-skeleton";
@@ -48,7 +49,7 @@ function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     hotjar.initialize(2700632, 6);
   }, []);
-  
+
   const router = useRouter();
   const queryClient = new QueryClient();
 
@@ -62,8 +63,8 @@ function App({ Component, pageProps }: AppProps) {
           defaultTheme="system"
         >
           <SkeletonTheme
-            baseColor="var(--colors-backgroundSecondary)"
-            highlightColor="var(--colors-skeletonSecondary)"
+            baseColor="var(--colors-surfaceVariant)"
+            highlightColor="var(--colors-outline)"
             duration={1.3}
           >
             <Script

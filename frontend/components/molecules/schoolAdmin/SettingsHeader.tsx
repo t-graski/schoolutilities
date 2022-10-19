@@ -27,13 +27,13 @@ const AddIconLayout = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$specialPrimary",
+  backgroundColor: "$warning",
   cursor: "pointer",
 });
 
 const AddIconPlus = styled("p", {
   fontSize: "80px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const SettingsHeader: React.FC<Props> = ({ headline, addFunction }) => {

@@ -18,7 +18,7 @@ const PopOverLayout = styled("div", {
   left: "0",
   width: "100vw",
   height: "100vh",
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
   alignItems: "center",
   flexDirection: "column",
   padding: "60px 10px",
@@ -30,7 +30,7 @@ const LogoLayout = styled("div", {
   display: "flex",
   width: "130px",
   height: "fit-content",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const NavLinksLayout = styled("div", {
@@ -48,20 +48,20 @@ const NavLinksLayout = styled("div", {
 });
 
 const StyledLink = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   cursor: "pointer",
   fontSize: "1.7rem",
   paddingBottom: "5px",
   transition: "all 200ms ease-in-out",
   "&:hover": {
-    color: "$specialPrimary",
+    color: "$warning",
   },
 
   variants: {
     marked: {
       true: {
-        borderBottom: "2px solid $fontPrimary",
+        borderBottom: "2px solid $neutral-500",
       },
       false: {
         borderBottom: "none",
@@ -75,7 +75,7 @@ const SpecialLinkLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledCloseButton = styled("button", {
@@ -87,7 +87,7 @@ const StyledCloseButton = styled("button", {
   backgroundColor: "transparent",
   border: "none",
   outline: "none",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: "2.5rem",
 });
 

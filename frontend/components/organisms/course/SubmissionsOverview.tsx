@@ -11,7 +11,7 @@ type Props = {
 };
 
 const Headline = styled("h2", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {

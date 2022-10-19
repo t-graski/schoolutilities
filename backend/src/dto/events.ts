@@ -16,14 +16,14 @@ export class CourseEvent {
   schoolName: string;
   courseUUID: string;
   courseName: string;
-  elementUUID: string;
-  elementName: string;
-  description: string;
-  dueDate: Date;
-  submitLater: boolean;
-  submitLaterDate: Date;
-  maxFileSize: number;
-  allowedFileTypes: string;
+  courseElementUUID: string;
+  courseFileSubmissionName: string;
+  courseFileSubmissionDescription: string;
+  courseFileSubmissionDueTimestamp: Date;
+  courseFileSubmissionSubmitLater: boolean;
+  courseFileSubmissionSubmitLaterTimestamp: Date;
+  courseFileSubmissionMaxFileSize: number;
+  courseFileSubmissionAllowedFileTypes: string;
 }
 
 

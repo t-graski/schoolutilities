@@ -21,7 +21,7 @@ const GeneralListLayout = styled("div", {
   width: "100vw",
   padding: "10vh 10vw",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   "@mobileOnly": {
     gridTemplateColumns: "1fr",

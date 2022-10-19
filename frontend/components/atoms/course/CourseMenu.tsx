@@ -33,12 +33,12 @@ const slideLeftAndFade = keyframes({
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
   borderRadius: 15,
-  padding: 8,
+  padding: "$2x",
   display: "flex",
   flexDirection: "column",
   gap: 10,
 
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$surface2",
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
   "@media (prefers-reduced-motion: no-preference)": {
@@ -67,17 +67,22 @@ const itemStyles = {
   cursor: "pointer",
   fontWeight: "$medium",
   lineHeight: 1,
-  color: "$fontPrimary",
+  color: "$onSurface",
   fontSize: "1.05rem",
 
+  "&:hover": {
+    backgroundColor: "$surfaceVariant",
+    color: "$onSurfaceVariant",
+  },
+
   "&[data-disabled]": {
-    color: "$fontPrimary",
+    color: "$neutral-500",
     pointerEvents: "none",
   },
 
   "&:focus": {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
 };
 
@@ -92,8 +97,8 @@ const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
 });
 const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
   '&[data-state="open"]': {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
   ...itemStyles,
 });
@@ -103,14 +108,14 @@ const StyledLabel = styled(DropdownMenuPrimitive.Label, {
 
   fontSize: 12,
   lineHeight: "25px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
   margin: 5,
 
-  backgroundColor: "$fontPrimary",
+  backgroundColor: "$neutral-500",
 });
 
 const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
@@ -127,7 +132,7 @@ const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
   position: "relative",
   right: 0,
 
-  fill: "$fontPrimary",
+  fill: "$neutral-500",
 });
 
 // Exports
@@ -172,7 +177,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 
   opacity: 0.8,
   inset: 0,
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$neutral-400",
 
   "@media (prefers-reduced-motion: no-preference)": {
     animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
@@ -191,7 +196,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   padding: 25,
   borderRadius: 6,
 
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$surface2",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
 
@@ -215,14 +220,14 @@ const StyledTitle = styled(DialogPrimitive.Title, {
   margin: 0,
 
   fontWeight: "$medium",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 17,
 });
 
 const StyledDescription = styled(DialogPrimitive.Description, {
   margin: "10px 0 20px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: 15,
   lineHeight: 1.5,
 });
@@ -247,15 +252,15 @@ const IconButton = styled("button", {
   alignItems: "center",
   justifyContent: "center",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   cursor: "pointer",
   transition: "all 0.2s ease-in-out",
   all: "unset",
   fontFamily: "inherit",
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
 
-  "&:focus": { boxShadow: `0 0 0 2px $specialPrimary` },
+  "&:focus": { boxShadow: `0 0 0 2px $warning` },
 });
 
 const ElementSelectionLayout = styled("div", {
@@ -276,20 +281,20 @@ const SelectionLayout = styled("div", {
 
 const Element = styled("div", {
   padding: "10px 20px",
-  border: "1px solid $fontPrimary",
+  border: "1px solid $neutral-500",
   borderRadius: 15,
 
   transition: "all 0.2s",
   fontSize: "1rem",
   cursor: "pointer",
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
 
   variants: {
     highlighted: {
       true: {
-        backgroundColor: "$fontPrimary",
-        color: "$backgroundPrimary",
+        backgroundColor: "$neutral-500",
+        color: "$neutral-100",
       },
     },
   },
@@ -316,19 +321,19 @@ const AddButton = styled("button", {
 
   cursor: "pointer",
   transition: "all 0.2s",
-  backgroundColor: "$specialSecondary",
-  color: "$fontPrimary",
-  boxShadow: `0 2px 10px $specialPrimary`,
+  backgroundColor: "$primary-400",
+  color: "$neutral-500",
+  boxShadow: `0 2px 10px $warning`,
 
-  "&:hover": { backgroundColor: "$fontPrimary", color: "$backgroundPrimary" },
+  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
 
   "&:focus": { boxShadow: `0 0 0 2px black` },
 
   "&:disabled": { opacity: 0.5, cursor: "not-allowed" },
 
   "&:disabled:hover": {
-    backgroundColor: "$specialSecondary",
-    color: "$fontPrimary",
+    backgroundColor: "$primary-400",
+    color: "$neutral-500",
   },
 });
 
@@ -356,7 +361,6 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
               <SvgEdit />
             </IconLayout>
           </DropdownMenuTrigger>
-
           <DropdownMenuContent
             sideOffset={5}
             alignOffset={30}
@@ -390,7 +394,6 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
                 Edit elements
               </DropdownMenuItem>
             )}
-
             <DropdownMenuItem
               onClick={() => {
                 router.push(

@@ -33,7 +33,7 @@ const IconLayout = styled("div", {
 
 const Label = styled("label", {
   fontSize: "20px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   marginBottom: "5px",
 });
 
@@ -160,7 +160,6 @@ export default function Features() {
         </title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <ContentLayout>
         <HeadlineLayout>
           <Headline

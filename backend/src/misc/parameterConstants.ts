@@ -150,6 +150,13 @@ export const ID_STARTERS = {
   EMAIL: 8,
   COURSE_ELEMENT: 9,
   ARTICLE: 'A',
+  TIME_TABLE_ELEMENT: 'T',
+  SUBSTITUTION: 'S',
+  EVENT: 'E',
+  ROOM: 'R',
+  SUBJECT: 'SS',
+  HOLIDAYS: 'H',
+  EXAM: 'X',
 };
 
 export const ERROR_CODES = {
@@ -173,3 +180,5 @@ export const ERROR_CODES = {
   EMAIL_NULL_OR_INVALID: 'ERROR_900',
   TOKEN_NULL_OR_INVALID: 'ERROR_1000',
 };
+
+export const UNTIS_API_URL = 'https://mese.webuntis.com/WebUntis/jsonrpc.do?school=htbla linz leonding';

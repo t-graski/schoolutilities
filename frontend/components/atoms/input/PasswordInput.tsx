@@ -35,16 +35,16 @@ const StyledInputField = styled("input", {
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
 
-  fontFamily: "$fontPrimary",
+  fontFamily: "$neutral-500",
   fontWeight: "bold",
-  background: "$backgroundTertiary",
+  background: "$neutral-300",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
   },
 
   variants: {
@@ -90,7 +90,7 @@ const ImageLayout = styled("div", {
   width: "30px",
   height: "30px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   variants: {
     cursor: {
@@ -201,7 +201,11 @@ export const PasswordInput: React.FC<Props> = ({
           </ImageLayout>
         )}
         {validationOptions && showPasswordStrength && (
-          <PasswordStrengthPopOver password={value} setValidInput={setValidInput} validationOptions={validationOptions}></PasswordStrengthPopOver>
+          <PasswordStrengthPopOver
+            password={value}
+            setValidInput={setValidInput}
+            validationOptions={validationOptions}
+          ></PasswordStrengthPopOver>
         )}
       </InputFieldCore>
       {errorMessage && isInputValid === false && (

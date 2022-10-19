@@ -25,7 +25,7 @@ export default function CreateCourse() {
     if (!getAccessToken()) {
       router.push("/auth?tab=login");
     } else if (!router.query.schoolUUID) {
-      router.push("/school/select?redirect=/course/create-course");
+      router.push("/school/select?redirect=/course/create");
     }
   }, [router]);
 
@@ -51,7 +51,6 @@ export default function CreateCourse() {
           <title>Course Setup - SchoolUtilities</title>
         </Head>
         <Navbar></Navbar>
-        <Spacer size="small"></Spacer>
         <CreateCourseLayout>
           <CourseCreateProgressSite
             steps={progressSteps}

@@ -59,8 +59,8 @@ export interface JoinSchool {
 
 export interface AddJoinCode {
   schoolUUID: string;
-  expireDate?: Date;
-  joinCodeName?: string;
+  schoolJoinCodeExpireTimestamp?: Date;
+  schoolJoinCodeName?: string;
 }
 
 export interface RemoveJoinCode {

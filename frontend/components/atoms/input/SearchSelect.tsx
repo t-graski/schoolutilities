@@ -13,87 +13,67 @@ type Props = {
   onChange: Function;
   icon?: any;
   editable?: boolean;
+  isSmall?: boolean;
 };
-
-const InputFieldLayout = styled("div", {
-  display: "flex",
-  alignItems: "center",
-  background: "$backgroundTertiary",
-  width: "100%",
-  borderRadius: "15px",
-  border: "none",
-  padding: "10.3px 20px",
-  gap: "20px",
-
-  variants: {
-    editable: {
-      true: {},
-      false: {
-        background: "transparent",
-        border: "none",
-      },
-    },
-  },
-});
-
-const ImageLayout = styled("div", {
-  display: "flex",
-  width: "30px",
-  height: "30px",
-
-  color: "$fontPrimary",
-
-  variants: {
-    cursor: {
-      pointer: {
-        cursor: "pointer",
-      },
-    },
-  },
-});
 
 const StyledSelect = styled(Select, {
   width: "100%",
   border: "none",
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
+  borderRadius: "15px",
 
   fontWeight: "bold",
-  color: "$fontPrimary",
-  background: "transparent",
+  color: "$neutral-500",
+  background: "$surfaceVariant",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
+  },
+
+  variants: {
+    isSmall: {
+      true: {
+        fontSize: "1rem",
+        lineHeight: "1.2rem",
+        width: "fit-content",
+        minWidth: "200px",
+        padding: "0",
+      },
+    },
   },
 });
 
 const selectStyled = {
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "$colors$fontPrimary" : "$fontPrimary",
-    backgroundColor: styles.theme.colors.backgroundTertiary,
-  }),
+    color: "var(--colors-onSurface)",
+    backgroundColor: state.isSelected ? "var(--colors-surface4)" : "var(--colors-surface)",
+    ":hover": {
+      backgroundColor: "var(--colors-surface4)",
+    },
+  }), 
   control: (provided, state) => ({
     ...provided,
     border: "none",
     borderBottom: "solid 1px transparent",
     background: "transparent",
-    color: styles.theme.colors.fontPrimary,
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
     ["&:focus"]: {
-      borderBottom: `solid 1px ${styles.theme.colors.fontPrimary}`,
+      borderBottom: `solid 1px ${styles.theme.colors["neutral-500"]}`,
     },
   }),
 
   menu: (provided, state) => ({
     ...provided,
-    background: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    background: "var(--colors-surface1)",
+    color: "var(--colors-onSurface)",
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
@@ -102,56 +82,56 @@ const selectStyled = {
 
   singleValue: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
   }),
 
   indicatorSeparator: (provided, state) => ({
     ...provided,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    backgroundColor: styles.theme.colors["neutral-300"],
   }),
 
   dropdownIndicator: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
 
     "&:hover": {
-      backgroundColor: styles.theme.colors.backgroundTertiary,
+      backgroundColor: "var(--colors-surface5)",
     },
 
     "&:active": {
-      backgroundColor: styles.theme.colors.backgroundTertiary,
+      backgroundColor: styles.theme.colors["neutral-300"],
     },
 
     "&:focus": {
-      backgroundColor: styles.theme.colors.backgroundTertiary,
+      backgroundColor: styles.theme.colors["neutral-300"],
     },
   }),
 
   clearIndicator: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
   }),
 
   container: (provided, state) => ({
     ...provided,
-    background: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    background: styles.theme.colors["neutral-300"],
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
 
     ["&:focus"]: {
-      borderBottom: `solid 1px ${styles.theme.colors.fontPrimary}`,
+      borderBottom: `solid 1px ${styles.theme.colors["neutral-500"]}`,
     },
   }),
 
   menuList: (provided, state) => ({
     ...provided,
-    background: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    background: styles.theme.colors["neutral-300"],
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
@@ -170,8 +150,8 @@ const selectStyled = {
 
   multiValue: (provided, state) => ({
     ...provided,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
-    color: styles.theme.colors.fontPrimary,
+    backgroundColor: styles.theme.colors["neutral-300"],
+    color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
@@ -179,17 +159,17 @@ const selectStyled = {
 
   multiValueLabel: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
     padding: "8px",
     borderRadius: "5px",
-    border: `solid 1px ${styles.theme.colors.fontPrimary}`,
+    border: `solid 1px ${styles.theme.colors["neutral-500"]}`,
   }),
 
   multiValueRemove: (provided, state) => ({
     ...provided,
-    color: styles.theme.colors.fontPrimary,
-    backgroundColor: styles.theme.colors.backgroundTertiary,
+    color: styles.theme.colors["neutral-500"],
+    backgroundColor: styles.theme.colors["neutral-300"],
     cursor: "pointer",
   }),
 };
@@ -201,10 +181,11 @@ export const SearchSelect: React.FC<Props> = ({
   onChange,
   icon,
   editable = true,
+  isSmall = false,
 }) => {
   return (
     <>
-      <InputFieldCore icon={icon} showLabel={false}>
+      <InputFieldCore icon={icon} showLabel={false} isSmall={isSmall}>
         <StyledSelect
           styles={selectStyled}
           options={selectOptions}
@@ -217,6 +198,7 @@ export const SearchSelect: React.FC<Props> = ({
           onChange={(value) => {
             onChange(value);
           }}
+          isSmall={isSmall}
         ></StyledSelect>
       </InputFieldCore>
     </>

@@ -88,6 +88,16 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Put('/updateAppearance')
+  async updateAppearance(@Req() request, @Res() response) {
+    const result = await this.userService.updateAppearance(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+
+  @UseGuards(JwtAuthGuard)
   @Put('/updatePublicProfile')
   async updatePublicProfile(@Req() request, @Res() response) {
     const result = await this.userService.updatePublicProfile(request);

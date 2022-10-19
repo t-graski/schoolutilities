@@ -107,7 +107,7 @@ export async function fetchSchoolClasses(schoolUUID) {
   return response.json();
 }
 
-export async function fetchSchoolPersons(schoolUUID) {
+export async function fetchSchoolUsers(schoolUUID) {
   const accessToken = await getAccessToken();
 
   const response = await fetch(
@@ -460,7 +460,7 @@ export async function fetchCourseElement(courseElementUUID) {
 
 export async function fetchUserInfo() {
   const token = await getAccessToken();
-  
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`,
     {
@@ -469,7 +469,7 @@ export async function fetchUserInfo() {
       },
     }
   );
-  
+
   if (response.status !== 200) {
     throw new Error(formatErrorMessage(response));
   }
@@ -478,6 +478,7 @@ export async function fetchUserInfo() {
 }
 
 export async function requestPasswordReset(email) {
+  console.log(email);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/requestPasswordReset`,
     {
@@ -486,6 +487,114 @@ export async function requestPasswordReset(email) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function getTimeTableForClass(classUUID) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/timetable/${classUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function fetchOffDays(schoolUUID){
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday/${schoolUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function addOffDay(data){
+  console.log(data);
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+  
+  return response.json();
+}
+
+export async function deleteOffDay(holidayUUID){
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday/${holidayUUID}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function editOffDay(data){
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/timetable/holiday/${data.holidayUUID}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
     }
   );
 

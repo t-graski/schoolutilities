@@ -42,16 +42,16 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledError = styled("p", {
-  color: "$specialTertiary",
+  color: "$error",
   fontSize: "1.5rem",
   fontWeight: "$bold",
   marginTop: "15px",
   marginBottom: "15px",
-  border: "solid 2px $specialTertiary",
+  border: "solid 2px $error",
   padding: "20px",
   width: "fit-content",
   borderRadius: "25px",
@@ -59,7 +59,7 @@ const StyledError = styled("p", {
 
 const DepartmentName = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const EditableList: React.FC<Props> = ({
@@ -72,7 +72,7 @@ export const EditableList: React.FC<Props> = ({
   deleteEntry,
 }) => {
   const [error, setError] = React.useState("");
-
+  
   return (
     <>
       <SchoolDetailLayout>

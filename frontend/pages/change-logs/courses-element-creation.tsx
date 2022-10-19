@@ -11,6 +11,7 @@ import { GeneralLayout } from "../../components/article/GeneralLayout";
 import { ArticleDetails } from "../../components/article/ArticleDetails";
 import { ArticleList } from "../../components/article/ArticleList";
 import dynamic from "next/dynamic";
+import { BackLink } from "../../components/molecules/BackLink";
 
 export default function Article() {
   const articleDetails = {
@@ -26,7 +27,7 @@ export default function Article() {
         <title>Patch Notes - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
+      <BackLink href={"/change-logs"} label={"Back to help"}></BackLink>
       <Headline
         fontSize="medium"
         label="March 6, 2022 - Patch Notes"

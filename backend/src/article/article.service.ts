@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { HelperService } from '../helper/helper.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly helper: HelperService) {}
+  constructor(private readonly helper: HelperService) { }
 
   async createArticle(request): Promise<ReturnMessage> {
     const {
@@ -30,13 +30,17 @@ export class ArticleService {
       const article = await prisma.articles.create({
         data: {
           articleUUID: `${ID_STARTERS.ARTICLE}${uuidv4()}`,
-          headline,
-          catchPhrase,
-          content,
-          type,
-          isPublic,
-          publishDate: isPublic ? new Date() : new Date(946684800),
-          personCreationId: userId,
+          articleHeadline: headline,
+          articleCatchPhrase: catchPhrase,
+          articleContent: content,
+          articleType: type,
+          articleIsPublic: isPublic,
+          articlePublishTimestamp: isPublic ? new Date() : new Date(946684800),
+          users: {
+            connect: {
+              userId,
+            },
+          },
         },
       });
       return {
@@ -74,12 +78,12 @@ export class ArticleService {
           articleUUID,
         },
         data: {
-          headline,
-          catchPhrase,
-          content,
-          type,
-          isPublic,
-          publishDate: isPublic ? new Date() : new Date(946684800),
+          articleHeadline: headline,
+          articleCatchPhrase: catchPhrase,
+          articleContent: content,
+          articleType: type,
+          articleIsPublic: isPublic,
+          articlePublishTimestamp: isPublic ? new Date() : new Date(946684800),
         },
       });
     } catch (error) {
@@ -97,8 +101,8 @@ export class ArticleService {
           articleUUID,
         },
         data: {
-          isPublic: true,
-          publishDate: new Date(),
+          articleIsPublic: true,
+          articlePublishTimestamp: new Date(),
         },
       });
     } catch (error) {
@@ -115,25 +119,29 @@ export class ArticleService {
         },
       });
 
-      const creator = await this.helper.getUserById(article.personCreationId);
+      const creator = await this.helper.getUserById(article.articleCreatorId);
 
       const articleItem = {
         articleUUID: article.articleUUID,
-        headline: article.headline,
-        catchPhrase: article.catchPhrase,
-        content: article.content,
+        articleHeadline: article.articleHeadline,
+        articleCatchPhrase: article.articleCatchPhrase,
+        articleContent: article.articleContent,
         type: {
-          articleTypeId: article.type,
-          articleTypeName: await this.helper.translateArticleType(article.type),
+          articleTypeId: article.articleType,
+          articleTypeName: await this.helper.translateArticleType(
+            article.articleType,
+          ),
         },
-        isPublic: article.isPublic,
-        publishDate: article.publishDate,
-        creationDate: article.creationDate,
+        articleIsPublic: article.articleIsPublic,
+        articlePublishTimestamp: article.articlePublishTimestamp,
+        articleCreationTimestamp: article.articleCreationTimestamp,
         creator: {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(article.content),
+        readingTime: await this.helper.computeReadingTime(
+          article.articleContent,
+        ),
       };
 
       return {
@@ -148,7 +156,7 @@ export class ArticleService {
   async getAllArticles(request): Promise<ReturnMessage> {
     const articles = await prisma.articles.findMany({
       where: {
-        creationDate: {
+        articleCreationTimestamp: {
           gt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
         },
       },
@@ -157,32 +165,39 @@ export class ArticleService {
     const articleItems = [];
 
     for (const article of articles) {
-      const creator = await this.helper.getUserById(article.personCreationId);
+      const creator = await this.helper.getUserById(article.articleCreatorId);
 
       const articleItem = {
         articleUUID: article.articleUUID,
-        headline: article.headline,
-        catchPhrase: article.catchPhrase,
-        content: article.content,
+        articleHeadline: article.articleHeadline,
+        articleCatchPhrase: article.articleCatchPhrase,
+        articleContent: article.articleContent,
         type: {
-          articleTypeId: article.type,
-          articleTypeName: await this.helper.translateArticleType(article.type),
+          articleType: article.articleType,
+          articleTypeName: await this.helper.translateArticleType(
+            article.articleType,
+          ),
         },
-        isPublic: article.isPublic,
-        publishDate: article.publishDate,
-        creationDate: article.creationDate,
+        articleIsPublic: article.articleIsPublic,
+        articlePublishTimestamp: article.articlePublishTimestamp,
+        articleCreationTimestamp: article.articleCreationTimestamp,
         creator: {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(article.content),
+        readingTime: await this.helper.computeReadingTime(
+          article.articleContent,
+        ),
       };
 
       articleItems.push(articleItem);
     }
 
     articleItems.sort((a, b) => {
-      return b.creationDate.getTime() - a.creationDate.getTime();
+      return (
+        b.articleCreationTimestamp.getTime() -
+        a.articleCreationTimestamp.getTime()
+      );
     });
 
     return {
@@ -197,7 +212,7 @@ export class ArticleService {
     try {
       const article = await prisma.articles.findFirst({
         where: {
-          isPublic,
+          articleIsPublic: isPublic,
         },
       });
       return {
@@ -206,6 +221,49 @@ export class ArticleService {
       };
     } catch (error) {
       return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async uploadFile(file, request): Promise<ReturnMessage> {
+    const { articleUUID } = request.body;
+    try {
+      const articleFile = await prisma.articleFile.create({
+        data: {
+          articleFileUUID: `${file.filename}`,
+          articleFileName: `${file.originalname}`,
+          articleFileSize: file.size,
+          articles: {
+            connect: {
+              articleUUID
+            }
+          }
+        }
+      })
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: articleFile,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async getArticleFiles(articleUUID: string): Promise<ReturnMessage> {
+    try {
+      const articleFiles = await prisma.articleFile.findMany({
+        where: {
+          articles: {
+            articleUUID
+          }
+        }
+      })
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: articleFiles,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
     }
   }
 }

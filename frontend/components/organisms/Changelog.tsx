@@ -9,7 +9,7 @@ type Props = {
     date: string;
     headline: string;
     text: string;
-  }[]
+  }[];
 };
 
 const ChangeLogsLayout = styled("div", {
@@ -31,13 +31,13 @@ const ChangeLogLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   padding: "3vh 3vw",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   borderRadius: "15px",
   cursor: "pointer",
 });
 
 const StyledLink = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
 });
 

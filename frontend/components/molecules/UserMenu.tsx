@@ -41,7 +41,7 @@ const slideLeftAndFade = keyframes({
 
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$secondaryContainer",
   borderRadius: 15,
   padding: 8,
   boxShadow:
@@ -62,7 +62,7 @@ const StyledContent = styled(DropdownMenuPrimitive.Content, {
 const itemStyles = {
   all: "unset",
   lineHeight: 1,
-  color: "$fontPrimary",
+  color: "$onSecondaryContainer",
   borderRadius: 5,
   display: "flex",
   alignItems: "center",
@@ -76,13 +76,13 @@ const itemStyles = {
   cursor: "pointer",
 
   "&[data-disabled]": {
-    color: "$fontPrimary",
+    color: "$neutral-500",
     pointerEvents: "none",
   },
 
   "&:focus": {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
 };
 
@@ -95,8 +95,8 @@ const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
 });
 const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
   '&[data-state="open"]': {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    backgroundColor: "$warning",
+    color: "$neutral-500",
   },
   ...itemStyles,
 });
@@ -105,12 +105,12 @@ const StyledLabel = styled(DropdownMenuPrimitive.Label, {
   paddingLeft: 25,
   fontSize: 12,
   lineHeight: "25px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
   height: 1,
-  backgroundColor: "$fontPrimary",
+  backgroundColor: "$outline",
   margin: 5,
 });
 
@@ -124,7 +124,7 @@ const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
 });
 
 const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
-  fill: "$fontPrimary",
+  fill: "$neutral-500",
   position: "relative",
   right: 40,
 });
@@ -150,11 +150,11 @@ const RightSlot = styled("div", {
   marginLeft: "auto",
   paddingLeft: 20,
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
-  ":focus > &": { color: "$fontPrimary" },
+  ":focus > &": { color: "$neutral-500" },
 
-  "[data-disabled] &": { color: "$fontPrimary" },
+  "[data-disabled] &": { color: "$neutral-500" },
 });
 
 const IconLayout = styled("div", {
@@ -164,7 +164,7 @@ const IconLayout = styled("div", {
   padding: "5px",
   borderRadius: "100%",
 
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
 });
 
 const UserMenuLayout = styled("div", {
@@ -176,7 +176,8 @@ const UserMenuLayout = styled("div", {
   justifyContent: "center",
   alignItems: "center",
 
-  backgroundColor: "#A2A8C3",
+  backgroundColor: "$primary",
+  color: "$onPrimary",
   cursor: "pointer",
 });
 
@@ -204,12 +205,13 @@ const StyledLink = styled("a", {
   width: "100%",
   justifyContent: "space-between",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
 });
 
 export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
   const { theme, setTheme } = useTheme();
+  const [language, setLanguage] = useState("en");
   const [open, setOpen] = useState(false);
 
   const [currentSchool, setCurrentSchool] = useState(getSelectedSchool());
@@ -255,7 +257,9 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
               <SvgRoundUser />
             </IconLayout>
             <StyledUserName>
-              {userInfo && userInfo.firstName ? userInfo.firstName : "Profile"}
+              {userInfo && userInfo.userFirstname
+                ? userInfo.userFirstname
+                : "Profile"}
             </StyledUserName>
             <ArrowLayout open={open}>
               <ChevronRightIcon />
@@ -272,6 +276,11 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link href={`/school/${currentSchool}/planner?tab=timetable`} passHref>
+                  <StyledLink>Planner</StyledLink>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenu>
                 <DropdownMenuTriggerItem>
                   <Link href={`/school/${currentSchool}/course`} passHref>
@@ -305,7 +314,7 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
                         <Link
-                          href={`/school/${currentSchool}/course/create-course`}
+                          href={`/school/${currentSchool}/course/create`}
                           passHref
                         >
                           <StyledLink>Create a course</StyledLink>
@@ -318,7 +327,7 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
               <DropdownMenu>
                 <DropdownMenuTriggerItem>
                   <Link
-                    href={`/school/${currentSchool}/course/create-course`}
+                    href={`/school/${currentSchool}/course/create`}
                     passHref
                   >
                     <StyledLink>
@@ -407,16 +416,16 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                 </DropdownMenuTriggerItem>
                 <DropdownMenuContent sideOffset={2} alignOffset={-5}>
                   <DropdownMenuRadioGroup
-                    value={theme}
-                    onValueChange={setTheme}
+                    value={language}
+                    onValueChange={setLanguage}
                   >
-                    <DropdownMenuRadioItem value="english">
+                    <DropdownMenuRadioItem value="en">
                       <DropdownMenuItemIndicator>
                         <DotFilledIcon />
                       </DropdownMenuItemIndicator>
                       English
                     </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="german">
+                    <DropdownMenuRadioItem value="de">
                       <DropdownMenuItemIndicator>
                         <DotFilledIcon />
                       </DropdownMenuItemIndicator>

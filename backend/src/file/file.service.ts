@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class FileUploadService {
-  constructor() {}
+  constructor() { }
 
   async uploadFile(file, request) {
     if (request.fileValidationError?.status === HttpStatus.BAD_REQUEST) {
@@ -27,9 +27,9 @@ export class FileUploadService {
       await prisma.courseFiles.create({
         data: {
           courseFileUUID: file.filename,
-          fileName: request.file.originalname.split('.')[0],
-          fileSize: Number(file.size),
-          fileType: file.mimetype,
+          courseFileName: request.file.originalname.split('.')[0],
+          courseFileSize: Number(file.size),
+          courseFileType: file.mimetype,
         },
       });
     } catch (error) {
@@ -82,10 +82,10 @@ export class FileUploadService {
         },
         select: {
           courseFileUUID: true,
-          dateUploaded: true,
-          fileName: true,
-          fileSize: true,
-          fileType: true,
+          courseFileUploadTimestamp: true,
+          courseFileName: true,
+          courseFileSize: true,
+          courseFileType: true,
         },
       });
 

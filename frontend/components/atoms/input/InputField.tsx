@@ -4,7 +4,7 @@ import type * as Stitches from "@stitches/react";
 import { InputFieldCore } from "./InputFieldCore";
 
 type Props = {
-  inputType: "text" | "date" | "email" | "number" | "datetime-local";
+  inputType: "text" | "date" | "email" | "number" | "datetime-local" | "time";
   value?: string;
   onChange: Function;
   icon?: any;
@@ -18,6 +18,7 @@ type Props = {
   errorMessage?: string;
   min?: string;
   max?: string;
+  theme?: "surface" | "surfaceVariant";
 };
 
 const StyledInputField = styled("input", {
@@ -27,16 +28,16 @@ const StyledInputField = styled("input", {
   padding: "0.5rem 0",
   borderBottom: "solid 1px transparent",
 
-  fontFamily: "$fontPrimary",
+  fontFamily: "$neutral-500",
   fontWeight: "bold",
-  background: "$backgroundTertiary",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
-  color: "$fontPrimary",
+  color: "$onSurfaceVariant",
+  backgroundColor: "transparent",
 
   ["&:focus"]: {
-    borderBottom: "solid 1px $colors$fontPrimary",
+    borderBottom: "solid 1px $colors$neutral-500",
   },
 
   variants: {
@@ -92,6 +93,7 @@ export const InputField: React.FC<Props> = ({
   errorMessage = "",
   min,
   max,
+  theme,
 }) => {
   const [isInputValid, setIsInputValid] = React.useState(null);
 
@@ -114,7 +116,13 @@ export const InputField: React.FC<Props> = ({
 
   return (
     <>
-      <InputFieldCore icon={icon} required={required} label={label} showLabel={showLabel}>
+      <InputFieldCore
+        icon={icon}
+        required={required}
+        label={label}
+        showLabel={showLabel}
+        theme={theme}
+      >
         <StyledLabel>
           <StyledInputField
             type={inputType}

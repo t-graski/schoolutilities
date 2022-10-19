@@ -32,14 +32,14 @@ const SchoolLayout = styled("div", {
   margin: "20px auto",
   padding: "20px 40px",
   borderRadius: "15px",
-  
-  backgroundColor: "$backgroundTertiary",
+
+  backgroundColor: "$surface3",
   transition: "all 200ms ease-in-out",
   cursor: "pointer",
   placeSelf: "center",
 
   "&:hover": {
-    backgroundColor: "$backgroundSecondary",
+    backgroundColor: "$secondaryContainer",
   },
 });
 
@@ -48,7 +48,7 @@ const SchoolName = styled("p", {
   margin: 0,
 
   textAlign: "left",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   fontSize: "30px",
   fontWeight: "bold",
 });
@@ -58,7 +58,7 @@ const SchoolDescription = styled("p", {
 
   fontSize: "14px",
   textAlign: "left",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const SchoolSelectionList: React.FC<SideDashboardProps> = ({}) => {

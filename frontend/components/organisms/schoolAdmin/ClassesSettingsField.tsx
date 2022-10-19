@@ -30,7 +30,6 @@ const SchoolDetailLayout = styled("form", {
   justifySelf: "center",
   width: "100%",
   padding: "40px 60px",
-  marginTop: "12vh",
   overflowY: "scroll",
 });
 
@@ -48,12 +47,12 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const DepartmentName = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$onSurface",
 });
 
 const StyledInputField = styled("div", {
@@ -68,18 +67,16 @@ const SettingsEntryLink = styled("a", {
 
 const StyledDeleteText = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   marginTop: "15px",
 });
 
-export const ClassesSettingsField: React.FC<Props> = ({
-  queryClient,
-}) => {
+export const ClassesSettingsField: React.FC<Props> = ({ queryClient }) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
   const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
   const [schoolClassName, setSchoolClassName] = React.useState("");
   const [schoolClassNameValid, setSchoolClassNameValid] = React.useState(false);
-  const [departmentUUID, setDepartmentUUId] = React.useState("");
+  const [departmentUUID, setDepartmentUUID] = React.useState("");
   const [schoolClassId, setSchoolClassId] = React.useState("");
   const [error, setError] = React.useState("");
   const router = useRouter();
@@ -123,6 +120,8 @@ export const ClassesSettingsField: React.FC<Props> = ({
           (department) => department.departmentUUID === departmentUUID
         ).departmentName,
       };
+
+      console.log(entry);
 
       queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
         old.map((currEntry) =>
@@ -226,6 +225,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
                 setValidInput={setSchoolClassNameValid}
                 min="2"
                 max="30"
+                theme="surface"
               />
               <Spacer size="verySmall" />
               <Select
@@ -237,8 +237,9 @@ export const ClassesSettingsField: React.FC<Props> = ({
                   };
                 })}
                 onChange={(event) => {
-                  setDepartmentUUId(event);
+                  setDepartmentUUID(event);
                 }}
+                theme="surface"
               ></Select>
             </StyledInputField>
           </SettingsPopUp>
@@ -270,12 +271,13 @@ export const ClassesSettingsField: React.FC<Props> = ({
             setSchoolClassName("");
             setSchoolClassId("");
             setEditPopUpIsVisible(true);
-            setDepartmentUUId(departments[0].departmentUUID);
+            setDepartmentUUID(departments[0].departmentUUID);
           }}
         ></SettingsHeader>
         {error}
         <SettingsEntriesLayout>
-          {classesStatus == "success" && classes.length > 0 ? (
+          {classesStatus == "success" &&
+            classes.length > 0 &&
             classes.map((entry) => (
               <SettingsEntryLayout
                 key={entry.classUUID}
@@ -285,7 +287,7 @@ export const ClassesSettingsField: React.FC<Props> = ({
                   editFunction={() => {
                     setSchoolClassName(entry.className);
                     setSchoolClassId(entry.classUUID);
-                    setDepartmentUUId(entry.departmentUUID);
+                    setDepartmentUUID(entry.departmentUUID);
                     setEditPopUpIsVisible(true);
                     setSchoolClassNameValid(true);
                   }}
@@ -309,18 +311,36 @@ export const ClassesSettingsField: React.FC<Props> = ({
                       passHref
                     >
                       <SettingsEntryLink>
-                        <DepartmentName>{entry.departmentName}</DepartmentName>
+                        <DepartmentName>
+                          {
+                            departments.find(
+                              (department) =>
+                                department.departmentUUID ===
+                                entry.departmentUUID
+                            ).departmentName
+                          }
+                        </DepartmentName>
                       </SettingsEntryLink>
                     </Link>
                   </>
                 </SettingsEntry>
               </SettingsEntryLayout>
-            ))
-          ) : (
+            ))}
+          {classesStatus == "success" && classes.length <= 0 && (
+            <>
+              There are no classes yet. Add a new class by clicking the button
+            </>
+          )}
+          {classesStatus == "loading" && (
             <>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
               <Skeleton width="100%" height={100}></Skeleton>
+            </>
+          )}
+          {classesStatus == "error" && (
+            <>
+              While loading the classes an error occured. Please try again later
             </>
           )}
         </SettingsEntriesLayout>

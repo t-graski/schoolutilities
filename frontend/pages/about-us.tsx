@@ -23,7 +23,7 @@ export default function AboutUs() {
         name="Tobias"
         position="Chief Executive Officer"
         description=""
-        roles={["Management", "Backend Developer", "Network Developer"]}
+        roles={["Management", "Backend Developer", "Network Developer", "Datasbase Designer"]}
       />
       <AboutUsItem
         imageSrc="/images/david_woegerbauer.svg"
@@ -31,15 +31,23 @@ export default function AboutUs() {
         name="David"
         position="Chief Technology Officer"
         description=""
-        roles={["Management", "Frontend Developer", "Backend Developer"]}
+        roles={["Management", "Frontend Developer"]}
+      />
+      <AboutUsItem
+        imageSrc="/images/tobias_graski.svg"
+        imageAlt="maxi"
+        name="Maximilian"
+        position="Backend specialist"
+        description=""
+        roles={["Backend Developer", "Database designer"]}
       />
       <AboutUsItem
         imageSrc="/images/florian_doppler.svg"
         imageAlt="florian"
         name="Florian"
-        position="Chief Design Officer"
+        position="Designer"
         description=""
-        roles={["Design", "Frontend Developer"]}
+        roles={["Design"]}
       />
       <Footer></Footer>
     </>

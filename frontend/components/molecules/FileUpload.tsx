@@ -21,16 +21,16 @@ const StyledDropzone = styled("div", {
   borderColor: "#eeeeee",
   borderStyle: "dashed",
   padding: "40px",
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
   color: "#fontPrimary",
   outline: "none",
   transition: "border .24s ease-in-out",
   cursor: "pointer",
   "&:hover": {
-    borderColor: "$specialPrimary",
+    borderColor: "$warning",
   },
   "&:focus": {
-    borderColor: "$specialPrimary",
+    borderColor: "$warning",
   },
 });
 
@@ -48,7 +48,7 @@ const StyledHeadline = styled("h4", {
   margin: "20px 0",
 });
 
-export const FileUpload: React.FC<Props> = ({ }) => {
+export const FileUpload: React.FC<Props> = ({}) => {
   const [files, setFiles] = useState([]);
   const [filesSent, setFilesSent] = useState("");
 
@@ -135,7 +135,9 @@ export const FileUpload: React.FC<Props> = ({ }) => {
               onClick={() => {
                 uploadFile(files[0]);
               }}
-            >Hand in</Button>
+            >
+              Hand in
+            </Button>
           </aside>
         </section>
       )}

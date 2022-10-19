@@ -15,7 +15,7 @@ export type AboutUsItem = {
 const AboutUsLayout = styled("div", {
   padding: "1.5vh 15vw",
   display: "flex",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const ImageDimension = styled("div", {

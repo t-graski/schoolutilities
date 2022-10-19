@@ -26,8 +26,8 @@ const StyledAccordion = styled(AccordionPrimitive.Root, {
   borderRadius: 6,
   width: "50%",
   minWidth: "400px",
-  backgroundColor: "$backgroundPrimary",
-  boxShadow: `0 2px 10px $backgroundPrimary`,
+  backgroundColor: "$neutral-100",
+  boxShadow: `0 2px 10px $neutral-100`,
 });
 
 const StyledItem = styled(AccordionPrimitive.Item, {
@@ -48,7 +48,7 @@ const StyledItem = styled(AccordionPrimitive.Item, {
   "&:focus-within": {
     position: "relative",
     zIndex: 1,
-    boxShadow: `0 0 0 2px $fontPrimary`,
+    boxShadow: `0 0 0 2px $neutral-500`,
   },
 });
 
@@ -69,18 +69,18 @@ const StyledTrigger = styled(AccordionPrimitive.Trigger, {
   justifyContent: "space-between",
   fontSize: 15,
   lineHeight: 1,
-  color: "$fontPrimary",
-  boxShadow: `0 1px 0 $fontPrimary`,
-  '&[data-state="closed"]': { backgroundColor: "$backgroundTertiary" },
-  '&[data-state="open"]': { backgroundColor: "$backgroundSecondary" },
-  "&:hover": { backgroundColor: "$backgroundSecondary" },
+  color: "$neutral-500",
+  boxShadow: `0 1px 0 $neutral-500`,
+  '&[data-state="closed"]': { backgroundColor: "$neutral-300" },
+  '&[data-state="open"]': { backgroundColor: "$neutral-400" },
+  "&:hover": { backgroundColor: "$neutral-400" },
 });
 
 const StyledContent = styled(AccordionPrimitive.Content, {
   overflow: "hidden",
   fontSize: 15,
-  color: "$fontPrimary",
-  backgroundColor: "$backgroundPrimary",
+  color: "$neutral-500",
+  backgroundColor: "$neutral-100",
 
   '&[data-state="open"]': {
     animation: `${slideDown} 300ms cubic-bezier(0.87, 0, 0.13, 1)`,
@@ -95,7 +95,7 @@ const StyledContentText = styled("div", {
 });
 
 const StyledChevron = styled(ChevronDownIcon, {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   transition: "transform 300ms cubic-bezier(0.87, 0, 0.13, 1)",
   "[data-state=open] &": { transform: "rotate(180deg)" },
 });
@@ -109,7 +109,7 @@ const AccordionLayout = styled("div", {
 });
 
 const StyledLink = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const Accordion = StyledAccordion;

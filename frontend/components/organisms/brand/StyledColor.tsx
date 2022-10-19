@@ -14,7 +14,7 @@ const SingleColorLayout = styled("div", {
   width: "100%",
   justifyContent: "center",
   alignItems: "flex-start",
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   padding: "25px",
 });
 

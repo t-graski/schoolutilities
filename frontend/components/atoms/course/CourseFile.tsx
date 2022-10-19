@@ -20,7 +20,7 @@ type Props = {
 };
 
 const StyledLink = styled("a", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
   cursor: "pointer",
 });

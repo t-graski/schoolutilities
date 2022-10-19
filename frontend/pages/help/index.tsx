@@ -39,9 +39,9 @@ export async function getStaticProps() {
     props: {
       items: getResponse.map((item) => {
         return {
-          title: item.headline,
+          title: item.articleHeadline,
           href: `/help/articles/${item.articleUUID}`,
-          description: item.catchPhrase,
+          description: item.articleCatchPhrase,
         };
       }),
     },

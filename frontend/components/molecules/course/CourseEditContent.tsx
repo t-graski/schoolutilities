@@ -19,11 +19,11 @@ type Props = {
 };
 
 const ComponentLayout = styled("div", {
-  border: "1px solid $fontPrimary",
+  border: "1px solid $neutral-500",
   padding: "10px 20px",
   borderRadius: "15px",
   cursor: "pointer",
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
   display: "flex",
   width: "100%",
   justifyContent: "space-between",
@@ -104,7 +104,10 @@ export const CourseEditContent: React.FC<Props> = ({
                   if (currentItem.id === item.id) {
                     return {
                       id: item.id,
-                      config: { ...config, choosenElement: currentChoosenElement },
+                      config: {
+                        ...config,
+                        choosenElement: currentChoosenElement,
+                      },
                       children: currentItem.children,
                     };
                   } else if (childElement) {
@@ -114,7 +117,10 @@ export const CourseEditContent: React.FC<Props> = ({
                         if (child.id === item.id) {
                           return {
                             ...child,
-                            config: { ...config, choosenElement: currentChoosenElement },
+                            config: {
+                              ...config,
+                              choosenElement: currentChoosenElement,
+                            },
                           };
                         } else {
                           return child;

@@ -7,6 +7,7 @@ import cookie from "js-cookie";
 import { Progressbar } from "../../molecules/Progressbar";
 import { Spacer } from "../../atoms/Spacer";
 import { getAccessToken } from "../../../utils/authHelper";
+import { useCourseControllerAddCourse } from "../../../default/default";
 
 type Props = {
   steps: {
@@ -44,7 +45,7 @@ const SuccessLayout = styled("div", {
   width: "100%",
   padding: "0 10vw",
   gap: "40px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledHeadline = styled("h1", {
@@ -64,10 +65,10 @@ const SuccessImageLayout = styled("div", {
   variants: {
     color: {
       success: {
-        color: "$specialPrimary",
+        color: "$warning",
       },
       error: {
-        color: "$specialTertiary",
+        color: "$error",
       },
     },
   },
@@ -78,19 +79,18 @@ const SuccessDescription = styled("p", {
 });
 
 const StyledLink = styled("a", {
-  color: "$specialPrimary",
+  color: "$onPrimaryContainer",
+  backgroundColor: "$primaryContainer",
   fontSize: "1.2rem",
   fontWeight: "bold",
   padding: "20px",
-  border: "2px solid $specialPrimary",
   borderRadius: "25px",
   textDecoration: "none",
   cursor: "pointer",
   transition: "all 0.2s",
 
   "&:hover": {
-    backgroundColor: "$specialPrimary",
-    color: "$fontPrimary",
+    opacity: 0.8,
   },
 });
 
@@ -120,17 +120,23 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
 
   async function saveInputs() {
     let accessToken = await getAccessToken();
-    console.log(inputData);
+    console.log({
+      courseName: inputData.courseName,
+      schoolUUID: router.query.schoolUUID as string,
+      courseDescription: inputData.courseDescription,
+      courseClasses: inputData.classes.map((schoolClass) => schoolClass.value),
+      users: inputData.members.map((person) => person.value),
+    });
     const schoolResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/addCourse`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course`,
       {
         method: "POST",
         body: JSON.stringify({
-          name: inputData.courseName,
+          courseName: inputData.courseName,
           schoolUUID: router.query.schoolUUID as string,
           courseDescription: inputData.courseDescription,
-          classes: inputData.classes.map((schoolClass) => schoolClass.value),
-          persons: inputData.members.map((person) => person.value),
+          courseClasses: inputData.classes.map((schoolClass) => schoolClass.value),
+          users: inputData.members.map((person) => person.value),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +145,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
       }
     );
     if (schoolResponse) {
-      if (schoolResponse.status == 200) {
+      if (schoolResponse.status == 201) {
         setStatusInfo({
           statusHeadline: "Your Course was successfully created",
           statusDescription:
@@ -198,9 +204,8 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
         <Spacer size="small"></Spacer>
         <NavigationLayout>
           <Button
-            disabled={activeStep === 0 || isButtonDisabled}
-            backgroundColor="primary"
-            color="primary"
+            isDisabled={activeStep === 0 || isButtonDisabled}
+            buttonType="filled"
             onClick={() => {
               setActiveStep(activeStep - 1);
             }}

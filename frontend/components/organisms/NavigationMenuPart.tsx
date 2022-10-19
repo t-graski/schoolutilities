@@ -48,7 +48,7 @@ const fadeOut = keyframes({
 
 const StyledMenu = styled(NavigationMenuPrimitive.Root, {
   position: "relative",
-  zIndex: 1,
+  zIndex: 2,
 
   display: "flex",
   justifyContent: "center",
@@ -70,16 +70,16 @@ const StyledList = styled(NavigationMenuPrimitive.List, {
 const itemStyles = {
   padding: "8px 12px",
   borderRadius: 4,
-  
+
   fontSize: 15,
-  color: "$fontPrimary",
+  color: "$neutral-500",
   lineHeight: 1,
   fontWeight: "$medium",
   outline: "none",
   userSelect: "none",
 
   "&:focus": { position: "relative", boxShadow: `0 0 0 2px ${violet.violet7}` },
-  "&:hover": { backgroundColor: "$backgroundSecondary" },
+  "&:hover": { backgroundColor: "$surface2", color: "$onSurface" },
 };
 
 const StyledTrigger = styled(NavigationMenuPrimitive.Trigger, {
@@ -100,8 +100,8 @@ const StyledCaret = styled(CaretDownIcon, {
   position: "relative",
   top: 1,
 
-  color: "$fontPrimary",
-  
+  color: "$neutral-500",
+
   "[data-state=open] &": { transform: "rotate(-180deg)" },
   "@media (prefers-reduced-motion: no-preference)": {
     transition: "transform 250ms ease",
@@ -171,7 +171,7 @@ const StyledArrow = styled("div", {
   position: "relative",
   top: "70%",
   transform: "rotate(45deg)",
-  
+
   width: 10,
   height: 10,
   borderTopLeftRadius: 2,
@@ -200,7 +200,7 @@ const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   overflow: "hidden",
   height: "var(--radix-navigation-menu-viewport-height)",
 
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$surface2",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
 
@@ -251,19 +251,18 @@ const ContentList = styled("ul", {
   },
 });
 
-const ListItem = styled("li", {
-});
+const ListItem = styled("li", {});
 
 const LinkTitle = styled("div", {
   marginBottom: 5,
 
   fontWeight: "$bold",
   lineHeight: 1.2,
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const LinkText = styled("p", {
-  color: "$fontPrimary",
+  color: "$neutral-500",
   lineHeight: 1.4,
   fontWeight: "initial",
 });
@@ -276,11 +275,12 @@ const StyledA = styled("a", {
   borderRadius: 5,
 
   transition: "background-color 250ms ease",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
 
   "&:hover": {
-    backgroundColor: "$backgroundTertiary",
+    backgroundColor: "$surface",
+    color: "$onSurface",
   },
 });
 
@@ -297,7 +297,7 @@ const ContentListItem = React.forwardRef<any, any>(function Content(
           padding: 12,
           borderRadius: 6,
           transition: "background-color 150ms ease",
-          "&:hover": { backgroundColor: "$backgroundTertiary" },
+          "&:hover": { backgroundColor: "$neutral-300" },
         }}
         passHref
       >
@@ -392,7 +392,21 @@ export const NavigationMenuPart = () => {
               </ContentListItem>
               <ContentListItem
                 title="Create course"
-                href="/school/select?redirect=/course/create"
+                href={
+                  schoolUUID
+                    ? `/school/${schoolUUID}/course/create`
+                    : "/school/select?redirect=/course/create"
+                }
+              >
+                Create a course and start teaching your students.
+              </ContentListItem>
+              <ContentListItem
+                title="Create timetable item"
+                href={
+                  schoolUUID
+                    ? `/school/${schoolUUID}/timetable/create`
+                    : "/school/select?redirect=/timetable/create"
+                }
               >
                 Create a course and start teaching your students.
               </ContentListItem>

@@ -34,9 +34,9 @@ export class DatabaseService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const isNotAvailable = await prisma.persons.findFirst({
+    const isNotAvailable = await prisma.users.findFirst({
       where: {
-        email,
+        userEmail: email,
       },
     });
     if (isNotAvailable) {
@@ -44,20 +44,20 @@ export class DatabaseService {
     }
 
     try {
-      let person = await prisma.persons.create({
+      let person = await prisma.users.create({
         data: {
-          personUUID: `${ID_STARTERS.USER}${uuidv4()}`,
-          firstName,
-          lastName,
-          birthDate: new Date(birthDate),
-          email,
-          password,
-          lastLogin: new Date(500),
+          userUUID: `${ID_STARTERS.USER}${uuidv4()}`,
+          userFirstname: firstName,
+          userLastname: lastName,
+          userBirthDate: new Date(birthDate),
+          userEmail: email,
+          userPassword: password,
+          userLastLoginTimestamp: new Date(500),
         },
       });
 
-      await this.helper.createOrResetDefaultSettings(person.personId);
-      await this.helper.createDefaultPublicProfileSettings(person.personId);
+      await this.helper.createOrResetDefaultSettings(person.userId);
+      await this.helper.createDefaultPublicProfileSettings(person.userId);
 
     } catch (error) {
       console.log(error);
@@ -72,92 +72,92 @@ export class DatabaseService {
       return [];
     }
 
-    const roles = await prisma.personRoles.findMany({
+    const roles = await prisma.schoolUserRoles.findMany({
       where: {
-        personId: Number(userId),
+        userId: Number(userId),
       },
     });
     return roles;
   }
 
-  async getUserData(body: LoginUserData): Promise<UserData> {
+  async getUserData(body: LoginUserData): Promise<UserData | any> {
     const { email } = body;
-    const user = await prisma.persons.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
-        email: email,
+        userEmail: email,
       },
       select: {
-        personId: true,
-        email: true,
-        password: true,
+        userId: true,
+        userEmail: true,
+        userPassword: true,
       },
     });
     return user;
   }
 
   async getUserIdByEmail(email: string): Promise<object> {
-    const user = await prisma.persons.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
-        email: email,
+        userEmail: email,
       },
       select: {
-        personId: true,
+        userId: true,
       },
     });
     return user;
   }
 
-  async getPersonEmailByUUID(personUUID: string): Promise<string> {
-    const person = await prisma.persons.findFirst({
+  async getPersonEmailByUUID(userUUID: string): Promise<string> {
+    const user = await prisma.users.findFirst({
       where: {
-        personUUID: personUUID,
+        userUUID,
       },
       select: {
-        email: true,
+        userEmail: true,
       },
     });
-    return person.email;
+    return user.userEmail;
   }
 
-  async getUserDataById(userId: number): Promise<UserData> {
-    const user = await prisma.persons.findFirst({
+  async getUserDataById(userId: number): Promise<UserData | any> {
+    const user = await prisma.users.findFirst({
       where: {
-        personId: userId,
+        userId,
       },
     });
     return user;
   }
 
   async getUserUUIDByEmail(email: string): Promise<string> {
-    const user = await prisma.persons.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
-        email: email,
+        userEmail: email,
       },
     });
-    return user.personUUID;
+    return user.userUUID;
   }
 
   async getPersonByEmail(email: string): Promise<any> {
-    const person = await prisma.persons.findFirst({
+    const user = await prisma.users.findFirst({
       where: {
-        email: email,
+        userEmail: email,
       },
     });
-    return person;
+    return user;
   }
 
-  async getPersonById(personId: number): Promise<any> {
-    const person = await prisma.persons.findFirst({
+  async getPersonById(userId: number): Promise<any> {
+    const person = await prisma.users.findFirst({
       where: {
-        personId: personId,
+        userId,
       },
       select: {
-        personId: true,
-        personUUID: true,
-        firstName: true,
-        lastName: true,
-        birthDate: true,
-        email: true,
+        userId: true,
+        userUUID: true,
+        userFirstname: true,
+        userLastname: true,
+        userBirthDate: true,
+        userEmail: true,
       },
     });
 
@@ -167,7 +167,7 @@ export class DatabaseService {
   async getSchoolUUIDByJoinCode(joinCode: string): Promise<string> {
     const schoolId = await prisma.schoolJoinCodes.findFirst({
       where: {
-        joinCode: joinCode,
+        schoolJoinCode: joinCode,
       },
       select: {
         schoolId: true,
@@ -184,9 +184,9 @@ export class DatabaseService {
       select: {
         schoolId: true,
         schoolUUID: true,
-        name: true,
-        languageId: true,
-        timezone: true,
+        schoolName: true,
+        schoolLanguageId: true,
+        schoolTimezone: true,
       },
     });
 
@@ -196,7 +196,7 @@ export class DatabaseService {
   async getSchoolIdByUUID(schoolUUID: string): Promise<number> {
     const school = await prisma.schools.findFirst({
       where: {
-        schoolUUID: schoolUUID,
+        schoolUUID,
       },
       select: {
         schoolId: true,
@@ -214,22 +214,22 @@ export class DatabaseService {
     return school.schoolUUID;
   }
 
-  async getPersonIdByUUID(personUUID: string): Promise<number> {
-    const person = await prisma.persons.findFirst({
+  async getPersonIdByUUID(userUUID: string): Promise<number> {
+    const user = await prisma.users.findFirst({
       where: {
-        personUUID: personUUID,
+        userUUID,
       },
       select: {
-        personId: true,
+        userId: true,
       },
     });
-    return person.personId;
+    return user.userId;
   }
 
   async getDepartmentIdByUUID(departmentUUID: string): Promise<any> {
     const department = await prisma.departments.findFirst({
       where: {
-        departmentUUID: departmentUUID,
+        departmentUUID,
       },
       select: {
         departmentId: true,
@@ -241,13 +241,13 @@ export class DatabaseService {
   async getClassIdByUUID(classUUID: string): Promise<any> {
     const classId = await prisma.schoolClasses.findFirst({
       where: {
-        classUUID: classUUID,
+        schoolClassUUID: classUUID,
       },
       select: {
-        classId: true,
+        schoolClassId: true,
       },
     });
-    return classId.classId;
+    return classId.schoolClassId;
   }
   async getCourseUUIDById(courseUUID: string): Promise<any> {
     const course = await prisma.courses.findFirst({
@@ -276,9 +276,9 @@ export class DatabaseService {
   async getPersonRolesByPersonUUID(personUUID: string): Promise<any> {
     const personId = await this.getPersonIdByUUID(personUUID);
 
-    let schools = await prisma.schoolPersons.findMany({
+    let schools = await prisma.schoolUsers.findMany({
       where: {
-        personId: personId,
+        schoolUserId: personId,
       },
       select: {
         schoolId: true,
@@ -287,20 +287,20 @@ export class DatabaseService {
 
     let schoolRoles = [];
     for (const school of schools) {
-      const role = await prisma.personRoles.findFirst({
+      const role = await prisma.schoolUserRoles.findFirst({
         where: {
-          personId: personId,
+          userId: personId,
           schoolId: school.schoolId,
         },
         select: {
-          roleId: true,
+          schoolRoleId: true,
         },
       });
 
       let schoolUUID = await this.getSchoolUUIDById(school.schoolId);
 
-      let roleName = Object.keys(Role)[role.roleId];
-      let roleId = role.roleId;
+      let roleName = Object.keys(Role)[role.schoolRoleId];
+      let roleId = role.schoolRoleId;
 
       schoolRoles.push({
         schoolUUID,
@@ -339,13 +339,13 @@ export class DatabaseService {
   async getClassById(classId: number): Promise<any> {
     const classData = await prisma.schoolClasses.findFirst({
       where: {
-        classId: classId,
+        schoolClassId: classId,
       },
       select: {
-        classId: true,
-        classUUID: true,
-        className: true,
-        departmentId: true,
+        schoolClassId: true,
+        schoolClassUUID: true,
+        schoolClassName: true,
+        schoolClassDepartmentId: true,
       },
     });
 
@@ -369,9 +369,9 @@ export class DatabaseService {
   // }
 
   async inserToken(userId: number, token: string) {
-    prisma.loginTokens.create({
+    prisma.userLoginTokens.create({
       data: {
-        personId: userId,
+        userId,
         refreshToken: token,
       },
     });
@@ -395,10 +395,10 @@ export class DatabaseService {
   // }
 
   async inserRegisterToken(userId: number, token: string) {
-    prisma.registerTokens.create({
+    prisma.userRegisterTokens.create({
       data: {
-        personId: userId,
-        token: token,
+        userId,
+        userRegisterToken: token,
       },
     });
   }
@@ -420,16 +420,16 @@ export class DatabaseService {
   // }
 
   async getUnverifiedUserByRegisterToken(token: string) {
-    return prisma.persons.findMany({
+    return prisma.users.findMany({
       where: {
-        personId: {
-          in: (await prisma.registerTokens.findMany({
+        userId: {
+          in: (await prisma.userRegisterTokens.findMany({
             where: {
-              token: token,
+              userRegisterToken: token,
             },
-          })).map((token) => token.personId),
+          })).map((token) => token.userId),
         },
-        emailVerified: false,
+        userEmailVerified: false,
       },
     });
   }
@@ -451,9 +451,9 @@ export class DatabaseService {
   // }
 
   async deleteRegisterToken(token: string) {
-    prisma.registerTokens.deleteMany({
+    prisma.userRegisterTokens.deleteMany({
       where: {
-        token: token,
+        userRegisterToken: token,
       },
     });
   }
@@ -475,18 +475,18 @@ export class DatabaseService {
   // }
 
   async activateAccount(token: string) {
-    prisma.persons.updateMany({
+    prisma.users.updateMany({
       where: {
-        personId: {
-          in: (await prisma.registerTokens.findMany({
+        userId: {
+          in: (await prisma.userRegisterTokens.findMany({
             where: {
-              token: token,
+              userRegisterToken: token,
             },
-          })).map((token) => token.personId),
+          })).map((token) => token.userId),
         },
       },
       data: {
-        emailVerified: true,
+        userEmailVerified: true,
       },
     });
   }

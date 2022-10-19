@@ -37,13 +37,13 @@ const AddIconLayout = styled("div", {
   alignItems: "center",
   borderRadius: "50%",
 
-  backgroundColor: "$specialPrimary",
+  backgroundColor: "$warning",
   cursor: "pointer",
 });
 
 const AddIconPlus = styled("p", {
   fontSize: "80px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const DepartmentsLayout = styled("div", {
@@ -63,13 +63,13 @@ const DepartmentLayout = styled("div", {
   justifyContent: "space-between",
   borderRadius: "20px",
 
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$neutral-300",
 });
 
 const DepartmentName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const DepartmentIcons = styled("div", {
@@ -88,8 +88,8 @@ const DepartmentEditIcon = styled("div", {
   borderRadius: "50%",
 
   cursor: "pointer",
-  color: "$fontPrimary",
-  backgroundColor: "$specialSecondary",
+  color: "$neutral-500",
+  backgroundColor: "$primary-400",
 });
 
 const DepartmentDeleteIcon = styled("div", {
@@ -101,9 +101,9 @@ const DepartmentDeleteIcon = styled("div", {
   alignItems: "center",
   borderRadius: "50%",
 
-  backgroundColor: "$specialTertiary",
+  backgroundColor: "$error",
   cursor: "pointer",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const PopUpLayout = styled("div", {
@@ -129,7 +129,7 @@ const PopUpContentLayout = styled("div", {
   padding: "30px",
   borderRadius: "20px",
 
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
 });
 
 const StyledInputField = styled("div", {
@@ -142,7 +142,7 @@ const StyledPopUpHeadline = styled("h2", {
   fontWeight: "bold",
   margin: "0",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const PopUpButtonLayout = styled("div", {
@@ -154,9 +154,9 @@ const PopUpButtonLayout = styled("div", {
 
 const Description = styled("p", {
   margin: "15px 0",
-  
+
   fontSize: "1.2rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
@@ -263,7 +263,9 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                   }}
                   backgroundColor={"secondary"}
                   color={"primary"}
-                >Close</Button>
+                >
+                  Close
+                </Button>
                 <Button
                   onClick={savePopUpInput}
                   backgroundColor={"primary"}
@@ -274,7 +276,9 @@ export const DepartmentsDetailField: React.FC<Props> = ({ setDisabled }) => {
                       departmentName == departments[departmentId])
                   }
                   type="submit"
-                >{departmentId == -1 ? "Add" : "Edit"}</Button>
+                >
+                  {departmentId == -1 ? "Add" : "Edit"}
+                </Button>
               </PopUpButtonLayout>
             </PopUpContentLayout>
           </PopUpLayout>

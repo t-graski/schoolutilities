@@ -5,6 +5,7 @@ import { styled } from "../../stitches.config";
 type Props = {
   items: {
     name: string;
+    value: string;
     icon?: any;
     href: string;
   }[];
@@ -15,16 +16,16 @@ const SideDashboardBarLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   justifySelf: "center",
-  width: "30vw",
-  minWidth: "200px",
-  maxWidth: "400px",
+  width: "100%",
+  minWidth: "100px",
+  maxWidth: "300px",
   padding: "20px",
   overflowY: "scroll",
   height: "auto",
   position: "sticky",
   top: "0",
   left: "0",
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "$secondaryContainer",
   scrollbarWidth: "none",
 
   "&::-webkit-scrollbar": {
@@ -47,7 +48,7 @@ const SideDashboardBarItemLink = styled("a", {
   padding: "15px 0",
 
   transition: "all 0.2s ease-in-out",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   textDecoration: "none",
 
   "&:hover": {
@@ -77,7 +78,7 @@ const IconLayout = styled("div", {
 const SideDashboardBarItemName = styled("p", {
   fontSize: "1rem",
   fontWeight: "$bold",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {
@@ -90,7 +91,7 @@ export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {
             <Link href={item.href} key={item.name} passHref>
               <SideDashboardBarItemLink
                 href={item.href}
-                highlighted={active.toLowerCase() == item.name.toLowerCase()}
+                highlighted={active.toLowerCase() == item.value.toLowerCase()}
               >
                 <IconLayout>
                   <Icon />

@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
 import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
-import { LoadingAnimation } from "../../molecules/LoadingAnimation";
 import { regex } from "../../../utils/regex";
 import Skeleton from "react-loading-skeleton";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -24,7 +23,6 @@ const SchoolDetailLayout = styled("form", {
   flexDirection: "column",
   gap: "20px",
   justifySelf: "center",
-  marginTop: "12vh",
   width: "100%",
   padding: "40px 60px",
 
@@ -45,7 +43,7 @@ const SettingsEntryLayout = styled("div", {
 const SettingsEntryName = styled("p", {
   fontSize: "2rem",
   fontWeight: "bold",
-  color: "$fontPrimary",
+  color: "$onSurface",
 });
 
 const StyledInputField = styled("div", {
@@ -61,12 +59,12 @@ const SettingsEntryLink = styled("a", {
 const StyledError = styled("p", {
   marginTop: "15px",
   marginBottom: "15px",
-  border: "solid 2px $specialTertiary",
+  border: "solid 2px $error",
   padding: "20px",
   width: "fit-content",
   borderRadius: "25px",
 
-  color: "$specialTertiary",
+  color: "$error",
   fontSize: "1.5rem",
   fontWeight: "$bold",
 });
@@ -79,7 +77,7 @@ const StyledDeleteText = styled("p", {
   marginTop: "15px",
 
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
@@ -224,6 +222,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                 setValidInput={setDepartmentNameValid}
                 min="2"
                 max="30"
+                theme="surface"
               />
             </StyledInputField>
           </SettingsPopUp>
@@ -260,7 +259,8 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
         <LoadingLayout>
           {error && <StyledError>{error}</StyledError>}
           <SettingsEntriesLayout>
-            {departmentsStatus == "success" && departments.length > 0 ? (
+            {departmentsStatus == "success" &&
+              departments.length > 0 &&
               departments.map((entry, index) => (
                 <SettingsEntryLayout
                   key={entry.departmentUUID}
@@ -298,12 +298,20 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
                     </Link>
                   </SettingsEntry>
                 </SettingsEntryLayout>
-              ))
-            ) : (
+              ))}
+            {departmentsStatus == "success" && departments.length <= 0 && (
+              <>There are no departments yet. Add one by clicking the button</>
+            )}
+            {departmentsStatus == "loading" && (
               <>
                 <Skeleton width="100%" height={80}></Skeleton>
                 <Skeleton width="100%" height={80}></Skeleton>
                 <Skeleton width="100%" height={80}></Skeleton>
+              </>
+            )}
+            {departmentsStatus == "error" && (
+              <>
+                While loading the departments an error occured. Please try again
               </>
             )}
           </SettingsEntriesLayout>

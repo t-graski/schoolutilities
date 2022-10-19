@@ -69,7 +69,6 @@ export default function Features() {
           <title>Course - SchoolUtilities</title>
         </Head>
         <Navbar></Navbar>
-        <Spacer size="small"></Spacer>
         <ContentLayout>
           <HeadlineLayout>
             <Skeleton width={300} height={60}></Skeleton>
@@ -119,8 +118,6 @@ export default function Features() {
   const { courseName, canEdit } = courses.find(
     (currCourse) => currCourse.courseUUID === courseUUID
   );
-
-  console.log(courses);
 
   return (
     <>

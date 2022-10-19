@@ -16,13 +16,13 @@ module.exports = {
         permanent: true,
       },
       {
-        source: "/create-school",
-        destination: "/school/admin/create-school",
+        source: "/profile/settings",
+        destination: "/profile/account",
         permanent: true,
       },
       {
-        source: "/profile",
-        destination: "/profile/settings",
+        source: "/create-school",
+        destination: "/school/admin/create-school",
         permanent: true,
       },
       {

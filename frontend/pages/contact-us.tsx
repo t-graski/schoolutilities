@@ -11,7 +11,7 @@ const ImprintLayout = styled("div", {
   width: "100%",
   padding: "0 15vw",
   minHeight: "80vh",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const MainContentText = styled("p", {
@@ -27,9 +27,7 @@ export default function Features() {
         <title>Contact Us - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="Contact Us" fontSize="medium"></Headline>
-      <Separator width="small" alignment="center" />
       <ImprintLayout>
         <Spacer size="small"></Spacer>
         <MainContentText>

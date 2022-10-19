@@ -4,32 +4,27 @@ import { Separator } from "../../atoms/Separator";
 import { ArticleDetails } from "../../article/ArticleDetails";
 import { Spacer } from "../../atoms/Spacer";
 
-export type SideDashboardProps = {
+export type Props = {
   content: {
-    headline: string;
-    content: string;
-    creator: {
-      firstName: string;
-      lastName: string;
-    };
-    creationDate: string;
-    readingTime: number;
+    articleHeadline: string;
+    articleContent: string;
+    articleCreationTimestamp: string;
   };
 };
 
-export const Article: React.FC<SideDashboardProps> = ({ content }) => {
+export const Article: React.FC<Props> = ({ content }) => {
   return (
     <>
-      <Headline label={content.headline}></Headline>
+      <Headline label={content.articleHeadline}></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="verySmall" />
       <ArticleDetails
-        title={content.headline}
-        author={content.creator.firstName + " " + content.creator.lastName}
-        date={new Date(content.creationDate).toLocaleDateString()}
-        readingTime={content.readingTime + " min read"}
+        title={content.articleHeadline}
+        author={""}
+        date={new Date(content.articleCreationTimestamp).toLocaleDateString()}
+        readingTime={" min read"}
       ></ArticleDetails>
-      <div dangerouslySetInnerHTML={{ __html: content.content }}></div>
+      <div className="ProseMirror" dangerouslySetInnerHTML={{ __html: content.articleContent }}></div>
     </>
   );
 };

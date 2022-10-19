@@ -7,413 +7,748 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model coursePersons {
-  courseId Int     @map("course_id")
-  personId Int     @map("person_id")
-  courses  courses @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCoursepersonscourseid")
-  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkCoursepersonspersonid")
-
-  @@unique([courseId, personId], name: "coursePersonId")
-  @@index([personId], map: "fkCoursepersonspersonid")
-  @@index([courseId], map: "fkCoursepersonscourseid")
-  @@map("course_persons")
-}
-
 model courseClasses {
   courseId      Int           @map("course_id")
   classId       Int           @map("class_id")
-  courses       courses       @relation(fields: [courseId], references: [courseId], onUpdate: Restrict, map: "fkCourseclasscourse")
-  schoolClasses schoolClasses @relation(fields: [classId], references: [classId], onUpdate: Restrict, map: "fkCourseclassclass")
+  schoolClasses schoolClasses @relation(fields: [classId], references: [schoolClassId])
+  courses       courses       @relation(fields: [courseId], references: [courseId])
 
-  @@unique([courseId, classId], name: "courseClassId")
-  @@index([courseId], map: "fkCourseclasscourse")
-  @@index([classId], map: "fkCourseclassclass")
+  @@id([courseId, classId])
+  @@index([classId], map: "fk_course_classes_class_id")
+  @@index([courseId], map: "fk_course_classes_course_id")
   @@map("course_classes")
 }
 
 model departments {
-  departmentId   Int             @id @default(autoincrement()) @map("department_id")
-  departmentUUID String          @map("department_uuid") @db.VarChar(255)
-  name           String          @db.VarChar(255)
-  schoolId       Int             @map("school_id")
-  isVisible      Boolean         @default(true) @map("is_visible")
-  childsVisible  Boolean         @default(true) @map("childs_visible")
-  schools        schools         @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkDepartmentschool")
-  schoolClasses  schoolClasses[]
+  departmentId            Int             @id @default(autoincrement()) @map("department_id")
+  departmentUUID          String          @map("department_uuid")
+  departmentName          String          @map("department_name")
+  departmentAbbreviation  String          @default("") @map("department_abbreviation")
+  schoolId                Int             @map("school_id")
+  departmentIsVisible     Boolean         @map("department_is_visible")
+  departmentChildsVisible Boolean         @map("department_childs_visible")
+  schools                 schools         @relation(fields: [schoolId], references: [schoolId])
+  schoolClasses           schoolClasses[]
 
-  @@index([schoolId], map: "fkDepartmentschool")
+  @@unique([departmentUUID], map: "department_uuid_UNIQUE")
+  @@index([schoolId], map: "fk_departments_school_id")
 }
 
 model languages {
-  languageId   Int       @id @default(autoincrement()) @map("language_id")
-  languageName String    @map("language_name") @db.VarChar(255)
-  languageTag  String    @map("language_tag") @db.VarChar(255)
-  schools      schools[]
-}
-
-model loginTokens {
-  loginTokenId Int      @id @default(autoincrement()) @map("login_token_id")
-  personId     Int      @map("person_id")
-  refreshToken String   @map("refresh_token") @db.VarChar(255)
-  creationTime DateTime @default(now()) @map("creation_time") @db.Timestamp(0)
-  expireDate   DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
-  persons      persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkLogintokenperson")
-
-  @@index([personId], map: "fkLogintokenperson")
-  @@map("login_tokens")
-}
-
-model personRoles {
-  personId Int     @unique(map: "personId") @map("person_id")
-  roleId   Int     @map("role_id")
-  schoolId Int     @unique @map("school_id")
-  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonroleperson")
-  roles    roles   @relation(fields: [roleId], references: [roleId], onUpdate: Restrict, map: "fkPersonrolerole")
-  schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkPersonroleschool")
-
-  @@unique([personId, schoolId], name: "schoolPersonId")
-  @@index([roleId], map: "fkPersonrolerole")
-  @@map("person_roles")
-}
-
-model persons {
-  personId      Int      @id @default(autoincrement()) @map("person_id")
-  personUUID    String   @unique(map: "personUUID") @map("person_uuid") @db.VarChar(255)
-  firstName     String   @db.VarChar(255)
-  lastName      String   @db.VarChar(255)
-  birthDate     DateTime @db.Date
-  email         String   @unique(map: "email") @db.VarChar(255)
-  password      String   @db.VarChar(255)
-  emailVerified Boolean  @default(false) @map("email_verified")
-  creationDate  DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
-  lastLogin     DateTime @map("last_login") @db.Timestamp(0)
-
-  attendingCourses courses[]        @relation(references: [courseId])
-  loginTokens      loginTokens[]
-  personRoles      personRoles[]
-  registerTokens   registerTokens[]
-
-  coursePersons         coursePersons[]
-  schoolJoinCodes       schoolJoinCodes[]
-  schoolPersons         schoolPersons[]
-  publicProfileSettings publicProfileSettings[]
-  personSettings        personSettings[]
-  updateEmailReceivers  updateEmailReceivers[]
-  personBadges          personBadges[]
-  passwordResetTokens   passwordResetTokens[]
-  emailChangeTokens     emailChangeTokens[]
-  submissionGrades      submissionGrades[]
-}
-
-model personSettings {
-  personSettingsId    Int     @id @default(autoincrement()) @map("person_settings_id")
-  personId            Int     @unique(map: "personId") @map("person_id")
-  language            String  @map("language") @db.VarChar(255)
-  timeZone            String  @map("time_zone") @db.VarChar(255)
-  dateTimeFormat      String  @map("date_time_format") @db.VarChar(255)
-  receiveUpdateEmails Boolean @map("receive_update_emails")
-  avatarUUID          String  @map("avatar_uuid") @db.VarChar(255)
-  phoneNumber         String  @map("phone_number") @db.VarChar(255)
-  themeMode           Int     @map("theme_mode")
-  theme               Int     @map("theme")
-
-  persons persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonsettingsperson")
-  @@map("person_settings")
-}
-
-model publicProfileSettings {
-  publicProfileSettingsId Int     @id @default(autoincrement()) @map("public_profile_settings_id")
-  personId                Int     @unique(map: "personId") @map("person_id")
-  displayName             String  @map("display_name") @db.VarChar(255)
-  publicEmail             String  @map("public_email") @db.VarChar(255)
-  biography               String  @map("biography") @db.Text
-  location                String  @map("location") @db.VarChar(255)
-  preferredLanguage       String  @map("preferred_language") @db.VarChar(255)
-  showAge                 Boolean @map("show_age")
-  showJoinDate            Boolean @map("show_join_date")
-  showBadges              Boolean @map("show_badges")
-
-  person persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPublicprofilesettingsperson")
-  @@map("public_profile_settings")
-}
-
-model registerTokens {
-  registerLinkId Int     @id @default(autoincrement()) @map("register_link_id")
-  personId       Int     @map("person_id")
-  token          String  @db.VarChar(255)
-  persons        persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkRegistertokenperson")
-
-  @@index([personId], map: "fkRegistertokenperson")
-  @@map("register_tokens")
+  languageId   Int    @id @default(autoincrement()) @map("language_id")
+  languageName String @map("language_name")
+  languageTag  String @map("language_tag")
 }
 
 model updateEmailReceivers {
-  updateEmailReceiverId Int     @id @default(autoincrement()) @map("update_email_receiver_id")
-  personId              Int     @unique(map: "personId") @map("person_id")
-  email                 String  @map("email") @db.VarChar(255)
-  persons               persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkUpdateemailreceiverperson")
+  updateEmailReceiverId    Int    @id @default(autoincrement()) @map("update_email_receiver_id")
+  userId                   Int    @map("user_id")
+  updateEmailReceiverEmail String @map("update_email_receiver_email")
+  users                    users  @relation(fields: [userId], references: [userId])
 
-  @@index([personId], map: "fkUpdateemailreceiverperson")
+  @@unique([userId], map: "user_id_UNIQUE")
+  @@index([userId], map: "fk_update_email_receiver_user_id")
   @@map("update_email_receivers")
 }
 
-model roles {
-  roleId      Int           @id @default(autoincrement()) @map("role_id")
-  roleName    String        @map("role_name") @db.VarChar(255)
-  personRoles personRoles[]
-}
-
 model schoolClasses {
-  classId      Int         @id @default(autoincrement()) @map("class_id")
-  classUUID    String      @map("class_uuid") @db.VarChar(255)
-  departmentId Int         @map("department_id")
-  className    String      @map("class_name") @db.VarChar(255)
-  departments  departments @relation(fields: [departmentId], references: [departmentId], onUpdate: Restrict, map: "fkSchoolclassdepartment")
+  schoolClassId                Int                            @id @default(autoincrement()) @map("school_class_id")
+  schoolClassUUID              String                         @map("school_class_uuid")
+  schoolClassDepartmentId      Int                            @map("school_class_department_id")
+  schoolClassName              String                         @map("school_class_name")
+  departments                  departments                    @relation(fields: [schoolClassDepartmentId], references: [departmentId])
+  courseClasses                courseClasses[]
+  timeTableElementClasses      timeTableElementClasses[]
+  timeTableEventClasses        timeTableEventClasses[]
+  timeTableSubstitutionClasses timeTableSubstitutionClasses[]
+  schoolClassUsers             schoolClassUsers[]
 
-  courseClasses courseClasses[]
-  @@index([departmentId], map: "fkSchoolclassdepartment")
+  @@unique([schoolClassUUID], map: "school_class_uuid_UNIQUE")
+  @@index([schoolClassDepartmentId], map: "fk_school_class_department_id")
   @@map("school_classes")
 }
 
-model schools {
-  schoolId         Int           @id @default(autoincrement()) @map("school_id")
-  schoolUUID       String        @map("school_uuid") @db.VarChar(255)
-  name             String        @db.VarChar(255)
-  description      String        @db.VarChar(3000)
-  languageId       Int           @map("language_id")
-  timezone         String        @db.VarChar(255)
-  creationDate     DateTime      @default(now()) @map("creation_date") @db.Timestamp(0)
-  personCreationId Int           @map("person_creation_id")
-  languages        languages     @relation(fields: [languageId], references: [languageId], onUpdate: Restrict, map: "fkSchoollanguage")
-  personRoles      personRoles[]
-  courses          courses[]
-  departments      departments[]
+model schoolClassUsers {
+  schoolClassId Int           @map("school_class_id")
+  userId        Int           @map("user_id")
+  schoolClasses schoolClasses @relation(fields: [schoolClassId], references: [schoolClassId])
+  users         users         @relation(fields: [userId], references: [userId])
 
-  schoolJoinCodes schoolJoinCodes[]
-  schoolPersons   schoolPersons[]
+  @@id([schoolClassId, userId])
+  @@index([userId], map: "fk_school_class_users_user_id")
+  @@index([schoolClassId], map: "fk_school_class_users_school_class_id")
+  @@map("school_class_users")
+}
+
+model schools {
+  schoolId                Int               @id @default(autoincrement()) @map("school_id")
+  schoolUUID              String            @map("school_uuid")
+  schoolName              String            @map("school_name")
+  schoolDescription       String            @map("school_description") @db.Text
+  schoolLanguageId        Int               @map("school_language_id")
+  schoolTimezone          String            @map("school_timezone")
+  schoolCreationTimestamp DateTime          @default(now()) @map("school_creation_timestamp") @db.Timestamp(0)
+  schoolCreatorId         Int               @map("school_creator_id")
+  schoolCanUpload         Boolean           @default(false) @map("school_can_upload")
+  users                   users             @relation(fields: [schoolCreatorId], references: [userId])
+  courses                 courses[]
+  departments             departments[]
+  schoolJoinCodes         schoolJoinCodes[]
+  schoolUserRoles         schoolUserRoles[]
+  schoolUsers             schoolUsers[]
+  schoolRooms             schoolRooms[]
+  schoolSubjects          schoolSubjects[]
+  holidays                holidays[]
+  timeTableGrid           timeTableGrid[]
+
+  @@unique([schoolUUID], map: "school_uuid_UNIQUE")
+  @@index([schoolCreatorId], map: "fk_school_creator_id")
 }
 
 model courses {
-  courseId          Int      @id @default(autoincrement()) @map("course_id")
-  courseUUID        String   @map("course_uuid") @db.VarChar(255)
-  name              String   @db.VarChar(255)
-  courseDescription String   @map("course_description") @db.Text
-  schoolId          Int      @map("school_id")
-  subjectId         Int      @map("subject_id")
-  creationDate      DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
-  personCreationId  Int      @map("person_creation_id")
+  courseId                   Int                          @id @default(autoincrement()) @map("course_id")
+  courseUUID                 String                       @map("course_uuid")
+  courseName                 String                       @map("course_name")
+  courseDescription          String                       @map("course_description") @db.Text
+  courseSchoolId             Int                          @map("course_school_id")
+  courseSubjectId            Int?                         @map("course_subject_id")
+  courseCreationTimestamp    DateTime                     @default(now()) @map("course_creation_timestamp") @db.Timestamp(0)
+  courseCreatorId            Int                          @map("course_creator_id")
+  users                      users                        @relation(fields: [courseCreatorId], references: [userId], onUpdate: Restrict, map: "fk_courses_creator_id")
+  schools                    schools                      @relation(fields: [courseSchoolId], references: [schoolId], onUpdate: Restrict, map: "fk_courses_school_id")
+  schoolSubjects             schoolSubjects?              @relation(fields: [courseSubjectId], references: [schoolSubjectId], onDelete: SetNull, onUpdate: Restrict, map: "fk_courses_subject_id")
+  courseClasses              courseClasses[]
+  courseElements             courseElements[]
+  courseFileSubmissionGrades courseFileSubmissionGrades[]
+  courseUsers                courseUsers[]
 
-  schools  schools   @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkCourseschool")
-  subjects subjects  @relation(fields: [subjectId], references: [subjectId], onUpdate: Restrict, map: "fkCoursesubject")
-  members  persons[] @relation(references: [personId])
-
-  coursePersons  coursePersons[]
-  courseClasses  courseClasses[]
-  courseElements courseElements[]
-  @@unique([name, schoolId], map: "uniqueCourseNameSchoolId")
-  @@index([schoolId], map: "fkCourseschool")
-  @@index([subjectId], map: "fkCoursesubject")
-}
-
-model subjects {
-  subjectId   Int       @id @default(autoincrement()) @map("subject_id")
-  subjectName String    @map("subject_name") @db.VarChar(255)
-  classId     Int       @map("class_id")
-  courses     courses[]
-}
-
-model personBadges {
-  personBadgeId Int     @id @default(autoincrement()) @map("person_badge_id")
-  personId      Int     @map("person_id")
-  badgeId       Int     @map("badge_id")
-  persons       persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPersonbadgeperson")
-
-  @@map("person_badges")
+  @@unique([courseUUID], map: "course_uuid_UNIQUE")
+  @@index([courseCreatorId], map: "fk_courses_creator_id")
+  @@index([courseSchoolId], map: "fk_courses_school_id")
+  @@index([courseSubjectId], map: "fk_courses_subject_id")
 }
 
 model schoolJoinCodes {
-  schoolJoinCodeId Int      @id @default(autoincrement()) @map("school_join_code_id")
-  schoolId         Int      @map("school_id")
-  joinCode         String   @unique(map: "joinCode") @map("join_code") @db.VarChar(255)
-  expireDate       DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
-  joinCodeName     String   @map("join_code_name") @db.VarChar(255)
-  personCreationId Int      @map("person_creation_id")
-  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
-  persons          persons  @relation(fields: [personCreationId], references: [personId], onUpdate: Restrict, map: "fkSchoolJoinCodePerson")
-  schools          schools  @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkSchoolJoinCodeSchool")
+  schoolJoinCodeId                Int       @id @default(autoincrement()) @map("school_join_code_id")
+  schoolId                        Int       @map("school_id")
+  schoolJoinCode                  String    @map("school_join_code")
+  schoolJoinCodeExpireTimestamp   DateTime? @map("school_join_code_expire_timestamp") @db.Timestamp(0)
+  schoolJoinCodeName              String    @map("school_join_code_name")
+  schoolJoinCodeCreatorId         Int       @map("school_join_code_creator_id")
+  schoolJoinCodeCreationTimestamp DateTime  @default(now()) @map("school_join_code_creation_timestamp") @db.Timestamp(0)
+  schools                         schools   @relation(fields: [schoolId], references: [schoolId])
+  users                           users     @relation(fields: [schoolJoinCodeCreatorId], references: [userId])
 
-  @@index([personCreationId], map: "fkSchoolJoinCodePerson")
-  @@index([schoolId], map: "fkSchoolJoinCodeSchool")
+  @@unique([schoolJoinCode], map: "school_join_code_UNIQUE")
+  @@index([schoolJoinCodeCreatorId], map: "fk_school_join_code_creator_id")
+  @@index([schoolId], map: "fk_school_join_code_school_id")
   @@map("school_join_codes")
 }
 
-model passwordResetTokens {
-  passwordResetTokenId Int      @id @default(autoincrement()) @map("password_reset_token_id")
-  personId             Int      @map("person_id")
-  token                String   @unique(map: "token") @db.VarChar(255)
-  creationDate         DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
-  expireDate           DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
-  persons              persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkPasswordResetTokenperson")
-
-  @@map("password_reset_tokens")
-}
-
-model emailChangeTokens {
-  emailChangeTokenId Int      @id @default(autoincrement()) @map("email_change_token_id")
-  personId           Int      @map("person_id")
-  token              String   @unique(map: "token") @db.VarChar(255)
-  email              String   @map("email") @db.VarChar(255)
-  verified           Boolean  @map("verified")
-  creationDate       DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
-  expireDate         DateTime @default(now()) @map("expire_date") @db.Timestamp(0)
-  persons            persons  @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkEmailChangeTokenperson")
-
-  @@map("email_change_tokens")
-}
-
 model courseFiles {
-  courseFileId   Int      @id @default(autoincrement()) @map("course_file_id")
-  courseFileUUID String   @map("course_file_uuid") @db.VarChar(255)
-  fileName       String   @map("file_name") @db.VarChar(255)
-  dateUploaded   DateTime @default(now()) @map("date_uploaded") @db.Timestamp(0)
-  fileSize       Int      @map("file_size")
-  fileType       String   @map("file_type") @db.VarChar(255)
+  courseFileId              Int      @id @default(autoincrement()) @map("course_file_id")
+  courseFileUUID            String   @map("course_file_uuid")
+  courseFileName            String   @map("course_file_name")
+  courseFileUploadTimestamp DateTime @default(now()) @map("course_file_upload_timestamp") @db.Timestamp(0)
+  courseFileSize            BigInt   @map("course_file_size") @db.BigInt
+  courseFileType            String   @map("course_file_type")
 
+  @@unique([courseFileUUID], map: "course_file_uuid_UNIQUE")
   @@map("course_files")
 }
 
 model timezones {
   timezoneId   Int    @id @default(autoincrement()) @map("timezone_id")
-  timezoneUUID String @map("timezone_uuid") @db.VarChar(255)
-  timezoneName String @map("timezone_name") @db.VarChar(255)
-}
-
-model emailLog {
-  emailId       Int      @id @default(autoincrement()) @map("email_id")
-  emailUUID     String   @map("email_uuid") @db.VarChar(255)
-  personId      Int      @map("person_id")
-  emailDate     DateTime @default(now()) @map("email_date") @db.Timestamp(0)
-  emailSubject  String   @map("email_subject") @db.VarChar(255)
-  emailReceiver String   @map("email_receiver") @db.VarChar(255)
-
-  @@map("email_log")
-}
-
-model schoolPersons {
-  schoolId Int     @map("school_id")
-  personId Int     @map("person_id")
-  schools  schools @relation(fields: [schoolId], references: [schoolId], onUpdate: Restrict, map: "fkSchoolPersonSchoolId")
-  persons  persons @relation(fields: [personId], references: [personId], onUpdate: Restrict, map: "fkSchoolPersonPersonId")
-
-
-  @@unique([schoolId, personId], name: "schoolPersonId")
-  @@index([schoolId], map: "fkSchoolPersonSchoolId")
-  @@index([personId], map: "fkSchoolPersonPersonId")
-  @@map("school_persons")
+  timezoneUUID String @map("timezone_uuid")
+  timezoneName String @map("timezone_name")
 }
 
 model courseElements {
-  elementId        Int      @id @default(autoincrement()) @map("element_id")
-  elementUUID      String   @map("element_uuid") @db.VarChar(255)
-  typeId           Int      @map("type_id")
-  parentId         Int      @map("parent_id")
-  visible          Boolean  @map("visible")
-  elementOrder     Int      @map("element_order")
-  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
-  personCreationId Int      @map("person_creation_id")
-  courseId         Int      @map("course_id")
-  course           courses  @relation(fields: [courseId], references: [courseId])
+  courseElementId                Int                             @id @default(autoincrement()) @map("course_element_id")
+  courseElementUUID              String                          @map("course_element_uuid")
+  courseElementTypeId            Int                             @map("course_element_type_id")
+  courseElementParentId          Int                             @map("course_element_parent_id")
+  courseElementIsVisible         Boolean                         @map("course_element_is_visible")
+  courseElementWeight            Int                             @map("course_element_weight")
+  courseElementOrder             Int                             @map("course_element_order")
+  courseElementCreatorId         Int                             @map("course_element_creator_id")
+  courseElementCourseId          Int                             @map("course_element_course_id")
+  courseElementCreationTimestamp DateTime                        @default(now()) @map("course_element_creation_timestamp") @db.Timestamp(0)
+  courses                        courses                         @relation(fields: [courseElementCourseId], references: [courseId])
+  users                          users                           @relation(fields: [courseElementCreatorId], references: [userId])
+  courseElementHeadlineSettings  courseElementHeadlineSettings[]
+  courseFileSubmissionSettings   courseFileSubmissionSettings[]
+  courseFileSubmissions          courseFileSubmissions[]
+  courseElementTextSettings      courseElementTextSettings[]
 
-  fileSubmissionSettings fileSubmissionSettings[]
-  fileSubmissions        fileSubmissions[]
-  textSettings           textSettings[]
-
-  @@index([courseId], map: "fkCourseElementCourseId")
-  @@index([parentId], map: "fkCourseElementParentId")
-  @@index([typeId], map: "fkCourseElementTypeId")
-  @@index([personCreationId], map: "fkCourseElementPersonCreationId")
+  @@unique([courseElementUUID], map: "course_element_uuid_UNIQUE")
+  @@index([courseElementCourseId], map: "fk_course_elements_course_id")
+  @@index([courseElementCreatorId], map: "fk_course_elements_creator_id")
+  @@index([courseElementParentId], map: "fk_course_elements_parent_id")
   @@map("course_elements")
-  submissionGrades submissionGrades[]
-}
-
-model headlineSettings {
-  headlineId      Int    @id @default(autoincrement()) @map("headline_id")
-  courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
-  label           String @map("label") @db.VarChar(255)
-
-  @@index([courseElementId], map: "fkHeadlineCourseElementId")
-  @@map("headline_settings")
-}
-
-model textSettings {
-  textId          Int    @id @default(autoincrement()) @map("text_id")
-  courseElementId Int    @unique(map: "course_element_id") @map("course_element_id")
-  text            String @map("text") @db.VarChar(255)
-
-  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
-  @@index([courseElementId], map: "fkTextCourseElementId")
-  @@map("text_settings")
-}
-
-model fileSubmissionSettings {
-  fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
-  courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
-  name             String   @map("name") @db.VarChar(255)
-  description      String   @map("description") @db.Text
-  dueTime          DateTime @map("due_time") @db.Timestamp(0)
-  submitLater      Boolean  @map("submit_later")
-  submitLaterTime  DateTime @map("submit_later_time") @db.Timestamp(0)
-  maxFileSize      Int      @map("max_file_size")
-  allowedFileTypes String   @map("allowed_file_types") @db.VarChar(255)
-
-  courseElements courseElements @relation(fields: [courseElementId], references: [elementId], onUpdate: Restrict, map: "fkFileSubmissionCourseElementId")
-
-  @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
-  @@map("file_submission_settings")
-}
-
-model fileSubmissions {
-  fileSubmissionId Int      @id @default(autoincrement()) @map("file_submission_id")
-  courseElementId  Int      @unique(map: "course_element_id") @map("course_element_id")
-  fileName         String   @map("file_name") @db.VarChar(255)
-  originalName     String   @map("original_name") @db.VarChar(255)
-  fileSize         Int      @map("file_size")
-  fileType         String   @map("file_type") @db.VarChar(255)
-  submissionTime   DateTime @default(now()) @map("submission_time") @db.Timestamp(0)
-  personId         Int      @map("person_id")
-  submitedLate     Boolean  @map("submited_late")
-
-  courseElements courseElements? @relation(fields: [courseElementId], references: [elementId])
-  @@unique([courseElementId, personId], name: "fileSubmissionPersonId")
-  @@index([courseElementId], map: "fkFileSubmissionCourseElementId")
-  @@index([personId], map: "fkFileSubmissionPersonId")
-  @@map("file_submissions")
-}
-
-model submissionGrades {
-  submissionGradeId Int             @id @default(autoincrement()) @map("submission_grade_id")
-  courseElementId   Int             @unique(map: "course_element_id") @map("course_element_id")
-  personId          Int             @unique(map: "person_id") @map("person_id")
-  grade             Int             @map("grade")
-  notes             String          @map("notes") @db.Text
-  creationDate      DateTime        @default(now()) @map("creation_date") @db.Timestamp(0)
-  creator           Int             @map("creator")
-  courseElements    courseElements? @relation(fields: [courseElementId], references: [elementId])
-  persons           persons?        @relation(fields: [personId], references: [personId])
-
-  @@unique([courseElementId, personId], name: "submissionGradePersonId")
-  @@map("submission_grades")
 }
 
 model articles {
-  articleId        Int      @id @default(autoincrement()) @map("article_id")
-  articleUUID      String   @unique(map: "article_uuid") @map("article_uuid") @db.VarChar(255)
-  headline         String   @map("headline") @db.Text
-  catchPhrase      String   @map("catch_phrase") @db.Text
-  content          String   @map("content") @db.Text
-  type             Int      @map("type")
-  isPublic         Boolean  @map("is_public")
-  publishDate      DateTime @map("publish_date") @db.Timestamp(0)
-  creationDate     DateTime @default(now()) @map("creation_date") @db.Timestamp(0)
-  personCreationId Int      @map("person_creation_id")
+  articleId                Int           @id @default(autoincrement()) @map("article_id")
+  articleUUID              String        @map("article_uuid")
+  articleHeadline          String        @map("article_headline") @db.Text
+  articleCatchPhrase       String        @map("article_catch_phrase") @db.Text
+  articleContent           String        @map("article_content") @db.Text
+  articleType              Int           @map("article_type")
+  articleIsPublic          Boolean       @map("article_is_public")
+  articlePublishTimestamp  DateTime      @default(now()) @map("article_publish_timestamp") @db.Timestamp(0)
+  articleCreationTimestamp DateTime      @default(now()) @map("article_creation_timestamp") @db.Timestamp(0)
+  articleCreatorId         Int           @map("article_creator_id")
+  users                    users         @relation(fields: [articleCreatorId], references: [userId])
+  articleFile              articleFile[]
+
+  @@unique([articleUUID], map: "article_uuid_UNIQUE")
+  @@index([articleCreatorId], map: "fk_articles_creator_id")
+}
+
+model articleFile {
+  articleFileId              Int      @id @default(autoincrement()) @map("article_file_id")
+  articleFileUUID            String   @map("article_file_uuid")
+  articleFileArticleId       Int      @map("article_file_article_id")
+  articleFileName            String   @map("article_file_name")
+  articleFileUploadTimestamp DateTime @default(now()) @map("article_file_upload_timestamp") @db.Timestamp(0)
+  articleFileSize            BigInt   @map("article_file_size") @db.BigInt
+  articles                   articles @relation(fields: [articleFileArticleId], references: [articleId])
+
+  @@unique([articleFileUUID], map: "article_file_uuid_UNIQUE")
+  @@index([articleFileArticleId], map: "fk_article_file_article_id")
+  @@map("article_file")
+}
+
+model courseElementHeadlineSettings {
+  courseElementHeadlineId        Int            @id @default(autoincrement()) @map("course_element_headline_id")
+  courseElementHeadlineElementId Int            @map("course_element_headline_element_id")
+  courseElementHeadlineLabel     String         @map("course_element_headline_label")
+  courseElements                 courseElements @relation(fields: [courseElementHeadlineElementId], references: [courseElementId])
+
+  @@index([courseElementHeadlineElementId], map: "fk_course_element_headline_element_id")
+  @@map("course_element_headline_settings")
+}
+
+model courseElementTextSettings {
+  courseElementTextSettingId Int            @id @default(autoincrement()) @map("course_element_text_setting_id")
+  courseElementId            Int            @map("course_element_id")
+  courseElementTextText      String         @map("course_element_text_text") @db.Text
+  courses                    courseElements @relation(fields: [courseElementId], references: [courseElementId])
+
+  @@index([courseElementId], map: "fk_course_element_text_setting_course_element_id")
+  @@map("course_element_text_settings")
+}
+
+model courseFileSubmissionGrades {
+  courseFileSubmissionGradeId                Int      @id @default(autoincrement()) @map("course_file_submission_grade_id")
+  courseElementId                            Int      @map("course_element_id")
+  userId                                     Int      @map("user_id")
+  courseFileSubmissionGrade                  Int      @map("course_file_submission_grade")
+  courseFileSubmissionGradeNotes             String   @map("course_file_submission_grade_notes")
+  courseFileSubmissionGradeCreationTimestamp DateTime @default(now()) @map("course_file_submission_grade_creation_timestamp") @db.Timestamp(0)
+  courseFileSubmissionGradeCreatorId         Int      @map("course_file_submission_grade_creator_id")
+  courses                                    courses  @relation(fields: [courseElementId], references: [courseId])
+  users                                      users?   @relation(fields: [userId], references: [userId])
+
+  @@unique([courseElementId, userId], map: "course_element_id_UNIQUE")
+  @@index([courseElementId], map: "fk_course_file_submission_grade_course_element_id")
+  @@index([courseFileSubmissionGradeCreatorId], map: "fk_course_file_submission_grade_creator_id")
+  @@index([userId], map: "fk_course_file_submission_grade_user_id")
+  @@map("course_file_submission_grades")
+}
+
+model courseFileSubmissionSettings {
+  courseFileSubmissionSettingId            Int            @id @default(autoincrement()) @map("course_file_submission_setting_id")
+  courseFileSubmissionElementId            Int            @map("course_file_submission_element_id")
+  courseFileSubmissionName                 String         @map("course_file_submission_name") @db.Text
+  courseFileSubmissionDescription          String         @map("course_file_submission_description")
+  courseFileSubmissionDueTimestamp         DateTime?      @map("course_file_submission_due_timestamp") @db.Timestamp(0)
+  courseFileSubmissionSubmitLater          Boolean        @map("course_file_submission_submit_later")
+  courseFileSubmissionSubmitLaterTimestamp DateTime?      @map("course_file_submission_submit_later_timestamp") @db.Timestamp(0)
+  courseFileSubmissionMaxFileSize          Float          @map("course_file_submission_max_file_size") @db.Float
+  courseFileSubmissionAllowedFileTypes     String         @map("course_file_submission_allowed_file_types")
+  courseElements                           courseElements @relation(fields: [courseFileSubmissionElementId], references: [courseElementId])
+
+  @@index([courseFileSubmissionElementId], map: "course_file_submission_settings_element_id")
+  @@map("course_file_submission_settings")
+}
+
+model courseFileSubmissions {
+  courseFileSubmissionId              Int            @id @default(autoincrement())
+  courseFileSubmissionElementId       Int            @map("course_file_submission_element_id")
+  userId                              Int            @map("user_id")
+  courseFileSubmissionFileName        String         @map("course_file_submission_file_name")
+  courseFileSubmissionOriginalName    String         @map("course_file_submission_original_name")
+  courseFileSubmissionFileSize        Int            @map("course_file_submission_file_size")
+  courseFileSubmissionFileType        String         @map("course_file_submission_file_type")
+  courseFileSubmissionUploadTimestamp DateTime       @default(now()) @map("course_file_submission_upload_timestamp") @db.Timestamp(0)
+  courseFileSubmissionIsSubmittedLate Boolean        @map("course_file_submission_is_submitted_late")
+  courseElements                      courseElements @relation(fields: [courseFileSubmissionElementId], references: [courseElementId])
+  users                               users          @relation(fields: [userId], references: [userId])
+
+  @@unique([courseFileSubmissionElementId, userId], map: "course_file_submission_element_id_UNIQUE")
+  @@index([courseFileSubmissionElementId], map: "fk_course_file_submission_element_id")
+  @@index([userId], map: "fk_course_file_submission_user_id")
+  @@map("course_file_submissions")
+}
+
+model courseUsers {
+  courseId Int     @map("course_id")
+  userId   Int     @map("user_id")
+  courses  courses @relation(fields: [courseId], references: [courseId], onDelete: Cascade)
+  users    users   @relation(fields: [userId], references: [userId])
+
+  @@id([courseId, userId])
+  @@index([userId], map: "fk_course_users_user_id")
+  @@index([courseId], map: "fk_course_users_course_id")
+  @@map("course_users")
+}
+
+model logEmails {
+  logEmailId        Int      @id @default(autoincrement()) @map("log_email_id")
+  logEmailUUID      String   @map("log_email_uuid")
+  userId            Int      @map("user_id")
+  logEmailTimestamp DateTime @default(now()) @map("log_email_timestamp") @db.Timestamp(0)
+  logEmailSubject   String   @map("log_email_subject")
+  logEmailReceiver  String   @map("log_email_receiver")
+  users             users    @relation(fields: [userId], references: [userId])
+
+  @@unique([logEmailUUID], map: "log_email_uuid")
+  @@index([userId], map: "fk_log_emails_user_id")
+  @@map("log_emails")
+}
+
+model logRequests {
+  logRequestId            Int      @id @default(autoincrement())
+  logRequestIpAddress     String   @map("log_request_ip_address")
+  logRequestTimestamp     DateTime @default(now()) @map("log_request_timestamp") @db.Timestamp(0)
+  logRequestMethod        String   @map("log_request_method")
+  logRequestPath          String   @map("log_request_path")
+  logRequestStatusCode    Int      @map("log_request_status_code") @db.Int
+  logRequestContentLength Int      @map("log_request_content_length") @db.Int
+  logRequestUserAgent     String   @map("log_request_user_agent")
+  logRequestResponseTime  Float    @map("log_request_response_time") @db.Float
+
+  @@map("log_requests")
+}
+
+model schoolRoles {
+  schoolRoleId    Int               @id @default(autoincrement()) @map("school_role_id")
+  schoolRoleName  String            @map("school_role_name")
+  schoolUserRoles schoolUserRoles[]
+
+  @@map("school_roles")
+}
+
+model schoolSubjects {
+  schoolSubjectId           Int                      @id @default(autoincrement()) @map("school_subject_id")
+  schoolSubjectUUID         String                   @map("school_subject_uuid")
+  schoolSubjectName         String                   @map("school_subject_name")
+  schoolSubjectAbbreviation String                   @map("school_subject_abbreviation")
+  schoolId                  Int                      @map("school_id")
+  school                    schools                  @relation(fields: [schoolId], references: [schoolId])
+  courses                   courses[]
+  timeTableElement          timeTableElement[]
+  timeTableSubstitutions    timeTableSubstitutions[]
+
+  @@unique([schoolSubjectUUID], map: "school_subject_uuid")
+  @@index([schoolId], map: "fk_school_subjects_school_id")
+  @@map("school_subjects")
+}
+
+model schoolUserRoles {
+  userId       Int         @map("user_id")
+  schoolRoleId Int         @map("school_role_id")
+  schoolId     Int         @map("school_id")
+  schools      schools     @relation(fields: [schoolId], references: [schoolId])
+  schoolRoles  schoolRoles @relation(fields: [schoolRoleId], references: [schoolRoleId])
+  users        users       @relation(fields: [userId], references: [userId])
+
+  @@id([userId, schoolRoleId, schoolId])
+  @@unique([userId, schoolId], name: "user_school_unique", map: "userSchoolUnique")
+  @@index([schoolId], map: "fk_school_user_role_school_id")
+  @@index([schoolRoleId], map: "fk_school_user_school_role_id")
+  @@index([userId], map: "fk_school_user_role_user_id")
+  @@map("school_user_roles")
+}
+
+model schoolUsers {
+  schoolUserId Int     @map("user_id")
+  schoolId     Int     @map("school_id")
+  schools      schools @relation(fields: [schoolId], references: [schoolId])
+  users        users   @relation(fields: [schoolUserId], references: [userId])
+
+  @@id([schoolUserId, schoolId])
+  @@unique([schoolUserId, schoolId], name: "user_school_unique", map: "userSchoolUnique")
+  @@index([schoolId], map: "fk_school_users_school_id")
+  @@index([schoolUserId], map: "fk_school_users_user_id")
+  @@map("school_users")
+}
+
+model schoolRooms {
+  schoolRoomId           Int                      @id @default(autoincrement()) @map("school_room_id")
+  schoolRoomUUID         String                   @map("school_room_uuid")
+  schoolRoomName         String                   @map("school_room_name")
+  schoolRoomAbbreviation String                   @map("school_room_abbreviation")
+  schoolRoomBuilding     String                   @map("school_room_building")
+  schoolId               Int                      @map("school_id")
+  schools                schools                  @relation(fields: [schoolId], references: [schoolId])
+  timeTableElement       timeTableElement[]
+  timeTableExam          timeTableExam[]
+  timeTableSubstitutions timeTableSubstitutions[]
+
+  @@unique([schoolRoomUUID], map: "school_room_uuid")
+  @@index([schoolId], map: "fk_school_room_school_id")
+  @@map("school_rooms")
+}
+
+model userBadges {
+  userBadgeId              Int       @id @default(autoincrement()) @map("user_badge_id")
+  userId                   Int       @map("user_id")
+  badgeId                  Int       @map("badge_id") @db.Int
+  userBadgeIssueTimestamp  DateTime  @default(now()) @map("user_badge_issue_timestamp") @db.Timestamp(0)
+  userBadgeExpireTimestamp DateTime? @map("user_badge_expire_timestamp") @db.Timestamp(0)
+  userBadgeIssuerId        Int       @map("user_badge_issuer_id")
+  users                    users     @relation(fields: [userId], references: [userId])
+
+  @@index([userId], map: "user_badge_issuer_id")
+  @@index([userBadgeIssuerId], map: "fk_user_badges_badge_id")
+  @@map("user_badges")
+}
+
+model userEmailChangeTokens {
+  emailChangeTokenId                Int      @id @default(autoincrement()) @map("email_change_token_id")
+  userId                            Int      @map("user_id")
+  emailChangeToken                  String   @map("email_change_token")
+  emailChangeTokenNewEmail          String   @map("email_change_token_new_email")
+  emailChangeTokenVerified          Boolean  @map("email_change_token_verified")
+  emailChangeTokenCreationTimestamp DateTime @default(now()) @map("email_change_token_creation_timestamp") @db.Timestamp(0)
+  emailChangeTokenExpireTimestamp   DateTime @default(now()) @map("email_change_token_expire_timestamp") @db.Timestamp(0)
+  users                             users    @relation(fields: [userId], references: [userId])
+
+  @@unique([emailChangeToken], map: "email_change_token")
+  @@index([userId], map: "fk_user_email_change_tokens_user_id")
+  @@map("user_email_change_tokens")
+}
+
+model userLoginTokens {
+  userLoginTokenId                Int      @id @default(autoincrement()) @map("user_login_token_id")
+  userId                          Int      @map("user_id")
+  refreshToken                    String   @map("refresh_token") @db.VarChar(255)
+  userLoginTokenCreationTimestamp DateTime @default(now()) @map("user_login_token_creation_timestamp") @db.Timestamp(0)
+  userLoginTokenExpireTimestamp   DateTime @default(now()) @map("user_login_token_expire_timestamp") @db.Timestamp(0)
+  users                           users    @relation(fields: [userId], references: [userId])
+
+  @@unique([refreshToken], map: "refresh_token_UNIQUE")
+  @@index([userId], map: "user_login_token_user_id")
+  @@map("user_login_tokens")
+}
+
+model userPasswordResetTokens {
+  userPasswordResetTokenId                Int      @id @default(autoincrement()) @map("user_password_reset_token_id")
+  userId                                  Int      @map("user_id")
+  userPasswordResetToken                  String   @map("user_password_reset_token")
+  userPasswordResetTokenCreationTimestamp DateTime @default(now()) @map("user_password_reset_token_creation_timestamp") @db.Timestamp(0)
+  userPasswordResetTokenExpireTimestamp   DateTime @default(now()) @map("user_password_reset_token_expire_timestamp") @db.Timestamp(0)
+  users                                   users    @relation(fields: [userId], references: [userId])
+
+  @@unique([userPasswordResetToken], map: "user_password_reset_token_UNIQUE")
+  @@index([userId], map: "fk_user_password_reset_token_user_id")
+  @@map("user_password_reset_tokens")
+}
+
+model userPublicProfileSettings {
+  userPublicProfileSettingId                  Int     @id @default(autoincrement()) @map("user_public_profile_setting_id")
+  userId                                      Int     @map("user_id")
+  userPublicProfileDisplayName                String  @map("user_public_profile_display_name")
+  userPublicProfileSettingPublicEmail         String  @map("user_public_profile_setting_public_email")
+  userPublicProfileSettingBiography           String  @map("user_public_profile_setting_biography") @db.Text
+  userPublicProfileSettingLocation            String  @map("user_public_profile_setting_location")
+  userPublicProfileSettingPreferredLanguageId String  @map("user_public_profile_setting_preferred_language_id")
+  userPublicProfileSettingShowAge             Boolean @map("user_public_profile_setting_show_age")
+  userPublicProfileSettingShowJoinDate        Boolean @map("user_public_profile_setting_show_join_date")
+  userPublicProfileSettingShowBadges          Boolean @map("user_public_profile_setting_show_badges")
+  users                                       users   @relation(fields: [userId], references: [userId])
+
+  @@unique([userId], map: "user_public_profile_setting_user_id")
+  @@index([userId], map: "fk_user_public_profile_setting_user_id")
+  @@map("user_public_profile_settings")
+}
+
+model userRegisterTokens {
+  userRegisterTokenId Int    @id @default(autoincrement()) @map("user_register_token_id")
+  userId              Int    @map("user_id")
+  userRegisterToken   String @map("user_register_token")
+  users               users  @relation(fields: [userId], references: [userId])
+
+  @@index([userId], map: "fk_user_register_token_user_id")
+  @@map("user_register_tokens")
+}
+
+model userSettings {
+  userSettingId                  Int     @id @default(autoincrement()) @map("user_setting_id")
+  userId                         Int     @map("user_id")
+  userSettingLanguageId          String  @map("user_setting_language_id")
+  userSettingTimeZone            String  @map("user_setting_time_zone")
+  userSettingDateTimeFormat      String  @map("user_setting_date_time_format")
+  userSettingReceiveUpdateEmails Boolean @map("user_setting_receive_update_emails")
+  userSettingAvatarUUID          String  @map("user_setting_avatar_uuid")
+  userSettingPhoneNumber         String  @map("user_setting_phone_number")
+  userSettingThemeMode           Int     @map("user_setting_theme_mode") @db.Int
+  userSettingTheme               Int     @map("user_setting_theme") @db.Int
+  users                          users   @relation(fields: [userId], references: [userId])
+
+  @@unique([userId], map: "user_setting_user_id")
+  @@index([userId], map: "fk_user_setting_user_id")
+  @@map("user_settings")
+}
+
+model timeTableElement {
+  timeTableElementId                Int                        @id @default(autoincrement()) @map("time_table_element_id")
+  timeTableElementUUID              String                     @map("time_table_element_uuid")
+  timeTableElementSubjectId         Int                        @map("time_table_element_subject_id")
+  timeTableElementRoomId            Int                        @map("time_table_element_room_id")
+  timeTableElementStartTime         DateTime?                  @map("time_table_element_start")
+  timeTableElementEndTime           DateTime?                  @map("time_table_element_end")
+  timeTableElementDay               String                     @map("time_table_element_day")
+  timeTableElementCreationTimestamp DateTime                   @default(now()) @map("time_table_element_creation_timestamp") @db.Timestamp(0)
+  timeTableElementCreatorId         Int                        @map("time_table_element_creator_id")
+  schoolSubjects                    schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
+  users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
+  schoolRoom                        schoolRooms                @relation(fields: [timeTableElementRoomId], references: [schoolRoomId])
+  timeTableTeachers                 timeTableElementTeachers[]
+  timeTableElementClasses           timeTableElementClasses[]
+  timeTableEvents                   timeTableEvents[]
+  timeTableSubstitutions            timeTableSubstitutions[]
+  timeTableOmitted                  timeTableOmitted[]
+  timeTableExam                     timeTableExam[]
+
+  @@unique([timeTableElementUUID], map: "time_table_element_uuid_UNIQUE")
+  @@index([timeTableElementSubjectId], map: "fk_time_table_element_subject_id")
+  @@index([timeTableElementCreatorId], map: "fk_time_table_element_creator_id")
+  @@index([timeTableElementRoomId], map: "fk_time_table_element_room_id")
+  @@map("time_table_elements")
+}
+
+model timeTableOmitted {
+  timeTableOmittedId            Int              @id @default(autoincrement()) @map("time_table_omitted_id")
+  timeTableElementId            Int              @map("time_table_element_id")
+  timeTableElementIsOmitted     Boolean          @map("time_table_element_is_omitted")
+  timeTableElementOmittedReason String           @map("time_table_element_omitted_reason")
+  timeTableElementOmittedDate   DateTime         @map("time_table_element_omitted_date")
+  timeTableElement              timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+
+  @@unique([timeTableElementId, timeTableElementOmittedDate], map: "time_table_element_id_UNIQUE")
+  @@index([timeTableElementId], map: "fk_time_table_element_id")
+  @@map("time_table_omitted")
+}
+
+model timeTableExam {
+  timeTableExamId          Int              @id @default(autoincrement()) @map("time_table_exam_id")
+  timeTableExamUUID        String           @map("time_table_exam_uuid")
+  timeTableElementId       Int              @map("time_table_element_id")
+  timeTableExamRoomId      Int              @map("time_table_exam_room_id")
+  timeTableExamDescription String           @map("time_table_exam_description")
+  timeTableExamDate        DateTime         @map("time_table_exam_date")
+  timeTableElements        timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  schoolRooms              schoolRooms      @relation(fields: [timeTableExamRoomId], references: [schoolRoomId])
+
+  @@unique([timeTableExamUUID], map: "time_table_exam_uuid_UNIQUE")
+  @@index([timeTableElementId], map: "fk_time_table_element_id")
+  @@index([timeTableExamRoomId], map: "fk_time_table_exam_room_id")
+  @@map("time_table_exams")
+}
+
+model timeTableSubstitutions {
+  timeTableSubstitutionId                Int                             @id @default(autoincrement()) @map("time_table_substitution_id")
+  timeTableSubstitutionUUID              String                          @map("time_table_substitution_uuid")
+  timeTableSubstitutionSubjectId         Int                             @map("time_table_substitution_subject_id")
+  timeTableSubstitutionRoomId            Int                             @map("time_table_substitution_room_id")
+  timeTableSubstitutionCreationTimestamp DateTime                        @default(now()) @map("time_table_substitution_creation_timestamp") @db.Timestamp(0)
+  timeTableSubstitutionCreatorId         Int                             @map("time_table_substitution_creator_id")
+  timeTableSubstitutionElementId         Int                             @map("time_table_substitution_time_table_element_id")
+  timeTableSubstitutionDate              DateTime                        @map("time_table_substitution_date")
+  timeTableSubstitutionTeachers          timeTableSubstitutionTeachers[]
+  timeTableSubstitutionClasses           timeTableSubstitutionClasses[]
+  schoolSubjects                         schoolSubjects                  @relation(fields: [timeTableSubstitutionSubjectId], references: [schoolSubjectId])
+  schoolRooms                            schoolRooms                     @relation(fields: [timeTableSubstitutionRoomId], references: [schoolRoomId])
+  users                                  users                           @relation(fields: [timeTableSubstitutionCreatorId], references: [userId])
+  timeTableElements                      timeTableElement                @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId])
+
+  @@unique([timeTableSubstitutionUUID], map: "time_tablesubstitution_uuid_UNIQUE")
+  @@index([timeTableSubstitutionSubjectId], map: "fk_time_table_substitution_subject_id")
+  @@index([timeTableSubstitutionCreatorId], map: "fk_time_table_substitution_creator_id")
+  @@index([timeTableSubstitutionElementId], map: "fk_time_table_substitution_time_table_element_id")
+  @@index([timeTableSubstitutionRoomId], map: "fk_time_table_substitution_room_id")
+  @@map("time_table_substitutions")
+}
+
+model timeTableSubstitutionTeachers {
+  timeTableSubstitutionId Int                    @map("time_table_substitution_id")
+  userId                  Int                    @map("user_id")
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  users                   users                  @relation(fields: [userId], references: [userId])
+
+  @@unique([timeTableSubstitutionId, userId], map: "time_table_substitution_teacher_UNIQUE")
+  @@index([timeTableSubstitutionId], map: "fk_time_table_substitution_teacher_time_table_substitution_id")
+  @@index([userId], map: "fk_time_table_substitution_teacher_user_id")
+  @@map("time_table_substitution_teachers")
+}
+
+model timeTableSubstitutionClasses {
+  timeTableSubstitutionId Int                    @map("time_table_substitution_id")
+  classId                 Int                    @map("class_id")
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  classes                 schoolClasses          @relation(fields: [classId], references: [schoolClassId])
+
+  @@unique([timeTableSubstitutionId, classId], map: "time_table_substitution_class_UNIQUE")
+  @@index([timeTableSubstitutionId], map: "fk_time_table_substitution_class_time_table_substitution_id")
+  @@index([classId], map: "fk_time_table_substitution_class_class_id")
+  @@map("time_table_substitution_classes")
+}
+
+model timeTableEvents {
+  timeTableEventId          Int                      @id @default(autoincrement()) @map("time_table_event_id")
+  timeTableEventUUID        String                   @map("time_table_event_uuid")
+  timeTableElementId        Int                      @map("time_table_id")
+  timeTableEventName        String                   @map("time_table_event_name")
+  timeTableEventDescription String                   @map("time_table_event_description")
+  timeTableEventIsAllDay    Boolean                  @map("time_table_event_is_all_day")
+  timeTableEventDate        DateTime                 @map("time_table_event_date")
+  timeTableEventTeachers    timeTableEventTeachers[]
+  timeTableEventClasses     timeTableEventClasses[]
+  timeTableElement          timeTableElement         @relation(fields: [timeTableElementId], references: [timeTableElementId])
+
+  @@unique([timeTableEventUUID], map: "time_table_event_uuid_UNIQUE")
+  @@index([timeTableElementId], map: "fk_time_table_event_time_table_element_id")
+  @@map("time_table_events")
+}
+
+model timeTableEventTeachers {
+  timeTableEventId Int             @map("time_table_event_teacher_id")
+  userId           Int             @map("user_id")
+  timeTableEvents  timeTableEvents @relation(fields: [timeTableEventId], references: [timeTableEventId])
+  users            users           @relation(fields: [userId], references: [userId])
+
+  @@unique([timeTableEventId, userId], map: "time_table_event_teacher_UNIQUE")
+  @@index([timeTableEventId], map: "fk_time_table_event_teacher_time_table_element_event_id")
+  @@index([userId], map: "fk_time_table_event_teacher_user_id")
+  @@map("time_table_event_teachers")
+}
+
+model timeTableEventClasses {
+  timeTableEventId Int             @map("time_table_event_class_id")
+  classId          Int             @map("class_id")
+  timeTableEvents  timeTableEvents @relation(fields: [timeTableEventId], references: [timeTableEventId])
+  classes          schoolClasses   @relation(fields: [classId], references: [schoolClassId])
+
+  @@unique([timeTableEventId, classId], map: "time_table_event_class_UNIQUE")
+  @@index([timeTableEventId], map: "fk_time_table_event_class_time_table_element_event_id")
+  @@index([classId], map: "fk_time_table_event_class_class_id")
+  @@map("time_table_event_classes")
+}
+
+model timeTableElementTeachers {
+  timeTableElementId Int              @map("time_table_element_id")
+  userId             Int              @map("user_id")
+  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  users              users            @relation(fields: [userId], references: [userId])
+
+  @@unique([timeTableElementId, userId], map: "time_table_element_id_user_id_UNIQUE")
+  @@index([timeTableElementId], map: "fk_time_table_element_id")
+  @@index([userId], map: "fk_user_id")
+  @@map("time_table_element_teachers")
+}
+
+model timeTableElementClasses {
+  timeTableElementId Int              @map("time_table_element_id")
+  schoolClassId      Int              @map("school_class_id")
+  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  schoolClasses      schoolClasses    @relation(fields: [schoolClassId], references: [schoolClassId])
+
+  @@unique([timeTableElementId, schoolClassId], map: "time_table_element_id_school_class_id")
+  @@index([timeTableElementId], map: "fk_time_table_element_id")
+  @@index([schoolClassId], map: "fk_school_class_id")
+  @@map("time_table_element_classes")
+}
+
+model holidays {
+  holidayId        Int      @id @default(autoincrement()) @map("holiday_id")
+  holidayUUID      String   @map("holiday_uuid")
+  holidayName      String   @map("holiday_name")
+  holidayStartDate DateTime @map("holiday_start_date")
+  holidayEndDate   DateTime @map("holiday_end_date")
+  schoolId         Int      @map("school_id")
+  schools          schools  @relation(fields: [schoolId], references: [schoolId])
+
+  @@unique([holidayUUID], map: "holiday_uuid_UNIQUE")
+  @@index([schoolId], map: "fk_holiday_school_id")
+}
+
+model timeTableGrid {
+  timeTableGridId              Int                       @id @default(autoincrement()) @map("time_table_grid_id")
+  timeTableGridStartTime       DateTime                  @map("time_table_grid_start_date")
+  timeTableGridElementDuration Int                       @map("time_table_grid_element_duration")
+  timeTableGridBreakDuration   Int                       @map("time_table_grid_break_duration")
+  timeTableGridMaxLessons      Int                       @map("time_table_grid_max_lessons")
+  schoolId                     Int                       @map("school_id")
+  schools                      schools                   @relation(fields: [schoolId], references: [schoolId])
+  timeTableGridSpecialBreakId  Int                       @map("time_table_special_break_id")
+  timeTableGridSpecialBreak    timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
+
+  @@unique([timeTableGridId], map: "time_table_grid_uuid_UNIQUE")
+  @@index([schoolId], map: "fk_time_table_grid_school_id")
+  @@index([timeTableGridSpecialBreakId], map: "fk_time_table_special_break_id")
+  @@map("time_table_grid")
+}
+
+model timeTableGridSpecialBreak {
+  timeTableGridSpecialBreakId       Int             @id @default(autoincrement()) @map("time_table_grid_special_break_id")
+  timeTableGridSpecialBreakElement  Int             @map("time_table_grid_special_break_element")
+  timeTableGridSpecialBreakDuration Int             @map("time_table_grid_special_break_duration")
+  timeTableGrid                     timeTableGrid[]
+
+  @@map("time_table_grid_special_break")
+}
+
+model users {
+  userId                        Int                             @id @default(autoincrement()) @map("user_id")
+  userUUID                      String                          @unique() @map("user_uuid")
+  userFirstname                 String                          @map("user_firstname")
+  userLastname                  String                          @map("user_lastname")
+  userBirthDate                 DateTime                        @map("user_birth_date") @db.Date
+  userEmail                     String                          @map("user_email")
+  userPassword                  String                          @map("user_password")
+  userEmailVerified             Boolean                         @default(false) @map("user_email_verified")
+  userCreationTimestamp         DateTime                        @default(now()) @map("user_creation_timestamp") @db.Timestamp(0)
+  userLastLoginTimestamp        DateTime?                       @default(now()) @map("user_last_login_timestamp") @db.Timestamp(0)
+  articles                      articles[]
+  courseElements                courseElements[]
+  courseFileSubmissionGrades    courseFileSubmissionGrades[]
+  courseFileSubmissions         courseFileSubmissions[]
+  courseUsers                   courseUsers[]
+  courses                       courses[]
+  logEmails                     logEmails[]
+  schoolJoinCodes               schoolJoinCodes[]
+  schoolUserRoles               schoolUserRoles[]
+  schoolUsers                   schoolUsers[]
+  schools                       schools[]
+  updateEmailReceivers          updateEmailReceivers[]
+  userBadges                    userBadges[]
+  userEmailChangeTokens         userEmailChangeTokens[]
+  userLoginTokens               userLoginTokens[]
+  userPasswordResetTokens       userPasswordResetTokens[]
+  userPublicProfileSettings     userPublicProfileSettings[]
+  userRegisterTokens            userRegisterTokens[]
+  userSettings                  userSettings[]
+  timetableElementTeachers      timeTableElementTeachers[]
+  timeTableElement              timeTableElement[]
+  timeTableEventTeachers        timeTableEventTeachers[]
+  timeTableSubstitutionTeachers timeTableSubstitutionTeachers[]
+  timeTableSubstitutions        timeTableSubstitutions[]
+  schoolClassUsers              schoolClassUsers[]
+
+  @@unique([userUUID], map: "user_uuid_UNIQUE")
+  @@unique([userEmail], map: "user_email_UNIQUE")
 }

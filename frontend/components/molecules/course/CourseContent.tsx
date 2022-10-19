@@ -36,19 +36,19 @@ const ParentContainer = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "100%",
-  border: "solid 1px $fontPrimary",
+  border: "solid 1px $neutral-500",
   borderRadius: "15px",
   padding: "10px 20px",
 });
 
-export const CourseContent: React.FC<Props> = ({
-  items,
-}) => {
+export const CourseContent: React.FC<Props> = ({ items }) => {
   return (
     <>
       <ElementsLayout>
         {items.map((element, index) => {
-          return <Content item={mapElementOptions(element)} key={index}></Content>;
+          return (
+            <Content item={mapElementOptions(element)} key={index}></Content>
+          );
         })}
       </ElementsLayout>
     </>

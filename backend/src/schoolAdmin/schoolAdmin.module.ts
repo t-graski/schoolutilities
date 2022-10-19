@@ -6,9 +6,9 @@ import { RolesGuard } from 'src/roles/roles.guard';
 import { AuthService } from 'src/auth/auth.service';
 
 @Module({
-  imports: [DatabaseModule, RolesGuard],
+  imports: [DatabaseModule],
   controllers: [SchoolAdminController],
   providers: [SchoolAdminService],
   exports: [SchoolAdminService],
 })
-export class SchoolAdminModule {}
+export class SchoolAdminModule { }

@@ -44,11 +44,11 @@ const StyledContent = styled(HoverCardPrimitive.Content, {
       '&[data-side="left"]': { animationName: slideRightAndFade },
     },
   },
-  backgroundColor: "$backgroundPrimary",
+  backgroundColor: "$neutral-100",
 });
 
 const StyledArrow = styled(HoverCardPrimitive.Arrow, {
-  fill: "$backgroundPrimary",
+  fill: "$neutral-100",
 });
 
 // Exports
@@ -62,7 +62,7 @@ const ImageLayout = styled("div", {
   width: "30px",
   height: "30px",
 
-  color: "$fontPrimary",
+  color: "$neutral-500",
   cursor: "pointer",
 });
 

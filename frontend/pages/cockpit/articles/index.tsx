@@ -18,7 +18,7 @@ export const ContentLayout = styled("div", {
 
 const StyledDeleteText = styled("p", {
   fontSize: "1rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   marginTop: "15px",
 });
 
@@ -29,7 +29,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     getContent();
-  });
+  }, []);
 
   const [items, setItems] = useState([]);
 
@@ -50,9 +50,9 @@ export default function Home() {
       setItems(
         getResponse.map((item) => {
           return {
-            name: item.headline,
+            name: item.articleHeadline,
             id: item.articleUUID,
-            description: item.catchPhrase,
+            description: item.articleCatchPhrase,
           };
         })
       );

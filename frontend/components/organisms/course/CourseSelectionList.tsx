@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
-import { getAccessToken } from "../../../utils/authHelper";
 import { useRouter } from "next/router";
 import Skeleton from "react-loading-skeleton";
 import { useQuery } from "react-query";
@@ -33,16 +32,16 @@ const CourseLayout = styled("div", {
   margin: "20px auto",
   height: "100%",
   padding: "10px 35px",
-  borderRadius: "35px",
+  borderRadius: "$2x",
 
-  backgroundColor: "$backgroundTertiary",
+  backgroundColor: "$surface3",
   transition: "all 200ms ease-in-out",
   cursor: "pointer",
   placeSelf: "center",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 
   "&:hover": {
-    opacity: "0.8",
+    backgroundColor: "$secondaryContainer",
   },
 
   "@mobileOnly": {

@@ -19,7 +19,7 @@ const RegistrationLayout = styled("div", {
 const StyledText = styled("p", {
   marginTop: "$small",
   fontSize: "1.3rem",
-  color: "$fontPrimary",
+  color: "$neutral-500",
 });
 
 const StyledHeadline = styled(Headline, {

@@ -15,6 +15,9 @@ import { HelperModule } from './helper/helper.module';
 import { ArticleService } from './article/article.service';
 import { ArticleController } from './article/article.controller';
 import { ArticleModule } from './article/article.module';
+import { TimetableModule } from './timetable/timetable.module';
+import { UntisImportModule } from './untis-import/untis-import.module';
+import { PrismaService } from './prisma.service';
 
 @Module({
   imports: [
@@ -30,8 +33,11 @@ import { ArticleModule } from './article/article.module';
     StatusModule,
     HelperModule,
     ArticleModule,
+    TimetableModule,
+    UntisImportModule,
+    UserModule,
   ],
   controllers: [AppController, ArticleController],
-  providers: [AppService, ArticleService],
+  providers: [AppService, ArticleService, PrismaService],
 })
-export class AppModule {}
+export class AppModule { }

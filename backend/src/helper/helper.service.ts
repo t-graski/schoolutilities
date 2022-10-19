@@ -1,17 +1,18 @@
-import { Injectable, NotFoundException, Param } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { PrismaClient } from '@prisma/client';
+import * as moment from 'moment-timezone';
+
 import {
   ERROR_CODES,
-  PASSWORD,
   ID_STARTERS,
-  RETURN_DATA,
 } from 'src/misc/parameterConstants';
+import { Injectable, NotFoundException, Param } from '@nestjs/common';
+
+import { JwtService } from '@nestjs/jwt';
+import { PrismaClient } from '@prisma/client';
 import { RFC5646_LANGUAGE_TAGS } from 'src/misc/rfc5654';
-import validator from 'validator';
-import { v4 as uuidv4 } from 'uuid';
-import * as moment from 'moment-timezone';
 import { Role } from 'src/roles/role.enum';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
+
 //import parameter constants
 
 const prisma = new PrismaClient();
@@ -23,12 +24,12 @@ export class HelperService {
   async getUserIdByUUID(userUUID: string): Promise<number> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personUUID: userUUID,
+            userUUID,
           },
         });
-        return user.personId;
+        return user.userId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -40,12 +41,12 @@ export class HelperService {
   async getUserUUIDById(userId: number): Promise<string> {
     if (userId) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personId: userId,
+            userId,
           },
         });
-        return user.personUUID;
+        return user.userUUID;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -74,29 +75,29 @@ export class HelperService {
   async getElementDueDate(elementId: number): Promise<any> {
     const element = await prisma.courseElements.findFirst({
       where: {
-        elementId: elementId,
+        courseElementId: elementId,
       },
     });
-    if (element.typeId == 3) {
+    if (element.courseElementTypeId == 3) {
       const fileSubmissionSettings =
-        await prisma.fileSubmissionSettings.findFirst({
+        await prisma.courseFileSubmissionSettings.findFirst({
           where: {
-            courseElementId: elementId,
+            courseFileSubmissionElementId: elementId,
           },
         });
-      return fileSubmissionSettings.dueTime;
+      return fileSubmissionSettings.courseFileSubmissionDueTimestamp;
     }
   }
 
   async getUserIdByEmail(email: string): Promise<number> {
     if (email && validator.isEmail(email)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            email: email,
+            userEmail: email,
           },
         });
-        return user.personId;
+        return user.userId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -108,9 +109,9 @@ export class HelperService {
   async getUserById(userId: number): Promise<any> {
     if (userId) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personId: userId,
+            userId,
           },
         });
         return user;
@@ -125,9 +126,9 @@ export class HelperService {
   async getUserByUUID(userUUID: string): Promise<any> {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            personUUID: userUUID,
+            userUUID,
           },
         });
         return user;
@@ -142,9 +143,9 @@ export class HelperService {
   async getUserByEmail(email: string): Promise<any> {
     if (email && validator.isEmail(email)) {
       try {
-        const user = await prisma.persons.findFirst({
+        const user = await prisma.users.findFirst({
           where: {
-            email: email,
+            userEmail: email,
           },
         });
         return user;
@@ -164,9 +165,9 @@ export class HelperService {
     if (userUUID && validator.isUUID(userUUID.slice(1), 4)) {
       userId = await this.getUserIdByUUID(userUUID);
       try {
-        const schools = await prisma.schoolPersons.findMany({
+        const schools = await prisma.schoolUserRoles.findMany({
           where: {
-            personId: userId,
+            userId,
           },
           select: {
             schoolId: true,
@@ -311,11 +312,6 @@ export class HelperService {
   }
 
   /**
-   * 
-=======
-  /**
-   *
->>>>>>> parent of 636a947 (merge)
    * @param elementId Element Id
    * @param typeId Type Id
    * Type 0: Headline
@@ -333,41 +329,41 @@ export class HelperService {
       switch (typeId) {
         //HEADLINE
         case 1:
-          let headlineOptions = await prisma.headlineSettings.findFirst({
+          let headlineOptions = await prisma.courseElementHeadlineSettings.findFirst({
             where: {
-              courseElementId: Number(elementId),
+              courseElementHeadlineElementId: Number(elementId),
             },
           });
           options = {
-            label: headlineOptions.label,
+            label: headlineOptions.courseElementHeadlineLabel,
           };
           break;
         //TEXT
         case 2:
-          let textOptions = await prisma.textSettings.findFirst({
+          let textOptions = await prisma.courseElementTextSettings.findFirst({
             where: {
               courseElementId: Number(elementId),
             },
           });
           options = {
-            text: textOptions.text,
+            text: textOptions.courseElementTextText,
           };
           break;
         //FILE SUBMISSION
         case 3:
-          let fileOptions = await prisma.fileSubmissionSettings.findFirst({
+          let fileOptions = await prisma.courseFileSubmissionSettings.findFirst({
             where: {
-              courseElementId: Number(elementId),
+              courseFileSubmissionElementId: Number(elementId),
             },
           });
           options = {
-            name: fileOptions.name,
-            description: fileOptions.description,
-            dueDate: fileOptions.dueTime,
-            submitLater: fileOptions.submitLater,
-            submitLaterDate: fileOptions.submitLaterTime,
-            maxFileSize: fileOptions.maxFileSize,
-            allowedFileTypes: fileOptions.allowedFileTypes,
+            name: fileOptions.courseFileSubmissionName,
+            description: fileOptions.courseFileSubmissionDescription,
+            dueDate: fileOptions.courseFileSubmissionDueTimestamp,
+            submitLater: fileOptions.courseFileSubmissionSubmitLater,
+            submitLaterDate: fileOptions.courseFileSubmissionSubmitLaterTimestamp,
+            maxFileSize: fileOptions.courseFileSubmissionMaxFileSize,
+            allowedFileTypes: fileOptions.courseFileSubmissionAllowedFileTypes,
           };
       }
       return options;
@@ -383,10 +379,10 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementUUID: elementUUID,
+            courseElementUUID: elementUUID,
           },
         });
-        return element.elementId;
+        return element.courseElementId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -400,10 +396,10 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementId: elementId,
+            courseElementId: elementId,
           },
         });
-        return element.courseId;
+        return element.courseElementCourseId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -417,10 +413,10 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementId: elementId,
+            courseElementId: elementId,
           },
         });
-        return element.elementUUID;
+        return element.courseElementUUID;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -439,7 +435,7 @@ export class HelperService {
       try {
         const element = await prisma.courseElements.findFirst({
           where: {
-            elementUUID: elementUUID,
+            courseElementUUID: elementUUID,
           },
         });
         return element !== null;
@@ -456,18 +452,28 @@ export class HelperService {
       try {
         const elementId = await prisma.courseElements.create({
           data: {
-            elementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
-            typeId: element.typeId,
-            parentId: element.parentId,
-            visible: element.visible,
-            elementOrder: element.elementOrder,
-            personCreationId: element.personCreationId,
-            courseId: element.courseId,
+            courseElementUUID: `${ID_STARTERS.COURSE_ELEMENT}${uuidv4()}`,
+            courseElementTypeId: element.typeId,
+            courseElementParentId: element.parentId,
+            courseElementIsVisible: element.visible,
+            courseElementWeight: 0,
+            courseElementOrder: element.elementOrder,
+            users: {
+              connect: {
+                userId: element.personCreationId,
+              },
+            },
+            courses: {
+              connect: {
+                courseId: element.courseId,
+              },
+            },
           },
         });
+
         this.createElementOptions(
           element.options,
-          elementId.elementId,
+          elementId.courseElementCourseId,
           element.typeId,
         );
       } catch (err) {
@@ -488,39 +494,39 @@ export class HelperService {
         switch (typeId) {
           //HEADLINE
           case 1:
-            await prisma.headlineSettings.update({
+            await prisma.courseElementHeadlineSettings.update({
               where: {
-                courseElementId: elementId,
+                courseElementHeadlineId: elementId,
               },
               data: {
-                label: options.label,
+                courseElementHeadlineLabel: options.label,
               },
             });
             break;
           //TEXT
           case 2:
-            await prisma.textSettings.update({
+            await prisma.courseElementTextSettings.update({
               where: {
-                courseElementId: elementId,
+                courseElementTextSettingId: elementId,
               },
               data: {
-                text: options.text,
+                courseElementTextText: options.text,
               },
             });
             break;
           // FILE SUBMISSION
           case 3:
-            await prisma.fileSubmissionSettings.update({
+            await prisma.courseFileSubmissionSettings.update({
               where: {
-                courseElementId: elementId,
+                courseFileSubmissionSettingId: elementId,
               },
               data: {
-                name: options.name,
-                description: options.description,
-                dueTime: options.dueTime,
-                submitLater: options.submitLater,
-                submitLaterTime: options.submitLaterTime,
-                maxFileSize: options.maxFileSize,
+                courseFileSubmissionName: options.name,
+                courseFileSubmissionDescription: options.description,
+                courseFileSubmissionDueTimestamp: options.dueTime,
+                courseFileSubmissionSubmitLater: options.submitLater,
+                courseFileSubmissionSubmitLaterTimestamp: options.submitLaterTime,
+                courseFileSubmissionMaxFileSize: options.maxFileSize,
               },
             });
             break;
@@ -549,34 +555,34 @@ export class HelperService {
         switch (typeId) {
           //HEADLINE
           case 1:
-            await prisma.headlineSettings.create({
+            await prisma.courseElementHeadlineSettings.create({
               data: {
-                label: options.label,
-                courseElementId: elementId,
+                courseElementHeadlineLabel: options.label,
+                courseElementHeadlineElementId: elementId,
               },
             });
             break;
           //TEXT
           case 2:
-            await prisma.textSettings.create({
+            await prisma.courseElementTextSettings.create({
               data: {
-                text: options.text,
+                courseElementTextText: options.text,
                 courseElementId: elementId,
               },
             });
             break;
           // FILE SUBMISSION
           case 3:
-            await prisma.fileSubmissionSettings.create({
+            await prisma.courseFileSubmissionSettings.create({
               data: {
-                courseElementId: elementId,
-                name: options.name,
-                description: options.description,
-                dueTime: options.dueTime,
-                submitLater: options.submitLater,
-                submitLaterTime: options.submitLaterTime,
-                maxFileSize: options.maxFileSize,
-                allowedFileTypes: options.allowedFileTypes,
+                courseFileSubmissionElementId: elementId,
+                courseFileSubmissionName: options.name,
+                courseFileSubmissionDescription: options.description,
+                courseFileSubmissionDueTimestamp: options.dueTime,
+                courseFileSubmissionSubmitLater: options.submitLater,
+                courseFileSubmissionSubmitLaterTimestamp: options.submitLaterTime,
+                courseFileSubmissionMaxFileSize: options.maxFileSize,
+                courseFileSubmissionAllowedFileTypes: options.allowedFileTypes,
               },
             });
         }
@@ -595,7 +601,7 @@ export class HelperService {
       try {
         await prisma.courseElements.delete({
           where: {
-            elementId: elementId,
+            courseElementId: elementId,
           },
         });
         await this.deleteElementOptions(elementId, Number(typeId));
@@ -613,25 +619,25 @@ export class HelperService {
         switch (typeId) {
           //HEADLINE
           case 1:
-            await prisma.headlineSettings.delete({
+            await prisma.courseElementHeadlineSettings.delete({
               where: {
-                courseElementId: elementId,
+                courseElementHeadlineId: elementId,
               },
             });
             break;
           //TEXT
           case 2:
-            await prisma.textSettings.delete({
+            await prisma.courseElementTextSettings.delete({
               where: {
-                courseElementId: elementId,
+                courseElementTextSettingId: elementId,
               },
             });
             break;
           // FILE SUBMISSION
           case 3:
-            await prisma.fileSubmissionSettings.delete({
+            await prisma.courseFileSubmissionSettings.delete({
               where: {
-                courseElementId: elementId,
+                courseFileSubmissionSettingId: elementId,
               },
             });
         }
@@ -648,10 +654,10 @@ export class HelperService {
       try {
         const classId = await prisma.schoolClasses.findFirst({
           where: {
-            classUUID: classUUID,
+            schoolClassUUID: classUUID,
           },
         });
-        return classId.classId;
+        return classId.schoolClassId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -663,10 +669,10 @@ export class HelperService {
   async userIsInCourse(userId: number, courseId: number): Promise<any> {
     if (userId && courseId) {
       try {
-        const userInCourse = await prisma.coursePersons.findFirst({
+        const userInCourse = await prisma.courseUsers.findFirst({
           where: {
-            personId: userId,
-            courseId: courseId,
+            userId,
+            courseId,
           },
         });
         return userInCourse !== null;
@@ -708,34 +714,34 @@ export class HelperService {
   async createOrResetDefaultSettings(personId: number): Promise<any> {
     if (personId) {
       const defaultSettings = {
-        language: 'en',
-        timeZone: 'Europe/London',
-        dateTimeFormat: 'en-US',
-        receiveUpdateEmails: false,
-        avatarUUID: '',
-        phoneNumber: '',
-        themeMode: 0,
-        theme: -1,
+        userSettingLanguageId: 'en',
+        userSettingTimeZone: 'Europe/London',
+        userSettingDateTimeFormat: 'en-US',
+        userSettingReceiveUpdateEmails: false,
+        userSettingAvatarUUID: '',
+        userSettingPhoneNumber: '',
+        userSettingThemeMode: 0,
+        userSettingTheme: -1,
       };
 
       try {
-        const personSettings = await prisma.personSettings.findFirst({
+        const personSettings = await prisma.userSettings.findFirst({
           where: {
-            personId,
+            userId: personId,
           },
         });
 
         if (personSettings) {
-          await prisma.personSettings.update({
+          await prisma.userSettings.update({
             where: {
-              personId,
+              userSettingId: personId,
             },
             data: defaultSettings,
           });
         } else {
-          await prisma.personSettings.create({
+          await prisma.userSettings.create({
             data: {
-              personId,
+              userId: personId,
               ...defaultSettings,
             },
           });
@@ -754,8 +760,12 @@ export class HelperService {
         const user = await this.getUserById(personId);
         await prisma.updateEmailReceivers.create({
           data: {
-            personId,
-            email: user.email,
+            updateEmailReceiverEmail: user.email,
+            users: {
+              connect: {
+                userId: personId,
+              },
+            },
           },
         });
       } catch {
@@ -772,7 +782,7 @@ export class HelperService {
       try {
         await prisma.updateEmailReceivers.delete({
           where: {
-            personId,
+            userId: personId,
           },
         });
       } catch {
@@ -827,17 +837,17 @@ export class HelperService {
   async createDefaultPublicProfileSettings(userId: number): Promise<any> {
     if (userId) {
       try {
-        await prisma.publicProfileSettings.create({
+        await prisma.userPublicProfileSettings.create({
           data: {
-            personId: userId,
-            displayName: await this.getUserUUIDById(userId),
-            publicEmail: '',
-            biography: '',
-            location: '',
-            preferredLanguage: '',
-            showAge: false,
-            showJoinDate: true,
-            showBadges: true,
+            userId,
+            userPublicProfileDisplayName: await this.getUserUUIDById(userId),
+            userPublicProfileSettingPublicEmail: '',
+            userPublicProfileSettingBiography: '',
+            userPublicProfileSettingLocation: '',
+            userPublicProfileSettingPreferredLanguageId: '',
+            userPublicProfileSettingShowAge: false,
+            userPublicProfileSettingShowJoinDate: true,
+            userPublicProfileSettingShowBadges: true,
           },
         });
       } catch {
@@ -861,12 +871,12 @@ export class HelperService {
   async emailIsRegisteredAndVerified(email: string): Promise<any> {
     if (email) {
       try {
-        const user = await prisma.persons.findUnique({
+        const user = await prisma.users.findUnique({
           where: {
-            email,
+            userEmail: email,
           },
         });
-        if (user && Boolean(user.emailVerified)) {
+        if (user && Boolean(user.userEmailVerified)) {
           return user;
         } else {
           return false;
@@ -882,13 +892,13 @@ export class HelperService {
   async getUserIdByPasswordResetToken(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.passwordResetTokens.findFirst({
+        const user = await prisma.userPasswordResetTokens.findFirst({
           where: {
-            token,
+            userPasswordResetToken: token,
           },
         });
         if (user) {
-          return user.personId;
+          return user.userId;
         } else {
           return false;
         }
@@ -903,14 +913,14 @@ export class HelperService {
   async passwordResetTokenIsValidAndNotExpired(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.passwordResetTokens.findFirst({
+        const user = await prisma.userPasswordResetTokens.findFirst({
           where: {
-            token,
+            userPasswordResetToken: token,
           },
         });
         if (user) {
           const now = new Date();
-          const tokenExpireDate = new Date(user.expireDate);
+          const tokenExpireDate = new Date(user.userPasswordResetTokenExpireTimestamp);
           if (now < tokenExpireDate) {
             return true;
           } else {
@@ -934,9 +944,9 @@ export class HelperService {
   async deletePasswordResetToken(token: string): Promise<any> {
     if (token) {
       try {
-        await prisma.passwordResetTokens.delete({
+        await prisma.userPasswordResetTokens.delete({
           where: {
-            token,
+            userPasswordResetToken: token,
           },
         });
       } catch {
@@ -950,14 +960,14 @@ export class HelperService {
   async emailChangeTokenIsValidAndNotExpired(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.emailChangeTokens.findFirst({
+        const user = await prisma.userEmailChangeTokens.findFirst({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
         if (user) {
           const now = new Date();
-          const tokenExpireDate = new Date(user.expireDate);
+          const tokenExpireDate = new Date(user.emailChangeTokenExpireTimestamp);
           if (now < tokenExpireDate) {
             return true;
           } else {
@@ -981,13 +991,13 @@ export class HelperService {
   async getUserIdByEmailChangeToken(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.emailChangeTokens.findFirst({
+        const user = await prisma.userEmailChangeTokens.findFirst({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
         if (user) {
-          return user.personId;
+          return user.userId;
         } else {
           return false;
         }
@@ -1002,13 +1012,13 @@ export class HelperService {
   async getEmailByChangeToken(token: string): Promise<any> {
     if (token) {
       try {
-        const user = await prisma.emailChangeTokens.findFirst({
+        const user = await prisma.userEmailChangeTokens.findFirst({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
         if (user) {
-          return user.email;
+          return user.emailChangeTokenNewEmail;
         } else {
           return false;
         }
@@ -1023,9 +1033,9 @@ export class HelperService {
   async deleteEmailChangeToken(token: string): Promise<any> {
     if (token) {
       try {
-        await prisma.emailChangeTokens.delete({
+        await prisma.userEmailChangeTokens.delete({
           where: {
-            token,
+            emailChangeToken: token,
           },
         });
       } catch {
@@ -1053,13 +1063,13 @@ export class HelperService {
   async getUserRoleBySchool(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findFirst({
+        const userRole = await prisma.schoolUserRoles.findFirst({
           where: {
-            personId: userId,
-            schoolId: schoolId,
+            userId,
+            schoolId,
           },
         });
-        return userRole.roleId;
+        return userRole.schoolRoleId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -1071,15 +1081,15 @@ export class HelperService {
   async isTeacher(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findUnique({
+        const userRole = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
-        if (Object.keys(Role)[userRole.roleId] === 'Teacher') {
+        if (Object.keys(Role)[userRole.schoolRoleId] === 'Teacher') {
           return true;
         } else {
           return false;
@@ -1095,16 +1105,16 @@ export class HelperService {
   async isAdmin(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findUnique({
+        const userRole = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
 
-        if (Object.keys(Role)[userRole.roleId] === 'Admin') {
+        if (Object.keys(Role)[userRole.schoolRoleId] === 'Admin') {
           return true;
         } else {
           return false;
@@ -1120,18 +1130,18 @@ export class HelperService {
   async isTeacherOrHigher(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const userRole = await prisma.personRoles.findUnique({
+        const userRole = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
 
         if (
-          Object.keys(Role)[userRole.roleId] === 'Teacher' ||
-          Object.keys(Role)[userRole.roleId] === 'Admin'
+          Object.keys(Role)[userRole.schoolRoleId] === 'Teacher' ||
+          Object.keys(Role)[userRole.schoolRoleId] === 'Admin'
         ) {
           return true;
         } else {
@@ -1148,11 +1158,11 @@ export class HelperService {
   async userIdInSchool(userId: number, schoolId: number): Promise<any> {
     if (userId && schoolId) {
       try {
-        const user = await prisma.schoolPersons.findUnique({
+        const user = await prisma.schoolUserRoles.findUnique({
           where: {
-            schoolPersonId: {
-              personId: userId,
-              schoolId: schoolId,
+            user_school_unique: {
+              userId,
+              schoolId,
             },
           },
         });
@@ -1177,7 +1187,7 @@ export class HelperService {
             courseId,
           },
         });
-        return course.schoolId;
+        return course.courseSchoolId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
@@ -1188,18 +1198,18 @@ export class HelperService {
   async getCourseUsers(courseId: number): Promise<any> {
     if (courseId) {
       try {
-        const courseUsers = await prisma.coursePersons.findMany({
+        const courseUsers = await prisma.courseUsers.findMany({
           where: {
-            courseId: courseId,
+            courseId,
           },
         });
 
         const users = [];
 
         for (const user of courseUsers) {
-          const userData = await prisma.persons.findUnique({
+          const userData = await prisma.users.findUnique({
             where: {
-              personId: user.personId,
+              userId: user.userId,
             },
           });
           users.push(userData);

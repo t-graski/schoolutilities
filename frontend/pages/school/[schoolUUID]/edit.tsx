@@ -11,18 +11,22 @@ import { JoinCodesSettingsField } from "../../../components/organisms/schoolAdmi
 import SvgDepartment from "../../../components/atoms/svg/SvgDepartment";
 import SvgClass from "../../../components/atoms/svg/SvgClass";
 import SvgStudent from "../../../components/atoms/svg/SvgStudent";
-import SvgTeacher from "../../../components/atoms/svg/SvgTeacher";
 import { useQueryClient } from "react-query";
 import dynamic from "next/dynamic";
-import { logout } from "../../../utils/authHelper";
+import { SideDashboardBar } from "../../../components/organisms/SideDashboardBar";
+import { OffDaysSettingsField } from "../../../components/organisms/schoolAdmin/OffDaysSettingsField";
+import SvgInvitation from "../../../components/atoms/svg/SvgInvitation";
+import SvgCalendar from "../../../components/atoms/svg/SvgCalendar";
+import SvgSuitcase from "../../../components/atoms/svg/SvgSuitcase";
+import { SubjectsSettingsField } from "../../../components/organisms/schoolAdmin/SubjectsSettingsField";
+import { RoomsSettingsField } from "../../../components/organisms/schoolAdmin/RoomsSettingsField";
+import SvgEducation from "../../../components/atoms/svg/SvgEducation";
+import SvgBuilding from "../../../components/atoms/svg/SvgBuilding";
 
 const SettingsLayout = styled("div", {
   display: "flex",
   width: "100vw",
-  height: "100vh",
-  position: "fixed",
-  top: 0,
-  left: 0,
+  height: "89vh",
 });
 
 export default function CreateSchool() {
@@ -36,17 +40,27 @@ export default function CreateSchool() {
   if (router.query && router.query.tab) {
     urlParam = router.query.tab;
   } else {
-    urlParam = "";
+    urlParam = "Departments";
   }
 
   function getSecondPart() {
     switch (urlParam) {
       case "classes":
         return <ClassesSettingsField queryClient={queryClient} />;
-      case "persons":
+      case "users":
         return <PersonsSettingsField queryClient={queryClient} />;
+      case "off-days":
+        return <OffDaysSettingsField queryClient={queryClient} />;
       case "join-codes":
         return <JoinCodesSettingsField />;
+      case "subjects":
+        return (
+          <SubjectsSettingsField
+            queryClient={queryClient}
+          ></SubjectsSettingsField>
+        );
+      case "rooms":
+        return <RoomsSettingsField queryClient={queryClient} />;
       default:
         return <DepartmentsSettingsField></DepartmentsSettingsField>;
     }
@@ -59,53 +73,59 @@ export default function CreateSchool() {
       </Head>
       <Navbar></Navbar>
       <SettingsLayout>
-        <SideDashboard
-          links={[
+        <SideDashboardBar
+          items={[
             {
-              icon: SvgDepartment,
-              label: "Departments",
+              name: "Departments",
+              value: "departments",
               href: `/school/${schoolUUID}/edit?tab=departments`,
-              highlighted:
-                urlParam != "persons" &&
-                urlParam != "classes" &&
-                urlParam != "join-codes"
-                  ? true
-                  : false,
+              icon: SvgDepartment,
             },
             {
-              icon: SvgClass,
-              label: "Classes",
+              name: "Classes",
+              value: "classes",
               href: `/school/${schoolUUID}/edit?tab=classes`,
-              highlighted: urlParam == "classes" ? true : false,
+              icon: SvgClass,
             },
             {
+              name: "Users",
+              value: "users",
+              href: `/school/${schoolUUID}/edit?tab=users`,
               icon: SvgStudent,
-              label: "Persons",
-              href: `/school/${schoolUUID}/edit?tab=persons`,
-              highlighted: urlParam == "persons" ? true : false,
             },
             {
-              icon: SvgTeacher,
-              label: "Invite Codes",
+              name: "Invite Codes",
+              value: "join-codes",
               href: `/school/${schoolUUID}/edit?tab=join-codes`,
-              highlighted: urlParam == "join-codes" ? true : false,
+              icon: SvgInvitation,
+            },
+            {
+              name: "Subjects",
+              value: "subjects",
+              href: `/school/${schoolUUID}/edit?tab=subjects`,
+              icon: SvgEducation,
+            },
+            {
+              name: "Rooms",
+              value: "rooms",
+              href: `/school/${schoolUUID}/edit?tab=rooms`,
+              icon: SvgBuilding,
+            },
+            {
+              name: "Off Days",
+              value: "off-days",
+              href: `/school/${schoolUUID}/edit?tab=off-days`,
+              icon: SvgCalendar,
+            },
+            {
+              name: "School Years",
+              value: "school-years",
+              href: `/school/${schoolUUID}/edit?tab=school-years`,
+              icon: SvgSuitcase,
             },
           ]}
-          specialButton={{
-            imageSrc: "/images/icons/round_user_icon.svg",
-            imageAlt: "User Icon",
-            label: "User",
-            href: "/profile/settings",
-            onClickImageSrc: "/images/icons/logout_icon.svg",
-            onClickImageAlt: "Logout Icon",
-            onClickImageFunction: () => {
-              logout();
-              router.push("/");
-            },
-          }}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        ></SideDashboard>
+          active={urlParam}
+        ></SideDashboardBar>
         {getSecondPart()}
       </SettingsLayout>
     </>

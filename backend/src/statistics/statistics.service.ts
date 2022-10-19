@@ -91,7 +91,7 @@ export class StatisticsService {
   }
 
   async getUserAmount() {
-    return await prisma.persons.count();
+    return await prisma.users.count();
   }
 
   async getCourseAmount() {
@@ -101,9 +101,9 @@ export class StatisticsService {
   async usersJoinedLastXMonths(months: number) {
     const date = new Date();
     date.setMonth(date.getMonth() - months);
-    return await prisma.persons.count({
+    return await prisma.users.count({
       where: {
-        creationDate: {
+        userCreationTimestamp: {
           gt: date,
         },
       },
@@ -111,14 +111,14 @@ export class StatisticsService {
   }
 
   async userWithoutVerifiedEmail() {
-    return await prisma.persons.count({
+    return await prisma.users.count({
       where: {
-        emailVerified: false,
+        userEmailVerified: false,
       },
     });
   }
 
   async sentEmails() {
-    return await prisma.emailLog.count();
+    return await prisma.logEmails.count();
   }
 }

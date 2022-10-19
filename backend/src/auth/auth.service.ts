@@ -6,16 +6,12 @@ import { MailService } from 'src/mail/mail.service';
 import {
   LoginUserData,
   RegisterUserData,
-  UserData,
-  UserRole,
-  UserRoleData,
 } from 'src/types/User';
 import { jwtConstants } from './constants';
 import { RefreshTokenService } from './refreshToken/refreshToken.service';
 import { PrismaClient } from '@prisma/client';
 import { RETURN_DATA } from 'src/misc/parameterConstants';
 import { Role } from 'src/roles/role.enum';
-import { DecodedJWT } from 'src/types/SchoolAdmin';
 import { HelperService } from 'src/helper/helper.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -34,9 +30,9 @@ export class AuthService {
 
   async getUserDataByEmailAndPassword(userData: LoginUserData) {
     const userDbData = await this.databaseService.getUserData(userData);
-    const { password, ...result } = userDbData;
+    const { userPassword, ...result } = userDbData;
 
-    if (bcrypt.compareSync(userData.password, password)) {
+    if (bcrypt.compareSync(userData.password, userPassword)) {
       return result;
     }
     return null;
@@ -51,23 +47,23 @@ export class AuthService {
     const requesterRoles = await this.helper.getUserRoleBySchool(requesterId, schoolId);
     const required = [1, 2];
     if (required.includes(requesterRoles) || (requesterId == userId)) {
-      const roles = await prisma.personRoles.findUnique({
+      const roles = await prisma.schoolUserRoles.findUnique({
         where: {
-          schoolPersonId: {
-            personId: Number(userId),
+          user_school_unique: {
+            userId: Number(userId),
             schoolId: Number(schoolId),
           },
         },
         select: {
           schoolId: true,
-          roleId: true,
+          schoolRoleId: true,
         },
       });
 
       const rolesItem = {
         schoolUUID,
-        role: roles.roleId,
-        roleName: await this.getRoleNameById(roles.roleId.toString()),
+        role: roles.schoolRoleId,
+        roleName: await this.getRoleNameById(roles.schoolRoleId.toString()),
       }
 
       return rolesItem;
@@ -86,11 +82,11 @@ export class AuthService {
     const personId = await this.getPersonIdByUUID(personUUID);
     const requiredRole = requiredRoles[0];
     const roleId = await this.getRoleIdByName(requiredRole);
-    const hasRole = await prisma.personRoles.findMany({
+    const hasRole = await prisma.schoolUserRoles.findMany({
       where: {
-        personId: Number(personId.personId),
-        roleId: Number(roleId.roleId),
+        userId: Number(personId.userId),
         schoolId: Number(schoolId),
+        schoolRoleId: Number(roleId.roleId),
       },
     });
     return hasRole.length > 0;
@@ -98,64 +94,64 @@ export class AuthService {
 
   async getUserRoleName(personUUID: string, schoolId: number): Promise<any> {
     const personId = await this.getPersonIdByUUID(personUUID);
-    const roleName = await prisma.personRoles.findMany({
+    const roleName = await prisma.schoolUserRoles.findMany({
       where: {
-        personId: Number(personId.personId),
+        userId: Number(personId.userId),
         schoolId: Number(schoolId),
       },
     });
     if (roleName.length > 0) {
-      return this.getRoleNameById(roleName[0].roleId.toString());
+      return this.getRoleNameById(roleName[0].schoolRoleId.toString());
     } else {
       return null;
     }
   }
 
   async getRoleNameById(roleId: string): Promise<string> {
-    const roleName = await prisma.roles.findFirst({
+    const roleName = await prisma.schoolRoles.findFirst({
       where: {
-        roleId: Number(roleId),
+        schoolRoleId: Number(roleId),
       },
       select: {
-        roleName: true,
+        schoolRoleName: true,
       },
     });
-    return roleName.roleName;
+    return roleName.schoolRoleName;
   }
 
   async getPersonIdByUUID(personUUID: string) {
-    return await prisma.persons.findFirst({
+    return await prisma.users.findFirst({
       where: {
-        personUUID,
+        userUUID: personUUID,
       },
       select: {
-        personId: true,
+        userId: true,
       },
     });
   }
 
   async getRoleIdByName(roleName: string): Promise<any> {
-    return await prisma.roles.findFirst({
+    return await prisma.schoolRoles.findFirst({
       where: {
-        roleName,
+        schoolRoleName: roleName,
       },
       select: {
-        roleId: true,
+        schoolRoleId: true,
       },
     });
   }
 
   async personIsVerified(personUUID: string): Promise<boolean> {
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
-    const person = await prisma.persons.findFirst({
+    const person = await prisma.users.findFirst({
       where: {
-        personId: Number(personId),
+        userId: Number(personId),
       },
       select: {
-        emailVerified: true,
+        userEmailVerified: true,
       },
     });
-    return person.emailVerified;
+    return person.userEmailVerified;
   }
 
   async login(user: any) {
@@ -173,12 +169,12 @@ export class AuthService {
       await this.databaseService.getPersonIdByUUID(personUUID),
     );
 
-    await prisma.persons.update({
+    await prisma.users.update({
       where: {
-        personUUID,
+        userUUID: personUUID,
       },
       data: {
-        lastLogin: new Date(Date.now()),
+        userLastLoginTimestamp: new Date(Date.now()),
       },
     });
 
@@ -204,12 +200,12 @@ export class AuthService {
       await this.databaseService.getPersonIdByUUID(personUUID),
     );
 
-    await prisma.persons.update({
+    await prisma.users.update({
       where: {
-        personUUID,
+        userUUID: personUUID,
       },
       data: {
-        lastLogin: new Date(Date.now()),
+        userLastLoginTimestamp: new Date(Date.now()),
       },
     });
 
@@ -248,14 +244,14 @@ async function generateRegisterToken(
   const userId = await databaseService.getUserIdByEmail(email);
 
   try {
-    await prisma.registerTokens.create({
+    await prisma.userRegisterTokens.create({
       data: {
-        persons: {
+        users: {
           connect: {
-            personId: Number(userId['personId']),
+            userId: Number(userId['userId']),
           },
         },
-        token: generatedToken,
+        userRegisterToken: generatedToken,
       },
     });
   } catch (error) {

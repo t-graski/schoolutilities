@@ -6,10 +6,7 @@ import { Separator } from "../../atoms/Separator";
 import { Spacer } from "../../atoms/Spacer";
 import { SearchSelect } from "../../atoms/input/SearchSelect";
 import SvgSchool from "../../atoms/svg/SvgSchool";
-import {
-  fetchSchoolClasses,
-  fetchSchoolPersons,
-} from "../../../utils/requests";
+import { fetchSchoolClasses, fetchSchoolUsers } from "../../../utils/requests";
 import { useQuery } from "react-query";
 
 type Props = {
@@ -31,7 +28,7 @@ const CourseCreateDetailLayout = styled("form", {
 
 const Label = styled("label", {
   fontSize: "20px",
-  color: "$fontPrimary",
+  color: "$neutral-500",
   marginBottom: "5px",
 });
 
@@ -57,13 +54,14 @@ export const CourseCreateMembersField: React.FC<Props> = ({
   const { data: members, status: membersStatus } = useQuery(
     "members",
     async () => {
-      const currentMembers = await fetchSchoolPersons(
+      const currentMembers = await fetchSchoolUsers(
         router.query.schoolUUID as string
       );
+      console.log(currentMembers);
       return currentMembers.map((member) => {
         return {
-          value: member.personUUID,
-          label: `${member.lastName} ${member.firstName}`,
+          value: member.userUUID,
+          label: `${member.userLastname} ${member.userFirstname}`,
         };
       });
     }
