@@ -47,6 +47,12 @@ export default class Document extends NextDocument {
               __html: `function OptanonWrapper() {}`,
             }}
           ></script>
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `(adsbygoogle = window.adsbygoogle || []).push({});`,
+            }}
+          ></script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
@@ -113,7 +119,10 @@ export default class Document extends NextDocument {
 `,
             }}
           />
-          <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet"></link>
+          <link
+            href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+            rel="stylesheet"
+          ></link>
         </Head>
         <body>
           <Main />

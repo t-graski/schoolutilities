@@ -95,6 +95,13 @@ export default function Home() {
           },
         ]}
       ></GeneralList>
+      <ins
+        className="adsbygoogle"
+        data-ad-client="ca-pub-7476966411807562"
+        data-ad-slot="7738492515"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>
       <Footer />
     </>
   );
