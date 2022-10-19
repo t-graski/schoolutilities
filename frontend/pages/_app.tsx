@@ -22,9 +22,6 @@ const globalStyles = globalCss({
     backgroundColor: "$background",
     minHeight: "100vh",
   },
-  ".adsbygoogle": {
-    display: "block",
-  },
   ".nestable-item.is-dragging:before": {
     content: "''",
     position: "absolute",

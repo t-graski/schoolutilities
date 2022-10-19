@@ -101,7 +101,11 @@ export default function Home() {
         data-ad-slot="7738492515"
         data-ad-format="auto"
         data-full-width-responsive="true"
+        style={{
+          display: "block",
+        }}
       ></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       <Footer />
     </>
   );
