@@ -177,6 +177,7 @@ export const EditorMenuBar: React.FC<Props> = ({ editor }) => {
           {item.type === "divider" ? (
             <div className="divider" />
           ) : (
+            // @ts-ignore
             <MenuItem {...item} />
           )}
         </div>

@@ -18,7 +18,7 @@ type Props = {
   errorMessage?: string;
   min?: string;
   max?: string;
-  theme?: string;
+  theme?: "surface" | "surfaceVariant";
 };
 
 const StyledInputField = styled("input", {

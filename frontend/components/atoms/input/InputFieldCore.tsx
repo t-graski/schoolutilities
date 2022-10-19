@@ -7,7 +7,7 @@ type Props = {
   label?: string;
   showLabel?: boolean;
   isSmall?: boolean;
-  theme?: string;
+  theme?: "surface" | "surfaceVariant";
 };
 
 const InputFieldLayout = styled("div", {

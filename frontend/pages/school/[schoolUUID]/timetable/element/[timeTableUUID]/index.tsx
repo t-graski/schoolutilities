@@ -11,6 +11,8 @@ import { ChangeCreateItem } from "../../../../../../components/organisms/time-ta
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { getTimeTableElement } from "../../../../../../utils/requests/timeTable";
+import { SetStateAction } from "react";
+import { TimeTableItemType } from "../../../../../../components/atoms/TimeTableItem";
 
 export default function EditTimeTableElement() {
   const router = useRouter();
@@ -31,7 +33,32 @@ export default function EditTimeTableElement() {
       <ContentLayout>
         <Headline label="Edit timetable item"></Headline>
         <Separator width="small" alignment="center" />
-        <ChangeCreateItem></ChangeCreateItem>
+        <ChangeCreateItem timeTableElement={{
+          timeTableElementUUID: "",
+          timeTableElementStartTime: "",
+          timeTableElementEndTime: "",
+          overlaps: 0,
+          overlapStart: 0,
+          omitted: {
+            timeTableOmittedDate: "",
+            timeTableOmittedReason: ""
+          },
+          schoolSubject: {
+            schoolSubjectUUID: "",
+            schoolSubjectName: "",
+            schoolSubjectAbbreviation: ""
+          },
+          holidayUUID: "",
+          holidayName: "",
+          timeTableElementTeachers: [],
+          substitution: {
+            timeTableSubstitutionUUID: "",
+            timeTableSubstitutionClasses: [],
+            timeTableSubstitutionTeachers: []
+          }
+        }} setTimeTableElement={function (value: SetStateAction<TimeTableItemType>): void {
+          throw new Error("Function not implemented.");
+        } }></ChangeCreateItem>
       </ContentLayout>
       <Footer></Footer>
     </>
