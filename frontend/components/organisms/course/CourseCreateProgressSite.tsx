@@ -7,7 +7,6 @@ import cookie from "js-cookie";
 import { Progressbar } from "../../molecules/Progressbar";
 import { Spacer } from "../../atoms/Spacer";
 import { getAccessToken } from "../../../utils/authHelper";
-import { useCourseControllerAddCourse } from "../../../default/default";
 
 type Props = {
   steps: {
