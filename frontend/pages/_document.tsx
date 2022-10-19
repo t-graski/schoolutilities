@@ -47,12 +47,6 @@ export default class Document extends NextDocument {
               __html: `function OptanonWrapper() {}`,
             }}
           ></script>
-          <script
-            type="text/javascript"
-            dangerouslySetInnerHTML={{
-              __html: `(adsbygoogle = window.adsbygoogle || []).push({});`,
-            }}
-          ></script>
           <style
             dangerouslySetInnerHTML={{
               __html: `
