@@ -30,11 +30,6 @@ const StyledIns = styled("ins", {
 export const BannerAd: React.FC<Props> = ({}) => {
   useEffect(() => {
     // @ts-ignore
-    if (window.adsbygoogle) {
-      // @ts-ignore
-      window.adsbygoogle = [];
-    }
-    // @ts-ignore
     (window.adsbygoogle = window.adsbygoogle || []).push({});
   }, []);
 
