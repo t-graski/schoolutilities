@@ -8,10 +8,11 @@ import { Article } from "../../../../components/organisms/help/Article";
 import { ContentLayout } from "../../../../utils/styles";
 import dynamic from "next/dynamic";
 import { BackLink } from "../../../../components/molecules/BackLink";
+import { BannerAd } from "../../../../components/molecules/ads/BannerAd";
 
 export default function ArticleOverview({ content }) {
   return (
-    <SiteLayout>
+    <>
       <Head>
         <title>Headline</title>
       </Head>
@@ -21,8 +22,9 @@ export default function ArticleOverview({ content }) {
         <Article content={content}></Article>
         <Spacer size="small"></Spacer>
       </ContentLayout>
+      <BannerAd></BannerAd>
       <Footer></Footer>
-    </SiteLayout>
+    </>
   );
 }
 

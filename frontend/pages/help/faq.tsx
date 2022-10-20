@@ -11,6 +11,7 @@ import Link from "next/link";
 
 import React from "react";
 import dynamic from "next/dynamic";
+import { BannerAd } from "../../components/molecules/ads/BannerAd";
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -240,6 +241,7 @@ export default function RegisterApproved() {
         </Accordion>
       </AccordionLayout>
       <Spacer size="small"></Spacer>
+      <BannerAd></BannerAd>
       <Footer></Footer>
     </>
   );
