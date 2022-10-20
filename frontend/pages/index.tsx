@@ -7,6 +7,7 @@ import SvgSchool from "../components/atoms/svg/SvgSchool";
 import SvgPremium from "../components/atoms/svg/SvgPremium";
 import SvgStartpageArtwork from "../components/atoms/svg/SvgStartpageArtwork";
 import { useEffect } from "react";
+import { BannerAd } from "../components/molecules/ads/BannerAd";
 
 const Footer = dynamic(() => import("../components/organisms/Footer"));
 const GeneralList = dynamic(
@@ -34,10 +35,6 @@ const ArtworkLayout = styled("div", {
 });
 
 export default function Home() {
-  useEffect(() => {
-    // @ts-ignore
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
-  }, []);
 
   return (
     <>
@@ -101,16 +98,7 @@ export default function Home() {
           },
         ]}
       ></GeneralList>
-      <ins
-        className="adsbygoogle"
-        data-ad-client="ca-pub-7476966411807562"
-        data-ad-slot="7738492515"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-        style={{
-          display: "block",
-        }}
-      ></ins>
+      <BannerAd></BannerAd>
       <Footer />
     </>
   );

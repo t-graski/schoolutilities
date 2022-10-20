@@ -271,7 +271,7 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
           {userInfoStatus == "success" && (
             <>
               <DropdownMenuItem>
-                <Link href={"/profile/settings"} passHref>
+                <Link href={"/settings/account"} passHref>
                   <StyledLink>Profile</StyledLink>
                 </Link>
               </DropdownMenuItem>
