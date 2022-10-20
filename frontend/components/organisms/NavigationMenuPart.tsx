@@ -367,7 +367,7 @@ export const NavigationMenuPart = () => {
               <ContentListItem title="Tutorials" href="/help">
                 Learn how to deal with all of our features.
               </ContentListItem>
-              <ContentListItem title="Patch Notes" href="/help">
+              <ContentListItem title="Patch Notes" href="/change-logs">
                 See our incredible innovations for each release and also what we
                 have messed up in earlier releases.
               </ContentListItem>
