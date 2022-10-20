@@ -6,6 +6,7 @@ import { Spacer } from "../components/atoms/Spacer";
 import { Separator } from "../components/atoms/Separator";
 import Head from "next/head";
 import dynamic from "next/dynamic";
+import { BannerAd } from "../components/molecules/ads/BannerAd";
 
 const ImprintLayout = styled("div", {
   width: "100%",
@@ -51,6 +52,7 @@ export default function Features() {
           are not permitted to be made.
         </p>
       </ImprintLayout>
+      <BannerAd></BannerAd>
       <Footer></Footer>
     </>
   );
