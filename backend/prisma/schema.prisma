@@ -683,6 +683,7 @@ model timeTableGrid {
   timeTableGridSpecialBreak    timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
 
   @@unique([timeTableGridId], map: "time_table_grid_uuid_UNIQUE")
+  @@unique([schoolId], map: "time_table_grid_school_id_UNIQUE")
   @@index([schoolId], map: "fk_time_table_grid_school_id")
   @@index([timeTableGridSpecialBreakId], map: "fk_time_table_special_break_id")
   @@map("time_table_grid")

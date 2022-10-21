@@ -5,6 +5,7 @@ import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { TimeTableElement } from 'src/entity/time-table-element/timeTableElement';
+import { TimeTableGrid } from 'src/entity/time-table-grid/time-table-grid';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import { ReturnMessage } from 'src/types/Course';
@@ -464,6 +465,43 @@ export class TimetableService {
             return {
                 status: 200,
                 data: timeTableGrid,
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
+    async editTimeTableGrid(body: any, request): Promise<ReturnMessage> {
+        const { schoolUUID, timeTableGridMaxLessons, timeTableGridElementDuration, timeTableGridBreakDuration, timeTableGridSpecialBreakElement, timeTableGridStartTime, timeTableGridSpecialBreakDuration } = body
+
+        try {
+            const school = await prisma.schools.findUnique({
+                where: {
+                    schoolUUID,
+                }
+            })
+
+            const timeTableGrid = await prisma.timeTableGrid.update({
+                where: {
+                    schoolId: school.schoolId,
+                },
+                data: {
+                    timeTableGridStartTime: new Date(timeTableGridStartTime),
+                    timeTableGridElementDuration,
+                    timeTableGridMaxLessons,
+                    timeTableGridBreakDuration,
+                    timeTableGridSpecialBreak: {
+                        update: {
+                            timeTableGridSpecialBreakElement,
+                            timeTableGridSpecialBreakDuration,
+                        }
+                    },
+                }
+            })
+
+            return {
+                status: 200,
+                data: new TimeTableGrid(timeTableGrid),
             }
         } catch {
             return RETURN_DATA.DATABASE_ERROR;

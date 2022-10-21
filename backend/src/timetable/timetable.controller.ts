@@ -126,7 +126,6 @@ export class TimetableController {
     return this.timetableService.deleteExam(examUUID, request);
   }
   @UseGuards(JwtAuthGuard)
-  @UseGuards(JwtAuthGuard)
   @Get('/timetable/:classUUID/:dateString')
   async getTimetable(@Param('classUUID') classUUID: string, @Param('dateString') dateString: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getTimetable(classUUID, dateString, request);
