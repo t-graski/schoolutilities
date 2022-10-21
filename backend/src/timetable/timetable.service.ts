@@ -252,7 +252,7 @@ export class TimetableService {
           event: checkForEvent(element, new Date(dateString)),
           exam: checkForExam(element, new Date(dateString)),
           omitted:
-            element.timeTableOmitted.length > 0
+            element.timeTableOmitted.length > 0 && element.timeTableOmitted[0].timeTableElementOmittedDate >= new Date(dateString) && element.timeTableOmitted[0].timeTableElementOmittedDate <= new Date(new Date(dateString).getTime() + 86400000 * 4)
               ? {
                   timeTableOmittedReason:
                     element.timeTableOmitted[0].timeTableElementOmittedReason,
