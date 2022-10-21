@@ -348,22 +348,6 @@ export class DatabaseService {
     return classData;
   }
 
-  // async insertToken1(userId: number, token: string): Promise<DatabaseUpdate> {
-  //   return new Promise((resolve, reject) => {
-  //     this.connection.query(
-  //       'insert into `login_tokens` set person_id=?, expire_date=ADDTIME(now(), "06:00:00"), token=?',
-  //       [userId, token],
-  //       function (error, results, fields) {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results);
-  //         }
-  //       },
-  //     );
-  //   });
-  // }
-
   async inserToken(userId: number, token: string) {
     prisma.userLoginTokens.create({
       data: {
@@ -374,22 +358,6 @@ export class DatabaseService {
 
   }
 
-  // async insertRegisterToken(userId, token: string): Promise<DatabaseUpdate> {
-  //   return new Promise((resolve, reject) => {
-  //     this.connection.query(
-  //       'insert into `register_tokens` set person_id=?, token=?',
-  //       [userId, token],
-  //       function (error, results, fields) {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results);
-  //         }
-  //       },
-  //     );
-  //   });
-  // }
-
   async inserRegisterToken(userId: number, token: string) {
     prisma.userRegisterTokens.create({
       data: {
@@ -398,22 +366,6 @@ export class DatabaseService {
       },
     });
   }
-
-  // async getUnverifiedUserByRegisterToken(token: string): Promise<number[]> {
-  //   return new Promise((resolve, reject) => {
-  //     this.connection.query(
-  //       'select person_id from `persons` where person_id IN(select person_id from `register_tokens` where token=?) and email_verified=0',
-  //       [token],
-  //       function (error, results, fields) {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results);
-  //         }
-  //       },
-  //     );
-  //   });
-  // }
 
   async getUnverifiedUserByRegisterToken(token: string) {
     return prisma.users.findMany({
@@ -430,22 +382,6 @@ export class DatabaseService {
     });
   }
 
-  // async deleteRegisterToken(token: string): Promise<DatabaseUpdate> {
-  //   return new Promise((resolve, reject) => {
-  //     this.connection.query(
-  //       'delete from `register_tokens` where token=?',
-  //       [token],
-  //       function (error, results, fields) {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results);
-  //         }
-  //       },
-  //     );
-  //   });
-  // }
-
   async deleteRegisterToken(token: string) {
     prisma.userRegisterTokens.deleteMany({
       where: {
@@ -453,22 +389,6 @@ export class DatabaseService {
       },
     });
   }
-
-  // async activateAccount(token: string): Promise<DatabaseUpdate> {
-  //   return new Promise((resolve, reject) => {
-  //     this.connection.query(
-  //       'update `persons` set email_verified=1 where person_id IN (select person_id from `register_tokens` where token=?)',
-  //       [token],
-  //       function (error, results, fields) {
-  //         if (error) {
-  //           reject(error);
-  //         } else {
-  //           resolve(results);
-  //         }
-  //       },
-  //     );
-  //   });
-  // }
 
   async activateAccount(token: string) {
     prisma.users.updateMany({
