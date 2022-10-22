@@ -94,6 +94,24 @@ export const SubjectsSettingsField: React.FC<Props> = ({ queryClient }) => {
           schoolSubjectAbbreviation: "",
           schoolUUID: router.query.schoolUUID,
         }}
+        columns={[
+          {
+            title: "Name",
+            key: "schoolSubjectName",
+            sortFunction: (a: any, b: any) => {
+              return a.schoolSubjectName.localeCompare(b.schoolSubjectName);
+            },
+          },
+          {
+            title: "Abbreviation",
+            key: "schoolSubjectAbbreviation",
+            sortFunction: (a: any, b: any) => {
+              return a.schoolSubjectAbbreviation.localeCompare(
+                b.schoolSubjectAbbreviation
+              );
+            },
+          },
+        ]}
       ></AdminSettingsField>
     </>
   );

@@ -6,6 +6,8 @@ import { CheckIcon } from "@radix-ui/react-icons";
 type Props = {
   onChange: Function;
   disabled?: boolean;
+  selected?: boolean;
+  size?: "small" | "normal";
 };
 
 const FieldLayout = styled("div", {
@@ -39,6 +41,16 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
     boxShadow: "none",
     backgroundColor: "$surface",
   },
+
+  variants: {
+    size: {
+      small: {
+        width: 20,
+        height: 20,
+      },
+      normal: {},
+    },
+  },
 });
 
 const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
@@ -49,7 +61,13 @@ const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
 const Checkbox = StyledCheckbox;
 const CheckboxIndicator = StyledIndicator;
 
-export const CheckBox: React.FC<Props> = ({ onChange, disabled, children }) => {
+export const CheckBox: React.FC<Props> = ({
+  selected = false,
+  onChange,
+  disabled,
+  children,
+  size = "normal",
+}) => {
   return (
     <>
       <FieldLayout>
@@ -59,6 +77,8 @@ export const CheckBox: React.FC<Props> = ({ onChange, disabled, children }) => {
             onChange(checked);
           }}
           disabled={disabled}
+          checked={selected}
+          size={size}
         >
           <CheckboxIndicator>
             <CheckIcon />

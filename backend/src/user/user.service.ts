@@ -11,7 +11,7 @@ import { HelperService } from 'src/helper/helper.service';
 import { Cron } from '@nestjs/schedule';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import bcrypt from 'bcrypt';
+const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
