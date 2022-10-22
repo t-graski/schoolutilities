@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { violet } from "@radix-ui/colors";
 import Link from "next/link";
 import { getSelectedSchool } from "../../utils/authHelper";
+import { useRouter } from "next/router";
 
 const enterFromRight = keyframes({
   from: { transform: "translateX(200px)", opacity: 0 },
@@ -321,7 +322,8 @@ const ViewportPosition = styled("div", {
 });
 
 export const NavigationMenuPart = () => {
-  const schoolUUID = getSelectedSchool();
+  const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   return (
     <NavigationMenu>
