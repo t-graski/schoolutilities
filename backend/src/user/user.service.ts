@@ -389,6 +389,45 @@ export class UserService {
     });
   }
 
+  async changePassword(request): Promise<ReturnMessage> {
+    const { oldPassword, newPassword } = request.body;
+    const token = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(token);
+
+    if (!validator.isStrongPassword(newPassword, PASSWORD)) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const user = await prisma.users.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    const passwordMatch = await bcrypt.compare(oldPassword, user.userPassword);
+
+    if (!passwordMatch) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const encryptedPassword = await bcrypt.hash(newPassword, 10);
+
+    try {
+      await prisma.users.update({
+        where: {
+          userId,
+        },
+        data: {
+          userPassword: encryptedPassword,
+        },
+      });
+
+      return RETURN_DATA.SUCCESS;
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
   async requestEmailChange(request): Promise<ReturnMessage> {
     const { email } = request.body;
     const jwt = await this.helper.extractJWTToken(request);
