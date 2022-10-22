@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthService } from 'src/auth/auth.service';
 import { DatabaseService } from 'src/database/database.service';
 import { RETURN_DATA, PASSWORD } from 'src/misc/parameterConstants';
 import validator from 'validator';
-import { nanoid } from 'nanoid';
 import { MailService } from 'src/mail/mail.service';
 import { ReturnMessage } from 'src/types/Database';
 import { HelperService } from 'src/helper/helper.service';
 import { Cron } from '@nestjs/schedule';
+import { ConnectDiscordDTO, DisconnectDiscordDTO, DiscordUser } from 'src/entity/discord-user/discordUser';
+import { Request } from 'express';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
@@ -23,6 +24,48 @@ export class UserService {
     private readonly mailService: MailService,
     private readonly helper: HelperService,
   ) { }
+
+  async connectDiscord(payload: ConnectDiscordDTO, request: Request): Promise<DiscordUser> {
+    const { discordGuildChannelId, discordGuildId, discordUserChannelId, discordUserId } = payload;
+
+    try {
+      const token = await this.helper.extractJWTToken(request);
+      const userUUID = await this.helper.getUserUUIDfromJWT(token);
+      const discordUser = await prisma.userDiscordConnections.create({
+        data: {
+          discordGuildChannelId,
+          discordGuildId,
+          discordUserChannelId,
+          discordUserId,
+          users: {
+            connect: {
+              userUUID,
+            }
+          }
+        },
+      });
+      return new DiscordUser(discordUser);
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async disconnectDiscord(payload: DisconnectDiscordDTO, request: Request): Promise<number> {
+    const { userUUID } = payload;
+    try {
+      await prisma.userDiscordConnections.deleteMany({
+        where: {
+          users: {
+            userUUID,
+          }
+        }
+      });
+      return 200;
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
 
   async getSchools(token: string): Promise<ReturnMessage> {
     const jwt = await this.authService.decodeJWT(token);

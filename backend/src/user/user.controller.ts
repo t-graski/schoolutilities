@@ -1,6 +1,8 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Post,
   Put,
@@ -9,10 +11,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ConnectDiscordDTO, DisconnectDiscordDTO, DiscordUser } from 'src/entity/discord-user/discordUser';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { UserService } from './user.service';
+import { Request } from 'express';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -21,6 +25,24 @@ import { UserService } from './user.service';
 @UseGuards(RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) { }
+
+  @ApiOperation({ summary: 'Connect a user to discord' })
+  @ApiBody({ type: ConnectDiscordDTO })
+  @ApiCreatedResponse({ type: DiscordUser })
+  @UseGuards(JwtAuthGuard)
+  @Post('/discord/connect')
+  async connectDiscord(@Body() discord: ConnectDiscordDTO, @Req() request: Request): Promise<DiscordUser> {
+    return this.userService.connectDiscord(discord, request);
+  }
+
+  @ApiOperation({ summary: 'Disconnect a user from discord' })
+  @ApiResponse({ type: Number })
+  @ApiBody({ type: DisconnectDiscordDTO })
+  @UseGuards(JwtAuthGuard)
+  @Delete('/discord/disconnect')
+  async disconnectDiscord(@Body() discord: DisconnectDiscordDTO, @Req() request: Request): Promise<number> {
+    return this.userService.disconnectDiscord(discord, request);
+  }
 
   @Post('/requestPasswordReset')
   async requestPasswordReset(@Req() request, @Res() response) {
