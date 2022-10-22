@@ -19,7 +19,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TimetableService {
-  constructor(private readonly helper: HelperService) {}
+  constructor(private readonly helper: HelperService) { }
 
   async createTimetable(
     payload: AddTimeTableDto,
@@ -32,9 +32,8 @@ export class TimetableService {
       day.timeTableElements.forEach(async (element) => {
         await prisma.timeTableElement.create({
           data: {
-            timeTableElementUUID: `${
-              ID_STARTERS.TIME_TABLE_ELEMENT
-            }${uuidv4()}`,
+            timeTableElementUUID: `${ID_STARTERS.TIME_TABLE_ELEMENT
+              }${uuidv4()}`,
             schoolSubjects: {
               connect: {
                 schoolSubjectId: element.timetableElementSubjectId,
@@ -209,7 +208,7 @@ export class TimetableService {
               0,
               0,
             ) +
-              86400000 * weekday.indexOf(element.timeTableElementDay),
+            86400000 * weekday.indexOf(element.timeTableElementDay),
           ).toISOString(),
           timeTableElementEndTime: new Date(
             new Date(dateString).setHours(
@@ -218,7 +217,7 @@ export class TimetableService {
               0,
               0,
             ) +
-              86400000 * weekday.indexOf(element.timeTableElementDay),
+            86400000 * weekday.indexOf(element.timeTableElementDay),
           ).toISOString(),
           timeTableElementDay: element.timeTableElementDay,
           timeTableElementRoom: {
@@ -254,11 +253,11 @@ export class TimetableService {
           omitted:
             element.timeTableOmitted.length > 0 && element.timeTableOmitted[0].timeTableElementOmittedDate >= new Date(dateString) && element.timeTableOmitted[0].timeTableElementOmittedDate <= new Date(new Date(dateString).getTime() + 86400000 * 4)
               ? {
-                  timeTableOmittedReason:
-                    element.timeTableOmitted[0].timeTableElementOmittedReason,
-                  timeTableOmittedDate:
-                    element.timeTableOmitted[0].timeTableElementOmittedDate,
-                }
+                timeTableOmittedReason:
+                  element.timeTableOmitted[0].timeTableElementOmittedReason,
+                timeTableOmittedDate:
+                  element.timeTableOmitted[0].timeTableElementOmittedDate,
+              }
               : undefined,
         });
       });
@@ -268,7 +267,7 @@ export class TimetableService {
           if (
             element.timeTableExam[0].timeTableExamDate >= monday &&
             element.timeTableExam[0].timeTableExamDate <=
-              new Date(monday.getTime() + 86400000 * 4)
+            new Date(monday.getTime() + 86400000 * 4)
           ) {
             let day =
               weekday[element.timeTableExam[0].timeTableExamDate.getDay()];
@@ -291,7 +290,7 @@ export class TimetableService {
           if (
             element.timeTableEvents[0].timeTableEventDate >= monday &&
             element.timeTableEvents[0].timeTableEventDate <=
-              new Date(monday.setDate(monday.getDate() + 5))
+            new Date(monday.setDate(monday.getDate() + 5))
           ) {
             let day =
               weekday[element.timeTableEvents[0].timeTableEventDate.getDay()];
@@ -339,9 +338,9 @@ export class TimetableService {
         if (element.timeTableSubstitutions.length > 0) {
           if (
             element.timeTableSubstitutions[0].timeTableSubstitutionDate >=
-              monday &&
+            monday &&
             element.timeTableSubstitutions[0].timeTableSubstitutionDate <=
-              new Date(monday.setDate(monday.getDate() + 5))
+            new Date(monday.setDate(monday.getDate() + 5))
           ) {
             const weekday = [
               'Sunday',
@@ -354,7 +353,7 @@ export class TimetableService {
             ];
             let day =
               weekday[
-                element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()
+              element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()
               ];
             if (element.timeTableElementDay === day) {
               return {
