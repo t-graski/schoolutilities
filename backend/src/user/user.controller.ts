@@ -32,6 +32,7 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
+
   @UseGuards(JwtAuthGuard)
   @Post('/requestEmailChange')
   async requestEmailChange(@Req() request, @Res() response) {

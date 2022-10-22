@@ -18,6 +18,8 @@ import { ArticleModule } from './article/article.module';
 import { TimetableModule } from './timetable/timetable.module';
 import { UntisImportModule } from './untis-import/untis-import.module';
 import { PrismaService } from './prisma.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { PrismaService } from './prisma.service';
     TimetableModule,
     UntisImportModule,
     UserModule,
+    ScheduleModule.forRoot(),
+    NotificationModule,
   ],
   controllers: [AppController, ArticleController],
   providers: [AppService, ArticleService, PrismaService],

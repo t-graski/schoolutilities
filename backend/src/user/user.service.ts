@@ -392,10 +392,15 @@ export class UserService {
   async requestEmailChange(request): Promise<ReturnMessage> {
     const { email } = request.body;
     const jwt = await this.helper.extractJWTToken(request);
-    const userId = await this.helper.getUserIdfromJWT(jwt);
-    const currentEmail = await this.helper.getUserById(userId);
+    const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
 
-    if (currentEmail.email.toLowerCase() === email.toLowerCase()) {
+    const currentEmail = await prisma.users.findUnique({
+      where: {
+        userUUID
+      }
+    })
+
+    if (currentEmail.userEmail.toLowerCase() === email.toLowerCase()) {
       return {
         message: 'Email must not be the same as the current one',
         status: RETURN_DATA.INVALID_INPUT.status,
@@ -412,7 +417,7 @@ export class UserService {
         data: {
           users: {
             connect: {
-              userId,
+              userUUID,
             },
           },
           emailChangeTokenNewEmail: email,
