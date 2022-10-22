@@ -1,5 +1,11 @@
+import { styled } from "@stitches/react";
 import Head from "next/head";
+import { PasswordInput } from "../../components/atoms/input/PasswordInput";
+import { Spacer } from "../../components/atoms/Spacer";
+import { PersonalSettingsHeader } from "../../components/molecules/PersonalSettingsHeader";
 import { ProfileSettingsNavigation } from "../../components/organisms/profile/ProfileSettingsNavigation";
+import { SecuritySettings } from "../../components/pages/profile/SecuritySettings";
+import { Typography } from "../../utils/styles";
 
 export default function Home() {
   return (
@@ -19,7 +25,9 @@ export default function Home() {
         ></meta>
       </Head>
       <ProfileSettingsNavigation active={"security"}>
-        Security settings
+        <PersonalSettingsHeader title={"Security"} />
+        <Spacer size={"2x"}></Spacer>
+        <SecuritySettings></SecuritySettings>
       </ProfileSettingsNavigation>
     </>
   );

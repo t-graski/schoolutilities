@@ -407,7 +407,7 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                   </DropdownMenuRadioGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <DropdownMenu>
+              {/* <DropdownMenu>
                 <DropdownMenuTriggerItem>
                   Language
                   <RightSlot>
@@ -433,7 +433,7 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                     </DropdownMenuRadioItem>
                   </DropdownMenuRadioGroup>
                 </DropdownMenuContent>
-              </DropdownMenu>
+              </DropdownMenu> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {

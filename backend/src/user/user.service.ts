@@ -11,7 +11,7 @@ import { HelperService } from 'src/helper/helper.service';
 import { Cron } from '@nestjs/schedule';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -22,7 +22,7 @@ export class UserService {
     private readonly authService: AuthService,
     private readonly mailService: MailService,
     private readonly helper: HelperService,
-  ) { }
+  ) {}
 
   async getSchools(token: string): Promise<ReturnMessage> {
     const jwt = await this.authService.decodeJWT(token);
@@ -100,7 +100,8 @@ export class UserService {
           userSettingLanguage: userSettings.userSettingLanguageId,
           userSettingTimeZone: userSettings.userSettingTimeZone,
           userSettingDateTimeFormat: userSettings.userSettingDateTimeFormat,
-          userSettingReceiveUpdateEmails: userSettings.userSettingReceiveUpdateEmails,
+          userSettingReceiveUpdateEmails:
+            userSettings.userSettingReceiveUpdateEmails,
           userSettingAvatarUUID: userSettings.userSettingAvatarUUID,
           userSettingPhoneNumber: userSettings.userSettingPhoneNumber,
           userSettingThemeMode: userSettings.userSettingThemeMode,
@@ -285,15 +286,24 @@ export class UserService {
         userBirthDate: userSettings.userPublicProfileSettingShowAge
           ? new Date(user.userBirthDate).toISOString().split('T')[0]
           : '',
-        userPublicProfileSettingPublicEmail: userSettings.userPublicProfileSettingPublicEmail,
-        userPublicProfileSettingBiography: userSettings.userPublicProfileSettingBiography,
-        userPublicProfileSettingLocation: userSettings.userPublicProfileSettingLocation,
-        userPublicProfileSettingPreferredLanguage: userSettings.userPublicProfileSettingPreferredLanguageId,
+        userPublicProfileSettingPublicEmail:
+          userSettings.userPublicProfileSettingPublicEmail,
+        userPublicProfileSettingBiography:
+          userSettings.userPublicProfileSettingBiography,
+        userPublicProfileSettingLocation:
+          userSettings.userPublicProfileSettingLocation,
+        userPublicProfileSettingPreferredLanguage:
+          userSettings.userPublicProfileSettingPreferredLanguageId,
         userPublicProfileAge: userSettings.userPublicProfileSettingShowAge
           ? this.helper.calculateAge(user.userBirthDate)
           : '',
-        userPublicProfileJoinDate: userSettings.userPublicProfileSettingShowJoinDate ? user.userCreationTimestamp : 0,
-        userPublicProfileBadges: userSettings.userPublicProfileSettingShowBadges ? badges : [],
+        userPublicProfileJoinDate:
+          userSettings.userPublicProfileSettingShowJoinDate
+            ? user.userCreationTimestamp
+            : 0,
+        userPublicProfileBadges: userSettings.userPublicProfileSettingShowBadges
+          ? badges
+          : [],
       };
 
       return {
@@ -323,7 +333,9 @@ export class UserService {
       data: {
         userId,
         userPasswordResetToken: token,
-        userPasswordResetTokenExpireTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        userPasswordResetTokenExpireTimestamp: new Date(
+          Date.now() + 24 * 60 * 60 * 1000,
+        ),
       },
     });
 
@@ -394,10 +406,6 @@ export class UserService {
     const token = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(token);
 
-    if (!validator.isStrongPassword(newPassword, PASSWORD)) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
-
     const user = await prisma.users.findUnique({
       where: {
         userId,
@@ -405,7 +413,7 @@ export class UserService {
     });
 
     const passwordMatch = await bcrypt.compare(oldPassword, user.userPassword);
-
+    
     if (!passwordMatch) {
       return RETURN_DATA.INVALID_INPUT;
     }
@@ -431,10 +439,15 @@ export class UserService {
   async requestEmailChange(request): Promise<ReturnMessage> {
     const { email } = request.body;
     const jwt = await this.helper.extractJWTToken(request);
-    const userId = await this.helper.getUserIdfromJWT(jwt);
-    const currentEmail = await this.helper.getUserById(userId);
+    const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
 
-    if (currentEmail.email.toLowerCase() === email.toLowerCase()) {
+    const currentEmail = await prisma.users.findUnique({
+      where: {
+        userUUID,
+      },
+    });
+
+    if (currentEmail.userEmail.toLowerCase() === email.toLowerCase()) {
       return {
         message: 'Email must not be the same as the current one',
         status: RETURN_DATA.INVALID_INPUT.status,
@@ -451,13 +464,15 @@ export class UserService {
         data: {
           users: {
             connect: {
-              userId,
+              userUUID,
             },
           },
           emailChangeTokenNewEmail: email,
           emailChangeTokenVerified: false,
           emailChangeToken: token,
-          emailChangeTokenExpireTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          emailChangeTokenExpireTimestamp: new Date(
+            Date.now() + 24 * 60 * 60 * 1000,
+          ),
         },
       });
 
@@ -539,7 +554,8 @@ export class UserService {
   }
 }
 
-export async function findOneByUUID(userUUID: string): Promise<any> { //!TODO change to person
+export async function findOneByUUID(userUUID: string): Promise<any> {
+  //!TODO change to person
   try {
     const user = await prisma.users.findFirst({
       where: {
