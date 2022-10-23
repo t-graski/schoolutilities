@@ -1,6 +1,7 @@
 import React from "react";
 import { styled } from "../../stitches.config";
 import { CheckBox } from "../atoms/input/CheckBox";
+import { Column } from "../organisms/AdminList";
 
 type Props = {
   data: any;
@@ -11,12 +12,7 @@ type Props = {
     onClick: (item: any) => void;
     Icon: React.FC;
   }[];
-  columns: {
-    title: string;
-    key: string;
-    link?: (item: any) => string;
-    sortFunction?: (a: any, b: any) => number;
-  }[];
+  columns: Column[];
   uuidKey: string;
 };
 
@@ -80,7 +76,7 @@ export const AdminListItem: React.FC<Props> = ({
       </StyledItem>
       {columns.map((column) => (
         <StyledItem key={data[uuidKey] + column.key}>
-          {data[column.key]}
+          {typeof column.toStringFunction == "function" ? column.toStringFunction(data[column.key]) : data[column.key]}
         </StyledItem>
       ))}
       <StyledItem key={data[uuidKey] + "actions"}>

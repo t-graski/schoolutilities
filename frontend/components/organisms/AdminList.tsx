@@ -11,6 +11,7 @@ export type Column = {
     key: string;
     link?: (item: any) => string;
     sortFunction?: (a: any, b: any) => number;
+    toStringFunction?: (item: any) => string;
 }
 
 type Props = {

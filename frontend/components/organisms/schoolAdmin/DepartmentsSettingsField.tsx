@@ -15,6 +15,7 @@ import {
   editDepartment,
   fetchSchoolDepartments,
 } from "../../../utils/requests";
+import { AdminSettingsField } from "./AdminSettingsField";
 
 type Props = {};
 
@@ -79,6 +80,31 @@ const StyledDeleteText = styled("p", {
   fontSize: "1rem",
   color: "$neutral-500",
 });
+
+const EditElementInputs: React.FC<{
+  itemConfig: any;
+  setItemConfig: Function;
+}> = ({ itemConfig, setItemConfig }) => {
+  return (
+    <StyledInputField>
+      <InputField
+        label="Name"
+        inputType="text"
+        value={itemConfig.departmentName}
+        onChange={(event) => {
+          setItemConfig({
+            ...itemConfig,
+            departmentName: event,
+          });
+        }}
+        regex={regex.schoolName}
+        min="2"
+        max="30"
+        theme="surface"
+      />
+    </StyledInputField>
+  );
+};
 
 export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
   const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
@@ -193,130 +219,48 @@ export const DepartmentsSettingsField: React.FC<Props> = ({}) => {
     setEditPopUpIsVisible(false);
   }
 
+  console.log(departments);
+
   return (
     <>
-      <SchoolDetailLayout>
-        {editPopUpIsVisible && (
-          <SettingsPopUp
-            headline={
-              departmentId == "" ? "Add new department" : "Edit department"
-            }
-            inputValid={departmentNameValid}
-            saveLabel={departmentId == "" ? "Add" : "Save"}
-            saveFunction={savePopUpInput}
-            closeFunction={() => {
-              setEditPopUpIsVisible(false);
-              setDepartmentName("");
-              setDepartmentNameValid(false);
-            }}
-          >
-            <StyledInputField>
-              <InputField
-                label="Name"
-                inputType="text"
-                value={departmentName}
-                onChange={(event) => {
-                  setDepartmentName(event);
-                }}
-                regex={regex.schoolName}
-                setValidInput={setDepartmentNameValid}
-                min="2"
-                max="30"
-                theme="surface"
-              />
-            </StyledInputField>
-          </SettingsPopUp>
-        )}
-        {deletePopUpIsVisible && (
-          <SettingsPopUp
-            headline={`Remove ${departmentName}`}
-            inputValid={true}
-            saveLabel="Confirm"
-            saveFunction={() => {
-              deleteDepartmentMutation.mutate(departmentId);
-              setDeletePopUpIsVisible(false);
-            }}
-            closeFunction={() => {
-              setDeletePopUpIsVisible(false);
-              setDepartmentName("");
-              setDepartmentNameValid(false);
-            }}
-          >
-            <StyledDeleteText>
-              This action can&apos;t be undone and will permanently remove the
-              department {""} {departmentName}.
-            </StyledDeleteText>
-          </SettingsPopUp>
-        )}
-        <SettingsHeader
-          headline="Departments"
-          addFunction={() => {
-            setDepartmentName("");
-            setDepartmentId("");
-            setEditPopUpIsVisible(true);
-          }}
-        ></SettingsHeader>
-        <LoadingLayout>
-          {error && <StyledError>{error}</StyledError>}
-          <SettingsEntriesLayout>
-            {departmentsStatus == "success" &&
-              departments.length > 0 &&
-              departments.map((entry, index) => (
-                <SettingsEntryLayout
-                  key={entry.departmentUUID}
-                  data-key={entry.departmentUUID}
-                >
-                  <SettingsEntry
-                    editFunction={() => {
-                      setDepartmentName(entry.departmentName);
-                      setDepartmentId(entry.departmentUUID);
-                      setEditPopUpIsVisible(true);
-                    }}
-                    deleteFunction={() => {
-                      setDeletePopUpIsVisible(true);
-                      setDepartmentId(entry.departmentUUID);
-                    }}
-                    highlighted={
-                      router.query &&
-                      router.query.departmentUUID &&
-                      entry.departmentUUID == router.query.departmentUUID
-                    }
-                  >
-                    <Link
-                      href={`/school/${
-                        router.query.schoolUUID as string
-                      }/edit?tab=classes&departmentUUID=${
-                        entry.departmentUUID
-                      }`}
-                      passHref
-                    >
-                      <SettingsEntryLink>
-                        <SettingsEntryName>
-                          {entry.departmentName}
-                        </SettingsEntryName>
-                      </SettingsEntryLink>
-                    </Link>
-                  </SettingsEntry>
-                </SettingsEntryLayout>
-              ))}
-            {departmentsStatus == "success" && departments.length <= 0 && (
-              <>There are no departments yet. Add one by clicking the button</>
-            )}
-            {departmentsStatus == "loading" && (
-              <>
-                <Skeleton width="100%" height={80}></Skeleton>
-                <Skeleton width="100%" height={80}></Skeleton>
-                <Skeleton width="100%" height={80}></Skeleton>
-              </>
-            )}
-            {departmentsStatus == "error" && (
-              <>
-                While loading the departments an error occured. Please try again
-              </>
-            )}
-          </SettingsEntriesLayout>
-        </LoadingLayout>
-      </SchoolDetailLayout>
+      <AdminSettingsField
+        queryClient={queryClient}
+        reactQueryKey={"departments"}
+        texts={{
+          title: "Departments",
+          addHeadline: "Add new department",
+          editHeadline: "Edit department",
+          deleteHeadline: "Remove",
+          deleteDescription:
+            "This action can't be undone and will permanently remove the department ",
+          elementsLoadingErrorMessage:
+            "While loading the departments an error occured. Please try again.",
+          elementsNoElementsMessage:
+            "There are no departments yet. Add one by clicking the plus button.",
+        }}
+        uuidKey={"departmentUUID"}
+        nameKey={"departmentName"}
+        addElement={addDepartment}
+        editElement={editDepartment}
+        deleteElement={deleteDepartment}
+        getAllElements={fetchSchoolDepartments}
+        isItemValid={(item) => item.departmentName.length > 0}
+        EditElementInputs={EditElementInputs}
+        defaultItemConfig={{
+          schoolUUID,
+          departmentName: "",
+          isVisible: "true",
+          childsVisible: "true",
+        }}
+        columns={[
+          {
+            title: "Name",
+            key: "departmentName",
+            sortFunction: (a, b) =>
+              a.departmentName.localeCompare(b.departmentName),
+          },
+        ]}
+      ></AdminSettingsField>
     </>
   );
 };

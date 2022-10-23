@@ -456,7 +456,7 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
+  async updateDepartment(body): Promise<ReturnMessage> {
     const { departmentUUID, departmentName, isVisible, childsVisible } = body;
     if (
       !validator.isLength(departmentName, LENGTHS.DEPARTMENT_NAME) ||
@@ -753,18 +753,12 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async updateJoinCode(body: UpdateJoinCode): Promise<ReturnMessage> {
-    const { joinCode, expireDate, joinCodeName = '' } = body;
-    if (
-      !(new Date(expireDate).getTime() > 0) ||
-      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
+  async updateJoinCode(body): Promise<ReturnMessage> {
+    const { schoolJoinCode, schoolJoinCodeExpireTimestamp,  schoolJoinCodeName = '' } = body;
 
     const joinCodeData = await prisma.schoolJoinCodes.findUnique({
       where: {
-        schoolJoinCode: joinCode,
+        schoolJoinCode: schoolJoinCode,
       },
     });
 
@@ -775,11 +769,11 @@ export class SchoolAdminService {
     try {
       await prisma.schoolJoinCodes.update({
         where: {
-          schoolJoinCode: joinCode,
+          schoolJoinCode: schoolJoinCode,
         },
         data: {
-          schoolJoinCodeName: joinCodeName,
-          schoolJoinCodeExpireTimestamp: new Date(expireDate),
+          schoolJoinCodeName: schoolJoinCodeName,
+          schoolJoinCodeExpireTimestamp: new Date(schoolJoinCodeExpireTimestamp),
         },
       });
     } catch (err) {

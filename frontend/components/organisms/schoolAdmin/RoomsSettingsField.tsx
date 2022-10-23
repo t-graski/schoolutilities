@@ -2,7 +2,7 @@ import { styled } from "@stitches/react";
 import { useRouter } from "next/router";
 import React from "react";
 import {
-    addSchoolRoom,
+  addSchoolRoom,
   deleteSchoolRoom,
   editSchoolRoom,
   fetchSchoolRooms,
@@ -37,7 +37,7 @@ const EditElementInputs: React.FC<{
           });
         }}
         min="2"
-        max="30"        
+        max="30"
         theme="surface"
       />
       <Spacer size="verySmall" />
@@ -110,6 +110,15 @@ export const RoomsSettingsField: React.FC<Props> = ({ queryClient }) => {
           schoolRoomBuilding: "",
           schoolUUID: router.query.schoolUUID,
         }}
+        columns={[
+          {
+            title: "Room name",
+            key: "schoolRoomName",
+            sortFunction: (a: any, b: any) => {
+              return a.schoolRoomName.localeCompare(b.schoolRoomName);
+            },
+          },
+        ]}
       ></AdminSettingsField>
     </>
   );

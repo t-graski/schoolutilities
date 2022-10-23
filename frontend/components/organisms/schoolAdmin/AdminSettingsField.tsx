@@ -36,7 +36,7 @@ type Props = {
   deleteElement?: any;
   getAllElements: Function;
   getElementLink?: (schoolUUID: string, elementUUID: string) => string;
-  isItemValid: (item: unknown) => boolean;
+  isItemValid: (item: any) => boolean;
   EditElementInputs: React.FC<{
     itemConfig: unknown;
     setItemConfig: Function;
@@ -111,7 +111,6 @@ export const AdminSettingsField: React.FC<Props> = ({
 
   async function getTestElements() {
     const currElements = await getAllElements(schoolUUID);
-    console.log(currElements);
   }
 
   const addMutation = useMutation(addElement, {
