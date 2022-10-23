@@ -20,6 +20,7 @@ import { UntisImportModule } from './untis-import/untis-import.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { NotificationModule } from './notification/notification.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -39,6 +40,12 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      }
+    }),
     AuthModule,
     UsersModule,
     SchoolAdminModule,

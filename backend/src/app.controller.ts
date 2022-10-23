@@ -10,13 +10,7 @@ export class AppController {
     const message = {
       id: 1
     };
-    const record = new RmqRecordBuilder(message)
-      .setOptions({
-        headers: {
-          ["x-delayed-type"]: "direct",
-          ["x-delay"]: "10000"
-        },
-      }).build();
+    const record = new RmqRecordBuilder(message).build();
 
     this.client.emit('message_printed', record);
     return 'Hello world printed!';
