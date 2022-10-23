@@ -18,14 +18,27 @@ import { ArticleModule } from './article/article.module';
 import { TimetableModule } from './timetable/timetable.module';
 import { UntisImportModule } from './untis-import/untis-import.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { PrismaService } from './prisma.service';
 import { NotificationModule } from './notification/notification.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     CacheModule.register({
       isGlobal: true,
     }),
+    ClientsModule.register([
+      {
+        name: 'HELLO_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [
+            'amqp://guest:guest@localhost:5672/',
+          ],
+          queue: 'user_messages',
+          noAck: false,
+        },
+      },
+    ]),
     AuthModule,
     UsersModule,
     SchoolAdminModule,
