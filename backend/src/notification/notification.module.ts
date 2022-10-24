@@ -1,9 +1,10 @@
 import { BullModule } from '@nestjs/bull/dist/bull.module';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NotificationProcessor } from './notification.processor';
 import { NotificationService } from './notification.service';
 
+@Global()
 @Module({
   imports: [
     BullModule.registerQueue({
@@ -23,6 +24,9 @@ import { NotificationService } from './notification.service';
       },
     ]),
   ],
-  providers: [NotificationService, NotificationProcessor]
+  providers: [NotificationService, NotificationProcessor],
+  exports: [BullModule.registerQueue({
+    name: 'notification'
+  })]
 })
 export class NotificationModule { }

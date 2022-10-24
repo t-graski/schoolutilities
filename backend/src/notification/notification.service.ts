@@ -13,15 +13,24 @@ export class NotificationService {
 
     @Cron('*/10 * * * * *')
     async handleCron() {
-        const job = await this.notificationsQueue.add('notification', {
-            title: 'Test',
-        },
-            {
-                delay: 10000,
-            }
-        );
+        // const job = await this.notificationsQueue.add('notification', {
+        //     title: 'Test',
+        // },
+        //     {
+        //         delay: 10000,
+        //         attempts: 3,
+        //         removeOnComplete: true,
+        //         removeOnFail: true,
+        //     }
+        // );
 
-        console.log('job started', new Date().toLocaleTimeString());
+        //get job by id
+        // const job = await this.notificationsQueue.getJob('Need33622-af77-4cc3-bad1-2eadce53cc1e');
+        // console.log(job);
+
+
+
+        // console.log('job started', new Date().toLocaleTimeString());
 
         // console.log(job);
 

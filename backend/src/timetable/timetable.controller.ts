@@ -1,10 +1,13 @@
+import { InjectQueue } from '@nestjs/bull';
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { Queue } from 'bull';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { AddHolidayDTO, Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { TimeTableElement } from 'src/entity/time-table-element/timeTableElement';
+import { NotifcationInterceptor } from 'src/notification/notification.interceptor';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
@@ -95,6 +98,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseInterceptors(NotifcationInterceptor)
   @UseGuards(JwtAuthGuard)
   @Post('/exam')
   async addExam(@Body() exam: AddExamDTO, @Req() request: Request): Promise<Exam> {
@@ -124,7 +128,6 @@ export class TimetableController {
   async deleteExam(@Param('examUUID') examUUID: string, @Req() request: Request): Promise<number> {
     return this.timetableService.deleteExam(examUUID, request);
   }
-  @UseGuards(JwtAuthGuard)
   @UseGuards(JwtAuthGuard)
   @Get('/timetable/:classUUID/:dateString')
   async getTimetable(@Param('classUUID') classUUID: string, @Param('dateString') dateString: string, @Req() request, @Res() response) {

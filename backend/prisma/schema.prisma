@@ -697,6 +697,17 @@ model timeTableGridSpecialBreak {
   @@map("time_table_grid_special_break")
 }
 
+model notifications {
+  notificationUUID               String   @map("notification_uuid")
+  notificationUserId            Int      @map("notification_user_id")
+  notificationContent           String   @map("notification_content") @db.Text()
+  notificationScheduleTimestamp DateTime @map("notification_schedule_timestamp")
+
+  users users @relation(fields: [notificationUserId], references: [userId])
+
+  @@unique([notificationUUID], map: "notification_uuid_UNIQUE")
+}
+
 model users {
   userId                        Int                             @id @default(autoincrement()) @map("user_id")
   userUUID                      String                          @unique() @map("user_uuid")
@@ -734,6 +745,7 @@ model users {
   timeTableSubstitutions        timeTableSubstitutions[]
   schoolClassUsers              schoolClassUsers[]
   userDiscordConnections        userDiscordConnections[]
+  notifications                 notifications[]
 
   @@unique([userUUID], map: "user_uuid_UNIQUE")
   @@unique([userEmail], map: "user_email_UNIQUE")

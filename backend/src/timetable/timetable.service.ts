@@ -1,5 +1,7 @@
+import { InjectQueue } from '@nestjs/bull';
 import { Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { Queue } from 'bull';
 import { Request } from 'express';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
@@ -627,7 +629,7 @@ export class TimetableService {
                         },
                     },
                     timeTableExamDescription,
-                    timeTableExamDate,
+                    timeTableExamDate: new Date(timeTableExamDate),
                     timeTableElements: {
                         connect: {
                             timeTableElementUUID,
@@ -636,7 +638,9 @@ export class TimetableService {
                 }
             })
             return new Exam(exam);
-        } catch {
+        } catch (err) {
+            console.log(err);
+
             throw new InternalServerErrorException('Database error');
         }
     }

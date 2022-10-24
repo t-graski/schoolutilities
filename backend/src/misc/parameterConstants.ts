@@ -157,6 +157,7 @@ export const ID_STARTERS = {
   SUBJECT: 'SS',
   HOLIDAYS: 'H',
   EXAM: 'X',
+  NOTIFICATION: 'N',
 };
 
 export const ERROR_CODES = {

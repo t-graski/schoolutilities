@@ -10,14 +10,9 @@ export class NotificationProcessor {
 
     @Process('notification')
     async handleNotification(job: any) {
-        const message = {
-            id: 1
-        };
-        const record = new RmqRecordBuilder(message).build();
+        const record = new RmqRecordBuilder(job.data).build();
 
         console.log('job received', new Date().toLocaleTimeString());
-
-
-        this.client.emit('message_printed', record);
+        this.client.emit('exam_created', record);
     }
 }
