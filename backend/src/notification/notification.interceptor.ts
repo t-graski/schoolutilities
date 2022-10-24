@@ -34,7 +34,11 @@ export class NotifcationInterceptor implements NestInterceptor {
                                             include: {
                                                 schoolClassUsers: {
                                                     include: {
-                                                        users: true,
+                                                        users: {
+                                                            include: {
+                                                                userDiscordConnections: true
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
