@@ -87,6 +87,23 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Put('/grid/:schoolUUID')
+  async updateTimeTableGrid(@Body() timeTableGrid, @Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.editTimeTableGrid(timeTableGrid, schoolUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+  xw
+  @UseGuards(JwtAuthGuard)
+  @Delete('/grid/:schoolUUId')
+  async deleteTimeTableGrid(@Param('schoolUUId') schoolUUId: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.deleteTimeTableGrid(schoolUUId, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
   @Post('/substitution')
   async addSubstitution(@Body() substitution, @Req() request, @Res() response) {
     const result = await this.timetableService.addSubstitution(substitution, request);

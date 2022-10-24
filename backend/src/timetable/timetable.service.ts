@@ -507,6 +507,28 @@ export class TimetableService {
         }
     }
 
+    async deleteTimeTableGrid(schoolUUID: string, request): Promise<ReturnMessage> {
+        try {
+            const school = await prisma.schools.findUnique({
+                where: {
+                    schoolUUID,
+                }
+            })
+
+            const timeTableGrid = await prisma.timeTableGrid.delete({
+                where: {
+                    schoolId: school.schoolId,
+                }
+            })
+
+            return {
+                status: 200,
+            }
+        } catch {
+            return RETURN_DATA.DATABASE_ERROR;
+        }
+    }
+
     async addHoliday(holiday, request): Promise<Holiday> {
         const { schoolUUID, holidayName, holidayStartDate, holidayEndDate } = holiday;
 
