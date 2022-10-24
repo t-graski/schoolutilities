@@ -1,5 +1,3 @@
-import { Timestamp } from 'rxjs';
-
 export interface Server {
   guildId: string;
   name: string;

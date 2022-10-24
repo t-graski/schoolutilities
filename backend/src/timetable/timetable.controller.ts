@@ -2,7 +2,6 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post,
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { AddHolidayDTO, Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { TimeTableElement } from 'src/entity/time-table-element/timeTableElement';
@@ -18,7 +17,7 @@ export class TimetableController {
   @UseGuards(JwtAuthGuard)
   //@Roles(Role.Teacher)
   @Post("")
-  async createTimetable(@Body() createTimetable: AddTimeTableDto, @Req() request, @Res() response) {
+  async createTimetable(@Body() createTimetable: any, @Req() request, @Res() response) {
     const result = await this.timetableService.createTimetable(createTimetable, request);
     return response
       .status(result.status)

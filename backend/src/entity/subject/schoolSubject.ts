@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, Length } from "class-validator";
 import { IsCustomUUID } from "src/decorators/IsCustomUUID";
-import { TimeTableElement } from "src/dto/addTimeTable";
 import { Course } from "../course/course";
+import { TimeTableElement } from "../time-table-element/timeTableElement";
 
 export class SchoolSubject {
     @ApiProperty({

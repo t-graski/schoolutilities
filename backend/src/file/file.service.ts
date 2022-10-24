@@ -1,10 +1,9 @@
 import { Injectable, HttpStatus, StreamableFile } from '@nestjs/common';
 import { RETURN_DATA } from '../misc/parameterConstants';
 import { PrismaClient } from '@prisma/client';
-import { ReturnMessage } from 'src/types/SchoolAdmin';
 import validator from 'validator';
-import { GetFile } from 'src/types/File';
 import * as fs from 'fs';
+import { ReturnMessage } from 'src/types/Database';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -38,7 +37,7 @@ export class FileUploadService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async getFileUUID(body: GetFile): Promise<ReturnMessage> {
+  async getFileUUID(body: any): Promise<ReturnMessage> {
     const { fileId } = body;
 
     if (!validator.isNumeric(fileId)) {
@@ -68,7 +67,7 @@ export class FileUploadService {
     }
   }
 
-  async getFileInfo(body: GetFile): Promise<ReturnMessage> {
+  async getFileInfo(body: any): Promise<ReturnMessage> {
     const { fileId } = body;
 
     if (!validator.isNumeric(fileId)) {
@@ -102,7 +101,7 @@ export class FileUploadService {
     }
   }
 
-  async getFile(body: GetFile): Promise<ReturnMessage> {
+  async getFile(body: any): Promise<ReturnMessage> {
     const { fileId } = body;
 
     if (!validator.isNumeric(fileId)) {

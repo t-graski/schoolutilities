@@ -21,18 +21,82 @@ export class Course {
 
     @Exclude()
     courseCreatorId: number;
+
+    @ApiProperty({
+        description: 'The UUID of the course',
+        example: 'f4a4c2c0-5b9f-11eb-ae93-0242ac130002',
+        type: String,
+    })
     courseUUID: string;
+
+    @ApiProperty({
+        description: 'The name of the course',
+        example: 'Math',
+        type: String,
+    })
     courseName: string;
+
+    @ApiProperty({
+        description: 'The description of the course',
+        example: 'This course is about math',
+        type: String,
+    })
     courseDescription: string;
+
+    @ApiProperty({
+        description: 'The schoool of a course',
+        type: School
+    })
     school?: School;
+
+    @ApiProperty({
+        description: 'The subject of a course',
+        type: SchoolSubject
+    })
     schoolSubject?: SchoolSubject;
+
+    @ApiProperty({
+        description: 'The creation timestamp of the course',
+        example: '2021-01-01T00:00:00.000Z',
+        type: Date,
+    })
     courseCreationTimestamp: Date;
+
+    @ApiProperty({
+        description: 'The creator a the course',
+        type: User,
+    })
     creator?: User;
+
+    @ApiProperty({
+        description: 'Whether user is permitted to edit',
+        type: Boolean
+    })
     canEdit?: boolean;
+
+    @ApiProperty({
+        description: 'The users of a course',
+        type: [User],
+    })
     courseUsers?: User[];
+
+    @ApiProperty({
+        description: 'The classes of a course',
+        type: [SchoolClass],
+    })
     courseClasses?: SchoolClass[];
+
+    @ApiProperty({
+        description: 'The elements of a course',
+        type: [CourseElement]
+    })
     courseElements?: CourseElement[];
-    courseFileSubmmissionGrades?: FileSubmissionGrade[];
+
+    @ApiProperty({
+        description: 'The grades of a course',
+        type: [FileSubmissionGrade]
+    })
+    courseGrades?: FileSubmissionGrade[];
 
     constructor(partial: Partial<Course>) {
         Object.assign(this, partial);

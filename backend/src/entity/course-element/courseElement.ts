@@ -4,7 +4,7 @@ import { HeadlineSetting } from "../headline-setting/headlineSetting";
 import { TextSetting } from "../text-setting/textSetting";
 import { User } from "../user/user";
 
-export type CourseElement = {
+export class CourseElement {
     courseElementUUID: string;
     courseElementTypeId: number;
     courseElementParent: CourseElement;

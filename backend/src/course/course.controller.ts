@@ -20,10 +20,9 @@ import { editFileName, fileFilter } from 'src/misc/fileUpload';
 import { CourseService } from './course.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
-import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
 import { Request, Response } from 'express';
-import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, GetCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
+import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
 import { ClassSerializerInterceptor } from '@nestjs/common/serializer';
 import { CourseUser } from 'src/entity/course-user/courseUser';
 
@@ -156,14 +155,8 @@ export class CourseController {
   @Roles(Role.Student)
   @Get('/events/:schoolUUID/:days')
   async getEvents(
-    @Param() params: GetEventsDto,
-    @Req() request,
-    @Res() response,
-  ) {
-    const result = await this.courseService.getEvents(params, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    @Param('schoolUUID') schoolUUID: string, @Param('days') days: string, @Req() request: Request) {
+    return this.courseService.getEvents(schoolUUID, days, request);
   }
 
   @UseGuards(JwtAuthGuard)

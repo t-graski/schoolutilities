@@ -1,16 +1,11 @@
 import * as fs from 'fs';
 import * as moment from 'moment';
-import { CourseEvent, GetEventsDto } from 'src/dto/events';
 import {
   ERROR_CODES,
   ID_STARTERS,
   RETURN_DATA,
 } from 'src/misc/parameterConstants';
 import { HttpStatus, Injectable, NotAcceptableException, InternalServerErrorException } from '@nestjs/common';
-import { ReturnMessage } from 'src/types/Course';
-import { AuthService } from 'src/auth/auth.service';
-import { CourseDto } from 'src/dto/course';
-import { DatabaseService } from 'src/database/database.service';
 import { HelperService } from 'src/helper/helper.service';
 import { v4 as uuidv4 } from 'uuid';
 import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
@@ -19,6 +14,7 @@ import { CourseUser } from 'src/entity/course-user/courseUser';
 import { User } from 'src/entity/user/user';
 import { SchoolClass } from 'src/entity/school-class/schoolClass'
 import { PrismaService } from 'src/prisma.service';
+import { ReturnMessage } from 'src/types/Database';
 let JSZip = require('jszip');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -987,99 +983,38 @@ export class CourseService {
     };
   }
 
-  async getEvents(payload: GetEventsDto, request): Promise<ReturnMessage> {
-    const { schoolUUID, days } = payload;
+  async getEvents(schoolUUID: string, days: string, request: Request): Promise<ReturnMessage> {
     const jwt = await this.helper.extractJWTToken(request);
-    const userId = await this.helper.getUserIdfromJWT(jwt);
+    const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
 
-    let courses = await this.prisma.schools.findFirst({
+    const events = await this.prisma.schools.findUnique({
       where: {
-        schoolUUID,
+        schoolUUID
       },
-      select: {
-        schoolUUID: true,
-        schoolName: true,
+      include: {
         courses: {
           where: {
-            courseUsers: {
-              some: {
-                userId: Number(userId),
-              },
-            },
+            users: {
+              userUUID
+            }
           },
-          select: {
-            courseUUID: true,
-            courseName: true,
+          include: {
             courseElements: {
-              where: {
-                courseElementTypeId: {
-                  equals: 3,
-                },
-                AND: {
-                  courseElementIsVisible: true,
-                },
-              },
-              select: {
-                courseElementUUID: true,
-                courseElementCreationTimestamp: true,
-                courseElementOrder: true,
-                courseElementIsVisible: true,
-                courseFileSubmissionSettings: {
-                  where: {
-                    courseFileSubmissionDueTimestamp: {
-                      lte: moment(new Date(Date.now()))
-                        .add(days, 'days')
-                        .toDate(),
-                    },
-                    AND: {
-                      courseFileSubmissionDueTimestamp: {
-                        gte: moment(new Date(Date.now())).toDate(),
-                      },
-                    },
-                  },
-                  select: {
-                    courseFileSubmissionName: true,
-                    courseFileSubmissionDescription: true,
-                    courseFileSubmissionDueTimestamp: true,
-                    courseFileSubmissionSubmitLater: true,
-                    courseFileSubmissionSubmitLaterTimestamp: true,
-                    courseFileSubmissionMaxFileSize: true,
-                    courseFileSubmissionAllowedFileTypes: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-
-    const eventItems: CourseEvent[] = [];
-
-    for (const course of courses.courses) {
-      if (course.courseElements.length != 0) {
-        for (const element of course.courseElements) {
-          if (element.courseFileSubmissionSettings.length != 0) {
-            eventItems.push({
-              schoolUUID: courses.schoolUUID,
-              schoolName: courses.schoolName,
-              courseUUID: course.courseUUID,
-              courseName: course.courseName,
-              courseElementUUID: element.courseElementUUID,
-              courseFileSubmissionName: element.courseFileSubmissionSettings[0].courseFileSubmissionName,
-              courseFileSubmissionDescription: element.courseFileSubmissionSettings[0].courseFileSubmissionDescription,
-              courseFileSubmissionDueTimestamp: element.courseFileSubmissionSettings[0].courseFileSubmissionDueTimestamp,
-              courseFileSubmissionSubmitLater: element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLater,
-              courseFileSubmissionSubmitLaterTimestamp:
-                element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLaterTimestamp,
-              courseFileSubmissionMaxFileSize: element.courseFileSubmissionSettings[0].courseFileSubmissionMaxFileSize,
-              courseFileSubmissionAllowedFileTypes:
-                element.courseFileSubmissionSettings[0].courseFileSubmissionAllowedFileTypes,
-            });
+              include: {
+                courseFileSubmissions: {
+                  include: {
+                    users: true
+                  }
+                }
+              }
+            }
           }
         }
       }
-    }
+    })
+
+    const eventItems = [];
+
 
     return {
       status: RETURN_DATA.SUCCESS.status,
@@ -1141,7 +1076,7 @@ export class CourseService {
   }
 }
 
-export async function findOneByUUID(courseUUID: string): Promise<CourseDto | any> {
+export async function findOneByUUID(courseUUID: string): Promise<any> {
   try {
     const course = await this.prisma.courses.findFirst({
       where: {
@@ -1156,7 +1091,7 @@ export async function findOneByUUID(courseUUID: string): Promise<CourseDto | any
 export async function findOneByName(
   courseName: string,
   schoolUUID,
-): Promise<CourseDto | any> {
+): Promise<any> {
   try {
     const courseUUID = await this.prisma.schools.findFirst({
       where: {
