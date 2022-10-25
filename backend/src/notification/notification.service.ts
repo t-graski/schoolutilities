@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PrismaClient } from '@prisma/client';
 import { Queue } from 'bull';
+import { TimeTableNotificationBuilder } from './notification.builder';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,7 @@ export class NotificationService {
     constructor(@InjectQueue('notification') private readonly notificationsQueue: Queue) { }
 
 
-    @Cron('*/10 * * * * *')
+    // @Cron('*/10 * * * * *')
     async handleCron() {
         // const job = await this.notificationsQueue.add('notification', {
         //     title: 'Test',
@@ -28,7 +29,7 @@ export class NotificationService {
         // const job = await this.notificationsQueue.getJob('Need33622-af77-4cc3-bad1-2eadce53cc1e');
         // console.log(job);
 
-
+        console.log(new TimeTableNotificationBuilder().addMessage("You have an exam").addExam("Maths").build());
 
         // console.log('job started', new Date().toLocaleTimeString());
 
