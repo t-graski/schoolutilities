@@ -950,8 +950,6 @@ export class CourseService {
 
     const elementItem = {
       courseElementUUID: settings.courseElementUUID,
-      courseElementName: settings.courseFileSubmissionSettings.courseFileSubmissionName,
-      courseElementDueTimestamp: settings.courseFileSubmissionSettings.courseFileSubmissionDueTimestamp,
       courseUUID: settings.courses!.courseUUID,
       courseElementIsVisible: Boolean(settings.courseElementIsVisible),
       courseElementCreationTimestamp: settings.courseElementCreationTimestamp,
@@ -1045,10 +1043,16 @@ export class CourseService {
   }
 
   async getSubmissions(request, elementUUID): Promise<ReturnMessage> {
-    const elementId = await this.helper.getElementIdByUUID(elementUUID);
     const jwt = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(jwt);
-    const courseId = await this.helper.getCourseIdByElementId(elementId);
+    const courseId = (await this.prisma.courseElements.findUnique({
+      where: {
+        courseElementUUID: elementUUID,
+      },
+      include: {
+        courses: true,
+      }
+    })).courses.courseId;
 
     if (!(await this.helper.userIsInCourse(userId, courseId))) {
       return {
@@ -1059,24 +1063,37 @@ export class CourseService {
 
     const submissions = await this.prisma.courseFileSubmissions.findMany({
       where: {
-        courseFileSubmissionElementId: Number(elementId),
+        courseElements: {
+          courseElementUUID: elementUUID,
+        }
       },
     });
 
-    const courseUsers = await this.helper.getCourseUsers(courseId);
+    const course = await this.prisma.courses.findUnique({
+      where: {
+        courseId,
+      },
+      include: {
+        courseUsers: {
+          include: {
+            users: true,
+          },
+        },
+      }
+    })
     const userSubmissions = [];
 
-    for (const user of courseUsers) {
+    for (const user of course.courseUsers) {
       const userSubmissionItem = {
-        userUUID: user.personUUID,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        fullName: user.firstName + ' ' + user.lastName,
+        userUUID: user.users.userUUID,
+        firstName: user.users.userFirstname,
+        lastName: user.users.userLastname,
+        fullName: user.users.userFirstname + ' ' + user.users.userLastname,
         submission: {} as any,
       };
 
       const userSubmission = submissions.find((submission) => {
-        return submission.userId === user.personId;
+        return submission.userId === user.users.userId;
       });
 
       let submissionItem = {} as any;
@@ -1090,6 +1107,7 @@ export class CourseService {
         // submissionItem.grade = userSubmission.grade;
         submissionItem.courseFileSubmissionUploadTimestamp = userSubmission.courseFileSubmissionUploadTimestamp;
         submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.courseFileSubmissionFileName}`;
+
       } else {
         submissionItem = null;
       }

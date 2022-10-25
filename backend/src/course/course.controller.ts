@@ -84,6 +84,19 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/submissions/:elementUUID')
+  @Roles(Role.Teacher)
+  async getSubmissions(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getSubmissions(
+      request,
+      params.elementUUID,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/getCourseInfo/:courseUUID')
   @Roles(Role.Student)
   async getCourseInfo(@Param() params, @Req() request, @Res() response) {
@@ -140,19 +153,6 @@ export class CourseController {
     }
 
     return response.status(400).json({ message: 'Invalid file' });
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('submissions/:elementUUID')
-  @Roles(Role.Teacher)
-  async getSubmissions(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.getSubmissions(
-      request,
-      params.elementUUID,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)

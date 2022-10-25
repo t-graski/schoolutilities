@@ -382,6 +382,7 @@ export class HelperService {
             courseElementUUID: elementUUID,
           },
         });
+
         return element.courseElementId;
       } catch (err) {
         throw new Error(ERROR_CODES.DATABASE_ERROR);
