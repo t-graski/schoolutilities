@@ -176,10 +176,10 @@ export class CourseController {
     @Req() request,
     @Res() response,
   ) {
-    const result = await this.courseService.getEvents(params, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    // const result = await this.courseService.getEvents(params, request);
+    // return response
+    //   .status(result.status)
+    //   .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)

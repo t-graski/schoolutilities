@@ -598,14 +598,18 @@ export class HelperService {
 
   async deleteElement(elementId: number, typeId: number): Promise<any> {
     if (elementId) {
+      console.log(elementId);
+
       try {
+        // await this.deleteElementOptions(elementId, Number(typeId));
         await prisma.courseElements.delete({
           where: {
             courseElementId: elementId,
           },
         });
-        await this.deleteElementOptions(elementId, Number(typeId));
       } catch (err) {
+        console.log(err);
+
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {
@@ -642,6 +646,8 @@ export class HelperService {
             });
         }
       } catch (err) {
+        console.log(err);
+
         throw new Error(ERROR_CODES.DATABASE_ERROR);
       }
     } else {

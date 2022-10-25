@@ -901,18 +901,18 @@ export class CourseService {
       };
     }
 
-    const settings = await this.prisma.courseElements.findFirst({
+    const settings = await this.prisma.courseElements.findUnique({
       where: {
         courseElementId: elementId,
       },
       include: {
+        users: true,
         courses: true,
         courseFileSubmissionSettings: true,
         courseElementTextSettings: true,
       }
     });
 
-    const creator = await this.helper.getUserById(settings.courseElementCreatorId);
     const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
       userId,
       schoolId,
@@ -950,6 +950,8 @@ export class CourseService {
 
     const elementItem = {
       courseElementUUID: settings.courseElementUUID,
+      courseElementName: settings.courseFileSubmissionSettings.courseFileSubmissionName,
+      courseElementDueTimestamp: settings.courseFileSubmissionSettings.courseFileSubmissionDueTimestamp,
       courseUUID: settings.courses!.courseUUID,
       courseElementIsVisible: Boolean(settings.courseElementIsVisible),
       courseElementCreationTimestamp: settings.courseElementCreationTimestamp,
@@ -957,10 +959,10 @@ export class CourseService {
       ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
       creator: {
-        userUUID: creator.personUUID,
-        firstName: creator.firstName,
-        lastName: creator.lastName,
-        fullName: `${creator.firstName} ${creator.lastName}`,
+        userUUID: settings.users.userUUID,
+        firstName: settings.users.userFirstname,
+        lastName: settings.users.userLastname,
+        fullName: `${settings.users.userFirstname} ${settings.users.userLastname}`,
       },
       options: {
         type: settings.courseElementTypeId,
@@ -1101,105 +1103,105 @@ export class CourseService {
     };
   }
 
-  async getEvents(payload: GetEventsDto, request): Promise<ReturnMessage> {
-    const { schoolUUID, days } = payload;
-    const jwt = await this.helper.extractJWTToken(request);
-    const userId = await this.helper.getUserIdfromJWT(jwt);
+  // async getEvents(payload: GetEventsDto, request): Promise<ReturnMessage> {
+  //   const { schoolUUID, days } = payload;
+  //   const jwt = await this.helper.extractJWTToken(request);
+  //   const userId = await this.helper.getUserIdfromJWT(jwt);
 
-    let courses = await this.prisma.schools.findFirst({
-      where: {
-        schoolUUID,
-      },
-      select: {
-        schoolUUID: true,
-        schoolName: true,
-        courses: {
-          where: {
-            courseUsers: {
-              some: {
-                userId: Number(userId),
-              },
-            },
-          },
-          select: {
-            courseUUID: true,
-            courseName: true,
-            courseElements: {
-              where: {
-                courseElementTypeId: {
-                  equals: 3,
-                },
-                AND: {
-                  courseElementIsVisible: true,
-                },
-              },
-              select: {
-                courseElementUUID: true,
-                courseElementCreationTimestamp: true,
-                courseElementOrder: true,
-                courseElementIsVisible: true,
-                courseFileSubmissionSettings: {
-                  where: {
-                    courseFileSubmissionDueTimestamp: {
-                      lte: moment(new Date(Date.now()))
-                        .add(days, 'days')
-                        .toDate(),
-                    },
-                    AND: {
-                      courseFileSubmissionDueTimestamp: {
-                        gte: moment(new Date(Date.now())).toDate(),
-                      },
-                    },
-                  },
-                  select: {
-                    courseFileSubmissionName: true,
-                    courseFileSubmissionDescription: true,
-                    courseFileSubmissionDueTimestamp: true,
-                    courseFileSubmissionSubmitLater: true,
-                    courseFileSubmissionSubmitLaterTimestamp: true,
-                    courseFileSubmissionMaxFileSize: true,
-                    courseFileSubmissionAllowedFileTypes: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
+  //   let courses = await this.prisma.schools.findFirst({
+  //     where: {
+  //       schoolUUID,
+  //     },
+  //     select: {
+  //       schoolUUID: true,
+  //       schoolName: true,
+  //       courses: {
+  //         where: {
+  //           courseUsers: {
+  //             some: {
+  //               userId: Number(userId),
+  //             },
+  //           },
+  //         },
+  //         select: {
+  //           courseUUID: true,
+  //           courseName: true,
+  //           courseElements: {
+  //             where: {
+  //               courseElementTypeId: {
+  //                 equals: 3,
+  //               },
+  //               AND: {
+  //                 courseElementIsVisible: true,
+  //               },
+  //             },
+  //             select: {
+  //               courseElementUUID: true,
+  //               courseElementCreationTimestamp: true,
+  //               courseElementOrder: true,
+  //               courseElementIsVisible: true,
+  //               courseFileSubmissionSettings: {
+  //                 where: {
+  //                   courseFileSubmissionDueTimestamp: {
+  //                     lte: moment(new Date(Date.now()))
+  //                       .add(days, 'days')
+  //                       .toDate(),
+  //                   },
+  //                   AND: {
+  //                     courseFileSubmissionDueTimestamp: {
+  //                       gte: moment(new Date(Date.now())).toDate(),
+  //                     },
+  //                   },
+  //                 },
+  //                 select: {
+  //                   courseFileSubmissionName: true,
+  //                   courseFileSubmissionDescription: true,
+  //                   courseFileSubmissionDueTimestamp: true,
+  //                   courseFileSubmissionSubmitLater: true,
+  //                   courseFileSubmissionSubmitLaterTimestamp: true,
+  //                   courseFileSubmissionMaxFileSize: true,
+  //                   courseFileSubmissionAllowedFileTypes: true,
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
 
-    const eventItems: CourseEvent[] = [];
+  //   const eventItems: CourseEvent[] = [];
 
-    for (const course of courses.courses) {
-      if (course.courseElements.length != 0) {
-        for (const element of course.courseElements) {
-          if (element.courseFileSubmissionSettings.length != 0) {
-            eventItems.push({
-              schoolUUID: courses.schoolUUID,
-              schoolName: courses.schoolName,
-              courseUUID: course.courseUUID,
-              courseName: course.courseName,
-              courseElementUUID: element.courseElementUUID,
-              courseFileSubmissionName: element.courseFileSubmissionSettings[0].courseFileSubmissionName,
-              courseFileSubmissionDescription: element.courseFileSubmissionSettings[0].courseFileSubmissionDescription,
-              courseFileSubmissionDueTimestamp: element.courseFileSubmissionSettings[0].courseFileSubmissionDueTimestamp,
-              courseFileSubmissionSubmitLater: element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLater,
-              courseFileSubmissionSubmitLaterTimestamp:
-                element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLaterTimestamp,
-              courseFileSubmissionMaxFileSize: element.courseFileSubmissionSettings[0].courseFileSubmissionMaxFileSize,
-              courseFileSubmissionAllowedFileTypes:
-                element.courseFileSubmissionSettings[0].courseFileSubmissionAllowedFileTypes,
-            });
-          }
-        }
-      }
-    }
+  //   for (const course of courses.courses) {
+  //     if (course.courseElements.length != 0) {
+  //       for (const element of course.courseElements) {
+  //         if (element.courseFileSubmissionSettings.length != 0) {
+  //           eventItems.push({
+  //             schoolUUID: courses.schoolUUID,
+  //             schoolName: courses.schoolName,
+  //             courseUUID: course.courseUUID,
+  //             courseName: course.courseName,
+  //             courseElementUUID: element.courseElementUUID,
+  //             courseFileSubmissionName: element.courseFileSubmissionSettings[0].courseFileSubmissionName,
+  //             courseFileSubmissionDescription: element.courseFileSubmissionSettings[0].courseFileSubmissionDescription,
+  //             courseFileSubmissionDueTimestamp: element.courseFileSubmissionSettings[0].courseFileSubmissionDueTimestamp,
+  //             courseFileSubmissionSubmitLater: element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLater,
+  //             courseFileSubmissionSubmitLaterTimestamp:
+  //               element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLaterTimestamp,
+  //             courseFileSubmissionMaxFileSize: element.courseFileSubmissionSettings[0].courseFileSubmissionMaxFileSize,
+  //             courseFileSubmissionAllowedFileTypes:
+  //               element.courseFileSubmissionSettings[0].courseFileSubmissionAllowedFileTypes,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
 
-    return {
-      status: RETURN_DATA.SUCCESS.status,
-      data: eventItems,
-    };
-  }
+  //   return {
+  //     status: RETURN_DATA.SUCCESS.status,
+  //     data: eventItems,
+  //   };
+  // }
 
   async revertExercise(request, elementUUID): Promise<ReturnMessage> {
     const jwt = await this.helper.extractJWTToken(request);
