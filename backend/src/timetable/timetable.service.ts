@@ -4,11 +4,9 @@ import { Request } from 'express';
 import { AddTimeTableDto } from 'src/dto/addTimeTable';
 import {
   AddExamDTO,
-  DeleteExamDTO,
   Exam,
   UpdateExamDTO,
 } from 'src/entity/exam/exam';
-import { SchoolRoom } from 'src/entity/school-room/schoolRoom';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import { ReturnMessage } from 'src/types/Course';
@@ -19,7 +17,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TimetableService {
-  constructor(private readonly helper: HelperService) {}
+  constructor(private readonly helper: HelperService) { }
 
   async createTimetable(
     payload: AddTimeTableDto,
@@ -32,9 +30,8 @@ export class TimetableService {
       day.timeTableElements.forEach(async (element) => {
         await prisma.timeTableElement.create({
           data: {
-            timeTableElementUUID: `${
-              ID_STARTERS.TIME_TABLE_ELEMENT
-            }${uuidv4()}`,
+            timeTableElementUUID: `${ID_STARTERS.TIME_TABLE_ELEMENT
+              }${uuidv4()}`,
             schoolSubjects: {
               connect: {
                 schoolSubjectId: element.timetableElementSubjectId,
@@ -209,7 +206,7 @@ export class TimetableService {
               0,
               0,
             ) +
-              86400000 * weekday.indexOf(element.timeTableElementDay),
+            86400000 * weekday.indexOf(element.timeTableElementDay),
           ).toISOString(),
           timeTableElementEndTime: new Date(
             new Date(dateString).setHours(
@@ -218,7 +215,7 @@ export class TimetableService {
               0,
               0,
             ) +
-              86400000 * weekday.indexOf(element.timeTableElementDay),
+            86400000 * weekday.indexOf(element.timeTableElementDay),
           ).toISOString(),
           timeTableElementDay: element.timeTableElementDay,
           timeTableElementRoom: {
@@ -254,11 +251,11 @@ export class TimetableService {
           omitted:
             element.timeTableOmitted.length > 0 && element.timeTableOmitted[0].timeTableElementOmittedDate >= new Date(dateString) && element.timeTableOmitted[0].timeTableElementOmittedDate <= new Date(new Date(dateString).getTime() + 86400000 * 4)
               ? {
-                  timeTableOmittedReason:
-                    element.timeTableOmitted[0].timeTableElementOmittedReason,
-                  timeTableOmittedDate:
-                    element.timeTableOmitted[0].timeTableElementOmittedDate,
-                }
+                timeTableOmittedReason:
+                  element.timeTableOmitted[0].timeTableElementOmittedReason,
+                timeTableOmittedDate:
+                  element.timeTableOmitted[0].timeTableElementOmittedDate,
+              }
               : undefined,
         });
       });
@@ -268,7 +265,7 @@ export class TimetableService {
           if (
             element.timeTableExam[0].timeTableExamDate >= monday &&
             element.timeTableExam[0].timeTableExamDate <=
-              new Date(monday.getTime() + 86400000 * 4)
+            new Date(monday.getTime() + 86400000 * 4)
           ) {
             let day =
               weekday[element.timeTableExam[0].timeTableExamDate.getDay()];
@@ -291,7 +288,7 @@ export class TimetableService {
           if (
             element.timeTableEvents[0].timeTableEventDate >= monday &&
             element.timeTableEvents[0].timeTableEventDate <=
-              new Date(monday.setDate(monday.getDate() + 5))
+            new Date(monday.setDate(monday.getDate() + 5))
           ) {
             let day =
               weekday[element.timeTableEvents[0].timeTableEventDate.getDay()];
@@ -339,9 +336,9 @@ export class TimetableService {
         if (element.timeTableSubstitutions.length > 0) {
           if (
             element.timeTableSubstitutions[0].timeTableSubstitutionDate >=
-              monday &&
+            monday &&
             element.timeTableSubstitutions[0].timeTableSubstitutionDate <=
-              new Date(monday.setDate(monday.getDate() + 5))
+            new Date(monday.setDate(monday.getDate() + 5))
           ) {
             const weekday = [
               'Sunday',
@@ -354,7 +351,7 @@ export class TimetableService {
             ];
             let day =
               weekday[
-                element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()
+              element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()
               ];
             if (element.timeTableElementDay === day) {
               return {
@@ -463,7 +460,7 @@ export class TimetableService {
       });
 
       return {
-        status: 200,
+        status: RETURN_DATA.SUCCESS.status,
         data: timeTableDaysArray,
       };
     } catch {
@@ -471,7 +468,7 @@ export class TimetableService {
     }
   }
 
-  async getTimeTableGrid(schoolUUID: string, request) {
+  async getTimeTableGrid(schoolUUID: string, request): Promise<ReturnMessage> {
     try {
       const timeTableGrid = await prisma.schools.findUnique({
         where: {
@@ -480,36 +477,33 @@ export class TimetableService {
         include: {
           timeTableGrid: {
             include: {
-              timeTableGridSpecialBreak: true,
+              timeTableGridSpecialBreaks: {
+                include: {
+                  timeTableGridSpecialBreak: true,
+                }
+              }
             },
           },
         },
       });
 
       const timeTableGridData = {
-        timeTableGridUUID:
-          timeTableGrid.timeTableGrid[0].timeTableGridBreakDuration,
-        timeTableGridSpecialBreakStartTime:
-          timeTableGrid[0].timeTableGridSpecialBreakStartTime,
+        timeTableGridUUID: timeTableGrid.timeTableGrid[0].timeTableGridBreakDuration,
+        timeTableGridSpecialBreakStartTime: timeTableGrid[0].timeTableGridSpecialBreakStartTime,
         timeTableGridMaxLessons: timeTableGrid[0].timeTableGridMaxLessons,
-        timeTableGridBreakDuration:
-          timeTableGrid.timeTableGrid[0].timeTableGridBreakDuration,
-        timeTableGridSpecialBreak: {
-          timeTableGridSpecialBreakUUID:
-            timeTableGrid.timeTableGrid[0].timeTableGridSpecialBreak[0]
-              .timeTableGridSpecialBreakUUID,
-          timeTableGridSpecialBreakElement:
-            timeTableGrid.timeTableGrid[0].timeTableGridSpecialBreak[0]
-              .timeTableGridSpecialBreakElement,
-          timeTableGridBreakDuration:
-            timeTableGrid.timeTableGrid[0].timeTableGridSpecialBreak[0]
-              .timeTableGridBreakDuration,
-        },
+        timeTableGridBreakDuration: timeTableGrid.timeTableGrid[0].timeTableGridBreakDuration,
+        timeTableGridBreaks: timeTableGrid.timeTableGrid[0].timeTableGridSpecialBreaks.map((element) => {
+          return {
+            timeTableGridSpecialBreakUUID: element.timeTableGridSpecialBreak.timeTableGridSpecialBreakUUID,
+            timeTableGridSpecialBreakDuration: element.timeTableGridSpecialBreak.timeTableGridSpecialBreakDuration,
+            timeTableGridSpecialBreakElement: element.timeTableGridSpecialBreak.timeTableGridSpecialBreakElement,
+          }
+        })
       };
 
       return {
-        status: 200,
-        data: timeTableGrid,
+        status: RETURN_DATA.SUCCESS.status,
+        data: timeTableGridData,
       };
     } catch {
       return RETURN_DATA.DATABASE_ERROR;
@@ -559,7 +553,7 @@ export class TimetableService {
       };
 
       return {
-        status: 200,
+        status: RETURN_DATA.SUCCESS.status,
         data: timeTableElementData,
       };
     } catch {
@@ -573,9 +567,8 @@ export class TimetableService {
       timeTableGridMaxLessons,
       timeTableGridElementDuration,
       timeTableGridBreakDuration,
-      timeTableGridSpecialBreakElement,
       timeTableGridStartTime,
-      timeTableGridSpecialBreakDuration,
+      timeTableGridSpecialBreaks
     } = body;
 
     try {
@@ -590,12 +583,21 @@ export class TimetableService {
               schoolUUID,
             },
           },
-          timeTableGridSpecialBreak: {
-            create: {
-              timeTableGridSpecialBreakElement,
-              timeTableGridSpecialBreakDuration,
-            },
-          },
+          timeTableGridSpecialBreaks: {
+            createMany: {
+              data: timeTableGridSpecialBreaks.map((element) => {
+                return {
+                  timeTableGridSpecialBreak: {
+                    create: {
+                      timeTableGridSpecialBreakUUID: `${ID_STARTERS.BREAK}${uuidv4()}`,
+                      timeTableGridSpecialBreakDuration: element.timeTableGridSpecialBreakDuration,
+                      timeTableGridSpecialBreakElement: element.timeTableGridSpecialBreakElement,
+                    },
+                  },
+                };
+              }),
+            }
+          }
         },
       });
 
@@ -603,6 +605,135 @@ export class TimetableService {
         status: 200,
         data: timeTableGrid,
       };
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async editTimeTableGrid(body: any, request: Request): Promise<ReturnMessage> {
+    const { schoolUUID, timeTableGridMaxLessons, timeTableGridElementDuration, timeTableGridBreakDuration, timeTableGridStartTime } = body
+
+    try {
+      const school = await prisma.schools.findUnique({
+        where: {
+          schoolUUID,
+        }
+      })
+
+      const timeTableGrid = await prisma.timeTableGrid.update({
+        where: {
+          schoolId: school.schoolId,
+        },
+        data: {
+          timeTableGridStartTime: new Date(timeTableGridStartTime),
+          timeTableGridElementDuration,
+          timeTableGridMaxLessons,
+          timeTableGridBreakDuration,
+        }
+      })
+
+      return {
+        status: 200,
+        data: timeTableGrid,
+      }
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async removeBreak(payload: any, request: Request): Promise<ReturnMessage> {
+    const { timeTableGridSpecialBreakUUID } = payload;
+
+    try {
+      await prisma.timeTableGridSpecialBreak.delete({
+        where: {
+          timeTableGridSpecialBreakUUID,
+        }
+      })
+      return {
+        status: 200,
+        data: null,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async updateBreak(payload: any, request: Request): Promise<ReturnMessage> {
+    const { timeTableGridSpecialBreakUUID, timeTableGridSpecialBreakDuration, timeTableGridSpecialBreakElement } = payload;
+
+    try {
+      const breakElement = await prisma.timeTableGridSpecialBreak.update({
+        where: {
+          timeTableGridSpecialBreakUUID,
+        },
+        data: {
+          timeTableGridSpecialBreakDuration,
+          timeTableGridSpecialBreakElement,
+        }
+      })
+      return {
+        status: 200,
+        data: breakElement,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async addBreak(payload: any, request: Request): Promise<ReturnMessage> {
+    const { schoolUUID, timeTableGridSpecialBreakDuration, timeTableGridSpecialBreakElement } = payload;
+
+    try {
+      const school = await prisma.schools.findUnique({
+        where: {
+          schoolUUID,
+        }
+      })
+
+      const breakElement = await prisma.timeTableGridSpecialBreaks.create({
+        data: {
+          timeTableGrid: {
+            connect: {
+              schoolId: school.schoolId,
+            }
+          },
+          timeTableGridSpecialBreak: {
+            create: {
+              timeTableGridSpecialBreakUUID: `${ID_STARTERS.BREAK}${uuidv4()}`,
+              timeTableGridSpecialBreakDuration,
+              timeTableGridSpecialBreakElement,
+            },
+
+          }
+        }
+      })
+      return {
+        status: 200,
+        data: breakElement,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async deleteTimeTableGrid(schoolUUID: string, request): Promise<ReturnMessage> {
+    try {
+      const school = await prisma.schools.findUnique({
+        where: {
+          schoolUUID,
+        }
+      })
+
+      const timeTableGrid = await prisma.timeTableGrid.delete({
+        where: {
+          schoolId: school.schoolId,
+        }
+      })
+
+      return {
+        status: 200,
+      }
     } catch {
       return RETURN_DATA.DATABASE_ERROR;
     }

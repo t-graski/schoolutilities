@@ -687,29 +687,42 @@ model holidays {
 }
 
 model timeTableGrid {
-  timeTableGridId              Int                       @id @default(autoincrement()) @map("time_table_grid_id")
-  timeTableGridStartTime       DateTime                  @map("time_table_grid_start_date")
-  timeTableGridElementDuration Int                       @map("time_table_grid_element_duration")
-  timeTableGridBreakDuration   Int                       @map("time_table_grid_break_duration")
-  timeTableGridMaxLessons      Int                       @map("time_table_grid_max_lessons")
-  schoolId                     Int                       @map("school_id")
-  schools                      schools                   @relation(fields: [schoolId], references: [schoolId])
-  timeTableGridSpecialBreakId  Int                       @map("time_table_special_break_id")
-  timeTableGridSpecialBreak    timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
+  timeTableGridId              Int                          @id @default(autoincrement()) @map("time_table_grid_id")
+  timeTableGridStartTime       DateTime                     @map("time_table_grid_start_date")
+  timeTableGridElementDuration Int                          @map("time_table_grid_element_duration")
+  timeTableGridBreakDuration   Int                          @map("time_table_grid_break_duration")
+  timeTableGridMaxLessons      Int                          @map("time_table_grid_max_lessons")
+  schoolId                     Int                          @map("school_id")
+  schools                      schools                      @relation(fields: [schoolId], references: [schoolId])
+  timeTableGridSpecialBreaks   timeTableGridSpecialBreaks[]
 
   @@unique([timeTableGridId], map: "time_table_grid_uuid_UNIQUE")
+  @@unique([schoolId], map: "time_table_grid_school_id_UNIQUE")
   @@index([schoolId], map: "fk_time_table_grid_school_id")
-  @@index([timeTableGridSpecialBreakId], map: "fk_time_table_special_break_id")
   @@map("time_table_grid")
 }
 
 model timeTableGridSpecialBreak {
-  timeTableGridSpecialBreakId       Int             @id @default(autoincrement()) @map("time_table_grid_special_break_id")
-  timeTableGridSpecialBreakElement  Int             @map("time_table_grid_special_break_element")
-  timeTableGridSpecialBreakDuration Int             @map("time_table_grid_special_break_duration")
-  timeTableGrid                     timeTableGrid[]
+  timeTableGridSpecialBreakId       Int                          @id @default(autoincrement()) @map("time_table_grid_special_break_id")
+  timeTableGridSpecialBreakUUID     String                       @map("time_table_grid_special_break_uuid")
+  timeTableGridSpecialBreakElement  Int                          @map("time_table_grid_special_break_element")
+  timeTableGridSpecialBreakDuration Int                          @map("time_table_grid_special_break_duration")
+  timeTableGridSpecialBreaks        timeTableGridSpecialBreaks[]
 
+  @@unique([timeTableGridSpecialBreakUUID], map: "time_table_grid_special_break_uuid_UNIQUE")
   @@map("time_table_grid_special_break")
+}
+
+model timeTableGridSpecialBreaks {
+  timeTableGridSpecialBreakId Int                       @map("time_table_grid_special_break_id")
+  timeTableGridId             Int                       @map("time_table_grid_id")
+  timeTableGrid               timeTableGrid             @relation(fields: [timeTableGridId], references: [timeTableGridId])
+  timeTableGridSpecialBreak   timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
+
+  @@unique([timeTableGridSpecialBreakId, timeTableGridId], map: "time_table_grid_special_break_id_time_table_grid_id_UNIQUE")
+  @@index([timeTableGridId], map: "fk_time_table_grid_id")
+  @@index([timeTableGridSpecialBreakId], map: "fk_time_table_grid_special_break_id")
+  @@map("time_table_grid_special_breaks")
 }
 
 model users {

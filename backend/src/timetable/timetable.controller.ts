@@ -63,13 +63,59 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('timeTableGrid')
+  @Post('/grid')
   async addTimeTableGrid(@Body() timeTableGrid, @Req() request, @Res() response) {
     const result = await this.timetableService.addTimeTableGrid(timeTableGrid, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/grid/:schoolUUID')
+  async getTimeTableGrid(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getTimeTableGrid(schoolUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/grid')
+  async updateTimeTableGrid(@Body() timeTableGrid, @Req() request, @Res() response) {
+    const result = await this.timetableService.editTimeTableGrid(timeTableGrid, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/grid/break')
+  async removeBreak(@Body() breakUUID, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeBreak(breakUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/grid/break')
+  async updateBreak(@Body() breakData, @Req() request, @Res() response) {
+    const result = await this.timetableService.updateBreak(breakData, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/grid/break')
+  async addBreak(@Body() breakData, @Req() request, @Res() response) {
+    const result = await this.timetableService.addBreak(breakData, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
 
   @Post('/substitution')
   async addSubstitution(@Body() substitution, @Req() request, @Res() response) {
