@@ -221,7 +221,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             setValidInput={setPasswordConfirmationValid}
             errorMessage="Please enter a valid password"
           ></PasswordInput>
-          <CheckBox onChange={setTermsAccepted}>
+          <CheckBox selected={termsAccepted} onChange={setTermsAccepted}>
             <StyledAreement>
               I agree to all{" "}
               <StyledLInk href="/data-policy" target="_blank">

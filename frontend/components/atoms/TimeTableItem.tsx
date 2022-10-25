@@ -8,6 +8,14 @@ const TimeTableItemDetail = dynamic(
   () => import("../molecules/time-table/TimeTableItemDetail")
 );
 
+export type TimeTableElementTeacher = {
+  userUUID: string;
+  userFirstname: string;
+  userLastname: string;
+  userEmail: string;
+};
+
+
 export type TimeTableItemType = {
   timeTableElementUUID?: string;
   timeTableElementStartTime?: string;
@@ -25,12 +33,7 @@ export type TimeTableItemType = {
   };
   holidayUUID?: string;
   holidayName?: string;
-  timeTableElementTeachers?: {
-    userUUID: string;
-    userFirstname: string;
-    userLastname: string;
-    userEmail: string;
-  }[];
+  timeTableElementTeachers?: TimeTableElementTeacher[];
   substitution?: {
     timeTableSubstitutionUUID: string;
     timeTableSubstitutionClasses: {

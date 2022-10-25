@@ -103,11 +103,13 @@ export default function Features() {
     }
   }
 
+  console.log(submissionContent);
+
   return (
     <>
       <Head>
         <title>
-          {submissionContent ? submissionContent.name : "Submission"} -
+          {submissionContent ? submissionContent.courseFileSubmissionName : "Submission"} -
           SchoolUtilities
         </title>
       </Head>
@@ -116,7 +118,7 @@ export default function Features() {
         <HeadlineLayout>
           <Headline
             width="content"
-            label={submissionContent ? submissionContent.name : "Submission"}
+            label={submissionContent ? submissionContent.courseFileSubmissionName : "Submission"}
             alignment="left"
           ></Headline>
         </HeadlineLayout>

@@ -70,10 +70,10 @@ export const StartPageBox: React.FC<Props> = ({
       <StartPageBoxLayout>
         <StartPageBoxTitle>
           {title.map((text, index) => (
-            <>
-              <span key={index}>{text}</span>
+            <span key={index}>
+              {text}
               <br />
-            </>
+            </span>
           ))}
         </StartPageBoxTitle>
         <StartPageBoxDescription>
@@ -86,14 +86,10 @@ export const StartPageBox: React.FC<Props> = ({
         </StartPageBoxDescription>
         <ButtonLayout>
           <Link href={highlightedButtonLink} passHref>
-            <Button buttonType={"filled"}>
-              {highlightedButtonText}
-            </Button>
+            <Button buttonType={"filled"}>{highlightedButtonText}</Button>
           </Link>
           <Link href={buttonLink} passHref>
-            <Button buttonType={"text"}>
-              {buttonText}
-            </Button>
+            <Button buttonType={"text"}>{buttonText}</Button>
           </Link>
         </ButtonLayout>
       </StartPageBoxLayout>
