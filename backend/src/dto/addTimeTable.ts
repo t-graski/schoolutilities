@@ -1,9 +1,73 @@
-import { IsDate, IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
+import { IsDate, IsDateString, isDateString, IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
 import { IsCustomUUID } from "src/decorators/IsCustomUUID";
 
 export class AddTimeTableDto {
     @IsNotEmpty()
     timetableDay: TimeTableDay[]
+}
+
+export class AddTimeTableElementDto {
+    @IsNotEmpty()
+    @IsDateString()
+    timeTableElementStartTime: string;
+
+    @IsNotEmpty()
+    @IsDateString()
+    timeTableElementEndTime: string;
+
+    @IsNotEmpty()
+    @IsString()
+    timeTableElementDay: string;
+
+    @IsNotEmpty()
+    @IsString()
+    schoolSubjectUUID: string;
+
+    @IsNotEmpty()
+    @IsString({ each: true })
+    timeTableElementTeachers: string[];
+
+    @IsNotEmpty()
+    @IsString()
+    timeTableElementRoom: string;
+
+    @IsNotEmpty()
+    @IsString({ each: true })
+    timeTableElementClasses: string[];
+}
+
+export class UpdateTimeTableElementDto {
+    @IsNotEmpty()
+    @IsString()
+    timeTableElementUUID: string
+
+    @IsNotEmpty()
+    @IsString()
+    timeTableElementDay: string;
+
+    @IsNotEmpty()
+    @IsDateString()
+    timeTableElementStartTime: string;
+
+    @IsNotEmpty()
+    @IsDateString()
+    timeTableElementEndTime: string;
+
+    @IsNotEmpty()
+    @IsString()
+    schoolSubjectUUID: string;
+
+    @IsNotEmpty()
+    @IsString({ each: true })
+    timeTableElementTeachers: string[];
+
+    @IsNotEmpty()
+    @IsString()
+    timeTableElementRoom: string;
+
+    @IsNotEmpty()
+    @IsString({ each: true })
+    timeTableElementClasses: string[];
 }
 
 export class TimeTableDay {

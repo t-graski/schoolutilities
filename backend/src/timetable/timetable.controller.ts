@@ -1,7 +1,7 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AddTimeTableDto } from 'src/dto/addTimeTable';
+import { AddTimeTableDto, AddTimeTableElementDto, UpdateTimeTableElementDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
@@ -22,6 +22,34 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/element')
+  async addTimeTableElement(@Body() timeTableElement: AddTimeTableElementDto, @Req() request, @Res() response) {
+    const result = await this.timetableService.addTimeTableElement(timeTableElement, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/element')
+  async updateTimeTableElement(@Body() timeTableElement: UpdateTimeTableElementDto, @Req() request: Request, @Res() response) {
+    const result = await this.timetableService.updateTimeTableElement(timeTableElement, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/element')
+  async deleteTimeTableElement(@Body() timeTableElement, @Req() request: Request, @Res() response) {
+    const result = await this.timetableService.deleteTimeTableElement(timeTableElement, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+
   @Get('/timeTableElement/:timeTableElementUUID')
   async getTimeTableElement(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getTimeTableElement(timeTableElementUUID, request);
@@ -30,7 +58,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Post('holiday')
+  @Post('/holiday')
   async addHoliday(@Body() holiday, @Req() request, @Res() response) {
     const result = await this.timetableService.addHoliday(holiday, request);
     return response
@@ -38,7 +66,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Get('holiday/:schoolUUID')
+  @Get('/holiday/:schoolUUID')
   async getHoliday(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getHolidayOfSchool(schoolUUID);
     return response
@@ -46,7 +74,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Delete('holiday/:holidayUUID')
+  @Delete('/holiday/:holidayUUID')
   async removeHoliday(@Param('holidayUUID') holidayUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.removeHoliday(holidayUUID);
     return response
@@ -54,7 +82,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Put('holiday/:holidayUUID')
+  @Put('/holiday/:holidayUUID')
   async updateHoliday(@Param('holidayUUID') holidayUUID: string, @Body() holiday, @Req() request, @Res() response) {
     const result = await this.timetableService.updateHoliday(holidayUUID, holiday);
     return response
@@ -116,6 +144,15 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/freeRooms')
+  async getFreeRooms(@Req() request: Request, @Res() response) {
+    const result = await this.timetableService.getFreeRooms();
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
 
   @Post('/substitution')
   async addSubstitution(@Body() substitution, @Req() request, @Res() response) {
@@ -169,6 +206,4 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
-
 }

@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
-import { AddTimeTableDto } from 'src/dto/addTimeTable';
+import { AddTimeTableDto, AddTimeTableElementDto, UpdateTimeTableElementDto } from 'src/dto/addTimeTable';
 import {
   AddExamDTO,
   Exam,
@@ -82,6 +82,148 @@ export class TimetableService {
     return RETURN_DATA.SUCCESS;
   }
 
+  async addTimeTableElement(payload: AddTimeTableElementDto, request: Request): Promise<ReturnMessage> {
+    const { timeTableElementStartTime, timeTableElementDay, timeTableElementEndTime, schoolSubjectUUID, timeTableElementTeachers, timeTableElementRoom, timeTableElementClasses } = payload;
+
+    try {
+      const token = await this.helper.extractJWTToken(request);
+      const creatorUUID = await this.helper.getUserUUIDfromJWT(token);
+
+      const element = await prisma.timeTableElement.create({
+        data: {
+          timeTableElementUUID: `${ID_STARTERS.TIME_TABLE_ELEMENT}${uuidv4()}`,
+          timeTableElementDay,
+          schoolSubjects: {
+            connect: {
+              schoolSubjectUUID,
+            },
+          },
+          schoolRoom: {
+            connect: {
+              schoolRoomUUID: timeTableElementRoom,
+            },
+          },
+          timeTableElementStartTime: new Date(timeTableElementStartTime),
+          timeTableElementEndTime: new Date(timeTableElementEndTime),
+          users: {
+            connect: {
+              userUUID: creatorUUID,
+            },
+          },
+          timeTableTeachers: {
+            create: timeTableElementTeachers.map((teacherUUID) => {
+              return {
+                users: {
+                  connect: {
+                    userUUID: teacherUUID,
+                  },
+                },
+              };
+            }),
+          },
+          timeTableElementClasses: {
+            create: timeTableElementClasses.map((classUUID) => {
+              return {
+                schoolClasses: {
+                  connect: {
+                    schoolClassUUID: classUUID,
+                  },
+                },
+              };
+            }),
+          },
+        },
+      });
+      return {
+        status: 201,
+        data: element,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async updateTimeTableElement(payload: UpdateTimeTableElementDto, request: Request): Promise<ReturnMessage> {
+    const { timeTableElementUUID, timeTableElementStartTime, timeTableElementDay, timeTableElementEndTime, schoolSubjectUUID, timeTableElementTeachers, timeTableElementRoom, timeTableElementClasses } = payload;
+
+    try {
+      const token = await this.helper.extractJWTToken(request);
+      const creatorUUID = await this.helper.getUserUUIDfromJWT(token);
+
+      const element = await prisma.timeTableElement.update({
+        where: {
+          timeTableElementUUID,
+        },
+        data: {
+          timeTableElementDay,
+          schoolSubjects: {
+            connect: {
+              schoolSubjectUUID,
+            },
+          },
+          schoolRoom: {
+            connect: {
+              schoolRoomUUID: timeTableElementRoom,
+            },
+          },
+          timeTableElementStartTime: new Date(timeTableElementStartTime),
+          timeTableElementEndTime: new Date(timeTableElementEndTime),
+          users: {
+            connect: {
+              userUUID: creatorUUID,
+            },
+          },
+          timeTableTeachers: {
+            create: timeTableElementTeachers.map((teacherUUID) => {
+              return {
+                users: {
+                  connect: {
+                    userUUID: teacherUUID,
+                  },
+                },
+              };
+            }),
+          },
+          timeTableElementClasses: {
+            create: timeTableElementClasses.map((classUUID) => {
+              return {
+                schoolClasses: {
+                  connect: {
+                    schoolClassUUID: classUUID,
+                  },
+                },
+              };
+            }),
+          },
+        },
+      });
+      return {
+        status: 201,
+        data: element,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async deleteTimeTableElement(payload: any, request: Request): Promise<ReturnMessage> {
+    const { timeTableElementUUID } = payload;
+
+    try {
+      const element = await prisma.timeTableElement.delete({
+        where: {
+          timeTableElementUUID,
+        },
+      });
+      return {
+        status: 201,
+        data: element,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+  
   async getTimetable(
     classUUID: string,
     dateString: string,
@@ -714,6 +856,28 @@ export class TimetableService {
       }
     } catch {
       throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async getFreeRooms(): Promise<ReturnMessage> {
+    const rooms = await prisma.schoolRooms.findMany({
+      where: {
+        timeTableElement: {
+          every: {
+            timeTableElementEndTime: {
+              lt: new Date(),
+            },
+          },
+        }
+      }
+    })
+
+    console.log(rooms);
+
+
+    return {
+      status: 200,
+      data: null,
     }
   }
 

@@ -537,7 +537,7 @@ model timeTableOmitted {
   timeTableElementIsOmitted     Boolean          @map("time_table_element_is_omitted")
   timeTableElementOmittedReason String           @map("time_table_element_omitted_reason")
   timeTableElementOmittedDate   DateTime         @map("time_table_element_omitted_date")
-  timeTableElement              timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElement              timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
 
   @@unique([timeTableElementId, timeTableElementOmittedDate], map: "time_table_element_id_UNIQUE")
   @@index([timeTableElementId], map: "fk_time_table_element_id")
@@ -551,7 +551,7 @@ model timeTableExam {
   timeTableExamRoomId      Int              @map("time_table_exam_room_id")
   timeTableExamDescription String           @map("time_table_exam_description")
   timeTableExamDate        DateTime         @map("time_table_exam_date")
-  timeTableElements        timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElements        timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
   schoolRooms              schoolRooms      @relation(fields: [timeTableExamRoomId], references: [schoolRoomId])
 
   @@unique([timeTableExamUUID], map: "time_table_exam_uuid_UNIQUE")
@@ -574,7 +574,7 @@ model timeTableSubstitutions {
   schoolSubjects                         schoolSubjects                  @relation(fields: [timeTableSubstitutionSubjectId], references: [schoolSubjectId])
   schoolRooms                            schoolRooms                     @relation(fields: [timeTableSubstitutionRoomId], references: [schoolRoomId])
   users                                  users                           @relation(fields: [timeTableSubstitutionCreatorId], references: [userId])
-  timeTableElements                      timeTableElement                @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId])
+  timeTableElements                      timeTableElement                @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId], onDelete: Cascade)
 
   @@unique([timeTableSubstitutionUUID], map: "time_tablesubstitution_uuid_UNIQUE")
   @@index([timeTableSubstitutionSubjectId], map: "fk_time_table_substitution_subject_id")
@@ -618,7 +618,7 @@ model timeTableEvents {
   timeTableEventDate        DateTime                 @map("time_table_event_date")
   timeTableEventTeachers    timeTableEventTeachers[]
   timeTableEventClasses     timeTableEventClasses[]
-  timeTableElement          timeTableElement         @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElement          timeTableElement         @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
 
   @@unique([timeTableEventUUID], map: "time_table_event_uuid_UNIQUE")
   @@index([timeTableElementId], map: "fk_time_table_event_time_table_element_id")
@@ -652,7 +652,7 @@ model timeTableEventClasses {
 model timeTableElementTeachers {
   timeTableElementId Int              @map("time_table_element_id")
   userId             Int              @map("user_id")
-  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
   users              users            @relation(fields: [userId], references: [userId])
 
   @@unique([timeTableElementId, userId], map: "time_table_element_id_user_id_UNIQUE")
@@ -664,7 +664,7 @@ model timeTableElementTeachers {
 model timeTableElementClasses {
   timeTableElementId Int              @map("time_table_element_id")
   schoolClassId      Int              @map("school_class_id")
-  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
   schoolClasses      schoolClasses    @relation(fields: [schoolClassId], references: [schoolClassId])
 
   @@unique([timeTableElementId, schoolClassId], map: "time_table_element_id_school_class_id")
