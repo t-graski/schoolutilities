@@ -73,11 +73,9 @@ export const GeneralListItem: React.FC<Props> = ({
           <DescriptionLayout>{description}</DescriptionLayout>
         </ButtonBottomLayout>
         <StyledLink href={href} passHref>
-          <a>
-            <Button backgroundColor={"primary"} color={"primary"}>
-              {buttonText}
-            </Button>
-          </a>
+          <Button backgroundColor={"primary"} color={"primary"}>
+            {buttonText}
+          </Button>
         </StyledLink>
       </GeneralListItemLayout>
     </>

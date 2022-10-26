@@ -71,7 +71,7 @@ const SuccessDescription = styled("p", {
   fontSize: "1.5rem",
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   color: "$warning",
   fontSize: "1.2rem",
   fontWeight: "bold",
@@ -240,16 +240,14 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             Sign up
           </Button>
           <Link href="/auth?tab=login">
-            <a>
-              <Button
-                buttonType={"text"}
-                onClick={() => {
-                  handleSubmit();
-                }}
-              >
-                Log in instead
-              </Button>
-            </a>
+            <Button
+              buttonType={"text"}
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
+              Log in instead
+            </Button>
           </Link>
         </RegistrationLayout>
       )}
@@ -265,19 +263,16 @@ export const RegistrationField: React.FC<Props> = ({}) => {
                 ? "You can now join a school, or create a school"
                 : ""}
             </SuccessDescription>
-            <Link
+            <StyledLink
               href={signUpWorking ? "/profile/settings" : "/auth?tab=register"}
+              onClick={() => {
+                setSignUpInfo("");
+                setSignUpWorking(false);
+              }}
               passHref
             >
-              <StyledLink
-                onClick={() => {
-                  setSignUpInfo("");
-                  setSignUpWorking(false);
-                }}
-              >
-                {signUpWorking ? "Manage your Account now" : "Try again"}
-              </StyledLink>
-            </Link>
+              {signUpWorking ? "Manage your Account now" : "Try again"}
+            </StyledLink>
           </SuccessLayout>
         </>
       )}

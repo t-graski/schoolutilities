@@ -41,7 +41,7 @@ const SideDashboardBarLayout = styled("div", {
   },
 });
 
-const SideDashboardBarItemLink = styled("a", {
+const SideDashboardBarItemLink = styled(Link, {
   display: "flex",
   flexDirection: "row",
   gap: "20px",
@@ -88,17 +88,17 @@ export const SideDashboardBar: React.FC<Props> = ({ items, active = "" }) => {
         {items.map((item) => {
           const Icon = item.icon;
           return (
-            <Link href={item.href} key={item.name} passHref>
-              <SideDashboardBarItemLink
-                href={item.href}
-                highlighted={active.toLowerCase() == item.value.toLowerCase()}
-              >
-                <IconLayout>
-                  <Icon />
-                </IconLayout>
-                <SideDashboardBarItemName>{item.name}</SideDashboardBarItemName>
-              </SideDashboardBarItemLink>
-            </Link>
+            <SideDashboardBarItemLink
+              href={item.href}
+              highlighted={active.toLowerCase() == item.value.toLowerCase()}
+              key={item.name}
+              passHref
+            >
+              <IconLayout>
+                <Icon />
+              </IconLayout>
+              <SideDashboardBarItemName>{item.name}</SideDashboardBarItemName>
+            </SideDashboardBarItemLink>
           );
         })}
       </SideDashboardBarLayout>

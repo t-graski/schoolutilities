@@ -104,12 +104,10 @@ const Navbar: React.FC<Props> = ({}) => {
         <NavbarPopOver setVisibility={setMobileVisible}></NavbarPopOver>
       </PopOverLayout>
       <NavbarLayout>
-        <Link href="/" passHref>
-          <a aria-label="Startpage">
-            <LogoLayout>
-              <SvgOpenLogo />
-            </LogoLayout>
-          </a>
+        <Link href="/" passHref aria-label="Startpage">
+          <LogoLayout>
+            <SvgOpenLogo />
+          </LogoLayout>
         </Link>
         <NavLinksLayout>
           <NavigationMenuPart></NavigationMenuPart>

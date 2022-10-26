@@ -55,7 +55,7 @@ export const InfoBox: React.FC<Props> = ({
         ></StyledHeadline>
         <StyledText>{info}</StyledText>
         <ImageLayout>
-          <Image src={imageSrc} alt={imageAlt} layout="fill"></Image>
+          <Image src={imageSrc} alt={imageAlt} fill></Image>
         </ImageLayout>
       </RegistrationLayout>
     </>

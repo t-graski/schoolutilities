@@ -1,11 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "../../stitches.config";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import Skeleton from "react-loading-skeleton";
 import { CheckBox } from "../atoms/input/CheckBox";
 import { Typography } from "../../utils/styles";
-import SvgRightArrow from "../atoms/svg/SvgRightArrow";
 import SvgLongArrow from "../atoms/svg/SvgLongArrow";
 
 type Props = {

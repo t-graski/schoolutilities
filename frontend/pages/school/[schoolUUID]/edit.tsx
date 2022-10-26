@@ -60,7 +60,11 @@ export default function CreateSchool() {
       case "rooms":
         return <RoomsSettingsField queryClient={queryClient} />;
       default:
-        return <DepartmentsSettingsField></DepartmentsSettingsField>;
+        return (
+          <DepartmentsSettingsField
+            queryClient={queryClient}
+          ></DepartmentsSettingsField>
+        );
     }
   }
 

@@ -47,7 +47,7 @@ const NavLinksLayout = styled("div", {
   },
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   color: "$neutral-500",
   textDecoration: "none",
   cursor: "pointer",
@@ -107,26 +107,28 @@ export const NavbarPopOver: React.FC<Props> = ({ setVisibility }) => {
           <SvgClose />
         </StyledCloseButton>
         <Link href="/" passHref>
-          <a>
-            <LogoLayout>
-              <SvgOpenLogo />
-            </LogoLayout>
-          </a>
+          <LogoLayout>
+            <SvgOpenLogo />
+          </LogoLayout>
         </Link>
         <NavLinksLayout>
-          <Link href="/" passHref>
-            <StyledLink marked={router.pathname === "/"}>HOME</StyledLink>
-          </Link>
-          <Link href="/school/select" passHref>
-            <StyledLink marked={router.pathname === "/school/select"}>
-              MY SCHOOLS
-            </StyledLink>
-          </Link>
-          <Link href="/change-logs" passHref>
-            <StyledLink marked={router.pathname === "/change-logs"}>
-              CHANGE-LOG
-            </StyledLink>
-          </Link>
+          <StyledLink marked={router.pathname === "/"} href="/" passHref>
+            HOME
+          </StyledLink>
+          <StyledLink
+            marked={router.pathname === "/school/select"}
+            href="/school/select"
+            passHref
+          >
+            MY SCHOOLS
+          </StyledLink>
+          <StyledLink
+            marked={router.pathname === "/change-logs"}
+            href="/change-logs"
+            passHref
+          >
+            CHANGE-LOG
+          </StyledLink>
           <SpecialLinkLayout>
             {isLoggedIn ? (
               <UserMenu></UserMenu>

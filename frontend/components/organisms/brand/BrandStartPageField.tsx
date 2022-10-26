@@ -1,11 +1,8 @@
 import React from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { Headline } from "../../atoms/Headline";
 import { Separator } from "../../atoms/Separator";
 import { styled } from "@stitches/react";
 import { Spacer } from "../../atoms/Spacer";
-import Image from "next/image";
 import SvgLogoPencilOnly from "../../atoms/svg/SvgLogoPencilOnly";
 
 type Props = {

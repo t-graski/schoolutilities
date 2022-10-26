@@ -90,11 +90,7 @@ export const StartPageNav: React.FC<Props> = ({ links }) => {
             <StyledLink href={link.href} key={index}>
               <MenuBubbleIcon>
                 <MenuBubbleImage>
-                  <Image
-                    layout="fill"
-                    src={link.imageSrc}
-                    alt={link.imageAlt}
-                  />
+                  <Image fill src={link.imageSrc} alt={link.imageAlt} />
                 </MenuBubbleImage>
               </MenuBubbleIcon>
               <MenuBubbleText>{link.label}</MenuBubbleText>

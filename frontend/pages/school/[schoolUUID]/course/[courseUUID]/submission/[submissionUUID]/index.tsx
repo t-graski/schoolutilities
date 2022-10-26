@@ -1,5 +1,5 @@
 import { styled } from "../../../../../../../stitches.config";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 const Navbar = dynamic(

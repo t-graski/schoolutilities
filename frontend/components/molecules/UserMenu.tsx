@@ -62,7 +62,7 @@ const ArrowLayout = styled("div", {
 
 const StyledUserName = styled("p", {});
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   display: "flex",
   width: "100%",
   justifyContent: "space-between",
@@ -291,24 +291,24 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
           {userInfoStatus == "success" && (
             <>
               <DropdownMenuItem>
-                <Link href={"/settings/account"} passHref>
-                  <StyledLink>Profile</StyledLink>
-                </Link>
+                <StyledLink href={"/settings/account"} passHref>
+                  Profile
+                </StyledLink>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link
+                <StyledLink
                   href={`/school/${currentSchool}/planner?tab=timetable`}
                   passHref
                 >
-                  <StyledLink>Planner</StyledLink>
-                </Link>
+                  Planner
+                </StyledLink>
               </DropdownMenuItem>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
-                  <Link href={`/school/${currentSchool}/course`} passHref>
-                    <StyledLink>Courses</StyledLink>
-                  </Link>
+                  <StyledLink href={`/school/${currentSchool}/course`} passHref>
+                    Courses
+                  </StyledLink>
                   <RightSlot>
                     <ChevronRightIcon />
                   </RightSlot>
@@ -317,31 +317,31 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                   {coursesStatus == "success" &&
                     courses.map((course) => (
                       <DropdownMenuItem key={course.courseUUID}>
-                        <Link
+                        <StyledLink
                           href={`/school/${currentSchool}/course/${course.courseUUID}`}
                           passHref
                         >
-                          <StyledLink>{course.courseName}</StyledLink>
-                        </Link>
+                          {course.courseName}
+                        </StyledLink>
                       </DropdownMenuItem>
                     ))}
                   {coursesStatus == "success" && courses.length == 0 && (
                     <DropdownMenuItem>
-                      <Link href={"/school/select"} passHref>
-                        <StyledLink>Profile</StyledLink>
-                      </Link>
+                      <StyledLink href={"/school/select"} passHref>
+                        Profile
+                      </StyledLink>
                     </DropdownMenuItem>
                   )}
                   {coursesStatus == "success" && courses.length > 0 && (
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
-                        <Link
+                        <StyledLink
                           href={`/school/${currentSchool}/course/create`}
                           passHref
                         >
-                          <StyledLink>Create a course</StyledLink>
-                        </Link>
+                          Create a course
+                        </StyledLink>
                       </DropdownMenuItem>
                     </>
                   )}
@@ -349,17 +349,15 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
               </DropdownMenuSub>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
-                  <Link
+                  <StyledLink
                     href={`/school/${currentSchool}/course/create`}
                     passHref
                   >
-                    <StyledLink>
-                      Schools
-                      <RightSlot>
-                        <ChevronRightIcon />
-                      </RightSlot>
-                    </StyledLink>
-                  </Link>
+                    Schools
+                    <RightSlot>
+                      <ChevronRightIcon />
+                    </RightSlot>
+                  </StyledLink>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent sideOffset={2} alignOffset={-5}>
                   <DropdownMenuRadioGroup
@@ -386,14 +384,14 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                     <DropdownMenuSeparator />
                   )}
                   <DropdownMenuItem>
-                    <Link href={"/school/join"} passHref>
-                      <StyledLink>Join a school</StyledLink>
-                    </Link>
+                    <StyledLink href={"/school/join"} passHref>
+                      Join a school
+                    </StyledLink>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href={"/school/create"} passHref>
-                      <StyledLink>Create new school</StyledLink>
-                    </Link>
+                    <StyledLink href={"/school/create"} passHref>
+                      Create new school
+                    </StyledLink>
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
@@ -437,23 +435,23 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                   setIsLoggedIn(false);
                 }}
               >
-                <Link href={"/"} passHref>
-                  <StyledLink>Logout</StyledLink>
-                </Link>
+                <StyledLink href={"/"} passHref>
+                  Logout
+                </StyledLink>
               </DropdownMenuItem>
             </>
           )}
           {userInfoStatus != "success" && (
             <>
               <DropdownMenuItem>
-                <Link href={"/auth?tab=register"} passHref>
-                  <StyledLink>Register</StyledLink>
-                </Link>
+                <StyledLink href={"/auth?tab=register"} passHref>
+                  Register
+                </StyledLink>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={"/"} passHref>
-                  <StyledLink>Login</StyledLink>
-                </Link>
+                <StyledLink href={"/"} passHref>
+                  Login
+                </StyledLink>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuSub>
