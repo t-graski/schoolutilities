@@ -34,7 +34,6 @@ const IconLayout = styled("button", {
   width: 50,
   height: 50,
   padding: "12px",
-  backgroundColor: "$neutral-100",
   color: "$neutral-500",
   borderRadius: "50%",
   transition: "all 0.2s",

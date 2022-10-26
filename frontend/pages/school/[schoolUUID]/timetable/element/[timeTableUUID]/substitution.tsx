@@ -34,7 +34,30 @@ export default function EditTimeTableElement() {
       <ContentLayout>
         <Headline label="Edit timetable item"></Headline>
         <Separator width="small" alignment="center" />
-        <ChangeCreateSubstitution ></ChangeCreateSubstitution>
+        <ChangeCreateSubstitution timeTableElement={{
+          timeTableElementUUID: "",
+          timeTableElementStartTime: "",
+          timeTableElementEndTime: "",
+          overlaps: 0,
+          overlapStart: 0,
+          omitted: {
+            timeTableOmittedDate: "",
+            timeTableOmittedReason: ""
+          },
+          schoolSubject: {
+            schoolSubjectUUID: "",
+            schoolSubjectName: "",
+            schoolSubjectAbbreviation: ""
+          },
+          holidayUUID: "",
+          holidayName: "",
+          timeTableElementTeachers: [],
+          substitution: {
+            timeTableSubstitutionUUID: "",
+            timeTableSubstitutionClasses: [],
+            timeTableSubstitutionTeachers: []
+          }
+        }} ></ChangeCreateSubstitution>
       </ContentLayout>
       <Footer></Footer>
     </>

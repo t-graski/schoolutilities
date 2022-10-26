@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import { violet } from "@radix-ui/colors";
 import Link from "next/link";
-import { getSelectedSchool } from "../../utils/authHelper";
 import { useRouter } from "next/router";
 
 const enterFromRight = keyframes({
@@ -79,7 +77,7 @@ const itemStyles = {
   outline: "none",
   userSelect: "none",
 
-  "&:focus": { position: "relative", boxShadow: `0 0 0 2px ${violet.violet7}` },
+  "&:focus": { position: "relative", boxShadow: `0 0 0 2px $surface2` },
   "&:hover": { backgroundColor: "$surface2", color: "$onSurface" },
 };
 

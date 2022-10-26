@@ -159,7 +159,7 @@ export default function RegisterApproved() {
             </Link>
             . If you need any further assistance creating your school, you can
             visit our{" "}
-            <Link href="/support/help" passHref>
+            <Link href="/help" passHref>
               <StyledLink>Help Center</StyledLink>
             </Link>
             .
@@ -179,7 +179,7 @@ export default function RegisterApproved() {
             </Link>
             . If you need any further assistance creating your department, you
             can visit our{" "}
-            <Link href="/support/help" passHref>
+            <Link href="/help" passHref>
               <StyledLink>Help Center</StyledLink>
             </Link>
             .
@@ -210,15 +210,6 @@ export default function RegisterApproved() {
             </Link>
             .
           </p>
-        </>
-      ),
-    },
-    {
-      question:
-        "What can I do if I don't have access to my E-mail account anymore?",
-      answer: (
-        <>
-          <p></p>
         </>
       ),
     },
