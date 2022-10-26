@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
 import { InfoHoverCard } from "../InfoHoverCard";
 import { calculatePasswordStrengthIndex } from "../../../utils/authHelper";
-import { blackA } from "@radix-ui/colors";
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 import SvgCheckMark from "../svg/SvgCheckMark";
 import SvgExclamination from "../svg/SvgExclamination";
@@ -15,7 +14,7 @@ const StyledProgress = styled(ProgressPrimitive.Root, {
   width: "100%",
   height: 15,
 
-  background: blackA.blackA9,
+  background: "$surface2",
 });
 
 const StyledProgressIndicator = styled(ProgressPrimitive.Indicator, {

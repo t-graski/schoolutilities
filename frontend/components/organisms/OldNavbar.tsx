@@ -187,11 +187,7 @@ export const Navbar: React.FC<Props> = ({ links, isOnMain }) => {
       <NavbarLayout isOnMain={isOnMain}>
         <NavbarHeaderLink href="/" isOnMain={isOnMain}>
           <NavbarLogoLayout isOnMain={isOnMain}>
-            <Image
-              layout="fill"
-              src="/images/avatar.png"
-              alt="SchoolUtilities Logo"
-            />
+            <Image fill src="/images/avatar.png" alt="SchoolUtilities Logo" />
           </NavbarLogoLayout>
           <NavbarLogoText isOnMain={isOnMain}>SchoolUtilities</NavbarLogoText>
         </NavbarHeaderLink>

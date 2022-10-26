@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import { violet } from "@radix-ui/colors";
 import Link from "next/link";
-import { getSelectedSchool } from "../../utils/authHelper";
 import { useRouter } from "next/router";
 
 const enterFromRight = keyframes({
@@ -79,7 +77,7 @@ const itemStyles = {
   outline: "none",
   userSelect: "none",
 
-  "&:focus": { position: "relative", boxShadow: `0 0 0 2px ${violet.violet7}` },
+  "&:focus": { position: "relative", boxShadow: `0 0 0 2px $surface2` },
   "&:hover": { backgroundColor: "$surface2", color: "$onSurface" },
 };
 
@@ -131,6 +129,17 @@ const StyledLink = styled(Link, {
   textDecoration: "none",
   fontSize: 15,
   lineHeight: 1,
+
+  padding: "8px",
+  borderRadius: 5,
+
+  transition: "background-color 250ms ease",
+  color: "$neutral-500",
+
+  "&:hover": {
+    backgroundColor: "$surface",
+    color: "$onSurface",
+  },
 });
 
 const StyledContent = styled(NavigationMenuPrimitive.Content, {
@@ -268,23 +277,6 @@ const LinkText = styled("p", {
   fontWeight: "initial",
 });
 
-const StyledA = styled("a", {
-  width: "100%",
-  height: "100%",
-  padding: "8px",
-  display: "block",
-  borderRadius: 5,
-
-  transition: "background-color 250ms ease",
-  color: "$neutral-500",
-  textDecoration: "none",
-
-  "&:hover": {
-    backgroundColor: "$surface",
-    color: "$onSurface",
-  },
-});
-
 const ContentListItem = React.forwardRef<any, any>(function Content(
   { children, title, ...props },
   forwardedRef
@@ -302,10 +294,8 @@ const ContentListItem = React.forwardRef<any, any>(function Content(
         }}
         passHref
       >
-        <StyledA>
-          <LinkTitle>{title}</LinkTitle>
-          <LinkText>{children}</LinkText>
-        </StyledA>
+        <LinkTitle>{title}</LinkTitle>
+        <LinkText>{children}</LinkText>
       </NavigationMenuLink>
     </ListItem>
   );

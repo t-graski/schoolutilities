@@ -36,7 +36,7 @@ const ChangeLogLayout = styled("div", {
   cursor: "pointer",
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   color: "$neutral-500",
   textDecoration: "none",
 });
@@ -61,15 +61,17 @@ export const Changelog: React.FC<Props> = ({ entries }) => {
       <BoxLayout>
         <ChangeLogsLayout>
           {entries.map((entry, index) => (
-            <Link href={`/change-logs/${entry.name}`} passHref key={index}>
-              <StyledLink>
-                <ChangeLogLayout>
-                  <StyledHeadline>{entry.headline}</StyledHeadline>
-                  <Separator width="small" alignment="left"></Separator>
-                  <StyledText>{entry.text}</StyledText>
-                </ChangeLogLayout>
-              </StyledLink>
-            </Link>
+            <StyledLink
+              href={`/change-logs/${entry.name}`}
+              passHref
+              key={index}
+            >
+              <ChangeLogLayout>
+                <StyledHeadline>{entry.headline}</StyledHeadline>
+                <Separator width="small" alignment="left"></Separator>
+                <StyledText>{entry.text}</StyledText>
+              </ChangeLogLayout>
+            </StyledLink>
           ))}
         </ChangeLogsLayout>
       </BoxLayout>

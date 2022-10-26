@@ -115,7 +115,7 @@ const AccordionLayout = styled("div", {
   width: "100%",
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   color: "$neutral-500",
 });
 
@@ -154,14 +154,9 @@ export default function RegisterApproved() {
         <>
           <p>
             You can create a new school by clicking{" "}
-            <Link href="/school/create" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+              <StyledLink href="/school/create" passHref>here</StyledLink>
             . If you need any further assistance creating your school, you can
-            visit our{" "}
-            <Link href="/support/help" passHref>
-              <StyledLink>Help Center</StyledLink>
-            </Link>
+            visit our{" "}    <StyledLink href="/help" passHref>Help Center</StyledLink>
             .
           </p>
         </>
@@ -174,14 +169,10 @@ export default function RegisterApproved() {
           <p>
             If you have already created a school, you can create a new
             department by clicking{" "}
-            <Link href="/school/admin/create-department" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+              <StyledLink href="/school/admin/create-department" passHref>here</StyledLink>
             . If you need any further assistance creating your department, you
             can visit our{" "}
-            <Link href="/support/help" passHref>
-              <StyledLink>Help Center</StyledLink>
-            </Link>
+              <StyledLink href="/help" passHref>Help Center</StyledLink>
             .
           </p>
         </>
@@ -205,20 +196,9 @@ export default function RegisterApproved() {
           <p>
             If you have forgotten your password or E-mail, you can reset either
             of them by clicking{" "}
-            <Link href="profile/forgot" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+              <StyledLink href="profile/forgot" passHref>here</StyledLink>
             .
           </p>
-        </>
-      ),
-    },
-    {
-      question:
-        "What can I do if I don't have access to my E-mail account anymore?",
-      answer: (
-        <>
-          <p></p>
         </>
       ),
     },

@@ -93,7 +93,7 @@ export const PopUp: React.FC<Props> = ({
   children,
 }) => {
   const [open, setOpen] = React.useState(defaultOpen);
-  
+
   console.log(openButton);
   return (
     <>

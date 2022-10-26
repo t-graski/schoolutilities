@@ -140,7 +140,7 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
   isOpen,
   setIsOpen,
 }) => {
-  const LinkLayout = styled("a", {
+  const LinkLayout = styled(Link, {
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -174,19 +174,6 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
     <>
       <DashboardNavbarLayout data-size={isOpen ? "normal" : "small"}>
         <DashboardTopLayout>
-          {/* <LogoLayout>
-            <Image
-              src="/images/avatar 1.png"
-              alt="logo"
-              width={70}
-              height={70}
-            />
-            <LogoHeadline data-size={isOpen ? "normal" : "small"}>
-              School
-              <br />
-              <BoldFont>Utilities</BoldFont>
-            </LogoHeadline>
-          </LogoLayout> */}
           <HamburgerMenuButton
             onClick={() => {
               setIsOpen(!isOpen);
@@ -208,25 +195,26 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
               const Icon = link.icon;
 
               return (
-                <Link href={link.href} key={index} passHref>
-                  <LinkLayout
-                    color={link.highlighted ? "secondary" : "primary"}
-                    data-size={isOpen ? "normal" : "small"}
+                <LinkLayout
+                  color={link.highlighted ? "secondary" : "primary"}
+                  data-size={isOpen ? "normal" : "small"}
+                  href={link.href}
+                  key={index}
+                  passHref
+                >
+                  <SvgIconLayout
+                    color={link.highlighted ? "highlighted" : "normal"}
                   >
-                    <SvgIconLayout
-                      color={link.highlighted ? "highlighted" : "normal"}
+                    <Icon />
+                  </SvgIconLayout>
+                  {isOpen && (
+                    <LinkLabel
+                      color={link.highlighted ? "secondary" : "primary"}
                     >
-                      <Icon />
-                    </SvgIconLayout>
-                    {isOpen && (
-                      <LinkLabel
-                        color={link.highlighted ? "secondary" : "primary"}
-                      >
-                        {link.label}
-                      </LinkLabel>
-                    )}
-                  </LinkLayout>
-                </Link>
+                      {link.label}
+                    </LinkLabel>
+                  )}
+                </LinkLayout>
               );
             })}
           </LinksLayout>
@@ -234,23 +222,23 @@ export const SideDashboard: React.FC<SideDashboardProps> = ({
         {specialButton && (
           <SpecialLinkLayout data-size={isOpen ? "normal" : "small"}>
             <SecondButtonLayout>
-              <Link href={specialButton.href} passHref>
-                <LinkLayout
-                  color="special"
-                  data-size={isOpen ? "normal" : "small"}
-                >
-                  <Image
-                    src={specialButton.imageSrc}
-                    alt={specialButton.imageAlt}
-                    width={30}
-                    height={30}
-                  />
+              <LinkLayout
+                color="special"
+                data-size={isOpen ? "normal" : "small"}
+                href={specialButton.href}
+                passHref
+              >
+                <Image
+                  src={specialButton.imageSrc}
+                  alt={specialButton.imageAlt}
+                  width={30}
+                  height={30}
+                />
 
-                  {isOpen && (
-                    <LinkLabel color="special">{specialButton.label}</LinkLabel>
-                  )}
-                </LinkLayout>
-              </Link>
+                {isOpen && (
+                  <LinkLabel color="special">{specialButton.label}</LinkLabel>
+                )}
+              </LinkLayout>
               {isOpen && (
                 <ImageButton
                   onClick={() => {

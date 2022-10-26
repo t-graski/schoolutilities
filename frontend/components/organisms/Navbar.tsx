@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "../../stitches.config";
 import Link from "next/link";
 import { loggedIn } from "../../utils/authHelper";
@@ -92,7 +92,11 @@ const PopOverLayout = styled("div", {
 const Navbar: React.FC<Props> = ({}) => {
   const [mobileVisible, setMobileVisible] = useState(false);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(loggedIn());
+  }, []);
 
   return (
     <>
@@ -100,12 +104,10 @@ const Navbar: React.FC<Props> = ({}) => {
         <NavbarPopOver setVisibility={setMobileVisible}></NavbarPopOver>
       </PopOverLayout>
       <NavbarLayout>
-        <Link href="/" passHref>
-          <a aria-label="Startpage">
-            <LogoLayout>
-              <SvgOpenLogo />
-            </LogoLayout>
-          </a>
+        <Link href="/" passHref aria-label="Startpage">
+          <LogoLayout>
+            <SvgOpenLogo />
+          </LogoLayout>
         </Link>
         <NavLinksLayout>
           <NavigationMenuPart></NavigationMenuPart>
