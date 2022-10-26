@@ -19,144 +19,6 @@ type Props = {
   setIsLoggedIn?: Function;
 };
 
-const slideUpAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(2px)" },
-  "100%": { opacity: 1, transform: "translateY(0)" },
-});
-
-const slideRightAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(-2px)" },
-  "100%": { opacity: 1, transform: "translateX(0)" },
-});
-
-const slideDownAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(-2px)" },
-  "100%": { opacity: 1, transform: "translateY(0)" },
-});
-
-const slideLeftAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(2px)" },
-  "100%": { opacity: 1, transform: "translateX(0)" },
-});
-
-const StyledContent = styled(DropdownMenuPrimitive.Content, {
-  minWidth: 220,
-  backgroundColor: "$secondaryContainer",
-  borderRadius: 15,
-  padding: 8,
-  boxShadow:
-    "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
-  "@media (prefers-reduced-motion: no-preference)": {
-    animationDuration: "400ms",
-    animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-    willChange: "transform, opacity",
-    '&[data-state="open"]': {
-      '&[data-side="top"]': { animationName: slideDownAndFade },
-      '&[data-side="right"]': { animationName: slideLeftAndFade },
-      '&[data-side="bottom"]': { animationName: slideUpAndFade },
-      '&[data-side="left"]': { animationName: slideRightAndFade },
-    },
-  },
-});
-
-const itemStyles = {
-  all: "unset",
-  lineHeight: 1,
-  color: "$onSecondaryContainer",
-  borderRadius: 5,
-  display: "flex",
-  alignItems: "center",
-  height: 25,
-  fontWeight: "$medium",
-  fontSize: "1.05rem",
-  padding: "3px 8px",
-  position: "relative",
-  paddingLeft: 25,
-  userSelect: "none",
-  cursor: "pointer",
-
-  "&[data-disabled]": {
-    color: "$neutral-500",
-    pointerEvents: "none",
-  },
-
-  "&:focus": {
-    backgroundColor: "$warning",
-    color: "$neutral-500",
-  },
-};
-
-const StyledItem = styled(DropdownMenuPrimitive.Item, { ...itemStyles });
-const StyledCheckboxItem = styled(DropdownMenuPrimitive.CheckboxItem, {
-  ...itemStyles,
-});
-const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
-  ...itemStyles,
-});
-const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
-  '&[data-state="open"]': {
-    backgroundColor: "$warning",
-    color: "$neutral-500",
-  },
-  ...itemStyles,
-});
-
-const StyledLabel = styled(DropdownMenuPrimitive.Label, {
-  paddingLeft: 25,
-  fontSize: 12,
-  lineHeight: "25px",
-  color: "$neutral-500",
-});
-
-const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
-  height: 1,
-  backgroundColor: "$outline",
-  margin: 5,
-});
-
-const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
-  position: "absolute",
-  left: 0,
-  width: 25,
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-});
-
-const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
-  fill: "$neutral-500",
-  position: "relative",
-  right: 40,
-});
-
-// Exports
-export const DropdownMenu = DropdownMenuPrimitive.Root;
-export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
-export const DropdownMenuContent = StyledContent;
-export const DropdownMenuItem = StyledItem;
-export const DropdownMenuCheckboxItem = StyledCheckboxItem;
-export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
-export const DropdownMenuRadioItem = StyledRadioItem;
-export const DropdownMenuItemIndicator = StyledItemIndicator;
-export const DropdownMenuTriggerItem = StyledTriggerItem;
-export const DropdownMenuLabel = StyledLabel;
-export const DropdownMenuSeparator = StyledSeparator;
-export const DropdownMenuArrow = StyledArrow;
-
-// Your app...
-const Box = styled("div", {});
-
-const RightSlot = styled("div", {
-  marginLeft: "auto",
-  paddingLeft: 20,
-
-  color: "$neutral-500",
-
-  ":focus > &": { color: "$neutral-500" },
-
-  "[data-disabled] &": { color: "$neutral-500" },
-});
-
 const IconLayout = styled("div", {
   display: "flex",
   width: "30px",
@@ -209,9 +71,167 @@ const StyledLink = styled("a", {
   textDecoration: "none",
 });
 
+const slideUpAndFade = keyframes({
+  "0%": { opacity: 0, transform: "translateY(2px)" },
+  "100%": { opacity: 1, transform: "translateY(0)" },
+});
+
+const slideRightAndFade = keyframes({
+  "0%": { opacity: 0, transform: "translateX(-2px)" },
+  "100%": { opacity: 1, transform: "translateX(0)" },
+});
+
+const slideDownAndFade = keyframes({
+  "0%": { opacity: 0, transform: "translateY(-2px)" },
+  "100%": { opacity: 1, transform: "translateY(0)" },
+});
+
+const slideLeftAndFade = keyframes({
+  "0%": { opacity: 0, transform: "translateX(2px)" },
+  "100%": { opacity: 1, transform: "translateX(0)" },
+});
+
+const contentStyles = {
+  minWidth: 220,
+  backgroundColor: "$surface2",
+  borderRadius: "$small",
+  padding: "$1x",
+  boxShadow:
+    "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
+  "@media (prefers-reduced-motion: no-preference)": {
+    animationDuration: "400ms",
+    animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+    willChange: "transform, opacity",
+    '&[data-state="open"]': {
+      '&[data-side="top"]': { animationName: slideDownAndFade },
+      '&[data-side="right"]': { animationName: slideLeftAndFade },
+      '&[data-side="bottom"]': { animationName: slideUpAndFade },
+      '&[data-side="left"]': { animationName: slideRightAndFade },
+    },
+  },
+};
+
+const StyledContent = styled(DropdownMenuPrimitive.Content, {
+  ...contentStyles,
+});
+
+const StyledArrow = styled(DropdownMenuPrimitive.Arrow, {
+  fill: "white",
+});
+
+function Content({ children, ...props }) {
+  return (
+    <DropdownMenuPrimitive.Portal>
+      <StyledContent {...props}>
+        {children}
+        <StyledArrow />
+      </StyledContent>
+    </DropdownMenuPrimitive.Portal>
+  );
+}
+
+const StyledSubContent = styled(DropdownMenuPrimitive.SubContent, {
+  ...contentStyles,
+});
+
+function SubContent(props) {
+  return (
+    <DropdownMenuPrimitive.Portal>
+      <StyledSubContent {...props} />
+    </DropdownMenuPrimitive.Portal>
+  );
+}
+
+const itemStyles = {
+  all: "unset",
+  fontSize: "$s",
+  lineHeight: 1,
+  color: "$onSurface",
+  borderRadius: "$small",
+  display: "flex",
+  alignItems: "center",
+  position: "relative",
+  userSelect: "none",
+  padding: "$1x $2x",
+  cursor: "pointer",
+  gap: "$1x",
+  paddingLeft: "$3x",
+
+  "&[data-disabled]": {
+    color: "$onSurfaceVariant",
+    pointerEvents: "none",
+  },
+
+  "&[data-highlighted]": {
+    backgroundColor: "$primaryContainer",
+    color: "onPrimaryContainer",
+  },
+};
+
+const StyledItem = styled(DropdownMenuPrimitive.Item, { ...itemStyles });
+const StyledCheckboxItem = styled(DropdownMenuPrimitive.CheckboxItem, {
+  ...itemStyles,
+});
+const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
+  ...itemStyles,
+});
+const StyledSubTrigger = styled(DropdownMenuPrimitive.SubTrigger, {
+  '&[data-state="open"]': {
+    backgroundColor: "$primaryContainer",
+    color: "onPrimaryContainer",
+  },
+  ...itemStyles,
+});
+
+const StyledLabel = styled(DropdownMenuPrimitive.Label, {
+  paddingLeft: 25,
+  fontSize: 12,
+  lineHeight: "25px",
+  color: "$onSurfaceVariant",
+});
+
+const StyledSeparator = styled(DropdownMenuPrimitive.Separator, {
+  height: 1,
+  backgroundColor: "$surfaceVariant",
+  margin: 5,
+});
+
+const StyledItemIndicator = styled(DropdownMenuPrimitive.ItemIndicator, {
+  position: "absolute",
+  left: 0,
+  width: 25,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+// Exports
+export const DropdownMenu = DropdownMenuPrimitive.Root;
+export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+export const DropdownMenuContent = Content;
+export const DropdownMenuItem = StyledItem;
+export const DropdownMenuCheckboxItem = StyledCheckboxItem;
+export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+export const DropdownMenuRadioItem = StyledRadioItem;
+export const DropdownMenuItemIndicator = StyledItemIndicator;
+export const DropdownMenuLabel = StyledLabel;
+export const DropdownMenuSeparator = StyledSeparator;
+export const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+export const DropdownMenuSubTrigger = StyledSubTrigger;
+export const DropdownMenuSubContent = SubContent;
+
+// Your app...
+const Box = styled("div", {});
+
+const RightSlot = styled("div", {
+  marginLeft: "auto",
+  color: "$onSurface",
+  "[data-highlighted] > &": { color: "$onPrimaryContainer" },
+  "[data-disabled] &": { color: "$onPrimary" },
+});
+
 export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
   const { theme, setTheme } = useTheme();
-  const [language, setLanguage] = useState("en");
   const [open, setOpen] = useState(false);
 
   const [currentSchool, setCurrentSchool] = useState(getSelectedSchool());
@@ -277,20 +297,23 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link href={`/school/${currentSchool}/planner?tab=timetable`} passHref>
+                <Link
+                  href={`/school/${currentSchool}/planner?tab=timetable`}
+                  passHref
+                >
                   <StyledLink>Planner</StyledLink>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTriggerItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
                   <Link href={`/school/${currentSchool}/course`} passHref>
                     <StyledLink>Courses</StyledLink>
                   </Link>
                   <RightSlot>
                     <ChevronRightIcon />
                   </RightSlot>
-                </DropdownMenuTriggerItem>
-                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent sideOffset={2} alignOffset={-5}>
                   {coursesStatus == "success" &&
                     courses.map((course) => (
                       <DropdownMenuItem key={course.courseUUID}>
@@ -322,10 +345,10 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                       </DropdownMenuItem>
                     </>
                   )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTriggerItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
                   <Link
                     href={`/school/${currentSchool}/course/create`}
                     passHref
@@ -337,8 +360,8 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                       </RightSlot>
                     </StyledLink>
                   </Link>
-                </DropdownMenuTriggerItem>
-                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent sideOffset={2} alignOffset={-5}>
                   <DropdownMenuRadioGroup
                     value={currentSchool}
                     onValueChange={(value) => {
@@ -372,16 +395,16 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                       <StyledLink>Create new school</StyledLink>
                     </Link>
                   </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTriggerItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
                   Theme
                   <RightSlot>
                     <ChevronRightIcon />
                   </RightSlot>
-                </DropdownMenuTriggerItem>
-                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent sideOffset={2} alignOffset={-5}>
                   <DropdownMenuRadioGroup
                     value={theme}
                     onValueChange={setTheme}
@@ -405,35 +428,8 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                       System
                     </DropdownMenuRadioItem>
                   </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              {/* <DropdownMenu>
-                <DropdownMenuTriggerItem>
-                  Language
-                  <RightSlot>
-                    <ChevronRightIcon />
-                  </RightSlot>
-                </DropdownMenuTriggerItem>
-                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
-                  <DropdownMenuRadioGroup
-                    value={language}
-                    onValueChange={setLanguage}
-                  >
-                    <DropdownMenuRadioItem value="en">
-                      <DropdownMenuItemIndicator>
-                        <DotFilledIcon />
-                      </DropdownMenuItemIndicator>
-                      English
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="de">
-                      <DropdownMenuItemIndicator>
-                        <DotFilledIcon />
-                      </DropdownMenuItemIndicator>
-                      German
-                    </DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu> */}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
@@ -460,14 +456,14 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenu>
-                <DropdownMenuTriggerItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
                   Theme
                   <RightSlot>
                     <ChevronRightIcon />
                   </RightSlot>
-                </DropdownMenuTriggerItem>
-                <DropdownMenuContent sideOffset={2} alignOffset={-5}>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent sideOffset={2} alignOffset={-5}>
                   <DropdownMenuRadioGroup
                     value={theme}
                     onValueChange={setTheme}
@@ -485,11 +481,10 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
                       Light
                     </DropdownMenuRadioItem>
                   </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
             </>
           )}
-          <DropdownMenuArrow />
         </DropdownMenuContent>
       </DropdownMenu>
     </Box>

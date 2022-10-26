@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { styled } from "@stitches/react";
 import Link from "next/link";
@@ -94,7 +94,12 @@ const StyledCloseButton = styled("button", {
 export const NavbarPopOver: React.FC<Props> = ({ setVisibility }) => {
   const router = useRouter();
 
-  const isLoggedIn = loggedIn();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(loggedIn());
+  }, []);
+
   return (
     <>
       <PopOverLayout>
