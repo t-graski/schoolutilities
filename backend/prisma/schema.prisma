@@ -587,7 +587,7 @@ model timeTableSubstitutions {
 model timeTableSubstitutionTeachers {
   timeTableSubstitutionId Int                    @map("time_table_substitution_id")
   userId                  Int                    @map("user_id")
-  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId], onDelete: Cascade)
   users                   users                  @relation(fields: [userId], references: [userId])
 
   @@unique([timeTableSubstitutionId, userId], map: "time_table_substitution_teacher_UNIQUE")
@@ -599,7 +599,7 @@ model timeTableSubstitutionTeachers {
 model timeTableSubstitutionClasses {
   timeTableSubstitutionId Int                    @map("time_table_substitution_id")
   classId                 Int                    @map("class_id")
-  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId], onDelete: Cascade)
   classes                 schoolClasses          @relation(fields: [classId], references: [schoolClassId])
 
   @@unique([timeTableSubstitutionId, classId], map: "time_table_substitution_class_UNIQUE")

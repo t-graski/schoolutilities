@@ -17,6 +17,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TimetableService {
+  
   constructor(private readonly helper: HelperService) { }
 
   async createTimetable(
@@ -1081,6 +1082,120 @@ export class TimetableService {
 
       return {
         status: RETURN_DATA.SUCCESS.status,
+        data: substitution,
+      };
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async deleteSubstitution(substitutionUUID: string, request): Promise<ReturnMessage> {
+    try {
+      const substitution = await prisma.timeTableSubstitutions.delete({
+        where: {
+          timeTableSubstitutionUUID: substitutionUUID,
+        },
+      });
+      return {
+        status: 200,
+        data: substitution,
+      };
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async updateSubstitution(substitution: any, request): Promise<ReturnMessage> {
+    const {
+      timeTableSubstitutionUUID,
+      timeTableElementUUID,
+      timeTableSubstitutionDate,
+      timeTableSubstitutionTeachers,
+      schoolRoomUUID,
+      schoolSubject,
+      schoolClasses,
+    } = substitution;
+
+    try {
+      const updatedSubstitution = await prisma.timeTableSubstitutions.update({
+        where: {
+          timeTableSubstitutionUUID,
+        },
+        data: {
+          timeTableSubstitutionDate,
+          timeTableElements: {
+            connect: {
+              timeTableElementUUID,
+            },
+          },
+          schoolRooms: {
+            connect: {
+              schoolRoomUUID,
+            },
+          },
+          schoolSubjects: {
+            connect: {
+              schoolSubjectUUID: schoolSubject,
+            },
+          },
+          timeTableSubstitutionClasses: {
+            create: schoolClasses.map((subject) => {
+              return {
+                schoolClasses: {
+                  connect: {
+                    schoolSubjectUUID: subject,
+                  },
+                },
+              };
+            }),
+          },
+        },
+      });
+
+      if (timeTableSubstitutionTeachers.length > 0) {
+        await prisma.timeTableSubstitutionTeachers.createMany({
+          data: timeTableSubstitutionTeachers.map((teacher) => {
+            return {
+              timeTableSubstitutionUUID: updatedSubstitution.timeTableSubstitutionUUID,
+              users: {
+                connect: {
+                  userUUID: teacher,
+                },
+              },
+            };
+          }),
+        });
+      }
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: updatedSubstitution,
+      };
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getSubstitutionForTimeTableElement(timeTableElementUUID: string, request): Promise<ReturnMessage> {
+    try {
+      const timeTableElement = await prisma.timeTableElement.findUnique({
+        where: {
+          timeTableElementUUID,
+        },
+      });
+
+      const substitution = await prisma.timeTableSubstitutions.findMany({
+        where: {
+          timeTableSubstitutionElementId: timeTableElement.timeTableElementId,
+        },
+        include: {
+          timeTableSubstitutionTeachers: true,
+          timeTableSubstitutionClasses: true,
+        },
+      });
+
+      return {
+        status: 200,
         data: substitution,
       };
     } catch {

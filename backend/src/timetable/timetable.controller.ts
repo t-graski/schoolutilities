@@ -74,6 +74,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/holiday/:holidayUUID')
   async removeHoliday(@Param('holidayUUID') holidayUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.removeHoliday(holidayUUID);
@@ -82,6 +83,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/holiday/:holidayUUID')
   async updateHoliday(@Param('holidayUUID') holidayUUID: string, @Body() holiday, @Req() request, @Res() response) {
     const result = await this.timetableService.updateHoliday(holidayUUID, holiday);
@@ -153,10 +155,37 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Post('/substitution')
   async addSubstitution(@Body() substitution, @Req() request, @Res() response) {
     const result = await this.timetableService.addSubstitution(substitution, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/substitution/:elementUUID')
+  async getSubstitution(@Param('elementUUID') elementUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getSubstitutionForTimeTableElement(elementUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/substitution/:substitutionUUID')
+  async removeSubstitution(@Param('substitutionUUID') substitutionUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.deleteSubstitution(substitutionUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/substitution')
+  async updateSubstitution(@Body() substitution, @Req() request, @Res() response) {
+    const result = await this.timetableService.updateSubstitution(substitution, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
