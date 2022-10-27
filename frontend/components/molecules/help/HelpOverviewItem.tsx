@@ -10,7 +10,7 @@ type Props = {
   icon?: any;
 };
 
-const GeneralListItemLayout = styled("a", {
+const GeneralListItemLayout = styled(Link, {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -61,14 +61,12 @@ export const HelpOverviewItem: React.FC<Props> = ({
 
   return (
     <>
-      <Link href={href} passHref>
-        <GeneralListItemLayout>
+      <GeneralListItemLayout href={href} passHref>
           <IconLayout>{icon && <Icon />}</IconLayout>
           <TitleLayout>{title}</TitleLayout>
           <Separator width={"ultraSmall"} alignment={"center"}></Separator>
           <DescriptionLayout>{description}</DescriptionLayout>
-        </GeneralListItemLayout>
-      </Link>
+      </GeneralListItemLayout>
     </>
   );
 };

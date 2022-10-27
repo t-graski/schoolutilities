@@ -75,7 +75,7 @@ export const LoginField: React.FC<Props> = ({}) => {
     const accessToken = await getAccessToken();
 
     if (accessToken) {
-      router.push("/profile/settings");
+      router.push("/settings/account");
     }
   }
 
@@ -103,7 +103,6 @@ export const LoginField: React.FC<Props> = ({}) => {
         }),
         headers: { "Content-Type": "application/json" },
       }).then(async (response) => {
-        console.log(response);
         if (response.status == 200) {
           const data = await response.json();
           let redirectRoute: string = Array.isArray(router.query.redirect)
@@ -126,7 +125,6 @@ export const LoginField: React.FC<Props> = ({}) => {
       setSignUpInfo(
         "Ihre Eingaben konnten nicht verarbeitet werden, versuchen Sie es später erneut"
       );
-      console.log(err);
     }
   }
 

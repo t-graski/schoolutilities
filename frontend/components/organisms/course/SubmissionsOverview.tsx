@@ -19,7 +19,7 @@ export const SubmissionsOverview: React.FC<Props> = ({ submissionUUID }) => {
     ["submissions", submissionUUID],
     async () => {
       const data = await fetchSubmissions(submissionUUID);
-
+      console.log(data);
       const mappedSubmissions = [];
       data.forEach((person) => {
         mappedSubmissions.push({

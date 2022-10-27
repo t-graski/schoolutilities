@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
 import { styled } from "../../../stitches.config";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
-import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
 import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import Skeleton from "react-loading-skeleton";
 import {
@@ -12,6 +10,9 @@ import {
   useMutation,
   useQuery,
 } from "react-query";
+import { AdminList, Column } from "../AdminList";
+import SvgDelete from "../../atoms/svg/SvgDelete";
+import SvgEdit from "../../atoms/svg/SvgEdit";
 
 type Props = {
   queryClient: QueryClient;
@@ -27,12 +28,13 @@ type Props = {
   };
   uuidKey: string;
   nameKey: string;
+  columns: Column[];
   addElement?: MutationFunction<unknown, void>;
   editElement?: MutationFunction<unknown, void>;
   deleteElement?: any;
   getAllElements: Function;
   getElementLink?: (schoolUUID: string, elementUUID: string) => string;
-  isItemValid: (item: unknown) => boolean;
+  isItemValid: (item: any) => boolean;
   EditElementInputs: React.FC<{
     itemConfig: unknown;
     setItemConfig: Function;
@@ -46,9 +48,9 @@ const SchoolDetailLayout = styled("form", {
   gap: "20px",
   justifySelf: "center",
   width: "100%",
-  padding: "40px 60px",
+  padding: "0 $8x $2x $8x",
 
-  overflowY: "scroll",
+  overflowY: "auto",
 });
 
 const SettingsEntriesLayout = styled("div", {
@@ -56,21 +58,6 @@ const SettingsEntriesLayout = styled("div", {
   flexDirection: "column",
   gap: "20px",
   width: "100%",
-});
-
-const SettingsEntryLayout = styled("div", {
-  width: "100%",
-});
-
-const SettingsEntryName = styled("p", {
-  fontSize: "2rem",
-  fontWeight: "bold",
-  color: "$neutral-500",
-});
-
-const SettingsEntryLink = styled("a", {
-  textDecoration: "none",
-  cursor: "pointer",
 });
 
 const LoadingLayout = styled("div", {
@@ -90,11 +77,11 @@ export const AdminSettingsField: React.FC<Props> = ({
   texts,
   uuidKey,
   nameKey,
+  columns,
   addElement,
   editElement,
   deleteElement,
   getAllElements,
-  getElementLink,
   isItemValid,
   EditElementInputs,
   defaultItemConfig,
@@ -105,6 +92,8 @@ export const AdminSettingsField: React.FC<Props> = ({
   const [itemId, setItemId] = React.useState(null);
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
+
+  const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
 
   const { data: elements, status: elementsStatus } = useQuery(
     [reactQueryKey, schoolUUID],
@@ -120,7 +109,6 @@ export const AdminSettingsField: React.FC<Props> = ({
 
   async function getTestElements() {
     const currElements = await getAllElements(schoolUUID);
-    console.log(currElements);
   }
 
   const addMutation = useMutation(addElement, {
@@ -193,6 +181,32 @@ export const AdminSettingsField: React.FC<Props> = ({
     setEditPopUpIsVisible(false);
   }
 
+  const listActions = [];
+
+  if (editElement) {
+    listActions.push({
+      title: "Edit",
+      Icon: SvgEdit,
+      onClick: (item) => {
+        setItemConfig(item);
+        setItemId(item[uuidKey]);
+        setEditPopUpIsVisible(true);
+      },
+    });
+  }
+
+  if (deleteElement) {
+    listActions.push({
+      title: "Delete",
+      Icon: SvgDelete,
+      onClick: (item) => {
+        setDeletePopUpIsVisible(true);
+        setItemId(item[uuidKey]);
+        setItemConfig(item);
+      },
+    });
+  }
+
   return (
     <>
       <SchoolDetailLayout>
@@ -244,51 +258,17 @@ export const AdminSettingsField: React.FC<Props> = ({
         ></SettingsHeader>
         <LoadingLayout>
           <SettingsEntriesLayout>
-            {elementsStatus == "success" &&
-              elements.length > 0 &&
-              elements.map((entry, index) => (
-                <SettingsEntryLayout
-                  key={entry[uuidKey]}
-                  data-key={entry[uuidKey]}
-                >
-                  <SettingsEntry
-                    {...(editElement && {
-                      editFunction: () => {
-                        setItemConfig(entry);
-                        setItemId(entry[uuidKey]);
-                        setEditPopUpIsVisible(true);
-                      },
-                    })}
-                    {...(deleteElement && {
-                      deleteFunction: () => {
-                        setDeletePopUpIsVisible(true);
-                        setItemId(entry[uuidKey]);
-                        setItemConfig(entry);
-                      },
-                    })}
-                    highlighted={
-                      router.query &&
-                      router.query[uuidKey] &&
-                      entry[uuidKey] == router.query[uuidKey]
-                    }
-                  >
-                    {getElementLink ? (
-                      <Link
-                        href={getElementLink(schoolUUID, entry[uuidKey])}
-                        passHref
-                      >
-                        <SettingsEntryLink>
-                          <SettingsEntryName>
-                            {entry[nameKey]}
-                          </SettingsEntryName>
-                        </SettingsEntryLink>
-                      </Link>
-                    ) : (
-                      <SettingsEntryName>{entry[nameKey]}</SettingsEntryName>
-                    )}
-                  </SettingsEntry>
-                </SettingsEntryLayout>
-              ))}
+            {elementsStatus == "success" && elements.length > 0 && (
+              <AdminList
+                columns={columns}
+                data={elements}
+                selectedItems={selectedItems}
+                onSelectionChange={setSelectedItems}
+                actions={listActions}
+                uuidKey={uuidKey}
+              ></AdminList>
+            )}
+
             {elementsStatus == "success" &&
               elements.length <= 0 &&
               texts.elementsNoElementsMessage}

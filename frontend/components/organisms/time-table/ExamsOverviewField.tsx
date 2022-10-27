@@ -95,12 +95,9 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
           addHeadline: "Add new exam",
           editHeadline: "Edit exam",
           deleteHeadline: "Remove",
-          deleteDescription:
-            "This action can't be undone and will permanently remove the exam ",
-          elementsLoadingErrorMessage:
-            "While loading the exam an error occured. Please try again.",
-          elementsNoElementsMessage:
-            "There is no exam yet. Add one by clicking the plus button at the timetable item.",
+          deleteDescription: "This action can't be undone and will permanently remove the exam ",
+          elementsLoadingErrorMessage: "While loading the exam an error occured. Please try again.",
+          elementsNoElementsMessage: "There is no exam yet. Add one by clicking the plus button at the timetable item.",
         }}
         uuidKey={"timeTableExamUUID"}
         nameKey={"timeTableExamDescription"}
@@ -109,15 +106,14 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
         getAllElements={getExams}
         isItemValid={function (item: unknown): boolean {
           return true;
-        }}
+        } }
         EditElementInputs={EditElementInputs}
         defaultItemConfig={{
           schoolRoomName: "",
           schoolRoomAbbreviation: "",
           schoolRoomBuilding: "",
           schoolUUID: router.query.schoolUUID,
-        }}
-      ></AdminSettingsField>
+        }} columns={[]}      ></AdminSettingsField>
     </>
   );
 };

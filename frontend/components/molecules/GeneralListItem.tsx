@@ -16,8 +16,9 @@ const GeneralListItemLayout = styled("div", {
   flexDirection: "column",
   alignItems: "center",
   gap: "20px",
-  justifyContent: "center",
+  justifyContent: "space-between",
   width: "100%",
+  height: "100%",
 
   color: "$neutral-500",
 });
@@ -42,6 +43,17 @@ const DescriptionLayout = styled("div", {
   textAlign: "center",
 });
 
+const StyledLink = styled(Link, {
+  justifySelf: "flexEnd",
+});
+
+const ButtonBottomLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+  alignItems: "center",
+});
+
 export const GeneralListItem: React.FC<Props> = ({
   title,
   href,
@@ -53,18 +65,18 @@ export const GeneralListItem: React.FC<Props> = ({
   return (
     <>
       <GeneralListItemLayout>
-        <IconLayout>
-          <Icon />
-        </IconLayout>
-        <TitleLayout>{title}</TitleLayout>
-        <DescriptionLayout>{description}</DescriptionLayout>
-        <Link href={href} passHref>
-          <a>
-            <Button backgroundColor={"primary"} color={"primary"}>
-              {buttonText}
-            </Button>
-          </a>
-        </Link>
+        <ButtonBottomLayout>
+          <IconLayout>
+            <Icon />
+          </IconLayout>
+          <TitleLayout>{title}</TitleLayout>
+          <DescriptionLayout>{description}</DescriptionLayout>
+        </ButtonBottomLayout>
+        <StyledLink href={href} passHref>
+          <Button backgroundColor={"primary"} color={"primary"}>
+            {buttonText}
+          </Button>
+        </StyledLink>
       </GeneralListItemLayout>
     </>
   );

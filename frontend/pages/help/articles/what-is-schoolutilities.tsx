@@ -4,7 +4,6 @@ import { Spacer } from "../../../components/atoms/Spacer";
 import { Headline } from "../../../components/atoms/Headline";
 import { Separator } from "../../../components/atoms/Separator";
 import Footer from "../../../components/organisms/Footer";
-import Link from "next/link";
 import { ArticleLayout } from "../../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../../components/article/GeneralLayout";
 import { StyledLink } from "../../../components/article/Link";
@@ -46,9 +45,9 @@ export default function Article() {
           <p>
             SchoolUtilities is a web application that allows you to manage your
             school&apos;s students, teachers, and other{" "}
-            <Link href="/features" passHref>
-              <StyledLink>school-related</StyledLink>
-            </Link>{" "}
+            <StyledLink href="/features" passHref>
+              school-related
+            </StyledLink>{" "}
             information.
           </p>
           <ul>
@@ -60,7 +59,7 @@ export default function Article() {
             <Image
               src="/images/auth/Sign-Up-Mockup.png"
               alt="Sign Up Mockup"
-              layout="fill"
+              fill
             ></Image>
           </ImageLayout>
         </ArticleLayout>

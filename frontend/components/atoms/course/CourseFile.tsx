@@ -19,7 +19,7 @@ type Props = {
   allowedFileTypes: string;
 };
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   color: "$neutral-500",
   textDecoration: "none",
   cursor: "pointer",
@@ -38,7 +38,7 @@ export const CourseFile: React.FC<Props> = ({
   const Router = useRouter();
   return (
     <>
-      <Link
+      <StyledLink
         href={{
           pathname:
             "/school/[schoolUUID]/course/[courseUUID]/submission/[submissionUUID]",
@@ -50,8 +50,8 @@ export const CourseFile: React.FC<Props> = ({
         }}
         passHref
       >
-        <StyledLink>Abgabe: {name}</StyledLink>
-      </Link>
+        Abgabe: {name}
+      </StyledLink>
     </>
   );
 };

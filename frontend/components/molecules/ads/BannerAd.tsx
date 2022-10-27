@@ -13,7 +13,7 @@ const BannerAdLayout = styled("div", {
 
 const StyledIns = styled("ins", {
   display: "block",
-  height: "100px",
+  height: "70px",
   width: "1200px",
 
   "@mobileOnly": {
@@ -37,6 +37,9 @@ export const BannerAd: React.FC<Props> = ({}) => {
     <>
       <BannerAdLayout>
         <StyledIns
+          css={{
+            height: "70px",
+          }}
           className="adsbygoogle"
           data-ad-client="ca-pub-7476966411807562"
           data-ad-slot="7738492515"
