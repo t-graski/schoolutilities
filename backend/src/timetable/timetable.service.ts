@@ -684,7 +684,7 @@ export class TimetableService {
         timeTableElementEndTime: element.timeTableElementEndTime,
         timeTableElementDay: element.timeTableElementDay,
         timeTableElementRoomUUID: element.schoolRoom.schoolRoomUUID,
-        schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+        schoolSubjectUUID: element.schoolSubjects.schoolSubjectUUID,
         timeTableElementTeachers: element.timeTableTeachers.map((teacher) => teacher.users.userUUID),
         timeTableElementClasses: element.timeTableElementClasses.map((classes) => classes.schoolClasses.schoolClassUUID),
       };
