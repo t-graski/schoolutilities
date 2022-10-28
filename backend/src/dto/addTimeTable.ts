@@ -1,4 +1,4 @@
-import { IsDate, IsDateString, isDateString, IsNotEmpty, IsNumber, IsNumberString, IsString } from "class-validator";
+import { IsDate, IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { IsCustomUUID } from "src/decorators/IsCustomUUID";
 
 export class AddTimeTableDto {

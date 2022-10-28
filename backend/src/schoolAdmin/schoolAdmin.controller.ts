@@ -207,6 +207,16 @@ export class SchoolAdminController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/teachers/:schoolUUID')
+  // @Roles(Role.Student)
+  async getTeachersOfSchool(@Param('schoolUUID') schoolUUID: string, @Res() response) {
+    const result = await this.schoolAdminService.getTeachersOfSchool(schoolUUID);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/userPermissions')
   async getUserPermissions(@Req() request, @Res() response) {
     const result = await this.schoolAdminService.getUserPermissions(

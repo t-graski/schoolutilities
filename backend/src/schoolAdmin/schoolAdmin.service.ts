@@ -754,7 +754,7 @@ export class SchoolAdminService {
   }
 
   async updateJoinCode(body): Promise<ReturnMessage> {
-    const { schoolJoinCode, schoolJoinCodeExpireTimestamp,  schoolJoinCodeName = '' } = body;
+    const { schoolJoinCode, schoolJoinCodeExpireTimestamp, schoolJoinCodeName = '' } = body;
 
     const joinCodeData = await prisma.schoolJoinCodes.findUnique({
       where: {
@@ -912,6 +912,31 @@ export class SchoolAdminService {
       };
     } catch (err) {
       return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getTeachersOfSchool(schoolUUID: string): Promise<ReturnMessage> {
+    try {
+      const teachers = await prisma.schoolUserRoles.findMany({
+        where: {
+          schoolRoles: {
+            schoolRoleId: 1,
+          },
+          schools: {
+            schoolUUID,
+          }
+        },
+        include: {
+          users: true,
+        }
+      })
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: teachers,
+      }
+    } catch {
+      throw new InternalServerErrorException('Database error');
     }
   }
 

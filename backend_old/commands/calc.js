@@ -13,6 +13,7 @@ exports.run = async (client, message, args) => {
     } catch (e) {
         error = true;
     }
+
     let resultString = result + '';
     let commaLength = resultString.includes('.') ? resultString.split('.')[1].length : 0;
     result = numeral(result).format('0,0.' + '0'.repeat(commaLength > 10 ? 10 : commaLength));
