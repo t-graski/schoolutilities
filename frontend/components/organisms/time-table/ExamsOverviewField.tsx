@@ -2,13 +2,12 @@ import { styled } from "@stitches/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
+import { fetchSchoolRooms } from "../../../utils/requests/admin";
 import {
-  addSchoolRoom,
-  deleteSchoolRoom,
-  editSchoolRoom,
-  fetchSchoolRooms,
-} from "../../../utils/requests/admin";
-import { addExam, deleteExam, editExam, getExams } from "../../../utils/requests/timeTable";
+  deleteExam,
+  editExam,
+  getExams,
+} from "../../../utils/requests/timeTable";
 import { InputField } from "../../atoms/input/InputField";
 import { Select } from "../../atoms/input/Select";
 import { Spacer } from "../../atoms/Spacer";
@@ -95,9 +94,12 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
           addHeadline: "Add new exam",
           editHeadline: "Edit exam",
           deleteHeadline: "Remove",
-          deleteDescription: "This action can't be undone and will permanently remove the exam ",
-          elementsLoadingErrorMessage: "While loading the exam an error occured. Please try again.",
-          elementsNoElementsMessage: "There is no exam yet. Add one by clicking the plus button at the timetable item.",
+          deleteDescription:
+            "This action can't be undone and will permanently remove the exam ",
+          elementsLoadingErrorMessage:
+            "While loading the exam an error occured. Please try again.",
+          elementsNoElementsMessage:
+            "There is no exam yet. Add one by clicking the plus button at the timetable item.",
         }}
         uuidKey={"timeTableExamUUID"}
         nameKey={"timeTableExamDescription"}
@@ -106,14 +108,38 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
         getAllElements={getExams}
         isItemValid={function (item: unknown): boolean {
           return true;
-        } }
+        }}
         EditElementInputs={EditElementInputs}
         defaultItemConfig={{
           schoolRoomName: "",
           schoolRoomAbbreviation: "",
           schoolRoomBuilding: "",
           schoolUUID: router.query.schoolUUID,
-        }} columns={[]}      ></AdminSettingsField>
+        }}
+        columns={[
+          {
+            title: "Name",
+            key: "timeTableExamDescription",
+            sortFunction: (a: any, b: any) => {
+              return a.timeTableExamDescription.localeCompare(
+                b.timeTableExamDescription
+              );
+            },
+          },
+          {
+            title: "Room",
+            key: "schoolRooms",
+            sortFunction: (a: any, b: any) => {
+              return a.schoolRooms.schoolRoomName.localeCompare(
+                b.schoolRooms.schoolRoomName
+              );
+            },
+            toStringFunction: (item: any) => {
+              return item.schoolRoomName;
+            },
+          },
+        ]}
+      ></AdminSettingsField>
     </>
   );
 };

@@ -103,14 +103,6 @@ export const AdminSettingsField: React.FC<Props> = ({
     }
   );
 
-  useEffect(() => {
-    getTestElements();
-  }, []);
-
-  async function getTestElements() {
-    const currElements = await getAllElements(schoolUUID);
-  }
-
   const addMutation = useMutation(addElement, {
     onMutate: async () => {
       await queryClient.cancelQueries([reactQueryKey, schoolUUID]);
@@ -210,42 +202,49 @@ export const AdminSettingsField: React.FC<Props> = ({
   return (
     <>
       <SchoolDetailLayout>
-        {editPopUpIsVisible && (
-          <SettingsPopUp
-            headline={itemId == "" ? texts.addHeadline : texts.editHeadline}
-            inputValid={isItemValid(itemConfig)}
-            saveLabel={itemId == "" ? "Add" : "Save"}
-            saveFunction={savePopUpInput}
-            closeFunction={() => {
-              setEditPopUpIsVisible(false);
-              setItemConfig(null);
-            }}
-          >
+        <SettingsPopUp
+          headline={itemId == "" ? texts.addHeadline : texts.editHeadline}
+          inputValid={isItemValid(itemConfig)}
+          saveLabel={itemId == "" ? "Add" : "Save"}
+          saveFunction={savePopUpInput}
+          closeFunction={() => {
+            setEditPopUpIsVisible(false);
+            setItemConfig(null);
+          }}
+          open={editPopUpIsVisible}
+          setOpen={setEditPopUpIsVisible}
+        >
+          {itemConfig ? (
             <EditElementInputs
               itemConfig={itemConfig}
               setItemConfig={setItemConfig}
             />
-          </SettingsPopUp>
-        )}
-        {deletePopUpIsVisible && (
-          <SettingsPopUp
-            headline={`${texts.deleteHeadline} ${itemConfig[nameKey]}?`}
-            inputValid={true}
-            saveLabel="Confirm"
-            saveFunction={() => {
-              deleteMutation.mutate(itemId);
-              setDeletePopUpIsVisible(false);
-            }}
-            closeFunction={() => {
-              setDeletePopUpIsVisible(false);
-              setItemConfig(null);
-            }}
-          >
-            <StyledDeleteText>
-              {texts.deleteDescription} {itemConfig[nameKey]}.
-            </StyledDeleteText>
-          </SettingsPopUp>
-        )}
+          ) : (
+            <></>
+          )}
+        </SettingsPopUp>
+        <SettingsPopUp
+          headline={`${texts.deleteHeadline} ${
+            itemConfig ? itemConfig[nameKey] : ""
+          }?`}
+          inputValid={true}
+          saveLabel="Confirm"
+          saveFunction={() => {
+            deleteMutation.mutate(itemId);
+            setDeletePopUpIsVisible(false);
+          }}
+          closeFunction={() => {
+            setDeletePopUpIsVisible(false);
+            setItemConfig(null);
+          }}
+          open={deletePopUpIsVisible}
+          setOpen={setDeletePopUpIsVisible}
+        >
+          <StyledDeleteText>
+            {texts.deleteDescription}
+            {itemConfig ? itemConfig[nameKey] : ""}.
+          </StyledDeleteText>
+        </SettingsPopUp>
         <SettingsHeader
           headline={texts.title}
           {...(addElement && {

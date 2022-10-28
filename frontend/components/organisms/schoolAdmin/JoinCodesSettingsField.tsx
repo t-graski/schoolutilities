@@ -72,7 +72,7 @@ export const JoinCodesSettingsField: React.FC<Props> = ({ queryClient }) => {
         editElement={editJoinCode}
         deleteElement={deleteJoinCode}
         getAllElements={fetchSchoolJoinCodes}
-        isItemValid={(item) => item.schoolJoinCodeName.length > 0}
+        isItemValid={(item) => true}
         EditElementInputs={EditElementInputs}
         defaultItemConfig={{
           schoolJoinCodeName: "",

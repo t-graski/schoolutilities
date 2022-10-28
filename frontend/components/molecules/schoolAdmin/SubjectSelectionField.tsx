@@ -16,25 +16,31 @@ export const SubjectSelectionField: React.FC<Props> = ({
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const { data: subjects, status: subjectsStatus } = useQuery("subjects", () =>
-    fetchSchoolSubjects(schoolUUID)
+  const { data: subjects, status: subjectsStatus } = useQuery(
+    ["subjects", schoolUUID],
+    () => fetchSchoolSubjects(schoolUUID),
+    {
+      enabled: !!schoolUUID,
+    }
   );
 
-  if(subjectsStatus === "loading") return <div>Loading...</div>
+  if (subjectsStatus === "loading") return <div>Loading...</div>;
 
-  if(subjectsStatus === "error") return <div>Error</div>
+  if (subjectsStatus === "error") return <div>Error</div>;
 
-  return <>
-    <SearchSelect
+  return (
+    <>
+      <SearchSelect
         selectOptions={subjects?.map((subject) => ({
-            label: subject.schoolSubjectAbbreviation,
-            value: subject.schoolSubjectUUID,
+          label: subject.schoolSubjectAbbreviation,
+          value: subject.schoolSubjectUUID,
         }))}
-        selectValue={selectedSubject}
+        selectValue={[selectedSubject]}
         selectMultiValues={false}
         onChange={(value) => setSelectedSubject(value.value)}
         editable={true}
         isSmall={true}
-    ></SearchSelect>
-  </>;
+      ></SearchSelect>
+    </>
+  );
 };

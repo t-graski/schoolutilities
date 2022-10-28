@@ -15,11 +15,11 @@ export type TimeTableElementTeacher = {
   userEmail: string;
 };
 
-
 export type TimeTableItemType = {
   timeTableElementUUID?: string;
   timeTableElementStartTime?: string;
   timeTableElementEndTime?: string;
+  timeTableElementDay?: string;
   overlaps?: number;
   overlapStart?: number;
   omitted?: {
@@ -31,6 +31,9 @@ export type TimeTableItemType = {
     schoolSubjectName: string;
     schoolSubjectAbbreviation: string;
   };
+  timeTableElementRoom?: string;
+  timeTableElementClasses?: string[];
+  schoolSubjectUUID?: string;
   holidayUUID?: string;
   holidayName?: string;
   timeTableElementTeachers?: TimeTableElementTeacher[];
@@ -141,8 +144,6 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
       item.overlapStart * overlapColumns + 1
     } / span ${overlapColumns}`,
   });
-
-  console.log(item);
 
   return (
     <>

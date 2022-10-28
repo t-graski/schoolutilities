@@ -20,3 +20,8 @@ export async function editExam(exam: any) {
   console.log(exam);
   return fetchData("timetable/exam", "PUT", 200, exam);
 }
+
+export async function addTimeTableElement(timeTableElement: any) {
+  console.log(timeTableElement);
+  return fetchData("timetable/element", "POST", 200, timeTableElement);
+}

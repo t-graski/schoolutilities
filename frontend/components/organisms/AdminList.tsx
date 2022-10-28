@@ -7,12 +7,12 @@ import { AdminListHeader } from "../molecules/AdminListHeader";
 import { AdminListItem } from "../molecules/AdminListItem";
 
 export type Column = {
-    title: string;
-    key: string;
-    link?: (item: any) => string;
-    sortFunction?: (a: any, b: any) => number;
-    toStringFunction?: (item: any) => string;
-}
+  title: string;
+  key: string;
+  link?: (item: any) => string;
+  sortFunction?: (a: any, b: any) => number;
+  toStringFunction?: (item: any) => string;
+};
 
 type Props = {
   columns: Column[];
@@ -42,7 +42,7 @@ export const AdminList: React.FC<Props> = ({
   actions,
   defaultOrderKey,
   defaultOrderDirection,
-    uuidKey,
+  uuidKey,
 }) => {
   const [order, setOrder] = React.useState<{
     key: string;

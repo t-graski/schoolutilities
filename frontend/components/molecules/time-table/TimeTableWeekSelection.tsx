@@ -1,6 +1,6 @@
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { styled } from "../../../stitches.config";
 import { fetchSchoolClasses } from "../../../utils/requests";
@@ -50,19 +50,17 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
   startDate,
   setStartDate,
 }) => {
-  let date = new Date(startDate);
-
   const [endDate, setEndDate] = useState(
     new Date().toISOString().split("T")[0]
   );
 
   useEffect(() => {
-    let currentEndDate = new Date(date);
+    let currentEndDate = new Date(startDate);
     currentEndDate.setFullYear(currentEndDate.getFullYear());
     currentEndDate.setMonth(currentEndDate.getMonth());
     currentEndDate.setDate(currentEndDate.getDate() + 6);
     setEndDate(new Date(currentEndDate).toISOString());
-  }, [date, startDate]);
+  }, [startDate]);
 
   let options = {
     month: "2-digit",
@@ -86,7 +84,7 @@ export const TimeTableWeekSelection: React.FC<Props> = ({
         {startDate &&
           //@ts-ignore
           new Intl.DateTimeFormat("default", options).format(
-            new Date(date)
+            new Date(startDate)
           )}{" "}
         - {/*@ts-ignore */}
         {startDate &&

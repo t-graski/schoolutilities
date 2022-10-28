@@ -239,7 +239,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           >
             Sign up
           </Button>
-          <Link href="/auth?tab=login">
+          <Link href="/auth?tab=login" passHref>
             <Button
               buttonType={"text"}
               onClick={() => {

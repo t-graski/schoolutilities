@@ -73,7 +73,7 @@ export const DepartmentsSettingsField: React.FC<Props> = ({ queryClient }) => {
         editElement={editDepartment}
         deleteElement={deleteDepartment}
         getAllElements={fetchSchoolDepartments}
-        isItemValid={(item) => item.departmentName.length > 0}
+        isItemValid={(item) => true}
         EditElementInputs={EditElementInputs}
         defaultItemConfig={{
           schoolUUID,
