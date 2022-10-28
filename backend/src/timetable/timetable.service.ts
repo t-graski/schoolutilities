@@ -17,7 +17,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TimetableService {
-  
+
   constructor(private readonly helper: HelperService) { }
 
   async createTimetable(
@@ -224,7 +224,7 @@ export class TimetableService {
       throw new InternalServerErrorException('Database error');
     }
   }
-  
+
   async getTimetable(
     classUUID: string,
     dateString: string,
@@ -669,6 +669,11 @@ export class TimetableService {
               users: true,
             },
           },
+          timeTableElementClasses: {
+            include: {
+              schoolClasses: true,
+            },
+          },
           schoolRoom: true,
         },
       });
@@ -678,21 +683,10 @@ export class TimetableService {
         timeTableElementStartTime: element.timeTableElementStartTime,
         timeTableElementEndTime: element.timeTableElementEndTime,
         timeTableElementDay: element.timeTableElementDay,
-        timeTableElementRoom: {
-          schoolRoomUUID: element.schoolRoom.schoolRoomUUID,
-          schoolRoomName: element.schoolRoom.schoolRoomName,
-          schoolRoomAbbreviation: element.schoolRoom.schoolRoomAbbreviation,
-          schoolRoomBuilding: element.schoolRoom.schoolRoomBuilding,
-        },
+        timeTableElementRoomUUID: element.schoolRoom.schoolRoomUUID,
         schoolSubjectName: element.schoolSubjects.schoolSubjectName,
-        timeTableElementTeachers: element.timeTableTeachers.map((teacher) => {
-          return {
-            userUUID: teacher.users.userUUID,
-            userFirstname: teacher.users.userFirstname,
-            userLastname: teacher.users.userLastname,
-            userEmail: teacher.users.userEmail,
-          };
-        }),
+        timeTableElementTeachers: element.timeTableTeachers.map((teacher) => teacher.users.userUUID),
+        timeTableElementClasses: element.timeTableElementClasses.map((classes) => classes.schoolClasses.schoolClassUUID),
       };
 
       return {
