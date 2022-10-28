@@ -45,17 +45,6 @@ const LoginButtonLayout = styled("div", {
   alignItems: "center",
 });
 
-const StyledLink = styled("a", {
-  color: "$neutral-500",
-  textDecoration: "none",
-  transition: "all 0.2s",
-  cursor: "pointer",
-
-  "&:hover": {
-    textDecoration: "underline",
-  },
-});
-
 export const LoginField: React.FC<Props> = ({}) => {
   const [email, setEmail] = React.useState("");
   const [emailValid, setEmailValid] = React.useState(false);
@@ -69,15 +58,15 @@ export const LoginField: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     checkLogin();
-  }, []);
 
-  async function checkLogin() {
-    const accessToken = await getAccessToken();
+    async function checkLogin() {
+      const accessToken = await getAccessToken();
 
-    if (accessToken) {
-      router.push("/settings/account");
+      if (accessToken) {
+        router.push("/settings/account");
+      }
     }
-  }
+  }, [router]);
 
   function checkInputData() {
     console.log(emailValid, passwordValid);

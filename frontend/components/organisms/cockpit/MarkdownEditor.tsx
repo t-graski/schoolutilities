@@ -25,7 +25,7 @@ export const MarkdownEditor: React.FC<Props> = ({ saveContent, value }) => {
         saveContent(editor.getHTML());
       });
     }
-  }, [editor]);
+  }, [editor, saveContent]);
 
   return (
     <div className="editor">

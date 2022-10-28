@@ -78,7 +78,7 @@ export const PersonsSettingsField: React.FC<Props> = ({ queryClient }) => {
         editElement={editSchoolPerson}
         deleteElement={deleteSchoolPerson}
         getAllElements={fetchSchoolUsers}
-        isItemValid={(item) => item.userFirstname && item.userLastname}
+        isItemValid={(item) => true}
         EditElementInputs={EditElementInputs}
         defaultItemConfig={{
           schoolUUID,
