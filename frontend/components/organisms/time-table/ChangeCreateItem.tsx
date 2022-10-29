@@ -56,8 +56,6 @@ export const ChangeCreateItem: React.FC<Props> = ({
     }
   );
 
-  console.log(rooms);
-
   return (
     <>
       <InputFieldsLayout>
@@ -195,12 +193,12 @@ export const ChangeCreateItem: React.FC<Props> = ({
             onChange={(e) => {
               setItemConfig({
                 ...itemConfig,
-                timeTableElementRoom: e.value,
+                timeTableElementRoomUUID: e.value,
               });
             }}
             icon={SvgSchool}
             selectMultiValues={false}
-            selectValue={[itemConfig.timeTableElementRoom]}
+            selectValue={[itemConfig.timeTableElementRoomUUID]}
           />
         )}
       </InputFieldsLayout>

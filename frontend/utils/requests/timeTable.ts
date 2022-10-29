@@ -1,7 +1,7 @@
 import { fetchData } from "./default";
 
 export async function getTimeTableElement(timeTableElementUUID: string) {
-  return fetchData("timetable/element" + timeTableElementUUID, "GET", 200);
+  return fetchData("timetable/timetableelement/" + timeTableElementUUID, "GET", 200);
 }
 
 export async function getExams(schoolUUID: string) {
@@ -22,6 +22,9 @@ export async function editExam(exam: any) {
 }
 
 export async function addTimeTableElement(timeTableElement: any) {
-  console.log(timeTableElement);
   return fetchData("timetable/element", "POST", 200, timeTableElement);
+}
+
+export async function editTimeTableElement(timeTableElement: any) {
+  return fetchData("timetable/element", "PUT", 200, timeTableElement);
 }

@@ -31,7 +31,7 @@ export type TimeTableItemType = {
     schoolSubjectName: string;
     schoolSubjectAbbreviation: string;
   };
-  timeTableElementRoom?: string;
+  timeTableElementRoomUUID?: string;
   timeTableElementClasses?: string[];
   schoolSubjectUUID?: string;
   holidayUUID?: string;

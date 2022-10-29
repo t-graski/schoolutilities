@@ -55,7 +55,7 @@ const selectStyled = {
     ":hover": {
       backgroundColor: "var(--colors-surface4)",
     },
-  }), 
+  }),
   control: (provided, state) => ({
     ...provided,
     border: "none",
@@ -183,6 +183,7 @@ export const SearchSelect: React.FC<Props> = ({
   editable = true,
   isSmall = false,
 }) => {
+
   return (
     <>
       <InputFieldCore icon={icon} showLabel={false} isSmall={isSmall}>
@@ -191,7 +192,7 @@ export const SearchSelect: React.FC<Props> = ({
           options={selectOptions}
           isSearchable={true}
           isClearable={true}
-          defaultValue={selectValue}
+          defaultValue={selectOptions.filter(element => selectValue.includes(element.value))}
           isDisabled={!editable}
           className={selectMultiValues ? "basic-multi-select" : ""}
           isMulti={selectMultiValues}
