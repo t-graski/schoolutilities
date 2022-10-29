@@ -234,7 +234,7 @@ export class TimetableService {
         },
       });
       return {
-        status: 201,
+        status: 200,
         data: element,
       }
     } catch {
