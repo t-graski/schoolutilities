@@ -145,11 +145,27 @@ export class TimetableService {
   }
 
   async updateTimeTableElement(payload: UpdateTimeTableElementDto, request: Request): Promise<ReturnMessage> {
-    const { timeTableElementUUID, timeTableElementStartTime, timeTableElementDay, timeTableElementEndTime, schoolSubjectUUID, timeTableElementTeachers, timeTableElementRoom, timeTableElementClasses } = payload;
+    const { timeTableElementUUID, timeTableElementStartTime, timeTableElementDay, timeTableElementEndTime, schoolSubjectUUID, timeTableElementTeachers, timeTableElementRoomUUID, timeTableElementClasses } = payload;
 
     try {
       const token = await this.helper.extractJWTToken(request);
       const creatorUUID = await this.helper.getUserUUIDfromJWT(token);
+
+      await prisma.timeTableElementClasses.deleteMany({
+        where: {
+          timeTableElements: {
+            timeTableElementUUID,
+          },
+        },
+      });
+
+      await prisma.timeTableElementTeachers.deleteMany({
+        where: {
+          timeTableElements: {
+            timeTableElementUUID,
+          },
+        },
+      });
 
       const element = await prisma.timeTableElement.update({
         where: {
@@ -164,7 +180,7 @@ export class TimetableService {
           },
           schoolRoom: {
             connect: {
-              schoolRoomUUID: timeTableElementRoom,
+              schoolRoomUUID: timeTableElementRoomUUID,
             },
           },
           timeTableElementStartTime: new Date(timeTableElementStartTime),
@@ -202,7 +218,9 @@ export class TimetableService {
         status: 201,
         data: element,
       }
-    } catch {
+    } catch (err) {
+      console.log(err);
+
       throw new InternalServerErrorException('Database error');
     }
   }

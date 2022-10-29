@@ -63,7 +63,7 @@ export class UpdateTimeTableElementDto {
 
     @IsNotEmpty()
     @IsString()
-    timeTableElementRoom: string;
+    timeTableElementRoomUUID: string;
 
     @IsNotEmpty()
     @IsString({ each: true })
