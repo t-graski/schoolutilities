@@ -10,6 +10,7 @@ import { SetStateAction, useState } from "react";
 import { Button } from "@/atoms/Button";
 import { addTimeTableElement } from "utils/requests/timeTable";
 import { useRouter } from "next/router";
+import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
 
 export default function CreateCourse() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function CreateCourse() {
     timeTableElementEndTime: "",
     timeTableElementDay: "",
     schoolSubjectUUID: "",
-    timeTableElementRoom: "",
+    timeTableElementRoomUUID: "",
     timeTableElementTeachers: [],
     timeTableElementClasses: [],
   });
@@ -40,15 +41,18 @@ export default function CreateCourse() {
         <Button
           buttonType="filled"
           onClick={async () => {
-            const response = await addTimeTableElement({
-              ...itemConfig,
-              timeTableElementStartTime: `1970-01-01T${itemConfig.timeTableElementStartTime}:00.000Z`,
-              timeTableElementEndTime: `1970-01-01T${itemConfig.timeTableElementEndTime}:00.000Z`,
-            });
-
-            if (response.status === 201) {
-              router.push(`/school/${schoolUUID}/planner`);
-            } else {
+            try {
+              const response = await addTimeTableElement({
+                ...itemConfig,
+                timeTableElementStartTime: `1970-01-01T${itemConfig.timeTableElementStartTime}:00.000Z`,
+                timeTableElementEndTime: `1970-01-01T${itemConfig.timeTableElementEndTime}:00.000Z`,
+              });
+              router.push(
+                `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+                  itemConfig.timeTableElementClasses[0]
+                }`
+              );
+            } catch (e) {
               alert("Something went wrong");
             }
           }}
