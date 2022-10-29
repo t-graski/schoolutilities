@@ -10,9 +10,15 @@ import dynamic from "next/dynamic";
 import { ChangeCreateItem } from "../../../../../../components/organisms/time-table/ChangeCreateItem";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
-import { editTimeTableElement, getTimeTableElement } from "../../../../../../utils/requests/timeTable";
+import {
+  deleteTimeTableElement,
+  editTimeTableElement,
+  getTimeTableElement,
+} from "../../../../../../utils/requests/timeTable";
 import { SetStateAction, useEffect, useState } from "react";
 import { Button } from "@/atoms/Button";
+import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
+import { Spacer } from "@/atoms/Spacer";
 
 export default function EditTimeTableElement() {
   const router = useRouter();
@@ -60,20 +66,41 @@ export default function EditTimeTableElement() {
         <Button
           buttonType="filled"
           onClick={async () => {
-            const response = await editTimeTableElement({
-              ...itemConfig,
-              timeTableElementStartTime: `1970-01-01T${itemConfig.timeTableElementStartTime}:00.000Z`,
-              timeTableElementEndTime: `1970-01-01T${itemConfig.timeTableElementEndTime}:00.000Z`,
-            });
-
-            if (response.status === 201) {
-              router.push(`/school/${schoolUUID}/planner`);
-            } else {
+            try {
+              const response = await editTimeTableElement({
+                ...itemConfig,
+                timeTableElementStartTime: `1970-01-01T${itemConfig.timeTableElementStartTime}:00.000Z`,
+                timeTableElementEndTime: `1970-01-01T${itemConfig.timeTableElementEndTime}:00.000Z`,
+              });
+              router.push(
+                `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+                  itemConfig.timeTableElementClasses[0]
+                }`
+              );
+            } catch (e) {
               alert("Something went wrong");
             }
           }}
         >
           Send me_!!
+        </Button>
+        <Spacer size="4x"></Spacer>
+        <Button
+          buttonType="outlined"
+          onClick={async () => {
+            try {
+              const response = await deleteTimeTableElement(timeTableUUID);
+              router.push(
+                `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+                  itemConfig.timeTableElementClasses[0]
+                }`
+              );
+            } catch (e) {
+              alert("Something went wrong");
+            }
+          }}
+        >
+          Delete item
         </Button>
       </ContentLayout>
       <Footer></Footer>

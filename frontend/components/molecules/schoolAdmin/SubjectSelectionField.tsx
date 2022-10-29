@@ -35,9 +35,18 @@ export const SubjectSelectionField: React.FC<Props> = ({
           label: subject.schoolSubjectAbbreviation,
           value: subject.schoolSubjectUUID,
         }))}
-        selectValue={[selectedSubject]}
+        selectValue={
+          selectedSubject
+            ? {
+                label: subjects?.find(
+                  (subject) => subject.schoolSubjectUUID === selectedSubject
+                )?.schoolSubjectAbbreviation,
+                value: selectedSubject,
+              }
+            : undefined
+        }
         selectMultiValues={false}
-        onChange={(value) => setSelectedSubject(value.value)}
+        onChange={(value) => setSelectedSubject(value?.value)}
         editable={true}
         isSmall={true}
       ></SearchSelect>

@@ -160,7 +160,16 @@ export const ChangeCreateItem: React.FC<Props> = ({
             }}
             icon={SvgSchool}
             selectMultiValues={true}
-            selectValue={itemConfig.timeTableElementClasses}
+            selectValue={classes
+              .filter((element) =>
+                itemConfig.timeTableElementClasses.includes(element.classUUID)
+              )
+              .map((element) => {
+                return {
+                  value: element.classUUID,
+                  label: element.className,
+                };
+              })}
           />
         )}
         {teachersStatus === "success" && (
@@ -174,12 +183,23 @@ export const ChangeCreateItem: React.FC<Props> = ({
             onChange={(e) => {
               setItemConfig({
                 ...itemConfig,
-                timeTableElementTeachers: e.map((element) => element.value),
+                timeTableElementTeachers: e.map((element) => element?.value),
               });
             }}
             icon={SvgSchool}
             selectMultiValues={true}
-            selectValue={itemConfig.timeTableElementTeachers}
+            selectValue={teachers
+              .filter((element) =>
+                itemConfig.timeTableElementTeachers.includes(
+                  element.users.userUUID
+                )
+              )
+              .map((element) => {
+                return {
+                  value: element.users.userUUID,
+                  label: element.users.userFirstname,
+                };
+              })}
           />
         )}
         {roomsStatus === "success" && (
@@ -193,12 +213,25 @@ export const ChangeCreateItem: React.FC<Props> = ({
             onChange={(e) => {
               setItemConfig({
                 ...itemConfig,
-                timeTableElementRoomUUID: e.value,
+                timeTableElementRoomUUID: e?.value,
               });
             }}
             icon={SvgSchool}
             selectMultiValues={false}
-            selectValue={[itemConfig.timeTableElementRoomUUID]}
+            selectValue={
+              rooms
+                .filter((element) =>
+                  itemConfig.timeTableElementRoomUUID?.includes(
+                    element.schoolRoomUUID
+                  )
+                )
+                .map((element) => {
+                  return {
+                    value: element.schoolRoomUUID,
+                    label: element.schoolRoomName,
+                  };
+                })[0]
+            }
           />
         )}
       </InputFieldsLayout>

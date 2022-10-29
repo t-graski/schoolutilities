@@ -14,6 +14,7 @@ import SvgRoundUser from "../atoms/svg/SvgRoundUser";
 import { useQuery } from "react-query";
 import { fetchCourses, fetchSchools } from "../../utils/requests";
 import Link from "next/link";
+import { getCurrentWeekMonday } from "./time-table/TimeTableWeekSelection";
 
 type Props = {
   setIsLoggedIn?: Function;
@@ -268,8 +269,8 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
     setCurrentSchool(schools[0].schoolUUID);
   }
 
-  console.log(userInfo)
-  
+  console.log(userInfo);
+
   return (
     <Box>
       <DropdownMenu onOpenChange={setOpen}>
@@ -300,7 +301,9 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <StyledLink
-                  href={`/school/${currentSchool}/planner?tab=timetable`}
+                  href={`/school/${currentSchool}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+                    userInfo && userInfo.userSchoolClass
+                  }`}
                   passHref
                 >
                   Planner

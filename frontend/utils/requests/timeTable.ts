@@ -22,9 +22,13 @@ export async function editExam(exam: any) {
 }
 
 export async function addTimeTableElement(timeTableElement: any) {
-  return fetchData("timetable/element", "POST", 200, timeTableElement);
+  return fetchData("timetable/element", "POST", 201, timeTableElement);
 }
 
 export async function editTimeTableElement(timeTableElement: any) {
-  return fetchData("timetable/element", "PUT", 200, timeTableElement);
+  return fetchData("timetable/element", "PUT", 201, timeTableElement);
+}
+
+export async function deleteTimeTableElement(timeTableElementUUID: string) {
+  return fetchData("timetable/element/" + timeTableElementUUID, "DELETE", 200);
 }

@@ -183,7 +183,6 @@ export const SearchSelect: React.FC<Props> = ({
   editable = true,
   isSmall = false,
 }) => {
-
   return (
     <>
       <InputFieldCore icon={icon} showLabel={false} isSmall={isSmall}>
@@ -192,7 +191,7 @@ export const SearchSelect: React.FC<Props> = ({
           options={selectOptions}
           isSearchable={true}
           isClearable={true}
-          defaultValue={selectOptions.filter(element => selectValue.includes(element.value))}
+          defaultValue={selectValue}
           isDisabled={!editable}
           className={selectMultiValues ? "basic-multi-select" : ""}
           isMulti={selectMultiValues}
