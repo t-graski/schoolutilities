@@ -269,8 +269,6 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
     setCurrentSchool(schools[0].schoolUUID);
   }
 
-  console.log(userInfo);
-
   return (
     <Box>
       <DropdownMenu onOpenChange={setOpen}>

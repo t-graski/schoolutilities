@@ -286,12 +286,6 @@ const ContentListItem = React.forwardRef<any, any>(function Content(
       <NavigationMenuLink
         {...props}
         ref={forwardedRef}
-        css={{
-          padding: 12,
-          borderRadius: 6,
-          transition: "background-color 150ms ease",
-          "&:hover": { backgroundColor: "$neutral-300" },
-        }}
         passHref
       >
         <LinkTitle>{title}</LinkTitle>

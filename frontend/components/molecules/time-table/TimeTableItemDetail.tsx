@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
+import { useQuery } from "react-query";
+import { fetchSchoolSubjects } from "utils/requests/admin";
 import { styled } from "../../../stitches.config";
 import SvgEdit from "../../atoms/svg/SvgEdit";
 import { TimeTableItemType } from "../../atoms/TimeTableItem";
@@ -38,11 +40,9 @@ const HeaderLayout = styled("div", {
   gap: "$2x",
 });
 
-export const TimeTableItem: React.FC<Props> = ({ item }) => {
+export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
   const router = useRouter();
-  const { schoolUUID } = router.query;
-
-  console.log(item);
+  const schoolUUID = router.query.schoolUUID as string;
 
   return (
     <>
@@ -51,7 +51,9 @@ export const TimeTableItem: React.FC<Props> = ({ item }) => {
           {item?.schoolSubject.schoolSubjectName}{" - "} {item.schoolSubject.schoolSubjectAbbreviation} {" "}
           <StyledButton
             onClick={() => {
-              router.push(`/school/${schoolUUID}/timetable/element/${item?.timeTableElementUUID}`);
+              router.push(
+                `/school/${schoolUUID}/timetable/element/${item?.timeTableElementUUID}`
+              );
             }}
           >
             <SvgEdit></SvgEdit>
@@ -79,6 +81,6 @@ function formatTime(time: number) {
   return time < 10 ? "0" + time : time;
 }
 
-TimeTableItem.defaultProps = {};
+TimeTableItemDetail.defaultProps = {};
 
-export default TimeTableItem;
+export default TimeTableItemDetail;
