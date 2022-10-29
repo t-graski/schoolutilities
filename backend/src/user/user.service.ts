@@ -116,9 +116,6 @@ export class UserService {
         },
       };
 
-      console.log(userItem);
-
-
       return {
         status: RETURN_DATA.SUCCESS.status,
         data: userItem,
