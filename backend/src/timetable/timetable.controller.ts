@@ -41,9 +41,9 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('/element')
-  async deleteTimeTableElement(@Body() timeTableElement, @Req() request: Request, @Res() response) {
-    const result = await this.timetableService.deleteTimeTableElement(timeTableElement, request);
+  @Delete('/element/:elementUUID')
+  async deleteTimeTableElement(@Param('elementUUID') elementUUID: string, @Req() request: Request, @Res() response) {
+    const result = await this.timetableService.deleteTimeTableElement(elementUUID, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

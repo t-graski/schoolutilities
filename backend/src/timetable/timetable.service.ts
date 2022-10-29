@@ -225,8 +225,7 @@ export class TimetableService {
     }
   }
 
-  async deleteTimeTableElement(payload: any, request: Request): Promise<ReturnMessage> {
-    const { timeTableElementUUID } = payload;
+  async deleteTimeTableElement(timeTableElementUUID: string, request: Request): Promise<ReturnMessage> {
 
     try {
       const element = await prisma.timeTableElement.delete({
