@@ -22,7 +22,7 @@ export class UserService {
     private readonly authService: AuthService,
     private readonly mailService: MailService,
     private readonly helper: HelperService,
-  ) {}
+  ) { }
 
   async getSchools(token: string): Promise<ReturnMessage> {
     const jwt = await this.authService.decodeJWT(token);
@@ -71,10 +71,16 @@ export class UserService {
     }
 
     try {
-      const user = await prisma.users.findFirst({
+      const user = await prisma.users.findUnique({
         where: {
           userUUID: personUUID,
-        },
+        }, include: {
+          schoolClassUsers: {
+            include: {
+              schoolClasses: true,
+            }
+          }
+        }
       });
 
       const userSettings = await prisma.userSettings.findFirst({
@@ -96,6 +102,7 @@ export class UserService {
         userEmail: user.userEmail,
         userEmailVerified: user.userEmailVerified,
         userCreationTimestamp: user.userCreationTimestamp,
+        userSchoolClass: user.schoolClassUsers[0].schoolClasses.schoolClassUUID,
         userSettings: {
           userSettingLanguage: userSettings.userSettingLanguageId,
           userSettingTimeZone: userSettings.userSettingTimeZone,
@@ -108,6 +115,9 @@ export class UserService {
           userSettingTheme: userSettings.userSettingTheme,
         },
       };
+
+      console.log(userItem);
+
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -413,7 +423,7 @@ export class UserService {
     });
 
     const passwordMatch = await bcrypt.compare(oldPassword, user.userPassword);
-    
+
     if (!passwordMatch) {
       return RETURN_DATA.INVALID_INPUT;
     }
