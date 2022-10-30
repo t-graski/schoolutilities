@@ -1096,14 +1096,14 @@ export class TimetableService {
   }
 
   async addOmit(payload: any, request): Promise<ReturnMessage> {
-    const { timeTableElementUUID, timeTableOmittedReason, timeTableOmittedDate } = payload;
+    const { timeTableElementUUID, timeTableElementOmittedReason, timeTableElementOmittedDate } = payload;
 
     try {
       const omit = await prisma.timeTableOmitted.create({
         data: {
           timeTableElementIsOmitted: true,
-          timeTableElementOmittedReason: timeTableOmittedReason,
-          timeTableElementOmittedDate: new Date(timeTableOmittedDate),
+          timeTableElementOmittedReason,
+          timeTableElementOmittedDate: new Date(timeTableElementOmittedDate),
           timeTableElement: {
             connect: {
               timeTableElementUUID,
