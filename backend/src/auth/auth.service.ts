@@ -118,6 +118,37 @@ export class AuthService {
     }
   }
 
+
+  async unlinkUser(payload: any) {
+    const { discordUserId } = payload;
+
+    const user = await prisma.userDiscordConnections.findUnique({
+      where: {
+        discordUserId
+      },
+      include: {
+        users: true,
+      }
+    });
+
+    if (!user) return {
+      status: 200,
+      message: 'Discord account is not linked',
+    }
+
+    await prisma.userDiscordConnections.delete({
+      where: {
+        discordUserId
+      }
+    });
+
+    return {
+      status: 200,
+      message: 'User unlinked successfully',
+      data: user,
+    }
+  }
+
   async isPermitted(
     personUUID: string,
     requiredRoles: Role[],

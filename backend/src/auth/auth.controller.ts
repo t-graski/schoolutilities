@@ -37,8 +37,12 @@ export class AuthController {
   @Post('/link')
   async linkUser(@Req() request, @Res() response) {
     const result = await this.authService.linkUser(request.body);
-    console.log(result);
+    return response.status(result.status).send(result);
+  }
 
+  @Post('/unlink')
+  async unlinkUser(@Req() request, @Res() response) {
+    const result = await this.authService.unlinkUser(request.body);
     return response.status(result.status).send(result);
   }
 
