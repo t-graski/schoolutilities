@@ -730,6 +730,7 @@ export class TimetableService {
             },
           },
           schoolRoom: true,
+          timeTableOmitted: true,
         },
       });
 
@@ -750,6 +751,10 @@ export class TimetableService {
         timeTableElementClasses: element.timeTableElementClasses.map(
           (classes) => classes.schoolClasses.schoolClassUUID,
         ),
+        timeTableElementOmitted: {
+          timeTableElementOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
+          timeTableElementOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
+        }
       };
 
       return {
