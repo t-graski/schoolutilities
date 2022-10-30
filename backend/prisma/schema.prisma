@@ -761,7 +761,22 @@ model users {
   timeTableSubstitutionTeachers timeTableSubstitutionTeachers[]
   timeTableSubstitutions        timeTableSubstitutions[]
   schoolClassUsers              schoolClassUsers[]
+  userDiscordConnections        userDiscordConnections[]
 
   @@unique([userUUID], map: "user_uuid_UNIQUE")
   @@unique([userEmail], map: "user_email_UNIQUE")
+}
+
+model userDiscordConnections {
+  discordUserId         String @map("discord_user_id")
+  discordUserChannelId  String @map("discord_user_channel_id")
+  discordGuildChannelId String @default("") @map("discord_guild_channel_id")
+  discordGuildId        String @default("") @map("discord_guild_id")
+  userId                Int    @map("user_id")
+  users                 users  @relation(fields: [userId], references: [userId])
+
+  @@id([discordUserId, userId])
+  @@unique([discordUserId], map: "discord_user_id_UNIQUE")
+  @@index([userId], map: "fk_user_id")
+  @@map("user_discord_connections")
 }

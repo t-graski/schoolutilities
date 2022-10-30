@@ -74,6 +74,50 @@ export class AuthService {
     };
   }
 
+  async linkUser(payload: any) {
+    const { email, password, discordUserId, discordUserChannelId } = payload;
+
+    const user = await prisma.users.findUnique({
+      where: {
+        userEmail: email,
+      },
+      include: {
+        userDiscordConnections: true,
+      }
+    });
+
+    const isPasswordMatching = bcrypt.compareSync(password, user.userPassword);
+
+    if (!isPasswordMatching) return {
+      status: 200,
+      message: 'Password is not matching',
+    }
+
+    const discordConnection = user.userDiscordConnections.find(connection => connection.discordUserId === discordUserId);
+
+    if (discordConnection) return {
+      status: 200,
+      message: 'Discord account is already linked',
+    }
+
+    await prisma.userDiscordConnections.create({
+      data: {
+        users: {
+          connect: {
+            userId: user.userId,
+          }
+        },
+        discordUserId,
+        discordUserChannelId,
+      }
+    });
+    return {
+      status: 200,
+      message: 'User linked successfully',
+      data: user,
+    }
+  }
+
   async isPermitted(
     personUUID: string,
     requiredRoles: Role[],
