@@ -83,8 +83,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   let overlapColumns = item.overlaps ? 24 / item.overlaps : 24;
   const router = useRouter();
 
-  const TimeTableItemLayout = styled("button", {
-    textAlign: "left",
+  const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
     backgroundColor: isBeforeNow ? "$primary-100" : "$primary-300",
     color: isBeforeNow ? "$outline" : "$onBackground",
@@ -98,6 +97,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     } / span ${overlapColumns}`,
     overflowX: "hidden",
     cursor: "pointer",
+    height: "100%",
 
     variants: {
       layout: {
