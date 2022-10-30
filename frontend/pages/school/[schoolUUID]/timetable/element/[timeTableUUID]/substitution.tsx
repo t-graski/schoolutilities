@@ -7,12 +7,9 @@ import { Headline } from "../../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../../components/atoms/Separator";
 import { ContentLayout } from "../../../../../../utils/styles";
 import dynamic from "next/dynamic";
-import { ChangeCreateItem } from "../../../../../../components/organisms/time-table/ChangeCreateItem";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { getTimeTableElement } from "../../../../../../utils/requests/timeTable";
-import { SetStateAction } from "react";
-import { TimeTableItemType } from "../../../../../../components/atoms/TimeTableItem";
 import { ChangeCreateSubstitution } from "../../../../../../components/organisms/time-table/ChangeCreateSubstitution";
 
 export default function EditTimeTableElement() {
@@ -34,30 +31,32 @@ export default function EditTimeTableElement() {
       <ContentLayout>
         <Headline label="Edit timetable item"></Headline>
         <Separator width="small" alignment="center" />
-        <ChangeCreateSubstitution timeTableElement={{
-          timeTableElementUUID: "",
-          timeTableElementStartTime: "",
-          timeTableElementEndTime: "",
-          overlaps: 0,
-          overlapStart: 0,
-          omitted: {
-            timeTableOmittedDate: "",
-            timeTableOmittedReason: ""
-          },
-          schoolSubject: {
-            schoolSubjectUUID: "",
-            schoolSubjectName: "",
-            schoolSubjectAbbreviation: ""
-          },
-          holidayUUID: "",
-          holidayName: "",
-          timeTableElementTeachers: [],
-          substitution: {
-            timeTableSubstitutionUUID: "",
-            timeTableSubstitutionClasses: [],
-            timeTableSubstitutionTeachers: []
-          }
-        }} ></ChangeCreateSubstitution>
+        <ChangeCreateSubstitution
+          timeTableElement={{
+            timeTableElementUUID: "",
+            timeTableElementStartTime: "",
+            timeTableElementEndTime: "",
+            overlaps: 0,
+            overlapStart: 0,
+            omitted: {
+              timeTableOmittedDate: "",
+              timeTableOmittedReason: "",
+            },
+            schoolSubject: {
+              schoolSubjectUUID: "",
+              schoolSubjectName: "",
+              schoolSubjectAbbreviation: "",
+            },
+            holidayUUID: "",
+            holidayName: "",
+            timeTableElementTeachers: [],
+            substitution: {
+              timeTableSubstitutionUUID: "",
+              timeTableSubstitutionClasses: [],
+              timeTableSubstitutionTeachers: [],
+            },
+          }}
+        ></ChangeCreateSubstitution>
       </ContentLayout>
       <Footer></Footer>
     </>

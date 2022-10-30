@@ -1,7 +1,11 @@
 import { fetchData } from "./default";
 
 export async function getTimeTableElement(timeTableElementUUID: string) {
-  return fetchData("timetable/timetableelement/" + timeTableElementUUID, "GET", 200);
+  return fetchData(
+    "timetable/timetableelement/" + timeTableElementUUID,
+    "GET",
+    200
+  );
 }
 
 export async function getExams(schoolUUID: string) {
@@ -31,4 +35,12 @@ export async function editTimeTableElement(timeTableElement: any) {
 
 export async function deleteTimeTableElement(timeTableElementUUID: string) {
   return fetchData("timetable/element/" + timeTableElementUUID, "DELETE", 200);
+}
+
+export async function omitTimeTableElement(timeTableOmitInformation: object) {
+  return fetchData("timetable/omit", "POST", 200, timeTableOmitInformation);
+}
+
+export async function deleteOmitTimeTableElement(timeTableElementUUID: string) {
+  return fetchData("timetable/omit/" + timeTableElementUUID, "DELETE", 200);
 }
