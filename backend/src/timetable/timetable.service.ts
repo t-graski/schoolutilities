@@ -751,10 +751,11 @@ export class TimetableService {
         timeTableElementClasses: element.timeTableElementClasses.map(
           (classes) => classes.schoolClasses.schoolClassUUID,
         ),
-        timeTableElementOmitted: {
-          timeTableElementOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
-          timeTableElementOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
-        }
+        timeTableElementOmitted: element.timeTableOmitted[0] ?
+          {
+            timeTableElementOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
+            timeTableElementOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
+          } : undefined,
       };
 
       return {
