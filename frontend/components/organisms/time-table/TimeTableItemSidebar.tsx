@@ -30,11 +30,11 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
     return <div>Error</div>;
   }
 
-  console.log(timeTableElement);
-
   return (
     <>
-      <TimeTableItemDetail item={timeTableElement}></TimeTableItemDetail>
+      {timeTableElement && (
+        <TimeTableItemDetail item={timeTableElement}></TimeTableItemDetail>
+      )}
     </>
   );
 };
