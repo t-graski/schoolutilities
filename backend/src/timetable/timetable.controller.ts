@@ -93,6 +93,24 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('/omit')
+  async addOmit(@Body() omit, @Req() request, @Res() response) {
+    const result = await this.timetableService.addOmit(omit, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/omit/:timeTableElementUUID')
+  async removeOmit(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeOmit(timeTableElementUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('/grid')
   async addTimeTableGrid(@Body() timeTableGrid, @Req() request, @Res() response) {
     const result = await this.timetableService.addTimeTableGrid(timeTableGrid, request);

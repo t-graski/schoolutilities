@@ -1094,6 +1094,51 @@ export class TimetableService {
     }
   }
 
+  async addOmit(payload: any, request): Promise<ReturnMessage> {
+    const { timeTableElementUUID, timeTableOmittedReason, timeTableOmittedDate } = payload;
+
+    try {
+      const omit = await prisma.timeTableOmitted.create({
+        data: {
+          timeTableElementIsOmitted: true,
+          timeTableElementOmittedReason: timeTableOmittedReason,
+          timeTableElementOmittedDate: new Date(timeTableOmittedDate),
+          timeTableElement: {
+            connect: {
+              timeTableElementUUID,
+            }
+          }
+        },
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: omit,
+      };
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
+  async removeOmit(timeTableElementUUID: string, request): Promise<ReturnMessage> {
+    try {
+      const omit = await prisma.timeTableOmitted.deleteMany({
+        where: {
+          timeTableElement: {
+            timeTableElementUUID,
+          }
+        },
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: omit,
+      };
+    } catch {
+      throw new InternalServerErrorException('Database error');
+    }
+  }
+
   async addSubstitution(substitutions: any, request): Promise<ReturnMessage> {
     const jwt = await this.helper.extractJWTToken(request);
     const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
