@@ -1180,7 +1180,7 @@ export class SchoolAdminService {
   }
 
   async updateRole(request): Promise<ReturnMessage> {
-    const { userUUID, schoolUUID, roleId } = request.body;
+    const { userUUID, schoolUUID, schoolRoleId } = request.body;
 
     try {
       const userId = await this.helper.getUserIdByUUID(userUUID);
@@ -1206,7 +1206,7 @@ export class SchoolAdminService {
           },
           schoolRoles: {
             connect: {
-              schoolRoleId: roleId
+              schoolRoleId
             }
           }
         },
