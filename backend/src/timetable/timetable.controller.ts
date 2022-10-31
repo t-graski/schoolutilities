@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddTimeTableDto, AddTimeTableElementDto, UpdateTimeTableElementDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { ExamInterceptor } from 'src/notification/exam.interceptor';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
@@ -48,7 +49,6 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
 
   @Get('/timeTableElement/:timeTableElementUUID')
   async getTimeTableElement(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {
@@ -209,12 +209,14 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseInterceptors(ExamInterceptor)
   @UseGuards(JwtAuthGuard)
   @Post('/exam')
   async addExam(@Body() exam: AddExamDTO, @Req() request: Request) {
     return this.timetableService.addExam(exam, request);
   }
 
+  @UseInterceptors(ExamInterceptor)
   @UseGuards(JwtAuthGuard)
   @Put('/exam')
   async updateExam(@Body() exam: UpdateExamDTO, @Req() request: Request) {

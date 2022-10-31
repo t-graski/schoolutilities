@@ -157,6 +157,7 @@ export const ID_STARTERS = {
   ROOM: 'R',
   SUBJECT: 'SS',
   SUBSTITUTION: 'S',
+  NOTIFICATION: 'N',
   TIME_TABLE_ELEMENT: 'T',
 };
 

@@ -734,10 +734,25 @@ export class TimetableService {
         },
       });
 
+      //take hour and minutes from start and end and put them for today
+      const timeTableElementStartTime = new Date(
+        new Date().setHours(
+          new Date(element.timeTableElementStartTime).getHours(),
+          new Date(element.timeTableElementStartTime).getMinutes(),
+        ),
+      );
+
+      const timeTableElementEndTime = new Date(
+        new Date().setHours(
+          new Date(element.timeTableElementEndTime).getHours(),
+          new Date(element.timeTableElementEndTime).getMinutes(),
+        ),
+      );
+
       const timeTableElementData = {
         timeTableElementUUID: element.timeTableElementUUID,
-        timeTableElementStartTime: element.timeTableElementStartTime,
-        timeTableElementEndTime: element.timeTableElementEndTime,
+        timeTableElementStartTime,
+        timeTableElementEndTime,
         timeTableElementDay: element.timeTableElementDay,
         timeTableElementRoomUUID: element.schoolRoom.schoolRoomUUID,
         schoolSubject: {
