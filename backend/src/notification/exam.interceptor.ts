@@ -118,12 +118,13 @@ export class ExamInterceptor implements NestInterceptor {
                     });
                 });
 
-                const jobUUID = `${ID_STARTERS.NOTIFICATION}${uuidv4()}`;
+                let jobUUID;
                 let message = '';
 
                 switch (method) {
                     case 'POST':
                         for (const user of affectedUsers) {
+                            jobUUID = `${ID_STARTERS.NOTIFICATION}${uuidv4()}`
                             message = new NotificationBuilder()
                                 .addText('The exam ')
                                 .addBold(exam.timeTableExamDescription)
@@ -153,10 +154,24 @@ export class ExamInterceptor implements NestInterceptor {
                                 removeOnFail: true,
                                 jobId: jobUUID,
                             });
+
+                            await prisma.notifications.create({
+                                data: {
+                                    notificationUUID: jobUUID,
+                                    notificationScheduleTimestamp: new Date(),
+                                    users: {
+                                        connect: {
+                                            userUUID: user.userUUID,
+                                        }
+                                    },
+                                    notificationContent: message,
+                                }
+                            })
                         }
                         break;
                     case 'PUT':
                         for (const user of affectedUsers) {
+                            jobUUID = `${ID_STARTERS.NOTIFICATION}${uuidv4()}`
                             message = new NotificationBuilder()
                                 .addText('The exam ')
                                 .addBold(priorExam.timeTableExamDescription)
@@ -186,10 +201,24 @@ export class ExamInterceptor implements NestInterceptor {
                                 removeOnFail: true,
                                 jobId: jobUUID,
                             });
+
+                            await prisma.notifications.create({
+                                data: {
+                                    notificationUUID: jobUUID,
+                                    notificationScheduleTimestamp: new Date(),
+                                    users: {
+                                        connect: {
+                                            userUUID: user.userUUID,
+                                        }
+                                    },
+                                    notificationContent: message,
+                                }
+                            })
                         }
                         break;
                     case 'DELETE':
                         for (const user of affectedUsers) {
+                            jobUUID = `${ID_STARTERS.NOTIFICATION}${uuidv4()}`
                             message = new NotificationBuilder()
                                 .addText('The exam ')
                                 .addBold(exam.timeTableExamDescription)
@@ -210,21 +239,21 @@ export class ExamInterceptor implements NestInterceptor {
                                 removeOnFail: true,
                                 jobId: jobUUID,
                             });
+
+                            await prisma.notifications.create({
+                                data: {
+                                    notificationUUID: jobUUID,
+                                    notificationScheduleTimestamp: new Date(),
+                                    users: {
+                                        connect: {
+                                            userUUID: user.userUUID,
+                                        }
+                                    },
+                                    notificationContent: message,
+                                }
+                            })
                         }
                 }
-                await prisma.notifications.create({
-                    data: {
-                        notificationUUID: jobUUID,
-                        notificationScheduleTimestamp: new Date(),
-                        users: {
-                            connect: {
-                                userUUID,
-                            }
-                        },
-                        notificationContent: message,
-                    }
-                })
-
             }));
     }
 }
