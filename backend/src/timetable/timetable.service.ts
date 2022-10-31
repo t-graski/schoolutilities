@@ -734,7 +734,6 @@ export class TimetableService {
         },
       });
 
-      //take hour and minutes from start and end and put them for today
       const timeTableElementStartTime = new Date(
         new Date().setHours(
           new Date(element.timeTableElementStartTime).getHours(),
@@ -1426,16 +1425,15 @@ export class TimetableService {
     }
   }
 
-  async deleteExam(examUUID: string, request: Request): Promise<number> {
+  async deleteExam(examUUID: string, request: Request): Promise<Exam> {
     try {
-      await prisma.timeTableExam.delete({
+      const exam = await prisma.timeTableExam.delete({
         where: {
           timeTableExamUUID: examUUID,
         },
       });
-      return 200;
+      return new Exam(exam);
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException('Database error');
     }
   }

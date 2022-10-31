@@ -9,6 +9,6 @@ export class NotificationProcessor {
     @Process('notification')
     async handleNotification(job: any) {
         const record = new RmqRecordBuilder(job.data).build();
-        this.client.emit('exam_created', record);
+        this.client.emit('exam_change', record);
     }
 }

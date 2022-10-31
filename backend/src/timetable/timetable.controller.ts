@@ -241,9 +241,10 @@ export class TimetableController {
     return this.timetableService.getExamsOfSchool(schoolUUID, request);
   }
 
+  @UseInterceptors(ExamInterceptor)
   @UseGuards(JwtAuthGuard)
   @Delete('/exam/:examUUID')
-  async deleteExam(@Param('examUUID') examUUID: string, @Req() request: Request): Promise<number> {
+  async deleteExam(@Param('examUUID') examUUID: string, @Req() request: Request): Promise<Exam> {
     return this.timetableService.deleteExam(examUUID, request);
   }
 
