@@ -1180,26 +1180,44 @@ export class SchoolAdminService {
   }
 
   async updateRole(request): Promise<ReturnMessage> {
-    const { personUUID, schoolUUID, roleId } = request.body;
+    const { userUUID, schoolUUID, roleId } = request.body;
 
     try {
-      const personId = await this.helper.getUserIdByUUID(personUUID);
+      const userId = await this.helper.getUserIdByUUID(userUUID);
       const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
+
       await prisma.schoolUserRoles.update({
         where: {
           user_school_unique: {
-            userId: Number(personId),
-            schoolId: Number(schoolId),
+            schoolId,
+            userId
           },
         },
         data: {
-          schoolRoleId: Number(roleId),
+          users: {
+            connect: {
+              userUUID,
+            },
+          },
+          schools: {
+            connect: {
+              schoolUUID
+            }
+          },
+          schoolRoles: {
+            connect: {
+              schoolRoleId: roleId
+            }
+          }
         },
       });
-      return RETURN_DATA.SUCCESS;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        message: RETURN_DATA.SUCCESS.message,
+      }
     } catch (error) {
-      console.log(error);
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException('Database error');
     }
   }
 
