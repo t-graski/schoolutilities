@@ -34,14 +34,11 @@ export default function EditTimeTableElement() {
 
   useEffect(() => {
     if (timeTableElement) {
+      console.log(timeTableElement.timeTableElementStartTime);
       setItemConfig({
         ...timeTableElement,
-        timeTableElementStartTime: timeTableElement.timeTableElementStartTime
-          .split("T")[1]
-          .split(":00.")[0],
-        timeTableElementEndTime: timeTableElement.timeTableElementEndTime
-          .split("T")[1]
-          .split(":00.")[0],
+        timeTableElementStartTime: timeTableElement.timeTableElementStartTime,
+        timeTableElementEndTime: timeTableElement.timeTableElementEndTime,
       });
     }
   }, [timeTableElement]);
@@ -69,8 +66,12 @@ export default function EditTimeTableElement() {
             try {
               const response = await editTimeTableElement({
                 ...itemConfig,
-                timeTableElementStartTime: new Date(`1970-01-01T${itemConfig.timeTableElementStartTime}`).toISOString(),
-                timeTableElementEndTime: new Date(`1970-01-01T${itemConfig.timeTableElementEndTime}`).toISOString(),
+                timeTableElementStartTime: new Date(
+                  `1970-01-01T${itemConfig.timeTableElementStartTime}`
+                ).toISOString(),
+                timeTableElementEndTime: new Date(
+                  `1970-01-01T${itemConfig.timeTableElementEndTime}`
+                ).toISOString(),
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
@@ -82,7 +83,7 @@ export default function EditTimeTableElement() {
             }
           }}
         >
-          Send me_!!
+          Send me
         </Button>
         <Spacer size="4x"></Spacer>
         <Button

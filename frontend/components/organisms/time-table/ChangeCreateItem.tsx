@@ -57,9 +57,11 @@ export const ChangeCreateItem: React.FC<Props> = ({
   );
 
   console.log(
-    new Date(
-      `1970-01-01T${itemConfig.timeTableElementEndTime}`
-    ).toLocaleTimeString()
+    new Date(itemConfig.timeTableElementEndTime)
+      .toLocaleTimeString()
+      .split(":")
+      .slice(0, 2)
+      .join(":")
   );
 
   return (
@@ -68,7 +70,9 @@ export const ChangeCreateItem: React.FC<Props> = ({
         <InputFieldLayout>
           <InputField
             label="Start Time"
-            value={itemConfig.timeTableElementStartTime}
+            value={getTimeFormatFromDateString(
+              itemConfig.timeTableElementStartTime
+            )}
             inputType={"time"}
             onChange={(event) => {
               setItemConfig({
@@ -81,9 +85,9 @@ export const ChangeCreateItem: React.FC<Props> = ({
         <InputFieldLayout>
           <InputField
             label="End Time"
-            value={new Date(
+            value={getTimeFormatFromDateString(
               itemConfig.timeTableElementEndTime
-            ).toLocaleTimeString()}
+            )}
             inputType={"time"}
             onChange={(event) => {
               setItemConfig({
@@ -249,3 +253,11 @@ export const ChangeCreateItem: React.FC<Props> = ({
     </>
   );
 };
+
+function getTimeFormatFromDateString(dateString: string) {
+  return (
+    ("0" + new Date(dateString).getHours()).slice(-2) +
+    ":" +
+    ("0" + new Date(dateString).getMinutes()).slice(-2)
+  );
+}

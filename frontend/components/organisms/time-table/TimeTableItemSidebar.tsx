@@ -51,7 +51,10 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
 
   const { data: timeTableElement, status } = useQuery(
     ["timeTableElement", timeTableElementUUID],
-    () => getTimeTableElement(timeTableElementUUID)
+    () => getTimeTableElement(timeTableElementUUID),
+    {
+      enabled: !!timeTableElementUUID,
+    }
   );
 
   if (status === "loading") {
