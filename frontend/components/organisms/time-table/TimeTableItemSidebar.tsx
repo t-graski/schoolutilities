@@ -6,7 +6,7 @@ import { styled } from "@stitches/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import {
   deleteOmitTimeTableElement,
   getTimeTableElement,
@@ -41,7 +41,9 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
   );
   const [omittedReason, setOmittedReason] = useState("");
   const schoolUUId = router.query.schoolUUID as string;
+  const schoolClassUUID = router.query.classUUID as string;
   const startDate = router.query.startDate as string;
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setTimeTableElementUUID(router.query.detail as string);
@@ -49,10 +51,7 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
 
   const { data: timeTableElement, status } = useQuery(
     ["timeTableElement", timeTableElementUUID],
-    () => getTimeTableElement(timeTableElementUUID),
-    {
-      enabled: !!timeTableElementUUID,
-    }
+    () => getTimeTableElement(timeTableElementUUID)
   );
 
   if (status === "loading") {
@@ -62,8 +61,6 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
   if (status === "error") {
     return <div>Error</div>;
   }
-
-  console.log(timeTableElement.timeTableElementOmitted);
 
   return (
     <>
@@ -127,29 +124,33 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
                   </Button>
                   <Button
                     buttonType="filled"
-                    onClick={() => {
+                    onClick={async () => {
                       if (timeTableElement.timeTableElementOmitted) {
-                        deleteOmitTimeTableElement(
+                        await deleteOmitTimeTableElement(
                           timeTableElement.timeTableElementUUID
                         );
+                        queryClient.invalidateQueries("timeTableElement");
+                        queryClient.invalidateQueries("timetable");
                       } else {
                         let omittedDate = getParsedMonth(
                           new Date(startDate),
                           timeTableElement.timeTableElementDay
                         );
-                        omitTimeTableElement({
+                        await omitTimeTableElement({
                           timeTableElementUUID:
                             timeTableElement.timeTableElementUUID,
                           timeTableElementOmittedReason: omittedReason,
                           timeTableElementOmittedDate: omittedDate,
                         });
+                        queryClient.invalidateQueries("timeTableElement");
+                        queryClient.invalidateQueries("timetable");
                       }
                       setOmittedPopUpVisible(false);
                     }}
                   >
                     {timeTableElement.timeTableElementOmitted
-                      ? "Uncancel"
-                      : "Cancel"}
+                      ? "Uncancel lesson"
+                      : "Cancel lesson"}
                   </Button>
                 </ButtonLayout>
               </PopUpLayout>
