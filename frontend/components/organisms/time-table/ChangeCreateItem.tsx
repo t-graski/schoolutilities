@@ -56,6 +56,12 @@ export const ChangeCreateItem: React.FC<Props> = ({
     }
   );
 
+  console.log(
+    new Date(
+      `1970-01-01T${itemConfig.timeTableElementEndTime}`
+    ).toLocaleTimeString()
+  );
+
   return (
     <>
       <InputFieldsLayout>
@@ -75,7 +81,9 @@ export const ChangeCreateItem: React.FC<Props> = ({
         <InputFieldLayout>
           <InputField
             label="End Time"
-            value={itemConfig.timeTableElementEndTime}
+            value={new Date(
+              itemConfig.timeTableElementEndTime
+            ).toLocaleTimeString()}
             inputType={"time"}
             onChange={(event) => {
               setItemConfig({
@@ -136,7 +144,10 @@ export const ChangeCreateItem: React.FC<Props> = ({
           }}
         ></WeekdaySelection>
         <SubjectSelectionField
-          selectedSubject={itemConfig.schoolSubjectUUID}
+          selectedSubject={{
+            label: itemConfig.schoolSubject.schoolSubjectAbbreviation,
+            value: itemConfig.schoolSubject.schoolSubjectUUID,
+          }}
           setSelectedSubject={(subject) => {
             setItemConfig({
               ...itemConfig,

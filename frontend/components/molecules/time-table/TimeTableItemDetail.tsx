@@ -44,6 +44,8 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
+  console.log(item?.timeTableElementStartTime);
+
   return (
     <>
       <TimeTableItemLayout omitted={!!item?.omitted}>
@@ -74,6 +76,7 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
 function getSmallTimeFormat(time: string) {
   let hour = new Date(time).getHours();
   let minute = new Date(time).getMinutes();
+  console.log(time, hour, minute);
   return formatTime(hour) + ":" + formatTime(minute);
 }
 

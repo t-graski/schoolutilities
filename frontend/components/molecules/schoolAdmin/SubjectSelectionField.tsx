@@ -5,7 +5,10 @@ import { useRouter } from "next/router";
 import { SearchSelect } from "../../atoms/input/SearchSelect";
 
 type Props = {
-  selectedSubject: string;
+  selectedSubject: {
+    value: string;
+    label: string;
+  };
   setSelectedSubject: (subjectUUID: string) => void;
 };
 
@@ -35,16 +38,7 @@ export const SubjectSelectionField: React.FC<Props> = ({
           label: subject.schoolSubjectAbbreviation,
           value: subject.schoolSubjectUUID,
         }))}
-        selectValue={
-          selectedSubject
-            ? {
-                label: subjects?.find(
-                  (subject) => subject.schoolSubjectUUID === selectedSubject
-                )?.schoolSubjectAbbreviation,
-                value: selectedSubject,
-              }
-            : undefined
-        }
+        selectValue={selectedSubject}
         selectMultiValues={false}
         onChange={(value) => setSelectedSubject(value?.value)}
         editable={true}

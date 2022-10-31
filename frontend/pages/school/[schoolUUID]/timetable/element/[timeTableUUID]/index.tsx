@@ -69,8 +69,8 @@ export default function EditTimeTableElement() {
             try {
               const response = await editTimeTableElement({
                 ...itemConfig,
-                timeTableElementStartTime: `1970-01-01T${itemConfig.timeTableElementStartTime}:00.000Z`,
-                timeTableElementEndTime: `1970-01-01T${itemConfig.timeTableElementEndTime}:00.000Z`,
+                timeTableElementStartTime: new Date(`1970-01-01T${itemConfig.timeTableElementStartTime}`).toISOString(),
+                timeTableElementEndTime: new Date(`1970-01-01T${itemConfig.timeTableElementEndTime}`).toISOString(),
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${

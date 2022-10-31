@@ -62,6 +62,8 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
     return <div>Error</div>;
   }
 
+  console.log(timeTableElement);
+
   return (
     <>
       <SidebarLayout>
