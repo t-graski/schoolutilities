@@ -142,6 +142,8 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     } / span ${overlapColumns}`,
   });
 
+  console.log("timetableoverview", item);
+
   return (
     <>
       {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
@@ -197,6 +199,8 @@ function getRowFromTime(time: string, startTime: string) {
 function getSmallTimeFormat(time: string) {
   let hour = new Date(time).getHours();
   let minute = new Date(time).getMinutes();
+
+  console.log(time, hour, minute);
   return formatTime(hour) + ":" + formatTime(minute);
 }
 

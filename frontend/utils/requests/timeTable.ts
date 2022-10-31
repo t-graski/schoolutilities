@@ -30,6 +30,7 @@ export async function addTimeTableElement(timeTableElement: any) {
 }
 
 export async function editTimeTableElement(timeTableElement: any) {
+  console.log(timeTableElement);
   return fetchData("timetable/element", "PUT", 201, timeTableElement);
 }
 

@@ -266,7 +266,9 @@ export const UserMenu: React.FC<Props> = ({ setIsLoggedIn }) => {
   );
 
   if (schoolsStatus === "success" && !currentSchool) {
-    setCurrentSchool(schools[0].schoolUUID);
+    if (schools[0]) {
+      setCurrentSchool(schools[0]?.schoolUUID);
+    }
   }
 
   return (

@@ -325,6 +325,7 @@ export async function deleteSchoolPerson(data) {
 }
 
 export async function editSchoolPerson(data) {
+  console.log(data);
   const accessToken = await getAccessToken();
 
   const response = await fetch(

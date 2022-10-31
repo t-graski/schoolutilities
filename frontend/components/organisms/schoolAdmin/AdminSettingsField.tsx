@@ -30,7 +30,7 @@ type Props = {
   nameKey: string;
   columns: Column[];
   addElement?: MutationFunction<unknown, void>;
-  editElement?: MutationFunction<unknown, void>;
+  editElement?: Function;
   deleteElement?: any;
   getAllElements: Function;
   getElementLink?: (schoolUUID: string, elementUUID: string) => string;

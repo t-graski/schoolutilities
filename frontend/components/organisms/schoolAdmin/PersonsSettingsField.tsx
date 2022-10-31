@@ -45,7 +45,7 @@ const EditElementInputs: React.FC<{
         onChange={(event) => {
           setItemConfig({
             ...itemConfig,
-            schoolRoleId: event,
+            schoolRoleId: Number(event),
           });
         }}
         theme="surface"
@@ -75,7 +75,9 @@ export const PersonsSettingsField: React.FC<Props> = ({ queryClient }) => {
         }}
         uuidKey={"userUUID"}
         nameKey={"userFirstname"}
-        editElement={editSchoolPerson}
+        editElement={(body: object) =>
+          editSchoolPerson({ ...body, schoolUUID: schoolUUID })
+        }
         deleteElement={deleteSchoolPerson}
         getAllElements={fetchSchoolUsers}
         isItemValid={(item) => true}
