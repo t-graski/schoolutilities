@@ -13,12 +13,14 @@ import { useRouter } from "next/router";
 import {
   deleteTimeTableElement,
   editTimeTableElement,
+  editTimeTableItemSubstitution,
   getTimeTableElement,
 } from "../../../../../../utils/requests/timeTable";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Button } from "@/atoms/Button";
 import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
 import { Spacer } from "@/atoms/Spacer";
+import { ChangeCreateSubstitution } from "@/organisms/time-table/ChangeCreateSubstitution";
 
 export default function EditTimeTableElement() {
   const router = useRouter();
@@ -34,14 +36,11 @@ export default function EditTimeTableElement() {
 
   useEffect(() => {
     if (timeTableElement) {
+      console.log(timeTableElement.timeTableElementStartTime);
       setItemConfig({
         ...timeTableElement,
-        timeTableElementStartTime: timeTableElement.timeTableElementStartTime
-          .split("T")[1]
-          .split(":00.")[0],
-        timeTableElementEndTime: timeTableElement.timeTableElementEndTime
-          .split("T")[1]
-          .split(":00.")[0],
+        timeTableElementStartTime: timeTableElement.timeTableElementStartTime,
+        timeTableElementEndTime: timeTableElement.timeTableElementEndTime,
       });
     }
   }, [timeTableElement]);
@@ -51,26 +50,31 @@ export default function EditTimeTableElement() {
   return (
     <>
       <Head>
-        <title>Edit Timetable Element - SchoolUtilities</title>
+        <title>Edit Timetable Substitution - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
         <Headline label="Edit timetable substitution"></Headline>
         <Separator width="small" alignment="center" />
         {itemConfig && (
-          <ChangeCreateItem
+          <ChangeCreateSubstitution
+            initialItemConfig={itemConfig}
             itemConfig={itemConfig}
             setItemConfig={setItemConfig}
-          ></ChangeCreateItem>
+          ></ChangeCreateSubstitution>
         )}
         <Button
           buttonType="filled"
           onClick={async () => {
             try {
-              const response = await editTimeTableElement({
+              const response = await editTimeTableItemSubstitution({
                 ...itemConfig,
-                timeTableElementStartTime: new Date(`1970-01-01T${itemConfig.timeTableElementStartTime}`).toISOString(),
-                timeTableElementEndTime: new Date(`1970-01-01T${itemConfig.timeTableElementEndTime}`).toISOString(),
+                timeTableElementStartTime: new Date(
+                  `1970-01-01T${itemConfig.timeTableElementStartTime}`
+                ).toISOString(),
+                timeTableElementEndTime: new Date(
+                  `1970-01-01T${itemConfig.timeTableElementEndTime}`
+                ).toISOString(),
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
@@ -82,7 +86,7 @@ export default function EditTimeTableElement() {
             }
           }}
         >
-          Send me_!!
+          Send me
         </Button>
         <Spacer size="4x"></Spacer>
         <Button

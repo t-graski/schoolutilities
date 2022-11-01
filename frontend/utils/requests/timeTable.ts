@@ -30,7 +30,6 @@ export async function addTimeTableElement(timeTableElement: any) {
 }
 
 export async function editTimeTableElement(timeTableElement: any) {
-  console.log(timeTableElement);
   return fetchData("timetable/element", "PUT", 201, timeTableElement);
 }
 
@@ -44,4 +43,9 @@ export async function omitTimeTableElement(timeTableOmitInformation: object) {
 
 export async function deleteOmitTimeTableElement(timeTableElementUUID: string) {
   return fetchData("timetable/omit/" + timeTableElementUUID, "DELETE", 200);
+}
+
+export async function editTimeTableItemSubstitution(timeTableElement){
+  console.log(timeTableElement);
+  return fetchData("timetable/substitution", "POST", 200, timeTableElement);
 }

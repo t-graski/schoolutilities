@@ -8,6 +8,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import { fetchSchoolClasses, fetchTeachers } from "utils/requests";
 import { fetchSchoolRooms } from "utils/requests/admin";
+import { getTimeFormatFromDateString } from "utils/untilFunctions";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import { TimeTableItemType } from "../../atoms/TimeTableItem";
@@ -253,11 +254,3 @@ export const ChangeCreateItem: React.FC<Props> = ({
     </>
   );
 };
-
-function getTimeFormatFromDateString(dateString: string) {
-  return (
-    ("0" + new Date(dateString).getHours()).slice(-2) +
-    ":" +
-    ("0" + new Date(dateString).getMinutes()).slice(-2)
-  );
-}

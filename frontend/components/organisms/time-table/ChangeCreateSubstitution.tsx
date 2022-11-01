@@ -8,11 +8,13 @@ import React from "react";
 import { useQuery } from "react-query";
 import { fetchSchoolClasses, fetchTeachers } from "utils/requests";
 import { fetchSchoolRooms } from "utils/requests/admin";
+import { getTimeFormatFromDateString } from "utils/untilFunctions";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import { TimeTableItemType } from "../../atoms/TimeTableItem";
 
 type Props = {
+  initialItemConfig: TimeTableItemType;
   itemConfig: TimeTableItemType;
   setItemConfig: React.Dispatch<React.SetStateAction<TimeTableItemType>>;
 };
@@ -22,12 +24,8 @@ const InputFieldsLayout = styled("div", {
   gridTemplateColumns: "2fr 1fr 1fr 1fr",
 });
 
-const InputFieldLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-});
-
-export const ChangeCreateItem: React.FC<Props> = ({
+export const ChangeCreateSubstitution: React.FC<Props> = ({
+  initialItemConfig,
   itemConfig,
   setItemConfig,
 }) => {
@@ -56,89 +54,31 @@ export const ChangeCreateItem: React.FC<Props> = ({
     }
   );
 
+  console.log(itemConfig);
+
   return (
     <>
       <InputFieldsLayout>
-        <InputFieldLayout>
-          <InputField
-            label="Start Time"
-            value={getTimeFormatFromDateString(
-              itemConfig.timeTableElementStartTime
-            )}
-            inputType={"time"}
-            onChange={(event) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementStartTime: event,
-              });
-            }}
-          ></InputField>
-        </InputFieldLayout>
-        <InputFieldLayout>
-          <InputField
-            label="End Time"
-            value={getTimeFormatFromDateString(
-              itemConfig.timeTableElementEndTime
-            )}
-            inputType={"time"}
-            onChange={(event) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementEndTime: event,
-              });
-            }}
-          ></InputField>
-        </InputFieldLayout>
-
-        <WeekdaySelection
-          items={[
-            {
-              name: "Monday",
-              shortcut: "M",
-              value: "Monday",
-            },
-            {
-              name: "Tuesday",
-              shortcut: "T",
-              value: "Tuesday",
-            },
-            {
-              name: "Wednesday",
-              shortcut: "W",
-              value: "Wednesday",
-            },
-            {
-              name: "Thursday",
-              shortcut: "T",
-              value: "Thursday",
-            },
-            {
-              name: "Friday",
-              shortcut: "F",
-              value: "Friday",
-            },
-            {
-              name: "Saturday",
-              shortcut: "S",
-              value: "Saturday",
-            },
-            {
-              name: "Sunday",
-              shortcut: "S",
-              value: "Sunday",
-            },
-          ]}
-          multipleSelection={false}
-          selection={[itemConfig.timeTableElementDay]}
-          updateSelection={(selectedItems) => {
-            if (selectedItems.length > 0) {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementDay: selectedItems[0],
-              });
-            }
-          }}
-        ></WeekdaySelection>
+        {getTimeFormatFromDateString(
+          initialItemConfig.timeTableElementStartTime
+        )}{" "}
+        -{" "}
+        {getTimeFormatFromDateString(initialItemConfig.timeTableElementEndTime)}
+        , {initialItemConfig.timeTableElementDay}
+        {initialItemConfig.schoolSubject.schoolSubjectName}
+        {teachersStatus === "success" &&
+          teachers
+            .filter((element) =>
+              initialItemConfig.timeTableElementTeachers.includes(
+                element.users.userUUID
+              )
+            )
+            .map((element) => {
+              return {
+                value: element.users.userUUID,
+                label: element.users.userFirstname,
+              };
+            })}
         <SubjectSelectionField
           selectedSubject={{
             label: itemConfig.schoolSubject.schoolSubjectAbbreviation,
@@ -151,34 +91,6 @@ export const ChangeCreateItem: React.FC<Props> = ({
             });
           }}
         ></SubjectSelectionField>
-        {classesStatus === "success" && (
-          <SearchSelect
-            selectOptions={classes.map((element) => {
-              return {
-                value: element.classUUID,
-                label: element.className,
-              };
-            })}
-            onChange={(e) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementClasses: e.map((element) => element.value),
-              });
-            }}
-            icon={SvgSchool}
-            selectMultiValues={true}
-            selectValue={classes
-              .filter((element) =>
-                itemConfig.timeTableElementClasses.includes(element.classUUID)
-              )
-              .map((element) => {
-                return {
-                  value: element.classUUID,
-                  label: element.className,
-                };
-              })}
-          />
-        )}
         {teachersStatus === "success" && (
           <SearchSelect
             selectOptions={teachers.map((element) => {
@@ -245,11 +157,3 @@ export const ChangeCreateItem: React.FC<Props> = ({
     </>
   );
 };
-
-function getTimeFormatFromDateString(dateString: string) {
-  return (
-    ("0" + new Date(dateString).getHours()).slice(-2) +
-    ":" +
-    ("0" + new Date(dateString).getMinutes()).slice(-2)
-  );
-}
