@@ -82,6 +82,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   let isBeforeNow = endTime < now;
   let overlapColumns = item.overlaps ? 24 / item.overlaps : 24;
   const router = useRouter();
+  const timeTableElementUUID = router.query.detail as string;
 
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
@@ -130,6 +131,12 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
         },
         normal: {},
       },
+      highlight: {
+        true: {
+          borderColor: "$primary",
+        },
+        false: {},
+      },
     },
   });
 
@@ -155,6 +162,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
               query: { ...router.query, detail: item.timeTableElementUUID },
             });
           }}
+          highlight={!!timeTableElementUUID && timeTableElementUUID == item.timeTableElementUUID}
         >
           <TimeTableSubjectName>
             {item.schoolSubject.schoolSubjectAbbreviation}

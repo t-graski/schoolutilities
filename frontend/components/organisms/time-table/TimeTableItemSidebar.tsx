@@ -74,10 +74,10 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
           <>
             <TimeTableItemDetail item={timeTableElement}></TimeTableItemDetail>
             <Link
-              href={`/school/${schoolUUId}/timetable/element/${timeTableElementUUID}/substitution/${getParsedMonth(
+              href={`/school/${schoolUUId}/timetable/element/${timeTableElementUUID}/substitution?date=${getParsedMonth(
                 new Date(startDate),
                 timeTableElement.timeTableElementDay
-              )}`}
+              ).toISOString().split("T")[0]}`}
               passHref
             >
               <Button buttonType="filled">Add substitution</Button>

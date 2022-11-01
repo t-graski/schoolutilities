@@ -51,8 +51,6 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
     }
   );
 
-  console.log(itemConfig);
-
   return (
     <>
       <InputFieldsLayout>

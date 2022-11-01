@@ -49,3 +49,7 @@ export async function editTimeTableItemSubstitution(timeTableElement){
   console.log(timeTableElement);
   return fetchData("timetable/substitution/", "POST", 200, timeTableElement);
 }
+
+export async function getTimeTableItemSubstitution(timeTableElementUUID: string){
+  return fetchData("timetable/substitution/" + timeTableElementUUID, "GET", 200);
+}
