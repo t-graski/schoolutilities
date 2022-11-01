@@ -17,7 +17,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TimetableService {
-  constructor(private readonly helper: HelperService) { }
+  constructor(private readonly helper: HelperService) {}
 
   async createTimetable(
     payload: AddTimeTableDto,
@@ -30,8 +30,9 @@ export class TimetableService {
       day.timeTableElements.forEach(async (element) => {
         await prisma.timeTableElement.create({
           data: {
-            timeTableElementUUID: `${ID_STARTERS.TIME_TABLE_ELEMENT
-              }${uuidv4()}`,
+            timeTableElementUUID: `${
+              ID_STARTERS.TIME_TABLE_ELEMENT
+            }${uuidv4()}`,
             schoolSubjects: {
               connect: {
                 schoolSubjectId: element.timetableElementSubjectId,
@@ -247,8 +248,10 @@ export class TimetableService {
     }
   }
 
-  async deleteTimeTableElement(timeTableElementUUID: string, request: Request): Promise<ReturnMessage> {
-
+  async deleteTimeTableElement(
+    timeTableElementUUID: string,
+    request: Request,
+  ): Promise<ReturnMessage> {
     try {
       const element = await prisma.timeTableElement.delete({
         where: {
@@ -388,7 +391,7 @@ export class TimetableService {
               0,
               0,
             ) +
-            86400000 * weekday.indexOf(element.timeTableElementDay),
+              86400000 * weekday.indexOf(element.timeTableElementDay),
           ).toISOString(),
           timeTableElementEndTime: new Date(
             new Date(dateString).setHours(
@@ -397,7 +400,7 @@ export class TimetableService {
               0,
               0,
             ) +
-            86400000 * weekday.indexOf(element.timeTableElementDay),
+              86400000 * weekday.indexOf(element.timeTableElementDay),
           ).toISOString(),
           timeTableElementDay: element.timeTableElementDay,
           timeTableElementRoom: {
@@ -432,16 +435,16 @@ export class TimetableService {
           exam: checkForExam(element, new Date(dateString)),
           omitted:
             element.timeTableOmitted.length > 0 &&
-              element.timeTableOmitted[0].timeTableElementOmittedDate >=
+            element.timeTableOmitted[0].timeTableElementOmittedDate >=
               new Date(dateString) &&
-              element.timeTableOmitted[0].timeTableElementOmittedDate <=
+            element.timeTableOmitted[0].timeTableElementOmittedDate <=
               new Date(new Date(dateString).getTime() + 86400000 * 4)
               ? {
-                timeTableOmittedReason:
-                  element.timeTableOmitted[0].timeTableElementOmittedReason,
-                timeTableOmittedDate:
-                  element.timeTableOmitted[0].timeTableElementOmittedDate,
-              }
+                  timeTableOmittedReason:
+                    element.timeTableOmitted[0].timeTableElementOmittedReason,
+                  timeTableOmittedDate:
+                    element.timeTableOmitted[0].timeTableElementOmittedDate,
+                }
               : undefined,
         });
       });
@@ -451,7 +454,7 @@ export class TimetableService {
           if (
             element.timeTableExam[0].timeTableExamDate >= monday &&
             element.timeTableExam[0].timeTableExamDate <=
-            new Date(monday.getTime() + 86400000 * 4)
+              new Date(monday.getTime() + 86400000 * 4)
           ) {
             let day =
               weekday[element.timeTableExam[0].timeTableExamDate.getDay()];
@@ -474,7 +477,7 @@ export class TimetableService {
           if (
             element.timeTableEvents[0].timeTableEventDate >= monday &&
             element.timeTableEvents[0].timeTableEventDate <=
-            new Date(monday.setDate(monday.getDate() + 5))
+              new Date(monday.setDate(monday.getDate() + 5))
           ) {
             let day =
               weekday[element.timeTableEvents[0].timeTableEventDate.getDay()];
@@ -519,12 +522,12 @@ export class TimetableService {
       }
 
       function checkForSubstitution(element, monday) {
-        if (element.timeTableSubstitutions.length > 0) {
+        if (element.timeTableSubstitution.length > 0) {
           if (
-            element.timeTableSubstitutions[0].timeTableSubstitutionDate >=
-            monday &&
-            element.timeTableSubstitutions[0].timeTableSubstitutionDate <=
-            new Date(monday.setDate(monday.getDate() + 5))
+            element.timeTableSubstitution[0].timeTableSubstitutionDate >=
+              monday &&
+            element.timeTableSubstitution[0].timeTableSubstitutionDate <=
+              new Date(monday.setDate(monday.getDate() + 5))
           ) {
             const weekday = [
               'Sunday',
@@ -537,20 +540,20 @@ export class TimetableService {
             ];
             let day =
               weekday[
-              element.timeTableSubstitutions[0].timeTableSubstitutionDate.getDay()
+                element.timeTableSubstitution[0].timeTableSubstitutionDate.getDay()
               ];
             if (element.timeTableElementDay === day) {
               return {
                 timeTableSubstitutionUUID:
-                  element.timeTableSubstitutions[0].timeTableSubstitutionUUID,
-                timeTableSubstitutionStartTime:
-                  element.timeTableSubstitutions[0]
-                    .timeTableSubstitutionStartTime,
+                  element.timeTableSubstitution[0].timeTableSubstitutionUUID,
+                timeTableSubstitutiontartTime:
+                  element.timeTableSubstitution[0]
+                    .timeTableSubstitutiontartTime,
                 timeTableSubstitutionEndTime:
-                  element.timeTableSubstitutions[0]
+                  element.timeTableSubstitution[0]
                     .timeTableSubstitutionEndTime,
                 timeTableSubstitutionClasses:
-                  element.timeTableSubstitutions[0].timeTableSubstitutionClasses.map(
+                  element.timeTableSubstitution[0].timeTableSubstitutionClasses.map(
                     (classes) => {
                       return {
                         schoolClassUUID: classes.classes.schoolClassUUID,
@@ -561,7 +564,7 @@ export class TimetableService {
                     },
                   ),
                 timeTableSubstitutionTeachers:
-                  element.timeTableSubstitutions[0].timeTableSubstitutionTeachers.map(
+                  element.timeTableSubstitution[0].timeTableSubstitutionTeachers.map(
                     (teacher) => {
                       return {
                         userUUID: teacher.users.userUUID,
@@ -571,9 +574,9 @@ export class TimetableService {
                       };
                     },
                   ),
-                timeTableSubstitutionSubjectName:
-                  element.timeTableSubstitutions[0]
-                    .timeTableSubstitutionSubjectName,
+                timeTableSubstitutionubjectName:
+                  element.timeTableSubstitution[0]
+                    .timeTableSubstitutionubjectName,
               };
             }
           }
@@ -649,7 +652,8 @@ export class TimetableService {
         status: RETURN_DATA.SUCCESS.status,
         data: timeTableDaysArray,
       };
-    } catch {
+    } catch (err) {
+      console.log(err)
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
@@ -757,7 +761,8 @@ export class TimetableService {
         schoolSubject: {
           schoolSubjectUUID: element.schoolSubjects.schoolSubjectUUID,
           schoolSubjectName: element.schoolSubjects.schoolSubjectName,
-          schoolSubjectAbbreviation: element.schoolSubjects.schoolSubjectAbbreviation,
+          schoolSubjectAbbreviation:
+            element.schoolSubjects.schoolSubjectAbbreviation,
         },
         timeTableElementTeachers: element.timeTableTeachers.map(
           (teacher) => teacher.users.userUUID,
@@ -765,11 +770,14 @@ export class TimetableService {
         timeTableElementClasses: element.timeTableElementClasses.map(
           (classes) => classes.schoolClasses.schoolClassUUID,
         ),
-        timeTableElementOmitted: element.timeTableOmitted[0] ?
-          {
-            timeTableElementOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
-            timeTableElementOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
-          } : undefined,
+        timeTableElementOmitted: element.timeTableOmitted[0]
+          ? {
+              timeTableElementOmittedReason:
+                element.timeTableOmitted[0].timeTableElementOmittedReason,
+              timeTableElementOmittedDate:
+                element.timeTableOmitted[0].timeTableElementOmittedDate,
+            }
+          : undefined,
       };
 
       return {
@@ -809,8 +817,9 @@ export class TimetableService {
                 return {
                   timeTableGridSpecialBreak: {
                     create: {
-                      timeTableGridSpecialBreakUUID: `${ID_STARTERS.BREAK
-                        }${uuidv4()}`,
+                      timeTableGridSpecialBreakUUID: `${
+                        ID_STARTERS.BREAK
+                      }${uuidv4()}`,
                       timeTableGridSpecialBreakDuration:
                         element.timeTableGridSpecialBreakDuration,
                       timeTableGridSpecialBreakElement:
@@ -1110,7 +1119,11 @@ export class TimetableService {
   }
 
   async addOmit(payload: any, request): Promise<ReturnMessage> {
-    const { timeTableElementUUID, timeTableElementOmittedReason, timeTableElementOmittedDate } = payload;
+    const {
+      timeTableElementUUID,
+      timeTableElementOmittedReason,
+      timeTableElementOmittedDate,
+    } = payload;
 
     try {
       const omit = await prisma.timeTableOmitted.create({
@@ -1121,8 +1134,8 @@ export class TimetableService {
           timeTableElement: {
             connect: {
               timeTableElementUUID,
-            }
-          }
+            },
+          },
         },
       });
 
@@ -1135,13 +1148,16 @@ export class TimetableService {
     }
   }
 
-  async removeOmit(timeTableElementUUID: string, request): Promise<ReturnMessage> {
+  async removeOmit(
+    timeTableElementUUID: string,
+    request,
+  ): Promise<ReturnMessage> {
     try {
       const omit = await prisma.timeTableOmitted.deleteMany({
         where: {
           timeTableElement: {
             timeTableElementUUID,
-          }
+          },
         },
       });
 
@@ -1160,10 +1176,10 @@ export class TimetableService {
     const {
       timeTableElementUUID,
       timeTableSubstitutionDate,
-      timeTableSubstitutionTeachers,
-      schoolRoomUUID,
+      timeTableElementRoomUUID,
       schoolSubject,
-      schoolClasses,
+      timeTableElementTeachers,
+      timeTableElementClasses,
     } = substitutions;
 
     try {
@@ -1180,19 +1196,19 @@ export class TimetableService {
         update: {
           timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
           timeTableSubstitutionTeachers: {
-            set: timeTableSubstitutionTeachers,
+            set: timeTableElementTeachers,
           },
           timeTableSubstitutionClasses: {
-            set: schoolClasses,
+            set: timeTableElementClasses,
           },
           schoolRooms: {
             connect: {
-              schoolRoomUUID,
+              schoolRoomUUID: timeTableElementRoomUUID,
             },
           },
           schoolSubjects: {
             connect: {
-              schoolSubjectUUID: schoolSubject,
+              schoolSubjectUUID: schoolSubject.schoolSubjectUUID,
             },
           },
         },
@@ -1201,13 +1217,13 @@ export class TimetableService {
           timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
           schoolSubjects: {
             connect: {
-              schoolSubjectUUID: schoolSubject,
-            }
+              schoolSubjectUUID: schoolSubject.schoolSubjectUUID,
+            },
           },
           schoolRooms: {
             connect: {
-              schoolRoomUUID,
-            }
+              schoolRoomUUID: timeTableElementRoomUUID,
+            },
           },
           timeTableElements: {
             connect: {
@@ -1217,30 +1233,30 @@ export class TimetableService {
           users: {
             connect: {
               userUUID,
-            }
+            },
           },
           timeTableSubstitutionClasses: {
-            create: schoolClasses.map((schoolClass) => {
+            create: timeTableElementClasses.map((schoolClass) => {
               return {
                 schoolClasses: {
                   connect: {
                     schoolClassUUID: schoolClass,
-                  }
-                }
-              }
+                  },
+                },
+              };
             }),
           },
           timeTableSubstitutionTeachers: {
-            create: timeTableSubstitutionTeachers.map((teacher) => {
+            create: timeTableElementTeachers.map((teacher) => {
               return {
                 users: {
                   connect: {
                     userUUID: teacher,
-                  }
-                }
-              }
+                  },
+                },
+              };
             }),
-          }
+          },
         },
         include: {
           timeTableElements: true,
@@ -1250,11 +1266,13 @@ export class TimetableService {
       return {
         status: RETURN_DATA.SUCCESS.status,
         data: {
-          timeTableElementUUID: substitution.timeTableElements.timeTableElementUUID,
+          timeTableElementUUID:
+            substitution.timeTableElements.timeTableElementUUID,
           ...substitution,
         },
       };
-    } catch {
+    } catch (err) {
+      console.log(err);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
@@ -1375,13 +1393,14 @@ export class TimetableService {
       const substitutions = substitution.map((substitution) => {
         return {
           ...substitution,
-          timeTableElementUUID: substitution.timeTableElements.timeTableElementUUID,
-        }
-      })
+          timeTableElementUUID:
+            substitution.timeTableElements.timeTableElementUUID,
+        };
+      });
 
       return {
         status: 200,
-        data: substitutions
+        data: substitutions,
       };
     } catch {
       return RETURN_DATA.DATABASE_ERROR;

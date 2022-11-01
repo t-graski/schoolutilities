@@ -47,5 +47,5 @@ export async function deleteOmitTimeTableElement(timeTableElementUUID: string) {
 
 export async function editTimeTableItemSubstitution(timeTableElement){
   console.log(timeTableElement);
-  return fetchData("timetable/substitution", "POST", 200, timeTableElement);
+  return fetchData("timetable/substitution/", "POST", 200, timeTableElement);
 }

@@ -7,20 +7,19 @@ import { Headline } from "../../../../../../components/atoms/Headline";
 import { Separator } from "../../../../../../components/atoms/Separator";
 import { ContentLayout } from "../../../../../../utils/styles";
 import dynamic from "next/dynamic";
-import { ChangeCreateItem } from "../../../../../../components/organisms/time-table/ChangeCreateItem";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import {
   deleteTimeTableElement,
-  editTimeTableElement,
   editTimeTableItemSubstitution,
   getTimeTableElement,
 } from "../../../../../../utils/requests/timeTable";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/atoms/Button";
 import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
 import { Spacer } from "@/atoms/Spacer";
 import { ChangeCreateSubstitution } from "@/organisms/time-table/ChangeCreateSubstitution";
+import { BackLink } from "@/molecules/BackLink";
 
 export default function EditTimeTableElement() {
   const router = useRouter();
@@ -54,6 +53,12 @@ export default function EditTimeTableElement() {
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
+        <BackLink
+          href={`/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+            itemConfig?.timeTableElementClasses[0]
+          }`}
+          label={"Back to the timetable"}
+        ></BackLink>
         <Headline label="Edit timetable substitution"></Headline>
         <Separator width="small" alignment="center" />
         {itemConfig && (
@@ -69,12 +74,6 @@ export default function EditTimeTableElement() {
             try {
               const response = await editTimeTableItemSubstitution({
                 ...itemConfig,
-                timeTableElementStartTime: new Date(
-                  `1970-01-01T${itemConfig.timeTableElementStartTime}`
-                ).toISOString(),
-                timeTableElementEndTime: new Date(
-                  `1970-01-01T${itemConfig.timeTableElementEndTime}`
-                ).toISOString(),
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
@@ -82,6 +81,7 @@ export default function EditTimeTableElement() {
                 }`
               );
             } catch (e) {
+              console.log(e);
               alert("Something went wrong");
             }
           }}
@@ -104,7 +104,7 @@ export default function EditTimeTableElement() {
             }
           }}
         >
-          Delete item
+          Remove subsitution
         </Button>
       </ContentLayout>
       <Footer></Footer>

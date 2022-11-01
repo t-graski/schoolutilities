@@ -1,8 +1,6 @@
-import { Button } from "@/atoms/Button";
 import { SearchSelect } from "@/atoms/input/SearchSelect";
 import SvgSchool from "@/atoms/svg/SvgSchool";
 import { SubjectSelectionField } from "@/molecules/schoolAdmin/SubjectSelectionField";
-import { WeekdaySelection } from "@/molecules/WeekdaySelection";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
@@ -10,7 +8,6 @@ import { fetchSchoolClasses, fetchTeachers } from "utils/requests";
 import { fetchSchoolRooms } from "utils/requests/admin";
 import { getTimeFormatFromDateString } from "utils/untilFunctions";
 import { styled } from "../../../stitches.config";
-import { InputField } from "../../atoms/input/InputField";
 import { TimeTableItemType } from "../../atoms/TimeTableItem";
 
 type Props = {
@@ -73,12 +70,26 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
                 element.users.userUUID
               )
             )
-            .map((element) => {
-              return {
-                value: element.users.userUUID,
-                label: element.users.userFirstname,
-              };
-            })}
+            .map((element) => element.users.userFirstname)
+            .join(",")}
+        {classesStatus === "success" &&
+          classes
+            .filter((element) =>
+              initialItemConfig.timeTableElementClasses.includes(
+                element.schoolClassUUID
+              )
+            )
+            .map((element) => element.schoolClassName)
+            .join(",")}
+        {roomsStatus === "success" &&
+          rooms
+            .filter((element) =>
+              initialItemConfig.timeTableElementRoomUUID.includes(
+                element.schoolRoomUUID
+              )
+            )
+            .map((element) => element.schoolRoomName)
+            .join(",")}
         <SubjectSelectionField
           selectedSubject={{
             label: itemConfig.schoolSubject.schoolSubjectAbbreviation,
