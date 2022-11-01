@@ -333,8 +333,8 @@ async function generateRegisterToken(
     throw new Error('Error while generating token: ' + error);
   }
 
-  const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
-  const html = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
+  const text = `Please confirm your registration by clicking at this link: https://www.schoolutilities.net/auth/register-approved?token=${generatedToken}`;
+  const html = `Please confirm your registration by clicking at this link: https://www.schoolutilities.net/auth/register-approved?token=${generatedToken}`;
   const message = {
     from: 'noreply@schoolutilities.net',
     to: email,
