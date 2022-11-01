@@ -1380,10 +1380,19 @@ export class TimetableService {
           timeTableElementUUID,
         },
         include: {
+          schoolSubjects: true,
           timeTableSubstitution: {
             include: {
-              timeTableSubstitutionTeachers: true,
-              timeTableSubstitutionClasses: true,
+              timeTableSubstitutionTeachers: {
+                include: {
+                  users: true,
+                }
+              },
+              timeTableSubstitutionClasses: {
+                include: {
+                  classes: true,
+                }
+              },
             }
           }
         }
@@ -1394,6 +1403,11 @@ export class TimetableService {
         status: 200,
         data: {
           ...timeTableElement.timeTableSubstitution,
+          schoolSubject: {
+            schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
+            schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
+            schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
+          },
           timeTableElementUUID: timeTableElement.timeTableElementUUID,
         }
       }
