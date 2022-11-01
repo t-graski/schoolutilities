@@ -13,6 +13,7 @@ import {
   deleteTimeTableElement,
   editTimeTableItemSubstitution,
   getTimeTableElement,
+  getTimeTableItemSubstitution,
 } from "../../../../../../utils/requests/timeTable";
 import { useEffect, useState } from "react";
 import { Button } from "@/atoms/Button";
@@ -33,6 +34,11 @@ export default function EditTimeTableElement() {
     () => getTimeTableElement(timeTableUUID)
   );
 
+  const { data: substitution, status: substitutionStatus } = useQuery(
+    ["substitution", timeTableUUID],
+    () => getTimeTableItemSubstitution(timeTableUUID)
+  );
+
   useEffect(() => {
     if (timeTableElement) {
       console.log(timeTableElement.timeTableElementStartTime);
@@ -44,7 +50,7 @@ export default function EditTimeTableElement() {
     }
   }, [timeTableElement]);
 
-  console.log(itemConfig);
+  console.log(substitution);
 
   return (
     <>
@@ -61,10 +67,10 @@ export default function EditTimeTableElement() {
         ></BackLink>
         <Headline label="Edit timetable substitution"></Headline>
         <Separator width="small" alignment="center" />
-        {itemConfig && (
+        {itemConfig && substitution && (
           <ChangeCreateSubstitution
             initialItemConfig={itemConfig}
-            itemConfig={itemConfig}
+            itemConfig={substitution}
             setItemConfig={setItemConfig}
           ></ChangeCreateSubstitution>
         )}
@@ -74,6 +80,7 @@ export default function EditTimeTableElement() {
             try {
               const response = await editTimeTableItemSubstitution({
                 ...itemConfig,
+                timeTableSubstitutionDate: router.query.date as string,
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
@@ -86,7 +93,7 @@ export default function EditTimeTableElement() {
             }
           }}
         >
-          Send me
+          Change element substitution
         </Button>
         <Spacer size="4x"></Spacer>
         <Button

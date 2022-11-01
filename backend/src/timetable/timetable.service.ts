@@ -538,19 +538,19 @@ export class TimetableService {
             ];
             let day =
               weekday[
-              element.timeTableSubstitution[0].timeTableSubstitutionDate.getDay()
+                element.timeTableSubstitution.timeTableSubstitutionDate.getDay()
               ];
             if (element.timeTableElementDay === day) {
               return {
                 timeTableSubstitutionUUID:
-                  element.timeTableSubstitution[0].timeTableSubstitutionUUID,
+                  element.timeTableSubstitution.timeTableSubstitutionUUID,
                 timeTableSubstitutiontartTime:
-                  element.timeTableSubstitution[0]
+                  element.timeTableSubstitution
                     .timeTableSubstitutiontartTime,
                 timeTableSubstitutionEndTime:
-                  element.timeTableSubstitution[0].timeTableSubstitutionEndTime,
+                  element.timeTableSubstitution.timeTableSubstitutionEndTime,
                 timeTableSubstitutionClasses:
-                  element.timeTableSubstitution[0].timeTableSubstitutionClasses.map(
+                  element.timeTableSubstitution.timeTableSubstitutionClasses.map(
                     (classes) => {
                       return {
                         schoolClassUUID: classes.classes.schoolClassUUID,
@@ -561,7 +561,7 @@ export class TimetableService {
                     },
                   ),
                 timeTableSubstitutionTeachers:
-                  element.timeTableSubstitution[0].timeTableSubstitutionTeachers.map(
+                  element.timeTableSubstitution.timeTableSubstitutionTeachers.map(
                     (teacher) => {
                       return {
                         userUUID: teacher.users.userUUID,
@@ -572,7 +572,7 @@ export class TimetableService {
                     },
                   ),
                 timeTableSubstitutionubjectName:
-                  element.timeTableSubstitution[0]
+                  element.timeTableSubstitution
                     .timeTableSubstitutionubjectName,
               };
             }
