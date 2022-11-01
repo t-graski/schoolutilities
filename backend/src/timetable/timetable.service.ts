@@ -1380,10 +1380,10 @@ export class TimetableService {
           timeTableElementUUID,
         },
         include: {
-          schoolRoom: true,
           schoolSubjects: true,
           timeTableSubstitution: {
             include: {
+              schoolRooms: true,
               timeTableSubstitutionTeachers: {
                 include: {
                   users: true,
@@ -1406,7 +1406,7 @@ export class TimetableService {
           ...timeTableElement.timeTableSubstitution,
           timeTableSubstitutionClasses: timeTableElement.timeTableSubstitution.timeTableSubstitutionClasses.map((schoolClass) => schoolClass.classes.schoolClassUUID),
           timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution.timeTableSubstitutionTeachers.map((teacher) => teacher.users.userUUID),
-          timeTableSubstitutionRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
+          timeTableSubstitutionRoomUUID: timeTableElement.timeTableSubstitution.schoolRooms.schoolRoomName,
           schoolSubject: {
             schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
             schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
