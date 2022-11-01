@@ -1403,6 +1403,8 @@ export class TimetableService {
         status: 200,
         data: {
           ...timeTableElement.timeTableSubstitution,
+          timeTableSubstitutionClasses: timeTableElement.timeTableSubstitution.timeTableSubstitutionClasses.map((schoolClass) => schoolClass.classes.schoolClassUUID),
+          timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution.timeTableSubstitutionTeachers.map((teacher) => teacher.users.userUUID),
           schoolSubject: {
             schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
             schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
