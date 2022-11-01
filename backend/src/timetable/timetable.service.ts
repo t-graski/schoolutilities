@@ -304,6 +304,8 @@ export class TimetableService {
           schoolRoom: true,
           timeTableSubstitution: {
             include: {
+              schoolRooms: true,
+              schoolSubjects: true,
               timeTableSubstitutionClasses: {
                 include: {
                   classes: true,
@@ -542,24 +544,25 @@ export class TimetableService {
               ];
             if (element.timeTableElementDay === day) {
               return {
-                timeTableSubstitutionUUID:
-                  element.timeTableSubstitution.timeTableSubstitutionUUID,
-                timeTableSubstitutiontartTime:
-                  element.timeTableSubstitution
-                    .timeTableSubstitutiontartTime,
-                timeTableSubstitutionEndTime:
-                  element.timeTableSubstitution.timeTableSubstitutionEndTime,
-                timeTableSubstitutionClasses:
-                  element.timeTableSubstitution.timeTableSubstitutionClasses.map(
-                    (classes) => {
-                      return {
-                        schoolClassUUID: classes.classes.schoolClassUUID,
-                        schoolClassName: classes.classes.schoolClassName,
-                        schoolClassCreationTimestamp:
-                          classes.classes.schoolClassCreationTimestamp,
-                      };
-                    },
-                  ),
+                timeTableSubstitutionUUID: element.timeTableSubstitution.timeTableSubstitutionUUID,
+                timeTableSubstitutionRoomUUID: element.timeTableSubstitution.schoolRooms.schoolRoomUUID,
+                timeTableSubstitutiontartTime: element.timeTableSubstitution.timeTableSubstitutionstartTime,
+                timeTableSubstitutionEndTime: element.timeTableSubstitution.timeTableSubstitutionEndTime,
+                timeTableSubstitutionSubject: {
+                  schoolSubjectName: element.timeTableSubstitution.schoolSubjects.schoolSubjectName,
+                  schoolSubjectUUID: element.timeTableSubstitution.schoolSubjects.schoolSubjectUUID,
+                  schoolSubjectAbbreviation: element.timeTableSubstitution.schoolSubjects.schoolSubjectAbbreviation,
+                },
+                timeTableSubstitutionClasses: element.timeTableSubstitution.timeTableSubstitutionClasses.map(
+                  (classes) => {
+                    return {
+                      schoolClassUUID: classes.classes.schoolClassUUID,
+                      schoolClassName: classes.classes.schoolClassName,
+                      schoolClassCreationTimestamp:
+                        classes.classes.schoolClassCreationTimestamp,
+                    };
+                  },
+                ),
                 timeTableSubstitutionTeachers:
                   element.timeTableSubstitution.timeTableSubstitutionTeachers.map(
                     (teacher) => {
