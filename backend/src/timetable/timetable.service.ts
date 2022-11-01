@@ -1161,7 +1161,7 @@ export class TimetableService {
       timeTableElementUUID,
       timeTableSubstitutionDate,
       timeTableSubstitutionTeachers,
-      schoolRoom,
+      schoolRoomUUID,
       schoolSubject,
       schoolClasses,
     } = substitutions;
@@ -1178,7 +1178,7 @@ export class TimetableService {
           },
           schoolRooms: {
             connect: {
-              schoolRoomUUID: schoolRoom,
+              schoolRoomUUID,
             },
           },
           users: {
