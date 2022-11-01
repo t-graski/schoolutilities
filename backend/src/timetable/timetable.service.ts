@@ -522,11 +522,11 @@ export class TimetableService {
       }
 
       function checkForSubstitution(element, monday) {
-        if (element.timeTableSubstitution.length > 0) {
+        if (element.timeTableSubstitution) {
           if (
-            element.timeTableSubstitution[0].timeTableSubstitutionDate >=
+            element.timeTableSubstitution.timeTableSubstitutionDate >=
               monday &&
-            element.timeTableSubstitution[0].timeTableSubstitutionDate <=
+            element.timeTableSubstitution.timeTableSubstitutionDate <=
               new Date(monday.setDate(monday.getDate() + 5))
           ) {
             const weekday = [
@@ -550,8 +550,7 @@ export class TimetableService {
                   element.timeTableSubstitution[0]
                     .timeTableSubstitutiontartTime,
                 timeTableSubstitutionEndTime:
-                  element.timeTableSubstitution[0]
-                    .timeTableSubstitutionEndTime,
+                  element.timeTableSubstitution[0].timeTableSubstitutionEndTime,
                 timeTableSubstitutionClasses:
                   element.timeTableSubstitution[0].timeTableSubstitutionClasses.map(
                     (classes) => {
@@ -653,7 +652,7 @@ export class TimetableService {
         data: timeTableDaysArray,
       };
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return RETURN_DATA.DATABASE_ERROR;
     }
   }
