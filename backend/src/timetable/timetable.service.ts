@@ -300,7 +300,7 @@ export class TimetableService {
             },
           },
           schoolRoom: true,
-          timeTableSubstitutions: {
+          timeTableSubstitution: {
             include: {
               timeTableSubstitutionClasses: {
                 include: {
@@ -1167,23 +1167,27 @@ export class TimetableService {
     } = substitutions;
 
     try {
-      const substitution = await prisma.timeTableSubstitutions.create({
-        data: {
-          timeTableSubstitutionUUID: `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
-          timeTableSubstitutionDate,
-          timeTableElements: {
-            connect: {
-              timeTableElementUUID,
-            },
+      const timeTableElement = await prisma.timeTableElement.findUnique({
+        where: {
+          timeTableElementUUID,
+        },
+      });
+
+      const substitution = await prisma.timeTableSubstitutions.upsert({
+        where: {
+          timeTableSubstitutionElementId: timeTableElement.timeTableElementId,
+        },
+        update: {
+          timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
+          timeTableSubstitutionTeachers: {
+            set: timeTableSubstitutionTeachers,
+          },
+          timeTableSubstitutionClasses: {
+            set: schoolClasses,
           },
           schoolRooms: {
             connect: {
               schoolRoomUUID,
-            },
-          },
-          users: {
-            connect: {
-              userUUID,
             },
           },
           schoolSubjects: {
@@ -1191,37 +1195,57 @@ export class TimetableService {
               schoolSubjectUUID: schoolSubject,
             },
           },
+        },
+        create: {
+          timeTableSubstitutionUUID: `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
+          timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
+          schoolSubjects: {
+            connect: {
+              schoolSubjectUUID: schoolSubject,
+            }
+          },
+          schoolRooms: {
+            connect: {
+              schoolRoomUUID,
+            }
+          },
+          timeTableElements: {
+            connect: {
+              timeTableElementUUID,
+            },
+          },
+          users: {
+            connect: {
+              userUUID,
+            }
+          },
           timeTableSubstitutionClasses: {
-            create: schoolClasses.map((subject) => {
+            create: schoolClasses.map((schoolClass) => {
               return {
                 schoolClasses: {
                   connect: {
-                    schoolSubjectUUID: subject,
-                  },
-                },
-              };
+                    schoolClassUUID: schoolClass,
+                  }
+                }
+              }
             }),
           },
+          timeTableSubstitutionTeachers: {
+            create: timeTableSubstitutionTeachers.map((teacher) => {
+              return {
+                users: {
+                  connect: {
+                    userUUID: teacher,
+                  }
+                }
+              }
+            }),
+          }
         },
         include: {
           timeTableElements: true,
-        }
+        },
       });
-
-      if (timeTableSubstitutionTeachers.length > 0) {
-        await prisma.timeTableSubstitutionTeachers.createMany({
-          data: timeTableSubstitutionTeachers.map((teacher) => {
-            return {
-              timeTableSubstitutionUUID: substitution.timeTableSubstitutionUUID,
-              users: {
-                connect: {
-                  userUUID: teacher,
-                },
-              },
-            };
-          }),
-        });
-      }
 
       return {
         status: RETURN_DATA.SUCCESS.status,

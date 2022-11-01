@@ -517,10 +517,10 @@ model timeTableElement {
   schoolSubjects                    schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
   users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
   schoolRoom                        schoolRooms                @relation(fields: [timeTableElementRoomId], references: [schoolRoomId])
+  timeTableSubstitution             timeTableSubstitutions?
   timeTableTeachers                 timeTableElementTeachers[]
   timeTableElementClasses           timeTableElementClasses[]
   timeTableEvents                   timeTableEvents[]
-  timeTableSubstitutions            timeTableSubstitutions[]
   timeTableOmitted                  timeTableOmitted[]
   timeTableExam                     timeTableExam[]
 
@@ -571,12 +571,13 @@ model timeTableSubstitutions {
   timeTableSubstitutionDate              DateTime                        @map("time_table_substitution_date")
   timeTableSubstitutionTeachers          timeTableSubstitutionTeachers[]
   timeTableSubstitutionClasses           timeTableSubstitutionClasses[]
+  timeTableElements                      timeTableElement?               @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId], onDelete: Cascade)
   schoolSubjects                         schoolSubjects                  @relation(fields: [timeTableSubstitutionSubjectId], references: [schoolSubjectId])
   schoolRooms                            schoolRooms                     @relation(fields: [timeTableSubstitutionRoomId], references: [schoolRoomId])
   users                                  users                           @relation(fields: [timeTableSubstitutionCreatorId], references: [userId])
-  timeTableElements                      timeTableElement                @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId], onDelete: Cascade)
 
   @@unique([timeTableSubstitutionUUID], map: "time_tablesubstitution_uuid_UNIQUE")
+  @@unique([timeTableSubstitutionElementId], map: "time_table_substitution_time_table_element_id_UNIQUE")
   @@index([timeTableSubstitutionSubjectId], map: "fk_time_table_substitution_subject_id")
   @@index([timeTableSubstitutionCreatorId], map: "fk_time_table_substitution_creator_id")
   @@index([timeTableSubstitutionElementId], map: "fk_time_table_substitution_time_table_element_id")
