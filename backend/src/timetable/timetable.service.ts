@@ -1403,7 +1403,6 @@ export class TimetableService {
 
       });
 
-      if(timeTableElement.timeTableSubstitution) {
       return {
         status: 200,
         data: {
@@ -1419,16 +1418,6 @@ export class TimetableService {
           timeTableElementUUID: timeTableElement.timeTableElementUUID,
         }
       }
-    } else {
-      return {
-        status: 200,
-        data: {
-          //empty object
-          
-        }
-      }
-    }
-
     } catch {
       return RETURN_DATA.DATABASE_ERROR;
     }
