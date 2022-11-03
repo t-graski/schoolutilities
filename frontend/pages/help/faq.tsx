@@ -11,6 +11,7 @@ import Link from "next/link";
 
 import React from "react";
 import dynamic from "next/dynamic";
+import { BannerAd } from "../../components/molecules/ads/BannerAd";
 
 const slideDown = keyframes({
   from: { height: 0 },
@@ -60,7 +61,7 @@ const StyledHeader = styled(AccordionPrimitive.Header, {
 const StyledTrigger = styled(AccordionPrimitive.Trigger, {
   all: "unset",
   fontFamily: "inherit",
-  backgroundColor: "transparent",
+  backgroundColor: "$surface2",
   padding: "0 20px",
   height: 45,
   flex: 1,
@@ -69,18 +70,24 @@ const StyledTrigger = styled(AccordionPrimitive.Trigger, {
   justifyContent: "space-between",
   fontSize: 15,
   lineHeight: 1,
-  color: "$neutral-500",
+  color: "$onSurface",
   boxShadow: `0 1px 0 $neutral-500`,
-  '&[data-state="closed"]': { backgroundColor: "$neutral-300" },
-  '&[data-state="open"]': { backgroundColor: "$neutral-400" },
-  "&:hover": { backgroundColor: "$neutral-400" },
+  transition: "all 200ms",
+  '&[data-state="closed"]': { backgroundColor: "$surface2" },
+  '&[data-state="open"]': {
+    backgroundColor: "$primaryContainer",
+    "&:hover": {
+      backgroundColor: "$primaryContainer",
+    },
+  },
+  "&:hover": { backgroundColor: "$surface4" },
 });
 
 const StyledContent = styled(AccordionPrimitive.Content, {
   overflow: "hidden",
   fontSize: 15,
   color: "$neutral-500",
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surfaceVariant",
 
   '&[data-state="open"]': {
     animation: `${slideDown} 300ms cubic-bezier(0.87, 0, 0.13, 1)`,
@@ -108,7 +115,7 @@ const AccordionLayout = styled("div", {
   width: "100%",
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   color: "$neutral-500",
 });
 
@@ -147,14 +154,9 @@ export default function RegisterApproved() {
         <>
           <p>
             You can create a new school by clicking{" "}
-            <Link href="/school/create" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+              <StyledLink href="/school/create" passHref>here</StyledLink>
             . If you need any further assistance creating your school, you can
-            visit our{" "}
-            <Link href="/support/help" passHref>
-              <StyledLink>Help Center</StyledLink>
-            </Link>
+            visit our{" "}    <StyledLink href="/help" passHref>Help Center</StyledLink>
             .
           </p>
         </>
@@ -167,14 +169,10 @@ export default function RegisterApproved() {
           <p>
             If you have already created a school, you can create a new
             department by clicking{" "}
-            <Link href="/school/admin/create-department" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+              <StyledLink href="/school/admin/create-department" passHref>here</StyledLink>
             . If you need any further assistance creating your department, you
             can visit our{" "}
-            <Link href="/support/help" passHref>
-              <StyledLink>Help Center</StyledLink>
-            </Link>
+              <StyledLink href="/help" passHref>Help Center</StyledLink>
             .
           </p>
         </>
@@ -198,20 +196,9 @@ export default function RegisterApproved() {
           <p>
             If you have forgotten your password or E-mail, you can reset either
             of them by clicking{" "}
-            <Link href="profile/forgot" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+              <StyledLink href="profile/forgot" passHref>here</StyledLink>
             .
           </p>
-        </>
-      ),
-    },
-    {
-      question:
-        "What can I do if I don't have access to my E-mail account anymore?",
-      answer: (
-        <>
-          <p></p>
         </>
       ),
     },
@@ -240,6 +227,7 @@ export default function RegisterApproved() {
         </Accordion>
       </AccordionLayout>
       <Spacer size="small"></Spacer>
+      <BannerAd></BannerAd>
       <Footer></Footer>
     </>
   );

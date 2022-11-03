@@ -70,6 +70,81 @@ export class AuthService {
     };
   }
 
+  async linkUser(payload: any) {
+    const { email, password, discordUserId, discordUserChannelId } = payload;
+
+    const user = await prisma.users.findUnique({
+      where: {
+        userEmail: email,
+      },
+      include: {
+        userDiscordConnections: true,
+      }
+    });
+
+    const isPasswordMatching = bcrypt.compareSync(password, user.userPassword);
+
+    if (!isPasswordMatching) return {
+      status: 200,
+      message: 'Password is not matching',
+    }
+
+    const discordConnection = user.userDiscordConnections.find(connection => connection.discordUserId === discordUserId);
+
+    if (discordConnection) return {
+      status: 200,
+      message: 'Discord account is already linked',
+    }
+
+    await prisma.userDiscordConnections.create({
+      data: {
+        users: {
+          connect: {
+            userId: user.userId,
+          }
+        },
+        discordUserId,
+        discordUserChannelId,
+      }
+    });
+    return {
+      status: 200,
+      message: 'User linked successfully',
+      data: user,
+    }
+  }
+
+
+  async unlinkUser(payload: any) {
+    const { discordUserId } = payload;
+
+    const user = await prisma.userDiscordConnections.findUnique({
+      where: {
+        discordUserId
+      },
+      include: {
+        users: true,
+      }
+    });
+
+    if (!user) return {
+      status: 200,
+      message: 'Discord account is not linked',
+    }
+
+    await prisma.userDiscordConnections.delete({
+      where: {
+        discordUserId
+      }
+    });
+
+    return {
+      status: 200,
+      message: 'User unlinked successfully',
+      data: user,
+    }
+  }
+
   async isPermitted(
     personUUID: string,
     requiredRoles: Role[],
@@ -254,8 +329,8 @@ async function generateRegisterToken(
     throw new Error('Error while generating token: ' + error);
   }
 
-  const text = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
-  const html = `Please confirm your registration by clicking at this link: http://localhost:3000/auth/register?token=${generatedToken}`;
+  const text = `Please confirm your registration by clicking at this link: https://www.schoolutilities.net/auth/register-approved?token=${generatedToken}`;
+  const html = `Please confirm your registration by clicking at this link: https://www.schoolutilities.net/auth/register-approved?token=${generatedToken}`;
   const message = {
     from: 'noreply@schoolutilities.net',
     to: email,

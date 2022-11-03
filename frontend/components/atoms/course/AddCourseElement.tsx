@@ -5,6 +5,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { elementsToChoose } from "./CourseComponentDetailViews";
 import { AddIcon } from "../AddIcon";
+import { PopUp } from "../../molecules/PopUp";
 
 type Props = { addNewEntry?: Function };
 
@@ -92,7 +93,7 @@ const StyledCheckboxItem = styled(DropdownMenuPrimitive.CheckboxItem, {
 const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
   ...itemStyles,
 });
-const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
+const StyledTriggerItem = styled(DropdownMenuPrimitive.SubTrigger, {
   ...itemStyles,
 
   '&[data-state="open"]': {
@@ -161,7 +162,7 @@ const contentShow = keyframes({
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
   position: "fixed",
 
-  backgroundColor: "$neutral-400",
+  backgroundColor: "$surface1",
   opacity: 0.8,
   inset: 0,
 
@@ -181,7 +182,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   maxHeight: "85vh",
   padding: 25,
 
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface2",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
   transform: "translate(-50%, -50%)",
@@ -241,10 +242,11 @@ const IconButton = styled("button", {
   color: "$neutral-500",
   cursor: "pointer",
   transition: "all 0.2s ease-in-out",
-  all: "unset",
   fontFamily: "inherit",
+  border: "none",
+  backgroundColor: "transparent",
 
-  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
+  "&:hover": { backgroundColor: "$primaryContainer", color: "$neutral-100" },
   "&:focus": { boxShadow: `0 0 0 2px $warning` },
 });
 
@@ -273,13 +275,16 @@ const Element = styled("div", {
   cursor: "pointer",
   fontSize: "1rem",
 
-  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
+  "&:hover": {
+    backgroundColor: "$primaryContainer",
+    color: "$onPrimaryContainer",
+  },
 
   variants: {
     highlighted: {
       true: {
-        backgroundColor: "$neutral-500",
-        color: "$neutral-100",
+        backgroundColor: "$primaryContainer",
+        color: "$onPrimaryContainer",
       },
     },
   },
@@ -306,11 +311,11 @@ const AddButton = styled("button", {
   fontWeight: "$medium",
   cursor: "pointer",
   transition: "all 0.2s",
-  backgroundColor: "$primary-400",
-  color: "$neutral-500",
+  backgroundColor: "$primary",
+  color: "$onPrimary",
   boxShadow: `0 2px 10px $warning`,
 
-  "&:hover": { backgroundColor: "$neutral-500", color: "$neutral-100" },
+  "&:hover": { opacity: 0.8 },
 
   "&:focus": { boxShadow: `0 0 0 2px black` },
 
@@ -323,10 +328,10 @@ const AddButton = styled("button", {
 });
 
 export const AddCourseElement: React.FC<Props> = ({ addNewEntry }) => {
-  const [open, setOpen] = useState(false);
   const [choosenElementId, setChoosenElementId] = useState(-1);
   const [detailsConfig, setDetailsConfig] = useState({});
   const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const choosenElement = elementsToChoose.find(
     (element) => element.id === choosenElementId
@@ -346,6 +351,11 @@ export const AddCourseElement: React.FC<Props> = ({ addNewEntry }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent>
+          <DialogClose asChild>
+            <IconButton>
+              <Cross2Icon />
+            </IconButton>
+          </DialogClose>
           <DialogTitle>Choose element to add</DialogTitle>
           <DialogDescription>
             Click on the element at the right side and then enter the details
@@ -388,11 +398,6 @@ export const AddCourseElement: React.FC<Props> = ({ addNewEntry }) => {
               )}
             </SelectedLayout>
           </ElementSelectionLayout>
-          <DialogClose asChild>
-            <IconButton>
-              <Cross2Icon />
-            </IconButton>
-          </DialogClose>
         </DialogContent>
       </Dialog>
     </>

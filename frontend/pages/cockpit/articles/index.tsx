@@ -29,7 +29,7 @@ export default function Home() {
   const router = useRouter();
   useEffect(() => {
     getContent();
-  });
+  }, []);
 
   const [items, setItems] = useState([]);
 
@@ -50,9 +50,9 @@ export default function Home() {
       setItems(
         getResponse.map((item) => {
           return {
-            name: item.headline,
+            name: item.articleHeadline,
             id: item.articleUUID,
-            description: item.catchPhrase,
+            description: item.articleCatchPhrase,
           };
         })
       );
@@ -111,12 +111,11 @@ export default function Home() {
             saveFunction={() => {
               deleteSettingsEntry(articleUUID);
               setDeletePopUpIsVisible(false);
-            }}
+            } }
             closeFunction={() => {
               setDeletePopUpIsVisible(false);
               setArticleName("");
-            }}
-          >
+            } } open={false} setOpen={undefined}          >
             <StyledDeleteText>
               This action can&apos;t be undone and will permanently remove the
               class {articleName}.

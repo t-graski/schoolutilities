@@ -19,7 +19,7 @@ const FooterLayout = styled("footer", {
   gap: "40px",
   padding: "4vh 5vw",
 
-  backgroundColor: "$primary-200",
+  backgroundColor: "$surfaceVariant",
   color: "$neutral-500",
 });
 
@@ -42,7 +42,7 @@ const LogoLayout = styled("div", {
   width: "150px",
   height: "98px",
 
-  color: "$neutral-500",
+  color: "$onBackground",
 });
 
 const LinkLayout = styled("div", {
@@ -57,25 +57,30 @@ const LinkLayout = styled("div", {
 
 const LinkHeadline = styled("div", {
   marginBottom: "0.5vh",
+  padding: "$1x $2x",
 
   fontSize: "1.3rem",
   fontWeight: "bold",
   textTransform: "uppercase",
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   display: "flex",
   alignItems: "center",
   gap: "15px",
+  padding: "$1x $2x",
+  borderRadius: "$1x",
 
   fontSize: "1.1rem",
   textDecoration: "none",
-  color: "$neutral-500",
+  color: "$onBackground",
   cursor: "pointer",
+  width: "fit-content",
+  backgroundColor: "$surfaceVariant",
   transition: "color 0.2s ease-in-out",
 
   "&:hover": {
-    color: "$warning",
+    backgroundColor: "$surface2",
   },
 });
 
@@ -113,39 +118,41 @@ const Footer: React.FC<Props> = ({}) => {
     <>
       <FooterLayout>
         <FooterContentLayout>
-          <Link href="/" passHref>
-            <a aria-label="Startpage">
-              <LogoLayout>
-                <SvgLogoPencilCombinedCompact></SvgLogoPencilCombinedCompact>
-              </LogoLayout>
-            </a>
+          <Link href="/" passHref aria-label="Startpage">
+            <LogoLayout>
+              <SvgLogoPencilCombinedCompact></SvgLogoPencilCombinedCompact>
+            </LogoLayout>
           </Link>
           <LinkLayout>
             <LinkHeadline>Company</LinkHeadline>
-            <Link href="/contact-us" passHref>
-              <StyledLink>Contact</StyledLink>
-            </Link>
-            <Link href="/about-us" passHref>
-              <StyledLink>About</StyledLink>
-            </Link>
-            <Link href="/branding" passHref>
-              <StyledLink>Branding</StyledLink>
-            </Link>
+            <StyledLink href="/contact-us" passHref>
+              Contact
+            </StyledLink>
+            <StyledLink href="/about-us" passHref>
+              About
+            </StyledLink>
+            <StyledLink href="/branding" passHref>
+              Branding
+            </StyledLink>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Support</LinkHeadline>
-            <Link href="/help" passHref>
-              <StyledLink>Help Center</StyledLink>
-            </Link>
-            <Link href="/change-logs" passHref>
-              <StyledLink>Changelog</StyledLink>
-            </Link>
-            <Link href="/help/faq" passHref>
-              <StyledLink>FAQ</StyledLink>
-            </Link>
-            <Link href="https://schoolutilities.statuspage.io/" passHref>
-              <StyledLink target={"_blank"}>Status</StyledLink>
-            </Link>
+            <StyledLink href="/help" passHref>
+              Help Center
+            </StyledLink>
+            <StyledLink href="/change-logs" passHref>
+              Changelog
+            </StyledLink>
+            <StyledLink href="/help/faq" passHref>
+              FAQ
+            </StyledLink>
+            <StyledLink
+              target={"_blank"}
+              href="https://schoolutilities.statuspage.io/"
+              passHref
+            >
+              Status
+            </StyledLink>
           </LinkLayout>
           <LinkLayout>
             <LinkHeadline>Support Us</LinkHeadline>
@@ -176,12 +183,12 @@ const Footer: React.FC<Props> = ({}) => {
             © 2022, SchoolUtilities - All Rights Reserved
           </StyledRightText>
           <ImprintLayout>
-            <Link href="/data-policy" passHref>
-              <StyledLink>Data-Policy</StyledLink>
-            </Link>
-            <Link href="/contact-us" passHref>
-              <StyledLink>Imprint</StyledLink>
-            </Link>
+            <StyledLink href="/data-policy" passHref>
+              Data-Policy
+            </StyledLink>
+            <StyledLink href="/contact-us" passHref>
+              Imprint
+            </StyledLink>
           </ImprintLayout>
         </FooterContentLayout>
       </FooterLayout>

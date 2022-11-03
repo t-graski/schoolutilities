@@ -16,43 +16,6 @@ type Props = {
   isSmall?: boolean;
 };
 
-const InputFieldLayout = styled("div", {
-  display: "flex",
-  alignItems: "center",
-  background: "$neutral-300",
-  width: "100%",
-  borderRadius: "15px",
-  border: "none",
-  padding: "10.3px 20px",
-  gap: "20px",
-
-  variants: {
-    editable: {
-      true: {},
-      false: {
-        background: "transparent",
-        border: "none",
-      },
-    },
-  },
-});
-
-const ImageLayout = styled("div", {
-  display: "flex",
-  width: "30px",
-  height: "30px",
-
-  color: "$neutral-500",
-
-  variants: {
-    cursor: {
-      pointer: {
-        cursor: "pointer",
-      },
-    },
-  },
-});
-
 const StyledSelect = styled(Select, {
   width: "100%",
   border: "none",
@@ -62,7 +25,7 @@ const StyledSelect = styled(Select, {
 
   fontWeight: "bold",
   color: "$neutral-500",
-  background: "transparent",
+  background: "$surfaceVariant",
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
@@ -87,9 +50,12 @@ const StyledSelect = styled(Select, {
 const selectStyled = {
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "$colors$neutral-500" : "$neutral-500",
-    backgroundColor: styles.theme.colors["neutral-300"],
-  }), 
+    color: "var(--colors-onSurface)",
+    backgroundColor: state.isSelected ? "var(--colors-surface4)" : "var(--colors-surface)",
+    ":hover": {
+      backgroundColor: "var(--colors-surface4)",
+    },
+  }),
   control: (provided, state) => ({
     ...provided,
     border: "none",
@@ -106,8 +72,8 @@ const selectStyled = {
 
   menu: (provided, state) => ({
     ...provided,
-    background: styles.theme.colors["neutral-300"],
-    color: styles.theme.colors["neutral-500"],
+    background: "var(--colors-surface1)",
+    color: "var(--colors-onSurface)",
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
@@ -131,7 +97,7 @@ const selectStyled = {
     backgroundColor: styles.theme.colors["neutral-300"],
 
     "&:hover": {
-      backgroundColor: styles.theme.colors["neutral-300"],
+      backgroundColor: "var(--colors-surface5)",
     },
 
     "&:active": {

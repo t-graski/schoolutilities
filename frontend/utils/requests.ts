@@ -107,6 +107,27 @@ export async function fetchSchoolClasses(schoolUUID) {
   return response.json();
 }
 
+export async function fetchTeachers(schoolUUID) {
+  const accessToken = await getAccessToken();
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/schooladmin/teachers/${schoolUUID}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (response.status !== 200) {
+    throw new Error(formatErrorMessage(response));
+  }
+
+  return response.json();
+}
+
 export async function fetchSchoolUsers(schoolUUID) {
   const accessToken = await getAccessToken();
 
@@ -304,6 +325,7 @@ export async function deleteSchoolPerson(data) {
 }
 
 export async function editSchoolPerson(data) {
+  console.log(data);
   const accessToken = await getAccessToken();
 
   const response = await fetch(
@@ -558,7 +580,7 @@ export async function addOffDay(data){
   if (response.status !== 200) {
     throw new Error(formatErrorMessage(response));
   }
-  
+
   return response.json();
 }
 

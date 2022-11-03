@@ -74,6 +74,19 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/submissions/:elementUUID')
+  @Roles(Role.Teacher)
+  async getSubmissions(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getSubmissions(
+      request,
+      params.elementUUID,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/info/:courseUUID')
   @Roles(Role.Student)
   async getCourseInfo(@Param('courseUUID') course: string, @Req() request: Request) {
@@ -126,19 +139,6 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('submissions/:elementUUID')
-  @Roles(Role.Teacher)
-  async getSubmissions(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.getSubmissions(
-      request,
-      params.elementUUID,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Roles(Role.Student)
   @Get('/element/:elementUUID')
   async getElement(@Param() params, @Req() request, @Res() response) {
@@ -151,13 +151,13 @@ export class CourseController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.Student)
-  @Get('/events/:schoolUUID/:days')
-  async getEvents(
-    @Param('schoolUUID') schoolUUID: string, @Param('days') days: string, @Req() request: Request) {
-    return this.courseService.getEvents(schoolUUID, days, request);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Roles(Role.Student)
+  // @Get('/events/:schoolUUID/:days')
+  // async getEvents(
+  //   @Param('schoolUUID') schoolUUID: string, @Param('days') days: string, @Req() request: Request) {
+  //   return this.courseService.getEvents(schoolUUID, days, request);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)

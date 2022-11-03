@@ -114,7 +114,7 @@ export class SchoolAdminController {
   @UseGuards(JwtAuthGuard)
   @Delete('/class')
   // @Roles(Role.Admin)
-  async removeClass(@Body() schoolClass: DeleteSchoolClassDTO, @Req() request): Promise<number> {
+  async removeClass(@Body() schoolClass: DeleteSchoolClassDTO, @Req() request): Promise<SchoolClass> {
     return this.schoolAdminService.removeClass(schoolClass);
 
   }
@@ -378,7 +378,7 @@ export class SchoolAdminController {
   @ApiOkResponse({ type: UserRole })
   @ApiBody({ type: UpdateRoleDTO })
   @UseGuards(JwtAuthGuard)
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
   @Put('/role')
   async updateRole(@Body() role: UpdateRoleDTO, @Req() request, @Res() response): Promise<UserRole> {
     return this.schoolAdminService.updateRole(role, request);

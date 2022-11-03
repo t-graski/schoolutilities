@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { TimeTableItemSelection } from "../../../components/organisms/time-table/TimeTableItemSelection";
 import { useRouter } from "next/router";
 import { getCurrentWeekMonday } from "../../molecules/time-table/TimeTableWeekSelection";
+import { TimeTableItemSidebar } from "./TimeTableItemSidebar";
 
 const TimeTableNavigationLayout = styled("div", {
   display: "grid",
@@ -17,6 +18,13 @@ const TimeTableSelectionLayout = styled("div", {
   display: "grid",
   gridTemplateColumns: "1fr 15fr",
   gridGap: "$2x",
+});
+
+const TimeTableInfoLayout = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "3fr minmax(300px, 1fr)",
+  gridGap: "$2x",
+  width: "100%",
 });
 
 export default function ClassTimeTable() {
@@ -45,22 +53,24 @@ export default function ClassTimeTable() {
   }, [router, router.query, schoolClassUUID, startDate]);
 
   return (
-    <TimeTableNavigationLayout>
-      <TimeTableSelectionLayout>
-        <TimeTableItemSelection
-          schoolClassUUID={schoolClassUUID}
-          setSchoolClassUUID={setSchoolClassUUID}
-          startDate={startDate}
-          setStartDate={setStartDate}
-        ></TimeTableItemSelection>
-      </TimeTableSelectionLayout>
-
-      {schoolClassUUID && startDate && (
-        <TimeTableOverview
-          startDate={startDate}
-          schoolClassUUID={schoolClassUUID}
-        ></TimeTableOverview>
-      )}
-    </TimeTableNavigationLayout>
+    <TimeTableInfoLayout>
+      <TimeTableNavigationLayout>
+        <TimeTableSelectionLayout>
+          <TimeTableItemSelection
+            schoolClassUUID={schoolClassUUID}
+            setSchoolClassUUID={setSchoolClassUUID}
+            startDate={startDate}
+            setStartDate={setStartDate}
+          ></TimeTableItemSelection>
+        </TimeTableSelectionLayout>
+        {schoolClassUUID && startDate && (
+          <TimeTableOverview
+            startDate={startDate}
+            schoolClassUUID={schoolClassUUID}
+          ></TimeTableOverview>
+        )}
+      </TimeTableNavigationLayout>
+      <TimeTableItemSidebar></TimeTableItemSidebar>
+    </TimeTableInfoLayout>
   );
 }

@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { HelperService } from '../helper/helper.service';
-import { v4 as uuidv4 } from 'uuid';
-import { RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
 import { AddArticleDTO, Article, DeleteArticleDTO, UpdateArticleDTO } from 'src/entity/article/article';
 import { Request } from 'express';
-import { InternalServerErrorException } from '@nestjs/common/exceptions';
 import { User } from 'src/entity/user/user';
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
+import { HelperService } from "../helper/helper.service";
+import { v4 as uuidv4 } from "uuid";
+import { RETURN_DATA, ID_STARTERS } from "src/misc/parameterConstants";
+import { ReturnMessage } from 'src/types/Database';
 
 const prisma = new PrismaClient();
 
@@ -42,16 +42,16 @@ export class ArticleService {
     }
   }
 
-  async deleteArticle(payload: DeleteArticleDTO, request: Request): Promise<number> {
+  async deleteArticle(payload: DeleteArticleDTO, request: Request): Promise<Article> {
     const { articleUUID } = payload;
 
     try {
-      await prisma.articles.delete({
+      const article = await prisma.articles.delete({
         where: {
           articleUUID,
         },
       });
-      return 200;
+      return new Article(article);
     } catch (error) {
       throw new InternalServerErrorException("Database error");
     }
@@ -129,6 +129,49 @@ export class ArticleService {
         }));
       }
       return articleData;
+    } catch {
+      throw new InternalServerErrorException("Database error");
+    }
+  }
+
+  async uploadFile(file, request): Promise<ReturnMessage> {
+    const { articleUUID } = request.body;
+    try {
+      const articleFile = await prisma.articleFile.create({
+        data: {
+          articleFileUUID: `${file.filename}`,
+          articleFileName: `${file.originalname}`,
+          articleFileSize: file.size,
+          articles: {
+            connect: {
+              articleUUID,
+            },
+          },
+        },
+      });
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: articleFile,
+      };
+    } catch {
+      throw new InternalServerErrorException("Database error");
+    }
+  }
+
+  async getArticleFiles(articleUUID: string): Promise<ReturnMessage> {
+    try {
+      const articleFiles = await prisma.articleFile.findMany({
+        where: {
+          articles: {
+            articleUUID,
+          },
+        },
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: articleFiles,
+      };
     } catch {
       throw new InternalServerErrorException("Database error");
     }

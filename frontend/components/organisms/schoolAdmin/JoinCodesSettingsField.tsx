@@ -2,274 +2,96 @@ import React from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
 import { useRouter } from "next/router";
-import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
-import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
-import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import { regex } from "../../../utils/regex";
-import Skeleton from "react-loading-skeleton";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   addSchoolJoinCode,
   deleteJoinCode,
   editJoinCode,
   fetchSchoolJoinCodes,
 } from "../../../utils/requests";
+import { AdminSettingsField } from "./AdminSettingsField";
+import { QueryClient } from "react-query";
 
-type Props = {};
-
-const SchoolDetailLayout = styled("form", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-  justifySelf: "center",
-  width: "100%",
-  padding: "40px 60px",
-
-  overflowY: "scroll",
-});
-
-const SettingsEntriesLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-  width: "100%",
-});
-
-const SettingsEntryLayout = styled("div", {
-  width: "100%",
-});
-
-const SettingsEntryName = styled("p", {
-  fontSize: "2rem",
-  fontWeight: "bold",
-  color: "$neutral-500",
-});
+type Props = {
+  queryClient: QueryClient;
+};
 
 const StyledInputField = styled("div", {
   marginTop: "15px",
   marginBottom: "15px",
 });
 
-const StyledError = styled("p", {
-  marginTop: "15px",
-  marginBottom: "15px",
-  border: "solid 2px $error",
-  padding: "20px",
-  width: "fit-content",
-  borderRadius: "25px",
+const EditElementInputs: React.FC<{
+  itemConfig: any;
+  setItemConfig: Function;
+}> = ({ itemConfig, setItemConfig }) => {
+  return (
+    <StyledInputField>
+      <InputField
+        label="Name"
+        inputType="text"
+        value={itemConfig.schoolJoinCodeName}
+        onChange={(event) => {
+          setItemConfig({
+            ...itemConfig,
+            schoolJoinCodeName: event,
+          });
+        }}
+        regex={regex.schoolName}
+        min="2"
+        max="30"
+      />
+    </StyledInputField>
+  );
+};
 
-  color: "$error",
-  fontSize: "1.5rem",
-  fontWeight: "$bold",
-});
-
-const DepartmentName = styled("p", {
-  fontSize: "1rem",
-  color: "$neutral-500",
-});
-
-const StyledDeleteText = styled("p", {
-  marginTop: "15px",
-
-  fontSize: "1rem",
-  color: "$neutral-500",
-});
-
-export const JoinCodesSettingsField: React.FC<Props> = ({}) => {
-  const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
-  const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
-  const [joinCodeName, setJoinCodeName] = React.useState("");
-  const [joinCodeNameValid, setJoinCodeNameValid] = React.useState(false);
-  const [joinCodeId, setJoinCodeId] = React.useState("");
-  const [error, setError] = React.useState("");
+export const JoinCodesSettingsField: React.FC<Props> = ({ queryClient }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
-  const queryClient = useQueryClient();
-
-  const { data: joinCodes, status: joinCodesStatus } = useQuery(
-    ["joinCodes", schoolUUID],
-    () => fetchSchoolJoinCodes(schoolUUID)
-  );
-
-  const addJoinCodeMutation = useMutation(addSchoolJoinCode, {
-    onSuccess: (response) => {
-      let entry = {
-        joinCode: response.joinCode,
-        joinCodeName,
-      };
-
-      queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) => [
-        ...old,
-        entry,
-      ]);
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
-
-  const deleteJoinCodeMutation = useMutation(deleteJoinCode, {
-    onSuccess: async () => {
-      await queryClient.cancelQueries(["joinCodes", schoolUUID]);
-
-      queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.schoolJoinCode !== joinCodeId)
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
-
-  const editJoinCodeMutation = useMutation(editJoinCode, {
-    onSuccess: async () => {
-      let entry = {
-        schoolJoinCode: joinCodeId,
-        schoolJoinCodeName: joinCodeName,
-      };
-
-      queryClient.setQueryData(["joinCodes", schoolUUID], (old: any) =>
-        old.map((currEntry) =>
-          currEntry.schoolJoinCode === joinCodeId ? entry : currEntry
-        )
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
-
-  function savePopUpInput() {
-    if (joinCodeId == "") {
-      addJoinCodeMutation.mutate({
-        schoolUUID,
-        schoolJoinCodeName: joinCodeName,
-        schoolJoinCodeExpireTimestamp: "2023-10-22 14:00:00",
-      });
-    } else {
-      editJoinCodeMutation.mutate({
-        schoolJoinCode: joinCodeId,
-        schoolJoinCodeName: joinCodeName,
-        schoolJoinCodeExpireTimestamp: "2023-10-22 14:00:00",
-      });
-    }
-    setEditPopUpIsVisible(false);
-  }
-
   return (
     <>
-      <SchoolDetailLayout>
-        {editPopUpIsVisible && (
-          <SettingsPopUp
-            headline={
-              joinCodeId == "" ? "Add new invite code" : "Edit invite code"
-            }
-            inputValid={joinCodeNameValid}
-            saveLabel={joinCodeId == "" ? "Add" : "Save"}
-            saveFunction={savePopUpInput}
-            closeFunction={() => {
-              setEditPopUpIsVisible(false);
-              setJoinCodeName("");
-              setJoinCodeNameValid(false);
-            }}
-          >
-            <StyledInputField>
-              <InputField
-                label="Name"
-                inputType="text"
-                value={joinCodeName}
-                onChange={(event) => {
-                  setJoinCodeName(event);
-                }}
-                regex={regex.schoolName}
-                setValidInput={setJoinCodeNameValid}
-                min="2"
-                max="30"
-              />
-            </StyledInputField>
-          </SettingsPopUp>
-        )}
-        {deletePopUpIsVisible && (
-          <SettingsPopUp
-            headline={`Remove ${joinCodeName}`}
-            inputValid={true}
-            saveLabel="Confirm"
-            saveFunction={() => {
-              deleteJoinCodeMutation.mutate(joinCodeId);
-              setDeletePopUpIsVisible(false);
-            }}
-            closeFunction={() => {
-              setDeletePopUpIsVisible(false);
-              setJoinCodeName("");
-              setJoinCodeNameValid(false);
-            }}
-          >
-            <StyledDeleteText>
-              This action can&apos;t be undone and will permanently remove the
-              invite code {joinCodeName}.
-            </StyledDeleteText>
-          </SettingsPopUp>
-        )}
-        <SettingsHeader
-          headline="Invite Codes"
-          addFunction={() => {
-            setJoinCodeName("");
-            setJoinCodeId("");
-            setEditPopUpIsVisible(true);
-          }}
-        ></SettingsHeader>
-        {error && <StyledError>{error}</StyledError>}
-        <SettingsEntriesLayout>
-          {joinCodesStatus == "success" &&
-            joinCodes.length > 0 &&
-            joinCodes.map((entry, index) => (
-              <SettingsEntryLayout
-                key={entry.schoolJoinCode}
-                data-key={entry.schoolJoinCode}
-              >
-                <SettingsEntry
-                  editFunction={() => {
-                    setJoinCodeName(entry.schoolJoinCodeName);
-                    setJoinCodeId(entry.schoolJoinCode);
-                    setEditPopUpIsVisible(true);
-                  }}
-                  deleteFunction={() => {
-                    setJoinCodeId(entry.schoolJoinCode);
-                    setDeletePopUpIsVisible(true);
-                  }}
-                  highlighted={
-                    router.query &&
-                    router.query.joinCode &&
-                    entry.joinCode == router.query.joinCode
-                  }
-                >
-                  <SettingsEntryName>{entry.joinCode}</SettingsEntryName>
-                  <DepartmentName>{entry.joinCodeName}</DepartmentName>
-                </SettingsEntry>
-              </SettingsEntryLayout>
-            ))}
-          {joinCodesStatus == "success" && joinCodes.length <= 0 && (
-            <>
-              There are no invite codes yet. Click on the plus button to add
-              one.
-            </>
-          )}
-          {joinCodesStatus == "loading" && (
-            <>
-              <Skeleton width="100%" height={100}></Skeleton>
-              <Skeleton width="100%" height={100}></Skeleton>
-              <Skeleton width="100%" height={80}></Skeleton>
-              <Skeleton width="100%" height={100}></Skeleton>
-            </>
-          )}
-          {joinCodesStatus == "error" && (
-            <>
-              While loading the invite codes an error occured. Please try again.
-            </>
-          )}
-        </SettingsEntriesLayout>
-      </SchoolDetailLayout>
+      <AdminSettingsField
+        queryClient={queryClient}
+        reactQueryKey={"joinCodes"}
+        texts={{
+          title: "Invite Codes",
+          addHeadline: "Add new invite code",
+          editHeadline: "Edit invite code",
+          deleteHeadline: "Remove invite code",
+          deleteDescription:
+            "This action can't be undone and will permanently remove the invite code",
+          elementsLoadingErrorMessage:
+            "While loading the invite codes an error occured. Please try again.",
+          elementsNoElementsMessage:
+            "There are no invite codes yet. Click on the plus button to add one.",
+        }}
+        uuidKey={"schoolJoinCode"}
+        nameKey={"schoolJoinCodeName"}
+        addElement={addSchoolJoinCode}
+        editElement={editJoinCode}
+        deleteElement={deleteJoinCode}
+        getAllElements={fetchSchoolJoinCodes}
+        isItemValid={(item) => true}
+        EditElementInputs={EditElementInputs}
+        defaultItemConfig={{
+          schoolJoinCodeName: "",
+          schoolUUID: schoolUUID,
+          schoolJoinCodeExpireTimestamp: "2023-10-22 14:00:00",
+        }}
+        columns={[
+          {
+            title: "Name",
+            key: "schoolJoinCodeName",
+            sortFunction: (a, b) => a.schoolJoinCodeName.localeCompare(b.schoolJoinCodeName),
+          },
+          {
+            title: "Invite Code",
+            key: "schoolJoinCode",
+            sortFunction: (a, b) => a.schoolJoinCode.localeCompare(b.schoolJoinCode),
+          },
+        ]}
+      ></AdminSettingsField>
     </>
   );
 };

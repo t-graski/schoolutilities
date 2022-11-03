@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 
 export default function ShowCourses() {
   return (
-    <SiteLayout>
+    <>
       <Head>
         <title>Course Setup - SchoolUtilities</title>
       </Head>
@@ -19,6 +19,6 @@ export default function ShowCourses() {
       <Separator width="small" alignment="center" />
       <CourseSelectionList></CourseSelectionList>
       <Footer></Footer>
-    </SiteLayout>
+    </>
   );
 }

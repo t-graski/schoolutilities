@@ -38,6 +38,14 @@ export class UserController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @Post('changePassword')
+  async changePassword(@Req() request, @Res() response) {
+    const result = await this.userService.changePassword(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post('/requestEmailChange')
   async requestEmailChange(@Req() request, @Res() response) {
@@ -92,6 +100,16 @@ export class UserController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/updateAppearance')
+  async updateAppearance(@Req() request, @Res() response) {
+    const result = await this.userService.updateAppearance(request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
 
   @UseGuards(JwtAuthGuard)
   @Put('/updatePublicProfile')

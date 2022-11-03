@@ -7,21 +7,24 @@ import { getAccessToken } from "../../../../utils/authHelper";
 import { Article } from "../../../../components/organisms/help/Article";
 import { ContentLayout } from "../../../../utils/styles";
 import dynamic from "next/dynamic";
+import { BackLink } from "../../../../components/molecules/BackLink";
+import { BannerAd } from "../../../../components/molecules/ads/BannerAd";
 
 export default function ArticleOverview({ content }) {
   return (
-    <SiteLayout>
+    <>
       <Head>
         <title>Headline</title>
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
-        <Spacer size="medium"></Spacer>
+        <BackLink href={"/help"} label={"Back to help"}></BackLink>
         <Article content={content}></Article>
         <Spacer size="small"></Spacer>
       </ContentLayout>
+      <BannerAd></BannerAd>
       <Footer></Footer>
-    </SiteLayout>
+    </>
   );
 }
 

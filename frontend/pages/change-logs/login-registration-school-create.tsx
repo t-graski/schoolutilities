@@ -5,13 +5,13 @@ import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
-import Link from "next/link";
 import { ArticleLayout } from "../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../components/article/GeneralLayout";
 import { StyledLink } from "../../components/article/Link";
 import { ArticleDetails } from "../../components/article/ArticleDetails";
 import { ArticleList } from "../../components/article/ArticleList";
 import dynamic from "next/dynamic";
+import { BackLink } from "../../components/molecules/BackLink";
 
 export default function Article() {
   const articleDetails = {
@@ -27,7 +27,7 @@ export default function Article() {
         <title>Patch Notes - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
+      <BackLink href={"/change-logs"} label={"Back to help"}></BackLink>
       <Headline label="December 20th, 2021 - Patch Notes"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
@@ -55,9 +55,9 @@ export default function Article() {
           <p>
             If you don&apos;t want to miss out on any previous Patch Logs, you
             can find them{" "}
-            <Link href="/patch-logs" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+            <StyledLink href="/patch-logs" passHref>
+              here
+            </StyledLink>
             .
           </p>
           <br />
@@ -83,9 +83,9 @@ export default function Article() {
           ></Headline>
           <p>
             It is also possible to create your own school by clicking{" "}
-            <Link href="/school/create" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+            <StyledLink href="/school/create" passHref>
+              here
+            </StyledLink>
             .<br />
             You will also be able to create invite codes after successfully
             creating your school
@@ -104,9 +104,9 @@ export default function Article() {
             also join someone
             <br />
             else&apos;s school{" "}
-            <Link href="/school/admin/school-join" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+            <StyledLink href="/school/admin/school-join" passHref>
+              here
+            </StyledLink>
             .<br />
           </p>
           <br />
@@ -118,12 +118,12 @@ export default function Article() {
           <p>
             We also have our own Discord Bot, which you can invite to your
             discord server{" "}
-            <Link
+            <StyledLink
               href="https://discord.com/oauth2/authorize?client_id=737357503989415956&permissions=8&scope=bot"
               passHref
             >
-              <StyledLink>here</StyledLink>
-            </Link>
+              here
+            </StyledLink>
             .<br />
             It comes with various features such as:
             <ArticleList>
@@ -132,9 +132,9 @@ export default function Article() {
               <li>Send a message to all of your students</li>
               <li>
                 You can set up all of this in our{" "}
-                <Link href="/" passHref>
-                  <StyledLink>Bot Dashboard</StyledLink>
-                </Link>
+                <StyledLink href="/" passHref>
+                  Bot Dashboard
+                </StyledLink>
               </li>
             </ArticleList>
           </p>
@@ -146,9 +146,9 @@ export default function Article() {
           ></Headline>
           <p>
             You can suppoert us now on our brand new{" "}
-            <Link href="https://www.patreon.com/schoolutilities" passHref>
-              <StyledLink>Patreon</StyledLink>
-            </Link>
+            <StyledLink href="https://www.patreon.com/schoolutilities" passHref>
+              Patreon
+            </StyledLink>
             .<br />
             We are looking forward to see you there!
           </p>
@@ -156,20 +156,20 @@ export default function Article() {
           <br />
           <p>
             If you need any help, you can visit our{" "}
-            <Link href="/help/faq" passHref>
-              <StyledLink>FAQ</StyledLink>
-            </Link>{" "}
+            <StyledLink href="/help/faq" passHref>
+              FAQ
+            </StyledLink>{" "}
             or our{" "}
-            <Link href="/help/help-center" passHref>
-              <StyledLink>Help Center</StyledLink>
-            </Link>
+            <StyledLink href="/help/help-center" passHref>
+              Help Center
+            </StyledLink>
             .
             <br />
             If you have any quetions, which are not answered feel free to send
             us an E-Mail{" "}
-            <Link href="/contact-us" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+            <StyledLink href="/contact-us" passHref>
+              here
+            </StyledLink>
             .
           </p>
           <br />

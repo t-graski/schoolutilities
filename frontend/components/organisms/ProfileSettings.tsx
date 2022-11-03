@@ -89,7 +89,7 @@ const SpecialLinkLayout = styled("div", {
   },
 });
 
-const LinkLayout = styled("a", {
+const LinkLayout = styled(Link, {
   display: "flex",
   flexDirection: "row",
   justifyContent: "flex-start",
@@ -98,7 +98,7 @@ const LinkLayout = styled("a", {
   width: "100%",
   padding: "24px",
   borderRadius: "$normal",
-  backgroundColor: "$neutral-300",
+  backgroundColor: "$surface3",
   cursor: "pointer",
   color: "$neutral-500",
   textDecoration: "none",
@@ -110,10 +110,10 @@ const LinkLayout = styled("a", {
     color: {
       primary: {},
       secondary: {
-        backgroundColor: "$neutral-500",
+        backgroundColor: "$secondary",
       },
       special: {
-        backgroundColor: "$warning",
+        backgroundColor: "$primaryContainer",
       },
     },
   },
@@ -237,7 +237,7 @@ const contentShow = keyframes({
 });
 
 const StyledOverlay = styled(DialogPrimitive.Overlay, {
-  backgroundColor: "$neutral-400",
+  backgroundColor: "$surface",
   position: "fixed",
   opacity: 0.8,
   inset: 0,
@@ -247,7 +247,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
 });
 
 const StyledDialogContent = styled(DialogPrimitive.Content, {
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface4",
   borderRadius: 6,
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
@@ -379,40 +379,39 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
           </ProfileName>
           <ProfileNavigationLinks>
             <SpecialLinkLayout>
-              <Link href="/profile/settings" passHref>
-                <LinkLayout
-                  color={router.query.tab !== "schools" ? "special" : "primary"}
-                >
-                  <IconLayout>
-                    <SvgHome />
-                  </IconLayout>
-                  <LinkContentLayout>
-                    <LinkLabel color="special">Account</LinkLabel>
+              <LinkLayout
+                color={router.query.tab !== "schools" ? "special" : "primary"}
+                href="/profile/settings"
+                passHref
+              >
+                <IconLayout>
+                  <SvgHome />
+                </IconLayout>
+                <LinkContentLayout>
+                  <LinkLabel color="special">Account</LinkLabel>
 
-                    <LinkArrow color="special">
-                      <SvgRightArrow />
-                    </LinkArrow>
-                  </LinkContentLayout>
-                </LinkLayout>
-              </Link>
+                  <LinkArrow color="special">
+                    <SvgRightArrow />
+                  </LinkArrow>
+                </LinkContentLayout>
+              </LinkLayout>
             </SpecialLinkLayout>
             <SpecialLinkLayout>
-              <Link href="/profile/settings?tab=schools" passHref>
-                <LinkLayout
-                  color={router.query.tab == "schools" ? "special" : "primary"}
-                >
-                  <IconLayout>
-                    <SvgSchool />
-                  </IconLayout>
-                  <LinkContentLayout>
-                    <LinkLabel color="special">Schools</LinkLabel>
-
-                    <LinkArrow color="special">
-                      <SvgRightArrow />
-                    </LinkArrow>
-                  </LinkContentLayout>
-                </LinkLayout>
-              </Link>
+              <LinkLayout
+                color={router.query.tab == "schools" ? "special" : "primary"}
+                href="/profile/settings?tab=schools"
+                passHref
+              >
+                <IconLayout>
+                  <SvgSchool />
+                </IconLayout>
+                <LinkContentLayout>
+                  <LinkLabel color="special">Schools</LinkLabel>
+                  <LinkArrow color="special">
+                    <SvgRightArrow />
+                  </LinkArrow>
+                </LinkContentLayout>
+              </LinkLayout>
             </SpecialLinkLayout>
           </ProfileNavigationLinks>
         </GeneralProfileNavbarLayout>
@@ -457,10 +456,17 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogTitle>
-                    {passwordResetSucessfull == 0 ? "Loading" : passwordResetSucessfull == 1 ? "You got an email" : "Error"}
+                    {passwordResetSucessfull == 0
+                      ? "Loading"
+                      : passwordResetSucessfull == 1
+                      ? "You got an email"
+                      : "Error"}
                   </DialogTitle>
                   <DialogDescription>
-                    {passwordResetSucessfull == 0 ? "" : passwordResetSucessfull == 1 ? `We just sent you an email with a link to change your
+                    {passwordResetSucessfull == 0
+                      ? ""
+                      : passwordResetSucessfull == 1
+                      ? `We just sent you an email with a link to change your
                     password.`
                       : "Something went wrong. Please try again later."}
                   </DialogDescription>
@@ -516,28 +522,24 @@ export const ProfileSettings: React.FC<Props> = ({}) => {
               </SchoolList>
               <Spacer size="verySmall"></Spacer>
               <ButtonLayout>
-                <Link href="/school/join">
-                  <a>
-                    <Button
-                      backgroundColor={"primary"}
-                      color={"primary"}
-                      onClick={() => {}}
-                    >
-                      JOIN A SCHOOL
-                    </Button>
-                  </a>
+                <Link href="/school/join" passHref>
+                  <Button
+                    backgroundColor={"primary"}
+                    color={"primary"}
+                    onClick={() => {}}
+                  >
+                    JOIN A SCHOOL
+                  </Button>
                 </Link>
                 <Spacer size="verySmall"></Spacer>
-                <Link href="/school/create">
-                  <a>
-                    <Button
-                      backgroundColor={"secondary"}
-                      color={"primary"}
-                      onClick={() => {}}
-                    >
-                      CREATE A SCHOOL
-                    </Button>
-                  </a>
+                <Link href="/school/create" passHref>
+                  <Button
+                    backgroundColor={"secondary"}
+                    color={"primary"}
+                    onClick={() => {}}
+                  >
+                    CREATE A SCHOOL
+                  </Button>
                 </Link>
               </ButtonLayout>
             </ProfileDataColumn>

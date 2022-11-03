@@ -19,27 +19,50 @@ import { TimetableModule } from './timetable/timetable.module';
 import { UntisImportModule } from './untis-import/untis-import.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { PrismaService } from './prisma.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { BullModule } from '@nestjs/bull';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
     CacheModule.register({
       isGlobal: true,
     }),
+    ClientsModule.register([
+      {
+        name: 'HELLO_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: [
+            'amqp://guest:guest@localhost:5672/',
+          ],
+          queue: 'user_messages',
+          noAck: false,
+        },
+      },
+    ]),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      }
+    }),
+    ArticleModule,
+    AssetsModule,
     AuthModule,
-    UsersModule,
-    SchoolAdminModule,
     CourseModule,
     FileUploadModule,
-    StatisticsModule,
-    TimezoneModule,
-    UserModule,
-    AssetsModule,
-    StatusModule,
     HelperModule,
-    ArticleModule,
+    NotificationModule,
+    SchoolAdminModule,
+    StatisticsModule,
+    StatusModule,
     TimetableModule,
+    TimezoneModule,
     UntisImportModule,
     UserModule,
+    UserModule,
+    UsersModule,
   ],
   controllers: [AppController, ArticleController],
   providers: [AppService, ArticleService, {

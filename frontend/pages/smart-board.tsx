@@ -141,6 +141,8 @@ const AnimatedTimer = styled("div", {
 });
 
 export default function Home() {
+  const [showHighlight, setShowHighlight] = useState(false);
+  
   useEffect(() => {
     let startInterval = setInterval(() => {
       setTimeString(getTimeString());
@@ -178,7 +180,7 @@ export default function Home() {
     return () => {
       clearInterval(startInterval);
     };
-  }, []);
+  }, [showHighlight]);
 
   setInterval(() => {
     if (!isSSR()) {
@@ -186,7 +188,6 @@ export default function Home() {
     }
   }, 2000 * 60);
 
-  const [showHighlight, setShowHighlight] = useState(false);
   const [timeString, setTimeString] = useState("");
   const [counterString, setCounterString] = useState("");
 

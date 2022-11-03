@@ -121,7 +121,7 @@ export class AddCourseDTO {
 
     @ApiProperty()
     @IsNotEmpty()
-    @IsCustomUUID()
+    @IsOptional()
     schoolSubjectUUID: string;
 
     @ApiProperty()

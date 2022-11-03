@@ -6,6 +6,7 @@ import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
 import HelpOverview from "../../components/organisms/help/HelpOverview";
 import dynamic from "next/dynamic";
+import { BannerAd } from "../../components/molecules/ads/BannerAd";
 
 export default function RegisterApproved({ items }) {
   return (
@@ -19,6 +20,7 @@ export default function RegisterApproved({ items }) {
       <Spacer size="small"></Spacer>
       <HelpOverview items={items}></HelpOverview>
       <Spacer size="small"></Spacer>
+      <BannerAd></BannerAd>
       <Footer></Footer>
     </>
   );
@@ -39,9 +41,9 @@ export async function getStaticProps() {
     props: {
       items: getResponse.map((item) => {
         return {
-          title: item.headline,
+          title: item.articleHeadline,
           href: `/help/articles/${item.articleUUID}`,
-          description: item.catchPhrase,
+          description: item.articleCatchPhrase,
         };
       }),
     },

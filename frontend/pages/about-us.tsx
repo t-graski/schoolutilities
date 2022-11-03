@@ -6,6 +6,7 @@ import { Spacer } from "../components/atoms/Spacer";
 import { Separator } from "../components/atoms/Separator";
 import { AboutUsItem } from "../components/molecules/AboutUsItem";
 import dynamic from "next/dynamic";
+import { BannerAd } from "../components/molecules/ads/BannerAd";
 
 export default function AboutUs() {
   return (
@@ -49,6 +50,7 @@ export default function AboutUs() {
         description=""
         roles={["Design"]}
       />
+      <BannerAd></BannerAd>
       <Footer></Footer>
     </>
   );

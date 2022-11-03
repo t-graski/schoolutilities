@@ -5,13 +5,13 @@ import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
-import Link from "next/link";
 import { ArticleLayout } from "../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../components/article/GeneralLayout";
 import { StyledLink } from "../../components/article/Link";
 import { ArticleDetails } from "../../components/article/ArticleDetails";
 import { ArticleList } from "../../components/article/ArticleList";
 import dynamic from "next/dynamic";
+import { BackLink } from "../../components/molecules/BackLink";
 
 export default function Article() {
   const articleDetails = {
@@ -27,7 +27,7 @@ export default function Article() {
         <title>Patch Notes - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
+      <BackLink href={"/change-logs"} label={"Back to help"}></BackLink>
       <Headline label="January 16, 2022 - Patch Notes"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
@@ -51,9 +51,9 @@ export default function Article() {
           ></Headline>
           <p>
             It is now possible to create assignments in your course by clicking{" "}
-            <Link href="/course/create" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+            <StyledLink href="/course/create" passHref>
+              here
+            </StyledLink>
             .
             <br />
             Our assingments are highly customizable to perfectly fit into your
@@ -70,9 +70,9 @@ export default function Article() {
             page, you can always find the latest information about how our
             services are performing. If you are interested, you can find the
             details{" "}
-            <Link href="https://schoolutilities.statuspage.io/" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+            <StyledLink href="https://schoolutilities.statuspage.io/" passHref>
+              here
+            </StyledLink>
             .
           </p>
           <br />

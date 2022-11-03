@@ -17,12 +17,13 @@ const SettingsEntryLayout = styled("div", {
   alignItems: "center",
   padding: "20px",
   justifyContent: "space-between",
-  backgroundColor: "$neutral-300",
+  backgroundColor: "$surface2",
+  color: "$onSurface",
   borderRadius: "20px",
   variants: {
     highlighted: {
       true: {
-        border: "4px solid $warning",
+        border: "4px solid $primaryContainer",
       },
       false: {},
     },
@@ -42,7 +43,8 @@ const SettingsEntryEditIcon = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$primary-400",
+  color: "$onPrimary",
+  backgroundColor: "$primary",
   cursor: "pointer",
 });
 
@@ -53,10 +55,10 @@ const SettingsEntryDeleteIcon = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "50%",
-  backgroundColor: "$error",
   cursor: "pointer",
   padding: "10px",
-  color: "$neutral-500",
+  color: "$onSecondary",
+  backgroundColor: "$secondary",
 });
 
 export const SettingsEntry: React.FC<Props> = ({
@@ -84,13 +86,15 @@ export const SettingsEntry: React.FC<Props> = ({
               />
             </SettingsEntryEditIcon>
           )}
-          <SettingsEntryDeleteIcon
-            onClick={() => {
-              deleteFunction();
-            }}
-          >
-            <SvgDelete />
-          </SettingsEntryDeleteIcon>
+          {deleteFunction && (
+            <SettingsEntryDeleteIcon
+              onClick={() => {
+                deleteFunction();
+              }}
+            >
+              <SvgDelete />
+            </SettingsEntryDeleteIcon>
+          )}
         </SettingsEntryIcons>
       </SettingsEntryLayout>
     </>

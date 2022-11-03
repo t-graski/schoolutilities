@@ -77,7 +77,7 @@ const SuccessDescription = styled("p", {
   fontSize: "1.5rem",
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   padding: "20px",
   border: "2px solid $warning",
   borderRadius: "25px",
@@ -215,9 +215,9 @@ export const SetupProgressSite: React.FC<Props> = ({ steps }) => {
                 {statusInfo && statusInfo.statusDescription}
               </SuccessDescription>
               {statusInfo && statusInfo.linkVisibility && (
-                <Link href={`/school/${schoolUUID}/edit`} passHref>
-                  <StyledLink>Manage School now</StyledLink>
-                </Link>
+                <StyledLink href={`/school/${schoolUUID}/edit`} passHref>
+                  Manage School now
+                </StyledLink>
               )}
             </SuccessLayout>
           </>

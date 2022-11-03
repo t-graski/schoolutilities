@@ -33,12 +33,12 @@ const slideLeftAndFade = keyframes({
 const StyledContent = styled(DropdownMenuPrimitive.Content, {
   minWidth: 220,
   borderRadius: 15,
-  padding: 8,
+  padding: "$2x",
   display: "flex",
   flexDirection: "column",
   gap: 10,
 
-  backgroundColor: "$neutral-400",
+  backgroundColor: "$surface2",
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
   "@media (prefers-reduced-motion: no-preference)": {
@@ -67,8 +67,13 @@ const itemStyles = {
   cursor: "pointer",
   fontWeight: "$medium",
   lineHeight: 1,
-  color: "$neutral-500",
+  color: "$onSurface",
   fontSize: "1.05rem",
+
+  "&:hover": {
+    backgroundColor: "$surfaceVariant",
+    color: "$onSurfaceVariant",
+  },
 
   "&[data-disabled]": {
     color: "$neutral-500",
@@ -90,7 +95,7 @@ const StyledCheckboxItem = styled(DropdownMenuPrimitive.CheckboxItem, {
 const StyledRadioItem = styled(DropdownMenuPrimitive.RadioItem, {
   ...itemStyles,
 });
-const StyledTriggerItem = styled(DropdownMenuPrimitive.TriggerItem, {
+const StyledTriggerItem = styled(DropdownMenuPrimitive.SubTrigger, {
   '&[data-state="open"]': {
     backgroundColor: "$warning",
     color: "$neutral-500",
@@ -191,7 +196,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   padding: 25,
   borderRadius: 6,
 
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface2",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
 
@@ -356,7 +361,6 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
               <SvgEdit />
             </IconLayout>
           </DropdownMenuTrigger>
-
           <DropdownMenuContent
             sideOffset={5}
             alignOffset={30}
@@ -390,7 +394,6 @@ export const CourseMenu: React.FC<Props> = ({ courseId, addNewEntry }) => {
                 Edit elements
               </DropdownMenuItem>
             )}
-
             <DropdownMenuItem
               onClick={() => {
                 router.push(

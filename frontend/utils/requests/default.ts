@@ -1,6 +1,11 @@
 import { getAccessToken } from "../authHelper";
 
-export async function fetchData(url: string, method: string, statusCode: number, body?: any) {
+export async function fetchData(
+  url: string,
+  method: string,
+  statusCode: number,
+  body?: any
+) {
   const accessToken = await getAccessToken();
 
   const response = await fetch(
@@ -20,7 +25,7 @@ export async function fetchData(url: string, method: string, statusCode: number,
   }
 
   const responseBody = await response.json();
-  
+
   return responseBody;
 }
 

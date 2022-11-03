@@ -43,10 +43,6 @@ const StyledInputField = styled("input", {
   lineHeight: "1.5rem",
   color: "$neutral-500",
 
-  ["&:focus"]: {
-    borderBottom: "solid 1px $colors$neutral-500",
-  },
-
   variants: {
     editable: {
       true: {},

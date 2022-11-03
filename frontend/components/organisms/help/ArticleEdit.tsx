@@ -27,7 +27,7 @@ const ButtonLayout = styled("div", {
   gap: "20px",
 });
 
-export const ArticleEdit: React.FC<Props> = ({ }) => {
+export const ArticleEdit: React.FC<Props> = ({}) => {
   const [title, setTitle] = useState("");
   const [catchPhrase, setCatchPhrase] = useState("");
   const [content, setContent] = useState("");
@@ -51,9 +51,10 @@ export const ArticleEdit: React.FC<Props> = ({ }) => {
           }
         );
         const getResponse = await getRequest.json();
-        setTitle(getResponse.headline);
-        setCatchPhrase(getResponse.catchPhrase);
-        setContent(getResponse.content);
+        console.log(getResponse);
+        setTitle(getResponse.articleHeadline);
+        setCatchPhrase(getResponse.articleCatchPhrase);
+        setContent(getResponse.articleContent);
       }
     }
   }, [articleUUID]);
@@ -103,7 +104,12 @@ export const ArticleEdit: React.FC<Props> = ({ }) => {
         label={"Beschreibung"}
         value={catchPhrase}
       ></TextField>
-      <MarkdownEditor saveContent={setContent} value={content}></MarkdownEditor>
+      {content && (
+        <MarkdownEditor
+          saveContent={setContent}
+          value={content}
+        ></MarkdownEditor>
+      )}
       <ButtonLayout>
         <Button
           backgroundColor={"primary"}

@@ -5,13 +5,13 @@ import { Spacer } from "../../components/atoms/Spacer";
 import { Headline } from "../../components/atoms/Headline";
 import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
-import Link from "next/link";
 import { ArticleLayout } from "../../components/article/ArticleLayout";
 import { GeneralLayout } from "../../components/article/GeneralLayout";
 import { StyledLink } from "../../components/article/Link";
 import { ArticleDetails } from "../../components/article/ArticleDetails";
 import { ArticleList } from "../../components/article/ArticleList";
 import dynamic from "next/dynamic";
+import { BackLink } from "../../components/molecules/BackLink";
 
 export default function Article() {
   const articleDetails = {
@@ -27,7 +27,7 @@ export default function Article() {
         <title>Patch Notes - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
+      <BackLink href={"/change-logs"} label={"Back to help"}></BackLink>
       <Headline label="January 16, 2022 - Patch Notes"></Headline>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
@@ -50,9 +50,9 @@ export default function Article() {
           ></Headline>
           <p>
             It is now possible to create courses in your school by clicking{" "}
-            <Link href="/course/create" passHref>
-              <StyledLink>here</StyledLink>
-            </Link>
+            <StyledLink href="/course/create" passHref>
+              here
+            </StyledLink>
             . You can give it a name, a description, add singular users or a
             whole class to it.
           </p>
@@ -65,9 +65,9 @@ export default function Article() {
           <ArticleList>
             <li>
               Added new questions to our{" "}
-              <Link href="/help/faq" passHref>
-                <StyledLink>FAQ</StyledLink>
-              </Link>{" "}
+              <StyledLink href="/help/faq" passHref>
+                FAQ
+              </StyledLink>{" "}
               page.
             </li>
             <li>Added a new user menu to the navigation bar.</li>
@@ -77,9 +77,9 @@ export default function Article() {
             </li>
             <li>
               Added{" "}
-              <Link href="/contact-us" passHref>
-                <StyledLink>Contact Us</StyledLink>
-              </Link>{" "}
+              <StyledLink href="/contact-us" passHref>
+                Contact Us
+              </StyledLink>{" "}
               page.
             </li>
             <li>New premium tab on main page.</li>

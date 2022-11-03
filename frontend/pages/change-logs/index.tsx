@@ -6,6 +6,7 @@ import { Separator } from "../../components/atoms/Separator";
 import Footer from "../../components/organisms/Footer";
 import { Changelog } from "../../components/organisms/Changelog";
 import dynamic from "next/dynamic";
+import { BannerAd } from "../../components/molecules/ads/BannerAd";
 
 export default function RegisterApproved({ entries }) {
   return (
@@ -14,12 +15,12 @@ export default function RegisterApproved({ entries }) {
         <title>Change-Logs - SchoolUtilities</title>
       </Head>
       <Navbar></Navbar>
-      <Spacer size="medium"></Spacer>
       <Headline label="Change-Logs"></Headline>
       <Spacer size="verySmall"></Spacer>
       <Separator width="small" alignment="center" />
       <Spacer size="small"></Spacer>
       <Changelog entries={entries}></Changelog>
+      <BannerAd></BannerAd>
       <Footer></Footer>
     </>
   );
@@ -29,6 +30,12 @@ export function getStaticProps() {
   return {
     props: {
       entries: [
+        {
+          name: "timetable-bug-fixes",
+          date: "November 02, 2022",
+          headline: "November 02, 2022 - Patch Notes",
+          text: "",
+        },
         {
           name: "new-course-elements-bug-fixes",
           date: "April 23, 2022",

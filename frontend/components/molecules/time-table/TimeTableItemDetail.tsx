@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
+import { useQuery } from "react-query";
+import { fetchSchoolSubjects } from "utils/requests/admin";
 import { styled } from "../../../stitches.config";
 import SvgEdit from "../../atoms/svg/SvgEdit";
 import { TimeTableItemType } from "../../atoms/TimeTableItem";
@@ -8,18 +10,7 @@ type Props = {
   item: TimeTableItemType;
 };
 
-const TimeTableItemLayout = styled("div", {
-  variants: {
-    omitted: {
-      true: {
-        textDecoration: "line-through",
-      },
-      false: {
-        textDecoration: "none",
-      },
-    },
-  },
-});
+const TimeTableItemLayout = styled("div", {});
 
 const StyledButton = styled("button", {
   backgroundColor: "transparent",
@@ -36,33 +27,54 @@ const HeaderLayout = styled("div", {
   justifyContent: "flex-start",
   alignItems: "center",
   gap: "$2x",
+
+  variants: {
+    omitted: {
+      true: {
+        textDecoration: "line-through",
+      },
+      false: {
+        textDecoration: "none",
+      },
+    },
+  },
 });
 
-export const TimeTableItem: React.FC<Props> = ({ item }) => {
+export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
   const router = useRouter();
-  const { schoolUUID } = router.query;
+  const schoolUUID = router.query.schoolUUID as string;
 
-  console.log(item);
+  console.log(item?.timeTableElementStartTime);
 
   return (
     <>
-      <TimeTableItemLayout omitted={!!item?.omitted}>
-        <HeaderLayout>
-          {item?.schoolSubject.schoolSubjectName}{" - "} {item.schoolSubject.schoolSubjectAbbreviation} {" "}
+      <TimeTableItemLayout>
+        <HeaderLayout omitted={!!item?.timeTableElementOmitted}>
+          {item?.schoolSubject.schoolSubjectName}
+          {" - "} {item.schoolSubject.schoolSubjectAbbreviation}{" "}
           <StyledButton
             onClick={() => {
-              router.push(`/school/${schoolUUID}/timetable/element/${item?.timeTableElementUUID}`);
+              router.push(
+                `/school/${schoolUUID}/timetable/element/${item?.timeTableElementUUID}`
+              );
             }}
           >
             <SvgEdit></SvgEdit>
           </StyledButton>
         </HeaderLayout>
-        <br />
         {item?.timeTableElementStartTime &&
           getSmallTimeFormat(item.timeTableElementStartTime)}{" "}
         -{" "}
         {item?.timeTableElementEndTime &&
           getSmallTimeFormat(item.timeTableElementEndTime)}
+        <br />
+        <br />
+        {item?.timeTableElementOmitted && (
+          <span>
+            Omitted reason:{" "}
+            {item?.timeTableElementOmitted.timeTableElementOmittedReason}
+          </span>
+        )}
         <br />
       </TimeTableItemLayout>
     </>
@@ -72,6 +84,7 @@ export const TimeTableItem: React.FC<Props> = ({ item }) => {
 function getSmallTimeFormat(time: string) {
   let hour = new Date(time).getHours();
   let minute = new Date(time).getMinutes();
+  console.log(time, hour, minute);
   return formatTime(hour) + ":" + formatTime(minute);
 }
 
@@ -79,6 +92,6 @@ function formatTime(time: number) {
   return time < 10 ? "0" + time : time;
 }
 
-TimeTableItem.defaultProps = {};
+TimeTableItemDetail.defaultProps = {};
 
-export default TimeTableItem;
+export default TimeTableItemDetail;

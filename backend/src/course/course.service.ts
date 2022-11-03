@@ -42,7 +42,9 @@ export class CourseService {
     try {
       const token = await this.helper.extractJWTToken(request);
       userUUID = await this.helper.getUserUUIDfromJWT(token);
-      users.push(userUUID);
+      if (!users.includes(userUUID)) {
+        users.push(userUUID);
+      }
     } catch (err) {
       throw new NotAcceptableException("Couldn't get user from token");
     }
@@ -84,7 +86,7 @@ export class CourseService {
               return {
                 schoolClasses: {
                   connect: {
-                    classUUID
+                    schoolClassUUID: classUUID
                   }
                 }
               }
@@ -95,6 +97,7 @@ export class CourseService {
 
       return new Course(courseData)
     } catch (err) {
+      console.log(err);
       throw new InternalServerErrorException('Database error');
     }
   }
@@ -783,18 +786,18 @@ export class CourseService {
       };
     }
 
-    const settings = await this.prisma.courseElements.findFirst({
+    const settings = await this.prisma.courseElements.findUnique({
       where: {
         courseElementId: elementId,
       },
       include: {
+        users: true,
         courses: true,
         courseFileSubmissionSettings: true,
         courseElementTextSettings: true,
       }
     });
 
-    const creator = await this.helper.getUserById(settings.courseElementCreatorId);
     const isTeacherOrHigher = await this.helper.isTeacherOrHigher(
       userId,
       schoolId,
@@ -839,10 +842,10 @@ export class CourseService {
       ...evaluation,
       hasSubmitted: hasSubmitted ? true : false,
       creator: {
-        userUUID: creator.personUUID,
-        firstName: creator.firstName,
-        lastName: creator.lastName,
-        fullName: `${creator.firstName} ${creator.lastName}`,
+        userUUID: settings.users.userUUID,
+        firstName: settings.users.userFirstname,
+        lastName: settings.users.userLastname,
+        fullName: `${settings.users.userFirstname} ${settings.users.userLastname}`,
       },
       options: {
         type: settings.courseElementTypeId,
@@ -925,10 +928,16 @@ export class CourseService {
   }
 
   async getSubmissions(request, elementUUID): Promise<ReturnMessage> {
-    const elementId = await this.helper.getElementIdByUUID(elementUUID);
     const jwt = await this.helper.extractJWTToken(request);
     const userId = await this.helper.getUserIdfromJWT(jwt);
-    const courseId = await this.helper.getCourseIdByElementId(elementId);
+    const courseId = (await this.prisma.courseElements.findUnique({
+      where: {
+        courseElementUUID: elementUUID,
+      },
+      include: {
+        courses: true,
+      }
+    })).courses.courseId;
 
     if (!(await this.helper.userIsInCourse(userId, courseId))) {
       return {
@@ -939,24 +948,37 @@ export class CourseService {
 
     const submissions = await this.prisma.courseFileSubmissions.findMany({
       where: {
-        courseFileSubmissionElementId: Number(elementId),
+        courseElements: {
+          courseElementUUID: elementUUID,
+        }
       },
     });
 
-    const courseUsers = await this.helper.getCourseUsers(courseId);
+    const course = await this.prisma.courses.findUnique({
+      where: {
+        courseId,
+      },
+      include: {
+        courseUsers: {
+          include: {
+            users: true,
+          },
+        },
+      }
+    })
     const userSubmissions = [];
 
-    for (const user of courseUsers) {
+    for (const user of course.courseUsers) {
       const userSubmissionItem = {
-        userUUID: user.personUUID,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        fullName: user.firstName + ' ' + user.lastName,
+        userUUID: user.users.userUUID,
+        firstName: user.users.userFirstname,
+        lastName: user.users.userLastname,
+        fullName: user.users.userFirstname + ' ' + user.users.userLastname,
         submission: {} as any,
       };
 
       const userSubmission = submissions.find((submission) => {
-        return submission.userId === user.personId;
+        return submission.userId === user.users.userId;
       });
 
       let submissionItem = {} as any;
@@ -970,6 +992,7 @@ export class CourseService {
         // submissionItem.grade = userSubmission.grade;
         submissionItem.courseFileSubmissionUploadTimestamp = userSubmission.courseFileSubmissionUploadTimestamp;
         submissionItem.download = `${process.env.BACKEND_URL}/api/assets/submissions/${userSubmission.courseFileSubmissionFileName}`;
+
       } else {
         submissionItem = null;
       }
@@ -983,44 +1006,105 @@ export class CourseService {
     };
   }
 
-  async getEvents(schoolUUID: string, days: string, request: Request): Promise<ReturnMessage> {
-    const jwt = await this.helper.extractJWTToken(request);
-    const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
+  // async getEvents(payload: GetEventsDto, request): Promise<ReturnMessage> {
+  //   const { schoolUUID, days } = payload;
+  //   const jwt = await this.helper.extractJWTToken(request);
+  //   const userId = await this.helper.getUserIdfromJWT(jwt);
 
-    const events = await this.prisma.schools.findUnique({
-      where: {
-        schoolUUID
-      },
-      include: {
-        courses: {
-          where: {
-            users: {
-              userUUID
-            }
-          },
-          include: {
-            courseElements: {
-              include: {
-                courseFileSubmissions: {
-                  include: {
-                    users: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+  //   let courses = await this.prisma.schools.findFirst({
+  //     where: {
+  //       schoolUUID,
+  //     },
+  //     select: {
+  //       schoolUUID: true,
+  //       schoolName: true,
+  //       courses: {
+  //         where: {
+  //           courseUsers: {
+  //             some: {
+  //               userId: Number(userId),
+  //             },
+  //           },
+  //         },
+  //         select: {
+  //           courseUUID: true,
+  //           courseName: true,
+  //           courseElements: {
+  //             where: {
+  //               courseElementTypeId: {
+  //                 equals: 3,
+  //               },
+  //               AND: {
+  //                 courseElementIsVisible: true,
+  //               },
+  //             },
+  //             select: {
+  //               courseElementUUID: true,
+  //               courseElementCreationTimestamp: true,
+  //               courseElementOrder: true,
+  //               courseElementIsVisible: true,
+  //               courseFileSubmissionSettings: {
+  //                 where: {
+  //                   courseFileSubmissionDueTimestamp: {
+  //                     lte: moment(new Date(Date.now()))
+  //                       .add(days, 'days')
+  //                       .toDate(),
+  //                   },
+  //                   AND: {
+  //                     courseFileSubmissionDueTimestamp: {
+  //                       gte: moment(new Date(Date.now())).toDate(),
+  //                     },
+  //                   },
+  //                 },
+  //                 select: {
+  //                   courseFileSubmissionName: true,
+  //                   courseFileSubmissionDescription: true,
+  //                   courseFileSubmissionDueTimestamp: true,
+  //                   courseFileSubmissionSubmitLater: true,
+  //                   courseFileSubmissionSubmitLaterTimestamp: true,
+  //                   courseFileSubmissionMaxFileSize: true,
+  //                   courseFileSubmissionAllowedFileTypes: true,
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
 
-    const eventItems = [];
+  //   const eventItems: CourseEvent[] = [];
 
+  //   for (const course of courses.courses) {
+  //     if (course.courseElements.length != 0) {
+  //       for (const element of course.courseElements) {
+  //         if (element.courseFileSubmissionSettings.length != 0) {
+  //           eventItems.push({
+  //             schoolUUID: courses.schoolUUID,
+  //             schoolName: courses.schoolName,
+  //             courseUUID: course.courseUUID,
+  //             courseName: course.courseName,
+  //             courseElementUUID: element.courseElementUUID,
+  //             courseFileSubmissionName: element.courseFileSubmissionSettings[0].courseFileSubmissionName,
+  //             courseFileSubmissionDescription: element.courseFileSubmissionSettings[0].courseFileSubmissionDescription,
+  //             courseFileSubmissionDueTimestamp: element.courseFileSubmissionSettings[0].courseFileSubmissionDueTimestamp,
+  //             courseFileSubmissionSubmitLater: element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLater,
+  //             courseFileSubmissionSubmitLaterTimestamp:
+  //               element.courseFileSubmissionSettings[0].courseFileSubmissionSubmitLaterTimestamp,
+  //             courseFileSubmissionMaxFileSize: element.courseFileSubmissionSettings[0].courseFileSubmissionMaxFileSize,
+  //             courseFileSubmissionAllowedFileTypes:
+  //               element.courseFileSubmissionSettings[0].courseFileSubmissionAllowedFileTypes,
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
 
-    return {
-      status: RETURN_DATA.SUCCESS.status,
-      data: eventItems,
-    };
-  }
+  //   return {
+  //     status: RETURN_DATA.SUCCESS.status,
+  //     data: eventItems,
+  //   };
+  // }
 
   async revertExercise(request, elementUUID): Promise<ReturnMessage> {
     const jwt = await this.helper.extractJWTToken(request);

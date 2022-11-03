@@ -7,7 +7,6 @@ import cookie from "js-cookie";
 import { Progressbar } from "../../molecules/Progressbar";
 import { Spacer } from "../../atoms/Spacer";
 import { getAccessToken } from "../../../utils/authHelper";
-import { useCourseControllerAddCourse } from "../../../default/default";
 
 type Props = {
   steps: {
@@ -79,19 +78,18 @@ const SuccessDescription = styled("p", {
 });
 
 const StyledLink = styled("a", {
-  color: "$warning",
+  color: "$onPrimaryContainer",
+  backgroundColor: "$primaryContainer",
   fontSize: "1.2rem",
   fontWeight: "bold",
   padding: "20px",
-  border: "2px solid $warning",
   borderRadius: "25px",
   textDecoration: "none",
   cursor: "pointer",
   transition: "all 0.2s",
 
   "&:hover": {
-    backgroundColor: "$warning",
-    color: "$neutral-500",
+    opacity: 0.8,
   },
 });
 
@@ -119,21 +117,25 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
     cookie.set("activeStep", activeStep);
   }
 
-  const mutation = useCourseControllerAddCourse();
-
   async function saveInputs() {
     let accessToken = await getAccessToken();
-    console.log(inputData);
+    console.log({
+      courseName: inputData.courseName,
+      schoolUUID: router.query.schoolUUID as string,
+      courseDescription: inputData.courseDescription,
+      courseClasses: inputData.classes.map((schoolClass) => schoolClass.value),
+      users: inputData.members.map((person) => person.value),
+    });
     const schoolResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course/addCourse`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/course`,
       {
         method: "POST",
         body: JSON.stringify({
-          name: inputData.courseName,
+          courseName: inputData.courseName,
           schoolUUID: router.query.schoolUUID as string,
           courseDescription: inputData.courseDescription,
-          classes: inputData.classes.map((schoolClass) => schoolClass.value),
-          persons: inputData.members.map((person) => person.value),
+          courseClasses: inputData.classes.map((schoolClass) => schoolClass.value),
+          users: inputData.members.map((person) => person.value),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +144,7 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
       }
     );
     if (schoolResponse) {
-      if (schoolResponse.status == 200) {
+      if (schoolResponse.status == 201) {
         setStatusInfo({
           statusHeadline: "Your Course was successfully created",
           statusDescription:
@@ -161,40 +163,6 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
         });
       }
     }
-    // mutation.mutate(
-    //   {
-    //     data: {
-    //       name: inputData.courseName,
-    //       schoolUUID: router.query.schoolUUID as string,
-    //       courseDescription: inputData.courseDescription,
-    //       classes: inputData.classes.map(
-    //         (schoolClass): string => schoolClass.value
-    //       ),
-    //       persons: inputData.members.map((person): string => person.value),
-    //     },
-    //   },
-    //   {
-    //     onSuccess: (data) => {
-    //       setStatusInfo({
-    //         statusHeadline: "Your Course was successfully created",
-    //         statusDescription:
-    //           "You can now manage your course, create classes and add users to your course.",
-    //         statusIcon: "SvgQuality",
-    //         statusColor: "success",
-    //         linkVisibility: true,
-    //       });
-    //     },
-    //     onError: (error) => {
-    //       setStatusInfo({
-    //         statusHeadline: "There was an error creating the course",
-    //         statusDescription: "Please try again later",
-    //         statusIcon: "SvgWarning",
-    //         statusColor: "error",
-    //         linkVisibility: false,
-    //       });
-    //     },
-    //   }
-    // );
   }
 
   return (
@@ -235,9 +203,8 @@ export const CourseCreateProgressSite: React.FC<Props> = ({ steps }) => {
         <Spacer size="small"></Spacer>
         <NavigationLayout>
           <Button
-            disabled={activeStep === 0 || isButtonDisabled}
-            backgroundColor="primary"
-            color="primary"
+            isDisabled={activeStep === 0 || isButtonDisabled}
+            buttonType="filled"
             onClick={() => {
               setActiveStep(activeStep - 1);
             }}

@@ -33,13 +33,13 @@ const SchoolLayout = styled("div", {
   padding: "20px 40px",
   borderRadius: "15px",
 
-  backgroundColor: "$neutral-300",
+  backgroundColor: "$surface3",
   transition: "all 200ms ease-in-out",
   cursor: "pointer",
   placeSelf: "center",
 
   "&:hover": {
-    backgroundColor: "$neutral-400",
+    backgroundColor: "$secondaryContainer",
   },
 });
 

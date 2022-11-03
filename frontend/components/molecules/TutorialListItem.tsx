@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { styled } from "../../stitches.config";
-import { Button } from "../atoms/Button";
 
 export type TutorialListItemProps = {
   title: string;
@@ -46,7 +45,7 @@ export const TutorialListItem: React.FC<TutorialListItemProps> = ({
       <Link href={tutorialHref} passHref>
         <TutorialListItemLayout>
           <PreviewImageLayout>
-            <Image src={previewImageSrc} alt={previewImageAlt} layout="fill" />
+            <Image src={previewImageSrc} alt={previewImageAlt} fill />
           </PreviewImageLayout>
           <TitleLayout>{title}</TitleLayout>
           <LearnMore>Learn More ›</LearnMore>

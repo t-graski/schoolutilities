@@ -16,6 +16,7 @@ import SvgLogoPencilLeftWhite from "../components/atoms/svg/SvgLogoPencilLeftWhi
 import SvgLogoPencilOnly from "../components/atoms/svg/SvgLogoPencilOnly";
 import SvgLogoPencilOnlyBlack from "../components/atoms/svg/SvgLogoPencilOnlyBlack";
 import SvgLogoPencilOnlyWhite from "../components/atoms/svg/SvgLogoPencilOnlyWhite";
+import { BannerAd } from "../components/molecules/ads/BannerAd";
 
 const Footer = dynamic(() => import("../components/organisms/Footer"));
 
@@ -159,6 +160,7 @@ export default function Home() {
           <Spacer size="small"></Spacer>
         </InnerContentLayout>
       </ContentLayout>
+      <BannerAd></BannerAd>
       <Footer />
     </>
   );

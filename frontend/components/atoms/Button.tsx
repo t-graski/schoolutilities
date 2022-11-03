@@ -9,6 +9,7 @@ export const Button = styled("button", {
   fontSize: "1rem",
   cursor: "pointer",
   fontWeight: "bold",
+  color: "$onPrimary",
 
   ":hover": {
     backgroundColor: "$backgroundColor",
@@ -22,7 +23,7 @@ export const Button = styled("button", {
   variants: {
     backgroundColor: {
       primary: {
-        backgroundColor: "$primary-400",
+        backgroundColor: "$primary",
       },
       secondary: {
         backgroundColor: "$neutral-300",
@@ -33,10 +34,7 @@ export const Button = styled("button", {
     },
     color: {
       primary: {
-        color: "$neutral-500",
-        [`.${lightTheme} &`]: {
-          color: "$neutral-400",
-        },
+        color: "$onPrimary",
       },
     },
     fontWeight: {
@@ -61,6 +59,21 @@ export const Button = styled("button", {
       true: {},
       false: {
         opacity: 0,
+      },
+    },
+    buttonType: {
+      filled: {
+        backgroundColor: "$primary",
+        color: "$onPrimary",
+      },
+      outlined: {
+        backgroundColor: "transparent",
+        color: "$onPrimaryContainer",
+        border: "1px solid $outline",
+      },
+      text: {
+        backgroundColor: "transparent",
+        color: "$onBackground",
       },
     },
   },

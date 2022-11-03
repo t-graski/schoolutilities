@@ -44,17 +44,6 @@ const BoldDescription = styled("span", {
   fontWeight: "$bold",
 });
 
-const StyledLink = styled("a", {
-  height: "fit-content",
-  lineHeight: "1.5rem",
-  fontSize: "1.5rem",
-  fontWeight: "$bold",
-  margin: "0",
-  color: "$neutral-500",
-  textDecoration: "none",
-  cursor: "pointer",
-});
-
 const ButtonLayout = styled("div", {
   display: "flex",
   flexDirection: "row",
@@ -81,10 +70,10 @@ export const StartPageBox: React.FC<Props> = ({
       <StartPageBoxLayout>
         <StartPageBoxTitle>
           {title.map((text, index) => (
-            <>
-              <span key={index}>{text}</span>
+            <span key={index}>
+              {text}
               <br />
-            </>
+            </span>
           ))}
         </StartPageBoxTitle>
         <StartPageBoxDescription>
@@ -97,12 +86,10 @@ export const StartPageBox: React.FC<Props> = ({
         </StartPageBoxDescription>
         <ButtonLayout>
           <Link href={highlightedButtonLink} passHref>
-            <Button backgroundColor={"primary"} color={"primary"}>
-              {highlightedButtonText}
-            </Button>
+            <Button buttonType={"filled"}>{highlightedButtonText}</Button>
           </Link>
           <Link href={buttonLink} passHref>
-            <StyledLink>{buttonText}</StyledLink>
+            <Button buttonType={"text"}>{buttonText}</Button>
           </Link>
         </ButtonLayout>
       </StartPageBoxLayout>

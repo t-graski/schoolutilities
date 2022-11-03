@@ -71,10 +71,16 @@ export class UserService {
     }
 
     try {
-      const user = await prisma.users.findFirst({
+      const user = await prisma.users.findUnique({
         where: {
           userUUID: personUUID,
-        },
+        }, include: {
+          schoolClassUsers: {
+            include: {
+              schoolClasses: true,
+            }
+          }
+        }
       });
 
       const userSettings = await prisma.userSettings.findFirst({
@@ -96,11 +102,13 @@ export class UserService {
         userEmail: user.userEmail,
         userEmailVerified: user.userEmailVerified,
         userCreationTimestamp: user.userCreationTimestamp,
+        userSchoolClass: user.schoolClassUsers[0].schoolClasses.schoolClassUUID,
         userSettings: {
           userSettingLanguage: userSettings.userSettingLanguageId,
           userSettingTimeZone: userSettings.userSettingTimeZone,
           userSettingDateTimeFormat: userSettings.userSettingDateTimeFormat,
-          userSettingReceiveUpdateEmails: userSettings.userSettingReceiveUpdateEmails,
+          userSettingReceiveUpdateEmails:
+            userSettings.userSettingReceiveUpdateEmails,
           userSettingAvatarUUID: userSettings.userSettingAvatarUUID,
           userSettingPhoneNumber: userSettings.userSettingPhoneNumber,
           userSettingThemeMode: userSettings.userSettingThemeMode,
@@ -190,6 +198,23 @@ export class UserService {
     return RETURN_DATA.SUCCESS;
   }
 
+  async updateAppearance(request): Promise<ReturnMessage> {
+    let { theme } = request.body;
+
+    const token = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(token);
+
+    await prisma.userSettings.update({
+      where: {
+        userId,
+      },
+      data: {
+        userSettingTheme: theme,
+      },
+    });
+    return RETURN_DATA.SUCCESS;
+  }
+
   async updatePublicProfile(request): Promise<ReturnMessage> {
     let {
       displayName,
@@ -268,15 +293,24 @@ export class UserService {
         userBirthDate: userSettings.userPublicProfileSettingShowAge
           ? new Date(user.userBirthDate).toISOString().split('T')[0]
           : '',
-        userPublicProfileSettingPublicEmail: userSettings.userPublicProfileSettingPublicEmail,
-        userPublicProfileSettingBiography: userSettings.userPublicProfileSettingBiography,
-        userPublicProfileSettingLocation: userSettings.userPublicProfileSettingLocation,
-        userPublicProfileSettingPreferredLanguage: userSettings.userPublicProfileSettingPreferredLanguageId,
+        userPublicProfileSettingPublicEmail:
+          userSettings.userPublicProfileSettingPublicEmail,
+        userPublicProfileSettingBiography:
+          userSettings.userPublicProfileSettingBiography,
+        userPublicProfileSettingLocation:
+          userSettings.userPublicProfileSettingLocation,
+        userPublicProfileSettingPreferredLanguage:
+          userSettings.userPublicProfileSettingPreferredLanguageId,
         userPublicProfileAge: userSettings.userPublicProfileSettingShowAge
           ? this.helper.calculateAge(user.userBirthDate)
           : '',
-        userPublicProfileJoinDate: userSettings.userPublicProfileSettingShowJoinDate ? user.userCreationTimestamp : 0,
-        userPublicProfileBadges: userSettings.userPublicProfileSettingShowBadges ? badges : [],
+        userPublicProfileJoinDate:
+          userSettings.userPublicProfileSettingShowJoinDate
+            ? user.userCreationTimestamp
+            : 0,
+        userPublicProfileBadges: userSettings.userPublicProfileSettingShowBadges
+          ? badges
+          : [],
       };
 
       return {
@@ -306,7 +340,9 @@ export class UserService {
       data: {
         userId,
         userPasswordResetToken: token,
-        userPasswordResetTokenExpireTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        userPasswordResetTokenExpireTimestamp: new Date(
+          Date.now() + 24 * 60 * 60 * 1000,
+        ),
       },
     });
 
@@ -372,13 +408,53 @@ export class UserService {
     });
   }
 
+  async changePassword(request): Promise<ReturnMessage> {
+    const { oldPassword, newPassword } = request.body;
+    const token = await this.helper.extractJWTToken(request);
+    const userId = await this.helper.getUserIdfromJWT(token);
+
+    const user = await prisma.users.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    const passwordMatch = await bcrypt.compare(oldPassword, user.userPassword);
+
+    if (!passwordMatch) {
+      return RETURN_DATA.INVALID_INPUT;
+    }
+
+    const encryptedPassword = await bcrypt.hash(newPassword, 10);
+
+    try {
+      await prisma.users.update({
+        where: {
+          userId,
+        },
+        data: {
+          userPassword: encryptedPassword,
+        },
+      });
+
+      return RETURN_DATA.SUCCESS;
+    } catch {
+      return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
   async requestEmailChange(request): Promise<ReturnMessage> {
     const { email } = request.body;
     const jwt = await this.helper.extractJWTToken(request);
-    const userId = await this.helper.getUserIdfromJWT(jwt);
-    const currentEmail = await this.helper.getUserById(userId);
+    const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
 
-    if (currentEmail.email.toLowerCase() === email.toLowerCase()) {
+    const currentEmail = await prisma.users.findUnique({
+      where: {
+        userUUID,
+      },
+    });
+
+    if (currentEmail.userEmail.toLowerCase() === email.toLowerCase()) {
       return {
         message: 'Email must not be the same as the current one',
         status: RETURN_DATA.INVALID_INPUT.status,
@@ -395,13 +471,15 @@ export class UserService {
         data: {
           users: {
             connect: {
-              userId,
+              userUUID,
             },
           },
           emailChangeTokenNewEmail: email,
           emailChangeTokenVerified: false,
           emailChangeToken: token,
-          emailChangeTokenExpireTimestamp: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          emailChangeTokenExpireTimestamp: new Date(
+            Date.now() + 24 * 60 * 60 * 1000,
+          ),
         },
       });
 
@@ -483,7 +561,8 @@ export class UserService {
   }
 }
 
-export async function findOneByUUID(userUUID: string): Promise<any> { //!TODO change to person
+export async function findOneByUUID(userUUID: string): Promise<any> {
+  //!TODO change to person
   try {
     const user = await prisma.users.findFirst({
       where: {

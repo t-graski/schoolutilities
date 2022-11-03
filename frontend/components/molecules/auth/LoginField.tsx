@@ -45,17 +45,6 @@ const LoginButtonLayout = styled("div", {
   alignItems: "center",
 });
 
-const StyledLink = styled("a", {
-  color: "$neutral-500",
-  textDecoration: "none",
-  transition: "all 0.2s",
-  cursor: "pointer",
-
-  "&:hover": {
-    textDecoration: "underline",
-  },
-});
-
 export const LoginField: React.FC<Props> = ({}) => {
   const [email, setEmail] = React.useState("");
   const [emailValid, setEmailValid] = React.useState(false);
@@ -69,15 +58,15 @@ export const LoginField: React.FC<Props> = ({}) => {
 
   useEffect(() => {
     checkLogin();
-  }, []);
 
-  async function checkLogin() {
-    const accessToken = await getAccessToken();
+    async function checkLogin() {
+      const accessToken = await getAccessToken();
 
-    if (accessToken) {
-      router.push("/profile/settings");
+      if (accessToken) {
+        router.push("/settings/account");
+      }
     }
-  }
+  }, [router]);
 
   function checkInputData() {
     console.log(emailValid, passwordValid);
@@ -103,7 +92,6 @@ export const LoginField: React.FC<Props> = ({}) => {
         }),
         headers: { "Content-Type": "application/json" },
       }).then(async (response) => {
-        console.log(response);
         if (response.status == 200) {
           const data = await response.json();
           let redirectRoute: string = Array.isArray(router.query.redirect)
@@ -126,7 +114,6 @@ export const LoginField: React.FC<Props> = ({}) => {
       setSignUpInfo(
         "Ihre Eingaben konnten nicht verarbeitet werden, versuchen Sie es später erneut"
       );
-      console.log(err);
     }
   }
 
@@ -138,9 +125,9 @@ export const LoginField: React.FC<Props> = ({}) => {
 
     fontSize: "1rem",
     cursor: "pointer",
-    color: "$neutral-500",
+    color: "$onPrimary",
     fontWeight: "bold",
-    backgroundColor: "$primary-400",
+    backgroundColor: "$primary",
 
     ":hover": {
       backgroundColor: "$backgroundColor",
@@ -182,7 +169,7 @@ export const LoginField: React.FC<Props> = ({}) => {
               value="Sign in"
             ></StyledSubmitButton>
             <Link href="/auth/password-reset" passHref>
-              <StyledLink>Reset Password</StyledLink>
+              <Button buttonType={"text"}>Reset Password</Button>
             </Link>
           </LoginButtonLayout>
         </LoginLayout>
@@ -192,8 +179,7 @@ export const LoginField: React.FC<Props> = ({}) => {
         {signUpInfo && (
           <ButtonLayout>
             <Button
-              backgroundColor="secondary"
-              color="primary"
+              buttonType={"filled"}
               onClick={() => {
                 setSignUpInfo("");
               }}

@@ -26,7 +26,6 @@ export default function Features() {
       <ContentLayout>
         <Spacer size="verySmall"></Spacer>
         <Headline label="YOUR PLAN" alignment="left"></Headline>
-        <Separator width="small" alignment="left" />
         <PremiumPlansList></PremiumPlansList>
       </ContentLayout>
       <Footer></Footer>

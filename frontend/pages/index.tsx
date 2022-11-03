@@ -6,6 +6,8 @@ import SvgDiscordLogo from "../components/atoms/svg/SvgDiscordLogo";
 import SvgSchool from "../components/atoms/svg/SvgSchool";
 import SvgPremium from "../components/atoms/svg/SvgPremium";
 import SvgStartpageArtwork from "../components/atoms/svg/SvgStartpageArtwork";
+import { useEffect } from "react";
+import { BannerAd } from "@/molecules/ads/BannerAd";
 
 const Footer = dynamic(() => import("../components/organisms/Footer"));
 const GeneralList = dynamic(
@@ -28,9 +30,12 @@ const ArtworkLayout = styled("div", {
   display: "block",
   width: "55vw",
   height: "calc(55vw/731*526)",
+
+  color: "$surface3",
 });
 
 export default function Home() {
+
   return (
     <>
       <Head>
@@ -93,6 +98,7 @@ export default function Home() {
           },
         ]}
       ></GeneralList>
+      <BannerAd></BannerAd>
       <Footer />
     </>
   );

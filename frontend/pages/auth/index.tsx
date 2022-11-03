@@ -36,12 +36,14 @@ const StyledTabs = styled(TabsPrimitive.Root, {
 const StyledList = styled(TabsPrimitive.List, {
   flexShrink: 0,
   display: "flex",
+  borderRadius: "$1x",
+  overflow: "hidden",
 });
 
 const StyledTrigger = styled(TabsPrimitive.Trigger, {
   all: "unset",
   fontFamily: "inherit",
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface1",
   padding: "0 20px",
   height: 45,
   flex: 1,
@@ -50,27 +52,26 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   justifyContent: "center",
   fontSize: 15,
   lineHeight: 1,
-  color: "$neutral-500",
+  color: "$onSurface",
   cursor: "pointer",
   userSelect: "none",
   borderBottom: "$neutral-500 solid 3px",
-  "&:first-child": { borderTopLeftRadius: 6 },
-  "&:last-child": { borderTopRightRadius: 6 },
-  "&:hover": { color: "$neutral-500" },
+  transition: "all 0.2s",
+  "&:hover": { backgroundColor: "$surface4" },
   '&[data-state="active"]': {
-    color: "$warning",
     borderBottom: "$warning solid 3px",
+    backgroundColor: "$surface4",
   },
   "&:focus": {
     position: "relative",
-    color: "$warning",
+    backgroundColor: "$surface4",
     borderBottom: "$warning solid 3px",
   },
 });
 
 const StyledContent = styled(TabsPrimitive.Content, {
   flexGrow: 1,
-  padding: 20,
+  paddingTop: 20,
   backgroundColor: "$neutral-100",
   borderBottomLeftRadius: 6,
   borderBottomRightRadius: 6,

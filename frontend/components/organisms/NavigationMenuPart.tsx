@@ -2,9 +2,8 @@ import React from "react";
 import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import { violet } from "@radix-ui/colors";
 import Link from "next/link";
-import { getSelectedSchool } from "../../utils/authHelper";
+import { useRouter } from "next/router";
 
 const enterFromRight = keyframes({
   from: { transform: "translateX(200px)", opacity: 0 },
@@ -48,7 +47,7 @@ const fadeOut = keyframes({
 
 const StyledMenu = styled(NavigationMenuPrimitive.Root, {
   position: "relative",
-  zIndex: 1,
+  zIndex: 2,
 
   display: "flex",
   justifyContent: "center",
@@ -78,8 +77,8 @@ const itemStyles = {
   outline: "none",
   userSelect: "none",
 
-  "&:focus": { position: "relative", boxShadow: `0 0 0 2px ${violet.violet7}` },
-  "&:hover": { backgroundColor: "$neutral-400" },
+  "&:focus": { position: "relative", boxShadow: `0 0 0 2px $surface2` },
+  "&:hover": { backgroundColor: "$surface2", color: "$onSurface" },
 };
 
 const StyledTrigger = styled(NavigationMenuPrimitive.Trigger, {
@@ -130,6 +129,17 @@ const StyledLink = styled(Link, {
   textDecoration: "none",
   fontSize: 15,
   lineHeight: 1,
+
+  padding: "8px",
+  borderRadius: 5,
+
+  transition: "background-color 250ms ease",
+  color: "$neutral-500",
+
+  "&:hover": {
+    backgroundColor: "$surface",
+    color: "$onSurface",
+  },
 });
 
 const StyledContent = styled(NavigationMenuPrimitive.Content, {
@@ -200,7 +210,7 @@ const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   overflow: "hidden",
   height: "var(--radix-navigation-menu-viewport-height)",
 
-  backgroundColor: "$neutral-100",
+  backgroundColor: "$surface2",
   boxShadow:
     "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
 
@@ -267,22 +277,6 @@ const LinkText = styled("p", {
   fontWeight: "initial",
 });
 
-const StyledA = styled("a", {
-  width: "100%",
-  height: "100%",
-  padding: "8px",
-  display: "block",
-  borderRadius: 5,
-
-  transition: "background-color 250ms ease",
-  color: "$neutral-500",
-  textDecoration: "none",
-
-  "&:hover": {
-    backgroundColor: "$neutral-300",
-  },
-});
-
 const ContentListItem = React.forwardRef<any, any>(function Content(
   { children, title, ...props },
   forwardedRef
@@ -292,18 +286,10 @@ const ContentListItem = React.forwardRef<any, any>(function Content(
       <NavigationMenuLink
         {...props}
         ref={forwardedRef}
-        css={{
-          padding: 12,
-          borderRadius: 6,
-          transition: "background-color 150ms ease",
-          "&:hover": { backgroundColor: "$neutral-300" },
-        }}
         passHref
       >
-        <StyledA>
-          <LinkTitle>{title}</LinkTitle>
-          <LinkText>{children}</LinkText>
-        </StyledA>
+        <LinkTitle>{title}</LinkTitle>
+        <LinkText>{children}</LinkText>
       </NavigationMenuLink>
     </ListItem>
   );
@@ -320,7 +306,8 @@ const ViewportPosition = styled("div", {
 });
 
 export const NavigationMenuPart = () => {
-  const schoolUUID = getSelectedSchool();
+  const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
 
   return (
     <NavigationMenu>
@@ -366,7 +353,7 @@ export const NavigationMenuPart = () => {
               <ContentListItem title="Tutorials" href="/help">
                 Learn how to deal with all of our features.
               </ContentListItem>
-              <ContentListItem title="Patch Notes" href="/help">
+              <ContentListItem title="Patch Notes" href="/change-logs">
                 See our incredible innovations for each release and also what we
                 have messed up in earlier releases.
               </ContentListItem>
@@ -391,13 +378,21 @@ export const NavigationMenuPart = () => {
               </ContentListItem>
               <ContentListItem
                 title="Create course"
-                href={schoolUUID ? `/school/${schoolUUID}/course/create` : "/school/select?redirect=/course/create"}
+                href={
+                  schoolUUID
+                    ? `/school/${schoolUUID}/course/create`
+                    : "/school/select?redirect=/course/create"
+                }
               >
                 Create a course and start teaching your students.
               </ContentListItem>
               <ContentListItem
                 title="Create timetable item"
-                href={schoolUUID ? `/school/${schoolUUID}/timetable/create` : "/school/select?redirect=/timetable/create"}
+                href={
+                  schoolUUID
+                    ? `/school/${schoolUUID}/timetable/create`
+                    : "/school/select?redirect=/timetable/create"
+                }
               >
                 Create a course and start teaching your students.
               </ContentListItem>

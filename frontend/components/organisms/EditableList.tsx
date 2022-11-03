@@ -72,7 +72,7 @@ export const EditableList: React.FC<Props> = ({
   deleteEntry,
 }) => {
   const [error, setError] = React.useState("");
-
+  
   return (
     <>
       <SchoolDetailLayout>

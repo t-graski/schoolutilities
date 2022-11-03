@@ -1,30 +1,23 @@
-import {
-  Controller,
-  Get,
-  Delete,
-  Put,
-  Req,
-  UseGuards,
-  Param,
-  Post,
-  Body,
-  UseInterceptors,
-  ClassSerializerInterceptor,
-} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddArticleDTO, Article, DeleteArticleDTO, UpdateArticleDTO } from 'src/entity/article/article';
-import { Role } from 'src/roles/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { ArticleService } from './article.service';
+import { Controller, Get, Delete, Put, Req, Res, UseGuards, Param, Post, UseInterceptors, UploadedFile, HttpStatus, ClassSerializerInterceptor, Body } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
+import { of } from "rxjs";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { editFileName, fileFilter } from "src/misc/fileUpload";
+import { LENGTHS } from "src/misc/parameterConstants";
+import { Role } from "src/roles/role.enum";
+import { Roles } from "src/roles/roles.decorator";
+import { RolesGuard } from "src/roles/roles.guard";
+import { ArticleService } from "./article.service";
 
 @ApiBearerAuth()
 @ApiTags('articles')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(RolesGuard)
-@Controller('api/articles')
+@Controller("api/articles")
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) { }
 
@@ -70,7 +63,34 @@ export class ArticleController {
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
   @Delete('/delete')
-  async deleteArticle(@Body() article: DeleteArticleDTO, @Req() request: Request): Promise<number> {
+  async deleteArticle(@Body() article: DeleteArticleDTO, @Req() request: Request): Promise<Article> {
     return this.articleService.deleteArticle(article, request);
+  }
+
+  @Post("/uploadFile")
+  @UseInterceptors(
+    FileInterceptor("image", {
+      storage: diskStorage({
+        destination: "../files",
+        filename: editFileName,
+      }),
+      fileFilter: fileFilter,
+      limits: { fileSize: LENGTHS.MAX_FILE_SIZE },
+    }),
+  )
+  async uploadFile(@Req() request, @Res() response, @UploadedFile() file) {
+    const result = await this.articleService.uploadFile(file, request);
+    return response.status(result.status).json(result?.message);
+  }
+
+  @Get("/files/:articleUUID")
+  async getArticleFiles(@Param("articleUUID") articleUUID: string, @Req() request, @Res() response) {
+    const result = await this.articleService.getArticleFiles(articleUUID);
+    return response.status(result.status).json(result?.data ? result.data : result.message);
+  }
+
+  @Get("/file/:fileUUID")
+  async getArticleFile(@Param("fileUUID") fileUUID: string, @Req() request, @Res() response) {
+    return of(response.status(HttpStatus.OK).sendFile(`${fileUUID}`, { root: process.env.LOGO_PATH }));
   }
 }
