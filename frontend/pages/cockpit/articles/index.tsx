@@ -111,12 +111,11 @@ export default function Home() {
             saveFunction={() => {
               deleteSettingsEntry(articleUUID);
               setDeletePopUpIsVisible(false);
-            }}
+            } }
             closeFunction={() => {
               setDeletePopUpIsVisible(false);
               setArticleName("");
-            }}
-          >
+            } } open={false} setOpen={undefined}          >
             <StyledDeleteText>
               This action can&apos;t be undone and will permanently remove the
               class {articleName}.

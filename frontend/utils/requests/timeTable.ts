@@ -26,10 +26,12 @@ export async function editExam(exam: any) {
 }
 
 export async function addTimeTableElement(timeTableElement: any) {
+  console.log(timeTableElement);
   return fetchData("timetable/element", "POST", 201, timeTableElement);
 }
 
 export async function editTimeTableElement(timeTableElement: any) {
+  console.log(timeTableElement);
   return fetchData("timetable/element", "PUT", 201, timeTableElement);
 }
 

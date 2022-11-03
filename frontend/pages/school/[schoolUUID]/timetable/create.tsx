@@ -19,7 +19,11 @@ export default function CreateCourse() {
     timeTableElementStartTime: "",
     timeTableElementEndTime: "",
     timeTableElementDay: "",
-    schoolSubjectUUID: "",
+    schoolSubject: {
+      schoolSubjectUUID: "",
+      schoolSubjectName: "",
+      schoolSubjectAbbreviation: "",
+    },
     timeTableElementRoomUUID: "",
     timeTableElementTeachers: [],
     timeTableElementClasses: [],
@@ -44,8 +48,6 @@ export default function CreateCourse() {
             try {
               const response = await addTimeTableElement({
                 ...itemConfig,
-                timeTableElementStartTime: `1970-01-01T${itemConfig.timeTableElementStartTime}:00.000Z`,
-                timeTableElementEndTime: `1970-01-01T${itemConfig.timeTableElementEndTime}:00.000Z`,
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
