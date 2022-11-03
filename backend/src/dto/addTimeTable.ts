@@ -26,8 +26,7 @@ export class AddTimeTableElementDto {
   timeTableElementDay: string;
 
   @IsNotEmpty()
-  @IsString()
-  schoolSubjectUUID: string;
+  schoolSubject: Record<string, any>;
 
   @IsNotEmpty()
   @IsString({ each: true })
@@ -60,8 +59,7 @@ export class UpdateTimeTableElementDto {
   timeTableElementEndTime: string;
 
   @IsNotEmpty()
-  @IsString()
-  schoolSubjectUUID: string;
+  schoolSubject: Record<string, any>;
 
   @IsNotEmpty()
   @IsString({ each: true })

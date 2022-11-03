@@ -90,7 +90,7 @@ export class TimetableService {
       timeTableElementStartTime,
       timeTableElementEndTime,
       timeTableElementDay,
-      schoolSubjectUUID,
+      schoolSubject,
       timeTableElementTeachers,
       timeTableElementRoomUUID,
       timeTableElementClasses,
@@ -106,7 +106,7 @@ export class TimetableService {
           timeTableElementDay,
           schoolSubjects: {
             connect: {
-              schoolSubjectUUID,
+              schoolSubjectUUID: schoolSubject.schoolSubjectUUID,
             },
           },
           schoolRoom: {
@@ -172,7 +172,7 @@ export class TimetableService {
       timeTableElementStartTime,
       timeTableElementDay,
       timeTableElementEndTime,
-      schoolSubjectUUID,
+      schoolSubject,
       timeTableElementTeachers,
       timeTableElementRoomUUID,
       timeTableElementClasses,
@@ -206,7 +206,7 @@ export class TimetableService {
           timeTableElementDay,
           schoolSubjects: {
             connect: {
-              schoolSubjectUUID,
+              schoolSubjectUUID: schoolSubject.schoolSubjectUUID,
             },
           },
           schoolRoom: {
