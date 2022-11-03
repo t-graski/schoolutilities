@@ -88,11 +88,11 @@ export class TimetableService {
   ): Promise<ReturnMessage> {
     const {
       timeTableElementStartTime,
-      timeTableElementDay,
       timeTableElementEndTime,
+      timeTableElementDay,
       schoolSubjectUUID,
       timeTableElementTeachers,
-      timeTableElementRoomUUID: timeTableElementRoom,
+      timeTableElementRoomUUID,
       timeTableElementClasses,
     } = payload;
 
@@ -111,7 +111,7 @@ export class TimetableService {
           },
           schoolRoom: {
             connect: {
-              schoolRoomUUID: timeTableElementRoom,
+              schoolRoomUUID: timeTableElementRoomUUID,
             },
           },
           timeTableElementStartTime: new Date(timeTableElementStartTime),
@@ -143,11 +143,20 @@ export class TimetableService {
               };
             }),
           },
-        },
+        }, include: {
+          schoolSubjects: true,
+        }
       });
       return {
         status: 201,
-        data: element,
+        data: {
+          ...element,
+          schoolSubject: {
+            schoolSubjectUUID: element.schoolSubjects.schoolSubjectUUID,
+            schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+            schoolSubjectAbbreviation: element.schoolSubjects.schoolSubjectAbbreviation,
+          }
+        },
       };
     } catch {
       throw new InternalServerErrorException('Database error');
@@ -234,11 +243,20 @@ export class TimetableService {
               };
             }),
           },
-        },
+        }, include: {
+          schoolSubjects: true,
+        }
       });
       return {
         status: 201,
-        data: element,
+        data: {
+          ...element,
+          schoolSubject: {
+            schoolSubjectUUID: element.schoolSubjects.schoolSubjectUUID,
+            schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+            schoolSubjectAbbreviation: element.schoolSubjects.schoolSubjectAbbreviation,
+          }
+        }
       };
     } catch (err) {
       console.log(err);
@@ -1264,6 +1282,7 @@ export class TimetableService {
           },
         },
         include: {
+          schoolSubjects: true,
           timeTableElements: true,
         },
       });
@@ -1271,9 +1290,14 @@ export class TimetableService {
       return {
         status: RETURN_DATA.SUCCESS.status,
         data: {
+          ...substitution,
           timeTableElementUUID:
             substitution.timeTableElements.timeTableElementUUID,
-          ...substitution,
+          schoolSubject: {
+            schoolSubjectUUID: substitution.schoolSubjects.schoolSubjectUUID,
+            schoolSubjectName: substitution.schoolSubjects.schoolSubjectName,
+            schoolSubjectAbbreviation: substitution.schoolSubjects.schoolSubjectAbbreviation,
+          },
         },
       };
     } catch (err) {
@@ -1283,18 +1307,21 @@ export class TimetableService {
   }
 
   async deleteSubstitution(
-    substitutionUUID: string,
+    timeTableElementUUID: string,
     request,
   ): Promise<ReturnMessage> {
     try {
-      const substitution = await prisma.timeTableSubstitutions.delete({
+      const substitution = await prisma.timeTableElement.findUnique({
         where: {
-          timeTableSubstitutionUUID: substitutionUUID,
-        },
-      });
+          timeTableElementUUID
+        }, include: {
+          timeTableSubstitution: true
+        }
+      })
+
       return {
         status: 200,
-        data: substitution,
+        data: substitution.timeTableSubstitution,
       };
     } catch {
       return RETURN_DATA.DATABASE_ERROR;
