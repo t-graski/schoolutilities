@@ -517,7 +517,7 @@ model timeTableElement {
   schoolSubjects                    schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
   users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
   schoolRoom                        schoolRooms                @relation(fields: [timeTableElementRoomId], references: [schoolRoomId])
-  timeTableSubstitution             timeTableSubstitutions?
+  timeTableSubstitution             timeTableSubstitutions[]
   timeTableTeachers                 timeTableElementTeachers[]
   timeTableElementClasses           timeTableElementClasses[]
   timeTableEvents                   timeTableEvents[]

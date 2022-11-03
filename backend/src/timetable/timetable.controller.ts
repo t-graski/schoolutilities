@@ -42,6 +42,15 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/element/detailed/:elementUUID/:date')
+  async getTimeTableElementDetailed(@Param('elementUUID') elementUUID: string, @Param('date') date: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getTimeTableElementDetailed(elementUUID, date, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete('/element/:elementUUID')
   async deleteTimeTableElement(@Param('elementUUID') elementUUID: string, @Req() request: Request, @Res() response) {
     const result = await this.timetableService.deleteTimeTableElement(elementUUID, request);
@@ -49,6 +58,7 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
+
 
   @Get('/timeTableElement/:timeTableElementUUID')
   async getTimeTableElement(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {

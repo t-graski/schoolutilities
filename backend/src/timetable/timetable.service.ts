@@ -1,6 +1,8 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { rules } from '@typescript-eslint/eslint-plugin';
 import { triggerAsyncId } from 'async_hooks';
+import { RuleTester } from 'eslint';
 import { Request } from 'express';
 import {
   AddTimeTableDto,
@@ -741,6 +743,7 @@ export class TimetableService {
           timeTableElementUUID,
         },
         include: {
+          schoolRoom: true,
           timeTableSubstitution: {
             include: {
               schoolSubjects: true,
@@ -768,8 +771,6 @@ export class TimetableService {
               schoolClasses: true,
             },
           },
-          schoolRoom: true,
-          timeTableOmitted: true,
         },
       });
 
@@ -799,36 +800,28 @@ export class TimetableService {
           schoolSubjectAbbreviation:
             element.schoolSubjects.schoolSubjectAbbreviation,
         },
-        substitution: element.timeTableSubstitution ? {
-          timeTableSubstitutionUUID: element.timeTableSubstitution.timeTableSubstitutionUUID,
-          timeTableSubstitutionRoomUUID: element.timeTableSubstitution.schoolRooms.schoolRoomUUID,
-          timeTableSubstitutiontartTime: element.timeTableElementStartTime,
-          timeTableSubstitutionEndTime: element.timeTableElementEndTime,
-          schoolSubject: {
-            schoolSubjectName: element.timeTableSubstitution.schoolSubjects.schoolSubjectName,
-            schoolSubjectUUID: element.timeTableSubstitution.schoolSubjects.schoolSubjectUUID,
-            schoolSubjectAbbreviation: element.timeTableSubstitution.schoolSubjects.schoolSubjectAbbreviation,
-          },
-          timeTableSubstitutionClasses: element.timeTableSubstitution.timeTableSubstitutionClasses.map((classes) => classes.classes.schoolClassUUID),
-          timeTableSubstitutionTeachers:
-            element.timeTableSubstitution.timeTableSubstitutionTeachers.map(
-              (teacher) => teacher.users.userUUID,
-            ),
-        } : undefined,
+        // substitution: element.timeTableSubstitution ? {
+        //   timeTableSubstitutionUUID: element.timeTableSubstitution.timeTableSubstitutionUUID,
+        //   timeTableSubstitutionRoomUUID: element.timeTableSubstitution.schoolRooms.schoolRoomUUID,
+        //   timeTableSubstitutiontartTime: element.timeTableElementStartTime,
+        //   timeTableSubstitutionEndTime: element.timeTableElementEndTime,
+        //   schoolSubject: {
+        //     schoolSubjectName: element.timeTableSubstitution.schoolSubjects.schoolSubjectName,
+        //     schoolSubjectUUID: element.timeTableSubstitution.schoolSubjects.schoolSubjectUUID,
+        //     schoolSubjectAbbreviation: element.timeTableSubstitution.schoolSubjects.schoolSubjectAbbreviation,
+        //   },
+        //   timeTableSubstitutionClasses: element.timeTableSubstitution.timeTableSubstitutionClasses.map((classes) => classes.classes.schoolClassUUID),
+        //   timeTableSubstitutionTeachers:
+        //     element.timeTableSubstitution.timeTableSubstitutionTeachers.map(
+        //       (teacher) => teacher.users.userUUID,
+        //     ),
+        // } : undefined,
         timeTableElementTeachers: element.timeTableTeachers.map(
           (teacher) => teacher.users.userUUID,
         ),
         timeTableElementClasses: element.timeTableElementClasses.map(
           (classes) => classes.schoolClasses.schoolClassUUID,
         ),
-        timeTableElementOmitted: element.timeTableOmitted[0]
-          ? {
-            timeTableElementOmittedReason:
-              element.timeTableOmitted[0].timeTableElementOmittedReason,
-            timeTableElementOmittedDate:
-              element.timeTableOmitted[0].timeTableElementOmittedDate,
-          }
-          : undefined,
       };
 
       return {
@@ -837,6 +830,118 @@ export class TimetableService {
       };
     } catch {
       return RETURN_DATA.DATABASE_ERROR;
+    }
+  }
+
+  async getTimeTableElementDetailed(timeTableElementUUID: string, date: string, request): Promise<ReturnMessage> {
+    const sunday = new Date(new Date(date).setDate(new Date(date).getDate() + 6));
+    const monday = new Date(date);
+
+    const element = await prisma.timeTableElement.findUnique({
+      where: {
+        timeTableElementUUID,
+      },
+      include: {
+        schoolRoom: true,
+        schoolSubjects: true,
+        timeTableTeachers: {
+          include: {
+            users: true,
+          }
+        },
+        timeTableElementClasses: {
+          include: {
+            schoolClasses: true,
+          }
+        },
+        timeTableExam: {
+          where: {
+            timeTableExamDate: {
+              gte: monday,
+              lte: sunday,
+            }
+          },
+          include: {
+            schoolRooms: true,
+          }
+        },
+        timeTableOmitted: {
+          where: {
+            timeTableElementOmittedDate: {
+              gte: monday,
+              lte: sunday,
+            }
+          }
+        },
+        timeTableSubstitution: {
+          where: {
+            timeTableSubstitutionDate: {
+              gte: monday,
+              lte: sunday,
+            },
+          },
+          include: {
+            timeTableSubstitutionClasses: {
+              include: {
+                classes: true,
+              }
+            },
+            timeTableSubstitutionTeachers: {
+              include: {
+                users: true,
+              }
+            },
+            schoolRooms: true,
+            schoolSubjects: true,
+
+          },
+        }
+      },
+    })
+
+    const timeTableElementData = {
+      timeTableElementUUID: element.timeTableElementUUID,
+      timeTableElementStartTime: element.timeTableElementStartTime,
+      timeTableElementEndTime: element.timeTableElementEndTime,
+      timeTableElementDay: element.timeTableElementDay,
+      timeTableElementRoomUUID: element.schoolRoom.schoolRoomUUID,
+      schoolSubject: {
+        schoolSubjectUUID: element.schoolSubjects.schoolSubjectUUID,
+        schoolSubjectName: element.schoolSubjects.schoolSubjectName,
+        schoolSubjectAbbreviation: element.schoolSubjects.schoolSubjectAbbreviation,
+      },
+      substitution: element.timeTableSubstitution.length > 0 ? {
+        timeTableSubstitutionUUID: element.timeTableSubstitution[0].timeTableSubstitutionUUID,
+        timeTableSubstitutionRoomUUID: element.timeTableSubstitution[0].schoolRooms.schoolRoomUUID,
+        timeTableSubstitutiontartTime: element.timeTableElementStartTime,
+        timeTableSubstitutionEndTime: element.timeTableElementEndTime,
+        schoolSubject: {
+          schoolSubjectName: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
+          schoolSubjectUUID: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
+          schoolSubjectAbbreviation: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectAbbreviation,
+        },
+        timeTableSubstitutionClasses: element.timeTableSubstitution[0].timeTableSubstitutionClasses.map((classes) => classes.classes.schoolClassUUID),
+        timeTableSubstitutionTeachers:
+          element.timeTableSubstitution[0].timeTableSubstitutionTeachers.map(
+            (teacher) => teacher.users.userUUID,
+          ),
+      } : undefined,
+      omitted: element.timeTableOmitted.length > 0 ? {
+        timeTableElementOmittedDate: element.timeTableOmitted[0].timeTableElementOmittedDate,
+        timeTableElementOmittedReason: element.timeTableOmitted[0].timeTableElementOmittedReason,
+      } : undefined,
+      exam: element.timeTableExam.length > 0 ? {
+        timeTableExamDate: element.timeTableExam[0].timeTableExamDate,
+        timeTableExamDescription: element.timeTableExam[0].timeTableExamDescription,
+        timeTableExamRoom: element.timeTableExam[0].schoolRooms.schoolRoomUUID,
+      } : undefined,
+      timeTableElementTeachers: element.timeTableTeachers.map(teacher => teacher.users.userUUID),
+      timeTableElementClasses: element.timeTableElementClasses.map(classes => classes.schoolClasses.schoolClassUUID),
+    }
+
+    return {
+      status: RETURN_DATA.SUCCESS.status,
+      data: timeTableElementData,
     }
   }
 
@@ -1481,9 +1586,9 @@ export class TimetableService {
           status: 200,
           data: {
             ...timeTableElement.timeTableSubstitution,
-            timeTableSubstitutionClasses: timeTableElement.timeTableSubstitution.timeTableSubstitutionClasses.map((schoolClass) => schoolClass.classes.schoolClassUUID),
-            timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution.timeTableSubstitutionTeachers.map((teacher) => teacher.users.userUUID),
-            timeTableSubstitutionRoomUUID: timeTableElement.timeTableSubstitution.schoolRooms.schoolRoomUUID,
+            // timeTableSubstitutionClasses: timeTableElement.timeTableSubstitution.timeTableSubstitutionClasses.map((schoolClass) => schoolClass.classes.schoolClassUUID),
+            // timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution.timeTableSubstitutionTeachers.map((teacher) => teacher.users.userUUID),
+            // timeTableSubstitutionRoomUUID: timeTableElement.timeTableSubstitution.schoolRooms.schoolRoomUUID,
             schoolSubject: {
               schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
               schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
