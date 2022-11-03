@@ -1192,11 +1192,12 @@ export class TimetableService {
     const userUUID = await this.helper.getUserUUIDfromJWT(jwt);
     const {
       timeTableElementUUID,
+      timeTableSubstitutionUUID,
       timeTableSubstitutionDate,
-      timeTableElementRoomUUID,
+      timeTableSubstitutionRoomUUID,
       schoolSubject,
-      timeTableElementTeachers,
-      timeTableElementClasses,
+      timeTableSubstitutionTeachers,
+      timeTableSubstitutionClasses,
     } = substitutions;
 
     try {
@@ -1206,6 +1207,8 @@ export class TimetableService {
         },
       });
 
+      console.log(timeTableElement);
+
       const substitution = await prisma.timeTableSubstitutions.upsert({
         where: {
           timeTableSubstitutionElementId: timeTableElement.timeTableElementId,
@@ -1213,20 +1216,20 @@ export class TimetableService {
         update: {
           timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
           timeTableSubstitutionTeachers: {
-            set: timeTableElementTeachers,
+            set: timeTableSubstitutionTeachers,
           },
           timeTableSubstitutionClasses: {
             create: {
               classes: {
                 connect: {
-                  schoolClassUUID: timeTableElementClasses[0],
+                  schoolClassUUID: timeTableSubstitutionClasses[0],
                 },
               },
             },
           },
           schoolRooms: {
             connect: {
-              schoolRoomUUID: timeTableElementRoomUUID,
+              schoolRoomUUID: timeTableSubstitutionRoomUUID,
             },
           },
           schoolSubjects: {
@@ -1245,7 +1248,7 @@ export class TimetableService {
           },
           schoolRooms: {
             connect: {
-              schoolRoomUUID: timeTableElementRoomUUID,
+              schoolRoomUUID: timeTableSubstitutionRoomUUID,
             },
           },
           timeTableElements: {
@@ -1259,7 +1262,7 @@ export class TimetableService {
             },
           },
           timeTableSubstitutionClasses: {
-            create: timeTableElementClasses.map((schoolClass) => {
+            create: timeTableSubstitutionClasses.map((schoolClass) => {
               return {
                 classes: {
                   connect: {
@@ -1270,7 +1273,7 @@ export class TimetableService {
             }),
           },
           timeTableSubstitutionTeachers: {
-            create: timeTableElementTeachers.map((teacher) => {
+            create: timeTableSubstitutionTeachers.map((teacher) => {
               return {
                 users: {
                   connect: {
