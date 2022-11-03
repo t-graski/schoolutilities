@@ -25,6 +25,7 @@ import { Request, Response } from 'express';
 import { AddCourseDTO, AddCourseUserDTO, Course, DeleteCourseDTO, RemoveCourseUserDTO, UpdateCourseDTO } from 'src/entity/course/course';
 import { ClassSerializerInterceptor } from '@nestjs/common/serializer';
 import { CourseUser } from 'src/entity/course-user/courseUser';
+import { ApiBody, ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
 
 // @UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/course')
@@ -33,6 +34,9 @@ export class CourseController {
     private readonly courseService: CourseService,
   ) { }
 
+  @ApiOperation({ summary: 'Add a course to a school' })
+  @ApiBody({ type: AddCourseDTO })
+  @ApiCreatedResponse({ type: Course })
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Teacher)
   @Post('')
@@ -76,10 +80,10 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Get('/submissions/:elementUUID')
   @Roles(Role.Teacher)
-  async getSubmissions(@Param() params, @Req() request, @Res() response) {
+  async getSubmissions(@Param('elementUUID') elementUUID: string, @Req() request, @Res() response) {
     const result = await this.courseService.getSubmissions(
       request,
-      params.elementUUID,
+      elementUUID,
     );
     return response
       .status(result.status)
@@ -105,10 +109,8 @@ export class CourseController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/courseElements/:courseUUID')
-  async getCourseElements(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.getCourseElements(
-      params.courseUUID,
-    );
+  async getCourseElements(@Param('courseUUID') courseUUID: string, @Req() request, @Res() response) {
+    const result = await this.courseService.getCourseElements(courseUUID);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
@@ -141,11 +143,8 @@ export class CourseController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.Student)
   @Get('/element/:elementUUID')
-  async getElement(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.getElement(
-      request,
-      params.elementUUID,
-    );
+  async getElement(@Param('elementUUID') elementUUID: string, @Req() request, @Res() response) {
+    const result = await this.courseService.getElement(request, elementUUID);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);
@@ -159,29 +158,26 @@ export class CourseController {
   //   return this.courseService.getEvents(schoolUUID, days, request);
   // }
 
-  @UseGuards(JwtAuthGuard)
-  @Roles(Role.Teacher)
-  @Get('downloadAll/:elementUUID')
-  async downloadAll(@Param() params, @Req() request, @Res() response: Response) {
-    const result = await this.courseService.downloadAll(params, request);
+  // @UseGuards(JwtAuthGuard)
+  // @Roles(Role.Teacher)
+  // @Get('downloadAll/:elementUUID')
+  // async downloadAll(@Param() params, @Req() request, @Res() response: Response) {
+  //   const result = await this.courseService.downloadAll(params, request);
 
-    return of(
-      response
-        .set('Content-Type', 'application/octet-stream')
-        .set('Content-Disposition', `attachment; filename="abc.zip"`)
-        .status(HttpStatus.OK)
-        .sendFile(`${result.data}`, { root: process.env.FILE_PATH }),
-    );
-  }
+  //   return of(
+  //     response
+  //       .set('Content-Type', 'application/octet-stream')
+  //       .set('Content-Disposition', `attachment; filename="abc.zip"`)
+  //       .status(HttpStatus.OK)
+  //       .sendFile(`${result.data}`, { root: process.env.FILE_PATH }),
+  //   );
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Post('revertExercise/:elementUUID')
   @Roles(Role.Student)
-  async revertExercise(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.revertExercise(
-      request,
-      params.elementUUID,
-    );
+  async revertExercise(@Param('elementUUID') elementUUID: string, @Req() request, @Res() response) {
+    const result = await this.courseService.revertExercise(request, elementUUID);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

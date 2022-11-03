@@ -27,7 +27,6 @@ import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/
 import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
 import { AddSchoolClassUserDTO, DeleteSchoolClassUserDTO } from 'src/entity/school-class-user/schoolClassUser';
 
-@ApiBearerAuth()
 @ApiTags('SchoolAdmin')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('/api/schoolAdmin')
@@ -336,10 +335,10 @@ export class SchoolAdminController {
   @ApiOperation({ deprecated: true })
   @UseGuards(JwtAuthGuard)
   @Get('/information/:schoolUUID')
-  async getSchoolInformation(@Param() params, @Res() response, @Req() request) {
+  async getSchoolInformation(@Param('schoolUUID') schoolUUID: string, @Res() response, @Req() request) {
     const token = request.headers.authorization.split(' ')[1];
     const result = await this.schoolAdminService.getSchoolInformation(
-      params.schoolUUID,
+      schoolUUID,
       token,
     );
     return response
@@ -358,15 +357,12 @@ export class SchoolAdminController {
   @UseGuards(JwtAuthGuard)
   @Get('/detailedInformation/:schoolUUID')
   async getDetailedSchoolInformation(
-    @Param() params,
+    @Param('schoolUUID') schoolUUID: string,
     @Res() response,
     @Req() request,
   ) {
     const token = request.headers.authorization.split(' ')[1];
-    const result = await this.schoolAdminService.getDetailedSchoolInformation(
-      params.schoolUUID,
-      token,
-    );
+    const result = await this.schoolAdminService.getDetailedSchoolInformation(schoolUUID, token);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

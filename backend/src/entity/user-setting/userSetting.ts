@@ -1,4 +1,4 @@
-export type UserSetting = {
+export class UserSetting {
     // user: User;
     userSettingLanguageId: number;
     userSettingTimezone: string;

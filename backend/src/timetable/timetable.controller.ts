@@ -101,7 +101,7 @@ export class TimetableController {
   @ApiBody({ type: UpdateHolidayDTO })
   @ApiOkResponse({ type: Holiday })
   @UseGuards(JwtAuthGuard)
-  @Put('/holiday/:holidayUUID')
+  @Put('/holiday')
   async updateHoliday(@Body() holiday: UpdateHolidayDTO, request: Request): Promise<Holiday> {
     return this.timetableService.updateHoliday(holiday, request);
   }

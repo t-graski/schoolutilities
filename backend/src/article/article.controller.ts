@@ -13,7 +13,6 @@ import { Roles } from "src/roles/roles.decorator";
 import { RolesGuard } from "src/roles/roles.guard";
 import { ArticleService } from "./article.service";
 
-@ApiBearerAuth()
 @ApiTags('articles')
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(RolesGuard)

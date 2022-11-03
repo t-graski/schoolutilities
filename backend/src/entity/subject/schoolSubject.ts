@@ -28,7 +28,7 @@ export class SchoolSubject {
 
     @ApiProperty({
         description: 'The courses of the school subject',
-        type: [Course],
+        type: () => [Course],
     })
     courses?: Course[];
 

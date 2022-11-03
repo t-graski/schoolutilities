@@ -14,7 +14,6 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { UserService } from './user.service';
 
-@ApiBearerAuth()
 @ApiTags('users')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/user')

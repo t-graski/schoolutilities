@@ -8,7 +8,7 @@ import { SchoolRoom } from "../school-room/schoolRoom";
 import { SchoolSubject } from "../subject/schoolSubject";
 import { User } from "../user/user";
 
-export class School  {
+export class School {
     schoolUUID: string;
     schoolName: string;
     schoolDescription: string;
@@ -20,7 +20,7 @@ export class School  {
 
     @ApiProperty({
         description: 'The courses of a school',
-        type: [Course],
+        type: () => [Course],
     })
     courses?: Course[];
 
