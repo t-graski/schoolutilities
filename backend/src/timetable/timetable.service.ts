@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { triggerAsyncId } from 'async_hooks';
 import { Request } from 'express';
 import {
   AddTimeTableDto,
@@ -740,6 +741,22 @@ export class TimetableService {
           timeTableElementUUID,
         },
         include: {
+          timeTableSubstitution: {
+            include: {
+              schoolSubjects: true,
+              schoolRooms: true,
+              timeTableSubstitutionClasses: {
+                include: {
+                  classes: true,
+                }
+              },
+              timeTableSubstitutionTeachers: {
+                include: {
+                  users: true,
+                }
+              }
+            },
+          },
           schoolSubjects: true,
           timeTableTeachers: {
             include: {
@@ -781,6 +798,22 @@ export class TimetableService {
           schoolSubjectName: element.schoolSubjects.schoolSubjectName,
           schoolSubjectAbbreviation:
             element.schoolSubjects.schoolSubjectAbbreviation,
+        },
+        substitution: {
+          timeTableSubstitutionUUID: element.timeTableSubstitution.timeTableSubstitutionUUID,
+          timeTableSubstitutionRoomUUID: element.timeTableSubstitution.schoolRooms.schoolRoomUUID,
+          timeTableSubstitutiontartTime: element.timeTableElementStartTime,
+          timeTableSubstitutionEndTime: element.timeTableElementEndTime,
+          schoolSubject: {
+            schoolSubjectName: element.timeTableSubstitution.schoolSubjects.schoolSubjectName,
+            schoolSubjectUUID: element.timeTableSubstitution.schoolSubjects.schoolSubjectUUID,
+            schoolSubjectAbbreviation: element.timeTableSubstitution.schoolSubjects.schoolSubjectAbbreviation,
+          },
+          timeTableSubstitutionClasses: element.timeTableSubstitution.timeTableSubstitutionClasses.map((classes) => classes.classes.schoolClassUUID),
+          timeTableSubstitutionTeachers:
+            element.timeTableSubstitution.timeTableSubstitutionTeachers.map(
+              (teacher) => teacher.users.userUUID,
+            ),
         },
         timeTableElementTeachers: element.timeTableTeachers.map(
           (teacher) => teacher.users.userUUID,
