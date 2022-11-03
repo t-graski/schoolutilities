@@ -33,6 +33,10 @@ const ButtonLayout = styled("div", {
   justifyContent: "flex-end",
 });
 
+const StyledLink = styled(Link, {
+  width: "fit-content",
+});
+
 export const TimeTableItemSidebar: React.FC<{}> = () => {
   const [omittedPopUpVisible, setOmittedPopUpVisible] = useState(false);
   const router = useRouter();
@@ -41,7 +45,6 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
   );
   const [omittedReason, setOmittedReason] = useState("");
   const schoolUUId = router.query.schoolUUID as string;
-  const schoolClassUUID = router.query.classUUID as string;
   const startDate = router.query.startDate as string;
   const queryClient = useQueryClient();
 
@@ -73,7 +76,7 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
         {timeTableElement && (
           <>
             <TimeTableItemDetail item={timeTableElement}></TimeTableItemDetail>
-            <Link
+            <StyledLink
               href={`/school/${schoolUUId}/timetable/element/${timeTableElementUUID}/substitution?date=${getParsedMonth(
                 new Date(startDate),
                 timeTableElement.timeTableElementDay
@@ -81,7 +84,7 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
               passHref
             >
               <Button buttonType="filled">Add substitution</Button>
-            </Link>
+            </StyledLink>
             <Button
               buttonType="outlined"
               onClick={() => {
@@ -175,25 +178,25 @@ function getParsedMonth(weekStartDay, weekDayName) {
 
   switch (weekDayName) {
     case "Monday":
-      addDays = 0;
-      break;
-    case "Tuesday":
       addDays = 1;
       break;
-    case "Wednesday":
+    case "Tuesday":
       addDays = 2;
       break;
-    case "Thursday":
+    case "Wednesday":
       addDays = 3;
       break;
-    case "Friday":
+    case "Thursday":
       addDays = 4;
       break;
-    case "Saturday":
+    case "Friday":
       addDays = 5;
       break;
-    case "Sunday":
+    case "Saturday":
       addDays = 6;
+      break;
+    case "Sunday":
+      addDays = 7;
       break;
   }
 

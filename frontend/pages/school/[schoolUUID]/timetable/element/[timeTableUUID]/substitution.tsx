@@ -42,13 +42,17 @@ export default function EditTimeTableElement() {
   useEffect(() => {
     if (timeTableElement) {
       console.log(timeTableElement.timeTableElementStartTime);
-      setItemConfig({
-        ...timeTableElement,
-        timeTableElementStartTime: timeTableElement.timeTableElementStartTime,
-        timeTableElementEndTime: timeTableElement.timeTableElementEndTime,
-      });
+      setItemConfig(substitution);
     }
-  }, [timeTableElement]);
+  }, [substitution, timeTableElement]);
+
+  if (status === "loading" && substitutionStatus === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "error" || substitutionStatus === "error") {
+    return <div>Error</div>;
+  }
 
   console.log(substitution);
 
@@ -59,18 +63,22 @@ export default function EditTimeTableElement() {
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
-        <BackLink
-          href={`/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
-            itemConfig?.timeTableElementClasses[0]
-          }`}
-          label={"Back to the timetable"}
-        ></BackLink>
+        {itemConfig &&
+          substitution &&
+          itemConfig.timeTableSubstitutionClasses && (
+            <BackLink
+              href={`/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+                itemConfig?.timeTableSubstitutionClasses[0]
+              }`}
+              label={"Back to the timetable"}
+            ></BackLink>
+          )}
         <Headline label="Edit timetable substitution"></Headline>
         <Separator width="small" alignment="center" />
         {itemConfig && substitution && (
           <ChangeCreateSubstitution
-            initialItemConfig={itemConfig}
-            itemConfig={substitution}
+            initialItemConfig={timeTableElement}
+            itemConfig={itemConfig}
             setItemConfig={setItemConfig}
           ></ChangeCreateSubstitution>
         )}
@@ -84,7 +92,7 @@ export default function EditTimeTableElement() {
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
-                  itemConfig.timeTableElementClasses[0]
+                  itemConfig.timeTableSubstitutionClasses[0]
                 }`
               );
             } catch (e) {
@@ -103,7 +111,7 @@ export default function EditTimeTableElement() {
               const response = await deleteTimeTableElement(timeTableUUID);
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
-                  itemConfig.timeTableElementClasses[0]
+                  itemConfig.timeTableSubstitutionClasses[0]
                 }`
               );
             } catch (e) {

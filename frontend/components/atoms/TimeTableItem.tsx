@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
@@ -18,9 +17,13 @@ export type TimeTableItemType = {
   timeTableElementDay?: string;
   overlaps?: number;
   overlapStart?: number;
+  timeTableElementOmitted?: {
+    timeTableElementOmittedDate: string;
+    timeTableElementOmittedReason: string;
+  };
   omitted?: {
-    timeTableOmittedDate: string;
-    timeTableOmittedReason: string;
+    timeTableElementOmittedDate: string;
+    timeTableElementOmittedReason: string;
   };
   schoolSubject?: {
     schoolSubjectUUID: string;
@@ -45,6 +48,12 @@ export type TimeTableItemType = {
       userLastname: string;
       userEmail: string;
     }[];
+    timeTableSubstitutionRoomUUID: string;
+    timeTableSubstitutionSubject: {
+      schoolSubjectUUID: string;
+      schoolSubjectName: string;
+      schoolSubjectAbbreviation: string;
+    };
   };
 };
 
@@ -120,16 +129,6 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           wordBreak: "break-word",
         },
         big: {},
-        omitted: {
-          textDecoration: "line-through",
-        },
-      },
-      state: {
-        omitted: {
-          textDecoration: "line-through",
-          borderColor: "$error",
-        },
-        normal: {},
       },
       highlight: {
         true: {
@@ -137,7 +136,25 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
         },
         false: {},
       },
+      omitted: {
+        true: {
+          textDecoration: "line-through",
+          borderColor: "transparent",
+        },
+        false: {
+          textDecoration: "none",
+        },
+      },
     },
+    compoundVariants: [
+      {
+        highlight: "true",
+        omitted: "true",
+        css: {
+          borderColor: "$primary",
+        },
+      },
+    ],
   });
 
   const SkeletonLayout = styled("div", {
@@ -149,23 +166,28 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     } / span ${overlapColumns}`,
   });
 
-  console.log("timetableoverview", item);
+  console.log(item);
 
   return (
     <>
       {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
         <TimeTableItemLayout
           layout={item.overlaps > 1 ? "small" : "big"}
-          state={item?.omitted ? "omitted" : "normal"}
+          omitted={!!item?.omitted}
           onClick={() => {
             router.push({
               query: { ...router.query, detail: item.timeTableElementUUID },
             });
           }}
-          highlight={!!timeTableElementUUID && timeTableElementUUID == item.timeTableElementUUID}
+          highlight={
+            !!timeTableElementUUID &&
+            timeTableElementUUID == item.timeTableElementUUID
+          }
         >
           <TimeTableSubjectName>
-            {item.schoolSubject.schoolSubjectAbbreviation}
+            {item.substitution?.timeTableSubstitutionSubject
+              ?.schoolSubjectAbbreviation ??
+              item.schoolSubject.schoolSubjectAbbreviation}
           </TimeTableSubjectName>
           <TimeTableTime>
             {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}
@@ -208,7 +230,6 @@ function getSmallTimeFormat(time: string) {
   let hour = new Date(time).getHours();
   let minute = new Date(time).getMinutes();
 
-  console.log(time, hour, minute);
   return formatTime(hour) + ":" + formatTime(minute);
 }
 

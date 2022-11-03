@@ -146,6 +146,7 @@ export const AdminSettingsField: React.FC<Props> = ({
     onError: (err: any) => {},
   });
 
+  //@ts-ignore
   const editMutation = useMutation(editElement, {
     onSuccess: async () => {
       await queryClient.cancelQueries([reactQueryKey, schoolUUID]);

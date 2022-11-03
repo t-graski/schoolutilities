@@ -12,7 +12,7 @@ import { TimeTableItemType } from "../../atoms/TimeTableItem";
 
 type Props = {
   initialItemConfig: TimeTableItemType;
-  itemConfig: TimeTableItemType;
+  itemConfig: any;
   setItemConfig: React.Dispatch<React.SetStateAction<TimeTableItemType>>;
 };
 
@@ -50,6 +50,8 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
       enabled: !!schoolUUID,
     }
   );
+
+  console.log(itemConfig);
 
   return (
     <>
@@ -111,14 +113,16 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
             onChange={(e) => {
               setItemConfig({
                 ...itemConfig,
-                timeTableElementTeachers: e.map((element) => element?.value),
+                timeTableSubstitutionTeachers: e.map(
+                  (element) => element?.value
+                ),
               });
             }}
             icon={SvgSchool}
             selectMultiValues={true}
             selectValue={teachers
               .filter((element) =>
-                itemConfig.timeTableElementTeachers.includes(
+                itemConfig.timeTableSubstitutionTeachers.includes(
                   element.users.userUUID
                 )
               )
@@ -141,7 +145,7 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
             onChange={(e) => {
               setItemConfig({
                 ...itemConfig,
-                timeTableElementRoomUUID: e?.value,
+                timeTableSubstitutionRoomUUID: e?.value,
               });
             }}
             icon={SvgSchool}
@@ -149,7 +153,7 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
             selectValue={
               rooms
                 .filter((element) =>
-                  itemConfig.timeTableElementRoomUUID?.includes(
+                  itemConfig.timeTableSubstitutionRoomUUID?.includes(
                     element.schoolRoomUUID
                   )
                 )

@@ -57,14 +57,6 @@ export const ChangeCreateItem: React.FC<Props> = ({
     }
   );
 
-  console.log(
-    new Date(itemConfig.timeTableElementEndTime)
-      .toLocaleTimeString()
-      .split(":")
-      .slice(0, 2)
-      .join(":")
-  );
-
   return (
     <>
       <InputFieldsLayout>
@@ -75,11 +67,25 @@ export const ChangeCreateItem: React.FC<Props> = ({
               itemConfig.timeTableElementStartTime
             )}
             inputType={"time"}
-            onChange={(event) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementStartTime: event,
-              });
+            onChange={(time) => {
+              if (time == "") {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementStartTime: "",
+                });
+              } else {
+
+                const date = new Date(itemConfig.timeTableElementStartTime != "" ? itemConfig.timeTableElementStartTime : null);
+                const hours = time.split(":")[0];
+                const minutes = time.split(":")[1];
+                date.setHours(parseInt(hours));
+                date.setMinutes(parseInt(minutes));
+
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementStartTime: date.toISOString(),
+                });
+              }
             }}
           ></InputField>
         </InputFieldLayout>
@@ -90,11 +96,24 @@ export const ChangeCreateItem: React.FC<Props> = ({
               itemConfig.timeTableElementEndTime
             )}
             inputType={"time"}
-            onChange={(event) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementEndTime: event,
-              });
+            onChange={(time) => {
+              if (time == "") {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementEndTime: "",
+                });
+              } else {
+                const date = new Date(itemConfig.timeTableElementEndTime != "" ? itemConfig.timeTableElementEndTime : null);
+                const hours = time.split(":")[0];
+                const minutes = time.split(":")[1];
+                date.setHours(parseInt(hours));
+                date.setMinutes(parseInt(minutes));
+
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementEndTime: date.toISOString(),
+                });
+              }
             }}
           ></InputField>
         </InputFieldLayout>
@@ -156,7 +175,10 @@ export const ChangeCreateItem: React.FC<Props> = ({
           setSelectedSubject={(subject) => {
             setItemConfig({
               ...itemConfig,
-              schoolSubjectUUID: subject,
+              schoolSubject: {
+                ...itemConfig.schoolSubject,
+                schoolSubjectUUID: subject,
+              },
             });
           }}
         ></SubjectSelectionField>

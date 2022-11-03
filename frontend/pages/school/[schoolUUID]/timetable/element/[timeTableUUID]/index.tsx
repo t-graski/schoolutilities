@@ -29,12 +29,15 @@ export default function EditTimeTableElement() {
 
   const { data: timeTableElement, status } = useQuery(
     ["timetableElement", timeTableUUID],
-    () => getTimeTableElement(timeTableUUID)
+    () => getTimeTableElement(timeTableUUID),
+    {
+      enabled: !!timeTableUUID,
+    }
   );
 
   useEffect(() => {
     if (timeTableElement) {
-      console.log(timeTableElement.timeTableElementStartTime);
+      console.log(timeTableElement);
       setItemConfig({
         ...timeTableElement,
         timeTableElementStartTime: timeTableElement.timeTableElementStartTime,
@@ -42,8 +45,6 @@ export default function EditTimeTableElement() {
       });
     }
   }, [timeTableElement]);
-
-  console.log(itemConfig);
 
   return (
     <>
@@ -67,10 +68,10 @@ export default function EditTimeTableElement() {
               const response = await editTimeTableElement({
                 ...itemConfig,
                 timeTableElementStartTime: new Date(
-                  `1970-01-01T${itemConfig.timeTableElementStartTime}`
+                  itemConfig.timeTableElementStartTime
                 ).toISOString(),
                 timeTableElementEndTime: new Date(
-                  `1970-01-01T${itemConfig.timeTableElementEndTime}`
+                  itemConfig.timeTableElementEndTime
                 ).toISOString(),
               });
               router.push(
