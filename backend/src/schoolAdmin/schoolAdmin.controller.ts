@@ -14,8 +14,6 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddSchoolDTO, School, UpdateSchoolDTO } from 'src/entity/school/school';
-import { Role } from 'src/roles/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 import { Request } from 'express'
@@ -73,7 +71,7 @@ export class SchoolAdminController {
   @UseGuards(JwtAuthGuard)
   @Delete('/department')
   // @Roles(Role.Admin)
-  async removeDepartment(@Body() department: DeleteDepartmentDTO, @Req() request): Promise<number> {
+  async removeDepartment(@Body() department: DeleteDepartmentDTO, @Req() request): Promise<Department> {
     return this.schoolAdminService.removeDepartment(department);
 
   }

@@ -1,6 +1,5 @@
 import { InjectQueue } from '@nestjs/bull/dist/decorators';
 import { Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 import { PrismaClient } from '@prisma/client';
 import { Queue } from 'bull';
 

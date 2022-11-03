@@ -298,15 +298,15 @@ export class SchoolAdminService {
     }
   }
 
-  async removeDepartment(payload: DeleteDepartmentDTO): Promise<number> {
+  async removeDepartment(payload: DeleteDepartmentDTO): Promise<Department> {
     const { departmentUUID } = payload;
     try {
-      await prisma.departments.delete({
+      const department = await prisma.departments.delete({
         where: {
           departmentUUID
         },
       });
-      return 200;
+      return new Department(department);
     } catch {
       throw new InternalServerErrorException("Database error");
     }
