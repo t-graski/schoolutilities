@@ -49,7 +49,7 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
   return (
     <>
       <TimeTableItemLayout>
-        <HeaderLayout omitted={!!item?.timeTableElementOmitted}>
+        <HeaderLayout omitted={!!item?.omitted}>
           {item?.schoolSubject.schoolSubjectName}
           {" - "} {item.schoolSubject.schoolSubjectAbbreviation}{" "}
           <StyledButton
@@ -69,10 +69,10 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
           getSmallTimeFormat(item.timeTableElementEndTime)}
         <br />
         <br />
-        {item?.timeTableElementOmitted && (
+        {item?.omitted && (
           <span>
             Omitted reason:{" "}
-            {item?.timeTableElementOmitted.timeTableElementOmittedReason}
+            {item?.omitted.timeTableElementOmittedReason}
           </span>
         )}
         <br />

@@ -8,6 +8,12 @@ export async function getTimeTableElement(timeTableElementUUID: string) {
   );
 }
 
+export async function getTimeTableElementDetailed(timeTableElementUUID: string, startDate: string){
+  return fetchData(
+    "timetable/element/detailed/" + timeTableElementUUID + "/" + startDate,
+    "GET", 200);
+}
+
 export async function getExams(schoolUUID: string) {
   return fetchData("timetable/exams/" + schoolUUID, "GET", 200);
 }

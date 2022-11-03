@@ -41,7 +41,7 @@ export default function EditTimeTableElement() {
 
   useEffect(() => {
     if (timeTableElement) {
-      console.log(timeTableElement.timeTableElementStartTime);
+      console.log(substitution);
       setItemConfig(substitution);
     }
   }, [substitution, timeTableElement]);

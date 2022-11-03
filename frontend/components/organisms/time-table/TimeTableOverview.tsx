@@ -12,28 +12,6 @@ type Props = {
   schoolClassUUID: string;
 };
 
-const TimeTableGrid = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr repeat(5, 3fr)",
-  gridTemplateRows: "1fr",
-  gridGap: "4px",
-  backgroundColor: "$gray100",
-  borderRadius: "0.5rem",
-  width: "100%",
-  padding: "0 $2x",
-});
-
-const TimeTableInformationGrid = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr repeat(5, 3fr)",
-  gridTemplateRows: "1fr",
-  gridGap: "$1x",
-  backgroundColor: "$gray100",
-  borderRadius: "0.5rem",
-  width: "100%",
-  padding: "$1x",
-});
-
 const TimeTableDay = styled("div", {
   display: "flex",
   flexDirection: "column",
@@ -71,6 +49,32 @@ export const TimeTableOverview: React.FC<Props> = ({
   );
 
   const timeTableRows = calculate5MinuteRows(startTime, endTime);
+
+  const TimeTableGrid = styled("div", {
+    display: "grid",
+    gridTemplateColumns: `50px repeat(${
+      weekTimeTable ? weekTimeTable.length : DEFAULT_TIMETABLE.length
+    }, 3fr)`,
+    gridTemplateRows: "1fr",
+    gridGap: "4px",
+    backgroundColor: "$gray100",
+    borderRadius: "0.5rem",
+    width: "100%",
+    padding: "0 $1x",
+  });
+
+  const TimeTableInformationGrid = styled("div", {
+    display: "grid",
+    gridTemplateColumns: `50px repeat(${
+      weekTimeTable ? weekTimeTable.length : DEFAULT_TIMETABLE.length
+    }, 3fr)`,
+    gridTemplateRows: "1fr",
+    gridGap: "$1x",
+    backgroundColor: "$gray100",
+    borderRadius: "0.5rem",
+    width: "100%",
+    padding: "$1x",
+  });
 
   if (status === "loading") {
     return (
