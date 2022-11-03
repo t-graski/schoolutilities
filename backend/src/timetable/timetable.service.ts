@@ -799,7 +799,7 @@ export class TimetableService {
           schoolSubjectAbbreviation:
             element.schoolSubjects.schoolSubjectAbbreviation,
         },
-        substitution: {
+        substitution: element.timeTableSubstitution ? {
           timeTableSubstitutionUUID: element.timeTableSubstitution.timeTableSubstitutionUUID,
           timeTableSubstitutionRoomUUID: element.timeTableSubstitution.schoolRooms.schoolRoomUUID,
           timeTableSubstitutiontartTime: element.timeTableElementStartTime,
@@ -814,7 +814,7 @@ export class TimetableService {
             element.timeTableSubstitution.timeTableSubstitutionTeachers.map(
               (teacher) => teacher.users.userUUID,
             ),
-        },
+        } : undefined,
         timeTableElementTeachers: element.timeTableTeachers.map(
           (teacher) => teacher.users.userUUID,
         ),
