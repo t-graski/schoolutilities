@@ -1410,6 +1410,17 @@ export class TimetableService {
           timeTableElementUUID,
         },
         include: {
+          timeTableElementClasses: {
+            include: {
+              schoolClasses: true,
+            }
+          },
+          timeTableTeachers: {
+            include: {
+              users: true,
+            },
+          },
+          schoolRoom: true,
           schoolSubjects: true,
           timeTableSubstitution: {
             include: {
@@ -1429,20 +1440,38 @@ export class TimetableService {
         }
 
       });
-
-      return {
-        status: 200,
-        data: {
-          ...timeTableElement.timeTableSubstitution,
-          timeTableSubstitutionClasses: timeTableElement.timeTableSubstitution.timeTableSubstitutionClasses.map((schoolClass) => schoolClass.classes.schoolClassUUID),
-          timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution.timeTableSubstitutionTeachers.map((teacher) => teacher.users.userUUID),
-          timeTableSubstitutionRoomUUID: timeTableElement.timeTableSubstitution.schoolRooms.schoolRoomUUID,
-          schoolSubject: {
-            schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
-            schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
-            schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
-          },
-          timeTableElementUUID: timeTableElement.timeTableElementUUID,
+      if (timeTableElement.timeTableSubstitution) {
+        return {
+          status: 200,
+          data: {
+            ...timeTableElement.timeTableSubstitution,
+            timeTableSubstitutionClasses: timeTableElement.timeTableSubstitution.timeTableSubstitutionClasses.map((schoolClass) => schoolClass.classes.schoolClassUUID),
+            timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution.timeTableSubstitutionTeachers.map((teacher) => teacher.users.userUUID),
+            timeTableSubstitutionRoomUUID: timeTableElement.timeTableSubstitution.schoolRooms.schoolRoomUUID,
+            schoolSubject: {
+              schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
+              schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
+              schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
+            },
+            timeTableElementUUID: timeTableElement.timeTableElementUUID,
+          }
+        }
+      } else {
+        return {
+          status: 200,
+          data: {
+            ...timeTableElement.timeTableSubstitution,
+            timeTableSubstitutionUUID: "",
+            timeTableSubstitutionClasses: timeTableElement.timeTableElementClasses.map((schoolClass) => schoolClass.schoolClasses.schoolClassUUID),
+            timeTableSubstitutionTeachers: timeTableElement.timeTableTeachers.map((teacher) => teacher.users.userUUID),
+            timeTableSubstitutionRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
+            schoolSubject: {
+              schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
+              schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
+              schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
+            },
+            timeTableElementUUID: timeTableElement.timeTableElementUUID,
+          }
         }
       }
     } catch {
