@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, U
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AddTimeTableElementDto, TimeTableElement, UpdateTimeTableElementDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { AddHolidayDTO, Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { ExamInterceptor } from 'src/notification/exam.interceptor';
@@ -27,7 +26,7 @@ export class TimetableController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/element')
-  async addTimeTableElement(@Body() timeTableElement: AddTimeTableElementDto, @Req() request, @Res() response) {
+  async addTimeTableElement(@Body() timeTableElement, @Req() request, @Res() response) {
     const result = await this.timetableService.addTimeTableElement(timeTableElement, request);
     return response
       .status(result.status)
@@ -36,7 +35,7 @@ export class TimetableController {
 
   @UseGuards(JwtAuthGuard)
   @Put('/element')
-  async updateTimeTableElement(@Body() timeTableElement: UpdateTimeTableElementDto, @Req() request: Request, @Res() response) {
+  async updateTimeTableElement(@Body() timeTableElement, @Req() request: Request, @Res() response) {
     const result = await this.timetableService.updateTimeTableElement(timeTableElement, request);
     return response
       .status(result.status)

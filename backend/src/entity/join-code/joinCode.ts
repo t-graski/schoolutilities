@@ -23,7 +23,7 @@ export class AddJoinCodeDTO {
 }
 
 export class UpdateJoinCodeDTO {
-    joinCode: string;
+    schoolJoinCode: string;
     joinCodeName?: string;
     joinCodeExpireTimestamp?: Date;
 }

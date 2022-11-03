@@ -1,14 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { rules } from '@typescript-eslint/eslint-plugin';
-import { triggerAsyncId } from 'async_hooks';
-import { RuleTester } from 'eslint';
 import { Request } from 'express';
-import {
-  AddTimeTableDto,
-  AddTimeTableElementDto,
-  UpdateTimeTableElementDto,
-} from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
 import { HelperService } from 'src/helper/helper.service';
@@ -24,7 +16,7 @@ export class TimetableService {
   constructor(private readonly helper: HelperService) { }
 
   async createTimetable(
-    payload: AddTimeTableDto,
+    payload,
     request,
   ): Promise<ReturnMessage> {
     const token = await this.helper.extractJWTToken(request);
@@ -87,7 +79,7 @@ export class TimetableService {
   }
 
   async addTimeTableElement(
-    payload: AddTimeTableElementDto,
+    payload,
     request: Request,
   ): Promise<ReturnMessage> {
     const {
@@ -168,7 +160,7 @@ export class TimetableService {
   }
 
   async updateTimeTableElement(
-    payload: UpdateTimeTableElementDto,
+    payload,
     request: Request,
   ): Promise<ReturnMessage> {
     const {
