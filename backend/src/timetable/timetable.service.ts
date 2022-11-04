@@ -1346,7 +1346,7 @@ export class TimetableService {
 
             const timeTableElement = await prisma.timeTableSubstitutions.create({
                 data: {
-                    timeTableSubstitutionUUID: deleted.timeTableSubstitutionUUID ? deleted.timeTableSubstitutionUUID : `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
+                    timeTableSubstitutionUUID: deleted && deleted.timeTableSubstitutionUUID ? deleted.timeTableSubstitutionUUID : `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
                     timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
                     schoolRooms: {
                         connect: {
