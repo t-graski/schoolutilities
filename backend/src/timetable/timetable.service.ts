@@ -1520,6 +1520,7 @@ export class TimetableService {
                     timeTableElementUUID,
                 },
                 include: {
+                    schoolSubjects: true,
                     timeTableElementClasses: {
                         include: {
                             schoolClasses: true,
@@ -1565,7 +1566,7 @@ export class TimetableService {
                         timeTableSubstitutionUUID: timeTableElement.timeTableSubstitution[0].timeTableSubstitutionUUID,
                         timeTableSubstitutionClasses: timeTableElement.timeTableSubstitution[0].timeTableSubstitutionClasses.map((timeTableSubstitutionClass) => timeTableSubstitutionClass.classes.schoolClassUUID),
                         timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution[0].timeTableSubstitutionTeachers.map((timeTableSubstitutionTeacher) => timeTableSubstitutionTeacher.users.userUUID),
-                        timeTableSubstitutionRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
+                        timeTableSubstitutionRoomUUID: timeTableElement.timeTableSubstitution[0].schoolRooms.schoolRoomUUID,
                         schoolSubject: {
                             schoolSubjectUUID: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
                             schoolSubjectName: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
@@ -1584,9 +1585,9 @@ export class TimetableService {
                         timeTableSubstitutionTeachers: timeTableElement.timeTableTeachers.map((teacher) => teacher.users.userUUID),
                         timeTableSubstitutionRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
                         schoolSubject: {
-                            schoolSubjectUUID: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
-                            schoolSubjectName: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
-                            schoolSubjectAbbreviation: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectAbbreviation,
+                            schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
+                            schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
+                            schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
                         },
                         timeTableElementUUID: timeTableElement.timeTableElementUUID,
                     }
