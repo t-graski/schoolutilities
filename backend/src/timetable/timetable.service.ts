@@ -1332,11 +1332,15 @@ export class TimetableService {
             timeTableSubstitutionClasses,
         } = substitutions;
 
-        const deleted = await prisma.timeTableSubstitutions.delete({
-            where: {
-                timeTableSubstitutionUUID
-            },
-        });
+        let deleted;
+
+        if (timeTableSubstitutionUUID) {
+            deleted = await prisma.timeTableSubstitutions.delete({
+                where: {
+                    timeTableSubstitutionUUID
+                },
+            });
+        }
 
         try {
 
