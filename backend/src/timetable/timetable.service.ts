@@ -1371,7 +1371,7 @@ export class TimetableService {
                     timeTableSubstitutionClasses: {
                         create: timeTableSubstitutionClasses.map((timeTableSubstitutionClass) => {
                             return {
-                                schoolClasses: {
+                                classes: {
                                     connect: {
                                         schoolClassUUID: timeTableSubstitutionClass,
                                     }
