@@ -10,6 +10,7 @@ import {
     UpdateTimeTableElementDto,
 } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { SchoolRoom } from 'src/entity/school-room/schoolRoom';
 import { HelperService } from 'src/helper/helper.service';
 import { ID_STARTERS, RETURN_DATA } from 'src/misc/parameterConstants';
 import { ReturnMessage } from 'src/types/Course';
@@ -1601,7 +1602,7 @@ export class TimetableService {
             timeTableElementUUID,
             timeTableExamDate,
             timeTableExamDescription,
-            timeTableExamRoomUUID,
+            timeTableExamRoom,
         } = payload;
 
         try {
@@ -1610,7 +1611,7 @@ export class TimetableService {
                     timeTableExamUUID: `${ID_STARTERS.EXAM}${uuidv4()}`,
                     schoolRooms: {
                         connect: {
-                            schoolRoomUUID: timeTableExamRoomUUID,
+                            schoolRoomUUID: timeTableExamRoom.schoolRoomUUID,
                         },
                     },
                     timeTableExamDescription,
@@ -1633,7 +1634,7 @@ export class TimetableService {
             timeTableExamUUID,
             timeTableExamDate,
             timeTableExamDescription,
-            timeTableExamRoomUUID,
+            timeTableExamRoom,
         } = payload;
 
         try {
@@ -1646,7 +1647,7 @@ export class TimetableService {
                     timeTableExamDate,
                     schoolRooms: {
                         connect: {
-                            schoolRoomUUID: timeTableExamRoomUUID,
+                            schoolRoomUUID: timeTableExamRoom.schoolRoomUUID,
                         },
                     },
                 },
@@ -1705,7 +1706,7 @@ export class TimetableService {
                 (exam) =>
                     new Exam({
                         ...exam,
-                        timeTableExamRoomUUID: exam.schoolRooms.schoolRoomUUID,
+                        timeTableExamRoom: new SchoolRoom(exam.schoolRooms),
                     }),
             );
         } catch {
