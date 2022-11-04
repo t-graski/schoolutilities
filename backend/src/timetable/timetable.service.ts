@@ -1531,7 +1531,6 @@ export class TimetableService {
                         },
                     },
                     schoolRoom: true,
-                    schoolSubjects: true,
                     timeTableSubstitution: {
                         where: {
                             timeTableSubstitutionDate: {
@@ -1541,6 +1540,7 @@ export class TimetableService {
                             }
                         },
                         include: {
+                            schoolSubjects: true,
                             schoolRooms: true,
                             timeTableSubstitutionTeachers: {
                                 include: {
@@ -1567,9 +1567,9 @@ export class TimetableService {
                         timeTableSubstitutionTeachers: timeTableElement.timeTableSubstitution[0].timeTableSubstitutionTeachers.map((timeTableSubstitutionTeacher) => timeTableSubstitutionTeacher.users.userUUID),
                         timeTableSubstitutionRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
                         schoolSubject: {
-                            schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
-                            schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
-                            schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
+                            schoolSubjectUUID: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
+                            schoolSubjectName: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
+                            schoolSubjectAbbreviation: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectAbbreviation,
                         },
                         timeTableElementUUID: timeTableElement.timeTableElementUUID,
                     }
@@ -1584,9 +1584,9 @@ export class TimetableService {
                         timeTableSubstitutionTeachers: timeTableElement.timeTableTeachers.map((teacher) => teacher.users.userUUID),
                         timeTableSubstitutionRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
                         schoolSubject: {
-                            schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
-                            schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
-                            schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
+                            schoolSubjectUUID: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
+                            schoolSubjectName: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
+                            schoolSubjectAbbreviation: timeTableElement.timeTableSubstitution[0].schoolSubjects.schoolSubjectAbbreviation,
                         },
                         timeTableElementUUID: timeTableElement.timeTableElementUUID,
                     }
