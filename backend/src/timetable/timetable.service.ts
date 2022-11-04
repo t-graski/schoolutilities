@@ -1586,7 +1586,7 @@ export class TimetableService {
                     status: 200,
                     data: {
                         ...timeTableElement.timeTableSubstitution[0],
-                        timeTableElementRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
+                        timeTableSubstitutionRoomUUID : timeTableElement.schoolRoom.schoolRoomUUID,
                         schoolSubject: {
                             schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
                             schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
