@@ -558,8 +558,6 @@ export class TimetableService {
                             element.timeTableSubstitution[0].timeTableSubstitutionDate.getDay()
                             ];
                         if (element.timeTableElementDay === day) {
-                            console.log(element);
-
                             return {
                                 timeTableSubstitutionUUID: element.timeTableSubstitution[0].timeTableSubstitutionUUID,
                                 timeTableSubstitutionRoomUUID: element.timeTableSubstitution[0].schoolRooms.schoolRoomUUID,
@@ -1341,8 +1339,6 @@ export class TimetableService {
                 },
             });
 
-            console.log(timeTableElement);
-
             const substitution = await prisma.timeTableSubstitutions.upsert({
                 where: {
                     timeTableSubstitutionElementId: timeTableElement.timeTableElementId,
@@ -1590,6 +1586,7 @@ export class TimetableService {
                     status: 200,
                     data: {
                         ...timeTableElement.timeTableSubstitution[0],
+                        timeTableElementRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
                         schoolSubject: {
                             schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
                             schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
