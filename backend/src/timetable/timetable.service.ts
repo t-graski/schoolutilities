@@ -1416,21 +1416,19 @@ export class TimetableService {
     }
 
     async deleteSubstitution(
-        timeTableElementUUID: string,
+        timeTableSubstitutionUUID: string,
         request,
     ): Promise<ReturnMessage> {
         try {
-            const substitution = await prisma.timeTableElement.findUnique({
+            const substitution = await prisma.timeTableSubstitutions.delete({
                 where: {
-                    timeTableElementUUID
-                }, include: {
-                    timeTableSubstitution: true
-                }
-            })
+                    timeTableSubstitutionUUID,
+                },
+            });
 
             return {
                 status: 200,
-                data: substitution.timeTableSubstitution,
+                data: substitution,
             };
         } catch {
             return RETURN_DATA.DATABASE_ERROR;
