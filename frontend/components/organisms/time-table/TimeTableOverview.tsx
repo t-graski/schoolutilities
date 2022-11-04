@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TimeTableColumn } from "../../molecules/TimeTableColumn";
 import { styled } from "../../../stitches.config";
 import { TimeTableTime } from "../../molecules/TimeTableTime";
@@ -44,9 +44,17 @@ export const TimeTableOverview: React.FC<Props> = ({
     () => getTimeTableForClass(schoolClassUUID + "/" + startDate)
   );
 
-  let { startTime, endTime } = getStartEndTime(
-    weekTimeTable ?? DEFAULT_TIMETABLE
-  );
+  const [startTime, setStartTime] = useState("12:00");
+  const [endTime, setEndTime] = useState("13:00");
+
+  useEffect(() => {
+    const { startTime, endTime } = getStartEndTime(
+      weekTimeTable ?? DEFAULT_TIMETABLE
+    );
+
+    setStartTime(startTime);
+    setEndTime(endTime);
+  }, [weekTimeTable]);
 
   const timeTableRows = calculate5MinuteRows(startTime, endTime);
 
@@ -217,6 +225,8 @@ function getStartEndTime(timeTable) {
       timeTable.flatMap((dayTimeTable) =>
         dayTimeTable.timeTableElements.map((timeTableElement) => {
           const date = new Date(timeTableElement.timeTableElementEndTime);
+
+          console.log(date);
 
           date.setFullYear(new Date().getFullYear());
           date.setMonth(new Date().getMonth());
