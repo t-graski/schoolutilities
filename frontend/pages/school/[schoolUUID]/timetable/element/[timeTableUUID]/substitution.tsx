@@ -11,6 +11,7 @@ import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import {
   deleteTimeTableElement,
+  deleteTimeTableItemSubstitution,
   editTimeTableItemSubstitution,
   getTimeTableElement,
   getTimeTableItemSubstitution,
@@ -93,10 +94,6 @@ export default function EditTimeTableElement() {
               const response = await editTimeTableItemSubstitution({
                 ...itemConfig,
                 timeTableSubstitutionDate: router.query.date as string,
-                timeTableSubstitutionClasses:
-                  itemConfig.timeTableSubstitutionClasses.map(
-                    (item: any) => item.classes.schoolClassUUID
-                  ),
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
@@ -112,23 +109,27 @@ export default function EditTimeTableElement() {
           Change element substitution
         </Button>
         <Spacer size="4x"></Spacer>
-        <Button
-          buttonType="outlined"
-          onClick={async () => {
-            try {
-              const response = await deleteTimeTableElement(timeTableUUID);
-              router.push(
-                `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
-                  itemConfig.timeTableSubstitutionClasses[0]
-                }`
-              );
-            } catch (e) {
-              alert("Something went wrong");
-            }
-          }}
-        >
-          Remove subsitution
-        </Button>
+        {itemConfig && substitution && (
+          <Button
+            buttonType="outlined"
+            onClick={async () => {
+              try {
+                const response = await deleteTimeTableItemSubstitution(
+                  substitution.timeTableSubstitutionUUID
+                );
+                router.push(
+                  `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+                    itemConfig.timeTableSubstitutionClasses[0]
+                  }`
+                );
+              } catch (e) {
+                alert("Something went wrong");
+              }
+            }}
+          >
+            Remove subsitution
+          </Button>
+        )}
       </ContentLayout>
       <Footer></Footer>
     </>

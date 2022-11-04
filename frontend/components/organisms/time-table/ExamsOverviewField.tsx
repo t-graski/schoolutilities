@@ -1,12 +1,14 @@
 import { styled } from "@stitches/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchSchoolRooms } from "../../../utils/requests/admin";
 import {
+  addExam,
   deleteExam,
   editExam,
   getExams,
+  getTimeTableElement,
 } from "../../../utils/requests/timeTable";
 import { InputField } from "../../atoms/input/InputField";
 import { Select } from "../../atoms/input/Select";
@@ -29,6 +31,21 @@ const EditElementInputs: React.FC<{
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
+  useEffect(() => {
+    if (
+      router.query.element &&
+      router.query.date &&
+      itemConfig.timeTableElementUUID != (router.query.element as string) &&
+      itemConfig.timeTableExamDate != (router.query.date as string)
+    ) {
+      setItemConfig({
+        ...itemConfig,
+        timeTableElementUUID: router.query.element as string,
+        timeTableExamDate: router.query.date as string,
+      });
+    }
+  }, [itemConfig, router.query.date, router.query.element, setItemConfig]);
+
   const { data: rooms, status } = useQuery(
     ["rooms", schoolUUID],
     () => fetchSchoolRooms(schoolUUID),
@@ -36,11 +53,28 @@ const EditElementInputs: React.FC<{
       enabled: !!schoolUUID,
     }
   );
-
-  console.log(itemConfig);
+  const { data: timeTableElement, status: timeTableElementStatus } = useQuery(
+    ["timeTableElement", itemConfig.timeTableElementUUID],
+    () => getTimeTableElement(itemConfig.timeTableElementUUID),
+    {
+      enabled: !!schoolUUID && !!itemConfig.timeTableElementUUID,
+    }
+  );
 
   return (
     <StyledInputField>
+      {timeTableElementStatus === "success" && (
+        <>
+          {timeTableElement?.schoolSubject.schoolSubjectName}:{" "}
+          {new Date(
+            timeTableElement.timeTableElementStartTime
+          ).toLocaleString()}
+          {" - "}
+          {new Date(timeTableElement.timeTableElementEndTime).toLocaleString()}
+          <br />
+          <br />
+        </>
+      )}
       <InputField
         label="Exam description"
         inputType="text"
@@ -60,7 +94,10 @@ const EditElementInputs: React.FC<{
         onChange={(value) => {
           setItemConfig({
             ...itemConfig,
-            timeTableExamRoomUUID: value ?? "",
+            timeTableExamRoom: {
+              ...itemConfig.timeTableExamRoom,
+              schoolRoomUUID: value ?? "",
+            },
           });
         }}
         label="Room"
@@ -74,7 +111,7 @@ const EditElementInputs: React.FC<{
               })
             : []
         }
-        selectValue={itemConfig.timeTableExamRoomUUID}
+        selectValue={itemConfig.timeTableExamRoom.schoolRoomUUID}
         theme="surface"
       ></Select>
     </StyledInputField>
@@ -82,8 +119,6 @@ const EditElementInputs: React.FC<{
 };
 
 export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
-  const router = useRouter();
-
   return (
     <>
       <AdminSettingsField
@@ -103,6 +138,7 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
         }}
         uuidKey={"timeTableExamUUID"}
         nameKey={"timeTableExamDescription"}
+        addElement={addExam}
         editElement={editExam}
         deleteElement={deleteExam}
         getAllElements={getExams}
@@ -111,10 +147,9 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
         }}
         EditElementInputs={EditElementInputs}
         defaultItemConfig={{
-          schoolRoomName: "",
-          schoolRoomAbbreviation: "",
-          schoolRoomBuilding: "",
-          schoolUUID: router.query.schoolUUID,
+          timeTableElementUUID: "",
+          timeTableExamDate: "",
+          timeTableExamRoom: "",
         }}
         columns={[
           {
@@ -128,7 +163,7 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
           },
           {
             title: "Room",
-            key: "schoolRooms",
+            key: "timeTableExamRoom",
             sortFunction: (a: any, b: any) => {
               return a.schoolRooms.schoolRoomName.localeCompare(
                 b.schoolRooms.schoolRoomName

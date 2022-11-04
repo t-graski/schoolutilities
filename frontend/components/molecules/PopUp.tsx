@@ -95,6 +95,7 @@ export const PopUp: React.FC<Props> = ({
   children,
 }) => {
   const [localOpen, setOpen] = React.useState(defaultOpen);
+  console.log(open);
   return (
     <>
       <Dialog
