@@ -40,6 +40,10 @@ const HeaderLayout = styled("div", {
   },
 });
 
+const LineThrough = styled("span", {
+  textDecoration: "line-through",
+});
+
 export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
@@ -49,7 +53,7 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
   return (
     <>
       <TimeTableItemLayout>
-        <HeaderLayout omitted={!!item?.omitted}>
+        <HeaderLayout omitted={!!item?.omitted || !!item?.substitution}>
           {item?.schoolSubject.schoolSubjectName}
           {" - "} {item.schoolSubject.schoolSubjectAbbreviation}{" "}
           <StyledButton
@@ -73,6 +77,12 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
           <span>
             Omitted reason:{" "}
             {item?.omitted.timeTableElementOmittedReason}
+          </span>
+        )}
+        {item?.substitution && (
+          <span>
+            Substitution changes:{" "}<br />
+            <LineThrough>{item?.schoolSubject.schoolSubjectName}</LineThrough> - {item?.substitution.schoolSubject.schoolSubjectName}
           </span>
         )}
         <br />

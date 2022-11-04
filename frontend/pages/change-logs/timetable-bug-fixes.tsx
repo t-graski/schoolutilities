@@ -35,7 +35,7 @@ export default function Article() {
                     <p>
                         Hey,
                         <br />
-                        It's been some time, but we are finally back with one big new feature and dozens of bug fixes.
+                        It&apos;s been some time, but we are finally back with one big new feature and dozens of bug fixes.
                         We are eager to release our new timetable feature, which allows you to create your own timetable and custmize it to your needs.
                     </p>
                     <br />
@@ -45,10 +45,10 @@ export default function Article() {
                         alignment="left"
                     />
                     <p>
-                        Let's start with the big one: Timetable.
+                        Let&apos;s start with the big one: Timetable.
                         <br />
                         We have already implemented a lot of features into it, but we are planning to add and improve those features even more in the future.
-                        By clicking on the little "+" on top of the page you can access the timetable creation page. Of course, you can also add mutliple classes
+                        By clicking on the little &quot;+&quot; on top of the page you can access the timetable creation page. Of course, you can also add mutliple classes
                         simultaneously, which is very useful for bigger schools.
                         You can customize many things for each element such as:
                         <ArticleList>
@@ -71,7 +71,7 @@ export default function Article() {
                             fontSize="verySmall"
                             alignment="left"
                         />
-                        You can view all exams by navigating to the left handside of the page and clicking on "exams". You can either change the description
+                        You can view all exams by navigating to the left handside of the page and clicking on &quot;exams&quot;. You can either change the description
                         or the room of the exam. It is also possible to delete an exam.
                         <br />
                         <br />
@@ -88,7 +88,7 @@ export default function Article() {
                             fontSize="verySmall"
                             alignment="left"
                         />
-                        Substitutions can be added by clicking on any element followed by clicking on "Add substitution". You can customize teachers, classes and the room.
+                        Substitutions can be added by clicking on any element followed by clicking on &quot;Add substitution&quot;. You can customize teachers, classes and the room.
                         <br />
                         <br />
                         <Headline
@@ -96,7 +96,7 @@ export default function Article() {
                             fontSize="verySmall"
                             alignment="left"
                         />
-                        A class can be cancelled by clicking on any element followed by clicking on "Cancel class".
+                        A class can be cancelled by clicking on any element followed by clicking on &quot;Cancel class&quot;.
                         <br />
                         <br />
                         All of the above events are highlighted within the timetable.
@@ -147,7 +147,7 @@ export default function Article() {
                     <br />
                     <p>
                         It is now possible to change password and email in the security tab. <br />
-                        Every feature marked as "coming soon" are currenly being planned, but unfortunately not yet ready to be released.
+                        Every feature marked as &quot;coming soon&quot; are currenly being planned, but unfortunately not yet ready to be released.
                     </p>
                     <br />
                     <Headline
@@ -167,7 +167,7 @@ export default function Article() {
                     />
                     <p>
                         Now to the more inconvenient part, ads. Yes, we also have to pay our bills. Thanks to ads we will provide you
-                        with even more features in the future. And you don't have to worry, we only put ads on the bottom of every non login page.
+                        with even more features in the future. And you don&apos;t have to worry, we only put ads on the bottom of every non login page.
                     </p>
                     <br />
                     <Headline

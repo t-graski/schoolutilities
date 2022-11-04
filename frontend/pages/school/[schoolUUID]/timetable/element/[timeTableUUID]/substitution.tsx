@@ -27,6 +27,7 @@ export default function EditTimeTableElement() {
 
   const timeTableUUID = router.query.timeTableUUID as string;
   const schoolUUID = router.query.schoolUUID as string;
+  const date = router.query.date as string;
   const [itemConfig, setItemConfig] = useState<any>(null);
 
   const { data: timeTableElement, status } = useQuery(
@@ -35,8 +36,11 @@ export default function EditTimeTableElement() {
   );
 
   const { data: substitution, status: substitutionStatus } = useQuery(
-    ["substitution", timeTableUUID],
-    () => getTimeTableItemSubstitution(timeTableUUID)
+    ["substitution", timeTableUUID, date],
+    () => getTimeTableItemSubstitution(timeTableUUID, date),
+    {
+      enabled: !!timeTableUUID && !!date,
+    }
   );
 
   useEffect(() => {

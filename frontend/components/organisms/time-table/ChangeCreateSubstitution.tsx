@@ -98,7 +98,10 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
           setSelectedSubject={(subject) => {
             setItemConfig({
               ...itemConfig,
-              schoolSubjectUUID: subject,
+              schoolSubject: {
+                ...itemConfig.schoolSubject,
+                schoolSubjectUUID: subject,
+              },
             });
           }}
         ></SubjectSelectionField>

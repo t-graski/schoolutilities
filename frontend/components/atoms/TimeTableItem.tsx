@@ -49,7 +49,7 @@ export type TimeTableItemType = {
       userEmail: string;
     }[];
     timeTableSubstitutionRoomUUID: string;
-    timeTableSubstitutionSubject: {
+    schoolSubject: {
       schoolSubjectUUID: string;
       schoolSubjectName: string;
       schoolSubjectAbbreviation: string;
@@ -185,8 +185,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           }
         >
           <TimeTableSubjectName>
-            {item.substitution?.timeTableSubstitutionSubject
-              ?.schoolSubjectAbbreviation ??
+            {item.substitution?.schoolSubject?.schoolSubjectAbbreviation ??
               item.schoolSubject.schoolSubjectAbbreviation}
           </TimeTableSubjectName>
           <TimeTableTime>

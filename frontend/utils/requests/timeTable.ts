@@ -58,6 +58,6 @@ export async function editTimeTableItemSubstitution(timeTableElement){
   return fetchData("timetable/substitution/", "POST", 200, timeTableElement);
 }
 
-export async function getTimeTableItemSubstitution(timeTableElementUUID: string){
-  return fetchData("timetable/substitution/" + timeTableElementUUID, "GET", 200);
+export async function getTimeTableItemSubstitution(timeTableElementUUID: string, startDate: string){
+  return fetchData("timetable/substitution/" + timeTableElementUUID + "/" + startDate, "GET", 200);
 }
