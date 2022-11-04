@@ -33,6 +33,8 @@ type Props = {
   editElement?: Function;
   deleteElement?: any;
   getAllElements: Function;
+  editPopUpOpen?: boolean;
+  deletePopUpOpen?: boolean;
   getElementLink?: (schoolUUID: string, elementUUID: string) => string;
   isItemValid: (item: any) => boolean;
   EditElementInputs: React.FC<{
@@ -82,12 +84,18 @@ export const AdminSettingsField: React.FC<Props> = ({
   editElement,
   deleteElement,
   getAllElements,
+  editPopUpOpen,
+  deletePopUpOpen,
   isItemValid,
   EditElementInputs,
   defaultItemConfig,
 }) => {
-  const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
-  const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
+  const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(
+    editPopUpOpen ?? false
+  );
+  const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(
+    deletePopUpOpen ?? false
+  );
   const [itemConfig, setItemConfig] = React.useState(null);
   const [itemId, setItemId] = React.useState(null);
   const router = useRouter();
@@ -112,10 +120,11 @@ export const AdminSettingsField: React.FC<Props> = ({
         [uuidKey]: "newEntry",
       };
 
-      queryClient.setQueryData([reactQueryKey, schoolUUID], (old: any) => [
-        ...old,
-        entry,
-      ]);
+      console.log(entry);
+
+      queryClient.setQueryData([reactQueryKey, schoolUUID], (old: any) => {
+        return [...old, entry];
+      });
 
       return { entry };
     },
@@ -207,7 +216,10 @@ export const AdminSettingsField: React.FC<Props> = ({
           headline={itemId == "" ? texts.addHeadline : texts.editHeadline}
           inputValid={isItemValid(itemConfig)}
           saveLabel={itemId == "" ? "Add" : "Save"}
-          saveFunction={savePopUpInput}
+          saveFunction={() => {
+            console.log(itemConfig);
+            savePopUpInput();
+          }}
           closeFunction={() => {
             setEditPopUpIsVisible(false);
             setItemConfig(null);

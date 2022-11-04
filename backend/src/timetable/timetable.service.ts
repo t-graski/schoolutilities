@@ -1615,7 +1615,7 @@ export class TimetableService {
                         },
                     },
                     timeTableExamDescription,
-                    timeTableExamDate,
+                    timeTableExamDate: new Date(timeTableExamDate),
                     timeTableElements: {
                         connect: {
                             timeTableElementUUID,
@@ -1624,7 +1624,8 @@ export class TimetableService {
                 },
             });
             return new Exam(exam);
-        } catch {
+        } catch (err){
+            console.log(err);
             throw new InternalServerErrorException('Database error');
         }
     }
@@ -1644,7 +1645,7 @@ export class TimetableService {
                 },
                 data: {
                     timeTableExamDescription,
-                    timeTableExamDate,
+                    timeTableExamDate: new Date(timeTableExamDate),
                     schoolRooms: {
                         connect: {
                             schoolRoomUUID: timeTableExamRoom.schoolRoomUUID,
@@ -1653,7 +1654,7 @@ export class TimetableService {
                 },
             });
             return new Exam(exam);
-        } catch {
+        } catch (err){
             throw new InternalServerErrorException('Database error');
         }
     }
