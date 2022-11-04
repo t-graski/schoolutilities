@@ -410,20 +410,13 @@ export class TimetableService {
                         new Date(dateString).setHours(
                             element.timeTableElementStartTime.getHours(),
                             element.timeTableElementStartTime.getMinutes(),
-                            0,
-                            0,
-                        ) +
-                        86400000 * weekday.indexOf(element.timeTableElementDay),
+                            0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay),
                     ).toISOString(),
                     timeTableElementEndTime: new Date(
                         new Date(dateString).setHours(
                             element.timeTableElementEndTime.getHours(),
                             element.timeTableElementEndTime.getMinutes(),
-                            0,
-                            0,
-                        ) +
-                        86400000 * weekday.indexOf(element.timeTableElementDay),
-                    ).toISOString(),
+                            0, 0) + 86400000 * weekday.indexOf(element.timeTableElementDay)).toISOString(),
                     timeTableElementDay: element.timeTableElementDay,
                     timeTableElementRoom: {
                         schoolRoomUUID: element.schoolRoom.schoolRoomUUID,
@@ -544,12 +537,13 @@ export class TimetableService {
             }
 
             function checkForSubstitution(element, monday) {
-                if (element.timeTableSubstitution) {
+                if (element.timeTableSubstitution.length > 0) {
                     if (
-                        element.timeTableSubstitution.timeTableSubstitutionDate >= monday &&
-                        element.timeTableSubstitution.timeTableSubstitutionDate <=
-                        new Date(monday.setDate(monday.getDate() + 5))
+                        element.timeTableSubstitution[0].timeTableSubstitutionDate >= monday &&
+                        element.timeTableSubstitution[0].timeTableSubstitutionDate <=
+                        new Date(monday.getTime() + 86400000 * 4)
                     ) {
+
                         const weekday = [
                             'Sunday',
                             'Monday',
@@ -561,20 +555,22 @@ export class TimetableService {
                         ];
                         let day =
                             weekday[
-                            element.timeTableSubstitution.timeTableSubstitutionDate.getDay()
+                            element.timeTableSubstitution[0].timeTableSubstitutionDate.getDay()
                             ];
                         if (element.timeTableElementDay === day) {
+                            console.log(element);
+
                             return {
-                                timeTableSubstitutionUUID: element.timeTableSubstitution.timeTableSubstitutionUUID,
-                                timeTableSubstitutionRoomUUID: element.timeTableSubstitution.schoolRooms.schoolRoomUUID,
-                                timeTableSubstitutiontartTime: element.timeTableSubstitution.timeTableSubstitutionstartTime,
-                                timeTableSubstitutionEndTime: element.timeTableSubstitution.timeTableSubstitutionEndTime,
+                                timeTableSubstitutionUUID: element.timeTableSubstitution[0].timeTableSubstitutionUUID,
+                                timeTableSubstitutionRoomUUID: element.timeTableSubstitution[0].schoolRooms.schoolRoomUUID,
+                                timeTableSubstitutiontartTime: element.timeTableSubstitution[0].timeTableSubstitutionstartTime,
+                                timeTableSubstitutionEndTime: element.timeTableSubstitution[0].timeTableSubstitutionEndTime,
                                 timeTableSubstitutionSubject: {
-                                    schoolSubjectName: element.timeTableSubstitution.schoolSubjects.schoolSubjectName,
-                                    schoolSubjectUUID: element.timeTableSubstitution.schoolSubjects.schoolSubjectUUID,
-                                    schoolSubjectAbbreviation: element.timeTableSubstitution.schoolSubjects.schoolSubjectAbbreviation,
+                                    schoolSubjectName: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
+                                    schoolSubjectUUID: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
+                                    schoolSubjectAbbreviation: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectAbbreviation,
                                 },
-                                timeTableSubstitutionClasses: element.timeTableSubstitution.timeTableSubstitutionClasses.map(
+                                timeTableSubstitutionClasses: element.timeTableSubstitution[0].timeTableSubstitutionClasses.map(
                                     (classes) => {
                                         return {
                                             schoolClassUUID: classes.classes.schoolClassUUID,
@@ -585,7 +581,7 @@ export class TimetableService {
                                     },
                                 ),
                                 timeTableSubstitutionTeachers:
-                                    element.timeTableSubstitution.timeTableSubstitutionTeachers.map(
+                                    element.timeTableSubstitution[0].timeTableSubstitutionTeachers.map(
                                         (teacher) => {
                                             return {
                                                 userUUID: teacher.users.userUUID,
