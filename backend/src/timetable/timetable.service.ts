@@ -1332,104 +1332,76 @@ export class TimetableService {
             timeTableSubstitutionClasses,
         } = substitutions;
 
-        try {
-            const timeTableElement = await prisma.timeTableElement.findUnique({
-                where: {
-                    timeTableElementUUID,
-                },
-            });
+        const deleted = await prisma.timeTableSubstitutions.delete({
+            where: {
+                timeTableSubstitutionUUID
+            },
+        });
 
-            const substitution = await prisma.timeTableSubstitutions.upsert({
-                where: {
-                    timeTableSubstitutionElementId: timeTableElement.timeTableElementId,
-                },
-                update: {
+        try {
+
+            const timeTableElement = await prisma.timeTableSubstitutions.create({
+                data: {
+                    timeTableSubstitutionUUID: deleted.timeTableSubstitutionUUID ? deleted.timeTableSubstitutionUUID : `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
                     timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
-                    timeTableSubstitutionTeachers: {
-                        set: timeTableSubstitutionTeachers,
-                    },
-                    timeTableSubstitutionClasses: {
-                        create: {
-                            classes: {
-                                connect: {
-                                    schoolClassUUID: timeTableSubstitutionClasses[0],
-                                },
-                            },
-                        },
-                    },
                     schoolRooms: {
                         connect: {
                             schoolRoomUUID: timeTableSubstitutionRoomUUID,
-                        },
+                        }
                     },
                     schoolSubjects: {
                         connect: {
                             schoolSubjectUUID: schoolSubject.schoolSubjectUUID,
-                        },
-                    },
-                },
-                create: {
-                    timeTableSubstitutionUUID: `${ID_STARTERS.SUBSTITUTION}${uuidv4()}`,
-                    timeTableSubstitutionDate: new Date(timeTableSubstitutionDate),
-                    schoolSubjects: {
-                        connect: {
-                            schoolSubjectUUID: schoolSubject.schoolSubjectUUID,
-                        },
-                    },
-                    schoolRooms: {
-                        connect: {
-                            schoolRoomUUID: timeTableSubstitutionRoomUUID,
-                        },
-                    },
-                    timeTableElements: {
-                        connect: {
-                            timeTableElementUUID,
-                        },
+                        }
                     },
                     users: {
                         connect: {
                             userUUID,
-                        },
+                        }
+                    },
+                    timeTableElements: {
+                        connect: {
+                            timeTableElementUUID,
+                        }
                     },
                     timeTableSubstitutionClasses: {
-                        create: timeTableSubstitutionClasses.map((schoolClass) => {
+                        create: timeTableSubstitutionClasses.map((timeTableSubstitutionClass) => {
                             return {
-                                classes: {
+                                schoolClasses: {
                                     connect: {
-                                        schoolClassUUID: schoolClass,
-                                    },
-                                },
-                            };
-                        }),
+                                        schoolClassUUID: timeTableSubstitutionClass,
+                                    }
+                                }
+                            }
+                        })
                     },
                     timeTableSubstitutionTeachers: {
-                        create: timeTableSubstitutionTeachers.map((teacher) => {
+                        create: timeTableSubstitutionTeachers.map((timeTableSubstitutionTeacher) => {
                             return {
                                 users: {
                                     connect: {
-                                        userUUID: teacher,
-                                    },
-                                },
-                            };
-                        }),
+                                        userUUID: timeTableSubstitutionTeacher,
+                                    }
+                                }
+                            }
+                        })
                     },
                 },
                 include: {
                     schoolSubjects: true,
                     timeTableElements: true,
-                },
+                }
             });
-
             return {
                 status: RETURN_DATA.SUCCESS.status,
                 data: {
-                    ...substitution,
+                    ...timeTableElement,
                     timeTableElementUUID:
-                        substitution.timeTableElements.timeTableElementUUID,
+                        timeTableElement.timeTableElements.timeTableElementUUID,
                     schoolSubject: {
-                        schoolSubjectUUID: substitution.schoolSubjects.schoolSubjectUUID,
-                        schoolSubjectName: substitution.schoolSubjects.schoolSubjectName,
-                        schoolSubjectAbbreviation: substitution.schoolSubjects.schoolSubjectAbbreviation,
+                        schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
+                        schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
+                        schoolSubjectAbbreviation: timeTableElement.schoolSubjects.schoolSubjectAbbreviation,
                     },
                 },
             };
@@ -1586,7 +1558,7 @@ export class TimetableService {
                     status: 200,
                     data: {
                         ...timeTableElement.timeTableSubstitution[0],
-                        timeTableSubstitutionRoomUUID : timeTableElement.schoolRoom.schoolRoomUUID,
+                        timeTableSubstitutionRoomUUID: timeTableElement.schoolRoom.schoolRoomUUID,
                         schoolSubject: {
                             schoolSubjectUUID: timeTableElement.schoolSubjects.schoolSubjectUUID,
                             schoolSubjectName: timeTableElement.schoolSubjects.schoolSubjectName,
