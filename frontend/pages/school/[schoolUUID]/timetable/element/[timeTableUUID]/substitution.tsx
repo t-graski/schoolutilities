@@ -93,6 +93,10 @@ export default function EditTimeTableElement() {
               const response = await editTimeTableItemSubstitution({
                 ...itemConfig,
                 timeTableSubstitutionDate: router.query.date as string,
+                timeTableSubstitutionClasses:
+                  itemConfig.timeTableSubstitutionClasses.map(
+                    (item: any) => item.classes.schoolClassUUID
+                  ),
               });
               router.push(
                 `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${

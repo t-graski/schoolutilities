@@ -85,6 +85,14 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
                 {timeTableElement.substitution ? "Edit" : "Add"} substitution
               </Button>
             </StyledLink>
+            <StyledLink
+              href={`/school/${schoolUUId}/planner?tab=exams&element=${timeTableElementUUID}&date=${startDate}`}
+              passHref
+            >
+              <Button buttonType="filled">
+                {timeTableElement.substitution ? "Edit" : "Add"} exam
+              </Button>
+            </StyledLink>
             <Button
               buttonType="outlined"
               onClick={() => {
