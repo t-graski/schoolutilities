@@ -160,17 +160,21 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
                 b.timeTableExamDescription
               );
             },
+            link: (item: any) => {
+              console.log(item);
+              return `/school/${item.schoolUUID}/planner/tab?element=${item.timeTableElementUUID}&date=${item.timeTableExamDate}`;
+            }
           },
           {
             title: "Room",
             key: "timeTableExamRoom",
             sortFunction: (a: any, b: any) => {
-              return a.schoolRooms.schoolRoomName.localeCompare(
-                b.schoolRooms.schoolRoomName
+              return a?.schoolRoomName?.localeCompare(
+                b?.schoolRoomName
               );
             },
             toStringFunction: (item: any) => {
-              return item.schoolRoomName;
+              return item?.schoolRoomName;
             },
           },
         ]}
@@ -178,3 +182,38 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
     </>
   );
 };
+
+
+function getParsedMonth(weekStartDay, weekDayName) {
+  let addDays = 0;
+
+  switch (weekDayName) {
+    case "Monday":
+      addDays = 1;
+      break;
+    case "Tuesday":
+      addDays = 2;
+      break;
+    case "Wednesday":
+      addDays = 3;
+      break;
+    case "Thursday":
+      addDays = 4;
+      break;
+    case "Friday":
+      addDays = 5;
+      break;
+    case "Saturday":
+      addDays = 6;
+      break;
+    case "Sunday":
+      addDays = 7;
+      break;
+  }
+
+  return new Date(
+    weekStartDay.getFullYear(),
+    weekStartDay.getMonth(),
+    weekStartDay.getDate() - addDays
+  );
+}

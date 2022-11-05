@@ -31,13 +31,18 @@ const ChangeLogLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   padding: "3vh 3vw",
-  backgroundColor: "$neutral-300",
+  backgroundColor: "$surface2",
   borderRadius: "15px",
   cursor: "pointer",
+  transition: "all 200ms",
+
+  "&:hover": {
+    backgroundColor: "$surface4",
+  },
 });
 
 const StyledLink = styled(Link, {
-  color: "$neutral-500",
+  color: "$onSurface",
   textDecoration: "none",
 });
 

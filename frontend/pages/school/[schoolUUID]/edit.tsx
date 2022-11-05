@@ -119,12 +119,12 @@ export default function CreateSchool() {
               href: `/school/${schoolUUID}/edit?tab=off-days`,
               icon: SvgCalendar,
             },
-            {
-              name: "School Years",
-              value: "school-years",
-              href: `/school/${schoolUUID}/edit?tab=school-years`,
-              icon: SvgSuitcase,
-            },
+            // {
+            //   name: "School Years",
+            //   value: "school-years",
+            //   href: `/school/${schoolUUID}/edit?tab=school-years`,
+            //   icon: SvgSuitcase,
+            // },
           ]}
           active={urlParam}
         ></SideDashboardBar>

@@ -108,13 +108,12 @@ export default function Article() {
                         alignment="left"
                     />
                     <p>
-                        Since last update we have added many new settings into the school management page.
+                        Since last update we have added new settings into the school management page.
                     </p>
                     <ArticleList>
                         <li>Subjects</li>
                         <li>Rooms</li>
                         <li>Holidays</li>
-                        <li>School years</li>
                     </ArticleList>
                     <br />
                     <Headline

@@ -118,6 +118,22 @@ export const RoomsSettingsField: React.FC<Props> = ({ queryClient }) => {
               return a.schoolRoomName.localeCompare(b.schoolRoomName);
             },
           },
+          {
+            title: "Room Abbreviation",
+            key: "schoolRoomAbbreviation",
+            sortFunction: (a: any, b: any) => {
+              return a.schoolRoomAbbreviation.localeCompare(
+                b.schoolRoomAbbreviation
+              );
+            },
+          },
+          {
+            title: "Room Building",
+            key: "schoolRoomBuilding",
+            sortFunction: (a: any, b: any) => {
+              return a.schoolRoomBuilding.localeCompare(b.schoolRoomBuilding);
+            },
+          },
         ]}
       ></AdminSettingsField>
     </>

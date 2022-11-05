@@ -74,7 +74,7 @@ export default function EditTimeTableElement() {
             <BackLink
               href={`/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
                 itemConfig?.timeTableSubstitutionClasses[0]
-              }`}
+              }&detail=${timeTableUUID}`}
               label={"Back to the timetable"}
             ></BackLink>
           )}
@@ -109,7 +109,7 @@ export default function EditTimeTableElement() {
           Change element substitution
         </Button>
         <Spacer size="4x"></Spacer>
-        {itemConfig && substitution && (
+        {itemConfig && substitution.timeTableSubstitutionUUID !== "" && (
           <Button
             buttonType="outlined"
             onClick={async () => {

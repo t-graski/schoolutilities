@@ -145,6 +145,12 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           textDecoration: "none",
         },
       },
+      substituted: {
+        true: {
+          borderColor: "$primaryContainer",
+        },
+        false: {},
+      }
     },
     compoundVariants: [
       {
@@ -166,6 +172,8 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     } / span ${overlapColumns}`,
   });
 
+  console.log(item);
+
   return (
     <>
       {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
@@ -181,6 +189,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
             !!timeTableElementUUID &&
             timeTableElementUUID == item.timeTableElementUUID
           }
+          substituted={!!item.substitution}
         >
           <TimeTableSubjectName>
             {item.substitution?.schoolSubject?.schoolSubjectAbbreviation ??

@@ -283,11 +283,7 @@ const ContentListItem = React.forwardRef<any, any>(function Content(
 ) {
   return (
     <ListItem>
-      <NavigationMenuLink
-        {...props}
-        ref={forwardedRef}
-        passHref
-      >
+      <NavigationMenuLink {...props} ref={forwardedRef} passHref>
         <LinkTitle>{title}</LinkTitle>
         <LinkText>{children}</LinkText>
       </NavigationMenuLink>
@@ -314,7 +310,7 @@ export const NavigationMenuPart = () => {
       <NavigationMenuList>
         <NavigationMenuItem>
           {/*@ts-ignore */}
-          <NavigationMenuTrigger>Dropdown</NavigationMenuTrigger>
+          <NavigationMenuTrigger>School</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
               <ContentListItem
@@ -328,8 +324,12 @@ export const NavigationMenuPart = () => {
                 This is where everything happens.
               </ContentListItem>
               <ContentListItem
-                title="Dashboard"
-                href="/school/select?redirect=/dashboard"
+                title="Planner"
+                href={
+                  schoolUUID
+                    ? `/school/${schoolUUID}/planner?tab=timetable`
+                    : "/school/select?redirect=/planner?tab=timetable"
+                }
               >
                 Maintain a clean and organized environment for managing
                 everything you can imagine.

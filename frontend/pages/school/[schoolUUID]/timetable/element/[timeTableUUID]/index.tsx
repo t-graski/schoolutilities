@@ -19,6 +19,7 @@ import { SetStateAction, useEffect, useState } from "react";
 import { Button } from "@/atoms/Button";
 import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
 import { Spacer } from "@/atoms/Spacer";
+import { BackLink } from "@/molecules/BackLink";
 
 export default function EditTimeTableElement() {
   const router = useRouter();
@@ -37,7 +38,6 @@ export default function EditTimeTableElement() {
 
   useEffect(() => {
     if (timeTableElement) {
-      console.log(timeTableElement);
       setItemConfig({
         ...timeTableElement,
         timeTableElementStartTime: timeTableElement.timeTableElementStartTime,
@@ -53,6 +53,14 @@ export default function EditTimeTableElement() {
       </Head>
       <Navbar></Navbar>
       <ContentLayout>
+        {itemConfig && itemConfig.timeTableElementClasses && (
+          <BackLink
+            href={`/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+              itemConfig?.timeTableElementClasses[0]
+            }&detail=${timeTableUUID}`}
+            label={"Back to the timetable"}
+          ></BackLink>
+        )}
         <Headline label="Edit timetable item"></Headline>
         <Separator width="small" alignment="center" />
         {itemConfig && (
