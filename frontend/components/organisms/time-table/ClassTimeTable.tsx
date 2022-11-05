@@ -1,5 +1,3 @@
-import Head from "next/head";
-import dynamic from "next/dynamic";
 import { TimeTableOverview } from "../../../components/organisms/time-table/TimeTableOverview";
 import { styled } from "@stitches/react";
 import { useEffect, useState } from "react";

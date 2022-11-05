@@ -1,10 +1,6 @@
 import moment from "moment";
-import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import React, { useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
-import { fetchSchoolClasses } from "../../../utils/requests";
-import { SearchSelect } from "../../atoms/input/SearchSelect";
 import SvgRightArrow from "../../atoms/svg/SvgRightArrow";
 
 type Props = {

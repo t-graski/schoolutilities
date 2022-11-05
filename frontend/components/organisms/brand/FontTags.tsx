@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "@stitches/react";
-import { SingleLogo } from "./SingleLogo";
 import type * as Stitches from "@stitches/react";
 
 type Props = {

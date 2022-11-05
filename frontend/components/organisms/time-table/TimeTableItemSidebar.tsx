@@ -9,7 +9,6 @@ import React, { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import {
   deleteOmitTimeTableElement,
-  getTimeTableElement,
   getTimeTableElementDetailed,
   omitTimeTableElement,
 } from "../../../utils/requests/timeTable";

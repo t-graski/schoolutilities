@@ -5,7 +5,6 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { elementsToChoose } from "./CourseComponentDetailViews";
 import { AddIcon } from "../AddIcon";
-import { PopUp } from "../../molecules/PopUp";
 
 type Props = { addNewEntry?: Function };
 

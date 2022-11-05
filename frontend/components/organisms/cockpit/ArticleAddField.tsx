@@ -3,12 +3,9 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { getAccessToken } from "../../../utils/authHelper";
 import { Button } from "../../atoms/Button";
-import { Headline } from "../../atoms/Headline";
 import { InputField } from "../../atoms/input/InputField";
 import { TextField } from "../../atoms/input/TextField";
 import { Separator } from "../../atoms/Separator";
-import { Spacer } from "../../atoms/Spacer";
-import { SideDashboardBar } from "../SideDashboardBar";
 import { MarkdownEditor } from "./MarkdownEditor";
 
 type Props = {};
