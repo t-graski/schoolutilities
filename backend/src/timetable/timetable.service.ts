@@ -1624,7 +1624,7 @@ export class TimetableService {
                 },
             });
             return new Exam(exam);
-        } catch (err){
+        } catch (err) {
             console.log(err);
             throw new InternalServerErrorException('Database error');
         }
@@ -1654,7 +1654,7 @@ export class TimetableService {
                 },
             });
             return new Exam(exam);
-        } catch (err){
+        } catch (err) {
             throw new InternalServerErrorException('Database error');
         }
     }
@@ -1701,12 +1701,23 @@ export class TimetableService {
                 },
                 include: {
                     schoolRooms: true,
+                    timeTableElements: {
+                        include: {
+                            timeTableElementClasses: {
+                                include: {
+                                    schoolClasses: true,
+                                }
+                            }
+                        }
+                    }
                 },
             });
             return exams.map(
                 (exam) =>
                     new Exam({
                         ...exam,
+                        timeTableExamUUID: exam.timeTableElements.timeTableElementUUID,
+                        timeTableExamSchoolClasses: exam.timeTableElements.timeTableElementClasses.map((schoolClass) => schoolClass.schoolClasses.schoolClassUUID),
                         timeTableExamRoom: new SchoolRoom(exam.schoolRooms),
                     }),
             );
