@@ -41,6 +41,8 @@ export class Exam {
 
     timeTableExamSchoolClasses: string[];
 
+    timeTableElementDay: string;
+
     @ApiProperty({
         description: 'The room uuid of the exam',
         type: SchoolRoom,

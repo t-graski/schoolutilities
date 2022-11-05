@@ -1717,6 +1717,7 @@ export class TimetableService {
                     new Exam({
                         ...exam,
                         timeTableExamUUID: exam.timeTableElements.timeTableElementUUID,
+                        timeTableElementDay: exam.timeTableElements.timeTableElementDay,
                         timeTableExamSchoolClasses: exam.timeTableElements.timeTableElementClasses.map((schoolClass) => schoolClass.schoolClasses.schoolClassUUID),
                         timeTableExamRoom: new SchoolRoom(exam.schoolRooms),
                     }),
