@@ -7,7 +7,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "../utils/skeleton.css";
 import "../utils/tapTapEditor.css";
-import { IdProvider } from "@radix-ui/react-id";
 
 const globalStyles = globalCss({
   "*": {
@@ -54,58 +53,56 @@ function App({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
 
   return (
-    <IdProvider>
-      <ProtectedRoute router={router}>
-        <ThemeProvider
-          disableTransitionOnChange
-          attribute="class"
-          value={{ light: lightTheme.className, dark: "dark-theme" }}
-          defaultTheme="system"
+    <ProtectedRoute router={router}>
+      <ThemeProvider
+        disableTransitionOnChange
+        attribute="class"
+        value={{ light: lightTheme.className, dark: "dark-theme" }}
+        defaultTheme="system"
+      >
+        <SkeletonTheme
+          baseColor="var(--colors-surfaceVariant)"
+          highlightColor="var(--colors-outline)"
+          duration={1.3}
         >
-          <SkeletonTheme
-            baseColor="var(--colors-surfaceVariant)"
-            highlightColor="var(--colors-outline)"
-            duration={1.3}
-          >
-            <Script
-              async
-              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-              strategy="lazyOnload"
-              defer
-            ></Script>
-            <Script
-              dangerouslySetInnerHTML={{
-                __html: `
+          <Script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+            strategy="lazyOnload"
+            defer
+          ></Script>
+          <Script
+            dangerouslySetInnerHTML={{
+              __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', 'G-879Y3BTW0K', {
                   page_path: window.location.pathname,
                 });`,
-              }}
-              id="google-analytics-tag"
-              strategy="lazyOnload"
-              defer
-            ></Script>
-            <Script
-              src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
-              strategy="lazyOnload"
-              defer
-            ></Script>
-            <Script
-              async
-              src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
-              strategy="lazyOnload"
-              defer
-            ></Script>
-            <QueryClientProvider client={queryClient}>
-              <Component {...pageProps} router={router} />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
-          </SkeletonTheme>
-        </ThemeProvider>
-      </ProtectedRoute>
-    </IdProvider>
+            }}
+            id="google-analytics-tag"
+            strategy="lazyOnload"
+            defer
+          ></Script>
+          <Script
+            src="https://r1l6px23b4sc.statuspage.io/embed/script.js"
+            strategy="lazyOnload"
+            defer
+          ></Script>
+          <Script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-879Y3BTW0K"
+            strategy="lazyOnload"
+            defer
+          ></Script>
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} router={router} />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </SkeletonTheme>
+      </ThemeProvider>
+    </ProtectedRoute>
   );
 }
 
