@@ -27,10 +27,6 @@ const ContentLayout = styled("div", {
 
 const HeadlineLayout = styled("div", {});
 
-const IconLayout = styled("div", {
-  width: "40px",
-});
-
 const Label = styled("label", {
   fontSize: "20px",
   color: "$neutral-500",

@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect } from "react";
-import { Editor, useEditor } from "@tiptap/react";
+import React from "react";
 import { styled } from "@stitches/react";
 import { MenuItem, WeekdaySelector } from "../atoms/WeekdaySelector";
 

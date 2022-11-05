@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "../../../stitches.config";
 import { useRouter } from "next/router";
 import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";

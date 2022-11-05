@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import { styled } from "../../../stitches.config";
 import { fetchSchoolClasses } from "../../../utils/requests";

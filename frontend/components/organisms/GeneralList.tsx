@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "../../stitches.config";
-import { Separator } from "../atoms/Separator";
 import { GeneralListItem } from "../molecules/GeneralListItem";
 
 type Props = {

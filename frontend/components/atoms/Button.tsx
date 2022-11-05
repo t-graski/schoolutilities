@@ -1,4 +1,4 @@
-import { lightTheme, styled } from "../../stitches.config";
+import { styled } from "../../stitches.config";
 
 export const Button = styled("button", {
   borderRadius: "8px",

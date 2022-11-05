@@ -1,8 +1,6 @@
 import SvgClose from "@/atoms/svg/SvgClose";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import { useQuery } from "react-query";
-import { fetchSchoolSubjects } from "utils/requests/admin";
+import React from "react";
 import { styled } from "../../../stitches.config";
 import SvgEdit from "../../atoms/svg/SvgEdit";
 import { TimeTableItemType } from "../../atoms/TimeTableItem";

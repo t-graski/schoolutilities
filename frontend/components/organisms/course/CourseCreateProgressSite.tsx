@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styled } from "../../../stitches.config";
 import { Button } from "../../atoms/Button";
 import Link from "next/link";

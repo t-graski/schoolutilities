@@ -182,38 +182,3 @@ export const ExamsOverviewField: React.FC<Props> = ({ queryClient }) => {
     </>
   );
 };
-
-
-function getParsedMonth(weekStartDay, weekDayName) {
-  let addDays = 0;
-
-  switch (weekDayName) {
-    case "Monday":
-      addDays = 1;
-      break;
-    case "Tuesday":
-      addDays = 2;
-      break;
-    case "Wednesday":
-      addDays = 3;
-      break;
-    case "Thursday":
-      addDays = 4;
-      break;
-    case "Friday":
-      addDays = 5;
-      break;
-    case "Saturday":
-      addDays = 6;
-      break;
-    case "Sunday":
-      addDays = 7;
-      break;
-  }
-
-  return new Date(
-    weekStartDay.getFullYear(),
-    weekStartDay.getMonth(),
-    weekStartDay.getDate() - addDays
-  );
-}

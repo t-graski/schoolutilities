@@ -6,7 +6,7 @@ import { Separator } from "../../../../components/atoms/Separator";
 import { ContentLayout } from "../../../../utils/styles";
 import dynamic from "next/dynamic";
 import { ChangeCreateItem } from "../../../../components/organisms/time-table/ChangeCreateItem";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/atoms/Button";
 import { addTimeTableElement } from "utils/requests/timeTable";
 import { useRouter } from "next/router";

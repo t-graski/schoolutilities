@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "@stitches/react";
-import { SingleLogo } from "./SingleLogo";
 import { StyledColor } from "./StyledColor";
 
 type Props = {

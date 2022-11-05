@@ -7,14 +7,6 @@ type Props = {
   editor: Editor;
 };
 
-const divider = styled("div", {
-  backgroundColor: "rgba(#000, 0.1)",
-  height: "1.25rem",
-  marginLeft: "0.5rem",
-  marginRight: "0.75rem",
-  width: "2px",
-});
-
 export const EditorMenuBar: React.FC<Props> = ({ editor }) => {
   const items = [
     {
