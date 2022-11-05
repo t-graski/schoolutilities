@@ -59,6 +59,8 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
+  console.log(item);
+
   return (
     <>
       <TimeTableItemLayout>
@@ -105,6 +107,12 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
               {item?.schoolSubject.schoolSubjectName}
             </LineThrough> -{" "}
             {item?.substitution.timeTableSubstitutionSubject.schoolSubjectName}
+          </span>
+        )}
+        {item?.exam && (
+          <span>
+            Exam: <br />
+            {item?.exam.timeTableExamDescription}
           </span>
         )}
         <br />
