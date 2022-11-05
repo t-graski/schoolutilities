@@ -11,15 +11,10 @@ import {
   Body,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Role } from 'src/roles/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { SchoolAdminService } from './schoolAdmin.service';
 import { Request } from 'express'
-import { Department } from 'src/entity/department/department';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
-import { User } from 'src/entity/user/user';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
 import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
 
