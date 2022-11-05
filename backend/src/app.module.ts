@@ -39,7 +39,7 @@ dotenv.config();
     ]),
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
+        host: '168.119.227.44',
         port: 6379,
       }
     }),
