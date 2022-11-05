@@ -1,3 +1,4 @@
+import { ProfileSettings } from "@/organisms/ProfileSettings";
 import Head from "next/head";
 import { PersonalSettingsHeader } from "../../components/molecules/PersonalSettingsHeader";
 import { ProfileSettingsNavigation } from "../../components/organisms/profile/ProfileSettingsNavigation";
@@ -21,6 +22,7 @@ export default function Home() {
       </Head>
       <ProfileSettingsNavigation active={"account"}>
         <PersonalSettingsHeader title={"Account"} />
+        <ProfileSettings></ProfileSettings>
       </ProfileSettingsNavigation>
     </>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TimeTableColumn } from "../../molecules/TimeTableColumn";
 import { styled } from "../../../stitches.config";
 import { TimeTableTime } from "../../molecules/TimeTableTime";
@@ -11,28 +11,6 @@ type Props = {
   startDate: string;
   schoolClassUUID: string;
 };
-
-const TimeTableGrid = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr repeat(5, 3fr)",
-  gridTemplateRows: "1fr",
-  gridGap: "4px",
-  backgroundColor: "$gray100",
-  borderRadius: "0.5rem",
-  width: "100%",
-  padding: "0 $2x",
-});
-
-const TimeTableInformationGrid = styled("div", {
-  display: "grid",
-  gridTemplateColumns: "1fr repeat(5, 3fr)",
-  gridTemplateRows: "1fr",
-  gridGap: "$1x",
-  backgroundColor: "$gray100",
-  borderRadius: "0.5rem",
-  width: "100%",
-  padding: "$1x",
-});
 
 const TimeTableDay = styled("div", {
   display: "flex",
@@ -66,11 +44,45 @@ export const TimeTableOverview: React.FC<Props> = ({
     () => getTimeTableForClass(schoolClassUUID + "/" + startDate)
   );
 
-  let { startTime, endTime } = getStartEndTime(
-    weekTimeTable ?? DEFAULT_TIMETABLE
-  );
+  const [startTime, setStartTime] = useState("12:00");
+  const [endTime, setEndTime] = useState("13:00");
+
+  useEffect(() => {
+    const { startTime, endTime } = getStartEndTime(
+      weekTimeTable ?? DEFAULT_TIMETABLE
+    );
+
+    setStartTime(startTime);
+    setEndTime(endTime);
+  }, [weekTimeTable]);
 
   const timeTableRows = calculate5MinuteRows(startTime, endTime);
+
+  const TimeTableGrid = styled("div", {
+    display: "grid",
+    gridTemplateColumns: `50px repeat(${
+      weekTimeTable ? weekTimeTable.length : DEFAULT_TIMETABLE.length
+    }, 3fr)`,
+    gridTemplateRows: "1fr",
+    gridGap: "4px",
+    backgroundColor: "$gray100",
+    borderRadius: "0.5rem",
+    width: "100%",
+    padding: "0 $1x",
+  });
+
+  const TimeTableInformationGrid = styled("div", {
+    display: "grid",
+    gridTemplateColumns: `50px repeat(${
+      weekTimeTable ? weekTimeTable.length : DEFAULT_TIMETABLE.length
+    }, 3fr)`,
+    gridTemplateRows: "1fr",
+    gridGap: "$1x",
+    backgroundColor: "$gray100",
+    borderRadius: "0.5rem",
+    width: "100%",
+    padding: "$1x",
+  });
 
   if (status === "loading") {
     return (
@@ -213,6 +225,8 @@ function getStartEndTime(timeTable) {
       timeTable.flatMap((dayTimeTable) =>
         dayTimeTable.timeTableElements.map((timeTableElement) => {
           const date = new Date(timeTableElement.timeTableElementEndTime);
+
+          console.log(date);
 
           date.setFullYear(new Date().getFullYear());
           date.setMonth(new Date().getMonth());

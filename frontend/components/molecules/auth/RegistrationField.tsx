@@ -71,7 +71,7 @@ const SuccessDescription = styled("p", {
   fontSize: "1.5rem",
 });
 
-const StyledLink = styled("a", {
+const StyledLink = styled(Link, {
   color: "$warning",
   fontSize: "1.2rem",
   fontWeight: "bold",
@@ -221,7 +221,7 @@ export const RegistrationField: React.FC<Props> = ({}) => {
             setValidInput={setPasswordConfirmationValid}
             errorMessage="Please enter a valid password"
           ></PasswordInput>
-          <CheckBox onChange={setTermsAccepted}>
+          <CheckBox selected={termsAccepted} onChange={setTermsAccepted}>
             <StyledAreement>
               I agree to all{" "}
               <StyledLInk href="/data-policy" target="_blank">
@@ -239,17 +239,15 @@ export const RegistrationField: React.FC<Props> = ({}) => {
           >
             Sign up
           </Button>
-          <Link href="/auth?tab=login">
-            <a>
-              <Button
-                buttonType={"text"}
-                onClick={() => {
-                  handleSubmit();
-                }}
-              >
-                Log in instead
-              </Button>
-            </a>
+          <Link href="/auth?tab=login" passHref>
+            <Button
+              buttonType={"text"}
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
+              Log in instead
+            </Button>
           </Link>
         </RegistrationLayout>
       )}
@@ -265,19 +263,16 @@ export const RegistrationField: React.FC<Props> = ({}) => {
                 ? "You can now join a school, or create a school"
                 : ""}
             </SuccessDescription>
-            <Link
+            <StyledLink
               href={signUpWorking ? "/profile/settings" : "/auth?tab=register"}
+              onClick={() => {
+                setSignUpInfo("");
+                setSignUpWorking(false);
+              }}
               passHref
             >
-              <StyledLink
-                onClick={() => {
-                  setSignUpInfo("");
-                  setSignUpWorking(false);
-                }}
-              >
-                {signUpWorking ? "Manage your Account now" : "Try again"}
-              </StyledLink>
-            </Link>
+              {signUpWorking ? "Manage your Account now" : "Try again"}
+            </StyledLink>
           </SuccessLayout>
         </>
       )}

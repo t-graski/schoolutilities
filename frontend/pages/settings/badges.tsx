@@ -40,7 +40,7 @@ export default function Home() {
           <Image
             src="/images/coming_soon_badges.png"
             alt="Coming soon"
-            layout="fill"
+            fill
           ></Image>
         </ImageLayout>
       </ProfileSettingsNavigation>

@@ -150,13 +150,15 @@ export const ID_STARTERS = {
   EMAIL: 8,
   COURSE_ELEMENT: 9,
   ARTICLE: 'A',
-  TIME_TABLE_ELEMENT: 'T',
-  SUBSTITUTION: 'S',
+  BREAK: 'B',
   EVENT: 'E',
+  EXAM: 'X',
+  HOLIDAYS: 'H',
   ROOM: 'R',
   SUBJECT: 'SS',
-  HOLIDAYS: 'H',
-  EXAM: 'X',
+  SUBSTITUTION: 'S',
+  NOTIFICATION: 'N',
+  TIME_TABLE_ELEMENT: 'T',
 };
 
 export const ERROR_CODES = {

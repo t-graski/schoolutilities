@@ -34,15 +34,13 @@ export default function CreateSchool() {
 
   return (
     <>
-      <SiteLayout>
-        <Head>
-          <title>School Setup - SchoolUtilities</title>
-        </Head>
-        <Navbar></Navbar>
-        <CreateSchoolLayout>
-          <SetupProgressSite steps={progressSteps}></SetupProgressSite>
-        </CreateSchoolLayout>
-      </SiteLayout>
+      <Head>
+        <title>School Setup - SchoolUtilities</title>
+      </Head>
+      <Navbar></Navbar>
+      <CreateSchoolLayout>
+        <SetupProgressSite steps={progressSteps}></SetupProgressSite>
+      </CreateSchoolLayout>
       <Footer></Footer>
     </>
   );

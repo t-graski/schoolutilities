@@ -1,16 +1,11 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import { InputField } from "../../atoms/input/InputField";
-import Link from "next/link";
 import { regex } from "../../../utils/regex";
 import { useRouter } from "next/router";
 import { Spacer } from "../../atoms/Spacer";
-import { SettingsHeader } from "../../molecules/schoolAdmin/SettingsHeader";
-import { SettingsEntry } from "../../molecules/schoolAdmin/SettingsEntry";
-import { SettingsPopUp } from "../../molecules/schoolAdmin/SettingsPopUp";
 import Skeleton from "react-loading-skeleton";
 import { Select } from "../../atoms/input/Select";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   addSchoolClass,
   deleteSchoolClass,
@@ -18,333 +13,151 @@ import {
   fetchSchoolClasses,
   fetchSchoolDepartments,
 } from "../../../utils/requests";
+import { AdminSettingsField } from "./AdminSettingsField";
+import { useQuery } from "react-query";
 
 type Props = {
   queryClient: any;
 };
-
-const SchoolDetailLayout = styled("form", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-  justifySelf: "center",
-  width: "100%",
-  padding: "40px 60px",
-  overflowY: "scroll",
-});
-
-const SettingsEntriesLayout = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-  width: "100%",
-});
-
-const SettingsEntryLayout = styled("div", {
-  width: "100%",
-});
-
-const SettingsEntryName = styled("p", {
-  fontSize: "2rem",
-  fontWeight: "bold",
-  color: "$neutral-500",
-});
-
-const DepartmentName = styled("p", {
-  fontSize: "1rem",
-  color: "$onSurface",
-});
 
 const StyledInputField = styled("div", {
   marginTop: "15px",
   marginBottom: "15px",
 });
 
-const SettingsEntryLink = styled("a", {
-  textDecoration: "none",
-  cursor: "pointer",
-});
-
-const StyledDeleteText = styled("p", {
-  fontSize: "1rem",
-  color: "$neutral-500",
-  marginTop: "15px",
-});
-
-export const ClassesSettingsField: React.FC<Props> = ({ queryClient }) => {
-  const [editPopUpIsVisible, setEditPopUpIsVisible] = React.useState(false);
-  const [deletePopUpIsVisible, setDeletePopUpIsVisible] = React.useState(false);
-  const [schoolClassName, setSchoolClassName] = React.useState("");
-  const [schoolClassNameValid, setSchoolClassNameValid] = React.useState(false);
-  const [departmentUUID, setDepartmentUUID] = React.useState("");
-  const [schoolClassId, setSchoolClassId] = React.useState("");
-  const [error, setError] = React.useState("");
+const EditElementInputs: React.FC<{
+  itemConfig: any;
+  setItemConfig: Function;
+}> = ({ itemConfig, setItemConfig }) => {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
-
-  const { data: classes, status: classesStatus } = useQuery(
-    ["classes", schoolUUID],
-    () => fetchSchoolClasses(schoolUUID)
-  );
   const { data: departments, status: departmentsStatus } = useQuery(
     ["departments", schoolUUID],
     () => fetchSchoolDepartments(schoolUUID)
   );
 
-  const addClassMutation = useMutation(addSchoolClass, {
-    onMutate: async () => {
-      await queryClient.cancelQueries(["classes", schoolUUID]);
+  if (departmentsStatus === "loading") {
+    return <Skeleton height={50} width={200} />;
+  }
 
-      let entry = {
-        classUUID: "newEntry",
-        className: schoolClassName,
-        departmentUUID,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
-        ).departmentName,
-      };
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) => [
-        ...old,
-        entry,
-      ]);
-
-      return { entry };
-    },
-    onSuccess: (newEntry) => {
-      let entry = {
-        classUUID: newEntry.classUUID,
-        className: newEntry.className,
-        departmentUUID,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
-        ).departmentName,
-      };
-
-      console.log(entry);
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.map((currEntry) =>
-          currEntry.classUUID === "newEntry" ? entry : currEntry
-        )
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.filter((currEntry) => currEntry.classUUID !== "newEntry")
-      );
-    },
-  });
-
-  const deleteClassMutation = useMutation(deleteSchoolClass, {
-    onSuccess: async () => {
-      await queryClient.cancelQueries(["classes", schoolUUID]);
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.filter((currElement) => currElement.classUUID !== schoolClassId)
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
-
-  const editClassMutation = useMutation(editSchoolClass, {
-    onSuccess: async (response) => {
-      let entry = {
-        classUUID: response.classUUID,
-        className: response.className,
-        departmentUUID,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
-        ).departmentName,
-      };
-
-      queryClient.setQueryData(["classes", schoolUUID], (old: any) =>
-        old.map((currEntry) =>
-          currEntry.classUUID === response.classUUID ? entry : currEntry
-        )
-      );
-    },
-    onError: (err: any) => {
-      setError(err.message);
-    },
-  });
-
-  function savePopUpInput() {
-    if (schoolClassId == "") {
-      addClassMutation.mutate({
-        classUUID: "newEntry",
-        className: schoolClassName,
-        departmentUUID,
-        departmentName: departments.find(
-          (department) => department.departmentUUID === departmentUUID
-        ).departmentName,
-      });
-    } else {
-      editClassMutation.mutate({
-        classUUID: schoolClassId,
-        className: schoolClassName,
-        departmentUUID,
-      });
-    }
-    setEditPopUpIsVisible(false);
+  if (departmentsStatus === "error") {
+    return <p>Error</p>;
   }
 
   return (
+    <StyledInputField>
+      <InputField
+        label="Name"
+        inputType="text"
+        value={itemConfig.className}
+        onChange={(event) => {
+          setItemConfig({
+            ...itemConfig,
+            className: event.target.value,
+          });
+        }}
+        regex={regex.schoolName}
+        min="2"
+        max="30"
+        theme="surface"
+      />
+      <Spacer size="verySmall" />
+      <Select
+        selectValue={itemConfig.departmentUUID}
+        selectOptions={departments.map((department) => {
+          return {
+            value: department.departmentUUID,
+            label: department.departmentName,
+          };
+        })}
+        onChange={(event) => {
+          setItemConfig({
+            ...itemConfig,
+            departmentUUID: event,
+          });
+        }}
+        theme="surface"
+      ></Select>
+    </StyledInputField>
+  );
+};
+
+export const ClassesSettingsField: React.FC<Props> = ({ queryClient }) => {
+  const router = useRouter();
+  const schoolUUID = router.query.schoolUUID as string;
+  const { data: departments, status: departmentsStatus } = useQuery(
+    ["departments", schoolUUID],
+    () => fetchSchoolDepartments(schoolUUID)
+  );
+
+  return (
     <>
-      <SchoolDetailLayout>
-        {editPopUpIsVisible && (
-          <SettingsPopUp
-            headline={schoolClassId == "" ? "Add new class" : "Edit class"}
-            inputValid={schoolClassNameValid}
-            saveLabel={schoolClassId == "" ? "Add" : "Save"}
-            saveFunction={savePopUpInput}
-            closeFunction={() => {
-              setEditPopUpIsVisible(false);
-              setSchoolClassName("");
-              setSchoolClassNameValid(false);
-            }}
-          >
-            <StyledInputField>
-              <InputField
-                label="Name"
-                inputType="text"
-                value={schoolClassName}
-                onChange={(event) => {
-                  setSchoolClassName(event);
-                  if (regex.name.test(event)) {
-                    setSchoolClassNameValid(true);
-                  } else {
-                    setSchoolClassNameValid(false);
-                  }
-                }}
-                regex={regex.schoolName}
-                setValidInput={setSchoolClassNameValid}
-                min="2"
-                max="30"
-                theme="surface"
-              />
-              <Spacer size="verySmall" />
-              <Select
-                selectValue={departmentUUID}
-                selectOptions={departments.map((department) => {
-                  return {
-                    value: department.departmentUUID,
-                    label: department.departmentName,
-                  };
-                })}
-                onChange={(event) => {
-                  setDepartmentUUID(event);
-                }}
-                theme="surface"
-              ></Select>
-            </StyledInputField>
-          </SettingsPopUp>
-        )}
-        {deletePopUpIsVisible && (
-          <SettingsPopUp
-            headline={`Remove ${schoolClassName}`}
-            inputValid={true}
-            saveLabel="Confirm"
-            saveFunction={() => {
-              deleteClassMutation.mutate(schoolClassId);
-              setDeletePopUpIsVisible(false);
-            }}
-            closeFunction={() => {
-              setDeletePopUpIsVisible(false);
-              setSchoolClassName("");
-              setSchoolClassNameValid(false);
-            }}
-          >
-            <StyledDeleteText>
-              This action can&apos;t be undone and will permanently remove the
-              class {schoolClassName}.
-            </StyledDeleteText>
-          </SettingsPopUp>
-        )}
-        <SettingsHeader
-          headline="Classes"
-          addFunction={() => {
-            setSchoolClassName("");
-            setSchoolClassId("");
-            setEditPopUpIsVisible(true);
-            setDepartmentUUID(departments[0].departmentUUID);
-          }}
-        ></SettingsHeader>
-        {error}
-        <SettingsEntriesLayout>
-          {classesStatus == "success" &&
-            classes.length > 0 &&
-            classes.map((entry) => (
-              <SettingsEntryLayout
-                key={entry.classUUID}
-                data-key={entry.classUUID}
-              >
-                <SettingsEntry
-                  editFunction={() => {
-                    setSchoolClassName(entry.className);
-                    setSchoolClassId(entry.classUUID);
-                    setDepartmentUUID(entry.departmentUUID);
-                    setEditPopUpIsVisible(true);
-                    setSchoolClassNameValid(true);
-                  }}
-                  deleteFunction={() => {
-                    setSchoolClassId(entry.classUUID);
-                    setSchoolClassName(entry.className);
-                    setDeletePopUpIsVisible(true);
-                  }}
-                  highlighted={
-                    router.query &&
-                    router.query.departmentUUID &&
-                    entry.departmentUUID == router.query.departmentUUID
-                  }
-                >
-                  <>
-                    <SettingsEntryName>{entry.className}</SettingsEntryName>
-                    <Link
-                      href={`/school/${
-                        router.query.schoolUUID as string
-                      }/edit?departmentUUID=${entry.departmentUUID}`}
-                      passHref
-                    >
-                      <SettingsEntryLink>
-                        <DepartmentName>
-                          {
-                            departments.find(
-                              (department) =>
-                                department.departmentUUID ===
-                                entry.departmentUUID
-                            ).departmentName
-                          }
-                        </DepartmentName>
-                      </SettingsEntryLink>
-                    </Link>
-                  </>
-                </SettingsEntry>
-              </SettingsEntryLayout>
-            ))}
-          {classesStatus == "success" && classes.length <= 0 && (
-            <>
-              There are no classes yet. Add a new class by clicking the button
-            </>
-          )}
-          {classesStatus == "loading" && (
-            <>
-              <Skeleton width="100%" height={100}></Skeleton>
-              <Skeleton width="100%" height={100}></Skeleton>
-              <Skeleton width="100%" height={100}></Skeleton>
-            </>
-          )}
-          {classesStatus == "error" && (
-            <>
-              While loading the classes an error occured. Please try again later
-            </>
-          )}
-        </SettingsEntriesLayout>
-      </SchoolDetailLayout>
+      <AdminSettingsField
+        queryClient={queryClient}
+        reactQueryKey={"classes"}
+        texts={{
+          title: "Classes",
+          addHeadline: "Add new class",
+          editHeadline: "Edit class",
+          deleteHeadline: "Remove",
+          deleteDescription:
+            "This action can't be undone and will permanently remove the class ",
+          elementsLoadingErrorMessage:
+            "While loading the classes an error occured. Please try again.",
+          elementsNoElementsMessage:
+            "There are no classes yet. Add one by clicking the plus button.",
+        }}
+        uuidKey={"classUUID"}
+        nameKey={"className"}
+        addElement={addSchoolClass}
+        editElement={editSchoolClass}
+        deleteElement={deleteSchoolClass}
+        getAllElements={fetchSchoolClasses}
+        isItemValid={(item) => {
+          return true;
+        }}
+        EditElementInputs={EditElementInputs}
+        defaultItemConfig={{
+          className: "",
+          departmentUUID: "",
+        }}
+        columns={[
+          {
+            title: "Name",
+            key: "className",
+            sortFunction: (a, b) => {
+              return a.className.localeCompare(b.className);
+            },
+          },
+          {
+            title: "Department",
+            key: "departmentUUID",
+            sortFunction: (a, b) => {
+              if (departmentsStatus !== "success") {
+                return -1;
+              }
+              let aDepartment = departments.find(
+                (department) => department.departmentUUID == a.departmentUUID
+              );
+              let bDepartment = departments.find(
+                (department) => department.departmentUUID == b.departmentUUID
+              );
+              return aDepartment.departmentName.localeCompare(
+                bDepartment.departmentName
+              );
+            },
+            toStringFunction: (item) => {
+              if (departmentsStatus !== "success") {
+                return <Skeleton height={20} width={100} />;
+              }
+              let department = departments.find(
+                (department) => department.departmentUUID == item
+              );
+              return department.departmentName;
+            },
+          },
+        ]}
+      ></AdminSettingsField>
     </>
   );
 };

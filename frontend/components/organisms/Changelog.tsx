@@ -31,13 +31,18 @@ const ChangeLogLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
   padding: "3vh 3vw",
-  backgroundColor: "$neutral-300",
+  backgroundColor: "$surface2",
   borderRadius: "15px",
   cursor: "pointer",
+  transition: "all 200ms",
+
+  "&:hover": {
+    backgroundColor: "$surface4",
+  },
 });
 
-const StyledLink = styled("a", {
-  color: "$neutral-500",
+const StyledLink = styled(Link, {
+  color: "$onSurface",
   textDecoration: "none",
 });
 
@@ -61,15 +66,17 @@ export const Changelog: React.FC<Props> = ({ entries }) => {
       <BoxLayout>
         <ChangeLogsLayout>
           {entries.map((entry, index) => (
-            <Link href={`/change-logs/${entry.name}`} passHref key={index}>
-              <StyledLink>
-                <ChangeLogLayout>
-                  <StyledHeadline>{entry.headline}</StyledHeadline>
-                  <Separator width="small" alignment="left"></Separator>
-                  <StyledText>{entry.text}</StyledText>
-                </ChangeLogLayout>
-              </StyledLink>
-            </Link>
+            <StyledLink
+              href={`/change-logs/${entry.name}`}
+              passHref
+              key={index}
+            >
+              <ChangeLogLayout>
+                <StyledHeadline>{entry.headline}</StyledHeadline>
+                <Separator width="small" alignment="left"></Separator>
+                <StyledText>{entry.text}</StyledText>
+              </ChangeLogLayout>
+            </StyledLink>
           ))}
         </ChangeLogsLayout>
       </BoxLayout>

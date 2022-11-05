@@ -18,10 +18,8 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { diskStorage } from 'multer';
 import { editFileName, fileFilter } from 'src/misc/fileUpload';
 import { CourseService } from './course.service';
-import { HelperService } from 'src/helper/helper.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/role.enum';
-import { RemoveCourseDto } from 'src/dto/removeCourse';
 import { GetEventsDto } from 'src/dto/events';
 import { of } from 'rxjs';
 import { Response } from 'express';
@@ -77,6 +75,19 @@ export class CourseController {
     const result = await this.courseService.getAllCourses(
       params.schoolUUID,
       token,
+    );
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/submissions/:elementUUID')
+  @Roles(Role.Teacher)
+  async getSubmissions(@Param() params, @Req() request, @Res() response) {
+    const result = await this.courseService.getSubmissions(
+      request,
+      params.elementUUID,
     );
     return response
       .status(result.status)
@@ -143,19 +154,6 @@ export class CourseController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('submissions/:elementUUID')
-  @Roles(Role.Teacher)
-  async getSubmissions(@Param() params, @Req() request, @Res() response) {
-    const result = await this.courseService.getSubmissions(
-      request,
-      params.elementUUID,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Roles(Role.Student)
   @Get('/element/:elementUUID')
   async getElement(@Param() params, @Req() request, @Res() response) {
@@ -176,10 +174,10 @@ export class CourseController {
     @Req() request,
     @Res() response,
   ) {
-    const result = await this.courseService.getEvents(params, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    // const result = await this.courseService.getEvents(params, request);
+    // return response
+    //   .status(result.status)
+    //   .json(result?.data ? result.data : result.message);
   }
 
   @UseGuards(JwtAuthGuard)

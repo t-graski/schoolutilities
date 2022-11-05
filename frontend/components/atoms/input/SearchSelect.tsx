@@ -55,7 +55,7 @@ const selectStyled = {
     ":hover": {
       backgroundColor: "var(--colors-surface4)",
     },
-  }), 
+  }),
   control: (provided, state) => ({
     ...provided,
     border: "none",

@@ -1,36 +1,41 @@
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { styled } from "../../stitches.config";
-import { PopUp } from "../molecules/PopUp";
-const TimeTableItemDetail = dynamic(
-  () => import("../molecules/time-table/TimeTableItemDetail")
-);
+
+export type TimeTableElementTeacher = {
+  userUUID: string;
+  userFirstname: string;
+  userLastname: string;
+  userEmail: string;
+};
 
 export type TimeTableItemType = {
   timeTableElementUUID?: string;
   timeTableElementStartTime?: string;
   timeTableElementEndTime?: string;
+  timeTableElementDay?: string;
   overlaps?: number;
   overlapStart?: number;
+  timeTableElementOmitted?: {
+    timeTableElementOmittedDate: string;
+    timeTableElementOmittedReason: string;
+  };
   omitted?: {
-    timeTableOmittedDate: string;
-    timeTableOmittedReason: string;
+    timeTableElementOmittedDate: string;
+    timeTableElementOmittedReason: string;
   };
   schoolSubject?: {
     schoolSubjectUUID: string;
     schoolSubjectName: string;
     schoolSubjectAbbreviation: string;
   };
+  timeTableElementRoomUUID?: string;
+  timeTableElementClasses?: string[];
+  schoolSubjectUUID?: string;
   holidayUUID?: string;
   holidayName?: string;
-  timeTableElementTeachers?: {
-    userUUID: string;
-    userFirstname: string;
-    userLastname: string;
-    userEmail: string;
-  }[];
+  timeTableElementTeachers?: TimeTableElementTeacher[];
   substitution?: {
     timeTableSubstitutionUUID: string;
     timeTableSubstitutionClasses: {
@@ -43,6 +48,12 @@ export type TimeTableItemType = {
       userLastname: string;
       userEmail: string;
     }[];
+    timeTableSubstitutionRoomUUID: string;
+    timeTableSubstitutionSubject: {
+      schoolSubjectUUID: string;
+      schoolSubjectName: string;
+      schoolSubjectAbbreviation: string;
+    };
   };
 };
 
@@ -80,6 +91,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   let isBeforeNow = endTime < now;
   let overlapColumns = item.overlaps ? 24 / item.overlaps : 24;
   const router = useRouter();
+  const timeTableElementUUID = router.query.detail as string;
 
   const TimeTableItemLayout = styled("div", {
     gridRow: `${startPoint} / ${endPoint}`,
@@ -95,6 +107,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     } / span ${overlapColumns}`,
     overflowX: "hidden",
     cursor: "pointer",
+    height: "100%",
 
     variants: {
       layout: {
@@ -116,18 +129,38 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           wordBreak: "break-word",
         },
         big: {},
-        omitted: {
+      },
+      highlight: {
+        true: {
+          borderColor: "$primary",
+        },
+        false: {},
+      },
+      omitted: {
+        true: {
           textDecoration: "line-through",
+          borderColor: "transparent",
+        },
+        false: {
+          textDecoration: "none",
         },
       },
-      state: {
-        omitted: {
-          textDecoration: "line-through",
-          borderColor: "$error",
+      substituted: {
+        true: {
+          borderColor: isBeforeNow ? "$inversePrimary" : "$onSurfaceVariant",
         },
-        normal: {},
-      },
+        false: {},
+      }
     },
+    compoundVariants: [
+      {
+        highlight: "true",
+        omitted: "true",
+        css: {
+          borderColor: "$primary",
+        },
+      },
+    ],
   });
 
   const SkeletonLayout = styled("div", {
@@ -144,40 +177,33 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
   return (
     <>
       {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
-        <PopUp
-          onOpenChange={(open) => {
-            if (open) {
-              router.push({
-                query: { ...router.query, detail: item.timeTableElementUUID },
-              });
-            } else {
-              router.push({
-                query: { ...router.query, detail: null },
-              });
-            }
+        <TimeTableItemLayout
+          layout={item.overlaps > 1 ? "small" : "big"}
+          omitted={!!item?.omitted}
+          onClick={() => {
+            router.push({
+              query: { ...router.query, detail: item.timeTableElementUUID },
+            });
           }}
-          defaultOpen={router.query?.detail === item.timeTableElementUUID}
-          openButton={
-            <TimeTableItemLayout
-              layout={item.overlaps > 1 ? "small" : "big"}
-              state={item?.omitted ? "omitted" : "normal"}
-            >
-              <TimeTableSubjectName>
-                {item.schoolSubject.schoolSubjectAbbreviation}
-              </TimeTableSubjectName>
-              <TimeTableTime>
-                {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}
-                {getSmallTimeFormat(item.timeTableElementEndTime)}
-              </TimeTableTime>
-
-              {item.timeTableElementTeachers.map((teacher, index) => (
-                <div key={index}>{teacher.userFirstname}</div>
-              ))}
-            </TimeTableItemLayout>
+          highlight={
+            !!timeTableElementUUID &&
+            timeTableElementUUID == item.timeTableElementUUID
           }
+          substituted={!!item.substitution}
         >
-          <TimeTableItemDetail item={item}></TimeTableItemDetail>
-        </PopUp>
+          <TimeTableSubjectName>
+            {item.substitution?.timeTableSubstitutionSubject?.schoolSubjectAbbreviation ??
+              item.schoolSubject.schoolSubjectAbbreviation}
+          </TimeTableSubjectName>
+          <TimeTableTime>
+            {getSmallTimeFormat(item.timeTableElementStartTime)} -{" "}
+            {getSmallTimeFormat(item.timeTableElementEndTime)}
+          </TimeTableTime>
+
+          {item.timeTableElementTeachers.map((teacher, index) => (
+            <div key={index}>{teacher.userFirstname}</div>
+          ))}
+        </TimeTableItemLayout>
       )}
       {!item.timeTableElementUUID && !!item.timeTableElementTeachers && (
         <SkeletonLayout>
@@ -209,6 +235,7 @@ function getRowFromTime(time: string, startTime: string) {
 function getSmallTimeFormat(time: string) {
   let hour = new Date(time).getHours();
   let minute = new Date(time).getMinutes();
+
   return formatTime(hour) + ":" + formatTime(minute);
 }
 

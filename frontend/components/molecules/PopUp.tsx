@@ -9,6 +9,7 @@ type Props = {
   defaultOpen?: boolean;
   openButton: React.ReactNode;
   children: React.ReactNode;
+  open?: boolean;
 };
 
 const overlayShow = keyframes({
@@ -90,19 +91,19 @@ export const PopUp: React.FC<Props> = ({
   onOpenChange = () => {},
   defaultOpen = false,
   openButton,
+  open,
   children,
 }) => {
-  const [open, setOpen] = React.useState(defaultOpen);
-  
-  console.log(openButton);
+  const [localOpen, setOpen] = React.useState(defaultOpen);
+  console.log(open);
   return (
     <>
       <Dialog
         onOpenChange={(isOpen) => {
-          setOpen(isOpen);
-          onOpenChange(isOpen);
+          if (onOpenChange) onOpenChange(isOpen);
+          if (!onOpenChange) setOpen(isOpen);
         }}
-        open={open}
+        open={open ? open : localOpen}
       >
         <DialogTrigger asChild>{openButton}</DialogTrigger>
         <DialogContent>

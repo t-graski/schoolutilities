@@ -8,7 +8,7 @@ type Props = {
   label: string;
 };
 
-const BackLinkLayout = styled("a", {
+const BackLinkLayout = styled(Link, {
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
@@ -27,14 +27,12 @@ const LinkIconLayout = styled("div", {
 export const BackLink: React.FC<Props> = ({ href, label }) => {
   return (
     <>
-      <Link href={href} passHref>
-        <BackLinkLayout>
-          <LinkIconLayout>
-            <SvgRightArrow></SvgRightArrow>
-          </LinkIconLayout>
-          {label}
-        </BackLinkLayout>
-      </Link>
+      <BackLinkLayout href={href} passHref>
+        <LinkIconLayout>
+          <SvgRightArrow></SvgRightArrow>
+        </LinkIconLayout>
+        {label}
+      </BackLinkLayout>
     </>
   );
 };

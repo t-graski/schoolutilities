@@ -164,22 +164,22 @@ model timezones {
 }
 
 model courseElements {
-  courseElementId                Int                             @id @default(autoincrement()) @map("course_element_id")
-  courseElementUUID              String                          @map("course_element_uuid")
-  courseElementTypeId            Int                             @map("course_element_type_id")
-  courseElementParentId          Int                             @map("course_element_parent_id")
-  courseElementIsVisible         Boolean                         @map("course_element_is_visible")
-  courseElementWeight            Int                             @map("course_element_weight")
-  courseElementOrder             Int                             @map("course_element_order")
-  courseElementCreatorId         Int                             @map("course_element_creator_id")
-  courseElementCourseId          Int                             @map("course_element_course_id")
-  courseElementCreationTimestamp DateTime                        @default(now()) @map("course_element_creation_timestamp") @db.Timestamp(0)
-  courses                        courses                         @relation(fields: [courseElementCourseId], references: [courseId])
-  users                          users                           @relation(fields: [courseElementCreatorId], references: [userId])
-  courseElementHeadlineSettings  courseElementHeadlineSettings[]
-  courseFileSubmissionSettings   courseFileSubmissionSettings[]
+  courseElementId                Int                            @id @default(autoincrement()) @map("course_element_id")
+  courseElementUUID              String                         @map("course_element_uuid")
+  courseElementTypeId            Int                            @map("course_element_type_id")
+  courseElementParentId          Int                            @map("course_element_parent_id")
+  courseElementIsVisible         Boolean                        @map("course_element_is_visible")
+  courseElementWeight            Int                            @map("course_element_weight")
+  courseElementOrder             Int                            @map("course_element_order")
+  courseElementCreatorId         Int                            @map("course_element_creator_id")
+  courseElementCourseId          Int                            @map("course_element_course_id")
+  courseElementCreationTimestamp DateTime                       @default(now()) @map("course_element_creation_timestamp") @db.Timestamp(0)
+  courses                        courses                        @relation(fields: [courseElementCourseId], references: [courseId])
+  users                          users                          @relation(fields: [courseElementCreatorId], references: [userId])
+  courseElementHeadlineSettings  courseElementHeadlineSettings?
+  courseFileSubmissionSettings   courseFileSubmissionSettings?
+  courseElementTextSettings      courseElementTextSettings?
   courseFileSubmissions          courseFileSubmissions[]
-  courseElementTextSettings      courseElementTextSettings[]
 
   @@unique([courseElementUUID], map: "course_element_uuid_UNIQUE")
   @@index([courseElementCourseId], map: "fk_course_elements_course_id")
@@ -222,19 +222,35 @@ model articleFile {
 
 model courseElementHeadlineSettings {
   courseElementHeadlineId        Int            @id @default(autoincrement()) @map("course_element_headline_id")
-  courseElementHeadlineElementId Int            @map("course_element_headline_element_id")
+  courseElementHeadlineElementId Int            @unique @map("course_element_headline_element_id")
   courseElementHeadlineLabel     String         @map("course_element_headline_label")
-  courseElements                 courseElements @relation(fields: [courseElementHeadlineElementId], references: [courseElementId])
+  courseElements                 courseElements @relation(fields: [courseElementHeadlineElementId], references: [courseElementId], onDelete: Cascade)
 
   @@index([courseElementHeadlineElementId], map: "fk_course_element_headline_element_id")
   @@map("course_element_headline_settings")
 }
 
+model courseFileSubmissionSettings {
+  courseFileSubmissionSettingId            Int            @id @default(autoincrement()) @map("course_file_submission_setting_id")
+  courseFileSubmissionElementId            Int            @unique @map("course_file_submission_element_id")
+  courseFileSubmissionName                 String         @map("course_file_submission_name") @db.Text
+  courseFileSubmissionDescription          String         @map("course_file_submission_description")
+  courseFileSubmissionDueTimestamp         DateTime?      @map("course_file_submission_due_timestamp") @db.Timestamp(0)
+  courseFileSubmissionSubmitLater          Boolean        @map("course_file_submission_submit_later")
+  courseFileSubmissionSubmitLaterTimestamp DateTime?      @map("course_file_submission_submit_later_timestamp") @db.Timestamp(0)
+  courseFileSubmissionMaxFileSize          Float          @map("course_file_submission_max_file_size") @db.Float
+  courseFileSubmissionAllowedFileTypes     String         @map("course_file_submission_allowed_file_types")
+  courseElements                           courseElements @relation(fields: [courseFileSubmissionElementId], references: [courseElementId], onDelete: Cascade)
+
+  @@index([courseFileSubmissionElementId], map: "fk_course_file_submission_settings_element_id")
+  @@map("course_file_submission_settings")
+}
+
 model courseElementTextSettings {
   courseElementTextSettingId Int            @id @default(autoincrement()) @map("course_element_text_setting_id")
-  courseElementId            Int            @map("course_element_id")
+  courseElementId            Int            @unique @map("course_element_id")
   courseElementTextText      String         @map("course_element_text_text") @db.Text
-  courses                    courseElements @relation(fields: [courseElementId], references: [courseElementId])
+  courseElements             courseElements @relation(fields: [courseElementId], references: [courseElementId], onDelete: Cascade)
 
   @@index([courseElementId], map: "fk_course_element_text_setting_course_element_id")
   @@map("course_element_text_settings")
@@ -256,22 +272,6 @@ model courseFileSubmissionGrades {
   @@index([courseFileSubmissionGradeCreatorId], map: "fk_course_file_submission_grade_creator_id")
   @@index([userId], map: "fk_course_file_submission_grade_user_id")
   @@map("course_file_submission_grades")
-}
-
-model courseFileSubmissionSettings {
-  courseFileSubmissionSettingId            Int            @id @default(autoincrement()) @map("course_file_submission_setting_id")
-  courseFileSubmissionElementId            Int            @map("course_file_submission_element_id")
-  courseFileSubmissionName                 String         @map("course_file_submission_name") @db.Text
-  courseFileSubmissionDescription          String         @map("course_file_submission_description")
-  courseFileSubmissionDueTimestamp         DateTime?      @map("course_file_submission_due_timestamp") @db.Timestamp(0)
-  courseFileSubmissionSubmitLater          Boolean        @map("course_file_submission_submit_later")
-  courseFileSubmissionSubmitLaterTimestamp DateTime?      @map("course_file_submission_submit_later_timestamp") @db.Timestamp(0)
-  courseFileSubmissionMaxFileSize          Float          @map("course_file_submission_max_file_size") @db.Float
-  courseFileSubmissionAllowedFileTypes     String         @map("course_file_submission_allowed_file_types")
-  courseElements                           courseElements @relation(fields: [courseFileSubmissionElementId], references: [courseElementId])
-
-  @@index([courseFileSubmissionElementId], map: "course_file_submission_settings_element_id")
-  @@map("course_file_submission_settings")
 }
 
 model courseFileSubmissions {
@@ -517,10 +517,10 @@ model timeTableElement {
   schoolSubjects                    schoolSubjects             @relation(fields: [timeTableElementSubjectId], references: [schoolSubjectId])
   users                             users                      @relation(fields: [timeTableElementCreatorId], references: [userId])
   schoolRoom                        schoolRooms                @relation(fields: [timeTableElementRoomId], references: [schoolRoomId])
+  timeTableSubstitution             timeTableSubstitutions[]
   timeTableTeachers                 timeTableElementTeachers[]
   timeTableElementClasses           timeTableElementClasses[]
   timeTableEvents                   timeTableEvents[]
-  timeTableSubstitutions            timeTableSubstitutions[]
   timeTableOmitted                  timeTableOmitted[]
   timeTableExam                     timeTableExam[]
 
@@ -537,7 +537,7 @@ model timeTableOmitted {
   timeTableElementIsOmitted     Boolean          @map("time_table_element_is_omitted")
   timeTableElementOmittedReason String           @map("time_table_element_omitted_reason")
   timeTableElementOmittedDate   DateTime         @map("time_table_element_omitted_date")
-  timeTableElement              timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElement              timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
 
   @@unique([timeTableElementId, timeTableElementOmittedDate], map: "time_table_element_id_UNIQUE")
   @@index([timeTableElementId], map: "fk_time_table_element_id")
@@ -551,7 +551,7 @@ model timeTableExam {
   timeTableExamRoomId      Int              @map("time_table_exam_room_id")
   timeTableExamDescription String           @map("time_table_exam_description")
   timeTableExamDate        DateTime         @map("time_table_exam_date")
-  timeTableElements        timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElements        timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
   schoolRooms              schoolRooms      @relation(fields: [timeTableExamRoomId], references: [schoolRoomId])
 
   @@unique([timeTableExamUUID], map: "time_table_exam_uuid_UNIQUE")
@@ -571,12 +571,13 @@ model timeTableSubstitutions {
   timeTableSubstitutionDate              DateTime                        @map("time_table_substitution_date")
   timeTableSubstitutionTeachers          timeTableSubstitutionTeachers[]
   timeTableSubstitutionClasses           timeTableSubstitutionClasses[]
+  timeTableElements                      timeTableElement?               @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId], onDelete: Cascade)
   schoolSubjects                         schoolSubjects                  @relation(fields: [timeTableSubstitutionSubjectId], references: [schoolSubjectId])
   schoolRooms                            schoolRooms                     @relation(fields: [timeTableSubstitutionRoomId], references: [schoolRoomId])
   users                                  users                           @relation(fields: [timeTableSubstitutionCreatorId], references: [userId])
-  timeTableElements                      timeTableElement                @relation(fields: [timeTableSubstitutionElementId], references: [timeTableElementId])
 
   @@unique([timeTableSubstitutionUUID], map: "time_tablesubstitution_uuid_UNIQUE")
+  @@unique([timeTableSubstitutionElementId], map: "time_table_substitution_time_table_element_id_UNIQUE")
   @@index([timeTableSubstitutionSubjectId], map: "fk_time_table_substitution_subject_id")
   @@index([timeTableSubstitutionCreatorId], map: "fk_time_table_substitution_creator_id")
   @@index([timeTableSubstitutionElementId], map: "fk_time_table_substitution_time_table_element_id")
@@ -587,7 +588,7 @@ model timeTableSubstitutions {
 model timeTableSubstitutionTeachers {
   timeTableSubstitutionId Int                    @map("time_table_substitution_id")
   userId                  Int                    @map("user_id")
-  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId], onDelete: Cascade)
   users                   users                  @relation(fields: [userId], references: [userId])
 
   @@unique([timeTableSubstitutionId, userId], map: "time_table_substitution_teacher_UNIQUE")
@@ -599,7 +600,7 @@ model timeTableSubstitutionTeachers {
 model timeTableSubstitutionClasses {
   timeTableSubstitutionId Int                    @map("time_table_substitution_id")
   classId                 Int                    @map("class_id")
-  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId])
+  timeTableSubstitutions  timeTableSubstitutions @relation(fields: [timeTableSubstitutionId], references: [timeTableSubstitutionId], onDelete: Cascade)
   classes                 schoolClasses          @relation(fields: [classId], references: [schoolClassId])
 
   @@unique([timeTableSubstitutionId, classId], map: "time_table_substitution_class_UNIQUE")
@@ -618,7 +619,7 @@ model timeTableEvents {
   timeTableEventDate        DateTime                 @map("time_table_event_date")
   timeTableEventTeachers    timeTableEventTeachers[]
   timeTableEventClasses     timeTableEventClasses[]
-  timeTableElement          timeTableElement         @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElement          timeTableElement         @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
 
   @@unique([timeTableEventUUID], map: "time_table_event_uuid_UNIQUE")
   @@index([timeTableElementId], map: "fk_time_table_event_time_table_element_id")
@@ -652,7 +653,7 @@ model timeTableEventClasses {
 model timeTableElementTeachers {
   timeTableElementId Int              @map("time_table_element_id")
   userId             Int              @map("user_id")
-  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
   users              users            @relation(fields: [userId], references: [userId])
 
   @@unique([timeTableElementId, userId], map: "time_table_element_id_user_id_UNIQUE")
@@ -664,7 +665,7 @@ model timeTableElementTeachers {
 model timeTableElementClasses {
   timeTableElementId Int              @map("time_table_element_id")
   schoolClassId      Int              @map("school_class_id")
-  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId])
+  timeTableElements  timeTableElement @relation(fields: [timeTableElementId], references: [timeTableElementId], onDelete: Cascade)
   schoolClasses      schoolClasses    @relation(fields: [schoolClassId], references: [schoolClassId])
 
   @@unique([timeTableElementId, schoolClassId], map: "time_table_element_id_school_class_id")
@@ -687,29 +688,42 @@ model holidays {
 }
 
 model timeTableGrid {
-  timeTableGridId              Int                       @id @default(autoincrement()) @map("time_table_grid_id")
-  timeTableGridStartTime       DateTime                  @map("time_table_grid_start_date")
-  timeTableGridElementDuration Int                       @map("time_table_grid_element_duration")
-  timeTableGridBreakDuration   Int                       @map("time_table_grid_break_duration")
-  timeTableGridMaxLessons      Int                       @map("time_table_grid_max_lessons")
-  schoolId                     Int                       @map("school_id")
-  schools                      schools                   @relation(fields: [schoolId], references: [schoolId])
-  timeTableGridSpecialBreakId  Int                       @map("time_table_special_break_id")
-  timeTableGridSpecialBreak    timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
+  timeTableGridId              Int                          @id @default(autoincrement()) @map("time_table_grid_id")
+  timeTableGridStartTime       DateTime                     @map("time_table_grid_start_date")
+  timeTableGridElementDuration Int                          @map("time_table_grid_element_duration")
+  timeTableGridBreakDuration   Int                          @map("time_table_grid_break_duration")
+  timeTableGridMaxLessons      Int                          @map("time_table_grid_max_lessons")
+  schoolId                     Int                          @map("school_id")
+  schools                      schools                      @relation(fields: [schoolId], references: [schoolId])
+  timeTableGridSpecialBreaks   timeTableGridSpecialBreaks[]
 
   @@unique([timeTableGridId], map: "time_table_grid_uuid_UNIQUE")
+  @@unique([schoolId], map: "time_table_grid_school_id_UNIQUE")
   @@index([schoolId], map: "fk_time_table_grid_school_id")
-  @@index([timeTableGridSpecialBreakId], map: "fk_time_table_special_break_id")
   @@map("time_table_grid")
 }
 
 model timeTableGridSpecialBreak {
-  timeTableGridSpecialBreakId       Int             @id @default(autoincrement()) @map("time_table_grid_special_break_id")
-  timeTableGridSpecialBreakElement  Int             @map("time_table_grid_special_break_element")
-  timeTableGridSpecialBreakDuration Int             @map("time_table_grid_special_break_duration")
-  timeTableGrid                     timeTableGrid[]
+  timeTableGridSpecialBreakId       Int                          @id @default(autoincrement()) @map("time_table_grid_special_break_id")
+  timeTableGridSpecialBreakUUID     String                       @map("time_table_grid_special_break_uuid")
+  timeTableGridSpecialBreakElement  Int                          @map("time_table_grid_special_break_element")
+  timeTableGridSpecialBreakDuration Int                          @map("time_table_grid_special_break_duration")
+  timeTableGridSpecialBreaks        timeTableGridSpecialBreaks[]
 
+  @@unique([timeTableGridSpecialBreakUUID], map: "time_table_grid_special_break_uuid_UNIQUE")
   @@map("time_table_grid_special_break")
+}
+
+model timeTableGridSpecialBreaks {
+  timeTableGridSpecialBreakId Int                       @map("time_table_grid_special_break_id")
+  timeTableGridId             Int                       @map("time_table_grid_id")
+  timeTableGrid               timeTableGrid             @relation(fields: [timeTableGridId], references: [timeTableGridId])
+  timeTableGridSpecialBreak   timeTableGridSpecialBreak @relation(fields: [timeTableGridSpecialBreakId], references: [timeTableGridSpecialBreakId])
+
+  @@unique([timeTableGridSpecialBreakId, timeTableGridId], map: "time_table_grid_special_break_id_time_table_grid_id_UNIQUE")
+  @@index([timeTableGridId], map: "fk_time_table_grid_id")
+  @@index([timeTableGridSpecialBreakId], map: "fk_time_table_grid_special_break_id")
+  @@map("time_table_grid_special_breaks")
 }
 
 model users {
@@ -748,7 +762,33 @@ model users {
   timeTableSubstitutionTeachers timeTableSubstitutionTeachers[]
   timeTableSubstitutions        timeTableSubstitutions[]
   schoolClassUsers              schoolClassUsers[]
+  userDiscordConnections        userDiscordConnections[]
+  notifications                 notifications[]
 
   @@unique([userUUID], map: "user_uuid_UNIQUE")
   @@unique([userEmail], map: "user_email_UNIQUE")
+}
+
+model notifications {
+  notificationUUID              String   @map("notification_uuid")
+  notificationUserId            Int      @map("notification_user_id")
+  notificationContent           String   @map("notification_content") @db.Text()
+  notificationScheduleTimestamp DateTime @map("notification_schedule_timestamp")
+  users                         users    @relation(fields: [notificationUserId], references: [userId])
+
+  @@unique([notificationUUID], map: "notification_uuid_UNIQUE")
+}
+
+model userDiscordConnections {
+  discordUserId         String @map("discord_user_id")
+  discordUserChannelId  String @map("discord_user_channel_id")
+  discordGuildChannelId String @default("") @map("discord_guild_channel_id")
+  discordGuildId        String @default("") @map("discord_guild_id")
+  userId                Int    @map("user_id")
+  users                 users  @relation(fields: [userId], references: [userId])
+
+  @@id([discordUserId, userId])
+  @@unique([discordUserId], map: "discord_user_id_UNIQUE")
+  @@index([userId], map: "fk_user_id")
+  @@map("user_discord_connections")
 }

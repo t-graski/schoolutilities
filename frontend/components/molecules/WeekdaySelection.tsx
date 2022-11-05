@@ -6,7 +6,8 @@ import { MenuItem, WeekdaySelector } from "../atoms/WeekdaySelector";
 type Props = {
   items: MenuItem[];
   multipleSelection: boolean;
-  updateSelection: (items: MenuItem[]) => void;
+  selection: string[];
+  updateSelection: (items: string[]) => void;
 };
 
 const WeekdaySelectionLayout = styled("div", {
@@ -17,14 +18,10 @@ const WeekdaySelectionLayout = styled("div", {
 
 export const WeekdaySelection: React.FC<Props> = ({
   items,
+  multipleSelection = false,
+  selection,
   updateSelection,
 }) => {
-  const [selectedItems, setSelectedItems] = React.useState<MenuItem[]>([]);
-
-  useEffect(() => {
-    updateSelection(selectedItems);
-  }, [selectedItems]);
-
   return (
     <>
       <WeekdaySelectionLayout>
@@ -32,15 +29,18 @@ export const WeekdaySelection: React.FC<Props> = ({
           <WeekdaySelector
             key={item.value}
             item={item}
-            selected={selectedItems.includes(item)}
+            selected={selection.includes(item.value)}
             onClick={(item) => {
-              setSelectedItems((prev) => {
-                if (prev.includes(item)) {
-                  return prev.filter((i) => i !== item);
+              if (selection.includes(item.value)) {
+                updateSelection(selection.filter((i) => i !== item.value));
+              } else {
+                if (multipleSelection) {
+                  updateSelection(selection.filter((i) => i !== item.value));
+                  [...selection, item.value];
                 } else {
-                  return [...prev, item];
+                  updateSelection([item.value]);
                 }
-              });
+              }
             }}
           ></WeekdaySelector>
         ))}

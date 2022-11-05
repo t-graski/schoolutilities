@@ -7,6 +7,7 @@ const BasicSiteLayout = styled("div", {
   display: "flex",
   width: "100vw",
   justifyContent: "center",
+  padding: "0 $5x",
 });
 
 const BasicInnerLayout = styled("div", {
@@ -16,5 +17,9 @@ const BasicInnerLayout = styled("div", {
 });
 
 export const SiteLayout: React.FC<Props> = ({ children }) => {
-  return <BasicSiteLayout><BasicInnerLayout>{children}</BasicInnerLayout></BasicSiteLayout>;
+  return (
+    <BasicSiteLayout>
+      <BasicInnerLayout>{children}</BasicInnerLayout>
+    </BasicSiteLayout>
+  );
 };

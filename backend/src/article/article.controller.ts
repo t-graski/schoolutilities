@@ -1,87 +1,61 @@
-import {
-  Controller,
-  Get,
-  Delete,
-  Put,
-  Req,
-  Res,
-  UseGuards,
-  Param,
-  Post,
-  UseInterceptors,
-  UploadedFile,
-  HttpStatus,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { of } from 'rxjs';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { editFileName, fileFilter } from 'src/misc/fileUpload';
-import { LENGTHS } from 'src/misc/parameterConstants';
-import { Role } from 'src/roles/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { ArticleService } from './article.service';
+import { Controller, Get, Delete, Put, Req, Res, UseGuards, Param, Post, UseInterceptors, UploadedFile, HttpStatus } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
+import { of } from "rxjs";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { editFileName, fileFilter } from "src/misc/fileUpload";
+import { LENGTHS } from "src/misc/parameterConstants";
+import { Role } from "src/roles/role.enum";
+import { Roles } from "src/roles/roles.decorator";
+import { RolesGuard } from "src/roles/roles.guard";
+import { ArticleService } from "./article.service";
 
 @UseGuards(RolesGuard)
-@Controller('api/articles')
+@Controller("api/articles")
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) { }
+  constructor(private readonly articleService: ArticleService) {}
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
-  @Post('/create')
+  @Post("/create")
   async createArticle(@Req() request, @Res() response) {
     const result = await this.articleService.createArticle(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    return response.status(result.status).json(result?.data ? result.data : result.message);
   }
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
-  @Delete('/delete')
+  @Delete("/delete")
   async deleteArticle(@Req() request, @Res() response) {
     const result = await this.articleService.deleteArticle(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    return response.status(result.status).json(result?.data ? result.data : result.message);
   }
 
   @Roles(Role.Supervisor)
   @UseGuards(JwtAuthGuard)
-  @Put('/edit')
+  @Put("/edit")
   async editArticle(@Req() request, @Res() response) {
     const result = await this.articleService.editArticle(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    return response.status(result.status).json(result?.data ? result.data : result.message);
   }
 
-  @Get('/article/:articleUUID')
+  @Get("/article/:articleUUID")
   async getArticle(@Param() params, @Req() request, @Res() response) {
-    const result = await this.articleService.getArticle(
-      request,
-      params.articleUUID,
-    );
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    const result = await this.articleService.getArticle(request, params.articleUUID);
+    return response.status(result.status).json(result?.data ? result.data : result.message);
   }
 
-  @Get('/articles')
+  @Get("/articles")
   async getArticles(@Req() request, @Res() response) {
     const result = await this.articleService.getAllArticles(request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    return response.status(result.status).json(result?.data ? result.data : result.message);
   }
 
-  @Post('/uploadFile')
+  @Post("/uploadFile")
   @UseInterceptors(
-    FileInterceptor('image', {
+    FileInterceptor("image", {
       storage: diskStorage({
-        destination: '../files',
+        destination: "../files",
         filename: editFileName,
       }),
       fileFilter: fileFilter,
@@ -93,20 +67,14 @@ export class ArticleController {
     return response.status(result.status).json(result?.message);
   }
 
-  @Get('/files/:articleUUID')
-  async getArticleFiles(@Param('articleUUID') articleUUID: string, @Req() request, @Res() response) {
+  @Get("/files/:articleUUID")
+  async getArticleFiles(@Param("articleUUID") articleUUID: string, @Req() request, @Res() response) {
     const result = await this.articleService.getArticleFiles(articleUUID);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+    return response.status(result.status).json(result?.data ? result.data : result.message);
   }
 
-  @Get('/file/:fileUUID')
-  async getArticleFile(@Param('fileUUID') fileUUID: string, @Req() request, @Res() response) {
-    return of(
-      response
-        .status(HttpStatus.OK)
-        .sendFile(`${fileUUID}`, { root: process.env.LOGO_PATH }),
-    );
+  @Get("/file/:fileUUID")
+  async getArticleFile(@Param("fileUUID") fileUUID: string, @Req() request, @Res() response) {
+    return of(response.status(HttpStatus.OK).sendFile(`${fileUUID}`, { root: process.env.LOGO_PATH }));
   }
 }

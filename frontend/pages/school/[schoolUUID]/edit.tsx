@@ -2,7 +2,6 @@ import React from "react";
 const Navbar = dynamic(() => import("../../../components/organisms/Navbar"));
 import { styled } from "../../../stitches.config";
 import Head from "next/head";
-import { SideDashboard } from "../../../components/molecules/schoolAdmin/SideDashboard";
 import { DepartmentsSettingsField } from "../../../components/organisms/schoolAdmin/DepartmentsSettingsField";
 import { useRouter } from "next/router";
 import { ClassesSettingsField } from "../../../components/organisms/schoolAdmin/ClassesSettingsField";
@@ -30,7 +29,6 @@ const SettingsLayout = styled("div", {
 });
 
 export default function CreateSchool() {
-  const [isOpen, setIsOpen] = React.useState(true);
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
 
@@ -52,7 +50,7 @@ export default function CreateSchool() {
       case "off-days":
         return <OffDaysSettingsField queryClient={queryClient} />;
       case "join-codes":
-        return <JoinCodesSettingsField />;
+        return <JoinCodesSettingsField queryClient={queryClient} />;
       case "subjects":
         return (
           <SubjectsSettingsField
@@ -62,7 +60,11 @@ export default function CreateSchool() {
       case "rooms":
         return <RoomsSettingsField queryClient={queryClient} />;
       default:
-        return <DepartmentsSettingsField></DepartmentsSettingsField>;
+        return (
+          <DepartmentsSettingsField
+            queryClient={queryClient}
+          ></DepartmentsSettingsField>
+        );
     }
   }
 
@@ -117,12 +119,12 @@ export default function CreateSchool() {
               href: `/school/${schoolUUID}/edit?tab=off-days`,
               icon: SvgCalendar,
             },
-            {
-              name: "School Years",
-              value: "school-years",
-              href: `/school/${schoolUUID}/edit?tab=school-years`,
-              icon: SvgSuitcase,
-            },
+            // {
+            //   name: "School Years",
+            //   value: "school-years",
+            //   href: `/school/${schoolUUID}/edit?tab=school-years`,
+            //   icon: SvgSuitcase,
+            // },
           ]}
           active={urlParam}
         ></SideDashboardBar>

@@ -37,11 +37,17 @@ export class Exam {
     })
     timeTableExamDate: Date;
 
+    timeTableElementUUID: string;
+
+    timeTableExamSchoolClasses: string[];
+
+    timeTableElementDay: string;
+
     @ApiProperty({
         description: 'The room uuid of the exam',
-        type: String,
+        type: SchoolRoom,
     })
-    timeTableExamRoomUUID: string;
+    timeTableExamRoom: SchoolRoom;
 
     // timeTableElements: timeTableelement
 
@@ -57,7 +63,7 @@ export class AddExamDTO {
 
     @ApiProperty()
     @IsNotEmpty()
-    timeTableExamRoomUUID: string;
+    timeTableExamRoom: Record<string, any>;
 
     @ApiProperty()
     @IsNotEmpty()
@@ -87,7 +93,7 @@ export class UpdateExamDTO {
 
     @ApiProperty()
     @IsNotEmpty()
-    timeTableExamRoomUUID: string;
+    timeTableExamRoom: Record<string, any>;
 }
 
 export class DeleteExamDTO {

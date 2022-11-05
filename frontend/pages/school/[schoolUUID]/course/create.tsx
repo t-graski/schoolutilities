@@ -46,7 +46,6 @@ export default function CreateCourse() {
 
   return (
     <>
-      <SiteLayout>
         <Head>
           <title>Course Setup - SchoolUtilities</title>
         </Head>
@@ -56,7 +55,6 @@ export default function CreateCourse() {
             steps={progressSteps}
           ></CourseCreateProgressSite>
         </CreateCourseLayout>
-      </SiteLayout>
       <Footer></Footer>
     </>
   );

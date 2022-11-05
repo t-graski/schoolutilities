@@ -31,6 +31,12 @@ export function getStaticProps() {
     props: {
       entries: [
         {
+          name: "timetable-bug-fixes",
+          date: "November 02, 2022",
+          headline: "November 02, 2022 - Patch Notes",
+          text: "",
+        },
+        {
           name: "new-course-elements-bug-fixes",
           date: "April 23, 2022",
           headline: "April 23, 2022 - Patch Notes",

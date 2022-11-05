@@ -1,11 +1,11 @@
-import { Injectable, HttpStatus, InternalServerErrorException } from '@nestjs/common';
-import { regex } from 'src/regex';
-import { nanoid } from 'nanoid';
-import validator from 'validator';
-import { PrismaClient } from '@prisma/client';
-import { LENGTHS, RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
-import { v4 as uuidv4 } from 'uuid';
-import { Role, RoleOrder } from '../roles/role.enum';
+import { Injectable, HttpStatus, InternalServerErrorException } from "@nestjs/common";
+import { regex } from "src/regex";
+import { nanoid } from "nanoid";
+import validator from "validator";
+import { PrismaClient } from "@prisma/client";
+import { LENGTHS, RETURN_DATA, ID_STARTERS } from "src/misc/parameterConstants";
+import { v4 as uuidv4 } from "uuid";
+import { Role, RoleOrder } from "../roles/role.enum";
 import {
   AddClass,
   AddSchool,
@@ -18,37 +18,30 @@ import {
   UpdateJoinCode,
   JoinSchool,
   UserPermissions,
-} from 'src/types/SchoolAdmin';
-import { DatabaseService } from 'src/database/database.service';
-import { AuthService } from 'src/auth/auth.service';
-import { HelperService } from 'src/helper/helper.service';
-import { AddSchoolDTO, School } from 'src/entity/school/school';
+} from "src/types/SchoolAdmin";
+import { DatabaseService } from "src/database/database.service";
+import { AuthService } from "src/auth/auth.service";
+import { HelperService } from "src/helper/helper.service";
+import { AddSchoolDTO, School } from "src/entity/school/school";
 // import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
 // import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
 // import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
 // import { User } from 'src/entity/user/user';
 // import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
-import { SchoolRole } from 'src/entity/school-role/schoolRole';
-import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
-import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
-import { Request } from 'express';
+import { SchoolRole } from "src/entity/school-role/schoolRole";
+import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from "src/entity/subject/schoolSubject";
+import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from "src/entity/school-room/schoolRoom";
+import { Request } from "express";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config();
+require("dotenv").config();
 const prisma = new PrismaClient();
 
 @Injectable()
 export class SchoolAdminService {
-  constructor(
-    private readonly databaseService: DatabaseService,
-    private readonly authService: AuthService,
-    private readonly helper: HelperService,
-  ) { }
+  constructor(private readonly databaseService: DatabaseService, private readonly authService: AuthService, private readonly helper: HelperService) {}
 
-  async addSchoolConfig(
-    body: AddSchool,
-    token: string,
-  ): Promise<ReturnMessage> {
-    const { name, languageId, timezone, description = '' } = body;
+  async addSchoolConfig(body: AddSchool, token: string): Promise<ReturnMessage> {
+    const { name, languageId, timezone, description = "" } = body;
     if (
       !validator.isLength(name, LENGTHS.CLASS_NAME)
       // !regex.timezone.test(timezone) ||
@@ -118,7 +111,7 @@ export class SchoolAdminService {
           schoolUUID: school.schoolUUID,
           schoolName: school.schoolName,
           schoolDescription: school.schoolDescription,
-          languageId: school.schoolLanguageId == 1 ? 'de' : 'en',
+          languageId: school.schoolLanguageId == 1 ? "de" : "en",
           timezone: school.schoolTimezone,
         },
       };
@@ -131,23 +124,18 @@ export class SchoolAdminService {
 
   async addClass(body: AddClass): Promise<ReturnMessage> {
     const { departmentUUID, className } = body;
-    if (
-      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
-      !validator.isUUID(departmentUUID.slice(1), 4)
-    ) {
+    if (!validator.isLength(className, LENGTHS.CLASS_NAME) || !validator.isUUID(departmentUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const departmentId = await this.databaseService.getDepartmentIdByUUID(
-      departmentUUID,
-    );
+    const departmentId = await this.databaseService.getDepartmentIdByUUID(departmentUUID);
 
     const isNotAvailable = await prisma.schoolClasses.findFirst({
       where: {
         schoolClassDepartmentId: Number(departmentId),
         AND: {
           schoolClassName: className,
-        }
+        },
       },
     });
 
@@ -205,7 +193,7 @@ export class SchoolAdminService {
       });
     } catch (err) {
       // Foreign key constraint failed
-      if (err.code === 'P2003') {
+      if (err.code === "P2003") {
         return RETURN_DATA.REFERENCE_ERROR;
       } else {
         return RETURN_DATA.DATABASE_ERROR;
@@ -216,18 +204,12 @@ export class SchoolAdminService {
 
   async updateClass(body: UpdateClass): Promise<ReturnMessage> {
     const { className, classUUID, departmentUUID } = body;
-    if (
-      !validator.isLength(className, LENGTHS.CLASS_NAME) ||
-      !validator.isUUID(classUUID.slice(1), 4) ||
-      !validator.isUUID(departmentUUID.slice(1), 4)
-    ) {
+    if (!validator.isLength(className, LENGTHS.CLASS_NAME) || !validator.isUUID(classUUID.slice(1), 4) || !validator.isUUID(departmentUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
     const classId = await this.databaseService.getClassIdByUUID(classUUID);
-    const departmentId = await this.databaseService.getDepartmentIdByUUID(
-      departmentUUID,
-    );
+    const departmentId = await this.databaseService.getDepartmentIdByUUID(departmentUUID);
 
     try {
       const schoolClass = await prisma.schoolClasses.update({
@@ -252,7 +234,7 @@ export class SchoolAdminService {
         data: schoolClass,
       };
     } catch (err) {
-      if (err.code === 'P2002') {
+      if (err.code === "P2002") {
         return RETURN_DATA.ALREADY_EXISTS;
       }
       return RETURN_DATA.DATABASE_ERROR;
@@ -277,7 +259,7 @@ export class SchoolAdminService {
           },
         });
 
-        const filteredClasses = departmentClasses.map((departmentClass) => {
+        const filteredClasses = departmentClasses.map(departmentClass => {
           return {
             departmentUUID: department.departmentUUID,
             departmentName: department.name,
@@ -311,7 +293,7 @@ export class SchoolAdminService {
         },
       });
 
-      const departmentsWithoutIds = departments.map((department) => {
+      const departmentsWithoutIds = departments.map(department => {
         const { departmentUUID, departmentName, departmentIsVisible, departmentChildsVisible } = department;
         return {
           departmentUUID: departmentUUID,
@@ -386,7 +368,7 @@ export class SchoolAdminService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const names = body.departments.map((department) => department.name);
+    const names = body.departments.map(department => department.name);
     const isNotUnique = names.some((name, index) => {
       return names.indexOf(name) !== index;
     });
@@ -426,9 +408,7 @@ export class SchoolAdminService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const departmentId = await this.databaseService.getDepartmentIdByUUID(
-      departmentUUID,
-    );
+    const departmentId = await this.databaseService.getDepartmentIdByUUID(departmentUUID);
 
     const department = await prisma.departments.findUnique({
       where: {
@@ -447,7 +427,7 @@ export class SchoolAdminService {
       });
     } catch (err) {
       // Foreign key constraint failed
-      if (err.code === 'P2003') {
+      if (err.code === "P2003") {
         return RETURN_DATA.REFERENCE_ERROR;
       } else {
         return RETURN_DATA.DATABASE_ERROR;
@@ -456,7 +436,7 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async updateDepartment(body: UpdateDepartment): Promise<ReturnMessage> {
+  async updateDepartment(body): Promise<ReturnMessage> {
     const { departmentUUID, departmentName, isVisible, childsVisible } = body;
     if (
       !validator.isLength(departmentName, LENGTHS.DEPARTMENT_NAME) ||
@@ -467,9 +447,7 @@ export class SchoolAdminService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const departmentId = await this.databaseService.getDepartmentIdByUUID(
-      departmentUUID,
-    );
+    const departmentId = await this.databaseService.getDepartmentIdByUUID(departmentUUID);
 
     const department = await prisma.departments.findUnique({
       where: {
@@ -493,7 +471,7 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      if (err.code === 'P2002') {
+      if (err.code === "P2002") {
         return RETURN_DATA.UNIQUE_ERROR;
       }
       return RETURN_DATA.DATABASE_ERROR;
@@ -505,14 +483,9 @@ export class SchoolAdminService {
     const jwt = await this.authService.decodeJWT(token);
 
     const personUUID = jwt.personUUID;
-    const schoolUUID = await this.databaseService.getSchoolUUIDByJoinCode(
-      joinCode,
-    );
+    const schoolUUID = await this.databaseService.getSchoolUUIDByJoinCode(joinCode);
 
-    if (
-      !validator.isUUID(personUUID.slice(1), 4) ||
-      !validator.isUUID(schoolUUID.slice(1), 4)
-    ) {
+    if (!validator.isUUID(personUUID.slice(1), 4) || !validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
@@ -571,7 +544,7 @@ export class SchoolAdminService {
         },
       });
     } catch (err) {
-      if (err.code === 'P2002') {
+      if (err.code === "P2002") {
         return RETURN_DATA.ALREADY_EXISTS;
       }
 
@@ -588,10 +561,7 @@ export class SchoolAdminService {
 
   async leaveSchool(body: JoinSchool): Promise<ReturnMessage> {
     const { personUUID, schoolUUID } = body;
-    if (
-      !validator.isUUID(personUUID.slice(1), 4) ||
-      !validator.isUUID(schoolUUID.slice(1), 4)
-    ) {
+    if (!validator.isUUID(personUUID.slice(1), 4) || !validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
 
@@ -615,7 +585,7 @@ export class SchoolAdminService {
     const personId = await this.databaseService.getPersonIdByUUID(personUUID);
     const role = await this.databaseService.getUserRoles(personId.toString());
 
-    const roleEntry = role.find((entry) => entry.schoolId === schoolId);
+    const roleEntry = role.find(entry => entry.schoolId === schoolId);
     if (roleEntry.roleId === 1) {
       return RETURN_DATA.LAST_USER;
     }
@@ -628,7 +598,7 @@ export class SchoolAdminService {
       },
     });
 
-    const isOnlyUserArray = isOnlyUser.map((entry) => entry.schoolId);
+    const isOnlyUserArray = isOnlyUser.map(entry => entry.schoolId);
 
     if (isOnlyUserArray.length == 1) return RETURN_DATA.LAST_USER;
 
@@ -638,7 +608,7 @@ export class SchoolAdminService {
           schoolUserId_schoolId: {
             schoolId: schoolId,
             schoolUserId: personId,
-          }
+          },
         },
       });
     } catch (err) {
@@ -649,7 +619,7 @@ export class SchoolAdminService {
   }
 
   async addJoinCode(body: AddJoinCode, token: string): Promise<ReturnMessage> {
-    const { schoolUUID, schoolJoinCodeExpireTimestamp, schoolJoinCodeName = '' } = body;
+    const { schoolUUID, schoolJoinCodeExpireTimestamp, schoolJoinCodeName = "" } = body;
     const jwt = await this.authService.decodeJWT(token);
     const personUUID = jwt.personUUID;
 
@@ -672,7 +642,7 @@ export class SchoolAdminService {
       },
     });
 
-    if (nameIsNotAvailable && nameIsNotAvailable.schoolJoinCodeName !== '') {
+    if (nameIsNotAvailable && nameIsNotAvailable.schoolJoinCodeName !== "") {
       return RETURN_DATA.ALREADY_EXISTS;
     }
 
@@ -744,7 +714,7 @@ export class SchoolAdminService {
       });
     } catch (err) {
       // Foreign key constraint failed
-      if (err.code === 'P2003') {
+      if (err.code === "P2003") {
         return RETURN_DATA.REFERENCE_ERROR;
       } else {
         return RETURN_DATA.DATABASE_ERROR;
@@ -753,18 +723,12 @@ export class SchoolAdminService {
     return RETURN_DATA.SUCCESS;
   }
 
-  async updateJoinCode(body: UpdateJoinCode): Promise<ReturnMessage> {
-    const { joinCode, expireDate, joinCodeName = '' } = body;
-    if (
-      !(new Date(expireDate).getTime() > 0) ||
-      !validator.isLength(joinCodeName, LENGTHS.JOIN_CODE_NAME)
-    ) {
-      return RETURN_DATA.INVALID_INPUT;
-    }
+  async updateJoinCode(body): Promise<ReturnMessage> {
+    const { schoolJoinCode, schoolJoinCodeExpireTimestamp, schoolJoinCodeName = "" } = body;
 
     const joinCodeData = await prisma.schoolJoinCodes.findUnique({
       where: {
-        schoolJoinCode: joinCode,
+        schoolJoinCode: schoolJoinCode,
       },
     });
 
@@ -775,15 +739,15 @@ export class SchoolAdminService {
     try {
       await prisma.schoolJoinCodes.update({
         where: {
-          schoolJoinCode: joinCode,
+          schoolJoinCode: schoolJoinCode,
         },
         data: {
-          schoolJoinCodeName: joinCodeName,
-          schoolJoinCodeExpireTimestamp: new Date(expireDate),
+          schoolJoinCodeName: schoolJoinCodeName,
+          schoolJoinCodeExpireTimestamp: new Date(schoolJoinCodeExpireTimestamp),
         },
       });
     } catch (err) {
-      if (err.code === 'P2002') {
+      if (err.code === "P2002") {
         return RETURN_DATA.ALREADY_EXISTS;
       }
       return RETURN_DATA.DATABASE_ERROR;
@@ -813,9 +777,7 @@ export class SchoolAdminService {
     const joinCodesData = [];
 
     for (const joinCode of joinCodes) {
-      const person = await this.databaseService.getPersonById(
-        joinCode.schoolJoinCodeCreatorId,
-      );
+      const person = await this.databaseService.getPersonById(joinCode.schoolJoinCodeCreatorId);
 
       joinCodesData.push({
         schoolJoinCodeName: joinCode.schoolJoinCodeName,
@@ -863,9 +825,7 @@ export class SchoolAdminService {
       return RETURN_DATA.INVALID_INPUT;
     }
 
-    const personRoles = await this.databaseService.getPersonRolesByPersonUUID(
-      personUUID,
-    );
+    const personRoles = await this.databaseService.getPersonRolesByPersonUUID(personUUID);
 
     return {
       status: HttpStatus.OK,
@@ -892,11 +852,11 @@ export class SchoolAdminService {
               schoolUserRoles: {
                 include: {
                   schoolRoles: true,
-                }
-              }
-            }
-          }
-        }
+                },
+              },
+            },
+          },
+        },
       });
 
       const usersData = [];
@@ -908,9 +868,8 @@ export class SchoolAdminService {
           userLastname: user.users.userLastname,
           schoolRoleName: user.users.schoolUserRoles[0].schoolRoles.schoolRoleName,
           schoolRoleId: user.users.schoolUserRoles[0].schoolRoleId,
-        })
+        });
       }
-
 
       return {
         status: RETURN_DATA.SUCCESS.status,
@@ -921,10 +880,32 @@ export class SchoolAdminService {
     }
   }
 
-  async getSchoolInformation(
-    schoolUUID: string,
-    token: string,
-  ): Promise<ReturnMessage> {
+  async getTeachersOfSchool(schoolUUID: string): Promise<ReturnMessage> {
+    try {
+      const teachers = await prisma.schoolUserRoles.findMany({
+        where: {
+          schoolRoles: {
+            schoolRoleId: 1,
+          },
+          schools: {
+            schoolUUID,
+          },
+        },
+        include: {
+          users: true,
+        },
+      });
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        data: teachers,
+      };
+    } catch {
+      throw new InternalServerErrorException("Database error");
+    }
+  }
+
+  async getSchoolInformation(schoolUUID: string, token: string): Promise<ReturnMessage> {
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
@@ -947,9 +928,7 @@ export class SchoolAdminService {
 
     if (!school) return RETURN_DATA.NOT_FOUND;
 
-    const creator = await this.databaseService.getPersonById(
-      school.schoolCreatorId,
-    );
+    const creator = await this.databaseService.getPersonById(school.schoolCreatorId);
 
     const schoolDataItem = {
       schoolName: school.schoolName,
@@ -970,10 +949,7 @@ export class SchoolAdminService {
     };
   }
 
-  async getDetailedSchoolInformation(
-    schoolUUID: string,
-    token: string,
-  ): Promise<ReturnMessage> {
+  async getDetailedSchoolInformation(schoolUUID: string, token: string): Promise<ReturnMessage> {
     if (!validator.isUUID(schoolUUID.slice(1), 4)) {
       return RETURN_DATA.INVALID_INPUT;
     }
@@ -996,9 +972,7 @@ export class SchoolAdminService {
 
     if (!school) return RETURN_DATA.NOT_FOUND;
 
-    const creator = await this.databaseService.getPersonById(
-      school.schoolCreatorId,
-    );
+    const creator = await this.databaseService.getPersonById(school.schoolCreatorId);
 
     const schoolData = {};
 
@@ -1028,13 +1002,9 @@ export class SchoolAdminService {
 
     const personsData = [];
     for (const person of persons) {
-      const personData = await this.databaseService.getPersonById(
-        person.schoolUserId,
-      );
+      const personData = await this.databaseService.getPersonById(person.schoolUserId);
 
-      const personRole = await this.databaseService.getPersonRolesByPersonUUID(
-        personData.personUUID,
-      );
+      const personRole = await this.databaseService.getPersonRolesByPersonUUID(personData.personUUID);
 
       personsData.push({
         personUUID: personData.personUUID,
@@ -1110,9 +1080,7 @@ export class SchoolAdminService {
     });
 
     for (const course of courses) {
-      const creator = await this.databaseService.getPersonById(
-        course.courseCreatorId,
-      );
+      const creator = await this.databaseService.getPersonById(course.courseCreatorId);
 
       const courseDataItem = {
         courseName: course.courseName,
@@ -1137,9 +1105,7 @@ export class SchoolAdminService {
       });
 
       for (const coursePerson of coursePersons) {
-        const coursePersonData = await this.databaseService.getPersonById(
-          coursePerson.userId,
-        );
+        const coursePersonData = await this.databaseService.getPersonById(coursePerson.userId);
 
         const coursePersonItem = {
           personUUID: coursePersonData.personUUID,
@@ -1161,26 +1127,44 @@ export class SchoolAdminService {
   }
 
   async updateRole(request): Promise<ReturnMessage> {
-    const { personUUID, schoolUUID, roleId } = request.body;
+    const { userUUID, schoolUUID, schoolRoleId } = request.body;
 
     try {
-      const personId = await this.helper.getUserIdByUUID(personUUID);
+      const userId = await this.helper.getUserIdByUUID(userUUID);
       const schoolId = await this.helper.getSchoolIdByUUID(schoolUUID);
+
       await prisma.schoolUserRoles.update({
         where: {
           user_school_unique: {
-            userId: Number(personId),
-            schoolId: Number(schoolId),
+            schoolId,
+            userId,
           },
         },
         data: {
-          schoolRoleId: Number(roleId),
+          users: {
+            connect: {
+              userUUID,
+            },
+          },
+          schools: {
+            connect: {
+              schoolUUID,
+            },
+          },
+          schoolRoles: {
+            connect: {
+              schoolRoleId,
+            },
+          },
         },
       });
-      return RETURN_DATA.SUCCESS;
+
+      return {
+        status: RETURN_DATA.SUCCESS.status,
+        message: RETURN_DATA.SUCCESS.message,
+      };
     } catch (error) {
-      console.log(error);
-      return RETURN_DATA.DATABASE_ERROR;
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1198,11 +1182,11 @@ export class SchoolAdminService {
               schoolUUID,
             },
           },
-        }
-      })
+        },
+      });
       return new SchoolSubject(subject);
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
   async getSubject(subjectUUID: string, request: Request): Promise<SchoolSubject> {
@@ -1210,11 +1194,11 @@ export class SchoolAdminService {
       const subject = await prisma.schoolSubjects.findUnique({
         where: {
           schoolSubjectUUID: subjectUUID,
-        }
+        },
       });
       return new SchoolSubject(subject);
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1224,12 +1208,12 @@ export class SchoolAdminService {
         where: {
           school: {
             schoolUUID,
-          }
-        }
+          },
+        },
       });
       return subjects.map(subject => new SchoolSubject(subject));
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1243,11 +1227,11 @@ export class SchoolAdminService {
         data: {
           schoolSubjectName,
           schoolSubjectAbbreviation,
-        }
-      })
+        },
+      });
       return new SchoolSubject(subject);
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1256,11 +1240,11 @@ export class SchoolAdminService {
       const subject = await prisma.schoolSubjects.delete({
         where: {
           schoolSubjectUUID: subjectUUID,
-        }
-      })
+        },
+      });
       return 200;
     } catch (err) {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1269,11 +1253,11 @@ export class SchoolAdminService {
       const room = await prisma.schoolRooms.findUnique({
         where: {
           schoolRoomUUID: roomUUID,
-        }
+        },
       });
       return new SchoolRoom(room);
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1282,13 +1266,13 @@ export class SchoolAdminService {
       const rooms = await prisma.schoolRooms.findMany({
         where: {
           schools: {
-            schoolUUID
+            schoolUUID,
           },
-        }
+        },
       });
       return rooms.map(room => new SchoolRoom(room));
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1307,11 +1291,11 @@ export class SchoolAdminService {
               schoolUUID,
             },
           },
-        }
-      })
+        },
+      });
       return new SchoolRoom(room);
     } catch (err) {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1327,11 +1311,11 @@ export class SchoolAdminService {
           schoolRoomName,
           schoolRoomAbbreviation,
           schoolRoomBuilding,
-        }
-      })
+        },
+      });
       return new SchoolRoom(room);
     } catch (err) {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -1340,15 +1324,15 @@ export class SchoolAdminService {
       const room = await prisma.schoolRooms.delete({
         where: {
           schoolRoomUUID: roomUUID,
-        }
-      })
+        },
+      });
       return 200;
     } catch (err) {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
   toBoolean(value): boolean {
-    return value === '1';
+    return value === "1";
   }
 }

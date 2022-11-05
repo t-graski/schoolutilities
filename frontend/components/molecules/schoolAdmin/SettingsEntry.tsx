@@ -23,7 +23,7 @@ const SettingsEntryLayout = styled("div", {
   variants: {
     highlighted: {
       true: {
-        border: "4px solid $warning",
+        border: "4px solid $primaryContainer",
       },
       false: {},
     },

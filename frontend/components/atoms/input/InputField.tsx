@@ -36,10 +36,6 @@ const StyledInputField = styled("input", {
   color: "$onSurfaceVariant",
   backgroundColor: "transparent",
 
-  ["&:focus"]: {
-    borderBottom: "solid 1px $colors$neutral-500",
-  },
-
   variants: {
     editable: {
       true: {},

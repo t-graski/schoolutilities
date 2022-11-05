@@ -15,9 +15,9 @@ type Props = {
 
 const GeneralListLayout = styled("div", {
   display: "grid",
-  gridTemplateColumns: "4fr 1fr 4fr 1fr 4fr",
+  gridTemplateColumns: "1fr 1fr 1fr",
   justifyContent: "space-evenly",
-  gap: "30px",
+  gap: "$9x",
   width: "100vw",
   padding: "10vh 10vw",
 
@@ -35,24 +35,14 @@ const GeneralList: React.FC<Props> = ({ items }) => {
     <>
       <GeneralListLayout>
         {items.map((item, index) => (
-          <>
-            <GeneralListItem
-              key={index}
-              title={item.title}
-              href={item.href}
-              buttonText={item.buttonText}
-              description={item.description}
-              icon={item.icon}
-            />
-            <Separator
-              key={index + items.length}
-              visible={index !== items.length - 1}
-              width={"big"}
-              alignment={"left"}
-              orientation={"vertical"}
-              hideOnMobile={true}
-            />
-          </>
+          <GeneralListItem
+            key={index}
+            title={item.title}
+            href={item.href}
+            buttonText={item.buttonText}
+            description={item.description}
+            icon={item.icon}
+          />
         ))}
       </GeneralListLayout>
     </>

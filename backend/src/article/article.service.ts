@@ -1,29 +1,21 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { HelperService } from '../helper/helper.service';
-import { v4 as uuidv4 } from 'uuid';
-import { RETURN_DATA, ID_STARTERS } from 'src/misc/parameterConstants';
-import validator from 'validator';
-import { ReturnMessage } from 'src/types/SchoolAdmin';
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
+import { HelperService } from "../helper/helper.service";
+import { v4 as uuidv4 } from "uuid";
+import { RETURN_DATA, ID_STARTERS } from "src/misc/parameterConstants";
+import validator from "validator";
+import { ReturnMessage } from "src/types/SchoolAdmin";
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly helper: HelperService) { }
+  constructor(private readonly helper: HelperService) {}
 
   async createArticle(request): Promise<ReturnMessage> {
-    const {
-      headline,
-      catchPhrase = '',
-      content,
-      type,
-      isPublic,
-    } = request.body;
+    const { headline, catchPhrase = "", content, type, isPublic } = request.body;
 
-    const userUUID = await this.helper.getUserUUIDfromJWT(
-      await this.helper.extractJWTToken(request),
-    );
+    const userUUID = await this.helper.getUserUUIDfromJWT(await this.helper.extractJWTToken(request));
     const userId = await this.helper.getUserIdByUUID(userUUID);
 
     try {
@@ -69,8 +61,7 @@ export class ArticleService {
   }
 
   async editArticle(request): Promise<ReturnMessage> {
-    const { articleUUID, headline, catchPhrase, content, type, isPublic } =
-      request.body;
+    const { articleUUID, headline, catchPhrase, content, type, isPublic } = request.body;
 
     try {
       await prisma.articles.update({
@@ -128,9 +119,7 @@ export class ArticleService {
         articleContent: article.articleContent,
         type: {
           articleTypeId: article.articleType,
-          articleTypeName: await this.helper.translateArticleType(
-            article.articleType,
-          ),
+          articleTypeName: await this.helper.translateArticleType(article.articleType),
         },
         articleIsPublic: article.articleIsPublic,
         articlePublishTimestamp: article.articlePublishTimestamp,
@@ -139,9 +128,7 @@ export class ArticleService {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(
-          article.articleContent,
-        ),
+        readingTime: await this.helper.computeReadingTime(article.articleContent),
       };
 
       return {
@@ -174,9 +161,7 @@ export class ArticleService {
         articleContent: article.articleContent,
         type: {
           articleType: article.articleType,
-          articleTypeName: await this.helper.translateArticleType(
-            article.articleType,
-          ),
+          articleTypeName: await this.helper.translateArticleType(article.articleType),
         },
         articleIsPublic: article.articleIsPublic,
         articlePublishTimestamp: article.articlePublishTimestamp,
@@ -185,19 +170,14 @@ export class ArticleService {
           firstName: creator.firstName,
           lastName: creator.lastName,
         },
-        readingTime: await this.helper.computeReadingTime(
-          article.articleContent,
-        ),
+        readingTime: await this.helper.computeReadingTime(article.articleContent),
       };
 
       articleItems.push(articleItem);
     }
 
     articleItems.sort((a, b) => {
-      return (
-        b.articleCreationTimestamp.getTime() -
-        a.articleCreationTimestamp.getTime()
-      );
+      return b.articleCreationTimestamp.getTime() - a.articleCreationTimestamp.getTime();
     });
 
     return {
@@ -234,17 +214,17 @@ export class ArticleService {
           articleFileSize: file.size,
           articles: {
             connect: {
-              articleUUID
-            }
-          }
-        }
-      })
+              articleUUID,
+            },
+          },
+        },
+      });
       return {
         status: RETURN_DATA.SUCCESS.status,
         data: articleFile,
-      }
+      };
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 
@@ -253,17 +233,17 @@ export class ArticleService {
       const articleFiles = await prisma.articleFile.findMany({
         where: {
           articles: {
-            articleUUID
-          }
-        }
-      })
+            articleUUID,
+          },
+        },
+      });
 
       return {
         status: RETURN_DATA.SUCCESS.status,
         data: articleFiles,
-      }
+      };
     } catch {
-      throw new InternalServerErrorException('Database error');
+      throw new InternalServerErrorException("Database error");
     }
   }
 }

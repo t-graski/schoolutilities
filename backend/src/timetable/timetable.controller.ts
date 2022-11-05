@@ -1,8 +1,9 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AddTimeTableDto } from 'src/dto/addTimeTable';
+import { AddTimeTableDto, AddTimeTableElementDto, UpdateTimeTableElementDto } from 'src/dto/addTimeTable';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
+import { ExamInterceptor } from 'src/notification/exam.interceptor';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
@@ -22,6 +23,43 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/element')
+  async addTimeTableElement(@Body() timeTableElement: AddTimeTableElementDto, @Req() request, @Res() response) {
+    const result = await this.timetableService.addTimeTableElement(timeTableElement, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/element')
+  async updateTimeTableElement(@Body() timeTableElement: UpdateTimeTableElementDto, @Req() request: Request, @Res() response) {
+    const result = await this.timetableService.updateTimeTableElement(timeTableElement, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/element/detailed/:elementUUID/:date')
+  async getTimeTableElementDetailed(@Param('elementUUID') elementUUID: string, @Param('date') date: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getTimeTableElementDetailed(elementUUID, date, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/element/:elementUUID')
+  async deleteTimeTableElement(@Param('elementUUID') elementUUID: string, @Req() request: Request, @Res() response) {
+    const result = await this.timetableService.deleteTimeTableElement(elementUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+
   @Get('/timeTableElement/:timeTableElementUUID')
   async getTimeTableElement(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getTimeTableElement(timeTableElementUUID, request);
@@ -30,7 +68,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Post('holiday')
+  @Post('/holiday')
   async addHoliday(@Body() holiday, @Req() request, @Res() response) {
     const result = await this.timetableService.addHoliday(holiday, request);
     return response
@@ -38,7 +76,7 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Get('holiday/:schoolUUID')
+  @Get('/holiday/:schoolUUID')
   async getHoliday(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.getHolidayOfSchool(schoolUUID);
     return response
@@ -46,7 +84,8 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Delete('holiday/:holidayUUID')
+  @UseGuards(JwtAuthGuard)
+  @Delete('/holiday/:holidayUUID')
   async removeHoliday(@Param('holidayUUID') holidayUUID: string, @Req() request, @Res() response) {
     const result = await this.timetableService.removeHoliday(holidayUUID);
     return response
@@ -54,7 +93,8 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
-  @Put('holiday/:holidayUUID')
+  @UseGuards(JwtAuthGuard)
+  @Put('/holiday/:holidayUUID')
   async updateHoliday(@Param('holidayUUID') holidayUUID: string, @Body() holiday, @Req() request, @Res() response) {
     const result = await this.timetableService.updateHoliday(holidayUUID, holiday);
     return response
@@ -63,7 +103,25 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('timeTableGrid')
+  @Post('/omit')
+  async addOmit(@Body() omit, @Req() request, @Res() response) {
+    const result = await this.timetableService.addOmit(omit, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/omit/:timeTableElementUUID')
+  async removeOmit(@Param('timeTableElementUUID') timeTableElementUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeOmit(timeTableElementUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/grid')
   async addTimeTableGrid(@Body() timeTableGrid, @Req() request, @Res() response) {
     const result = await this.timetableService.addTimeTableGrid(timeTableGrid, request);
     return response
@@ -71,6 +129,61 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/grid/:schoolUUID')
+  async getTimeTableGrid(@Param('schoolUUID') schoolUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getTimeTableGrid(schoolUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/grid')
+  async updateTimeTableGrid(@Body() timeTableGrid, @Req() request, @Res() response) {
+    const result = await this.timetableService.editTimeTableGrid(timeTableGrid, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/grid/break')
+  async removeBreak(@Body() breakUUID, @Req() request, @Res() response) {
+    const result = await this.timetableService.removeBreak(breakUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/grid/break')
+  async updateBreak(@Body() breakData, @Req() request, @Res() response) {
+    const result = await this.timetableService.updateBreak(breakData, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/grid/break')
+  async addBreak(@Body() breakData, @Req() request, @Res() response) {
+    const result = await this.timetableService.addBreak(breakData, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/freeRooms')
+  async getFreeRooms(@Req() request: Request, @Res() response) {
+    const result = await this.timetableService.getFreeRooms();
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('/substitution')
   async addSubstitution(@Body() substitution, @Req() request, @Res() response) {
     const result = await this.timetableService.addSubstitution(substitution, request);
@@ -80,11 +193,40 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/substitution/:elementUUID/:date')
+  async getSubstitution(@Param('elementUUID') elementUUID: string, @Param('date') date: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getSubstitutionForTimeTableElement(elementUUID, date, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/substitution/:substitutionUUID')
+  async removeSubstitution(@Param('substitutionUUID') substitutionUUID: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.deleteSubstitution(substitutionUUID, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/substitution')
+  async updateSubstitution(@Body() substitution, @Req() request, @Res() response) {
+    const result = await this.timetableService.updateSubstitution(substitution, request);
+    return response
+      .status(result.status)
+      .json(result?.data ? result.data : result.message);
+  }
+
+  @UseInterceptors(ExamInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Post('/exam')
   async addExam(@Body() exam: AddExamDTO, @Req() request: Request) {
     return this.timetableService.addExam(exam, request);
   }
 
+  @UseInterceptors(ExamInterceptor)
   @UseGuards(JwtAuthGuard)
   @Put('/exam')
   async updateExam(@Body() exam: UpdateExamDTO, @Req() request: Request) {
@@ -109,9 +251,10 @@ export class TimetableController {
     return this.timetableService.getExamsOfSchool(schoolUUID, request);
   }
 
+  @UseInterceptors(ExamInterceptor)
   @UseGuards(JwtAuthGuard)
   @Delete('/exam/:examUUID')
-  async deleteExam(@Param('examUUID') examUUID: string, @Req() request: Request): Promise<number> {
+  async deleteExam(@Param('examUUID') examUUID: string, @Req() request: Request): Promise<Exam> {
     return this.timetableService.deleteExam(examUUID, request);
   }
 
@@ -123,6 +266,4 @@ export class TimetableController {
       .status(result.status)
       .json(result?.data ? result.data : result.message);
   }
-
-
 }
