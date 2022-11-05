@@ -49,7 +49,7 @@ export type TimeTableItemType = {
       userEmail: string;
     }[];
     timeTableSubstitutionRoomUUID: string;
-    schoolSubject: {
+    timeTableSubstitutionSubject: {
       schoolSubjectUUID: string;
       schoolSubjectName: string;
       schoolSubjectAbbreviation: string;
@@ -147,7 +147,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
       },
       substituted: {
         true: {
-          borderColor: "$primaryContainer",
+          borderColor: isBeforeNow ? "$inversePrimary" : "$onSurfaceVariant",
         },
         false: {},
       }
@@ -192,7 +192,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           substituted={!!item.substitution}
         >
           <TimeTableSubjectName>
-            {item.substitution?.schoolSubject?.schoolSubjectAbbreviation ??
+            {item.substitution?.timeTableSubstitutionSubject?.schoolSubjectAbbreviation ??
               item.schoolSubject.schoolSubjectAbbreviation}
           </TimeTableSubjectName>
           <TimeTableTime>

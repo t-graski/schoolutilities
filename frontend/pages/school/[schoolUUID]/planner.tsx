@@ -7,9 +7,11 @@ import dynamic from "next/dynamic";
 import { SideDashboardBar } from "../../../components/organisms/SideDashboardBar";
 import ClassTimeTable from "../../../components/organisms/time-table/ClassTimeTable";
 import { ExamsOverviewField } from "../../../components/organisms/time-table/ExamsOverviewField";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import SvgPlanner from "../../../components/atoms/svg/SvgPlanner";
 import SvgTest from "../../../components/atoms/svg/SvgTest";
+import { getUserData, loggedIn } from "utils/authHelper";
+import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
 
 const SettingsLayout = styled("div", {
   display: "flex",
@@ -20,6 +22,15 @@ const SettingsLayout = styled("div", {
 export default function CreateSchool() {
   const router = useRouter();
   const schoolUUID = router.query.schoolUUID as string;
+  const { data: userInfo, status: userInfoStatus } = useQuery(
+    "userInfo",
+    getUserData,
+    {
+      refetchOnMount: false,
+      staleTime: 60000,
+      enabled: loggedIn(),
+    }
+  );
 
   let urlParam;
   if (router.query && router.query.tab) {
@@ -35,7 +46,9 @@ export default function CreateSchool() {
       case "timetable":
         return <ClassTimeTable></ClassTimeTable>;
       default:
-        return <ExamsOverviewField queryClient={queryClient}></ExamsOverviewField>;
+        return (
+          <ExamsOverviewField queryClient={queryClient}></ExamsOverviewField>
+        );
     }
   }
 
@@ -51,7 +64,9 @@ export default function CreateSchool() {
             {
               name: "Timetable",
               value: "timetable",
-              href: `/school/${schoolUUID}/planner?tab=timetable`,
+              href: `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
+                userInfo && userInfo.userSchoolClass
+              }`,
               icon: SvgPlanner,
             },
             {
@@ -59,7 +74,7 @@ export default function CreateSchool() {
               value: "exams",
               href: `/school/${schoolUUID}/planner?tab=exams`,
               icon: SvgTest,
-            }
+            },
           ]}
           active={urlParam}
         ></SideDashboardBar>
