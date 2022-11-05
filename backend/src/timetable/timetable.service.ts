@@ -262,9 +262,7 @@ export class TimetableService {
                     }
                 }
             };
-        } catch (err) {
-            console.log(err);
-
+        } catch {
             throw new InternalServerErrorException('Database error');
         }
     }
@@ -544,57 +542,41 @@ export class TimetableService {
                         element.timeTableSubstitution[0].timeTableSubstitutionDate <=
                         new Date(monday.getTime() + 86400000 * 4)
                     ) {
-
-                        const weekday = [
-                            'Sunday',
-                            'Monday',
-                            'Tuesday',
-                            'Wednesday',
-                            'Thursday',
-                            'Friday',
-                            'Saturday',
-                        ];
-                        let day =
-                            weekday[
-                            element.timeTableSubstitution[0].timeTableSubstitutionDate.getDay()
-                            ];
-                        if (element.timeTableElementDay === day) {
-                            return {
-                                timeTableSubstitutionUUID: element.timeTableSubstitution[0].timeTableSubstitutionUUID,
-                                timeTableSubstitutionRoomUUID: element.timeTableSubstitution[0].schoolRooms.schoolRoomUUID,
-                                timeTableSubstitutiontartTime: element.timeTableSubstitution[0].timeTableSubstitutionstartTime,
-                                timeTableSubstitutionEndTime: element.timeTableSubstitution[0].timeTableSubstitutionEndTime,
-                                timeTableSubstitutionSubject: {
-                                    schoolSubjectName: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
-                                    schoolSubjectUUID: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
-                                    schoolSubjectAbbreviation: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectAbbreviation,
+                        return {
+                            timeTableSubstitutionUUID: element.timeTableSubstitution[0].timeTableSubstitutionUUID,
+                            timeTableSubstitutionRoomUUID: element.timeTableSubstitution[0].schoolRooms.schoolRoomUUID,
+                            timeTableSubstitutiontartTime: element.timeTableSubstitution[0].timeTableSubstitutionstartTime,
+                            timeTableSubstitutionEndTime: element.timeTableSubstitution[0].timeTableSubstitutionEndTime,
+                            timeTableSubstitutionSubject: {
+                                schoolSubjectName: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectName,
+                                schoolSubjectUUID: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectUUID,
+                                schoolSubjectAbbreviation: element.timeTableSubstitution[0].schoolSubjects.schoolSubjectAbbreviation,
+                            },
+                            timeTableSubstitutionClasses: element.timeTableSubstitution[0].timeTableSubstitutionClasses.map(
+                                (classes) => {
+                                    return {
+                                        schoolClassUUID: classes.classes.schoolClassUUID,
+                                        schoolClassName: classes.classes.schoolClassName,
+                                        schoolClassCreationTimestamp:
+                                            classes.classes.schoolClassCreationTimestamp,
+                                    };
                                 },
-                                timeTableSubstitutionClasses: element.timeTableSubstitution[0].timeTableSubstitutionClasses.map(
-                                    (classes) => {
+                            ),
+                            timeTableSubstitutionTeachers:
+                                element.timeTableSubstitution[0].timeTableSubstitutionTeachers.map(
+                                    (teacher) => {
                                         return {
-                                            schoolClassUUID: classes.classes.schoolClassUUID,
-                                            schoolClassName: classes.classes.schoolClassName,
-                                            schoolClassCreationTimestamp:
-                                                classes.classes.schoolClassCreationTimestamp,
+                                            userUUID: teacher.users.userUUID,
+                                            userFirstname: teacher.users.userFirstname,
+                                            userLastname: teacher.users.userLastname,
+                                            userEmail: teacher.users.userEmail,
                                         };
                                     },
                                 ),
-                                timeTableSubstitutionTeachers:
-                                    element.timeTableSubstitution[0].timeTableSubstitutionTeachers.map(
-                                        (teacher) => {
-                                            return {
-                                                userUUID: teacher.users.userUUID,
-                                                userFirstname: teacher.users.userFirstname,
-                                                userLastname: teacher.users.userLastname,
-                                                userEmail: teacher.users.userEmail,
-                                            };
-                                        },
-                                    ),
-                                timeTableSubstitutionubjectName:
-                                    element.timeTableSubstitution
-                                        .timeTableSubstitutionubjectName,
-                            };
-                        }
+                            timeTableSubstitutionubjectName:
+                                element.timeTableSubstitution
+                                    .timeTableSubstitutionubjectName,
+                        };
                     }
                 }
                 return undefined;
@@ -668,8 +650,7 @@ export class TimetableService {
                 status: RETURN_DATA.SUCCESS.status,
                 data: timeTableDaysArray,
             };
-        } catch (err) {
-            console.log(err);
+        } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
@@ -1125,7 +1106,6 @@ export class TimetableService {
             },
         });
 
-        console.log(rooms);
 
         return {
             status: 200,
@@ -1410,8 +1390,7 @@ export class TimetableService {
                     },
                 },
             };
-        } catch (err) {
-            console.log(err);
+        } catch {
             return RETURN_DATA.DATABASE_ERROR;
         }
     }
@@ -1624,8 +1603,7 @@ export class TimetableService {
                 },
             });
             return new Exam(exam);
-        } catch (err) {
-            console.log(err);
+        } catch {
             throw new InternalServerErrorException('Database error');
         }
     }
