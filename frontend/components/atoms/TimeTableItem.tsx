@@ -166,8 +166,6 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     } / span ${overlapColumns}`,
   });
 
-  console.log(item);
-
   return (
     <>
       {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
