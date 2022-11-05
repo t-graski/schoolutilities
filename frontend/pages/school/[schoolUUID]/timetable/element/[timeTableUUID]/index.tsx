@@ -15,7 +15,7 @@ import {
   editTimeTableElement,
   getTimeTableElement,
 } from "../../../../../../utils/requests/timeTable";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/atoms/Button";
 import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
 import { Spacer } from "@/atoms/Spacer";

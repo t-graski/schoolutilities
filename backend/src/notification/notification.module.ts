@@ -3,6 +3,8 @@ import { Global, Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NotificationProcessor } from './notification.processor';
 import { NotificationService } from './notification.service';
+const dotenv = require('dotenv');
+dotenv.config();
 
 @Global()
 @Module({
@@ -15,9 +17,7 @@ import { NotificationService } from './notification.service';
         name: 'HELLO_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [
-            'amqp://guest:guest@localhost:5672/',
-          ],
+          urls: [process.env.RMQ_URL],
           queue: 'user_messages',
           noAck: false,
         },

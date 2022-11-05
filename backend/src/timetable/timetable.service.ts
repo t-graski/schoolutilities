@@ -1,8 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { rules } from '@typescript-eslint/eslint-plugin';
-import { triggerAsyncId } from 'async_hooks';
-import { RuleTester } from 'eslint';
 import { Request } from 'express';
 import {
     AddTimeTableDto,
@@ -323,6 +320,7 @@ export class TimetableService {
                     },
                     schoolRoom: true,
                     timeTableSubstitution: {
+
                         include: {
                             schoolRooms: true,
                             schoolSubjects: true,
@@ -1694,7 +1692,8 @@ export class TimetableService {
                 (exam) =>
                     new Exam({
                         ...exam,
-                        timeTableExamUUID: exam.timeTableElements.timeTableElementUUID,
+                        timeTableExamUUID: exam.timeTableExamUUID,
+                        timeTableElementUUID: exam.timeTableElements.timeTableElementUUID,
                         timeTableElementDay: exam.timeTableElements.timeTableElementDay,
                         timeTableExamSchoolClasses: exam.timeTableElements.timeTableElementClasses.map((schoolClass) => schoolClass.schoolClasses.schoolClassUUID),
                         timeTableExamRoom: new SchoolRoom(exam.schoolRooms),

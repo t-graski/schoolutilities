@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { styled } from "../../stitches.config";
-import { InputField } from "../atoms/input/InputField";
 import { useRouter } from "next/router";
 import { Spacer } from "../atoms/Spacer";
 import { Separator } from "../atoms/Separator";

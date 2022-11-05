@@ -1,7 +1,5 @@
 import Head from "next/head";
 const Navbar = dynamic(() => import("../../../components/organisms/Navbar"));
-import { SiteLayout } from "../../../components/atoms/SiteLayout";
-import { Spacer } from "../../../components/atoms/Spacer";
 import { Headline } from "../../../components/atoms/Headline";
 import { Separator } from "../../../components/atoms/Separator";
 import { CourseSelectionList } from "../../../components/organisms/course/CourseSelectionList";

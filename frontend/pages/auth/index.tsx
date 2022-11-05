@@ -1,8 +1,7 @@
 import { styled } from "../../stitches.config";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 const Navbar = dynamic(() => import("../../components/organisms/Navbar"));
 import Footer from "../../components/organisms/Footer";
-import { Spacer } from "../../components/atoms/Spacer";
 import { InfoBox } from "../../components/molecules/InfoBox";
 import { LoginField } from "../../components/molecules/auth/LoginField";
 import * as TabsPrimitive from "@radix-ui/react-tabs";

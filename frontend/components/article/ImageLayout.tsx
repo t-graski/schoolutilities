@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "../../stitches.config";
-import Image from "next/image";
 import type * as Stitches from "@stitches/react";
 
 export type Props = {
@@ -11,7 +10,7 @@ const ComponentLayout = styled("div", {
     height: "fit-content",
     position: "relative",
     marginTop: "30px",
-  
+
     ["&:before"]: {
       display: "block",
       content: "",

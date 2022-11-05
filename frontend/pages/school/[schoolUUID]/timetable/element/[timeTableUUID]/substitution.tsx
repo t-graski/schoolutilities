@@ -10,7 +10,6 @@ import dynamic from "next/dynamic";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import {
-  deleteTimeTableElement,
   deleteTimeTableItemSubstitution,
   editTimeTableItemSubstitution,
   getTimeTableElement,

@@ -1,4 +1,3 @@
-import { Button } from "@/atoms/Button";
 import { SearchSelect } from "@/atoms/input/SearchSelect";
 import SvgSchool from "@/atoms/svg/SvgSchool";
 import { SubjectSelectionField } from "@/molecules/schoolAdmin/SubjectSelectionField";

@@ -1,7 +1,6 @@
 import React from "react";
 import { styled } from "../../../stitches.config";
 import { Separator } from "../../atoms/Separator";
-import Image from "next/image";
 
 type Props = {
   highlight: boolean;

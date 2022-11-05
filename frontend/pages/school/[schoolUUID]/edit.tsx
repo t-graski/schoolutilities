@@ -16,7 +16,6 @@ import { SideDashboardBar } from "../../../components/organisms/SideDashboardBar
 import { OffDaysSettingsField } from "../../../components/organisms/schoolAdmin/OffDaysSettingsField";
 import SvgInvitation from "../../../components/atoms/svg/SvgInvitation";
 import SvgCalendar from "../../../components/atoms/svg/SvgCalendar";
-import SvgSuitcase from "../../../components/atoms/svg/SvgSuitcase";
 import { SubjectsSettingsField } from "../../../components/organisms/schoolAdmin/SubjectsSettingsField";
 import { RoomsSettingsField } from "../../../components/organisms/schoolAdmin/RoomsSettingsField";
 import SvgEducation from "../../../components/atoms/svg/SvgEducation";

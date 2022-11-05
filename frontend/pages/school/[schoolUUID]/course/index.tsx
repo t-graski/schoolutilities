@@ -1,6 +1,5 @@
 import Footer from "../../../../components/organisms/Footer";
 const Navbar = dynamic(() => import("../../../../components/organisms/Navbar"));
-import { Spacer } from "../../../../components/atoms/Spacer";
 import Head from "next/head";
 import { CourseSelectionList } from "../../../../components/organisms/course/CourseSelectionList";
 import { Headline } from "../../../../components/atoms/Headline";
