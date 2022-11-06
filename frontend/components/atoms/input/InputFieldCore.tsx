@@ -8,6 +8,7 @@ type Props = {
   showLabel?: boolean;
   isSmall?: boolean;
   theme?: "surface" | "surfaceVariant";
+  width?: "100%" | "fit-content";
 };
 
 const InputFieldLayout = styled("div", {
@@ -45,6 +46,14 @@ const InputFieldLayout = styled("div", {
         background: "$surfaceVariant",
       },
     },
+    width: {
+      "100%": {
+        width: "100%",
+      },
+      "fit-content": {
+        width: "fit-content",
+      },
+    },
   },
 });
 
@@ -70,6 +79,7 @@ export const InputFieldCore: React.FC<Props> = ({
   showLabel = true,
   isSmall = false,
   theme = "surfaceVariant",
+  width = "100%",
 }) => {
   const Icon = icon;
 
@@ -82,7 +92,7 @@ export const InputFieldCore: React.FC<Props> = ({
           </InputFieldLabel>
         </>
       )}
-      <InputFieldLayout isSmall={isSmall} theme={theme}>
+      <InputFieldLayout isSmall={isSmall} theme={theme} width={width}>
         {icon && (
           <ImageLayout>
             <Icon />

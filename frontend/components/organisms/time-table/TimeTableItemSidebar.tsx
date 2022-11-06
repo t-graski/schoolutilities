@@ -1,11 +1,13 @@
 import { Button } from "@/atoms/Button";
 import { InputField } from "@/atoms/input/InputField";
+import { Spacer } from "@/atoms/Spacer";
 import { PopUp } from "@/molecules/PopUp";
 import { TimeTableItemDetail } from "@/molecules/time-table/TimeTableItemDetail";
 import { styled } from "@stitches/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import { useQuery, useQueryClient } from "react-query";
 import {
   deleteOmitTimeTableElement,
@@ -61,7 +63,16 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
   );
 
   if (status === "loading") {
-    return <div>Loading</div>;
+    return (
+      <SidebarLayout>
+        <Skeleton width={"90%"} height={50} />
+        <Spacer size="1x"></Spacer>
+        <Skeleton width={"70%"} height={30} />
+        <Skeleton width={"90%"} height={40} />
+        <Skeleton width={"90%"} height={30} />
+        <Skeleton width={"90%"} height={30} />
+      </SidebarLayout>
+    );
   }
 
   if (status === "error") {
@@ -85,11 +96,15 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
               </Button>
             </StyledLink>
             <StyledLink
-              href={`/school/${schoolUUId}/planner?tab=exams&element=${timeTableElementUUID}&date=${startDate}`}
+              href={
+                timeTableElement.exam
+                  ? `/school/${schoolUUId}/planner?tab=exams`
+                  : `/school/${schoolUUId}/planner?tab=exams&element=${timeTableElementUUID}&date=${startDate}`
+              }
               passHref
             >
               <Button buttonType="filled">
-                {timeTableElement.substitution ? "Edit" : "Add"} exam
+                {timeTableElement.exam ? "Edit" : "Add"} exam
               </Button>
             </StyledLink>
             <Button

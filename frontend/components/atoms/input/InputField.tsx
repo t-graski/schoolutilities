@@ -36,6 +36,10 @@ const StyledInputField = styled("input", {
   color: "$onSurfaceVariant",
   backgroundColor: "transparent",
 
+  ["&[type='time']"]:{
+    width: "fit-content",
+  },
+
   variants: {
     editable: {
       true: {},
@@ -118,6 +122,7 @@ export const InputField: React.FC<Props> = ({
         label={label}
         showLabel={showLabel}
         theme={theme}
+        width={inputType == "time" ? "fit-content" : "100%"}
       >
         <StyledLabel>
           <StyledInputField

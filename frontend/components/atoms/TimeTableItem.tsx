@@ -49,11 +49,22 @@ export type TimeTableItemType = {
       userEmail: string;
     }[];
     timeTableSubstitutionRoomUUID: string;
-    timeTableSubstitutionSubject: {
+    timeTableSubstitutionSubject?: {
       schoolSubjectUUID: string;
       schoolSubjectName: string;
       schoolSubjectAbbreviation: string;
     };
+    schoolSubject?: {
+      schoolSubjectUUID: string;
+      schoolSubjectName: string;
+      schoolSubjectAbbreviation: string;
+    }
+  };
+  exam?: {
+    timeTableExamUUID: string;
+    timeTableExamDate: string;
+    timeTableExamDescription: string;
+    timeTableExamRoom: string;
   };
 };
 
@@ -150,6 +161,12 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
           borderColor: isBeforeNow ? "$inversePrimary" : "$onSurfaceVariant",
         },
         false: {},
+      },
+      exam: {
+        true: {
+          borderColor: isBeforeNow ? "$primaryContainer" : "$onSurfaceVariant",
+        },
+        false: {},
       }
     },
     compoundVariants: [
@@ -172,8 +189,6 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
     } / span ${overlapColumns}`,
   });
 
-  console.log(item);
-
   return (
     <>
       {item.schoolSubject && item.schoolSubject.schoolSubjectName != "" && (
@@ -190,6 +205,7 @@ export const TimeTableItem: React.FC<Props> = ({ item, startTime }) => {
             timeTableElementUUID == item.timeTableElementUUID
           }
           substituted={!!item.substitution}
+          exam={!!item.exam}
         >
           <TimeTableSubjectName>
             {item.substitution?.timeTableSubstitutionSubject?.schoolSubjectAbbreviation ??

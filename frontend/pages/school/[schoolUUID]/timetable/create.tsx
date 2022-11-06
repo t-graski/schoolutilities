@@ -11,6 +11,7 @@ import { Button } from "@/atoms/Button";
 import { addTimeTableElement } from "utils/requests/timeTable";
 import { useRouter } from "next/router";
 import { getCurrentWeekMonday } from "@/molecules/time-table/TimeTableWeekSelection";
+import { Spacer } from "@/atoms/Spacer";
 
 export default function CreateCourse() {
   const router = useRouter();
@@ -19,11 +20,7 @@ export default function CreateCourse() {
     timeTableElementStartTime: "",
     timeTableElementEndTime: "",
     timeTableElementDay: "",
-    schoolSubject: {
-      schoolSubjectUUID: "",
-      schoolSubjectName: "",
-      schoolSubjectAbbreviation: "",
-    },
+    schoolSubject: undefined,
     timeTableElementRoomUUID: "",
     timeTableElementTeachers: [],
     timeTableElementClasses: [],
@@ -37,11 +34,15 @@ export default function CreateCourse() {
       <Navbar></Navbar>
       <ContentLayout>
         <Headline label="Create timetable item"></Headline>
-        <Separator width="small" alignment="center" />
+        <Separator width="big" alignment="center" />
+        <Spacer size="3x" />
         <ChangeCreateItem
           itemConfig={itemConfig}
           setItemConfig={setItemConfig}
         ></ChangeCreateItem>
+        <Spacer size="3x" />
+        <Separator width="big" alignment="center" />
+        <Spacer size="3x" />
         <Button
           buttonType="filled"
           onClick={async () => {
@@ -59,7 +60,7 @@ export default function CreateCourse() {
             }
           }}
         >
-          Send me_!!
+          Create
         </Button>
       </ContentLayout>
       <Footer></Footer>

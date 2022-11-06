@@ -77,8 +77,9 @@ export default function EditTimeTableElement() {
               label={"Back to the timetable"}
             ></BackLink>
           )}
-        <Headline label="Edit timetable substitution"></Headline>
-        <Separator width="small" alignment="center" />
+        <Headline label={`${substitution.timeTableSubstitutionUUID ? "Edit" : "Add"} timetable substitution`}></Headline>
+        <Separator width="big" alignment="center" />
+        <Spacer size="7x" />
         {itemConfig && substitution && (
           <ChangeCreateSubstitution
             initialItemConfig={timeTableElement}
@@ -86,6 +87,9 @@ export default function EditTimeTableElement() {
             setItemConfig={setItemConfig}
           ></ChangeCreateSubstitution>
         )}
+        <Spacer size="7x" />
+        <Separator width="big" alignment="center" />
+        <Spacer size="7x" />
         <Button
           buttonType="filled"
           onClick={async () => {
