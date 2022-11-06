@@ -106,7 +106,7 @@ export const TimeTableItemDetail: React.FC<Props> = ({ item }) => {
             <LineThrough>
               {item?.schoolSubject.schoolSubjectName}
             </LineThrough> -{" "}
-            {item?.substitution.timeTableSubstitutionSubject.schoolSubjectName}
+            {item?.substitution.schoolSubject.schoolSubjectName}
           </span>
         )}
         {item?.exam && (

@@ -49,11 +49,16 @@ export type TimeTableItemType = {
       userEmail: string;
     }[];
     timeTableSubstitutionRoomUUID: string;
-    timeTableSubstitutionSubject: {
+    timeTableSubstitutionSubject?: {
       schoolSubjectUUID: string;
       schoolSubjectName: string;
       schoolSubjectAbbreviation: string;
     };
+    schoolSubject?: {
+      schoolSubjectUUID: string;
+      schoolSubjectName: string;
+      schoolSubjectAbbreviation: string;
+    }
   };
   exam?: {
     timeTableExamUUID: string;

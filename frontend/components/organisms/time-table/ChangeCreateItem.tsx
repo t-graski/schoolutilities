@@ -19,12 +19,15 @@ type Props = {
 
 const InputFieldsLayout = styled("div", {
   display: "grid",
-  gridTemplateColumns: "2fr 1fr 1fr 1fr",
+  gridTemplateColumns: "1fr 1fr 1fr",
+  gridColumnGap: "$9x",
+  gridRowGap: "$3x",
 });
 
 const InputFieldLayout = styled("div", {
   display: "flex",
   flexDirection: "column",
+  gap: "$4x",
 });
 
 export const ChangeCreateItem: React.FC<Props> = ({
@@ -73,8 +76,11 @@ export const ChangeCreateItem: React.FC<Props> = ({
                   timeTableElementStartTime: "",
                 });
               } else {
-
-                const date = new Date(itemConfig.timeTableElementStartTime != "" ? itemConfig.timeTableElementStartTime : null);
+                const date = new Date(
+                  itemConfig.timeTableElementStartTime != ""
+                    ? itemConfig.timeTableElementStartTime
+                    : null
+                );
                 const hours = time.split(":")[0];
                 const minutes = time.split(":")[1];
                 date.setHours(parseInt(hours));
@@ -86,6 +92,7 @@ export const ChangeCreateItem: React.FC<Props> = ({
                 });
               }
             }}
+            size={"small"}
           ></InputField>
         </InputFieldLayout>
         <InputFieldLayout>
@@ -102,7 +109,11 @@ export const ChangeCreateItem: React.FC<Props> = ({
                   timeTableElementEndTime: "",
                 });
               } else {
-                const date = new Date(itemConfig.timeTableElementEndTime != "" ? itemConfig.timeTableElementEndTime : null);
+                const date = new Date(
+                  itemConfig.timeTableElementEndTime != ""
+                    ? itemConfig.timeTableElementEndTime
+                    : null
+                );
                 const hours = time.split(":")[0];
                 const minutes = time.split(":")[1];
                 date.setHours(parseInt(hours));
@@ -114,163 +125,180 @@ export const ChangeCreateItem: React.FC<Props> = ({
                 });
               }
             }}
+            size={"small"}
           ></InputField>
         </InputFieldLayout>
 
-        <WeekdaySelection
-          items={[
-            {
-              name: "Monday",
-              shortcut: "M",
-              value: "Monday",
-            },
-            {
-              name: "Tuesday",
-              shortcut: "T",
-              value: "Tuesday",
-            },
-            {
-              name: "Wednesday",
-              shortcut: "W",
-              value: "Wednesday",
-            },
-            {
-              name: "Thursday",
-              shortcut: "T",
-              value: "Thursday",
-            },
-            {
-              name: "Friday",
-              shortcut: "F",
-              value: "Friday",
-            },
-            {
-              name: "Saturday",
-              shortcut: "S",
-              value: "Saturday",
-            },
-            {
-              name: "Sunday",
-              shortcut: "S",
-              value: "Sunday",
-            },
-          ]}
-          multipleSelection={false}
-          selection={[itemConfig.timeTableElementDay]}
-          updateSelection={(selectedItems) => {
-            if (selectedItems.length > 0) {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementDay: selectedItems[0],
-              });
-            }
-          }}
-        ></WeekdaySelection>
-        <SubjectSelectionField
-          selectedSubject={{
-            label: itemConfig.schoolSubject.schoolSubjectAbbreviation,
-            value: itemConfig.schoolSubject.schoolSubjectUUID,
-          }}
-          setSelectedSubject={(subject) => {
-            setItemConfig({
-              ...itemConfig,
-              schoolSubject: {
-                ...itemConfig.schoolSubject,
-                schoolSubjectUUID: subject,
+        <InputFieldLayout>
+          Weekday
+          <WeekdaySelection
+            items={[
+              {
+                name: "Monday",
+                shortcut: "M",
+                value: "Monday",
               },
-            });
-          }}
-        ></SubjectSelectionField>
-        {classesStatus === "success" && (
-          <SearchSelect
-            selectOptions={classes.map((element) => {
-              return {
-                value: element.classUUID,
-                label: element.className,
-              };
-            })}
-            onChange={(e) => {
+              {
+                name: "Tuesday",
+                shortcut: "T",
+                value: "Tuesday",
+              },
+              {
+                name: "Wednesday",
+                shortcut: "W",
+                value: "Wednesday",
+              },
+              {
+                name: "Thursday",
+                shortcut: "T",
+                value: "Thursday",
+              },
+              {
+                name: "Friday",
+                shortcut: "F",
+                value: "Friday",
+              },
+              {
+                name: "Saturday",
+                shortcut: "S",
+                value: "Saturday",
+              },
+              {
+                name: "Sunday",
+                shortcut: "S",
+                value: "Sunday",
+              },
+            ]}
+            multipleSelection={false}
+            selection={[itemConfig.timeTableElementDay]}
+            updateSelection={(selectedItems) => {
+              if (selectedItems.length > 0) {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementDay: selectedItems[0],
+                });
+              }
+            }}
+          ></WeekdaySelection>
+        </InputFieldLayout>
+        <InputFieldLayout>
+          <SubjectSelectionField
+            selectedSubject={
+              itemConfig.schoolSubject && {
+                label: itemConfig.schoolSubject.schoolSubjectAbbreviation,
+                value: itemConfig.schoolSubject.schoolSubjectUUID,
+              }
+            }
+            setSelectedSubject={(subject) => {
               setItemConfig({
                 ...itemConfig,
-                timeTableElementClasses: e.map((element) => element.value),
+                schoolSubject: {
+                  ...itemConfig.schoolSubject,
+                  schoolSubjectUUID: subject,
+                },
               });
             }}
-            icon={SvgSchool}
-            selectMultiValues={true}
-            selectValue={classes
-              .filter((element) =>
-                itemConfig.timeTableElementClasses.includes(element.classUUID)
-              )
-              .map((element) => {
+          ></SubjectSelectionField>
+        </InputFieldLayout>
+        <InputFieldLayout>
+          {classesStatus === "success" && (
+            <SearchSelect
+              selectOptions={classes.map((element) => {
                 return {
                   value: element.classUUID,
                   label: element.className,
                 };
               })}
-          />
-        )}
-        {teachersStatus === "success" && (
-          <SearchSelect
-            selectOptions={teachers.map((element) => {
-              return {
-                value: element.users.userUUID,
-                label: element.users.userFirstname,
-              };
-            })}
-            onChange={(e) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementTeachers: e.map((element) => element?.value),
-              });
-            }}
-            icon={SvgSchool}
-            selectMultiValues={true}
-            selectValue={teachers
-              .filter((element) =>
-                itemConfig.timeTableElementTeachers.includes(
-                  element.users.userUUID
+              onChange={(e) => {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementClasses: e.map((element) => element.value),
+                });
+              }}
+              selectMultiValues={true}
+              selectValue={classes
+                .filter((element) =>
+                  itemConfig.timeTableElementClasses.includes(element.classUUID)
                 )
-              )
-              .map((element) => {
+                .map((element) => {
+                  return {
+                    value: element.classUUID,
+                    label: element.className,
+                  };
+                })}
+              isSmall={true}
+              label={"Classes"}
+            />
+          )}
+        </InputFieldLayout>
+        <InputFieldLayout>
+          {teachersStatus === "success" && (
+            <SearchSelect
+              selectOptions={teachers.map((element) => {
                 return {
                   value: element.users.userUUID,
                   label: element.users.userFirstname,
                 };
               })}
-          />
-        )}
-        {roomsStatus === "success" && (
-          <SearchSelect
-            selectOptions={rooms.map((element) => {
-              return {
-                value: element.schoolRoomUUID,
-                label: element.schoolRoomName,
-              };
-            })}
-            onChange={(e) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableElementRoomUUID: e?.value,
-              });
-            }}
-            icon={SvgSchool}
-            selectMultiValues={false}
-            selectValue={
-              rooms
+              onChange={(e) => {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementTeachers: e.map((element) => element?.value),
+                });
+              }}
+              selectMultiValues={true}
+              selectValue={teachers
                 .filter((element) =>
-                  itemConfig.timeTableElementRoomUUID?.includes(
-                    element.schoolRoomUUID
+                  itemConfig.timeTableElementTeachers.includes(
+                    element.users.userUUID
                   )
                 )
                 .map((element) => {
                   return {
-                    value: element.schoolRoomUUID,
-                    label: element.schoolRoomName,
+                    value: element.users.userUUID,
+                    label: element.users.userFirstname,
                   };
-                })[0]
-            }
-          />
-        )}
+                })}
+              isSmall={true}
+              label={"Teachers"}
+            />
+          )}
+        </InputFieldLayout>
+        <InputFieldLayout>
+          {roomsStatus === "success" && (
+            <SearchSelect
+              selectOptions={rooms.map((element) => {
+                return {
+                  value: element.schoolRoomUUID,
+                  label: element.schoolRoomName,
+                };
+              })}
+              onChange={(e) => {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableElementRoomUUID: e?.value,
+                });
+              }}
+              selectMultiValues={false}
+              selectValue={
+                rooms
+                  .filter((element) =>
+                    itemConfig.timeTableElementRoomUUID?.includes(
+                      element.schoolRoomUUID
+                    )
+                  )
+                  .map((element) => {
+                    return {
+                      value: element.schoolRoomUUID,
+                      label: element.schoolRoomName,
+                    };
+                  })[0]
+              }
+              isSmall={true}
+              label={"Room"}
+            />
+          )}
+        </InputFieldLayout>
       </InputFieldsLayout>
     </>
   );
