@@ -912,7 +912,6 @@ export class TimetableService {
 
     return new TimeTableElement({
       ...element,
-      timeTableElementRoom: new SchoolRoom(element.schoolRoom),
       timeTableElementClasses: element.timeTableElementClasses.map(classes => new SchoolClass(classes.schoolClasses)),
       timeTableElementTeachers: element.timeTableTeachers.map(teacher => new User(teacher.users)),
       timeTableSubstitution: element.timeTableSubstitution.map(substitution => new Substitution({
@@ -923,7 +922,7 @@ export class TimetableService {
       timeTableExam: element.timeTableExam.length > 0 ? new Exam({
         ...element.timeTableExam,
         timeTableExamRoom: new SchoolRoom(element.timeTableExam[0].schoolRooms),
-        }) : undefined,
+      }) : undefined,
     })
   }
 

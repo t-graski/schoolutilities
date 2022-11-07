@@ -1,7 +1,7 @@
 import { SchoolRoom } from "../school-room/schoolRoom";
 import { SchoolClass } from "../school-class/schoolClass";
 import { SchoolSubject } from "../subject/schoolSubject";
-import { Exclude } from "class-transformer";
+import { Exclude, Expose, Transform } from "class-transformer";
 import { Exam } from "../exam/exam";
 import { User } from "../user/user";
 import { Substitution } from "../substitution/substitution";
@@ -23,10 +23,11 @@ export class TimeTableElement {
     timeTableElementUUID: string;
     timeTableElementSubject: SchoolSubject;
     @Exclude()
-    schoolRoom: SchoolRoom;
-    @Exclude()
     schoolSubject: SchoolSubject;
-    timeTableElementRoom: SchoolRoom;
+
+    @Transform(({ value }) => new SchoolRoom(value))
+    @Expose({ name: "timeTableElementRoom" })
+    schoolRoom: SchoolRoom;
     timeTableElementStartTime: Date;
     timeTableElementEndTime: Date;
     timeTableElementDay: string;
