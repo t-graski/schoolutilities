@@ -9,39 +9,36 @@ import { ExamInterceptor } from 'src/notification/exam.interceptor';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('timetable')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/timetable')
 @UseGuards(RolesGuard)
 export class TimetableController {
   constructor(private readonly timetableService: TimetableService) { }
 
-  /*
-  @UseGuards(JwtAuthGuard)
-  //@Roles(Role.Teacher)
-  @Post("")
-  async createTimetable(@Body() createTimetable: any, @Req() request, @Res() response) {
-    const result = await this.timetableService.createTimetable(createTimetable, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
-  }
-
-  */
+  // @UseGuards(JwtAuthGuard)
+  // //@Roles(Role.Teacher)
+  // @Post("")
+  // async createTimetable(@Body() createTimetable: any, @Req() request, @Res() response) {
+  //   const result = await this.timetableService.createTimetable(createTimetable, request);
+  //   return response
+  //     .status(result.status)
+  //     .json(result?.data ? result.data : result.message);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @ApiBody({ type: AddTimeTableElementDTO })
-  @ApiOperation({ summary: 'Add timetableelement' })
+  @ApiOperation({ summary: 'Add a time table element' })
   @ApiCreatedResponse({ type: TimeTableElement })
   @Post('/element')
   async addTimeTableElement(@Body() timeTableElement, @Req() request): Promise<TimeTableElement> {
-   return this.timetableService.addTimeTableElement(timeTableElement, request);
+    return this.timetableService.addTimeTableElement(timeTableElement, request);
 
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiBody({ type: UpdateTimeTableElementDTO })
-  @ApiOperation({ summary: 'Update timetableelement' })
+  @ApiOperation({ summary: 'Update a time table element' })
   @ApiOkResponse({ type: TimeTableElement })
   @Put('/element')
   async updateTimeTableElement(@Body() timeTableElement, @Req() request: Request): Promise<TimeTableElement> {
@@ -51,7 +48,7 @@ export class TimetableController {
   @UseGuards(JwtAuthGuard)
   @ApiParam({ name: 'elementUUID', type: String })
   @ApiParam({ name: 'date', type: String })
-  @ApiOperation({ summary: 'Get TimetableElement' })
+  @ApiOperation({ summary: 'Get a time table element' })
   @ApiOkResponse({ type: TimeTableElement })
   @Get('/element/:elementUUID/:date')
   async getTimeTableElementDetailed(@Param('elementUUID') elementUUID: string, @Param('date') date: string, @Req() request): Promise<TimeTableElement> {

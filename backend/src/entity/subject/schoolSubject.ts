@@ -1,10 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Exclude } from "class-transformer";
 import { IsNotEmpty, IsString, Length } from "class-validator";
 import { IsCustomUUID } from "src/decorators/IsCustomUUID";
 import { Course } from "../course/course";
 import { TimeTableElement } from "../time-table-element/timeTableElement";
 
 export class SchoolSubject {
+    @Exclude()
+    schoolSubjectId: number;
+
+    @Exclude()
+    schoolId: number;
+
     @ApiProperty({
         description: 'The UUID of the school subject',
         example: 'e8b3b9c0-5b9e-11eb-ae93-0242ac130002',

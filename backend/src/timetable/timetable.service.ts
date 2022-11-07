@@ -151,12 +151,23 @@ export class TimetableService {
             }),
           },
         }, include: {
+          timeTableTeachers: {
+            include: {
+              users: true,
+            }
+          },
+          timeTableElementClasses: {
+            include: {
+              schoolClasses: true,
+            }
+          },
+          users: true,
+          schoolRoom: true,
           schoolSubjects: true,
         }
       });
       return new TimeTableElement(element);
     } catch (err) {
-      console.log(err)
       throw new InternalServerErrorException('Database error');
     }
   }
@@ -242,6 +253,7 @@ export class TimetableService {
             }),
           },
         }, include: {
+          schoolRoom: true,
           schoolSubjects: true,
           timeTableTeachers: {
             include: {
@@ -250,13 +262,13 @@ export class TimetableService {
           },
         }
       });
+
+      console.log(element);
+
       return new TimeTableElement({
         ...element,
-        timeTableElementTeachers: element.timeTableTeachers.map((teacher) => new User(teacher)),
-        timeTableElementSubject: new SchoolSubject(element.schoolSubjects),
       });
-    } catch (err) {
-      console.log(err)
+    } catch {
       throw new InternalServerErrorException('Database error');
     }
   }
@@ -913,7 +925,6 @@ export class TimetableService {
     return new TimeTableElement({
       ...element,
       timeTableElementClasses: element.timeTableElementClasses.map(classes => new SchoolClass(classes.schoolClasses)),
-      timeTableElementTeachers: element.timeTableTeachers.map(teacher => new User(teacher.users)),
       timeTableSubstitution: element.timeTableSubstitution.map(substitution => new Substitution({
         ...substitution,
         timeTableSubstitutionClasses: substitution.timeTableSubstitutionClasses.map(classes => new SchoolClass(classes.classes)),
