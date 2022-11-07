@@ -3,6 +3,9 @@ import { SchoolClass } from "../school-class/schoolClass";
 import { SchoolSubject } from "../subject/schoolSubject";
 import { Exclude } from "class-transformer";
 import { Exam } from "../exam/exam";
+import { User } from "../user/user";
+import { Substitution } from "../substitution/substitution";
+import { IsNotEmpty } from "class-validator";
 
 export class TimeTableElement {
     @Exclude()
@@ -19,16 +22,20 @@ export class TimeTableElement {
 
     timeTableElementUUID: string;
     timeTableElementSubject: SchoolSubject;
+    @Exclude()
+    schoolRoom: SchoolRoom;
+    @Exclude()
+    schoolSubject: SchoolSubject;
     timeTableElementRoom: SchoolRoom;
     timeTableElementStartTime: Date;
     timeTableElementEndTime: Date;
     timeTableElementDay: string;
     timeTableElementCreationTimestamp: Date;
     // creator: User;
-    // timeTableTeachers?: User[]
+    timeTableElementTeachers?: User[]
     timeTableElementClasses?: SchoolClass[];
     // timeTableEvents?: TimeTableEvent[];
-    // timeTableSubstitution?: TimeTableSubstitution[];
+    timeTableSubstitution?: Substitution[] | Substitution;
     // timeTableOmitted?: TimeTableOmitted[];
     timeTableExam?: Exam;
 
@@ -38,8 +45,8 @@ export class TimeTableElement {
 }
 
 export class AddTimeTableElementDTO {
-    subjectUUID: string;
-    roomUUID: string;
+    timeTableElementSubjectUUID: string;
+    timeTableElementRoomUUID: string;
     timeTableElementStartTime: Date;
     timeTableElementEndTime: Date;
     timeTableElementDay: string;
@@ -48,13 +55,21 @@ export class AddTimeTableElementDTO {
 }
 
 export class UpdateTimeTableElementDTO {
+    @IsNotEmpty()
     timeTableElementUUID: string;
-    subjectUUID: string;
-    roomUUID: string;
+    @IsNotEmpty()
+    timeTableElementSubjectUUID: string;
+    @IsNotEmpty()
+    timeTableElementRoomUUID: string;
+    @IsNotEmpty()
     timeTableElementStartTime: Date;
+    @IsNotEmpty()
     timeTableElementEndTime: Date;
+    @IsNotEmpty()
     timeTableElementDay: string;
+    @IsNotEmpty()
     timeTableElementClasses?: string[];
+    @IsNotEmpty()
     timeTableElementTeachers?: string[];
 }
 

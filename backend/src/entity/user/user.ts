@@ -16,7 +16,6 @@ export class User {
     @Exclude()
     userPassword: string;
 
-
     @ApiProperty()
     userUUID: string;
 

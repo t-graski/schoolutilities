@@ -1,19 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddExamDTO, Exam, UpdateExamDTO } from 'src/entity/exam/exam';
 import { AddHolidayDTO, Holiday, UpdateHolidayDTO } from 'src/entity/holiday/holiday';
+import { AddTimeTableElementDTO, TimeTableElement, UpdateTimeTableElementDTO } from 'src/entity/time-table-element/timeTableElement';
 import { ExamInterceptor } from 'src/notification/exam.interceptor';
 import { RolesGuard } from 'src/roles/roles.guard';
 import { TimetableService } from './timetable.service';
 
-// @UseInterceptors(ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('timetable')
 @Controller('api/timetable')
 @UseGuards(RolesGuard)
 export class TimetableController {
   constructor(private readonly timetableService: TimetableService) { }
 
+  /*
   @UseGuards(JwtAuthGuard)
   //@Roles(Role.Teacher)
   @Post("")
@@ -24,31 +27,35 @@ export class TimetableController {
       .json(result?.data ? result.data : result.message);
   }
 
+  */
+
   @UseGuards(JwtAuthGuard)
+  @ApiBody({ type: AddTimeTableElementDTO })
+  @ApiOperation({ summary: 'Add timetableelement' })
+  @ApiCreatedResponse({ type: TimeTableElement })
   @Post('/element')
-  async addTimeTableElement(@Body() timeTableElement, @Req() request, @Res() response) {
-    const result = await this.timetableService.addTimeTableElement(timeTableElement, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async addTimeTableElement(@Body() timeTableElement, @Req() request): Promise<TimeTableElement> {
+   return this.timetableService.addTimeTableElement(timeTableElement, request);
+
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBody({ type: UpdateTimeTableElementDTO })
+  @ApiOperation({ summary: 'Update timetableelement' })
+  @ApiOkResponse({ type: TimeTableElement })
   @Put('/element')
-  async updateTimeTableElement(@Body() timeTableElement, @Req() request: Request, @Res() response) {
-    const result = await this.timetableService.updateTimeTableElement(timeTableElement, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  async updateTimeTableElement(@Body() timeTableElement, @Req() request: Request): Promise<TimeTableElement> {
+    return this.timetableService.updateTimeTableElement(timeTableElement, request);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/element/detailed/:elementUUID/:date')
-  async getTimeTableElementDetailed(@Param('elementUUID') elementUUID: string, @Param('date') date: string, @Req() request, @Res() response) {
-    const result = await this.timetableService.getTimeTableElementDetailed(elementUUID, date, request);
-    return response
-      .status(result.status)
-      .json(result?.data ? result.data : result.message);
+  @ApiParam({ name: 'elementUUID', type: String })
+  @ApiParam({ name: 'date', type: String })
+  @ApiOperation({ summary: 'Get TimetableElement' })
+  @ApiOkResponse({ type: TimeTableElement })
+  @Get('/element/:elementUUID/:date')
+  async getTimeTableElementDetailed(@Param('elementUUID') elementUUID: string, @Param('date') date: string, @Req() request): Promise<TimeTableElement> {
+    return this.timetableService.getTimeTableElementDetailed(elementUUID, date, request);
   }
 
   @UseGuards(JwtAuthGuard)
