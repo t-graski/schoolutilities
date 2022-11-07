@@ -124,7 +124,7 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
               <PopUpLayout>
                 Do you really want to{" "}
                 {timeTableElement.omitted ? "uncancel" : "cancel"} this element
-                ({timeTableElement.schoolSubject.schoolSubjectName}
+                ({timeTableElement.schoolSubject?.schoolSubjectName}
                 )?
                 <InputField
                   inputType={"text"}

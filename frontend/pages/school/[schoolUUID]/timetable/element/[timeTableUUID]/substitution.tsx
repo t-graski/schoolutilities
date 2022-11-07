@@ -77,7 +77,7 @@ export default function EditTimeTableElement() {
               label={"Back to the timetable"}
             ></BackLink>
           )}
-        <Headline label={`${substitution.timeTableSubstitutionUUID ? "Edit" : "Add"} timetable substitution`}></Headline>
+        <Headline label={`${substitution?.timeTableSubstitutionUUID ? "Edit" : "Add"} timetable substitution`}></Headline>
         <Separator width="big" alignment="center" />
         <Spacer size="7x" />
         {itemConfig && substitution && (
@@ -112,13 +112,13 @@ export default function EditTimeTableElement() {
           Change element substitution
         </Button>
         <Spacer size="4x"></Spacer>
-        {itemConfig && substitution.timeTableSubstitutionUUID !== "" && (
+        {itemConfig && substitution?.timeTableSubstitutionUUID !== "" && (
           <Button
             buttonType="outlined"
             onClick={async () => {
               try {
                 const response = await deleteTimeTableItemSubstitution(
-                  substitution.timeTableSubstitutionUUID
+                  substitution?.timeTableSubstitutionUUID
                 );
                 router.push(
                   `/school/${schoolUUID}/planner?tab=timetable&startDate=${getCurrentWeekMonday()}&schoolClassUUID=${
