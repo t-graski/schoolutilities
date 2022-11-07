@@ -14,15 +14,15 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AddSchoolDTO, School, UpdateSchoolDTO } from 'src/entity/school/school';
-import { RolesGuard } from 'src/roles/roles.guard';
-import { SchoolAdminService } from './schoolAdmin.service';
-import { Request } from 'express'
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AddDepartmentDTO, DeleteDepartmentDTO, Department, UpdateDepartmentDTO } from 'src/entity/department/department';
 import { AddSchoolClassDTO, DeleteSchoolClassDTO, SchoolClass, UpdateSchoolClassDTO } from 'src/entity/school-class/schoolClass';
 import { AddJoinCodeDTO, DeleteJoinCodeDTO, JoinCode, JoinSchoolDTO, LeaveSchoolDTO, UpdateJoinCodeDTO } from 'src/entity/join-code/joinCode';
 import { User } from 'src/entity/user/user';
 import { UpdateRoleDTO, UserRole } from 'src/entity/user-role/userRole';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { SchoolAdminService } from './schoolAdmin.service';
+import { Request } from 'express'
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AddSchoolSubjectDTO, SchoolSubject, UpdateSchoolSubjectDTO } from 'src/entity/subject/schoolSubject';
 import { AddSchoolRoomDTO, SchoolRoom, UpdateSchoolRoomDTO } from 'src/entity/school-room/schoolRoom';
 import { AddSchoolClassUserDTO, DeleteSchoolClassUserDTO } from 'src/entity/school-class-user/schoolClassUser';

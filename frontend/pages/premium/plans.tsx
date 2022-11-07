@@ -3,7 +3,6 @@ import Footer from "../../components/organisms/Footer";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { Headline } from "../../components/atoms/Headline";
-import { Separator } from "../../components/atoms/Separator";
 import { Spacer } from "../../components/atoms/Spacer";
 import { styled } from "@stitches/react";
 import { PremiumPlansList } from "../../components/organisms/PremiumPlansList";

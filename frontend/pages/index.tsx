@@ -6,7 +6,6 @@ import SvgDiscordLogo from "../components/atoms/svg/SvgDiscordLogo";
 import SvgSchool from "../components/atoms/svg/SvgSchool";
 import SvgPremium from "../components/atoms/svg/SvgPremium";
 import SvgStartpageArtwork from "../components/atoms/svg/SvgStartpageArtwork";
-import { useEffect } from "react";
 import { BannerAd } from "@/molecules/ads/BannerAd";
 
 const Footer = dynamic(() => import("../components/organisms/Footer"));

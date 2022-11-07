@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "../../stitches.config";
-import Image from "next/image";
 
 export type Props = {};
 

@@ -18,7 +18,14 @@ type Props = {
 
 const InputFieldsLayout = styled("div", {
   display: "grid",
-  gridTemplateColumns: "2fr 1fr 1fr 1fr",
+  gridTemplateColumns: "1fr 1fr 1fr 1fr",
+  gap: "9x",
+});
+
+const InputFieldLayout = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  gap: "$4x",
 });
 
 export const ChangeCreateSubstitution: React.FC<Props> = ({
@@ -51,121 +58,152 @@ export const ChangeCreateSubstitution: React.FC<Props> = ({
     }
   );
 
-  console.log(itemConfig);
+  console.log(classes);
 
   return (
     <>
       <InputFieldsLayout>
-        {getTimeFormatFromDateString(
-          initialItemConfig.timeTableElementStartTime
-        )}{" "}
-        -{" "}
-        {getTimeFormatFromDateString(initialItemConfig.timeTableElementEndTime)}
-        , {initialItemConfig.timeTableElementDay}
-        {initialItemConfig.schoolSubject.schoolSubjectName}
-        {teachersStatus === "success" &&
-          teachers
-            .filter((element) =>
-              initialItemConfig.timeTableElementTeachers.includes(
-                element.users.userUUID
-              )
-            )
-            .map((element) => element.users.userFirstname)
-            .join(",")}
-        {classesStatus === "success" &&
-          classes
-            .filter((element) =>
-              initialItemConfig.timeTableElementClasses.includes(
-                element.schoolClassUUID
-              )
-            )
-            .map((element) => element.schoolClassName)
-            .join(",")}
-        {roomsStatus === "success" &&
-          rooms
-            .filter((element) =>
-              initialItemConfig.timeTableElementRoomUUID.includes(
-                element.schoolRoomUUID
-              )
-            )
-            .map((element) => element.schoolRoomName)
-            .join(",")}
-        <SubjectSelectionField
-          selectedSubject={{
-            label: itemConfig.schoolSubject.schoolSubjectAbbreviation,
-            value: itemConfig.schoolSubject.schoolSubjectUUID,
-          }}
-          setSelectedSubject={(subject) => {
-            setItemConfig({
-              ...itemConfig,
-              schoolSubjectUUID: subject,
-            });
-          }}
-        ></SubjectSelectionField>
-        {teachersStatus === "success" && (
-          <SearchSelect
-            selectOptions={teachers.map((element) => {
-              return {
-                value: element.users.userUUID,
-                label: element.users.userFirstname,
-              };
-            })}
-            onChange={(e) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableSubstitutionTeachers: e.map(
-                  (element) => element?.value
-                ),
-              });
-            }}
-            icon={SvgSchool}
-            selectMultiValues={true}
-            selectValue={teachers
+        <InputFieldLayout>
+          Timetable element:
+          <br />
+          <span>
+            {initialItemConfig.timeTableElementDay},{" "}
+            {getTimeFormatFromDateString(
+              initialItemConfig.timeTableElementStartTime
+            )}{" "}
+            -{" "}
+            {getTimeFormatFromDateString(
+              initialItemConfig.timeTableElementEndTime
+            )}
+          </span>
+          {classesStatus === "success" &&
+            classes
               .filter((element) =>
-                itemConfig.timeTableSubstitutionTeachers.includes(
-                  element.users.userUUID
+                itemConfig.timeTableSubstitutionClasses.includes(
+                  element.classUUID
                 )
               )
-              .map((element) => {
+              .map((element) => element.className)
+              .join(",")}
+        </InputFieldLayout>
+        <InputFieldLayout>
+          <SubjectSelectionField
+            selectedSubject={{
+              label: itemConfig.schoolSubject.schoolSubjectAbbreviation,
+              value: itemConfig.schoolSubject.schoolSubjectUUID,
+            }}
+            setSelectedSubject={(subject) => {
+              setItemConfig({
+                ...itemConfig,
+                schoolSubject: {
+                  ...itemConfig.schoolSubject,
+                  schoolSubjectUUID: subject,
+                },
+              });
+            }}
+          ></SubjectSelectionField>
+          {initialItemConfig.schoolSubject.schoolSubjectName && (
+            <>Previous: {initialItemConfig.schoolSubject.schoolSubjectName}</>
+          )}
+        </InputFieldLayout>
+        <InputFieldLayout>
+          {teachersStatus === "success" && (
+            <SearchSelect
+              selectOptions={teachers.map((element) => {
                 return {
                   value: element.users.userUUID,
                   label: element.users.userFirstname,
                 };
               })}
-          />
-        )}
-        {roomsStatus === "success" && (
-          <SearchSelect
-            selectOptions={rooms.map((element) => {
-              return {
-                value: element.schoolRoomUUID,
-                label: element.schoolRoomName,
-              };
-            })}
-            onChange={(e) => {
-              setItemConfig({
-                ...itemConfig,
-                timeTableSubstitutionRoomUUID: e?.value,
-              });
-            }}
-            icon={SvgSchool}
-            selectMultiValues={false}
-            selectValue={
-              rooms
+              onChange={(e) => {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableSubstitutionTeachers: e.map(
+                    (element) => element?.value
+                  ),
+                });
+              }}
+              selectMultiValues={true}
+              selectValue={teachers
                 .filter((element) =>
-                  itemConfig.timeTableSubstitutionRoomUUID?.includes(
-                    element.schoolRoomUUID
+                  itemConfig.timeTableSubstitutionTeachers.includes(
+                    element.users.userUUID
                   )
                 )
                 .map((element) => {
                   return {
-                    value: element.schoolRoomUUID,
-                    label: element.schoolRoomName,
+                    value: element.users.userUUID,
+                    label: element.users.userFirstname,
                   };
-                })[0]
-            }
-          />
-        )}
+                })}
+              isSmall={true}
+              label="Teachers"
+            />
+          )}
+          {teachersStatus === "success" &&
+            initialItemConfig.timeTableElementTeachers.length > 0 && (
+              <>
+                Previous:{" "}
+                {teachers
+                  .filter((element) =>
+                    initialItemConfig.timeTableElementTeachers.includes(
+                      element.users.userUUID
+                    )
+                  )
+                  .map((element) => element.users.userFirstname)
+                  .join(",")}
+              </>
+            )}
+        </InputFieldLayout>
+        <InputFieldLayout>
+          {roomsStatus === "success" && (
+            <SearchSelect
+              selectOptions={rooms.map((element) => {
+                return {
+                  value: element.schoolRoomUUID,
+                  label: element.schoolRoomName,
+                };
+              })}
+              onChange={(e) => {
+                setItemConfig({
+                  ...itemConfig,
+                  timeTableSubstitutionRoomUUID: e?.value,
+                });
+              }}
+              selectMultiValues={false}
+              selectValue={
+                rooms
+                  .filter((element) =>
+                    itemConfig.timeTableSubstitutionRoomUUID?.includes(
+                      element.schoolRoomUUID
+                    )
+                  )
+                  .map((element) => {
+                    return {
+                      value: element.schoolRoomUUID,
+                      label: element.schoolRoomName,
+                    };
+                  })[0]
+              }
+              isSmall={true}
+              label="Room"
+            />
+          )}
+          {roomsStatus === "success" &&
+            initialItemConfig.timeTableElementRoomUUID.length > 0 && (
+              <>
+                Previous:{" "}
+                {rooms
+                  .filter((element) =>
+                    initialItemConfig.timeTableElementRoomUUID.includes(
+                      element.schoolRoomUUID
+                    )
+                  )
+                  .map((element) => element.schoolRoomName)
+                  .join(",")}
+              </>
+            )}
+        </InputFieldLayout>
       </InputFieldsLayout>
     </>
   );

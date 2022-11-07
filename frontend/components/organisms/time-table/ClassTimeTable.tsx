@@ -1,5 +1,3 @@
-import Head from "next/head";
-import dynamic from "next/dynamic";
 import { TimeTableOverview } from "../../../components/organisms/time-table/TimeTableOverview";
 import { styled } from "@stitches/react";
 import { useEffect, useState } from "react";
@@ -25,10 +23,23 @@ const TimeTableInfoLayout = styled("div", {
   gridTemplateColumns: "3fr minmax(300px, 1fr)",
   gridGap: "$2x",
   width: "100%",
+  transition: "all 0.2s ease-in-out",
+
+  variants: {
+    showSideBar: {
+      true: {
+        gridTemplateColumns: "3fr minmax(300px, 1fr)",
+      },
+      false: {
+        gridTemplateColumns: "3fr",
+      },
+    }
+  }
 });
 
 export default function ClassTimeTable() {
   const router = useRouter();
+  const detail = router.query.detail as string;
   const [schoolClassUUID, setSchoolClassUUID] = useState(
     (router.query.schoolClassUUID as string) ?? ""
   );
@@ -53,7 +64,7 @@ export default function ClassTimeTable() {
   }, [router, router.query, schoolClassUUID, startDate]);
 
   return (
-    <TimeTableInfoLayout>
+    <TimeTableInfoLayout showSideBar={!!detail}>
       <TimeTableNavigationLayout>
         <TimeTableSelectionLayout>
           <TimeTableItemSelection

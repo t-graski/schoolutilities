@@ -1,8 +1,5 @@
 import React from "react";
 import { SideDashboardChildrenBar } from "../../../components/organisms/SideDashboardChildrenBar";
-import SvgAlert from "../../../components/atoms/svg/SvgAlert";
-import SvgBuilding from "../../../components/atoms/svg/SvgBuilding";
-import SvgAttendance from "../../../components/atoms/svg/SvgAttendance";
 const Navbar = dynamic(() => import("../../../components/organisms/Navbar"));
 import Footer from "../../../components/organisms/Footer";
 import dynamic from "next/dynamic";

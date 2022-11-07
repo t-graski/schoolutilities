@@ -1,8 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styled } from "../../stitches.config";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import Skeleton from "react-loading-skeleton";
 import { AdminListHeader } from "../molecules/AdminListHeader";
 import { AdminListItem } from "../molecules/AdminListItem";
 

@@ -22,6 +22,8 @@ import { PrismaService } from './prisma.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BullModule } from '@nestjs/bull';
 import { NotificationModule } from './notification/notification.module';
+const dotenv = require('dotenv');
+dotenv.config();
 
 @Module({
   imports: [
@@ -33,9 +35,7 @@ import { NotificationModule } from './notification/notification.module';
         name: 'HELLO_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [
-            'amqp://guest:guest@localhost:5672/',
-          ],
+          urls: [process.env.RMQ_URL],
           queue: 'user_messages',
           noAck: false,
         },
@@ -43,7 +43,7 @@ import { NotificationModule } from './notification/notification.module';
     ]),
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
+        host: '168.119.227.44',
         port: 6379,
       }
     }),

@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "@stitches/react";
-import Image from "next/image";
 import SvgDownload from "../../atoms/svg/SvgDownload";
 
 type Props = {

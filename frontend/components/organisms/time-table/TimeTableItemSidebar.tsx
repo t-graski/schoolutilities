@@ -1,15 +1,17 @@
 import { Button } from "@/atoms/Button";
 import { InputField } from "@/atoms/input/InputField";
+import { Spacer } from "@/atoms/Spacer";
 import { PopUp } from "@/molecules/PopUp";
 import { TimeTableItemDetail } from "@/molecules/time-table/TimeTableItemDetail";
 import { styled } from "@stitches/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import { useQuery, useQueryClient } from "react-query";
 import {
   deleteOmitTimeTableElement,
-  getTimeTableElement,
+  getTimeTableElementDetailed,
   omitTimeTableElement,
 } from "../../../utils/requests/timeTable";
 
@@ -53,15 +55,24 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
   }, [router.query.detail]);
 
   const { data: timeTableElement, status } = useQuery(
-    ["timeTableElement", timeTableElementUUID],
-    () => getTimeTableElement(timeTableElementUUID),
+    ["timeTableElement", timeTableElementUUID, startDate],
+    () => getTimeTableElementDetailed(timeTableElementUUID, startDate),
     {
-      enabled: !!timeTableElementUUID,
+      enabled: !!timeTableElementUUID && !!startDate,
     }
   );
 
   if (status === "loading") {
-    return <div>Loading</div>;
+    return (
+      <SidebarLayout>
+        <Skeleton width={"90%"} height={50} />
+        <Spacer size="1x"></Spacer>
+        <Skeleton width={"70%"} height={30} />
+        <Skeleton width={"90%"} height={40} />
+        <Skeleton width={"90%"} height={30} />
+        <Skeleton width={"90%"} height={30} />
+      </SidebarLayout>
+    );
   }
 
   if (status === "error") {
@@ -77,13 +88,24 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
           <>
             <TimeTableItemDetail item={timeTableElement}></TimeTableItemDetail>
             <StyledLink
-              href={`/school/${schoolUUId}/timetable/element/${timeTableElementUUID}/substitution?date=${getParsedMonth(
-                new Date(startDate),
-                timeTableElement.timeTableElementDay
-              ).toISOString().split("T")[0]}`}
+              href={`/school/${schoolUUId}/timetable/element/${timeTableElementUUID}/substitution?date=${startDate}`}
               passHref
             >
-              <Button buttonType="filled">Add substitution</Button>
+              <Button buttonType="filled">
+                {timeTableElement.substitution ? "Edit" : "Add"} substitution
+              </Button>
+            </StyledLink>
+            <StyledLink
+              href={
+                timeTableElement.exam
+                  ? `/school/${schoolUUId}/planner?tab=exams`
+                  : `/school/${schoolUUId}/planner?tab=exams&element=${timeTableElementUUID}&date=${startDate}`
+              }
+              passHref
+            >
+              <Button buttonType="filled">
+                {timeTableElement.exam ? "Edit" : "Add"} exam
+              </Button>
             </StyledLink>
             <Button
               buttonType="outlined"
@@ -92,10 +114,7 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
                 setOmittedPopUpVisible(true);
               }}
             >
-              {timeTableElement?.timeTableElementOmitted
-                ? "Uncancel"
-                : "Cancel"}{" "}
-              element
+              {timeTableElement?.omitted ? "Uncancel" : "Cancel"} element
             </Button>
             <PopUp
               openButton={<></>}
@@ -104,24 +123,20 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
             >
               <PopUpLayout>
                 Do you really want to{" "}
-                {timeTableElement.timeTableElementOmitted
-                  ? "uncancel"
-                  : "cancel"}{" "}
-                this element ({timeTableElement.schoolSubject.schoolSubjectName}
+                {timeTableElement.omitted ? "uncancel" : "cancel"} this element
+                ({timeTableElement.schoolSubject?.schoolSubjectName}
                 )?
                 <InputField
                   inputType={"text"}
                   value={
-                    timeTableElement.timeTableElementOmitted
-                      ? timeTableElement.timeTableElementOmitted
-                          .timeTableElementOmittedReason
+                    timeTableElement.omitted
+                      ? timeTableElement.omitted.timeTableElementOmittedReason
                       : omittedReason
                   }
                   onChange={setOmittedReason}
                   theme={"surface"}
                   editable={
-                    !timeTableElement.timeTableElementOmitted
-                      ?.timeTableElementOmittedReason
+                    !timeTableElement.omitted?.timeTableElementOmittedReason
                   }
                 ></InputField>
                 <ButtonLayout>
@@ -136,7 +151,7 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
                   <Button
                     buttonType="filled"
                     onClick={async () => {
-                      if (timeTableElement.timeTableElementOmitted) {
+                      if (timeTableElement.omitted) {
                         await deleteOmitTimeTableElement(
                           timeTableElement.timeTableElementUUID
                         );
@@ -159,7 +174,7 @@ export const TimeTableItemSidebar: React.FC<{}> = () => {
                       setOmittedPopUpVisible(false);
                     }}
                   >
-                    {timeTableElement.timeTableElementOmitted
+                    {timeTableElement.omitted
                       ? "Uncancel lesson"
                       : "Cancel lesson"}
                   </Button>

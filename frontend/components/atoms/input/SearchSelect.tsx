@@ -14,6 +14,8 @@ type Props = {
   icon?: any;
   editable?: boolean;
   isSmall?: boolean;
+  label?: string;
+  showLabel?: boolean;
 };
 
 const StyledSelect = styled(Select, {
@@ -29,10 +31,6 @@ const StyledSelect = styled(Select, {
   outline: "none",
   fontSize: "1.2rem",
   lineHeight: "1.5rem",
-
-  ["&:focus"]: {
-    borderBottom: "solid 1px $colors$neutral-500",
-  },
 
   variants: {
     isSmall: {
@@ -59,15 +57,11 @@ const selectStyled = {
   control: (provided, state) => ({
     ...provided,
     border: "none",
-    borderBottom: "solid 1px transparent",
     background: "transparent",
     color: styles.theme.colors["neutral-500"],
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
-    ["&:focus"]: {
-      borderBottom: `solid 1px ${styles.theme.colors["neutral-500"]}`,
-    },
   }),
 
   menu: (provided, state) => ({
@@ -122,10 +116,6 @@ const selectStyled = {
     fontSize: "1.2rem",
     lineHeight: "1.5rem",
     fontWeight: "bold",
-
-    ["&:focus"]: {
-      borderBottom: `solid 1px ${styles.theme.colors["neutral-500"]}`,
-    },
   }),
 
   menuList: (provided, state) => ({
@@ -182,10 +172,12 @@ export const SearchSelect: React.FC<Props> = ({
   icon,
   editable = true,
   isSmall = false,
+  label,
+  showLabel = true,
 }) => {
   return (
     <>
-      <InputFieldCore icon={icon} showLabel={false} isSmall={isSmall}>
+      <InputFieldCore icon={icon} label={label} showLabel={showLabel} isSmall={isSmall}>
         <StyledSelect
           styles={selectStyled}
           options={selectOptions}

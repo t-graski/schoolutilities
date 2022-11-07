@@ -203,9 +203,9 @@ export class TimetableController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/substitution/:elementUUID')
-  async getSubstitution(@Param('elementUUID') elementUUID: string, @Req() request, @Res() response) {
-    const result = await this.timetableService.getSubstitutionForTimeTableElement(elementUUID, request);
+  @Get('/substitution/:elementUUID/:date')
+  async getSubstitution(@Param('elementUUID') elementUUID: string, @Param('date') date: string, @Req() request, @Res() response) {
+    const result = await this.timetableService.getSubstitutionForTimeTableElement(elementUUID, date, request);
     return response
       .status(result.status)
       .json(result?.data ? result.data : result.message);

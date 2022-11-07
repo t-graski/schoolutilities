@@ -43,6 +43,7 @@ export const SubjectSelectionField: React.FC<Props> = ({
         onChange={(value) => setSelectedSubject(value?.value)}
         editable={true}
         isSmall={true}
+        label={"Subject"}
       ></SearchSelect>
     </>
   );

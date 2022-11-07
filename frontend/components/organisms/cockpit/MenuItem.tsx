@@ -24,12 +24,6 @@ const StyledMenuItem = styled("button", {
     },
 });
 
-const StyledSvg = styled("svg", {
-    fill: "currentColor",
-    height: "100%",
-    width: "100%",
-});
-
 export const MenuItem: React.FC<Props> = ({
   icon,
   title,
@@ -43,9 +37,6 @@ export const MenuItem: React.FC<Props> = ({
       title={title}
     >
         {title}
-      {/* <StyledSvg className="remix">
-        <i className={`ri-${icon}-line`} />
-      </StyledSvg> */}
     </StyledMenuItem>
   );
 };

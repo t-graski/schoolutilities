@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { styled } from "../../stitches.config";
 import { CheckBox } from "../atoms/input/CheckBox";
@@ -76,7 +77,19 @@ export const AdminListItem: React.FC<Props> = ({
       </StyledItem>
       {columns.map((column) => (
         <StyledItem key={data[uuidKey] + column.key}>
-          {typeof column.toStringFunction == "function" ? column.toStringFunction(data[column.key]) : data[column.key]}
+          {typeof column.link == "function" ? (
+            <Link href={column.link(data)} passHref>
+              {typeof column.toStringFunction == "function"
+                ? column.toStringFunction(data[column.key])
+                : data[column.key]}
+            </Link>
+          ) : (
+            <>
+              {typeof column.toStringFunction == "function"
+                ? column.toStringFunction(data[column.key])
+                : data[column.key]}
+            </>
+          )}
         </StyledItem>
       ))}
       <StyledItem key={data[uuidKey] + "actions"}>

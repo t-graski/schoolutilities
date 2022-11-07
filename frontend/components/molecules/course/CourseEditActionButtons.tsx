@@ -10,7 +10,6 @@ import SvgEdit from "../../atoms/svg/SvgEdit";
 import SvgDelete from "../../atoms/svg/SvgDelete";
 import { PopUp } from "../PopUp";
 import { Button } from "../../atoms/Button";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 type Props = {
   item: Item;
